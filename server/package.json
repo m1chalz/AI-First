@@ -1,0 +1,33 @@
+{
+  "name": "pet-spot",
+  "version": "0.0.1",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "node --experimental-transform-types --watch ./src/index.ts",
+    "test": "vitest",
+    "lint": "tsc && eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "start": "node --experimental-transform-types ./src/index.ts",
+    "knex:add-migration": "knex migrate:make -x ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/express": "^5.0.5",
+    "@types/knex": "^0.15.2",
+    "@types/supertest": "^6.0.3",
+    "eslint": "^9.39.1",
+    "supertest": "^7.1.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.5"
+  }
+}

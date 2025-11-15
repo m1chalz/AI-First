@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Testcontainers
+.testcontainers.properties
+.testcontainers/
+
+# Editor/IDE specific
+.idea/
+.vscode/
+.env
+
+# Logs
+*.log
+
+# Test files
+coverage/
+.nyc_output/
+
+# OS generated files
+.DS_Store
+thumbs.db
+
+# SQLite
+*.db
