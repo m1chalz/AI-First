@@ -71,7 +71,7 @@ As an operations engineer investigating a production issue, I need to quickly se
 
 ### Edge Cases
 
-- **Large request/response bodies**: Bodies exceeding 10KB will be truncated in logs with a `"truncated": true` indicator field to prevent performance degradation and excessive log storage consumption
+- **Large request/response bodies**: Truncation behavior specified in FR-012 (bodies exceeding 10KB threshold)
 - **Binary content**: Binary content (images, PDFs, file uploads) will not be logged; instead, the log entry will include Content-Type, content size, and a `"binaryOmitted": true` field to preserve log readability and reduce storage costs
 - **Sensitive data in logs**: The `Authorization` header value will be redacted (replaced with `***`) to prevent credential exposure in logs while preserving header presence for debugging
 - **Missing or malformed headers**: How should the system handle requests with no headers or unusual header formats?
@@ -115,7 +115,7 @@ As an operations engineer investigating a production issue, I need to quickly se
 - **SC-005**: Every HTTP response includes a `request-id` header that clients can use for support inquiries
 - **SC-006**: Operations engineers can locate all logs (request, response, and application logs) for a specific transaction in under 30 seconds using the request ID
 - **SC-007**: Request IDs are unique with no collisions observed during typical daily operation (assuming reasonable daily request volume)
-- **SC-008**: Logging overhead does not increase average request processing time by more than 5%
+- **SC-008**: Logging overhead does not increase p95 request processing time by more than 5% (measured with 100 req/sec load, 1KB payloads, against baseline without logging middleware)
 
 ## Assumptions
 

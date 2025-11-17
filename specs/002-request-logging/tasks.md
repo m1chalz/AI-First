@@ -4,7 +4,7 @@
 **Input**: Design documents from `/specs/002-request-logging/`  
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, quickstart.md ✅
 
-**Tests**: Per user directive, tests are **SKIPPED** for this non-functional infrastructure feature. This is an exception to the standard 80% coverage requirement.
+**Tests**: Unit tests provided for utility functions (`/src/lib/__test__/`) per Constitution Principle XIII (80% coverage requirement). Manual validation tasks (Phase 6) verify middleware integration.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -41,6 +41,29 @@
 
 ---
 
+## Phase 2.5: Unit Tests for Utilities (TDD - Red Phase) ⚠️ CONSTITUTION COMPLIANCE
+
+**Purpose**: Achieve 80% test coverage for utility functions per Constitution Principle XIII
+
+**⚠️ CRITICAL**: Constitution Principle XIII (Backend Architecture & Quality Standards) is NON-NEGOTIABLE and requires 80% test coverage for `/src/lib/` utilities. These tests MUST be written following TDD workflow (Red-Green-Refactor).
+
+**TDD Workflow**:
+1. **RED**: Write failing test first (verify it fails)
+2. **GREEN**: Implement minimal code to pass test
+3. **REFACTOR**: Improve code quality while keeping tests passing
+
+**Coverage Target**: 80% line + branch coverage for `/server/src/lib/`
+
+- [ ] T007a [P] [TDD-RED] Create unit tests for requestIdGenerator in `/Users/pawelkedra/code/AI-First/server/src/lib/__test__/requestIdGenerator.test.ts` (test: 10-char length, alphanumeric only, uniqueness across 1000 calls, no collisions)
+- [ ] T007b [P] [TDD-RED] Create unit tests for requestContext in `/Users/pawelkedra/code/AI-First/server/src/lib/__test__/requestContext.test.ts` (test: setRequestContext stores ID, getRequestId retrieves ID, getRequestId returns undefined when no context)
+- [ ] T007c [P] [TDD-RED] Create unit tests for logSerializers in `/Users/pawelkedra/code/AI-First/server/src/lib/__test__/logSerializers.test.ts` (test: truncateBody at 10240 bytes, isBinaryContent detection for image/*, application/pdf, serializeBody with truncated flag, serializeBody with binaryOmitted flag)
+
+**Checkpoint**: After Phase 2.5, run `npm test -- --coverage` from server/ and verify 80%+ coverage for `/src/lib/` before proceeding to Phase 3
+
+**Note**: Middleware tests (T008, T012) are considered integration-level and tested via manual validation tasks in Phase 6 (T023-T028). Pure utility functions MUST have unit tests per constitution.
+
+---
+
 ## Phase 3: User Story 1 - Request/Response Tracing for Debugging (Priority: P1) 🎯 MVP
 
 **Goal**: Log all incoming HTTP requests and outgoing responses with complete details (method, URL, body, headers) in structured JSON format to enable debugging and troubleshooting.
@@ -57,7 +80,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [P] [US1] Create Pino logger middleware in `/Users/pawelkedra/code/AI-First/server/src/middlewares/loggerMiddleware.ts` (configure pino-http with custom serializers, redact Authorization header, integrate logSerializers for body truncation/binary detection)
+- [ ] T008 [P] [US1] Create Pino logger middleware in `/Users/pawelkedra/code/AI-First/server/src/middlewares/loggerMiddleware.ts` (configure pino-http with custom serializers, redact Authorization header, integrate logSerializers for body truncation/binary detection, configure timestamp: pino.stdTimeFunctions.isoTime for ISO8601 format per FR-008)
 - [ ] T009 [US1] Register logger middleware in `/Users/pawelkedra/code/AI-First/server/src/app.ts` (import loggerMiddleware and add app.use(loggerMiddleware) BEFORE route registration)
 - [ ] T010 [US1] Remove old console.log middleware from `/Users/pawelkedra/code/AI-First/server/src/app.ts` (delete lines 15-18: simple Request logging middleware)
 - [ ] T011 [P] [US1] Add JSDoc documentation to loggerMiddleware.ts explaining Pino configuration, custom serializers, and redaction rules
@@ -123,7 +146,7 @@
 - [ ] T023 [P] Test logging with large request body (>10KB) to verify truncation works correctly
 - [ ] T024 [P] Test logging with binary content (image upload) to verify binary omission works correctly
 - [ ] T025 [P] Test logging with Authorization header to verify redaction to `***` works correctly
-- [ ] T026 [P] Verify ISO8601 timestamp format in logs (e.g., `2025-11-17T14:23:45.123Z`)
+- [ ] T026 [P] Verify ISO8601 timestamp format in logs matches expected format `YYYY-MM-DDTHH:mm:ss.sssZ` (configured in T008 via Pino timestamp option)
 - [ ] T027 [P] Test request ID uniqueness by making 100 concurrent requests and verifying no ID collisions
 - [ ] T028 [P] Verify response time logging in response logs (responseTime field in milliseconds)
 - [ ] T029 Manual smoke test: Start dev server (`npm run dev` from server/), make requests, verify logs appear in stdout with request IDs
@@ -137,7 +160,8 @@
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
 - **Foundational (Phase 2)**: Depends on Setup (T001-T004) completion - BLOCKS all user stories
-- **User Story 1 (Phase 3)**: Depends on Foundational (T005-T007) completion
+- **Unit Tests (Phase 2.5)**: Can start in parallel with Phase 2 utilities (T005-T007) using TDD
+- **User Story 1 (Phase 3)**: Depends on Foundational (T005-T007) AND Unit Tests (T007a-T007c) completion
 - **User Story 2 (Phase 4)**: Depends on User Story 1 (T008-T011) completion (requires logger middleware to be in place)
 - **User Story 3 (Phase 5)**: Depends on User Story 2 (T012-T017) completion (requires request ID correlation to work)
 - **Polish (Phase 6)**: Depends on all user stories (T008-T020) completion
@@ -158,6 +182,7 @@
 
 - **Phase 1 (Setup)**: T001-T004 can all run in parallel after project initialization
 - **Phase 2 (Foundational)**: T005-T007 can run in parallel (different lib files)
+- **Phase 2.5 (Unit Tests)**: T007a-T007c can run in parallel (different test files)
 - **Phase 3 (User Story 1)**: T008 and T011 can run in parallel (implementation and documentation)
 - **Phase 4 (User Story 2)**: T012, T015, T016, T017 can run in parallel (different files)
 - **Phase 5 (User Story 3)**: T018-T020 can all run in parallel (verification and documentation)
@@ -205,15 +230,16 @@
 
 ## Summary
 
-**Total Tasks**: 30  
+**Total Tasks**: 33  
 **Setup**: 4 tasks  
 **Foundational**: 3 tasks  
+**Unit Tests (TDD)**: 3 tasks  
 **User Story 1 (P1)**: 4 tasks  
 **User Story 2 (P1)**: 6 tasks  
 **User Story 3 (P2)**: 3 tasks  
 **Polish**: 10 tasks
 
-**Parallel Opportunities**: 20 tasks can run in parallel (marked with [P])
+**Parallel Opportunities**: 23 tasks can run in parallel (marked with [P])
 
 **MVP Scope**: Phase 1 (Setup) + Phase 2 (Foundational) + Phase 3 (User Story 1) + Phase 4 (User Story 2) = 17 tasks
 - This delivers the core value: complete request/response logging with unique request ID correlation
@@ -229,7 +255,9 @@
 
 ## Notes
 
-- Tests are **SKIPPED** per user directive for this non-functional infrastructure feature
+- Unit tests REQUIRED for all utility functions per Constitution Principle XIII (80% coverage target)
+- TDD workflow MANDATORY: Write tests first (Red-Green-Refactor cycle)
+- Manual validation tasks serve as integration testing for middleware
 - All public APIs MUST have JSDoc documentation (Principle XI: Public API Documentation)
 - Code MUST follow Clean Code principles: small functions, descriptive naming, max 3 nesting levels, DRY (Principle XIII)
 - All new code will be validated by ESLint with TypeScript plugin

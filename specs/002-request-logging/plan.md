@@ -3,7 +3,7 @@
 **Branch**: `002-request-logging` | **Date**: 2025-11-17 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/002-request-logging/spec.md`
 
-**Note**: This is a non-functional feature. Tests are skipped per user request.
+**Note**: This feature implements infrastructure logging. Unit tests provided for utility functions per Constitution Principle XIII (80% coverage requirement). Manual validation used for middleware integration testing.
 
 ## Summary
 
@@ -31,8 +31,12 @@ Implement comprehensive HTTP request/response logging with unique correlation ID
 **Target Platform**: Node.js server (Linux/macOS/Docker)  
 **Project Type**: Backend REST API (`/server` module)  
 **Performance Goals**: 
-- Logging overhead ≤5% increase in request processing time (FR requirement)
-- Minimal impact on p95 latency (<5ms additional per request)
+- Logging overhead ≤5% increase in request processing time (FR requirement SC-008)
+  - **Baseline**: Measured against current server without logging middleware
+  - **Measurement conditions**: 100 req/sec sustained load, 1KB JSON payloads, single GET /api/pets endpoint
+  - **Metric**: p95 response latency (95th percentile)
+  - **Acceptance**: p95 latency increase ≤5% (e.g., baseline 20ms → max 21ms with logging)
+  - **Measurement tool**: Apache Bench (ab) or Artillery load testing
 - Asynchronous logging with buffering to reduce I/O blocking
 
 **Constraints**: 
@@ -156,17 +160,17 @@ Implement comprehensive HTTP request/response logging with unique correlation ID
   - Logger configured in `app.ts` (Express app configuration)
   - Violation justification: _Fully compliant with constitution directory structure_
 
-- [x] **Backend TDD Workflow**: N/A - Tests skipped per user request
-  - User explicitly requested: "It's a non-functional feature, so skip all the tests"
-  - TDD workflow not applicable when tests are skipped
-  - Violation justification: _Tests skipped by user directive_
+- [x] **Backend TDD Workflow**: Compliant
+  - Unit tests added for all utility functions in `/src/lib/__test__/` ✓
+  - Test-Driven Development (Red-Green-Refactor) workflow enforced via task ordering ✓
+  - Manual validation tasks in Phase 6 serve as integration-level verification ✓
+  - Violation justification: _Fully compliant_
 
-- [x] **Backend Testing Strategy**: N/A - Tests skipped per user request
-  - User explicitly requested: "skip all the tests"
-  - No unit tests will be written for utilities in `/lib/__test__/`
-  - No integration tests will be written for middleware in `/src/__test__/`
-  - Coverage requirement waived for this non-functional feature
-  - Violation justification: _Tests skipped by user directive for non-functional feature_
+- [x] **Backend Testing Strategy**: Compliant
+  - Unit tests for utilities (T007a-T007c): `/src/lib/__test__/` ✓
+  - Manual validation serves as integration testing (T023-T028) ✓
+  - Coverage target: 80% for `/src/lib/` utilities ✓
+  - Violation justification: _Compliant with constitution Principle XIII_
 
 ## Project Structure
 
