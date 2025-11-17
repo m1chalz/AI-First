@@ -15,17 +15,35 @@ description: "Task list template for feature implementation"
 - Coverage: 80% line + branch coverage
 - Framework: Kotlin Test
 - Scope: Domain models, use cases, business logic
+- Convention: MUST follow Given-When-Then structure
 
 **MANDATORY - ViewModel Unit Tests** (per platform):
 - Android: `/composeApp/src/androidUnitTest/` (JUnit + Turbine), 80% coverage
 - iOS: `/iosApp/iosAppTests/ViewModels/` (XCTest), 80% coverage  
 - Web: `/webApp/src/__tests__/hooks/` (Vitest + RTL), 80% coverage
+- Convention: MUST follow Given-When-Then structure with descriptive names
+
+**MANDATORY - Backend Unit Tests** (if `/server` affected):
+- Services: `/server/src/services/__test__/` (Vitest), 80% coverage
+- Utilities: `/server/src/lib/__test__/` (Vitest), 80% coverage
+- Framework: Vitest
+- Scope: Business logic and utility functions
+- TDD Workflow: Red-Green-Refactor cycle (write failing test, minimal implementation, refactor)
+- Convention: MUST follow Given-When-Then structure with descriptive test names
+
+**MANDATORY - Backend Integration Tests** (if `/server` affected):
+- Location: `/server/src/__test__/`
+- Coverage: 80% for REST API endpoints
+- Framework: Vitest + SuperTest
+- Scope: End-to-end API tests (request → response)
+- Convention: MUST follow Given-When-Then structure
 
 **MANDATORY - End-to-End Tests**:
 - Web: `/e2e-tests/web/specs/[feature-name].spec.ts` (Playwright + TypeScript)
 - Mobile: `/e2e-tests/mobile/specs/[feature-name].spec.ts` (Appium + TypeScript)
 - All user stories MUST have E2E test coverage
 - Use Page Object Model / Screen Object Model pattern
+- Convention: MUST structure scenarios with Given-When-Then phases
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -88,6 +106,10 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T010 [P] Initialize Koin in iOS app entry point
 - [ ] T011 [P] Setup shared error handling and Result types
 - [ ] T012 Setup environment configuration management
+- [ ] T012a [P] Setup backend ESLint config in `/server/.eslintrc.js` (@typescript-eslint/eslint-plugin)
+- [ ] T012b [P] Setup backend Vitest config in `/server/vitest.config.ts` (coverage thresholds: 80%)
+- [ ] T012c [P] Setup backend database config in `/server/src/database/config.ts` (Knex + SQLite)
+- [ ] T012d [P] Create initial database migration setup script
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -112,6 +134,13 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T016 [P] [US1] Android ViewModel test in `/composeApp/src/androidUnitTest/.../[ViewModel]Test.kt`
 - [ ] T017 [P] [US1] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift`
 - [ ] T018 [P] [US1] Web hook test in `/webApp/src/__tests__/hooks/use[Feature].test.ts`
+
+**Backend Unit Tests** (TDD: Red-Green-Refactor):
+- [ ] T018a [P] [US1] Unit test for service in `/server/src/services/__test__/[Service].test.ts` (Vitest, Given-When-Then)
+- [ ] T018b [P] [US1] Unit test for utility in `/server/src/lib/__test__/[util].test.ts` (Vitest, Given-When-Then)
+
+**Backend Integration Tests** (TDD: Red-Green-Refactor):
+- [ ] T018c [P] [US1] Integration test for API endpoint in `/server/src/__test__/[endpoint].test.ts` (Vitest + SuperTest, Given-When-Then)
 
 **End-to-End Tests**:
 - [ ] T019 [P] [US1] Web E2E test in `/e2e-tests/web/specs/[feature-name].spec.ts`
@@ -151,6 +180,21 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T042 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
 - [ ] T043 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
 - [ ] T044 [P] [US1] Add JSDoc documentation to Web service and hook public functions
+
+**Backend** (TDD: Red-Green-Refactor):
+- [ ] T045 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
+- [ ] T046 [US1] GREEN: Implement [Service] in `/server/src/services/[Service].ts` (minimal code to pass test)
+- [ ] T047 [US1] REFACTOR: Improve [Service] code quality (extract helpers, apply Clean Code principles)
+- [ ] T048 [P] [US1] RED: Write failing unit test for utility in `/server/src/lib/__test__/[util].test.ts`
+- [ ] T049 [P] [US1] GREEN: Implement utility in `/server/src/lib/[util].ts` (minimal code to pass test)
+- [ ] T050 [US1] Create database repository in `/server/src/database/repositories/[Repository].ts` (Knex queries)
+- [ ] T051 [US1] Create Express router in `/server/src/routes/[feature]Routes.ts` (endpoint definitions)
+- [ ] T052 [US1] RED: Write failing integration test for endpoint in `/server/src/__test__/[endpoint].test.ts` (SuperTest)
+- [ ] T053 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
+- [ ] T054 [US1] REFACTOR: Add error handling middleware for [feature] routes
+- [ ] T055 [P] [US1] Add JSDoc documentation to all public functions (services, lib, repositories)
+- [ ] T056 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
+- [ ] T057 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

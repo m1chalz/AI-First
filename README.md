@@ -1,15 +1,15 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web.
+This is a Kotlin Multiplatform project targeting Android, iOS, Web, with a standalone Node.js backend.
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
+  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that's common for all targets.
   - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
+    For example, if you want to use Apple's CoreCrypto for the iOS part of your Kotlin app,
     the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
     Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
     folder is the appropriate location.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
+* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you're sharing your UI with Compose Multiplatform,
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
 * [/shared](./shared/src) is for the code that will be shared between all targets in the project.
@@ -18,6 +18,10 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Web.
 
 * [/webApp](./webApp) contains web React application. It uses the Kotlin/JS library produced
   by the [shared](./shared) module.
+
+* [/server](./server) contains the Node.js/Express backend API. This is a standalone TypeScript
+  service (NOT part of KMP) that provides REST API endpoints consumed by all platform clients
+  (Android, iOS, Web). See [server/README.md](./server/README.md) for backend-specific documentation.
 
 ### Build and Run Android Application
 
@@ -55,7 +59,40 @@ in your IDE’s toolbar or run it directly from the terminal:
 ### Build and Run iOS Application
 
 To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+in your IDE's toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+
+### Build and Run Backend Server
+
+The backend server provides REST API endpoints for all platform clients.
+
+1. Navigate to the server directory:
+   ```shell
+   cd server
+   ```
+
+2. Install dependencies (first time only):
+   ```shell
+   npm install
+   ```
+
+3. Run the development server with hot reload:
+   ```shell
+   npm run dev
+   ```
+   
+   The server will be active on [http://localhost:3000](http://localhost:3000)
+
+4. Run tests:
+   ```shell
+   npm test
+   ```
+
+5. Run tests with coverage:
+   ```shell
+   npm test -- --coverage
+   ```
+
+See [server/README.md](./server/README.md) for more backend commands and documentation.
 
 ---
 

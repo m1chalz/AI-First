@@ -116,6 +116,72 @@
   - All public classes, methods, and properties documented
   - Violation justification: _[Required if documentation missing]_
 
+- [ ] **Given-When-Then Test Structure**: Plan ensures all tests follow Given-When-Then convention
+  - Unit tests clearly separate setup (Given), action (When), verification (Then)
+  - ViewModel tests use Given-When-Then pattern with descriptive names
+  - E2E tests structure scenarios with Given-When-Then phases
+  - Test names follow platform conventions (backticks for Kotlin, camelCase_with_underscores for Swift, descriptive strings for TypeScript)
+  - Comments mark test phases in complex tests
+  - Violation justification: _[Required if tests don't follow convention]_
+
+### Backend Architecture & Quality Standards (if `/server` affected)
+
+- [ ] **Backend Technology Stack**: Plan uses modern Node.js stack for `/server` module
+  - Runtime: Node.js v24 (LTS)
+  - Framework: Express.js
+  - Language: TypeScript with strict mode enabled
+  - Database: Knex query builder + SQLite (designed for PostgreSQL migration)
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+- [ ] **Backend Code Quality**: Plan enforces quality standards for `/server` code
+  - ESLint with TypeScript plugin configured and enabled
+  - Clean Code principles applied:
+    - Small, focused functions (single responsibility)
+    - Descriptive naming (avoid unclear abbreviations)
+    - Maximum 3 nesting levels
+    - DRY principle (extract reusable logic)
+    - JSDoc documentation for all public APIs
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+- [ ] **Backend Dependency Management**: Plan minimizes dependencies in `/server/package.json`
+  - Only add dependencies providing significant value
+  - Prefer well-maintained, security-audited packages
+  - Avoid micro-dependencies (e.g., "is-even", "left-pad")
+  - Document rationale for each dependency in comments
+  - Regular `npm audit` security checks planned
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+- [ ] **Backend Directory Structure**: Plan follows standardized layout in `/server/src/`
+  - `/middlewares/` - Express middlewares (auth, logging, error handling)
+  - `/routes/` - REST API endpoint definitions (Express routers)
+  - `/services/` - Business logic layer (testable, pure functions)
+  - `/database/` - Database config, migrations, query repositories
+  - `/lib/` - Utility functions, helpers (pure, reusable)
+  - `/__test__/` - Integration tests for REST API endpoints
+  - `app.ts` - Express app configuration
+  - `index.ts` - Server entry point
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+- [ ] **Backend TDD Workflow**: Plan follows Test-Driven Development (Red-Green-Refactor)
+  - RED: Write failing test first
+  - GREEN: Write minimal code to pass test
+  - REFACTOR: Improve code quality without changing behavior
+  - Tests written BEFORE implementation code
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+- [ ] **Backend Testing Strategy**: Plan includes comprehensive test coverage for `/server`
+  - Unit tests (Vitest):
+    - Location: `/src/services/__test__/`, `/src/lib/__test__/`
+    - Coverage target: 80% line + branch coverage
+    - Scope: Business logic and utility functions
+  - Integration tests (Vitest + SuperTest):
+    - Location: `/src/__test__/`
+    - Coverage target: 80% for API endpoints
+    - Scope: REST API end-to-end (request → response)
+  - All tests follow Given-When-Then structure
+  - Run commands: `npm test`, `npm test -- --coverage`
+  - Violation justification: _[Required if coverage < 80% or N/A if /server not affected]_
+
 ## Project Structure
 
 ### Documentation (this feature)
