@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Greeting } from './components/Greeting/Greeting.tsx';
+import { initializeKoin } from './di/koinSetup';
+
+// Initialize Koin dependency injection before rendering
+initializeKoin();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');

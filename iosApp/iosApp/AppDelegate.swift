@@ -11,6 +11,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        // Initialize Koin dependency injection at app startup
+        KoinInitializer().initialize()
+        
         // Future: Initialize global services (analytics, crash reporting, etc.)
         return true
     }
