@@ -2,18 +2,25 @@
 
 **Feature Branch**: `001-koin-kmp`  
 **Created**: 2025-11-17  
-**Status**: Draft  
-**Input**: User description: "dodanie koin dla KMP"
+**Status**: Ready for Implementation  
+**Last Updated**: 2025-11-17 (Post-Analysis Revision)  
+**Input**: User description: "Add Koin for KMP"
 
 ## Clarifications
 
 ### Session 2025-11-17
 
-- Q: Jaki jest maksymalny akceptowalny czas inicjalizacji DI container przy starcie aplikacji? → A: No specific time limit - initialization must succeed without errors but performance optimization is out of scope
-- Q: Jaka strategia organizacji modułów DI jest preferowana? → A: Single module - wszystkie dependencies w jednym module
-- Q: Gdzie i w jakim formacie powinna być dokumentacja DI? → A: Architecture Decision Records (ADR) - formalna dokumentacja decyzji w /docs/adr/
-- Q: Czy należy wspierać scoped dependencies (poza singleton i factory) w pierwszej implementacji? → A: No - only singleton and factory scopes in MVP
-- Q: Jaki poziom testowania samej konfiguracji DI jest wymagany? → A: No dedicated tests - DI is tested indirectly through component tests
+- Q: What is the maximum acceptable initialization time for the DI container at application startup? → A: No specific time limit - initialization must succeed without errors but performance optimization is out of scope
+- Q: What DI module organization strategy is preferred? → A: Single module - all dependencies in one module
+- Q: Where and in what format should DI documentation be? → A: Architecture Decision Records (ADR) - formal decision documentation in /docs/adr/
+- Q: Should scoped dependencies (beyond singleton and factory) be supported in the first implementation? → A: No - only singleton and factory scopes in MVP
+- Q: What level of testing is required for the DI configuration itself? → A: No dedicated unit tests for DI configuration infrastructure - DI correctness is validated indirectly through component tests and E2E smoke tests
+
+### Session 2025-11-17 (Post-Analysis Updates)
+
+- Q: What is the scope of E2E tests for this infrastructure feature? → A: E2E tests are smoke tests verifying technical correctness (app launches without DI errors). Full E2E user journey tests will be added when future features consume this DI infrastructure. User stories US1-US4 are developer-facing infrastructure stories, not end-user features.
+- Q: How is DI container cleanup handled? → A: Koin framework handles automatic cleanup when application terminates. No explicit cleanup code required - framework releases resources when app process ends.
+- Q: How are error handling requirements (FR-007, FR-014) verified? → A: E2E smoke tests verify error handling by ensuring apps fail fast with clear error messages if DI is misconfigured. Tests validate both successful initialization and graceful failure scenarios.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -25,12 +32,16 @@ As a developer working on the PetSpot KMP project, I need a dependency injection
 
 **Independent Test**: Can be fully tested by verifying that the DI container initializes successfully on each platform (Android app start, iOS app start, Web app start) without crashes, and that a simple test module can be defined and resolved.
 
+**Note on Testing**: This is a developer-facing infrastructure feature. E2E tests are smoke tests validating technical correctness (successful initialization, graceful failure with clear errors) rather than end-user journeys. Full E2E user journey tests will be added when future features consume this DI infrastructure.
+
 **Acceptance Scenarios**:
 
 1. **Given** the Android app is launched, **When** the application starts, **Then** the DI container initializes without errors
 2. **Given** the iOS app is launched, **When** the application starts, **Then** the DI container initializes without errors
 3. **Given** the Web app is loaded, **When** the application initializes, **Then** the DI container initializes without errors
 4. **Given** a simple dependency is registered in the DI container, **When** a developer requests that dependency, **Then** the dependency is provided correctly
+5. **Given** the DI container is misconfigured (missing dependency registration), **When** the application starts, **Then** the app fails fast with a clear error message identifying the missing dependency (validates FR-007, FR-014)
+6. **Given** a circular dependency exists in the DI configuration, **When** the application starts, **Then** the app fails fast with a clear error message identifying the circular dependency (validates FR-007, FR-014)
 
 ---
 
@@ -100,14 +111,14 @@ As a developer writing unit tests, I need to replace real dependencies with test
 - **FR-004**: System MUST support constructor injection for classes that require dependencies
 - **FR-005**: System MUST support property injection for classes where constructor injection is not possible
 - **FR-006**: System MUST initialize the DI container before any application code attempts to resolve dependencies
-- **FR-007**: System MUST provide clear error messages when dependency resolution fails (missing dependency, circular dependency, etc.)
+- **FR-007**: System MUST provide clear error messages when dependency resolution fails (missing dependency, circular dependency, etc.) - validated through smoke tests with intentional misconfigurations
 - **FR-008**: System MUST support singleton scope for dependencies that should be shared across the application
 - **FR-009**: System MUST support factory scope for dependencies that should be created new each time they are requested
 - **FR-010**: System MUST allow test code to replace production dependencies with test doubles
-- **FR-011**: System MUST clean up dependencies properly when the application is terminated
+- **FR-011**: System MUST clean up dependencies properly when the application is terminated (Koin framework handles automatic cleanup when app process ends - no explicit cleanup code required)
 - **FR-012**: Developers MUST be able to define dependency relationships declaratively without manual wiring code
 - **FR-013**: System MUST resolve dependency chains automatically (if A depends on B and B depends on C, resolving A should instantiate B and C automatically)
-- **FR-014**: System MUST validate the dependency graph at application startup to catch configuration errors early
+- **FR-014**: System MUST validate the dependency graph at application startup to catch configuration errors early - validated through smoke tests verifying fail-fast behavior
 
 ### Key Entities *(include if feature involves data)*
 
@@ -139,7 +150,9 @@ As a developer writing unit tests, I need to replace real dependencies with test
 - The team is familiar with basic dependency injection concepts (interfaces, implementations, injection)
 - Platform-specific ViewModels/state management will be the primary consumers of injected dependencies
 - Test frameworks on each platform support DI test utilities (test modules, mocking)
-- DI configuration correctness is validated indirectly through component tests rather than dedicated DI infrastructure tests
+- DI configuration correctness is validated indirectly through component tests and E2E smoke tests (no dedicated unit tests for DI configuration infrastructure)
+- Koin framework automatically handles dependency cleanup when application terminates - no explicit cleanup code required
+- Error handling (FR-007, FR-014) is validated through E2E smoke tests that verify fail-fast behavior with clear error messages when DI is misconfigured
 
 ## Out of Scope
 
