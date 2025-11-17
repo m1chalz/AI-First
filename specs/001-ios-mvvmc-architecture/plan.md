@@ -17,7 +17,7 @@ Refactor iOS app from pure SwiftUI architecture to hybrid MVVM-C pattern combini
 **Testing**: XCTest with Swift Concurrency (async/await)  
 **Target Platform**: iOS 18.2+
 **Project Type**: Mobile (iOS app in `/iosApp`)  
-**Performance Goals**: App launch <1s, coordinator transitions <2s, 60fps navigation animations  
+**Performance Goals**: N/A (architecture-only feature, no specific performance metrics)  
 **Constraints**: No storyboards, weak references for coordinators (prevent retain cycles), lazy initialization for sub-coordinators  
 **Scale/Scope**: Single iOS app module with extensible coordinator hierarchy for future feature modules
 
