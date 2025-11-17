@@ -373,7 +373,7 @@ After implementation, verify all success criteria from spec.md:
 - **iOS-only feature**: No Android, Web, or Shared module tasks
 - **Test identifiers deferred**: E2E tests will use alternative locators initially
 - **ViewModel tests deferred**: Minimal coordinator logic, tests will be added with business logic
-- **Commit strategy**: Commit after each phase or logical group (e.g., after AppCoordinator complete)
+- **Commit strategy**: Single commit at the end after all phases complete and validation passes
 - **Stop at any checkpoint**: Each phase delivers independently validatable increment
 - **Reference quickstart.md**: Use as implementation guide for code examples
 
