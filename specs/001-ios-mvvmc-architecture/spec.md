@@ -95,9 +95,7 @@ As a developer, I need proper scene lifecycle handling so that the app correctly
 
 ### Measurable Outcomes
 
-- **SC-001**: App launches successfully and displays splash screen with 100px red circle on black background within 1 second of launch
-- **SC-002**: Navigation bar appears with transparent green semi-transparent styling immediately upon display
-- **SC-003**: Transition from splash screen to list screen (ContentView) completes within 2 seconds of coordinator start
-- **SC-004**: App supports standard iOS scene lifecycle events (background, foreground, disconnect) without crashes or memory leaks
-- **SC-005**: All coordinators properly manage memory with no retain cycles detectable in Instruments
-- **SC-006**: Navigation controller hierarchy can be inspected to verify proper UIHostingController wrapping of SwiftUI views
+- **SC-001**: Navigation bar appears with transparent green semi-transparent styling immediately upon display
+- **SC-002**: App supports standard iOS scene lifecycle events (background, foreground, disconnect) without crashes or memory leaks
+- **SC-003**: All coordinators properly manage memory with no retain cycles detectable in Instruments
+- **SC-004**: Navigation controller hierarchy can be inspected to verify proper UIHostingController wrapping of SwiftUI views
