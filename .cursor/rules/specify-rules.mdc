@@ -1,0 +1,29 @@
+# AI-First Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-11-17
+
+## Active Technologies
+
+- Node.js v24 (LTS) with TypeScript (strict mode) (002-request-logging)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+Node.js v24 (LTS) with TypeScript (strict mode): Follow standard conventions
+
+## Recent Changes
+
+- 002-request-logging: Added Node.js v24 (LTS) with TypeScript (strict mode)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
