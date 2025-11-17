@@ -131,7 +131,7 @@ specs/001-ios-mvvmc-architecture/
 ```text
 iosApp/
 ├── iosApp/
-│   ├── AppDelegate.swift                    # NEW: UIKit app lifecycle entry point
+│   ├── AppDelegate.swift                    # NEW: UIKit app lifecycle entry point (@main)
 │   ├── SceneDelegate.swift                  # NEW: Scene lifecycle + window setup
 │   ├── Coordinators/
 │   │   ├── CoordinatorInterface.swift       # NEW: Protocol for all coordinators
@@ -141,14 +141,15 @@ iosApp/
 │   │   ├── SplashScreenView.swift           # NEW: Initial splash screen (red circle)
 │   │   └── ContentView.swift                # EXISTING: Main list view (will be wrapped in UIHostingController)
 │   ├── Assets.xcassets/                     # EXISTING
-│   ├── Info.plist                           # MODIFIED: Remove UIApplicationSceneManifest storyboard references
-│   └── iOSApp.swift                         # MODIFIED: Remove @main attribute
+│   └── Info.plist                           # MODIFIED: Add UIApplicationSceneManifest, remove storyboard references
 ├── iosAppTests/                             # EXISTING
 │   └── Coordinators/                        # NEW: Coordinator unit tests (future)
 ├── Configuration/
 │   └── Config.xcconfig                      # EXISTING
 └── iosApp.xcodeproj/                        # MODIFIED: Add new files to project
 ```
+
+**Note**: `iOSApp.swift` (SwiftUI App entry point) will be deleted - no longer needed with UIKit lifecycle.
 
 **Structure Decision**: iOS-only mobile project following MVVM-C pattern with UIKit coordinators + SwiftUI views. All coordinator logic resides in `/iosApp/iosApp/Coordinators/`. SwiftUI views in `/iosApp/iosApp/Views/` are wrapped in UIHostingController by coordinators. AppDelegate and SceneDelegate manage app lifecycle and initial coordinator setup.
 

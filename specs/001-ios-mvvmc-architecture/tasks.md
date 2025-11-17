@@ -65,7 +65,7 @@ This feature uses iOS-only paths in `/iosApp/`:
 - [ ] T010 Add SwiftDoc documentation to AppDelegate: app lifecycle management, scene configuration
 - [ ] T011 Create SceneDelegate with UIWindowSceneDelegate conformance in `/iosApp/iosApp/SceneDelegate.swift`
 - [ ] T012 Add SwiftDoc documentation to SceneDelegate: scene lifecycle, window setup, coordinator initialization
-- [ ] T013 Remove @main attribute from iOSApp struct in `/iosApp/iosApp/iOSApp.swift`
+- [ ] T013 Delete `/iosApp/iosApp/iOSApp.swift` file (no longer needed with UIKit lifecycle)
 - [ ] T014 Update Info.plist: Add UIApplicationSceneManifest with UISceneDelegateClassName pointing to SceneDelegate
 - [ ] T015 Update Info.plist: Remove UISceneStoryboardFile key (no storyboards)
 - [ ] T016 Verify project builds successfully after UIKit lifecycle migration

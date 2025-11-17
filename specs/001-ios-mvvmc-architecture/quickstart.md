@@ -21,7 +21,7 @@ This guide walks through implementing MVVM-C architecture for the iOS app, repla
 
 ## Implementation Steps
 
-### Step 1: Remove SwiftUI App Entry Point
+### Step 1: Delete SwiftUI App Entry Point
 
 **File**: `iosApp/iosApp/iOSApp.swift`
 
@@ -39,23 +39,14 @@ struct iOSApp: App {
 }
 ```
 
-**Change**: Remove `@main` attribute (keep the struct for now, or delete entirely)
+**Action**: Delete this entire file
 
-**New Code**:
-```swift
-import SwiftUI
+**In Xcode**:
+1. Select `iOSApp.swift` in Project Navigator
+2. Right-click → Delete
+3. Choose "Move to Trash"
 
-// @main removed - now using UIKit lifecycle
-struct iOSApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
-```
-
-**Why**: `@main` designates the app entry point. Removing it allows us to use UIKit's AppDelegate instead.
+**Why**: With UIKit lifecycle (AppDelegate + SceneDelegate), this SwiftUI `App` struct is no longer needed. AppDelegate will become the new `@main` entry point.
 
 ---
 
