@@ -45,6 +45,13 @@
   - Web state management in React in `/webApp`
   - Violation justification: _[Required if not compliant]_
 
+- [ ] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
+  - Single `StateFlow<UiState>` source of truth with immutable data classes
+  - Sealed `UserIntent` and optional `UiEffect` types co-located with feature packages
+  - Reducers implemented as pure functions (no side effects) and unit-tested
+  - `dispatchIntent` entry wired from UI → ViewModel → reducer, with effects delivered via `SharedFlow`
+  - Violation justification: _[Required if Android diverges from MVI]_
+
 - [ ] **Interface-Based Design**: Domain logic uses interfaces for repositories
   - Repository interfaces in `/shared/src/commonMain/.../repositories/`
   - Implementations in platform-specific modules

@@ -37,7 +37,7 @@
   - `commonMain/.../di/` - Koin modules for domain dependencies
   - `androidMain/`, `iosMain/`, `jsMain/` - Platform-specific implementations (expect/actual)
   - `commonTest/` - Unit tests (MUST achieve 80% coverage)
-- `/composeApp` - Android app with Jetpack Compose UI + ViewModels
+- `/composeApp` - Android app with Jetpack Compose UI + MVI ViewModels (single `StateFlow<UiState>`, sealed intents, `SharedFlow` effects)
   - `androidMain/.../di/` - Koin modules (data + ViewModel)
   - `androidUnitTest/` - ViewModel unit tests (MUST achieve 80% coverage)
 - `/webApp` - React TypeScript web app with hooks/state + consuming Kotlin/JS
