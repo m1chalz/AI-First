@@ -69,8 +69,8 @@
 - [ ] T015 [P] [US1] Add test:mobile:android script to root package.json (wdio run wdio.conf.ts --spec ./e2e-tests/mobile/specs/**/*.spec.ts)
 
 **Independent Test Criteria for US1**:
-- Run `npm run test:e2e:web --list` - should list test directory
-- Run `npm run test:mobile:android --dry-run` - should validate configuration
+- Run `npm run test:e2e:web -- --dry-run` - should validate configuration without running tests
+- Run `npm run test:mobile:android -- --dry-run` - should validate configuration without running tests
 - Verify all directories exist with `ls -la e2e-tests/`
 - Verify MCP configuration with `cat .cursor/mcp.json`
 
@@ -233,11 +233,11 @@ After completing all tasks, verify:
 
 ### Infrastructure (US1)
 - [ ] Directory structure matches constitution: `ls -R e2e-tests/`
-- [ ] Playwright config exists and is valid: `npx playwright test --list`
+- [ ] Playwright config exists and is valid: `npx playwright test --dry-run`
 - [ ] WebdriverIO config exists and is valid: `npm run test:mobile:android -- --dry-run`
 - [ ] MCP has both servers: `cat .cursor/mcp.json | grep -E "(Playwright|Appium)"`
 - [ ] All dependencies installed: `npm list @playwright/test appium webdriverio`
-- [ ] npm scripts work: `npm run test:e2e:web -- --version`
+- [ ] npm scripts work: `npm run test:e2e:web -- --dry-run`
 
 ### Examples (US2)
 - [ ] Web example test passes: `npm run test:e2e:web`
