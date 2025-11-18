@@ -8,7 +8,7 @@ import { getRequestId } from '../lib/requestContext.ts';
  * Includes body truncation, binary omission, header redaction, and request ID correlation.
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const loggerMiddleware = pinoHttp({
+export default pinoHttp({
   logger: pino({
     timestamp: pino.stdTimeFunctions.isoTime,
     formatters: {
@@ -77,5 +77,3 @@ const loggerMiddleware = pinoHttp({
   },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
-export default loggerMiddleware;
