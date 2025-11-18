@@ -2,22 +2,27 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.8.0 → 1.9.0
+Version change: 1.9.0 → 1.10.0
 Modified principles:
-- II. Native Presentation (Android bullet now mandates Compose + MVI loop)
+- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
 Added principles:
-- XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
+- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
 Modified sections:
-- Module Structure: Android subsection documents required MVI packaging and unidirectional flow contracts
-- Architecture Patterns: Added Android MVI pattern guidance with reducer/intent examples
-- Testing Standards: Android ViewModel tests now cover reducers, intents, and effects explicitly
-- Compliance: Added Android MVI audit checklist
+- Module Structure: iOS subsection documents required MVVM-C packaging (Coordinators/, Views/, ViewModels/)
+- Architecture Patterns: Added iOS MVVM-C pattern guidance with coordinator/ViewModel examples
+- Testing Standards: iOS ViewModel tests now cover ObservableObject properties and coordinator communication
+- Compliance: Added iOS MVVM-C audit checklist
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (added Android MVI constitution check)
-- ✅ .specify/templates/tasks-template.md (Android tasks now create UiState/UserIntent/Reducer artifacts)
-- ✅ README.md (documented Compose MVI architecture expectation)
+- ✅ .specify/templates/plan-template.md (iOS MVVM-C constitution check already generic, no changes needed)
+- ✅ .specify/templates/tasks-template.md (iOS tasks already generic enough for MVVM-C pattern)
+- ✅ README.md (no changes needed - iOS section remains platform-agnostic)
 Follow-up TODOs:
 - None
+Previous changes (v1.9.0):
+- II. Native Presentation (Android bullet now mandates Compose + MVI loop)
+- XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
+- Module Structure: Android MVI packaging
+- Templates updated: plan-template.md, tasks-template.md, README.md
 Previous changes (v1.8.0):
 - Backend Architecture & Quality Standards principle describing Node.js/Express module
 - Templates updated: AGENTS.md, README.md, constitution.md
@@ -57,7 +62,7 @@ without compromise.
 
 Each platform MUST implement its own presentation layer using native frameworks:
 - **Android**: Jetpack Compose + MVI ViewModel loop (in `/composeApp`)
-- **iOS**: SwiftUI + Swift ViewModels (in `/iosApp`)
+- **iOS**: SwiftUI + MVVM-C (Model-View-ViewModel-Coordinator) (in `/iosApp`)
 - **Web**: React + TypeScript state management (in `/webApp`)
 
 ViewModels and UI state MUST reside in platform-specific modules, NOT in `/shared`.
@@ -67,6 +72,13 @@ Android presentation logic MUST follow the Model-View-Intent pattern:
 - UI interactions emit `UserIntent` sealed classes through a `dispatchIntent` entry point
 - ViewModels reduce intents into new immutable `UiState` values and optional one-off `UiEffect` emissions (`SharedFlow`)
 - Side effects (navigation, snackbars) travel through the effect channel to keep reducers pure
+
+iOS presentation logic MUST follow the Model-View-ViewModel-Coordinator pattern:
+- SwiftUI views created via `UIHostingController` and managed by UIKit coordinators
+- ViewModels are `ObservableObject` classes with `@Published` properties for UI state
+- Coordinators (UIKit-based) handle navigation and flow coordination
+- ViewModels communicate with coordinators via methods or closures (callbacks)
+- View updates driven by `@Published` property changes observed by SwiftUI
 
 **Rationale**: Native presentation ensures best UX, platform idioms, and full access to
 platform capabilities without workarounds.
@@ -1422,6 +1434,164 @@ and makes reducers easy to unit test. Immutable `UiState` snapshots prevent UI d
 explicit intents capture every interaction for analytics and debugging. Effect channels keep
 navigation and transient events isolated from state, reducing Compose recompositions and bugs.
 
+### XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+
+All iOS presentation features MUST follow the Model-View-ViewModel-Coordinator (MVVM-C) pattern to
+maintain clear separation of concerns and enable testable, coordinator-driven navigation.
+
+**Core components**:
+- `Model`: Domain models from shared KMP module or platform-specific data structures
+- `View`: SwiftUI views that observe ViewModels via `@ObservedObject` or `@StateObject`
+- `ViewModel`: `ObservableObject` classes containing presentation logic and `@Published` state properties
+- `Coordinator`: UIKit-based objects managing navigation flow and creating `UIHostingController` instances
+
+**Architecture rules**:
+1. **Coordinators manage navigation**: All screen transitions, modal presentations, and flow logic
+   reside in coordinator classes (UIKit-based). SwiftUI views MUST NOT directly trigger navigation.
+
+2. **ViewModels own presentation state**: All UI-related state (loading flags, data, errors) lives
+   in ViewModel `@Published` properties. Views observe and render based on these properties.
+
+3. **ViewModel-Coordinator communication**: ViewModels communicate with coordinators via:
+   - Direct method calls (e.g., `coordinator.showDetails(petId:)`)
+   - Closure/callback properties set by coordinator during ViewModel initialization
+   - Example:
+     ```swift
+     class PetListViewModel: ObservableObject {
+         @Published var pets: [Pet] = []
+         @Published var isLoading = false
+         
+         // Coordinator callback for navigation
+         var onPetSelected: ((String) -> Void)?
+         
+         func selectPet(id: String) {
+             onPetSelected?(id)  // Coordinator handles navigation
+         }
+     }
+     ```
+
+4. **UIHostingController wrapping**: Coordinators create SwiftUI views and wrap them in
+   `UIHostingController` for UIKit integration:
+   ```swift
+   class PetListCoordinator {
+       private let navigationController: UINavigationController
+       
+       func start() {
+           let viewModel = PetListViewModel()
+           viewModel.onPetSelected = { [weak self] petId in
+               self?.showPetDetails(petId: petId)
+           }
+           
+           let view = PetListView(viewModel: viewModel)
+           let hostingController = UIHostingController(rootView: view)
+           navigationController.pushViewController(hostingController, animated: true)
+       }
+       
+       private func showPetDetails(petId: String) {
+           // Navigate to detail screen
+           let detailCoordinator = PetDetailCoordinator(navigationController: navigationController, petId: petId)
+           detailCoordinator.start()
+       }
+   }
+   ```
+
+5. **SwiftUI views remain pure**: Views MUST NOT contain business logic, navigation logic, or
+   direct use case calls. Views only render UI based on ViewModel state and trigger ViewModel methods.
+
+6. **Coordinator hierarchy**: Parent coordinators manage child coordinators for nested flows.
+   Child coordinators notify parents via delegation or closures when flow completes:
+   ```swift
+   protocol PetDetailCoordinatorDelegate: AnyObject {
+       func petDetailCoordinatorDidFinish(_ coordinator: PetDetailCoordinator)
+   }
+   
+   class PetDetailCoordinator {
+       weak var delegate: PetDetailCoordinatorDelegate?
+       
+       func dismiss() {
+           delegate?.petDetailCoordinatorDidFinish(self)
+       }
+   }
+   ```
+
+**Implementation requirements**:
+- Coordinators MUST be UIKit-based classes (not SwiftUI `NavigationStack` coordinators)
+- ViewModels MUST conform to `ObservableObject` protocol
+- ViewModels MUST use `@Published` for all observable state properties
+- ViewModels MUST NOT import UIKit (except for types like `UIImage` if necessary)
+- Coordinators MUST own ViewModels lifecycle and set up coordinator callbacks during initialization
+- Each screen/flow MUST have a dedicated coordinator class
+- Coordinator classes SHOULD be co-located in `/iosApp/iosApp/Coordinators/`
+- ViewModels SHOULD be co-located in `/iosApp/iosApp/ViewModels/`
+- SwiftUI views SHOULD be co-located in `/iosApp/iosApp/Views/`
+
+**Testing requirements**:
+- ViewModels MUST have unit tests in `/iosApp/iosAppTests/ViewModels/`
+- ViewModel tests MUST verify `@Published` property updates
+- ViewModel tests MUST verify coordinator callback invocations (e.g., `onPetSelected` called with correct ID)
+- Coordinators MAY have unit tests verifying navigation logic (optional but recommended)
+- Use XCTest with Swift Concurrency (`async`/`await`) for asynchronous ViewModel operations
+
+**Example ViewModel test**:
+```swift
+final class PetListViewModelTests: XCTestCase {
+    func testLoadPets_whenRepositorySucceeds_shouldUpdatePetsProperty() async {
+        // Given - setup test data
+        let expectedPets = [
+            Pet(id: "1", name: "Max", species: .dog),
+            Pet(id: "2", name: "Luna", species: .cat)
+        ]
+        let fakeRepository = FakePetRepository(pets: expectedPets)
+        let viewModel = PetListViewModel(repository: fakeRepository)
+        
+        // When - perform action
+        await viewModel.loadPets()
+        
+        // Then - verify @Published property updated
+        XCTAssertEqual(viewModel.pets.count, 2)
+        XCTAssertEqual(viewModel.pets.first?.name, "Max")
+        XCTAssertFalse(viewModel.isLoading)
+    }
+    
+    func testSelectPet_shouldTriggerCoordinatorCallback() {
+        // Given - setup ViewModel with coordinator callback
+        let viewModel = PetListViewModel()
+        var capturedPetId: String?
+        viewModel.onPetSelected = { petId in
+            capturedPetId = petId
+        }
+        
+        // When - select pet
+        viewModel.selectPet(id: "123")
+        
+        // Then - verify callback invoked with correct ID
+        XCTAssertEqual(capturedPetId, "123")
+    }
+}
+```
+
+**Prohibited patterns**:
+- ❌ SwiftUI views directly calling coordinators or navigation methods
+- ❌ ViewModels importing UIKit unnecessarily (except unavoidable types)
+- ❌ Business logic in coordinators (coordinators only manage flow, not business rules)
+- ❌ Multiple `@Published` sources for same logical state (maintain single source of truth)
+- ❌ Using SwiftUI `NavigationStack` for coordinator pattern (use UIKit `UINavigationController`)
+- ❌ ViewModels triggering navigation directly without coordinator involvement
+
+**Benefits**:
+- **Testability**: ViewModels testable in isolation without UIKit dependencies
+- **Reusability**: ViewModels can be reused across different flows with different coordinators
+- **Separation of concerns**: Navigation logic isolated from presentation logic
+- **Flexibility**: Easy to refactor navigation flows without touching ViewModels or Views
+- **UIKit interoperability**: Coordinators enable seamless integration with existing UIKit components
+
+**Rationale**: MVVM-C separates navigation responsibility from presentation logic, making both
+independently testable. Coordinators provide a centralized place for flow management and enable
+complex navigation patterns (deep linking, conditional flows, A/B testing different flows).
+UIHostingController integration allows SwiftUI views to participate in UIKit navigation hierarchies,
+providing flexibility for gradual SwiftUI adoption or mixed UIKit/SwiftUI codebases. ViewModels
+remain portable and can be tested without UIKit dependencies, improving test coverage and reliability.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -1470,8 +1640,9 @@ navigation and transient events isolated from state, reducing Compose recomposit
 - `navigation/` - Compose Navigation and effect handlers
 
 **`/iosApp/iosApp/`**
-- `Views/` - SwiftUI views
-- `ViewModels/` - Swift observable objects
+- `Coordinators/` - UIKit-based coordinators managing navigation and flow
+- `Views/` - SwiftUI views (wrapped in `UIHostingController` by coordinators)
+- `ViewModels/` - Swift `ObservableObject` classes with `@Published` properties
 - `Repositories/` - iOS repository implementations
 - `DI/` - Koin initialization or native Swift DI
 
@@ -2003,6 +2174,12 @@ All pull requests MUST:
   - `dispatchIntent` entry point wired from UI actions
   - Reducers implemented as pure functions with exhaustive `when` handling
   - Effects delivered via `SharedFlow`/`Channel` and handled in Compose through `LaunchedEffect`
+- Verify iOS SwiftUI screens follow MVVM-C architecture:
+  - UIKit-based coordinators manage navigation and create `UIHostingController` instances
+  - ViewModels conform to `ObservableObject` with `@Published` properties for state
+  - ViewModels communicate with coordinators via methods or closures (no direct navigation in ViewModels)
+  - SwiftUI views observe ViewModels and remain free of business/navigation logic
+  - Coordinator hierarchy maintained for nested flows (parent/child coordinator pattern)
 - Verify all new tests follow Given-When-Then structure:
   - Clear separation of setup (Given), action (When), verification (Then)
   - Descriptive test names following platform conventions
@@ -2027,4 +2204,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.9.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18
+**Version**: 1.10.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18
