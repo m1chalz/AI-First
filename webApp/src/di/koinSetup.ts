@@ -40,32 +40,34 @@ export function initializeKoin(): void {
 /**
  * Retrieves a dependency from the Koin container.
  *
- * Use this function to access dependencies in React components, hooks, or services.
+ * Note: Due to JavaScript/TypeScript limitations, specific getter functions should be
+ * exported from the shared module for each dependency type.
  *
- * Example usage in a custom hook:
+ * Example pattern (to be implemented in shared module when needed):
+ * ```kotlin
+ * // In shared/src/jsMain/.../KoinJs.kt
+ * @JsExport
+ * fun getGetPetsUseCase(): GetPetsUseCase = 
+ *     org.koin.core.context.GlobalContext.get().get()
+ * ```
+ *
+ * Then use in TypeScript:
  * ```typescript
- * import { getKoin } from './di/koinSetup';
- * import { GetPetsUseCase } from 'shared';
+ * import { getGetPetsUseCase } from 'shared';
  *
  * export function usePets() {
- *   const getPetsUseCase = getKoin<GetPetsUseCase>();
- *
- *   const loadPets = async () => {
- *     const result = await getPetsUseCase.invoke();
- *     // handle result
- *   };
- *
- *   return { loadPets };
+ *   const getPetsUseCase = getGetPetsUseCase();
+ *   // use it
  * }
  * ```
  *
  * @template T The type of dependency to retrieve
  * @returns The requested dependency instance
- * @throws Error if dependency is not registered in Koin
+ * @throws Error Not implemented - use specific getter functions from shared module
  */
 export function getKoin<T>(): T {
-  // This will be implemented when we consume dependencies
-  // For now, it's a placeholder that will be replaced with actual Koin.get() call
-  throw new Error('getKoin not yet implemented - add dependencies first');
+  throw new Error(
+    'getKoin() not available - use specific getter functions exported from shared module (e.g., getGetPetsUseCase())'
+  );
 }
 

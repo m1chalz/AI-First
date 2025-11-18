@@ -27,16 +27,17 @@ fun startKoinJs(modules: Array<Module> = arrayOf(domainModule)): KoinApplication
 /**
  * Retrieves a dependency from the Koin container.
  *
- * Usage from TypeScript/JavaScript:
- * ```typescript
- * import { getKoin } from 'shared';
- * const useCase = getKoin<GetPetsUseCase>();
- * ```
+ * Note: Cannot use reified generics with @JsExport. TypeScript code should access
+ * Koin directly through specific getter functions or use dependency injection
+ * at component boundaries.
  *
- * @return The requested dependency instance
- * @throws org.koin.core.error.NoBeanDefFoundException if dependency not found
+ * For TypeScript usage, define specific getter functions like:
+ * ```kotlin
+ * @JsExport
+ * fun getGetPetsUseCase(): GetPetsUseCase = org.koin.core.context.GlobalContext.get().get()
+ * ```
  */
-@JsExport
+// Not exported to JS - reified types not supported
 inline fun <reified T : Any> getKoin(): T {
     return org.koin.core.context.GlobalContext.get().get()
 }
