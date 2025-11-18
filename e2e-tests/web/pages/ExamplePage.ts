@@ -1,5 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { navigateTo, clickElement, fillInput, getElementText, waitForElement } from '../steps/commonSteps';
+import { navigateTo, waitForElement } from '../steps/urlSteps';
+import { getElementText, fillInput } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 /**
  * Page Object Model for Example page.

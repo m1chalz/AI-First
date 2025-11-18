@@ -43,7 +43,8 @@ Page Objects encapsulate page structure and interactions:
 ```typescript
 // pages/PetListPage.ts
 import { Page, Locator } from '@playwright/test';
-import { navigateTo, clickElement } from '../steps/commonSteps';
+import { navigateTo } from '../steps/urlSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 export class PetListPage {
   readonly page: Page;
@@ -73,10 +74,14 @@ export class PetListPage {
 
 ### 2. Add Step Definitions (Optional)
 
-For reusable actions, add to `steps/commonSteps.ts`:
+For reusable actions, add to appropriate step files:
 
 ```typescript
-// steps/commonSteps.ts
+// steps/urlSteps.ts - Navigation and page loading
+// steps/elementSteps.ts - Element content and state  
+// steps/mouseSteps.ts - Click and mouse interactions
+
+// Example - adding to elementSteps.ts:
 import { Page } from '@playwright/test';
 
 export async function selectFromDropdown(

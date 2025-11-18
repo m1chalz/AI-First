@@ -60,7 +60,9 @@ Screen Objects encapsulate screen structure and interactions:
 
 ```typescript
 // screens/PetListScreen.ts
-import { clickElement, getElementText, waitForElement } from '../steps/commonSteps';
+import { waitForElement } from '../steps/urlSteps';
+import { getElementText } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 export class PetListScreen {
   private driver: WebdriverIO.Browser;
@@ -98,16 +100,21 @@ export class PetListScreen {
 
 ### 2. Add Step Definitions (Optional)
 
-For reusable actions, add to `steps/commonSteps.ts`:
+For reusable actions, add to appropriate step files:
 
 ```typescript
-// steps/commonSteps.ts
+// steps/urlSteps.ts - Navigation and screen loading
+// steps/elementSteps.ts - Element content and state
+// steps/mouseSteps.ts - Tap and touch gestures
+
+// Example - adding scroll to mouseSteps.ts:
+import { getElementByTestId } from './urlSteps';
 
 export async function scrollToElement(
   driver: WebdriverIO.Browser,
   testId: string
 ): Promise<void> {
-  const selector = `~${testId}`;
+  const selector = getElementByTestId(testId);
   const element = await driver.$(selector);
   await driver.execute('mobile: scroll', { element });
 }

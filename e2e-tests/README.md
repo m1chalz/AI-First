@@ -221,9 +221,19 @@ export class PetListScreen {
 Common actions should be extracted to step definitions:
 
 ```typescript
-// web/steps/commonSteps.ts
+// web/steps/urlSteps.ts
 export async function navigateTo(page: Page, url: string) {
   await page.goto(url);
+}
+
+// web/steps/elementSteps.ts  
+export async function getElementText(page: Page, testId: string) {
+  return await page.getByTestId(testId).textContent() || '';
+}
+
+// web/steps/mouseSteps.ts
+export async function clickElement(page: Page, testId: string) {
+  await page.getByTestId(testId).click();
 }
 
 // Usage in Page Object

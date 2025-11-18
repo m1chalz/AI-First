@@ -1,4 +1,6 @@
-import { clickElement, fillInput, getElementText, waitForElement, isElementDisplayed } from '../steps/commonSteps';
+import { waitForElement } from '../steps/urlSteps';
+import { getElementText, fillInput, isElementDisplayed } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 /**
  * Screen Object Model for Example screen.
