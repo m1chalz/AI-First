@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { navigateTo, clickElement, fillInput, getElementText } from '../steps/commonSteps';
+import { navigateTo, clickElement, fillInput, getElementText, waitForElement } from '../steps/commonSteps';
 
 /**
  * Page Object Model for Example page.
@@ -64,7 +64,7 @@ export class ExamplePage {
    * Wait for page to be fully loaded.
    */
   async waitForPageLoad(): Promise<void> {
-    await this.titleLocator.waitFor({ state: 'visible' });
+    await waitForElement(this.page, 'example.title.display');
   }
 }
 
