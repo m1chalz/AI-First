@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Buffer } from 'buffer';
-import { truncateBody, isBinaryContent, serializeBody } from '../logSerializers';
+import { truncateBody, isBinaryContent, serializeBody, TruncatedBody } from '../logSerializers';
 
 describe('logSerializers', () => {
   describe('truncateBody', () => {
@@ -20,7 +20,7 @@ describe('logSerializers', () => {
       const largeBody = 'x'.repeat(15000);
 
       // When
-      const result = truncateBody(largeBody);
+      const result = truncateBody(largeBody) as TruncatedBody;
 
       // Then
       expect(result).toHaveProperty('content');
@@ -34,7 +34,7 @@ describe('logSerializers', () => {
       const largeObject = { data: 'x'.repeat(15000) };
 
       // When
-      const result = truncateBody(largeObject);
+      const result = truncateBody(largeObject) as TruncatedBody;
 
       // Then
       expect(result).toHaveProperty('truncated', true);
@@ -65,9 +65,10 @@ describe('logSerializers', () => {
 
       // Then
       if (shouldTruncate) {
-        expect(result).toHaveProperty('truncated', true);
-        expect(result).toHaveProperty('originalSize', size);
-        expect(result.content).toHaveLength(10240);
+        const truncated = result as TruncatedBody;
+        expect(truncated).toHaveProperty('truncated', true);
+        expect(truncated).toHaveProperty('originalSize', size);
+        expect(truncated.content).toHaveLength(10240);
       } else {
         expect(result).toBe(body);
       }
@@ -131,7 +132,7 @@ describe('logSerializers', () => {
       const headers = {};
 
       // When
-      const result = serializeBody(body, contentType, headers);
+      const result = serializeBody(body, contentType, headers) as TruncatedBody;
 
       // Then
       expect(result).toHaveProperty('truncated', true);

@@ -10,11 +10,23 @@ const BINARY_CONTENT_TYPES = [
   /^application\/gzip/,
 ];
 
+export interface TruncatedBody {
+  content: string;
+  truncated: true;
+  originalSize: number;
+}
+
+export interface BinaryOmittedBody {
+  binaryOmitted: true;
+  contentType: string | undefined;
+  contentLength: string | string[] | undefined;
+}
+
 /**
  * Truncates request/response body if it exceeds 10KB.
  * Returns truncated body with metadata (originalSize, truncated flag).
  */
-export function truncateBody(body: unknown): unknown {
+export function truncateBody(body: unknown): unknown | TruncatedBody {
   if (!body) {
     return body;
   }
@@ -53,7 +65,7 @@ export function serializeBody(
   body: unknown,
   contentType: string | undefined,
   headers: Record<string, string | string[] | undefined>
-): unknown {
+): unknown | BinaryOmittedBody | TruncatedBody {
   if (isBinaryContent(contentType)) {
     return {
       binaryOmitted: true,

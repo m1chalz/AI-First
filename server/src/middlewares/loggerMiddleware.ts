@@ -1,9 +1,5 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
-const pinoHttp = require('pino-http');
-const pino = require('pino');
-
+import { pinoHttp, stdSerializers } from 'pino-http';
+import { pino } from 'pino';
 import { serializeBody } from '../lib/logSerializers.ts';
 import { getRequestId } from '../lib/requestContext.ts';
 
@@ -24,7 +20,7 @@ const loggerMiddleware = pinoHttp({
 
   serializers: {
     req(req: any) {
-      const serialized: any = pinoHttp.stdSerializers.req(req);
+      const serialized: any = stdSerializers.req(req);
 
       if (req.raw?.body) {
         const contentType = req.headers['content-type'] as string | undefined;
@@ -35,7 +31,7 @@ const loggerMiddleware = pinoHttp({
     },
 
     res(res: any) {
-      const serialized: any = pinoHttp.stdSerializers.res(res);
+      const serialized: any = stdSerializers.res(res);
 
       // Explicitly capture statusCode (standard serializer may miss it)
       if (res.statusCode !== undefined) {
