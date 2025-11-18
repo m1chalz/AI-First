@@ -134,6 +134,7 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Framework: Playwright with TypeScript
 - Config: `playwright.config.ts` at repo root
 - Test location: `/e2e-tests/web/specs/[feature-name].spec.ts`
+- Step definitions: `/e2e-tests/web/steps/` (reusable test steps)
 - Run command: `npx playwright test`
 - Coverage: All user stories from spec.md
 
@@ -141,6 +142,7 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Framework: Appium with TypeScript + WebdriverIO
 - Config: `wdio.conf.ts` for Android/iOS
 - Test location: `/e2e-tests/mobile/specs/[feature-name].spec.ts`
+- Step definitions: `/e2e-tests/mobile/steps/` (reusable test steps)
 - Run command: `npm run test:mobile:android` or `npm run test:mobile:ios`
 - Coverage: All user stories from spec.md for both Android and iOS
 
@@ -149,7 +151,9 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Each user story MUST have at least one E2E test
 - Tests MUST run against real application builds (not mocked)
 - Tests MUST be executable in CI/CD pipeline
-- Page Object Model pattern REQUIRED for maintainability
+- Page Object Model pattern REQUIRED for web maintainability
+- Screen Object Model pattern REQUIRED for mobile maintainability
+- Step definitions MUST be used for reusable test steps (Given/When/Then actions)
 
 **Rationale**: E2E tests validate complete user flows across platforms, catching integration
 issues that unit tests cannot detect. TypeScript provides type safety and enables sharing
@@ -1813,6 +1817,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Report**: `playwright-report/index.html`
 - **Requirements**:
   - Page Object Model in `/e2e-tests/web/pages/`
+  - Step definitions in `/e2e-tests/web/steps/` (reusable Given/When/Then actions)
   - Test data fixtures in `/e2e-tests/web/fixtures/`
   - One spec file per feature
   - All user stories from spec.md covered
@@ -1827,6 +1832,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Report**: `e2e-tests/mobile/reports/`
 - **Requirements**:
   - Screen Object Model in `/e2e-tests/mobile/screens/`
+  - Step definitions in `/e2e-tests/mobile/steps/` (reusable Given/When/Then actions)
   - Shared test utilities in `/e2e-tests/mobile/utils/`
   - One spec file per feature (covers both platforms)
   - Platform-specific conditionals when needed

@@ -29,9 +29,11 @@ The project MUST have `/e2e-tests` directory with proper subdirectories for web 
 **Acceptance Criteria:**
 - `/e2e-tests/web/specs/` exists for Playwright test specifications
 - `/e2e-tests/web/pages/` exists for Page Object Model
+- `/e2e-tests/web/steps/` exists for reusable step definitions
 - `/e2e-tests/web/fixtures/` exists for test data
 - `/e2e-tests/mobile/specs/` exists for Appium test specifications
 - `/e2e-tests/mobile/screens/` exists for Screen Object Model
+- `/e2e-tests/mobile/steps/` exists for reusable step definitions
 - `/e2e-tests/mobile/utils/` exists for shared mobile test utilities
 
 ### FR-2: Playwright Configuration

@@ -60,9 +60,13 @@
   - `web/` - Playwright tests for web platform
     - `specs/` - Test specifications
     - `pages/` - Page Object Model
+    - `steps/` - Reusable step definitions (Given/When/Then actions)
+    - `fixtures/` - Test data fixtures
   - `mobile/` - Appium tests for Android/iOS
     - `specs/` - Test specifications
     - `screens/` - Screen Object Model
+    - `steps/` - Reusable step definitions (Given/When/Then actions)
+    - `utils/` - Shared mobile utilities
 
 ## Code Style
 - Package: `com.intive.aifirst.petspot`

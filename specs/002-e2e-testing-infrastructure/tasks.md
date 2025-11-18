@@ -47,9 +47,9 @@
 
 #### Directory Structure
 
-- [ ] T005 [P] [US1] Create e2e-tests/ root directory
-- [ ] T006 [P] [US1] Create e2e-tests/web/ subdirectories (specs/, pages/, fixtures/)
-- [ ] T007 [P] [US1] Create e2e-tests/mobile/ subdirectories (specs/, screens/, utils/)
+- [x] T005 [P] [US1] Create e2e-tests/ root directory
+- [x] T006 [P] [US1] Create e2e-tests/web/ subdirectories (specs/, pages/, steps/, fixtures/)
+- [x] T007 [P] [US1] Create e2e-tests/mobile/ subdirectories (specs/, screens/, steps/, utils/)
 
 #### Configuration Files
 
@@ -261,13 +261,15 @@ After completing all tasks, verify:
 
 ## File Changes Summary
 
-### New Directories (7)
+### New Directories (9)
 - `/e2e-tests/`
 - `/e2e-tests/web/specs/`
 - `/e2e-tests/web/pages/`
+- `/e2e-tests/web/steps/`
 - `/e2e-tests/web/fixtures/`
 - `/e2e-tests/mobile/specs/`
 - `/e2e-tests/mobile/screens/`
+- `/e2e-tests/mobile/steps/`
 - `/e2e-tests/mobile/utils/`
 
 ### New Files (9)

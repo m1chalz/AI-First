@@ -33,11 +33,13 @@ Set up complete End-to-End testing infrastructure for PetSpot project including 
 ├── web/
 │   ├── specs/          # Playwright test specifications
 │   ├── pages/          # Page Object Model classes
+│   ├── steps/          # Reusable step definitions (Given/When/Then actions)
 │   ├── fixtures/       # Test data and fixtures
 │   └── README.md       # Web testing documentation
 ├── mobile/
 │   ├── specs/          # Appium test specifications
 │   ├── screens/        # Screen Object Model classes
+│   ├── steps/          # Reusable step definitions (Given/When/Then actions)
 │   ├── utils/          # Shared mobile utilities
 │   └── README.md       # Mobile testing documentation
 └── README.md           # Main E2E documentation
