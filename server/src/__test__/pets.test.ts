@@ -15,7 +15,7 @@ describe('Pets ITs', () => {
   it('should return a json body', async () => {
     // given / when
     const response = await request(app)
-      .get('/pets')
+      .get('/api/pets')
       .send()
 
     // then
