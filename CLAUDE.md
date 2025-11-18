@@ -81,3 +81,10 @@
     - `io.insert-koin:koin-core` - Shared module
     - `io.insert-koin:koin-android` - Android ViewModels
     - `io.insert-koin:koin-test` - Unit tests
+
+## Active Technologies
+- Swift 5.9+ (iOS 18.2 deployment target) + UIKit (navigation), SwiftUI (views), Foundation (001-ios-mvvmc-architecture)
+- N/A (architecture-only feature, no data persistence) (001-ios-mvvmc-architecture)
+
+## Recent Changes
+- 001-ios-mvvmc-architecture: Added Swift 5.9+ (iOS 18.2 deployment target) + UIKit (navigation), SwiftUI (views), Foundation
