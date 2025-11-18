@@ -172,24 +172,30 @@ class KoinInitializer {
 }
 ```
 
-#### 2. App Entry Point
+#### 2. App Entry Point (AppDelegate)
 
-**File**: `iosApp/iosApp/iOSApp.swift`
+**File**: `iosApp/iosApp/AppDelegate.swift`
 
 ```swift
+import UIKit
+
 @main
-struct iOSApp: App {
-    init() {
-        KoinInitializer().initialize()
-    }
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        // Initialize Koin dependency injection at app startup
+        KoinInitializer().initialize()
+        
+        // Future: Initialize global services (analytics, crash reporting, etc.)
+        return true
     }
 }
 ```
+
+**Architecture Note**: iOS uses UIKit AppDelegate/SceneDelegate pattern with MVVM-C (Coordinator) architecture. Koin is initialized in `AppDelegate.application(_:didFinishLaunchingWithOptions:)` before any views are created.
 
 #### 3. Important: Kotlin/Native Swift Naming Convention
 
@@ -368,6 +374,42 @@ KoinIosKt.doInitKoin() // ✅ Correct
 
 ---
 
+### Issue 5: iOS Architecture Change During Rebase
+
+**Problem**: Rebase conflict - `iOSApp.swift` was deleted in `main` but modified in feature branch.
+
+**Root Cause**: Main branch updated iOS architecture from SwiftUI `@main` App struct to UIKit AppDelegate/SceneDelegate pattern with MVVM-C Coordinators.
+
+**Solution**:
+1. Removed obsolete `iOSApp.swift` file
+2. Moved Koin initialization from `iOSApp.init()` to `AppDelegate.application(_:didFinishLaunchingWithOptions:)`
+3. Updated documentation to reflect AppDelegate approach
+
+**Before (SwiftUI)**:
+```swift
+@main
+struct iOSApp: App {
+    init() {
+        KoinInitializer().initialize()
+    }
+}
+```
+
+**After (UIKit + MVVM-C)**:
+```swift
+@main
+class AppDelegate: UIApplicationDelegate {
+    func application(...didFinishLaunchingWithOptions...) -> Bool {
+        KoinInitializer().initialize()
+        return true
+    }
+}
+```
+
+**Benefit**: Better alignment with iOS MVVM-C architecture and more robust lifecycle management.
+
+---
+
 ## 📝 Files Created/Modified
 
 ### Configuration Files
@@ -390,7 +432,7 @@ KoinIosKt.doInitKoin() // ✅ Correct
 
 **iOS**:
 - ✅ `iosApp/iosApp/DI/KoinInitializer.swift`
-- ✅ `iosApp/iosApp/iOSApp.swift` (modified)
+- ✅ `iosApp/iosApp/AppDelegate.swift` (modified - added Koin initialization)
 
 **Web**:
 - ✅ `webApp/src/di/koinSetup.ts`
@@ -625,7 +667,7 @@ class PetRepositoryTest : KoinTest {
 ### 2. Initialization Timing
 
 - **Android**: Application.onCreate() - earliest lifecycle hook
-- **iOS**: App.init() - before first view rendered
+- **iOS**: AppDelegate.application(_:didFinishLaunchingWithOptions:) - before UI initialization
 - **Web**: BEFORE ReactDOM.render() - ensures DI ready for components
 
 ### 3. Architecture Patterns
@@ -661,8 +703,9 @@ class PetRepositoryTest : KoinTest {
 - Define ViewModels in `ViewModelModule`
 
 ### For iOS Developers
-- Call `KoinInitializer().initialize()` in App.init()
-- Remember `init*` → `do*` naming convention
+- Call `KoinInitializer().initialize()` in `AppDelegate.application(_:didFinishLaunchingWithOptions:)`
+- iOS uses UIKit AppDelegate/SceneDelegate with MVVM-C Coordinator architecture
+- Remember `init*` → `do*` naming convention (Kotlin/Native interop)
 - Access via `KoinKt.koin().get()`
 
 ### For Web Developers
