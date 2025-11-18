@@ -32,7 +32,8 @@ class KoinInitializer {
     /// - Warning: Calling this multiple times may result in undefined behavior.
     func initialize() {
         // Call Kotlin/Native Koin initialization from shared module
-        KoinIosKt.initKoin()
+        // Note: Kotlin/Native adds "do" prefix to function names in Swift
+        _ = KoinIosKt.doInitKoin()
     }
 }
 
