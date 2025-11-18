@@ -2,37 +2,25 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.7.0 → 1.8.0
-Modified principles: None
+Version change: 1.8.0 → 1.9.0
+Modified principles:
+- II. Native Presentation (Android bullet now mandates Compose + MVI loop)
 Added principles:
-- XIII. Backend Architecture & Quality Standards (NON-NEGOTIABLE)
-  - Node.js v24, Express.js, TypeScript stack
-  - ESLint + TypeScript plugin for code quality
-  - Clean Code principles
-  - Dependency minimization strategy
-  - Detailed directory structure (/src/middlewares, /src/routes, /src/services, /src/database, /src/lib)
-  - TDD workflow with Vitest + SuperTest
-  - Unit test locations (/src/services/__test__, /src/lib/__test__)
-  - Integration test locations (/src/__test__)
-  - Knex + SQLite database layer
+- XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
 Modified sections:
-- Module Structure: Expanded /server directory structure with detailed subdirectories
-- Testing Standards: Added TDD requirement and detailed test locations for backend
-- Compliance: Added backend code quality checks (ESLint, Clean Code, dependency minimization)
-Rationale: Backend module (/server) needs same level of architectural rigor as KMP platforms.
-Establishes technology stack (Node.js v24, Express, TypeScript), code quality tools (ESLint),
-and testing discipline (TDD). Defines clear separation of concerns (middlewares, routes, services,
-database, lib) to maintain testability and Clean Code principles. Minimizes dependencies to reduce
-security surface and maintenance burden. All business logic MUST be testable in isolation.
+- Module Structure: Android subsection documents required MVI packaging and unidirectional flow contracts
+- Architecture Patterns: Added Android MVI pattern guidance with reducer/intent examples
+- Testing Standards: Android ViewModel tests now cover reducers, intents, and effects explicitly
+- Compliance: Added Android MVI audit checklist
 Templates requiring updates:
-- ⚠️ AGENTS.md (PENDING: Add ESLint, Clean Code, TDD, detailed /src structure)
-- ⚠️ plan-template.md (PENDING: Add backend constitution check for XIII)
-- ⚠️ tasks-template.md (PENDING: Add TDD workflow for backend tasks)
-- ✅ constitution.md (Updated with Principle XIII, expanded Module Structure, Testing Standards, Compliance)
+- ✅ .specify/templates/plan-template.md (added Android MVI constitution check)
+- ✅ .specify/templates/tasks-template.md (Android tasks now create UiState/UserIntent/Reducer artifacts)
+- ✅ README.md (documented Compose MVI architecture expectation)
 Follow-up TODOs:
-- Update AGENTS.md with ESLint configuration and TDD workflow
-- Add Constitution Check for Principle XIII to plan-template.md
-- Add TDD task examples for backend in tasks-template.md
+- None
+Previous changes (v1.8.0):
+- Backend Architecture & Quality Standards principle describing Node.js/Express module
+- Templates updated: AGENTS.md, README.md, constitution.md
 Previous changes (v1.7.0):
 - Backend Module (/server) guidelines with testing, documentation requirements
 - Templates updated: AGENTS.md, README.md, constitution.md
@@ -68,11 +56,17 @@ without compromise.
 ### II. Native Presentation (NON-NEGOTIABLE)
 
 Each platform MUST implement its own presentation layer using native frameworks:
-- **Android**: Jetpack Compose + ViewModel (in `/composeApp`)
+- **Android**: Jetpack Compose + MVI ViewModel loop (in `/composeApp`)
 - **iOS**: SwiftUI + Swift ViewModels (in `/iosApp`)
 - **Web**: React + TypeScript state management (in `/webApp`)
 
 ViewModels and UI state MUST reside in platform-specific modules, NOT in `/shared`.
+
+Android presentation logic MUST follow the Model-View-Intent pattern:
+- Compose UI renders a single `UiState` data class exposed via `StateFlow`
+- UI interactions emit `UserIntent` sealed classes through a `dispatchIntent` entry point
+- ViewModels reduce intents into new immutable `UiState` values and optional one-off `UiEffect` emissions (`SharedFlow`)
+- Side effects (navigation, snackbars) travel through the effect channel to keep reducers pure
 
 **Rationale**: Native presentation ensures best UX, platform idioms, and full access to
 platform capabilities without workarounds.
@@ -1351,6 +1345,83 @@ with test doubles. Knex provides type-safe database queries while remaining data
 (SQLite for development, PostgreSQL for production). 80% test coverage on both unit and
 integration levels ensures API reliability and correctness.
 
+### XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
+
+All Android presentation features MUST follow a deterministic Model-View-Intent (MVI) loop to
+keep Compose UI declarative and testable.
+
+**Core contracts**:
+- `UiState`: Immutable data class representing the entire screen (loading flags, data, errors,
+  pending actions). MUST provide a `default` companion for initial state.
+- `UserIntent`: Sealed class capturing every user interaction or external trigger
+  (`Refresh`, `Retry`, `SelectPet(id)`, etc.). No stringly-typed intents.
+- `Reducer`: Pure function that takes current `UiState` and domain results (or `PartialState`)
+  and returns a new `UiState`. Reducers MUST remain side-effect free and unit-tested.
+- `UiEffect`: Sealed class for one-off events (navigation, snackbars). Delivered via `SharedFlow`.
+- `MviViewModel`: Exposes `state: StateFlow<UiState>`, `effects: SharedFlow<UiEffect>`, and
+  `dispatchIntent(intent: UserIntent)` to receive intents.
+
+**Loop requirements**:
+1. Compose UI collects `state` via `collectAsStateWithLifecycle()` and renders purely from `UiState`.
+2. UI emits intents through callbacks, e.g., `viewModel.dispatchIntent(UserIntent.Refresh)`.
+3. ViewModel handles intents inside `viewModelScope`, invokes use cases, then calls reducer to produce
+   the next `UiState`.
+4. Reducer updates the single source of truth (`MutableStateFlow`) and optionally emits `UiEffect`.
+5. UI listens to `effects` using `LaunchedEffect` for navigation or transient messages.
+
+**Implementation rules**:
+- Co-locate `UiState`, `UserIntent`, `UiEffect`, and reducer classes with the owning screen package.
+- Never mutate Compose state directly; only emit via the `MutableStateFlow`.
+- Provide exhaustive `when` handling for all intents and reducer branches.
+- Write unit tests covering reducers and intent handling before wiring UI.
+- Keep side effects (logging, analytics, navigation) inside dedicated effect handlers, not reducers.
+
+```kotlin
+data class PetListUiState(
+    val pets: List<Pet> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    companion object { val Initial = PetListUiState() }
+}
+
+sealed interface PetListIntent {
+    data object Refresh : PetListIntent
+    data class SelectPet(val id: String) : PetListIntent
+}
+
+sealed interface PetListEffect {
+    data class NavigateToDetails(val id: String) : PetListEffect
+}
+
+class PetListViewModel(
+    private val getPets: GetPetsUseCase
+) : ViewModel(), MviViewModel<PetListUiState, PetListEffect, PetListIntent> {
+    private val _state = MutableStateFlow(PetListUiState.Initial)
+    override val state = _state.asStateFlow()
+    private val _effects = MutableSharedFlow<PetListEffect>()
+    override val effects = _effects.asSharedFlow()
+
+    override fun dispatchIntent(intent: PetListIntent) {
+        when (intent) {
+            PetListIntent.Refresh -> refresh()
+            is PetListIntent.SelectPet -> emitEffect(intent.id)
+        }
+    }
+
+    private fun refresh() = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true, error = null) }
+        val result = getPets()
+        _state.value = PetListReducer.reduce(_state.value, result)
+    }
+}
+```
+
+**Rationale**: MVI enforces unidirectional data flow, simplifies reasoning about screen behavior,
+and makes reducers easy to unit test. Immutable `UiState` snapshots prevent UI drift, while
+explicit intents capture every interaction for analytics and debugging. Effect channels keep
+navigation and transient events isolated from state, reducing Compose recompositions and bugs.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -1391,11 +1462,12 @@ integration levels ensures API reliability and correctness.
 - `utils/` - Pure functions, no platform deps
 
 **`/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/`**
-- `ui/` - Composable functions
-- `viewmodels/` - Android ViewModels
+- `features/<feature>/ui/` - Composable screens that collect `StateFlow<UiState>` and emit intents via callbacks
+- `features/<feature>/presentation/mvi/` - `UiState`, `UserIntent`, `UiEffect`, reducers, and MVI helpers
+- `features/<feature>/presentation/viewmodels/` - `MviViewModel` implementations exposing `state`, `effects`, and `dispatchIntent`
 - `data/` - Android repository implementations
 - `di/` - Koin modules for Android (data + ViewModel modules)
-- `navigation/` - Compose Navigation
+- `navigation/` - Compose Navigation and effect handlers
 
 **`/iosApp/iosApp/`**
 - `Views/` - SwiftUI views
@@ -1525,6 +1597,31 @@ class SearchPetsUseCase(
 - Single Responsibility Principle
 - Reusable across platforms
 - Easy to test in isolation
+
+### Android MVI Pattern (NON-NEGOTIABLE)
+
+Android screens MUST implement a unidirectional MVI loop:
+
+- **State**: Immutable `UiState` data class with full screen snapshot and sensible defaults.
+- **Intent**: Sealed class describing every user/system trigger. UI dispatches intents via `viewModel.dispatchIntent()`.
+- **Reducer**: Pure function (often `object FeatureReducer`) converting current `UiState` plus domain result into the next `UiState`.
+- **Effects**: Optional sealed class for one-off events emitted through `SharedFlow`.
+- **ViewModel**: Implements `MviViewModel<UiState, UiEffect, UserIntent>` (or equivalent contract) exposing:
+  - `val state: StateFlow<UiState>`
+  - `val effects: SharedFlow<UiEffect>`
+  - `fun dispatchIntent(intent: UserIntent)`
+- **Compose Binding**: UI collects `state` via `collectAsStateWithLifecycle()`, renders purely from `UiState`,
+  and uses `LaunchedEffect`/`Flow.collect` to handle `effects`.
+
+Testing expectations:
+- Reducers MUST have unit tests covering each branch.
+- Intent handlers MUST be tested with Turbine to assert emitted states/effects.
+- `StateFlow` should never emit mutable references—copy the state before updates.
+
+Prohibited shortcuts:
+- No mutable Compose `var` or `mutableStateOf` in ViewModels.
+- No multiple state sources per screen—`StateFlow<UiState>` is the single truth.
+- No direct navigation calls from UI; emit an effect and handle it centrally.
 
 ### Dependency Injection Setup
 
@@ -1659,7 +1756,12 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Framework**: JUnit 5 + Kotlin Test + Turbine (for Flow testing)
 - **Run command**: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **Report**: `composeApp/build/reports/kover/html/index.html`
-- **Scope**: ViewModels, UI state management
+- **Scope**: MVI ViewModels (reducers, intents, effects, Flow pipelines)
+- **Requirements**:
+  - Write reducer tests that assert `UiState` transitions for every branch
+  - Use Turbine to verify `state` and `effects` emissions after `dispatchIntent`
+  - Mock use cases via Koin to keep tests deterministic
+  - Assert that `UiEffect` emissions occur only once per intent
 
 **iOS**:
 - **Location**: `/iosApp/iosAppTests/ViewModels/`
@@ -1895,6 +1997,12 @@ All pull requests MUST:
   - Swift: SwiftDoc format
   - TypeScript: JSDoc format (including backend API endpoints and business logic)
   - Focus on WHAT/WHY, not HOW (1-3 sentences)
+- Verify Android Compose screens follow MVI architecture:
+  - Single `StateFlow<UiState>` source of truth with immutable data classes
+  - Sealed `UserIntent` and optional `UiEffect` types co-located with the feature
+  - `dispatchIntent` entry point wired from UI actions
+  - Reducers implemented as pure functions with exhaustive `when` handling
+  - Effects delivered via `SharedFlow`/`Channel` and handled in Compose through `LaunchedEffect`
 - Verify all new tests follow Given-When-Then structure:
   - Clear separation of setup (Given), action (When), verification (Then)
   - Descriptive test names following platform conventions
@@ -1919,4 +2027,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.8.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-17
+**Version**: 1.9.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18

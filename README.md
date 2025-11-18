@@ -8,6 +8,10 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Web, with a stand
     the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
     Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
     folder is the appropriate location.
+  - Android UI screens use Jetpack Compose with a strict Model-View-Intent loop:
+    `UiState` data classes are emitted via `StateFlow`, Compose dispatches sealed `UserIntent`
+    events, reducers update immutable state, and navigation/snackbar side effects are emitted
+    through a `SharedFlow` of `UiEffect`.
 
 * [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you're sharing your UI with Compose Multiplatform,
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.

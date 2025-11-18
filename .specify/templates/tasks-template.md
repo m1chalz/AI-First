@@ -131,7 +131,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T015 [P] [US1] Create fake [Repository] in `/shared/src/commonTest/.../fakes/Fake[Repository].kt`
 
 **ViewModel Unit Tests**:
-- [ ] T016 [P] [US1] Android ViewModel test in `/composeApp/src/androidUnitTest/.../[ViewModel]Test.kt`
+- [ ] T016 [P] [US1] Android MVI ViewModel tests in `/composeApp/src/androidUnitTest/.../[ViewModel]Test.kt` (assert `StateFlow<UiState>` + `SharedFlow<UiEffect>` behavior with Turbine)
 - [ ] T017 [P] [US1] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift`
 - [ ] T018 [P] [US1] Web hook test in `/webApp/src/__tests__/hooks/use[Feature].test.ts`
 
@@ -160,11 +160,11 @@ Examples of foundational tasks (adjust based on your project):
 **Android**:
 - [ ] T027 [US1] Implement repository in `/composeApp/src/androidMain/.../data/[Repository]Impl.kt`
 - [ ] T028 [US1] Add repository to Android DI module in `/composeApp/src/androidMain/.../di/DataModule.kt`
-- [ ] T029 [US1] Create ViewModel in `/composeApp/src/androidMain/.../viewmodels/[Feature]ViewModel.kt`
+- [ ] T029 [US1] Create MVI artifacts (immutable `UiState`, sealed `UserIntent`, optional `UiEffect`, reducer) and ViewModel in `/composeApp/src/androidMain/.../presentation/[Feature]/`
 - [ ] T030 [US1] Add ViewModel to DI module in `/composeApp/src/androidMain/.../di/ViewModelModule.kt`
-- [ ] T031 [US1] Create Composable UI in `/composeApp/src/androidMain/.../ui/[Feature]Screen.kt`
+- [ ] T031 [US1] Create Composable UI in `/composeApp/src/androidMain/.../ui/[Feature]Screen.kt` that collects `state` and dispatches intents
 - [ ] T032 [US1] Add testTag modifiers to all interactive composables in [Feature]Screen (e.g., `Modifier.testTag("[screen].[element].[action]")`)
-- [ ] T033 [P] [US1] Add KDoc documentation to Android ViewModel and repository public methods
+- [ ] T033 [P] [US1] Add KDoc documentation to Android repository, ViewModel, and all MVI artifacts
 
 **iOS**:
 - [ ] T034 [US1] Implement repository in `/iosApp/iosApp/Repositories/[Repository].swift`
