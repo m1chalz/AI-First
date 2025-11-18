@@ -4,7 +4,7 @@ import routes from './routes/index.ts';
 import requestIdMiddleware from './middlewares/requestIdMiddleware.ts';
 import loggerMiddleware from './middlewares/loggerMiddleware.ts';
 
-import type { Request, Response, NextFunction } from 'express'
+import type { Request, Response } from 'express'
 
 export default async function prepareApp(): Promise<express.Express> {
   console.log('App starting...')
@@ -23,7 +23,7 @@ export default async function prepareApp(): Promise<express.Express> {
 
   app.use(routes);
 
-  app.use((_req: Request, res: Response, _next: NextFunction) => {
+  app.use((_req: Request, res: Response) => {
     res.status(404)
       .send({ message: 'Not found' });
   });

@@ -5,24 +5,24 @@ import { truncateBody, isBinaryContent, serializeBody } from '../logSerializers'
 describe('logSerializers', () => {
   describe('truncateBody', () => {
     it('should return body as-is if under 10KB limit', () => {
-      // Given: A small body
+      // Given
       const body = { message: 'Hello', data: [1, 2, 3] };
 
-      // When: Truncate the body
+      // When
       const result = truncateBody(body);
 
-      // Then: Should return original body
+      // Then
       expect(result).toEqual(body);
     });
 
     it('should truncate body at exactly 10240 bytes', () => {
-      // Given: A large body exceeding 10KB
+      // Given
       const largeBody = 'x'.repeat(15000);
 
-      // When: Truncate the body
+      // When
       const result = truncateBody(largeBody);
 
-      // Then: Should return truncated body with metadata
+      // Then
       expect(result).toHaveProperty('content');
       expect(result).toHaveProperty('truncated', true);
       expect(result).toHaveProperty('originalSize', 15000);
@@ -30,13 +30,13 @@ describe('logSerializers', () => {
     });
 
     it('should truncate JSON-stringified objects', () => {
-      // Given: A large object that exceeds 10KB when stringified
+      // Given
       const largeObject = { data: 'x'.repeat(15000) };
 
-      // When: Truncate the body
+      // When
       const result = truncateBody(largeObject);
 
-      // Then: Should return truncated body with metadata
+      // Then
       expect(result).toHaveProperty('truncated', true);
       expect(result).toHaveProperty('originalSize');
       expect(result.originalSize).toBeGreaterThan(10240);
@@ -46,12 +46,10 @@ describe('logSerializers', () => {
       null,
       undefined
     ])('should return %s as-is', (body) => {
-      // Given: Null or undefined body
-
-      // When: Truncate the body
+      // When
       const result = truncateBody(body);
 
-      // Then: Should return original value
+      // Then
       expect(result).toBe(body);
     });
 
@@ -59,13 +57,13 @@ describe('logSerializers', () => {
       [10240, false],
       [10241, true],
     ])('should handle edge case at %i bytes', (size, shouldTruncate) => {
-      // Given: A body at the truncation boundary
+      // Given
       const body = 'x'.repeat(size);
 
-      // When: Truncate the body
+      // When
       const result = truncateBody(body);
 
-      // Then: Should truncate only if over limit
+      // Then
       if (shouldTruncate) {
         expect(result).toHaveProperty('truncated', true);
         expect(result).toHaveProperty('originalSize', size);
@@ -83,12 +81,10 @@ describe('logSerializers', () => {
       'application/gzip',
       'application/octet-stream',
     ])('should detect %s as binary', (mimeType) => {
-      // Given: A binary MIME type
-
-      // When: Check if content is binary
+      // When
       const result = isBinaryContent(mimeType);
 
-      // Then: Should return true
+      // Then
       expect(result).toBe(true);
     });
 
@@ -97,34 +93,30 @@ describe('logSerializers', () => {
       'text/plain',
       'text/csv',
     ])('should NOT detect %s as binary', (mimeType) => {
-      // Given: A text-based MIME type
-
-      // When: Check if content is binary
+      // When
       const result = isBinaryContent(mimeType);
 
-      // Then: Should return false
+      // Then
       expect(result).toBe(false);
     });
 
     it('should return false for undefined content type', () => {
-      // Given: No content type
-
-      // When/Then: Should return false
+      // When/Then
       expect(isBinaryContent(undefined)).toBe(false);
     });
   });
 
   describe('serializeBody', () => {
     it('should omit binary content with metadata', () => {
-      // Given: Binary content (image)
+      // Given
       const body = Buffer.from('fake-image-data');
       const contentType = 'image/jpeg';
       const headers = { 'content-length': '245678' };
 
-      // When: Serialize the body
+      // When
       const result = serializeBody(body, contentType, headers);
 
-      // Then: Should return binary omission metadata
+      // Then
       expect(result).toEqual({
         binaryOmitted: true,
         contentType: 'image/jpeg',
@@ -133,42 +125,42 @@ describe('logSerializers', () => {
     });
 
     it('should truncate large non-binary content', () => {
-      // Given: Large text content
+      // Given
       const body = 'x'.repeat(15000);
       const contentType = 'text/plain';
       const headers = {};
 
-      // When: Serialize the body
+      // When
       const result = serializeBody(body, contentType, headers);
 
-      // Then: Should return truncated body
+      // Then
       expect(result).toHaveProperty('truncated', true);
       expect(result).toHaveProperty('originalSize', 15000);
     });
 
     it('should return normal content as-is', () => {
-      // Given: Normal JSON content
+      // Given
       const body = { message: 'Hello', data: [1, 2, 3] };
       const contentType = 'application/json';
       const headers = {};
 
-      // When: Serialize the body
+      // When
       const result = serializeBody(body, contentType, headers);
 
-      // Then: Should return original body
+      // Then
       expect(result).toEqual(body);
     });
 
     it('should handle missing Content-Length header for binary', () => {
-      // Given: Binary content without Content-Length
+      // Given
       const body = Buffer.from('data');
       const contentType = 'application/pdf';
       const headers = {};
 
-      // When: Serialize the body
+      // When
       const result = serializeBody(body, contentType, headers);
 
-      // Then: Should return 'unknown' for content length
+      // Then
       expect(result).toEqual({
         binaryOmitted: true,
         contentType: 'application/pdf',
@@ -177,15 +169,15 @@ describe('logSerializers', () => {
     });
 
     it('should prioritize binary detection over truncation', () => {
-      // Given: Large binary content (image over 10KB)
+      // Given
       const body = Buffer.alloc(15000);
       const contentType = 'image/png';
       const headers = { 'content-length': '15000' };
 
-      // When: Serialize the body
+      // When
       const result = serializeBody(body, contentType, headers);
 
-      // Then: Should omit binary (not truncate)
+      // Then
       expect(result).toHaveProperty('binaryOmitted', true);
       expect(result).not.toHaveProperty('truncated');
     });

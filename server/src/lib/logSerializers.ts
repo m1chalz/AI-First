@@ -1,11 +1,5 @@
-/**
- * Maximum body size before truncation (10KB in bytes).
- */
-const MAX_BODY_SIZE = 10240;
+const MAX_BODY_SIZE = 10240; // 10KB - prevents memory exhaustion and excessive log storage
 
-/**
- * MIME type patterns for binary content detection.
- */
 const BINARY_CONTENT_TYPES = [
   /^image\//,
   /^video\//,
@@ -17,18 +11,10 @@ const BINARY_CONTENT_TYPES = [
 ];
 
 /**
- * Truncates a request/response body if it exceeds the maximum size limit.
- *
- * Large payloads are truncated to prevent memory exhaustion and excessive
- * log storage. The truncated body includes metadata about the original size.
- *
- * @param body - The body to potentially truncate (any JSON-serializable type)
- * @returns Original body if under limit, or truncated body object with metadata
- * @example
- * const result = truncateBody({ large: "..." });
- * // If over 10KB: { content: "...", truncated: true, originalSize: 15360 }
+ * Truncates request/response body if it exceeds 10KB.
+ * Returns truncated body with metadata (originalSize, truncated flag).
  */
-export function truncateBody(body: any): any {
+export function truncateBody(body: unknown): unknown {
   if (!body) {
     return body;
   }
@@ -47,16 +33,8 @@ export function truncateBody(body: any): any {
 }
 
 /**
- * Checks if the given Content-Type header indicates binary content.
- *
- * Binary content (images, videos, PDFs, etc.) should not be logged as text
- * to prevent log pollution and excessive storage usage.
- *
- * @param contentType - The Content-Type header value
- * @returns true if content is binary, false otherwise
- * @example
- * isBinaryContent('image/jpeg'); // true
- * isBinaryContent('application/json'); // false
+ * Checks if Content-Type indicates binary content (images, videos, PDFs, etc.).
+ * Binary content should not be logged to prevent log pollution.
  */
 export function isBinaryContent(contentType: string | undefined): boolean {
   if (!contentType) {
@@ -66,27 +44,16 @@ export function isBinaryContent(contentType: string | undefined): boolean {
 }
 
 /**
- * Serializes a request/response body for logging, handling truncation and
- * binary content omission.
- *
- * This function applies the appropriate transformation based on content type:
- * - Binary content: Omitted with metadata (Content-Type, size)
- * - Large content: Truncated with metadata (original size)
+ * Serializes body for logging:
+ * - Binary content: Omitted with metadata
+ * - Large content: Truncated with metadata
  * - Normal content: Returned as-is
- *
- * @param body - The body to serialize
- * @param contentType - The Content-Type header value
- * @param headers - Request/response headers (for Content-Length)
- * @returns Serialized body (original, truncated, or binary omission metadata)
- * @example
- * serializeBody(buffer, 'image/jpeg', headers);
- * // Returns: { binaryOmitted: true, contentType: 'image/jpeg', contentLength: '245678' }
  */
 export function serializeBody(
-  body: any,
+  body: unknown,
   contentType: string | undefined,
   headers: Record<string, string | string[] | undefined>
-): any {
+): unknown {
   if (isBinaryContent(contentType)) {
     return {
       binaryOmitted: true,
@@ -97,4 +64,3 @@ export function serializeBody(
 
   return truncateBody(body);
 }
-
