@@ -240,6 +240,8 @@ After setup, verify:
 
 **Approach**: Infrastructure-first, then examples, then documentation
 
+**Branch**: `004-e2e-testing-infrastructure`
+
 **MVP Scope**: Phase 1 (Setup & Configuration) - US1
 - All directory structure in place
 - Configuration files functional
