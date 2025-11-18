@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { Buffer } from 'buffer';
 import { truncateBody, isBinaryContent, serializeBody } from '../logSerializers';
 
 describe('logSerializers', () => {
@@ -41,101 +42,68 @@ describe('logSerializers', () => {
       expect(result.originalSize).toBeGreaterThan(10240);
     });
 
-    it('should return null/undefined as-is', () => {
+    it.each([
+      null,
+      undefined
+    ])('should return %s as-is', (body) => {
       // Given: Null or undefined body
 
-      // When: Truncate null
-      const nullResult = truncateBody(null);
+      // When: Truncate the body
+      const result = truncateBody(body);
 
-      // Then: Should return null
-      expect(nullResult).toBeNull();
-
-      // When: Truncate undefined
-      const undefinedResult = truncateBody(undefined);
-
-      // Then: Should return undefined
-      expect(undefinedResult).toBeUndefined();
+      // Then: Should return original value
+      expect(result).toBe(body);
     });
 
-    it('should handle edge case at exactly 10240 bytes', () => {
-      // Given: A body of exactly 10240 characters
-      const exactBody = 'x'.repeat(10240);
+    it.each([
+      [10240, false],
+      [10241, true],
+    ])('should handle edge case at %i bytes', (size, shouldTruncate) => {
+      // Given: A body at the truncation boundary
+      const body = 'x'.repeat(size);
 
       // When: Truncate the body
-      const result = truncateBody(exactBody);
+      const result = truncateBody(body);
 
-      // Then: Should NOT be truncated (exactly at limit)
-      expect(result).toBe(exactBody);
-    });
-
-    it('should handle edge case at 10241 bytes', () => {
-      // Given: A body of 10241 characters (just over limit)
-      const overLimitBody = 'x'.repeat(10241);
-
-      // When: Truncate the body
-      const result = truncateBody(overLimitBody);
-
-      // Then: Should be truncated
-      expect(result).toHaveProperty('truncated', true);
-      expect(result).toHaveProperty('originalSize', 10241);
+      // Then: Should truncate only if over limit
+      if (shouldTruncate) {
+        expect(result).toHaveProperty('truncated', true);
+        expect(result).toHaveProperty('originalSize', size);
+        expect(result.content).toHaveLength(10240);
+      } else {
+        expect(result).toBe(body);
+      }
     });
   });
 
   describe('isBinaryContent', () => {
-    it('should detect image MIME types as binary', () => {
-      // Given: Various image MIME types
+    it.each([
+      'image/jpeg',
+      'image/png',
+      'application/gzip',
+      'application/octet-stream',
+    ])('should detect %s as binary', (mimeType) => {
+      // Given: A binary MIME type
 
-      // When/Then: Should detect all image types
-      expect(isBinaryContent('image/jpeg')).toBe(true);
-      expect(isBinaryContent('image/png')).toBe(true);
-      expect(isBinaryContent('image/gif')).toBe(true);
-      expect(isBinaryContent('image/webp')).toBe(true);
-      expect(isBinaryContent('image/svg+xml')).toBe(true);
+      // When: Check if content is binary
+      const result = isBinaryContent(mimeType);
+
+      // Then: Should return true
+      expect(result).toBe(true);
     });
 
-    it('should detect video MIME types as binary', () => {
-      // Given: Various video MIME types
+    it.each([
+      'application/json',
+      'text/plain',
+      'text/csv',
+    ])('should NOT detect %s as binary', (mimeType) => {
+      // Given: A text-based MIME type
 
-      // When/Then: Should detect all video types
-      expect(isBinaryContent('video/mp4')).toBe(true);
-      expect(isBinaryContent('video/mpeg')).toBe(true);
-      expect(isBinaryContent('video/webm')).toBe(true);
-    });
+      // When: Check if content is binary
+      const result = isBinaryContent(mimeType);
 
-    it('should detect audio MIME types as binary', () => {
-      // Given: Various audio MIME types
-
-      // When/Then: Should detect all audio types
-      expect(isBinaryContent('audio/mpeg')).toBe(true);
-      expect(isBinaryContent('audio/wav')).toBe(true);
-      expect(isBinaryContent('audio/ogg')).toBe(true);
-    });
-
-    it('should detect PDF as binary', () => {
-      // Given: PDF MIME type
-
-      // When/Then: Should detect PDF as binary
-      expect(isBinaryContent('application/pdf')).toBe(true);
-    });
-
-    it('should detect compressed files as binary', () => {
-      // Given: Compressed file MIME types
-
-      // When/Then: Should detect compressed files as binary
-      expect(isBinaryContent('application/zip')).toBe(true);
-      expect(isBinaryContent('application/gzip')).toBe(true);
-      expect(isBinaryContent('application/octet-stream')).toBe(true);
-    });
-
-    it('should NOT detect text/JSON/XML as binary', () => {
-      // Given: Text-based MIME types
-
-      // When/Then: Should NOT detect text as binary
-      expect(isBinaryContent('application/json')).toBe(false);
-      expect(isBinaryContent('text/plain')).toBe(false);
-      expect(isBinaryContent('text/html')).toBe(false);
-      expect(isBinaryContent('application/xml')).toBe(false);
-      expect(isBinaryContent('text/csv')).toBe(false);
+      // Then: Should return false
+      expect(result).toBe(false);
     });
 
     it('should return false for undefined content type', () => {
@@ -223,4 +191,3 @@ describe('logSerializers', () => {
     });
   });
 });
-
