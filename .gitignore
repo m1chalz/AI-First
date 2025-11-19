@@ -17,3 +17,11 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# E2E Test Artifacts
+e2e-tests/web/reports/
+e2e-tests/mobile/reports/
+e2e-tests/mobile/logs/
+playwright-report/
+test-results/
+*.trace.zip
