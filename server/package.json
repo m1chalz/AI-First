@@ -7,7 +7,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "node --experimental-transform-types --watch ./src/index.ts",
+    "dev": "node --experimental-transform-types --watch ./src/index.ts | npx pino-pretty",
     "test": "vitest",
     "lint": "tsc && eslint ./src",
     "lint:fix": "eslint --fix ./src",
