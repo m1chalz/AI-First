@@ -28,49 +28,61 @@ import kotlin.js.JsExport
  * Shared across all platforms via Kotlin Multiplatform.
  *
  * @property id Unique identifier (UUID or database ID)
- * @property image URL or placeholder identifier for animal photo
+ * @property name Name of the animal (e.g., "Buddy", "Mittens")
+ * @property photoUrl URL or placeholder identifier for animal photo
  * @property location Geographic location with radius for search area
  * @property species Animal species (Dog, Cat, Bird, etc.)
  * @property breed Specific breed name (e.g., "Maine Coon", "German Shepherd")
  * @property gender Biological sex (Male, Female, Unknown)
- * @property status Current status (Missing, Found)
- * @property date Date associated with status (missing date or found date)
+ * @property status Current status (Active, Found, Closed)
+ * @property lastSeenDate Date when animal was last seen (for Active status) or found (for Found status)
  * @property description Detailed text description (visible on web, truncated on mobile)
+ * @property email Contact email of the person who reported/owns the animal (optional)
+ * @property phone Contact phone number of the person who reported/owns the animal (optional)
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 data class Animal(
     val id: String,
-    val image: String,  // URL or placeholder identifier
+    val name: String,
+    val photoUrl: String,  // URL or placeholder identifier
     val location: Location,
     val species: AnimalSpecies,
     val breed: String,
     val gender: AnimalGender,
     val status: AnimalStatus,
-    val date: String,  // Format: DD/MM/YYYY (as specified in spec)
-    val description: String
+    val lastSeenDate: String,  // Format: DD/MM/YYYY (as specified in spec)
+    val description: String,
+    val email: String?,  // Optional contact email
+    val phone: String?   // Optional contact phone
 )
 ```
 
 **Validation Rules**:
 - `id`: Non-empty string (UUID format recommended for real API)
-- `image`: Non-empty string (URL or asset path)
+- `name`: Non-empty string (min 1 char)
+- `photoUrl`: Non-empty string (URL or asset path)
 - `breed`: Non-empty string (min 1 char)
-- `date`: String in DD/MM/YYYY format (e.g., "18/11/2025")
+- `lastSeenDate`: String in DD/MM/YYYY format (e.g., "18/11/2025")
 - `description`: Can be empty (optional field)
+- `email`: Optional (nullable), must be valid email format if provided (e.g., "owner@example.com")
+- `phone`: Optional (nullable), must be valid phone format if provided (e.g., "+48 123 456 789")
 
 **Mock Data Example**:
 ```kotlin
 Animal(
     id = "1",
-    image = "placeholder_cat",
+    name = "Fluffy",
+    photoUrl = "placeholder_cat",
     location = Location(city = "Pruszkow", radiusKm = 5),
     species = AnimalSpecies.CAT,
     breed = "Maine Coon",
     gender = AnimalGender.MALE,
-    status = AnimalStatus.MISSING,
-    date = "18/11/2025",
-    description = "Friendly orange tabby cat, last seen near the park."
+    status = AnimalStatus.ACTIVE,
+    lastSeenDate = "18/11/2025",
+    description = "Friendly orange tabby cat, last seen near the park.",
+    email = "owner@example.com",
+    phone = "+48 123 456 789"
 )
 ```
 
@@ -180,7 +192,7 @@ enum class AnimalGender(val displayName: String) {
 
 ### AnimalStatus
 
-Enum representing animal status (Missing or Found).
+Enum representing animal status (Active, Found, or Closed).
 
 **Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/AnimalStatus.kt`
 
@@ -195,23 +207,24 @@ import kotlin.js.JsExport
  * Determines badge color and text displayed in list.
  *
  * @property displayName Human-readable status label
- * @property badgeColor Hex color for status badge (from Figma spec)
+ * @property badgeColor Hex color for status badge
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 enum class AnimalStatus(
     val displayName: String,
-    val badgeColor: String  // Hex color from Figma
+    val badgeColor: String  // Hex color
 ) {
-    MISSING("Missing", "#FF0000"),  // Red badge
-    FOUND("Found", "#0074FF")       // Blue badge
+    ACTIVE("Active", "#FF0000"),    // Red badge - actively missing/searching
+    FOUND("Found", "#0074FF"),      // Blue badge - animal has been found
+    CLOSED("Closed", "#93A2B4")     // Gray badge - case closed/resolved
 }
 ```
 
 **Usage**:
 - Status badge displayed on each card
-- Red background for Missing, Blue for Found
-- Badge text: "Missing" or "Found"
+- Red background for Active, Blue for Found, Gray for Closed
+- Badge text: "Active", "Found", or "Closed"
 
 ---
 
@@ -323,36 +336,45 @@ interface UseAnimalListResult {
 listOf(
     Animal(
         id = "1",
-        image = "placeholder_cat",
+        name = "Fluffy",
+        photoUrl = "placeholder_cat",
         location = Location("Pruszkow", 5),
         species = AnimalSpecies.CAT,
         breed = "Maine Coon",
         gender = AnimalGender.MALE,
-        status = AnimalStatus.MISSING,
-        date = "18/11/2025",
-        description = "Friendly orange tabby, last seen near the park."
+        status = AnimalStatus.ACTIVE,
+        lastSeenDate = "18/11/2025",
+        description = "Friendly orange tabby, last seen near the park.",
+        email = "john@example.com",
+        phone = "+48 123 456 789"
     ),
     Animal(
         id = "2",
-        image = "placeholder_dog",
+        name = "Rex",
+        photoUrl = "placeholder_dog",
         location = Location("Warsaw", 10),
         species = AnimalSpecies.DOG,
         breed = "German Shepherd",
         gender = AnimalGender.FEMALE,
-        status = AnimalStatus.MISSING,
-        date = "17/11/2025",
-        description = "Large black and tan dog, wearing red collar."
+        status = AnimalStatus.ACTIVE,
+        lastSeenDate = "17/11/2025",
+        description = "Large black and tan dog, wearing red collar.",
+        email = "anna@example.com",
+        phone = null  // Only email provided
     ),
     Animal(
         id = "3",
-        image = "placeholder_cat",
+        name = "Bella",
+        photoUrl = "placeholder_cat",
         location = Location("Krakow", 3),
         species = AnimalSpecies.CAT,
         breed = "Siamese",
         gender = AnimalGender.FEMALE,
         status = AnimalStatus.FOUND,
-        date = "19/11/2025",
-        description = "Blue-eyed white cat found near train station."
+        lastSeenDate = "19/11/2025",
+        description = "Blue-eyed white cat found near train station.",
+        email = null,  // Only phone provided
+        phone = "+48 987 654 321"
     ),
     // ... 5-9 more animals with varied attributes
 )
@@ -360,10 +382,11 @@ listOf(
 
 **Requirements**:
 - Mix of species (Dog, Cat, Bird)
-- Mix of statuses (majority Missing, some Found)
+- Mix of statuses (majority Active, some Found, few Closed)
 - Varied locations (different cities)
-- Varied breeds and genders
+- Varied names, breeds, and genders
 - Realistic dates (recent dates in DD/MM/YYYY format)
+- Mix of contact info: some with email only, some with phone only, some with both, some with neither
 
 ---
 
@@ -410,19 +433,19 @@ UI displays empty state message
 ### Android
 
 - Use `@Parcelize` if Animal needs to be passed via Compose Navigation (future)
-- Image placeholder: Use drawable resource ID or asset path
+- Photo placeholder: Use drawable resource ID or asset path
 - Date formatting: Consider using `java.time.LocalDate` for parsing (API 26+)
 
 ### iOS
 
 - Animal model generated from shared KMP module (via `shared.framework`)
-- Image placeholder: Use `UIImage(named:)` with asset catalog
+- Photo placeholder: Use `UIImage(named:)` with asset catalog
 - Date formatting: Use `DateFormatter` with DD/MM/YYYY pattern
 
 ### Web
 
 - Animal model imported from shared Kotlin/JS module
-- Image placeholder: Use asset URL or data URI
+- Photo placeholder: Use asset URL or data URI
 - Date formatting: Use `Intl.DateTimeFormat` or date-fns library
 
 ---
@@ -431,10 +454,15 @@ UI displays empty state message
 
 1. **ID Uniqueness**: Each animal must have unique ID (enforced by mock repository)
 2. **Date Format**: All dates in DD/MM/YYYY format (future: validate format)
-3. **Required Fields**: id, image, location, species, breed, gender, status, date are mandatory
-4. **Optional Fields**: description can be empty string
+3. **Required Fields**: id, name, photoUrl, location, species, breed, gender, status, lastSeenDate are mandatory
+4. **Optional Fields**: description can be empty string, email and phone are nullable
 5. **Enum Validation**: species, gender, status must be valid enum values
 6. **Location Radius**: radiusKm must be positive integer (> 0)
+7. **Name Constraints**: name should be non-empty and reasonable length (1-50 chars recommended)
+8. **Breed Constraints**: breed should be non-empty and reasonable length (1-50 chars recommended)
+9. **Email Validation**: If provided, must match valid email format (regex validation in future)
+10. **Phone Validation**: If provided, should be valid phone number (international format recommended, e.g., +XX XXX XXX XXX)
+11. **Privacy**: Contact information (email, phone) should be displayed only on detail screens, not in list view
 
 ---
 
@@ -445,9 +473,10 @@ When backend is ready:
 1. **Add API Response Model**: Create DTO matching backend JSON schema
 2. **Add Mapping Layer**: Map API DTO to domain Animal model
 3. **Update Date Handling**: Parse ISO-8601 dates from API, format to DD/MM/YYYY for display
-4. **Add Image URLs**: Replace placeholders with real image URLs from CDN
+4. **Add Photo URLs**: Replace placeholders with real image URLs from CDN
 5. **Add Pagination**: Support infinite scrolling with page/limit parameters
 6. **Add Filtering**: Support species, status, location filters
+7. **Add Status Transitions**: Implement business rules for status changes (Active → Found/Closed)
 
 **No changes to domain model required** - API responses will be mapped to existing Animal structure.
 

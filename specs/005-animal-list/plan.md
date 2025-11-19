@@ -33,7 +33,7 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
 **Performance Goals**: 60 FPS scrolling (per spec clarification: performance targets removed but still best practice)  
 **Constraints**: 
 - UI-only (no backend calls)
-- Mock data: 8-12 animals with varied species, breeds, statuses
+- Mock data: 8-12 animals with varied species, breeds, names, and statuses
 - Empty state: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one."
 - Primary button: "Report a Missing Animal" (fixed at bottom on mobile)
 - Reserved space for future search component at top
@@ -207,7 +207,7 @@ shared/src/
 │   ├── domain/
 │   │   ├── models/
 │   │   │   ├── Animal.kt              # NEW: Animal data class with @JsExport
-│   │   │   ├── AnimalStatus.kt        # NEW: Enum (Missing, Found)
+│   │   │   ├── AnimalStatus.kt        # NEW: Enum (Active, Found, Closed)
 │   │   │   ├── AnimalSpecies.kt       # NEW: Enum (Dog, Cat, etc.)
 │   │   │   └── Location.kt            # NEW: Data class (city, radius)
 │   │   ├── repositories/

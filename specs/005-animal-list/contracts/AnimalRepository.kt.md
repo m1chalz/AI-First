@@ -122,113 +122,143 @@ class MockAnimalRepository : AnimalRepository {
     private fun getMockAnimals(): List<Animal> = listOf(
         Animal(
             id = "1",
-            image = "placeholder_cat",
+            name = "Fluffy",
+            photoUrl = "placeholder_cat",
             location = Location("Pruszkow", 5),
             species = AnimalSpecies.CAT,
             breed = "Maine Coon",
             gender = AnimalGender.MALE,
-            status = AnimalStatus.MISSING,
-            date = "18/11/2025",
-            description = "Friendly orange tabby cat, last seen near the park."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "18/11/2025",
+            description = "Friendly orange tabby cat, last seen near the park.",
+            email = "john.doe@example.com",
+            phone = "+48 123 456 789"
         ),
         Animal(
             id = "2",
-            image = "placeholder_dog",
+            name = "Rex",
+            photoUrl = "placeholder_dog",
             location = Location("Warsaw", 10),
             species = AnimalSpecies.DOG,
             breed = "German Shepherd",
             gender = AnimalGender.FEMALE,
-            status = AnimalStatus.MISSING,
-            date = "17/11/2025",
-            description = "Large black and tan dog, wearing red collar."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "17/11/2025",
+            description = "Large black and tan dog, wearing red collar.",
+            email = "anna.smith@example.com",
+            phone = null
         ),
         Animal(
             id = "3",
-            image = "placeholder_cat",
+            name = "Bella",
+            photoUrl = "placeholder_cat",
             location = Location("Krakow", 3),
             species = AnimalSpecies.CAT,
             breed = "Siamese",
             gender = AnimalGender.FEMALE,
             status = AnimalStatus.FOUND,
-            date = "19/11/2025",
-            description = "Blue-eyed white cat found near train station."
+            lastSeenDate = "19/11/2025",
+            description = "Blue-eyed white cat found near train station.",
+            email = null,
+            phone = "+48 987 654 321"
         ),
         Animal(
             id = "4",
-            image = "placeholder_dog",
+            name = "Buddy",
+            photoUrl = "placeholder_dog",
             location = Location("Wroclaw", 7),
             species = AnimalSpecies.DOG,
             breed = "Labrador Retriever",
             gender = AnimalGender.MALE,
-            status = AnimalStatus.MISSING,
-            date = "16/11/2025",
-            description = "Yellow lab, very friendly, responds to 'Buddy'."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "16/11/2025",
+            description = "Yellow lab, very friendly, responds to 'Buddy'.",
+            email = "mike@example.com",
+            phone = "+48 111 222 333"
         ),
         Animal(
             id = "5",
-            image = "placeholder_bird",
+            name = "Tweety",
+            photoUrl = "placeholder_bird",
             location = Location("Gdansk", 15),
             species = AnimalSpecies.BIRD,
             breed = "Cockatiel",
             gender = AnimalGender.UNKNOWN,
-            status = AnimalStatus.MISSING,
-            date = "15/11/2025",
-            description = "Gray and yellow bird, escaped from balcony."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "15/11/2025",
+            description = "Gray and yellow bird, escaped from balcony.",
+            email = "sarah@example.com",
+            phone = null
         ),
         Animal(
             id = "6",
-            image = "placeholder_cat",
+            name = "Snowball",
+            photoUrl = "placeholder_cat",
             location = Location("Poznan", 8),
             species = AnimalSpecies.CAT,
             breed = "Persian",
             gender = AnimalGender.FEMALE,
-            status = AnimalStatus.MISSING,
-            date = "14/11/2025",
-            description = "White long-haired cat, very shy."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "14/11/2025",
+            description = "White long-haired cat, very shy.",
+            email = null,
+            phone = null
         ),
         Animal(
             id = "7",
-            image = "placeholder_dog",
+            name = "Snoopy",
+            photoUrl = "placeholder_dog",
             location = Location("Lodz", 12),
             species = AnimalSpecies.DOG,
             breed = "Beagle",
             gender = AnimalGender.MALE,
             status = AnimalStatus.FOUND,
-            date = "20/11/2025",
-            description = "Tri-color beagle found wandering near shopping center."
+            lastSeenDate = "20/11/2025",
+            description = "Tri-color beagle found wandering near shopping center.",
+            email = "finder@example.com",
+            phone = "+48 555 666 777"
         ),
         Animal(
             id = "8",
-            image = "placeholder_rabbit",
+            name = "Thumper",
+            photoUrl = "placeholder_rabbit",
             location = Location("Katowice", 6),
             species = AnimalSpecies.RABBIT,
             breed = "Dwarf Rabbit",
             gender = AnimalGender.FEMALE,
-            status = AnimalStatus.MISSING,
-            date = "13/11/2025",
-            description = "Small gray rabbit, very timid."
+            status = AnimalStatus.CLOSED,
+            lastSeenDate = "13/11/2025",
+            description = "Small gray rabbit, reunited with owner.",
+            email = "owner@example.com",
+            phone = "+48 444 333 222"
         ),
         Animal(
             id = "9",
-            image = "placeholder_dog",
+            name = "Shadow",
+            photoUrl = "placeholder_dog",
             location = Location("Szczecin", 20),
             species = AnimalSpecies.DOG,
             breed = "Husky",
             gender = AnimalGender.MALE,
-            status = AnimalStatus.MISSING,
-            date = "12/11/2025",
-            description = "Blue-eyed Siberian Husky, very energetic."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "12/11/2025",
+            description = "Blue-eyed Siberian Husky, very energetic.",
+            email = null,
+            phone = "+48 888 999 000"
         ),
         Animal(
             id = "10",
-            image = "placeholder_cat",
+            name = "Whiskers",
+            photoUrl = "placeholder_cat",
             location = Location("Bialystok", 4),
             species = AnimalSpecies.CAT,
             breed = "British Shorthair",
             gender = AnimalGender.MALE,
-            status = AnimalStatus.MISSING,
-            date = "11/11/2025",
-            description = "Gray tabby cat with green eyes."
+            status = AnimalStatus.ACTIVE,
+            lastSeenDate = "11/11/2025",
+            description = "Gray tabby cat with green eyes.",
+            email = "cat.owner@example.com",
+            phone = null
         )
     )
 }
@@ -237,8 +267,9 @@ class MockAnimalRepository : AnimalRepository {
 **Key Points**:
 - Returns 10 animals (within 8-12 range from spec)
 - Mix of species: Dogs (5), Cats (4), Bird (1), Rabbit (1)
-- Mix of statuses: Missing (8), Found (2)
+- Mix of statuses: Active (7), Found (2), Closed (1)
 - Varied locations (different Polish cities)
+- Mix of contact info: some with both email & phone, some with email only, some with phone only, some with neither
 - Simulates 500ms network delay for realistic loading state
 - No error simulation (always succeeds) - error tests use FakeRepository
 
@@ -282,14 +313,17 @@ class MockAnimalRepository {
         [
             Animal(
                 id: "1",
-                image: "placeholder_cat",
+                name: "Fluffy",
+                photoUrl: "placeholder_cat",
                 location: Location(city: "Pruszkow", radiusKm: 5),
                 species: .cat,
                 breed: "Maine Coon",
                 gender: .male,
-                status: .missing,
-                date: "18/11/2025",
-                description: "Friendly orange tabby cat, last seen near the park."
+                status: .active,
+                lastSeenDate: "18/11/2025",
+                description: "Friendly orange tabby cat, last seen near the park.",
+                email: "john.doe@example.com",
+                phone: "+48 123 456 789"
             ),
             // ... other 9 animals (same as Android)
         ]
@@ -333,14 +367,17 @@ export class MockAnimalRepository {
         return [
             {
                 id: '1',
-                image: 'placeholder_cat',
+                name: 'Fluffy',
+                photoUrl: 'placeholder_cat',
                 location: { city: 'Pruszkow', radiusKm: 5 },
                 species: 'CAT',
                 breed: 'Maine Coon',
                 gender: 'MALE',
-                status: 'MISSING',
-                date: '18/11/2025',
-                description: 'Friendly orange tabby cat, last seen near the park.'
+                status: 'ACTIVE',
+                lastSeenDate: '18/11/2025',
+                description: 'Friendly orange tabby cat, last seen near the park.',
+                email: 'john.doe@example.com',
+                phone: '+48 123 456 789'
             },
             // ... other 9 animals (same as Android)
         ];
@@ -491,7 +528,7 @@ Repository implementation MUST:
 Mock repository MUST:
 - [ ] Return 8-12 Animal entities (per spec clarification)
 - [ ] Include mix of species (Dog, Cat, Bird, Rabbit)
-- [ ] Include mix of statuses (majority Missing, some Found)
+- [ ] Include mix of statuses (majority Active, some Found, few Closed)
 - [ ] Include varied locations (different cities)
 - [ ] Simulate realistic network delay (100-1000ms)
 - [ ] Never fail (unless explicitly testing error states with Fake)

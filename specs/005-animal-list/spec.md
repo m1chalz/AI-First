@@ -83,14 +83,17 @@ The screen layout must accommodate a future search component at the top of the l
 ### Key Entities *(include if feature involves data)*
 
 - **Animal**: Represents an animal in the system. Based on the Figma design, each animal includes:
-  - Image/photo (circular placeholder in mock version)
+  - Name: name of the animal (e.g., "Fluffy", "Rex")
+  - Photo URL: URL or placeholder for animal photo (circular placeholder in mock version)
   - Location: city name with radius (e.g., "Pruszkow, +5km")
-  - Species: animal type (e.g., "Cat")
-  - Breed: specific breed name (e.g., "Maine Coon")
+  - Species: animal type (e.g., "Cat", "Dog")
+  - Breed: specific breed name (e.g., "Maine Coon", "German Shepherd")
   - Gender: male or female (shown as icon on web version)
-  - Status: either "Missing" or "Found"
-  - Date: date associated with the status (format: DD/MM/YYYY)
+  - Status: "Active", "Found", or "Closed"
+  - Last Seen Date: date when animal was last seen or found (format: DD/MM/YYYY)
   - Description: detailed text description (visible on web version)
+  - Email: contact email (optional, shown in detail view only)
+  - Phone: contact phone number (optional, shown in detail view only)
 
 ### Dependencies
 
@@ -126,15 +129,16 @@ The screen layout must accommodate a future search component at the top of the l
 - Tertiary text: #93A2B4
 - Background white: #FAFAFA
 - Light gray (placeholders): #EEEEEE
-- Status "Missing": #FF0000 (red badge)
+- Status "Active": #FF0000 (red badge)
 - Status "Found": #0074FF (blue badge)
+- Status "Closed": #93A2B4 (gray badge)
 - Primary action button: #2D2D2D (dark)
 - Secondary action button: #E5E9EC (light gray)
 
 **Typography:**
 - Screen title: Inter 24px Regular
-- Card species name: Inter 16px Regular
-- Card breed name: Inter 14px Regular
+- Card animal name: Inter 16px Regular
+- Card species/breed: Inter 14px Regular
 - Card location: Inter 13px Regular
 - Status badge: Roboto 12px Regular
 - Button labels: Inter 16px Regular
@@ -152,7 +156,7 @@ The screen layout must accommodate a future search component at the top of the l
 - Screen title: "Missing animals list" (centered, 24px)
 - Search/Filters button: 186px wide, outlined style
 - Cards: full-width (328px), horizontal layout
-- Each card shows: circular image placeholder (63x63), location with pin icon, species | breed, status badge, date
+- Each card shows: circular image placeholder (63x63), animal name, location with pin icon, species | breed, status badge, last seen date
 - Floating action buttons at bottom (outside scroll area):
   - "Report Found Animal" (light background, secondary)
   - "Report a Missing Animal" (dark background, primary)
