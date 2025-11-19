@@ -18,7 +18,7 @@
 - Q: What exact date format should be used for the lastSeenDate field? → A: ISO 8601 with UTC timezone (e.g., "2025-11-19T14:30:00Z")
 - Q: Should petType be a free-form text field or a constrained enum? → A: Constrained enum (e.g., DOG, CAT, BIRD, RABBIT, OTHER)
 - Q: Should the announcements be returned in any specific order? → A: No specific ordering (database default/insertion order)
-- Q: What should the database table be named? → A: `pets` (simple, matches endpoint name)
+- Q: What should the database table be named? → A: `announcement` (singular form)
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -32,8 +32,8 @@ As a mobile/web application, I need to retrieve all lost pet announcements from 
 
 **Acceptance Scenarios**:
 
-1. **Given** the database contains lost pet announcements, **When** a client requests GET /api/v1/pets, **Then** the system returns HTTP 200 with a JSON response containing all announcements in the data array
-2. **Given** the database is empty (no announcements), **When** a client requests GET /api/v1/pets, **Then** the system returns HTTP 200 with an empty data array
+1. **Given** the database contains lost pet announcements, **When** a client requests GET /api/v1/announcements, **Then** the system returns HTTP 200 with a JSON response containing all announcements in the data array
+2. **Given** the database is empty (no announcements), **When** a client requests GET /api/v1/announcements, **Then** the system returns HTTP 200 with an empty data array
 3. **Given** a valid request is made, **When** the system retrieves announcements, **Then** each announcement includes all required fields (id, petName, petType, description, location, lastSeenDate, contactEmail, contactPhone, photoUrl, status)
 
 ---
@@ -49,13 +49,13 @@ As a mobile/web application, I need to retrieve all lost pet announcements from 
 
 ### Functional Requirements
 
-- **FR-001**: System MUST expose a GET endpoint at `/api/v1/pets` that returns lost pet announcements
+- **FR-001**: System MUST expose a GET endpoint at `/api/v1/announcements` that returns lost pet announcements
 - **FR-002**: System MUST return HTTP status code 200 for all successful requests, including when no announcements exist
 - **FR-003**: System MUST return response in JSON format with structure: `{ data: [...] }`
 - **FR-004**: System MUST return an empty array in the data field when no announcements exist
 - **FR-005**: Each announcement MUST include a unique identifier as a UUID string
 - **FR-006**: Each announcement MUST include: petName (pet's name), petType (species/type of pet, must be one of: DOG, CAT, BIRD, RABBIT, OTHER), description (detailed description of the pet), location (where the pet was last seen), lastSeenDate (when the pet was last seen in ISO 8601 UTC format: "YYYY-MM-DDTHH:MM:SSZ"), contactEmail (reporter's email address), contactPhone (reporter's phone number), photoUrl (optional URL to pet's photo), and status (current status of the announcement: ACTIVE, FOUND, or CLOSED)
-- **FR-007**: System MUST persist announcements in a database table named `pets`
+- **FR-007**: System MUST persist announcements in a database table named `announcement`
 - **FR-008**: System MUST provide seed data with example announcements for testing and development
 - **FR-009**: System MUST NOT implement filtering, search, or pagination in this initial phase
 - **FR-010**: System MUST handle database errors gracefully and return HTTP 500 with structured error response: `{ error: { code: "DATABASE_ERROR", message: "Service temporarily unavailable" } }`
@@ -68,7 +68,7 @@ As a mobile/web application, I need to retrieve all lost pet announcements from 
 
 ### Key Entities
 
-- **Lost Pet Announcement**: Represents a report of a missing pet stored in the `pets` database table. Includes identification (UUID), pet details (name, type constrained to DOG/CAT/BIRD/RABBIT/OTHER, description), location information (where last seen), temporal information (when last seen in ISO 8601 UTC format: "YYYY-MM-DDTHH:MM:SSZ"), contact information for the reporter (email validated by basic regex pattern, phone must contain digits), optional photo reference (null when absent), and current status of the announcement (ACTIVE: pet still missing, FOUND: pet has been located, CLOSED: announcement no longer active).
+- **Lost Pet Announcement**: Represents a report of a missing pet stored in the `announcement` database table. Includes identification (UUID), pet details (name, type constrained to DOG/CAT/BIRD/RABBIT/OTHER, description), location information (where last seen), temporal information (when last seen in ISO 8601 UTC format: "YYYY-MM-DDTHH:MM:SSZ"), contact information for the reporter (email validated by basic regex pattern, phone must contain digits), optional photo reference (null when absent), and current status of the announcement (ACTIVE: pet still missing, FOUND: pet has been located, CLOSED: announcement no longer active).
 
 ## Success Criteria *(mandatory)*
 
