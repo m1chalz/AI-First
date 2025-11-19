@@ -1,17 +1,8 @@
 import type { Knex } from 'knex';
 
-const ANNOUNCEMENT_MAX_UUID = '11111111-1111-1111-1111-111111111111';
-const ANNOUNCEMENT_LUNA_UUID = '22222222-2222-2222-2222-222222222222';
-const ANNOUNCEMENT_PIORUN_UUID = '33333333-3333-3333-3333-333333333333';
-const ANNOUNCEMENT_BUREK_UUID = '44444444-4444-4444-4444-444444444444';
-const ANNOUNCEMENT_MRUCZEK_UUID = '55555555-5555-5555-5555-555555555555';
-const ANNOUNCEMENT_USZATEK_UUID = '66666666-6666-6666-6666-666666666666';
-const ANNOUNCEMENT_REKSIO_UUID = '77777777-7777-7777-7777-777777777777';
-const ANNOUNCEMENT_FRYTKA_UUID = '88888888-8888-8888-8888-888888888888';
-
 const ANNOUNCEMENTS = [
   {
-    id: ANNOUNCEMENT_MAX_UUID,
+    id: '11111111-1111-1111-1111-111111111111',
     pet_name: 'Max',
     species: 'DOG',
     breed: 'Golden Retriever',
@@ -26,7 +17,7 @@ const ANNOUNCEMENTS = [
     status: 'ACTIVE',
   },
   {
-    id: ANNOUNCEMENT_LUNA_UUID,
+    id: '22222222-2222-2222-2222-222222222222',
     pet_name: 'Luna',
     species: 'CAT',
     breed: null,
@@ -41,7 +32,7 @@ const ANNOUNCEMENTS = [
     status: 'ACTIVE',
   },
   {
-    id: ANNOUNCEMENT_PIORUN_UUID,
+    id: '33333333-3333-3333-3333-333333333333',
     pet_name: 'Piorun',
     species: 'BIRD',
     breed: 'Papużka falista',
@@ -56,7 +47,7 @@ const ANNOUNCEMENTS = [
     status: 'ACTIVE',
   },
   {
-    id: ANNOUNCEMENT_BUREK_UUID,
+    id: '44444444-4444-4444-4444-444444444444',
     pet_name: 'Burek',
     species: 'DOG',
     breed: 'Mieszaniec labradora',
@@ -71,7 +62,7 @@ const ANNOUNCEMENTS = [
     status: 'FOUND',
   },
   {
-    id: ANNOUNCEMENT_MRUCZEK_UUID,
+    id: '55555555-5555-5555-5555-555555555555',
     pet_name: 'Mruczek',
     species: 'CAT',
     breed: 'Syjamski',
@@ -86,7 +77,7 @@ const ANNOUNCEMENTS = [
     status: 'ACTIVE',
   },
   {
-    id: ANNOUNCEMENT_USZATEK_UUID,
+    id: '66666666-6666-6666-6666-666666666666',
     pet_name: 'Uszatek',
     species: 'RABBIT',
     breed: 'Królik miniaturka',
@@ -101,7 +92,7 @@ const ANNOUNCEMENTS = [
     status: 'ACTIVE',
   },
   {
-    id: ANNOUNCEMENT_REKSIO_UUID,
+    id: '77777777-7777-7777-7777-777777777777',
     pet_name: 'Reksio',
     species: 'DOG',
     breed: null,
@@ -116,7 +107,7 @@ const ANNOUNCEMENTS = [
     status: 'CLOSED',
   },
   {
-    id: ANNOUNCEMENT_FRYTKA_UUID,
+    id: '88888888-8888-8888-8888-888888888888',
     pet_name: 'Frytka',
     species: 'OTHER',
     breed: 'Fretka',
