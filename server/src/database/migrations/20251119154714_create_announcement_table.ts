@@ -12,7 +12,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('location_radius').nullable();
     table.text('last_seen_date').notNullable();
     table.string('email', 255).nullable();
-    table.string('phone', 50).notNullable();
+    table.string('phone', 50).nullable();
     table.string('photo_url', 500).nullable();
     table.string('status', 20).notNullable().defaultTo('ACTIVE');
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());

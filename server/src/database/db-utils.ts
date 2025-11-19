@@ -10,7 +10,7 @@ export async function runDbMigrations() {
     await db.seed.run()
     log.info('DB migrations ran successfully');
   } catch (error) {
-    log.error({ error }, 'DB migration failed');
+    log.error(error, 'DB migration failed');
     process.exit(1);
   }
 }
