@@ -30,19 +30,35 @@ export const config: Options.Testrunner = {
   // ============
   maxInstances: 1,
   
-  capabilities: [{
-    platformName: 'Android',
-    'appium:deviceName': 'Android Emulator',
-    'appium:platformVersion': '13.0',
-    'appium:automationName': 'UiAutomator2',
-    // Path to your app (update this when you have the app)
-    // 'appium:app': path.join(process.cwd(), '../composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
-    'appium:appPackage': 'com.intive.aifirst.petspot',
-    'appium:appActivity': '.MainActivity',
-    'appium:noReset': false,
-    'appium:fullReset': false,
-    'appium:newCommandTimeout': 240,
-  }],
+  capabilities: [
+    // Android Configuration
+    {
+      platformName: 'Android',
+      'appium:deviceName': 'Android Emulator',
+      'appium:platformVersion': '13.0',
+      'appium:automationName': 'UiAutomator2',
+      // Path to your app (update this when you have the app)
+      // 'appium:app': path.join(process.cwd(), '../composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
+      'appium:appPackage': 'com.intive.aifirst.petspot',
+      'appium:appActivity': '.MainActivity',
+      'appium:noReset': false,
+      'appium:fullReset': false,
+      'appium:newCommandTimeout': 240,
+    },
+    // iOS Configuration
+    {
+      platformName: 'iOS',
+      'appium:deviceName': 'iPhone 15',
+      'appium:platformVersion': '17.0',
+      'appium:automationName': 'XCUITest',
+      // Path to your app (update this when you have the app)
+      // 'appium:app': path.join(process.cwd(), '../iosApp/build/Release-iphonesimulator/iosApp.app'),
+      'appium:bundleId': 'com.intive.aifirst.petspot',
+      'appium:noReset': false,
+      'appium:fullReset': false,
+      'appium:newCommandTimeout': 240,
+    }
+  ],
   
   //
   // ===================
