@@ -1,22 +1,35 @@
 import UIKit
 
-/// Root application coordinator.
-/// Manages app-level navigation and initializes sub-coordinators.
+/**
+ * Root application coordinator.
+ * Manages app-level navigation and initializes sub-coordinators.
+ * Sets AnimalListCoordinator as root flow per FR-010.
+ */
 class AppCoordinator: CoordinatorInterface {
+    var navigationController: UINavigationController?
+    var childCoordinators: [CoordinatorInterface] = []
     
-    weak var navigationController: UINavigationController?
+    /**
+     * Initializes app coordinator with navigation controller.
+     *
+     * - Parameter navigationController: Root navigation controller
+     */
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+    }
     
-    // Sub-coordinators (lazy initialization)
-    private lazy var listScreenCoordinator: ListScreenCoordinator = {
-        let coordinator = ListScreenCoordinator()
-        coordinator.navigationController = self.navigationController
-        return coordinator
-    }()
-    
-    /// Starts the app coordinator by launching the list screen flow.
-    /// - Parameter animated: Whether to animate the transition
+    /**
+     * Starts the app coordinator by launching the animal list flow.
+     * Sets AnimalListScreen as primary entry point per FR-010.
+     * 
+     * - Parameter animated: Whether to animate the transition
+     */
     func start(animated: Bool) async {
-        await listScreenCoordinator.start(animated: animated)
+        guard let navigationController = navigationController else { return }
+        
+        let animalListCoordinator = AnimalListCoordinator(navigationController: navigationController)
+        childCoordinators.append(animalListCoordinator)
+        await animalListCoordinator.start(animated: animated)
     }
 }
 

@@ -26,23 +26,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Create navigation controller
         let navigationController = UINavigationController()
-        
-        // Create splash screen as initial root view controller
-        let splashView = SplashScreenView()
-        let splashHostingController = UIHostingController(rootView: splashView)
-        navigationController.setViewControllers([splashHostingController], animated: false)
+        navigationController.navigationBar.isHidden = true // Hide nav bar (views manage their own)
         
         // Set window root and make visible
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
         // Initialize and start app coordinator
-        let coordinator = AppCoordinator()
-        coordinator.navigationController = navigationController
+        // Sets AnimalListScreen as primary entry point per FR-010
+        let coordinator = AppCoordinator(navigationController: navigationController)
         self.appCoordinator = coordinator
         
+        // Start coordinator asynchronously without animation (initial load)
         Task {
-            await coordinator.start(animated: true)
+            await coordinator.start(animated: false)
         }
     }
     

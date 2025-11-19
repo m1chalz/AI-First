@@ -5,7 +5,7 @@ import SwiftUI
 /// Manages presentation of the list view using existing ContentView.
 class ListScreenCoordinator: CoordinatorInterface {
     
-    weak var navigationController: UINavigationController?
+    var navigationController: UINavigationController?
     
     /// Starts the list screen by replacing navigation root with ContentView.
     /// - Parameter animated: Whether to animate the transition

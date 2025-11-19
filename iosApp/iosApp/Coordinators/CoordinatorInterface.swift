@@ -2,6 +2,7 @@ import UIKit
 
 /// Protocol defining the contract for all coordinators.
 /// Coordinators manage navigation flows and view controller presentation.
+@MainActor
 protocol CoordinatorInterface: AnyObject {
     /// Navigation controller used for presenting view controllers.
     /// Stored as weak reference to prevent retain cycles.

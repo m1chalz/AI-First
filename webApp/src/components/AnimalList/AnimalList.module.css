@@ -1,0 +1,251 @@
+/**
+ * Styles for Animal List component.
+ * Matches Figma design specifications (node 71:9154).
+ * 
+ * Color palette:
+ * - Primary text: #2D2D2D
+ * - Secondary text: #545F71
+ * - Tertiary text: #93A2B4
+ * - Background: #FAFAFA
+ * - Placeholder: #EEEEEE
+ * - Primary button: #2D2D2D
+ * - Secondary button: #E5E9EC
+ */
+
+/* Container */
+.container {
+    min-height: 100vh;
+    background-color: #FAFAFA;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #E5E9EC;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 400;
+    color: #2D2D2D;
+    margin: 0;
+}
+
+.headerButtons {
+    display: flex;
+    gap: 12px;
+}
+
+/* Buttons (per Figma web design) */
+.primaryButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    background-color: #2D2D2D;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.primaryButton:hover {
+    opacity: 0.9;
+}
+
+.secondaryButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #2D2D2D;
+    background-color: #E5E9EC;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.secondaryButton:hover {
+    background-color: #D5D9DC;
+}
+
+/* Search placeholder (reserved space) */
+.searchPlaceholder {
+    height: 64px;
+    padding: 16px 32px;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #E5E9EC;
+    /* Width: 582px search bar + filters will go here */
+}
+
+/* Content area */
+.content {
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Animal list */
+.animalList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* 8px gap per Figma */
+}
+
+/* Animal card */
+.animalCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.animalCard:hover {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Photo placeholder */
+.photoPlaceholder {
+    width: 63px;
+    height: 63px;
+    border-radius: 50%;
+    background-color: #EEEEEE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #93A2B4;
+    flex-shrink: 0;
+}
+
+/* Animal info */
+.animalInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.animalName {
+    font-size: 16px;
+    font-weight: 400;
+    color: #2D2D2D;
+}
+
+.animalLocation {
+    font-size: 13px;
+    font-weight: 400;
+    color: #545F71;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: white;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.animalDate {
+    font-size: 13px;
+    font-weight: 400;
+    color: #93A2B4;
+}
+
+/* Loading state */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 16px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #E5E9EC;
+    border-top-color: #2D2D2D;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading p {
+    font-size: 16px;
+    color: #545F71;
+}
+
+/* Error state */
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 32px;
+}
+
+.error p {
+    font-size: 16px;
+    color: #FF0000;
+    text-align: center;
+}
+
+/* Empty state */
+.emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 32px;
+}
+
+.emptyStateText {
+    font-size: 16px;
+    color: #545F71;
+    text-align: center;
+    line-height: 24px;
+    max-width: 500px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .headerButtons {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .primaryButton,
+    .secondaryButton {
+        width: 100%;
+    }
+    
+    .content {
+        padding: 16px;
+    }
+}
+
