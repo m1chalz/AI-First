@@ -1,5 +1,5 @@
 import express from 'express'
-import announcementsRouter from './announcements.js';
+import announcementsRouter from './announcements.ts';
 
 const router = express.Router();
 

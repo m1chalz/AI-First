@@ -16,6 +16,7 @@ const config: Knex.Config = {
     directory: './src/database/seeds',
     extension: 'ts',
   },
+  useNullAsDefault: true
 }
 
 export default config

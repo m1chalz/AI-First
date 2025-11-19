@@ -1,12 +1,12 @@
 import { pinoHttp, stdSerializers } from 'pino-http';
 import { serializeBody } from '../lib/log-serializers.ts';
-import { getRequestId } from '../lib/request-context.ts';
 import log from '../lib/logger.ts';
 
 /**
  * Pino HTTP logger middleware with comprehensive request/response logging.
  * Includes body truncation, binary omission, header redaction, and request ID correlation.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default pinoHttp({
   logger: log,
 
@@ -45,11 +45,6 @@ export default pinoHttp({
     censor: '***',
   },
 
-  customProps: () => {
-    const requestId = getRequestId();
-    return requestId ? { requestId } : {};
-  },
-
   customAttributeKeys: {
     responseTime: 'responseTime',
   },
@@ -69,4 +64,3 @@ export default pinoHttp({
   },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
-

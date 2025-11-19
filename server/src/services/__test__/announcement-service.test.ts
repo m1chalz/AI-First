@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { AnnouncementService } from '../announcement-service.js';
-import type { Announcement } from '../../types/announcement.js';
-import type { AnnouncementRepository } from '../../database/repositories/announcement-repository.js';
+import { AnnouncementService } from '../announcement-service.ts';
+import type { Announcement } from '../../types/announcement.ts';
+import type { AnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',

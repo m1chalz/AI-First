@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import { app } from '../app.js';
-import { db } from '../database/db-utils.js';
-import type { Announcement } from '../types/announcement.js';
+import server from '../server.ts';
+import { db } from '../database/db-utils.ts';
+import type { Announcement } from '../types/announcement.ts';
 
 const TEST_ANNOUNCEMENT_1 = {
   id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
@@ -46,7 +46,7 @@ describe('GET /api/v1/announcements', () => {
     await db('announcement').insert([TEST_ANNOUNCEMENT_1, TEST_ANNOUNCEMENT_2]);
     
     // When: Client requests all announcements
-    const response = await request(app).get('/api/v1/announcements');
+    const response = await request(server).get('/api/v1/announcements');
     
     // Then: Returns HTTP 200 with JSON array containing announcements
     expect(response.status).toBe(200);
@@ -82,7 +82,7 @@ describe('GET /api/v1/announcements', () => {
     // Given: Database has no announcements (cleaned in beforeEach)
     
     // When: Client requests all announcements
-    const response = await request(app).get('/api/v1/announcements');
+    const response = await request(server).get('/api/v1/announcements');
     
     // Then: Returns HTTP 200 with empty data array
     expect(response.status).toBe(200);

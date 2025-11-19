@@ -1,5 +1,5 @@
 import type { Knex } from 'knex';
-import type { Announcement, AnnouncementRow } from '../../types/announcement.js';
+import type { Announcement, AnnouncementRow } from '../../types/announcement.ts';
 
 export class AnnouncementRepository {
   constructor(private db: Knex) {}

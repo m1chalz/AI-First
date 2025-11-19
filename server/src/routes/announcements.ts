@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { AnnouncementRepository } from '../database/repositories/announcement-repository.js';
-import { AnnouncementService } from '../services/announcement-service.js';
-import { db } from '../database/db-utils.js';
+import { AnnouncementRepository } from '../database/repositories/announcement-repository.ts';
+import { AnnouncementService } from '../services/announcement-service.ts';
+import { db } from '../database/db-utils.ts';
 
 const router = Router();
 const announcementRepository = new AnnouncementRepository(db);

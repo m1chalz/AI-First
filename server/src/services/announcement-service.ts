@@ -1,5 +1,5 @@
-import type { Announcement } from '../types/announcement.js';
-import type { AnnouncementRepository } from '../database/repositories/announcement-repository.js';
+import type { Announcement } from '../types/announcement.ts';
+import type { AnnouncementRepository } from '../database/repositories/announcement-repository.ts';
 
 export class AnnouncementService {
   constructor(private repository: AnnouncementRepository) {}

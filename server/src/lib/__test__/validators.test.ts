@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isValidEmail, isValidPhone } from '../validators.js';
+import { isValidEmail, isValidPhone } from '../validators.ts';
 
 const VALID_EMAILS = [
   'user@example.com',
