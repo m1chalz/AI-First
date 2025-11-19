@@ -1,0 +1,302 @@
+openapi: 3.0.3
+info:
+  title: PetSpot Lost Pets API
+  description: |
+    REST API for retrieving lost pet announcements.
+    
+    This API provides a public endpoint to access lost pet announcements submitted by users.
+    No authentication is required for this endpoint.
+    
+    **Feature**: 006-pets-api  
+    **Version**: 1.0.0  
+    **Date**: 2025-11-19
+  version: 1.0.0
+  contact:
+    name: PetSpot API Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.petspot.example.com
+    description: Production server (future)
+
+tags:
+  - name: Announcements
+    description: Lost pet announcement operations
+
+paths:
+  /api/v1/announcements:
+    get:
+      tags:
+        - Announcements
+      summary: Get all lost pet announcements
+      description: |
+        Retrieves all lost pet announcements from the database.
+        
+        **Behavior**:
+        - Returns HTTP 200 for successful requests (even when no announcements exist)
+        - Returns empty array when database has no announcements
+        - Optional fields (photoUrl, breed, email, locationRadius) are included with null value when not present
+                
+        **Authentication**: None required (public endpoint).
+      operationId: getAllAnnouncements
+      parameters: []
+      responses:
+        '200':
+          description: |
+            Successful response with announcements data.
+            Returns empty array if no announcements exist in database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementsResponse'
+              examples:
+                withData:
+                  summary: Response with announcements
+                  value:
+                    data:
+                      - id: "550e8400-e29b-41d4-a716-446655440000"
+                        petName: "Max"
+                        species: "DOG"
+                        breed: "Golden Retriever"
+                        gender: "MALE"
+                        description: "Friendly golden retriever with red collar. Answers to Max."
+                        location: "Central Park, New York, NY"
+                        locationRadius: 5
+                        lastSeenDate: "2025-11-18"
+                        email: "john@example.com"
+                        phone: "+1-555-0101"
+                        photoUrl: "https://example.com/photos/max.jpg"
+                        status: "ACTIVE"
+                      - id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                        petName: "Luna"
+                        species: "CAT"
+                        breed: null
+                        gender: "FEMALE"
+                        description: "Black cat with white paws. Very shy."
+                        location: "Downtown Portland, OR"
+                        locationRadius: null
+                        lastSeenDate: "2025-11-15"
+                        email: null
+                        phone: "555-0102"
+                        photoUrl: null
+                        status: "ACTIVE"
+                emptyData:
+                  summary: Response when no announcements exist
+                  value:
+                    data: []
+        '500':
+          description: |
+            Internal server error - database connection or query failure.
+            Returns structured error response with generic message (no internal details exposed).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "DATABASE_ERROR"
+                  message: "Service temporarily unavailable"
+
+components:
+  schemas:
+    AnnouncementsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: Array of lost pet announcements (empty array if no announcements exist)
+          items:
+            $ref: '#/components/schemas/Announcement'
+      example:
+        data:
+          - id: "550e8400-e29b-41d4-a716-446655440000"
+            petName: "Max"
+            species: "DOG"
+            breed: "Golden Retriever"
+            gender: "MALE"
+            description: "Friendly golden retriever with red collar."
+            location: "Central Park, New York, NY"
+            locationRadius: 5
+            lastSeenDate: "2025-11-18"
+            email: "john@example.com"
+            phone: "+1-555-0101"
+            photoUrl: "https://example.com/photos/max.jpg"
+            status: "ACTIVE"
+    
+    Announcement:
+      type: object
+      required:
+        - id
+        - petName
+        - species
+        - gender
+        - description
+        - location
+        - lastSeenDate
+        - phone
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the announcement (UUID v4)
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        
+        petName:
+          type: string
+          maxLength: 100
+          description: Name of the lost pet
+          example: "Max"
+        
+        species:
+          type: string
+          enum:
+            - DOG
+            - CAT
+            - BIRD
+            - RABBIT
+            - OTHER
+          description: |
+            Type of animal (constrained enum).
+            - DOG: Dog
+            - CAT: Cat
+            - BIRD: Bird (parrots, canaries, etc.)
+            - RABBIT: Rabbit
+            - OTHER: Other species (ferrets, reptiles, etc.)
+          example: "DOG"
+        
+        breed:
+          type: string
+          maxLength: 100
+          nullable: true
+          description: Breed of the pet (optional, free-form text). Returns null when not provided.
+          example: "Golden Retriever"
+        
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - UNKNOWN
+          description: |
+            Gender of the pet (constrained enum).
+            - MALE: Male
+            - FEMALE: Female
+            - UNKNOWN: Gender unknown or not specified
+          example: "MALE"
+        
+        description:
+          type: string
+          maxLength: 1000
+          description: Detailed description of the pet (appearance, behavior, special markings, etc.)
+          example: "Friendly golden retriever with red collar. Answers to Max. Has a distinctive white patch on chest."
+        
+        location:
+          type: string
+          maxLength: 255
+          description: Location where pet was last seen (free-form text)
+          example: "Central Park near Bethesda Fountain, New York, NY"
+        
+        locationRadius:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          description: Search radius around location in kilometers (optional). Returns null when not provided.
+          example: 5
+        
+        lastSeenDate:
+          type: string
+          format: date
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          description: Date when pet was last seen in ISO 8601 date-only format (YYYY-MM-DD)
+          example: "2025-11-18"
+        
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          nullable: true
+          description: |
+            Reporter's email address (optional, basic validation).
+            Returns null when not provided.
+            Validated using simple regex pattern (basic format check only).
+          example: "john@example.com"
+        
+        phone:
+          type: string
+          maxLength: 50
+          description: |
+            Reporter's phone number (required, must contain digits).
+            Flexible format - accepts various international formats.
+            Examples: "+1-555-1234", "(555) 123-4567", "5551234567"
+          example: "+1-555-0101"
+        
+        photoUrl:
+          type: string
+          format: uri
+          maxLength: 500
+          nullable: true
+          description: URL to photo of the pet (optional). Returns null when not provided.
+          example: "https://example.com/photos/max.jpg"
+        
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - FOUND
+            - CLOSED
+          description: |
+            Current status of the announcement (lifecycle state).
+            - ACTIVE: Pet still missing, announcement active
+            - FOUND: Pet has been found and reunited with owner
+            - CLOSED: Announcement closed (no longer relevant)
+          example: "ACTIVE"
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440000"
+        petName: "Max"
+        species: "DOG"
+        breed: "Golden Retriever"
+        gender: "MALE"
+        description: "Friendly golden retriever with red collar. Answers to Max."
+        location: "Central Park, New York, NY"
+        locationRadius: 5
+        lastSeenDate: "2025-11-18"
+        email: "john@example.com"
+        phone: "+1-555-0101"
+        photoUrl: "https://example.com/photos/max.jpg"
+        status: "ACTIVE"
+    
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Error code identifying the error type
+              example: "DATABASE_ERROR"
+            message:
+              type: string
+              description: Human-readable error message (generic, no internal details)
+              example: "Service temporarily unavailable"
+      example:
+        error:
+          code: "DATABASE_ERROR"
+          message: "Service temporarily unavailable"
+
+  securitySchemes: {}
+
+security: []
+
