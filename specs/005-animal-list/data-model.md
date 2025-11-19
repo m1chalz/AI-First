@@ -1,0 +1,469 @@
+# Data Model: Animal List Screen
+
+**Feature**: Animal List Screen  
+**Date**: 2025-11-19  
+**Status**: Phase 1 - Data Model Design
+
+## Overview
+
+This document defines the data model for the Animal List Screen feature. The model is designed for the shared Kotlin Multiplatform module and will be consumed by all three platforms (Android, iOS, Web).
+
+## Domain Models
+
+### Animal
+
+Primary entity representing an animal in the system.
+
+**Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/Animal.kt`
+
+```kotlin
+package com.intive.aifirst.petspot.domain.models
+
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+/**
+ * Represents an animal in the PetSpot system.
+ * Contains all information needed for list display and detail views.
+ * Shared across all platforms via Kotlin Multiplatform.
+ *
+ * @property id Unique identifier (UUID or database ID)
+ * @property image URL or placeholder identifier for animal photo
+ * @property location Geographic location with radius for search area
+ * @property species Animal species (Dog, Cat, Bird, etc.)
+ * @property breed Specific breed name (e.g., "Maine Coon", "German Shepherd")
+ * @property gender Biological sex (Male, Female, Unknown)
+ * @property status Current status (Missing, Found)
+ * @property date Date associated with status (missing date or found date)
+ * @property description Detailed text description (visible on web, truncated on mobile)
+ */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+data class Animal(
+    val id: String,
+    val image: String,  // URL or placeholder identifier
+    val location: Location,
+    val species: AnimalSpecies,
+    val breed: String,
+    val gender: AnimalGender,
+    val status: AnimalStatus,
+    val date: String,  // Format: DD/MM/YYYY (as specified in spec)
+    val description: String
+)
+```
+
+**Validation Rules**:
+- `id`: Non-empty string (UUID format recommended for real API)
+- `image`: Non-empty string (URL or asset path)
+- `breed`: Non-empty string (min 1 char)
+- `date`: String in DD/MM/YYYY format (e.g., "18/11/2025")
+- `description`: Can be empty (optional field)
+
+**Mock Data Example**:
+```kotlin
+Animal(
+    id = "1",
+    image = "placeholder_cat",
+    location = Location(city = "Pruszkow", radiusKm = 5),
+    species = AnimalSpecies.CAT,
+    breed = "Maine Coon",
+    gender = AnimalGender.MALE,
+    status = AnimalStatus.MISSING,
+    date = "18/11/2025",
+    description = "Friendly orange tabby cat, last seen near the park."
+)
+```
+
+---
+
+### Location
+
+Geographic location with search radius.
+
+**Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/Location.kt`
+
+```kotlin
+package com.intive.aifirst.petspot.domain.models
+
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+/**
+ * Represents a geographic location with search radius.
+ * Used to display animal location in format: "City, +Xkm"
+ *
+ * @property city City or area name
+ * @property radiusKm Search radius in kilometers (displayed as "+Xkm")
+ */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+data class Location(
+    val city: String,
+    val radiusKm: Int
+) {
+    /** Formatted display string: "City, +Xkm" */
+    fun toDisplayString(): String = "$city, +${radiusKm}km"
+}
+```
+
+**Example**:
+```kotlin
+Location(city = "Pruszkow", radiusKm = 5)  // Displays as "Pruszkow, +5km"
+```
+
+---
+
+### AnimalSpecies
+
+Enum representing animal species.
+
+**Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/AnimalSpecies.kt`
+
+```kotlin
+package com.intive.aifirst.petspot.domain.models
+
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+/**
+ * Animal species types supported by the system.
+ * Determines icon/image display and filtering options.
+ */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+enum class AnimalSpecies(val displayName: String) {
+    DOG("Dog"),
+    CAT("Cat"),
+    BIRD("Bird"),
+    RABBIT("Rabbit"),
+    OTHER("Other")
+}
+```
+
+**Usage**:
+- Displayed in animal card (e.g., "Cat | Maine Coon")
+- Used for filtering (future feature)
+- Determines icon/placeholder image selection
+
+---
+
+### AnimalGender
+
+Enum representing animal gender.
+
+**Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/AnimalGender.kt`
+
+```kotlin
+package com.intive.aifirst.petspot.domain.models
+
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+/**
+ * Animal gender/sex.
+ * Displayed as icon on web version (per Figma spec).
+ */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+enum class AnimalGender(val displayName: String) {
+    MALE("Male"),
+    FEMALE("Female"),
+    UNKNOWN("Unknown")
+}
+```
+
+**Usage**:
+- Web: Displayed as gender icon (male/female symbol)
+- Mobile: May be shown in detail view (not in list card per Figma)
+
+---
+
+### AnimalStatus
+
+Enum representing animal status (Missing or Found).
+
+**Location**: `/shared/src/commonMain/kotlin/com/intive/aifirst/petspot/domain/models/AnimalStatus.kt`
+
+```kotlin
+package com.intive.aifirst.petspot.domain/models
+
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+/**
+ * Status of an animal in the system.
+ * Determines badge color and text displayed in list.
+ *
+ * @property displayName Human-readable status label
+ * @property badgeColor Hex color for status badge (from Figma spec)
+ */
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+enum class AnimalStatus(
+    val displayName: String,
+    val badgeColor: String  // Hex color from Figma
+) {
+    MISSING("Missing", "#FF0000"),  // Red badge
+    FOUND("Found", "#0074FF")       // Blue badge
+}
+```
+
+**Usage**:
+- Status badge displayed on each card
+- Red background for Missing, Blue for Found
+- Badge text: "Missing" or "Found"
+
+---
+
+## Entity Relationships
+
+```
+Animal
+├── Location (composition)
+├── AnimalSpecies (enum)
+├── AnimalGender (enum)
+└── AnimalStatus (enum)
+```
+
+**Notes**:
+- No foreign key relationships in this UI-only phase
+- Animal is self-contained entity (no joins required)
+- Future: May add `ownerId`, `reporterId` for user associations
+
+---
+
+## State Management Models
+
+### Android MVI State
+
+**Location**: `/composeApp/src/androidMain/.../features/animallist/presentation/mvi/AnimalListUiState.kt`
+
+```kotlin
+/**
+ * Immutable UI state for Animal List screen.
+ * Single source of truth for Compose UI rendering.
+ */
+data class AnimalListUiState(
+    val animals: List<Animal> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    /** Computed property: true when data loaded but list is empty */
+    val isEmpty: Boolean
+        get() = animals.isEmpty() && !isLoading && error == null
+
+    companion object {
+        val Initial = AnimalListUiState()
+    }
+}
+```
+
+---
+
+### iOS ViewModel State
+
+**Location**: `/iosApp/iosApp/ViewModels/AnimalListViewModel.swift`
+
+```swift
+/// ViewModel state for Animal List screen.
+/// Observable properties drive SwiftUI view updates.
+@MainActor
+class AnimalListViewModel: ObservableObject {
+    /// List of animals displayed to user
+    @Published var animals: [Animal] = []
+    
+    /// Loading state indicator
+    @Published var isLoading: Bool = false
+    
+    /// Error message (nil if no error)
+    @Published var errorMessage: String?
+    
+    /// Computed: true when data loaded but list is empty
+    var isEmpty: Bool {
+        animals.isEmpty && !isLoading && errorMessage == nil
+    }
+}
+```
+
+---
+
+### Web Hook State
+
+**Location**: `/webApp/src/hooks/useAnimalList.ts`
+
+```typescript
+/**
+ * Hook state for Animal List component.
+ * Encapsulates loading, data, and error states.
+ */
+interface UseAnimalListResult {
+    animals: Animal[];
+    isLoading: boolean;
+    error: string | null;
+    isEmpty: boolean;
+    loadAnimals: () => Promise<void>;
+    selectAnimal: (id: string) => void;
+    reportMissing: () => void;
+    reportFound: () => void;
+}
+```
+
+---
+
+## Mock Data Generation
+
+### Mock Repository Data
+
+8-12 animals with varied attributes for testing scrolling and states.
+
+**Location**: Platform-specific mock repositories
+
+**Data Set** (example):
+```kotlin
+listOf(
+    Animal(
+        id = "1",
+        image = "placeholder_cat",
+        location = Location("Pruszkow", 5),
+        species = AnimalSpecies.CAT,
+        breed = "Maine Coon",
+        gender = AnimalGender.MALE,
+        status = AnimalStatus.MISSING,
+        date = "18/11/2025",
+        description = "Friendly orange tabby, last seen near the park."
+    ),
+    Animal(
+        id = "2",
+        image = "placeholder_dog",
+        location = Location("Warsaw", 10),
+        species = AnimalSpecies.DOG,
+        breed = "German Shepherd",
+        gender = AnimalGender.FEMALE,
+        status = AnimalStatus.MISSING,
+        date = "17/11/2025",
+        description = "Large black and tan dog, wearing red collar."
+    ),
+    Animal(
+        id = "3",
+        image = "placeholder_cat",
+        location = Location("Krakow", 3),
+        species = AnimalSpecies.CAT,
+        breed = "Siamese",
+        gender = AnimalGender.FEMALE,
+        status = AnimalStatus.FOUND,
+        date = "19/11/2025",
+        description = "Blue-eyed white cat found near train station."
+    ),
+    // ... 5-9 more animals with varied attributes
+)
+```
+
+**Requirements**:
+- Mix of species (Dog, Cat, Bird)
+- Mix of statuses (majority Missing, some Found)
+- Varied locations (different cities)
+- Varied breeds and genders
+- Realistic dates (recent dates in DD/MM/YYYY format)
+
+---
+
+## Data Flow
+
+```
+MockAnimalRepository
+    ↓ (returns Result<List<Animal>>)
+GetAnimalsUseCase
+    ↓ (invoked by ViewModel)
+ViewModel State Update
+    ↓ (StateFlow/Published/useState)
+UI Rendering
+    ↓ (LazyColumn/List/map)
+Animal Cards Displayed
+```
+
+**Error Flow**:
+```
+MockRepository throws exception
+    ↓
+Use case catches and returns Result.failure(exception)
+    ↓
+ViewModel updates error state
+    ↓
+UI displays error message
+```
+
+**Empty Flow**:
+```
+MockRepository returns empty list
+    ↓
+Use case returns Result.success(emptyList())
+    ↓
+ViewModel sets isEmpty = true
+    ↓
+UI displays empty state message
+```
+
+---
+
+## Platform-Specific Considerations
+
+### Android
+
+- Use `@Parcelize` if Animal needs to be passed via Compose Navigation (future)
+- Image placeholder: Use drawable resource ID or asset path
+- Date formatting: Consider using `java.time.LocalDate` for parsing (API 26+)
+
+### iOS
+
+- Animal model generated from shared KMP module (via `shared.framework`)
+- Image placeholder: Use `UIImage(named:)` with asset catalog
+- Date formatting: Use `DateFormatter` with DD/MM/YYYY pattern
+
+### Web
+
+- Animal model imported from shared Kotlin/JS module
+- Image placeholder: Use asset URL or data URI
+- Date formatting: Use `Intl.DateTimeFormat` or date-fns library
+
+---
+
+## Validation & Business Rules
+
+1. **ID Uniqueness**: Each animal must have unique ID (enforced by mock repository)
+2. **Date Format**: All dates in DD/MM/YYYY format (future: validate format)
+3. **Required Fields**: id, image, location, species, breed, gender, status, date are mandatory
+4. **Optional Fields**: description can be empty string
+5. **Enum Validation**: species, gender, status must be valid enum values
+6. **Location Radius**: radiusKm must be positive integer (> 0)
+
+---
+
+## Migration to Real API
+
+When backend is ready:
+
+1. **Add API Response Model**: Create DTO matching backend JSON schema
+2. **Add Mapping Layer**: Map API DTO to domain Animal model
+3. **Update Date Handling**: Parse ISO-8601 dates from API, format to DD/MM/YYYY for display
+4. **Add Image URLs**: Replace placeholders with real image URLs from CDN
+5. **Add Pagination**: Support infinite scrolling with page/limit parameters
+6. **Add Filtering**: Support species, status, location filters
+
+**No changes to domain model required** - API responses will be mapped to existing Animal structure.
+
+---
+
+## Summary
+
+- ✅ Animal domain model defined with all required fields from spec
+- ✅ Supporting models: Location, AnimalSpecies, AnimalGender, AnimalStatus
+- ✅ Models exported for JavaScript consumption (@JsExport)
+- ✅ State management models defined for each platform (MVI, MVVM, hooks)
+- ✅ Mock data strategy documented (8-12 varied animals)
+- ✅ Data flow and error/empty handling described
+- ✅ Platform-specific considerations documented
+- ✅ Validation rules and business logic defined
+- ✅ Migration path to real API outlined
+
+**Status**: Data model complete. Ready for contracts definition.
+
