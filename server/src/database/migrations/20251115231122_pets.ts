@@ -1,9 +1,9 @@
 import type { Knex } from 'knex';
 
-export async function up(knex: Knex): Promise<void> {
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
+export async function up(_knex: Knex): Promise<void> {
 }
 
-
-export async function down(knex: Knex): Promise<void> {
+export async function down(_knex: Knex): Promise<void> {
 }
-
+/* eslint-enable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */

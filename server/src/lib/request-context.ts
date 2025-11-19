@@ -25,3 +25,4 @@ export function getRequestId(): string | undefined {
 export function setRequestContext(context: RequestContext): void {
   requestContextStorage.enterWith(context);
 }
+

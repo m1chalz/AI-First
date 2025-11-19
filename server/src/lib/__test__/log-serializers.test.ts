@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Buffer } from 'buffer';
-import { truncateBody, isBinaryContent, serializeBody, TruncatedBody } from '../logSerializers';
+import { truncateBody, isBinaryContent, serializeBody, TruncatedBody } from '../log-serializers';
 
 describe('logSerializers', () => {
   describe('truncateBody', () => {
@@ -184,3 +184,4 @@ describe('logSerializers', () => {
     });
   });
 });
+

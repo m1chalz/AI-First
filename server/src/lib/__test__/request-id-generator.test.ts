@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateRequestId } from '../requestIdGenerator';
+import { generateRequestId } from '../request-id-generator';
 
 describe('requestIdGenerator', () => {
   describe('generateRequestId', () => {

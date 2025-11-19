@@ -3,7 +3,7 @@ import {
   requestContextStorage,
   getRequestId,
   setRequestContext,
-} from '../requestContext';
+} from '../request-context';
 
 describe('requestContext', () => {
   beforeEach(() => {

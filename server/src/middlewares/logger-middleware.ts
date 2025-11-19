@@ -1,7 +1,7 @@
 import { pinoHttp, stdSerializers } from 'pino-http';
 import { pino } from 'pino';
-import { serializeBody } from '../lib/logSerializers.ts';
-import { getRequestId } from '../lib/requestContext.ts';
+import { serializeBody } from '../lib/log-serializers.ts';
+import { getRequestId } from '../lib/request-context.ts';
 
 /**
  * Pino HTTP logger middleware with comprehensive request/response logging.
@@ -77,3 +77,4 @@ export default pinoHttp({
   },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
+

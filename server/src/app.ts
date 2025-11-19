@@ -1,8 +1,8 @@
 import express from 'express'
 import { runDbMigrations } from './database/db-utils.ts';
 import routes from './routes/index.ts';
-import requestIdMiddleware from './middlewares/requestIdMiddleware.ts';
-import loggerMiddleware from './middlewares/loggerMiddleware.ts';
+import requestIdMiddleware from './middlewares/request-id-middleware.ts';
+import loggerMiddleware from './middlewares/logger-middleware.ts';
 
 import type { Request, Response } from 'express'
 
