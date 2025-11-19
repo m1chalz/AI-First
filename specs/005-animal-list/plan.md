@@ -13,7 +13,7 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
 
 ## Technical Context
 
-**Language/Version**: Kotlin 1.9+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)  
+**Language/Version**: Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)  
 **Primary Dependencies**: 
 - Android: Jetpack Compose, Kotlin Coroutines + Flow, Koin
 - iOS: SwiftUI, Swift Concurrency (async/await), Koin (from KMP)
@@ -82,13 +82,13 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
 
 - [x] **Interface-Based Design**: Domain logic uses interfaces for repositories
   - `AnimalRepository` interface in `/shared/src/commonMain/.../domain/repositories/AnimalRepository.kt`
-  - Mock implementation `MockAnimalRepository` in platform modules (Android, iOS, Web)
+  - Implementation `AnimalRepositoryImpl` in platform modules (Android, iOS, Web) with mocked data
   - `GetAnimalsUseCase` references interface, not concrete implementation
   - ✅ COMPLIANT: Repository pattern with interfaces
 
 - [x] **Dependency Injection**: Plan includes Koin setup for all platforms
   - Shared domain module in `/shared/src/commonMain/.../di/DomainModule.kt` (GetAnimalsUseCase)
-  - Android data module in `/composeApp/src/androidMain/.../di/DataModule.kt` (MockAnimalRepository)
+  - Android data module in `/composeApp/src/androidMain/.../di/DataModule.kt` (AnimalRepositoryImpl)
   - Android ViewModel module in `/composeApp/src/androidMain/.../di/ViewModelModule.kt` (AnimalListViewModel)
   - iOS Koin initialization in `/iosApp/iosApp/DI/KoinInitializer.swift`
   - Web DI setup (if using Koin/JS) in `/webApp/src/di/setup.ts` or native hooks
@@ -148,8 +148,8 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
   - Android testTags:
     - `animalList.list` (LazyColumn)
     - `animalList.item.${animal.id}` (each card)
-    - `animalList.reportMissingButton.click` (primary button)
-    - `animalList.reportFoundButton.click` (secondary button on mobile)
+    - `animalList.reportMissingButton` (primary button)
+    - `animalList.reportFoundButton` (secondary button on mobile)
     - `animalList.searchPlaceholder` (reserved search area)
   - iOS accessibilityIdentifiers: same naming convention
   - Web data-testid: same naming convention
@@ -239,9 +239,9 @@ composeApp/src/
 │   │   └── navigation/
 │   │       └── AnimalListNavigation.kt       # NEW: Navigation setup
 │   ├── data/
-│   │   └── MockAnimalRepository.kt    # NEW: Mock repository implementation
+│   │   └── AnimalRepositoryImpl.kt    # NEW: Repository implementation with mocked data
 │   └── di/
-│       ├── DataModule.kt              # UPDATED: Add MockAnimalRepository
+│       ├── DataModule.kt              # UPDATED: Add AnimalRepositoryImpl
 │       └── ViewModelModule.kt         # UPDATED: Add AnimalListViewModel
 └── androidUnitTest/kotlin/com/intive/aifirst/petspot/
     └── features/animallist/
@@ -263,7 +263,7 @@ iosApp/iosApp/
 │   ├── AnimalCardView.swift                   # NEW: SwiftUI card component
 │   └── EmptyStateView.swift                   # NEW: SwiftUI empty state
 ├── Repositories/
-│   └── MockAnimalRepository.swift             # NEW: Mock repository for iOS
+│   └── AnimalRepositoryImpl.swift             # NEW: Repository implementation with mocked data for iOS
 └── DI/
     └── KoinInitializer.swift                  # UPDATED: Register iOS-specific modules
 

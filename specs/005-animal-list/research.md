@@ -21,10 +21,10 @@ This document records research findings and design decisions made during plannin
 - Easy transition: swap mock with real HTTP repository via Koin DI in future sprint
 
 **Implementation**:
-- `MockAnimalRepository` provides fixed list of 8-12 Animal entities
+- `AnimalRepositoryImpl` provides fixed list of 8-12 Animal entities (mocked data for UI development)
 - Data includes varied species (Dog, Cat), breeds, statuses (Missing, Found), locations
-- Empty state tested by injecting empty mock repository in tests
-- Mock repository returns `Result.success(animals)` to match real API contract
+- Empty state tested by injecting empty fake repository in tests
+- Repository returns `Result.success(animals)` to match real API contract
 
 **Alternatives Considered**:
 - JSON files: Rejected - adds file I/O complexity for simple UI prototype
@@ -280,13 +280,13 @@ export function useAnimalList() {
 
 ### 7. Test Identifier Naming Convention
 
-**Decision**: Use `{screen}.{element}.{action}` format across all platforms
+**Decision**: Use `{screen}.{element}` format across all platforms
 
 **Rationale**:
 - Constitution mandates stable test identifiers for E2E tests
 - Consistent naming across Android (testTag), iOS (accessibilityIdentifier), Web (data-testid)
 - Screen-prefixed IDs prevent collisions across features
-- Action suffix (e.g., `.click`) documents interaction intent
+- Element name should be descriptive enough without redundant action suffix
 
 **Implementation**:
 ```kotlin
@@ -301,7 +301,7 @@ LazyColumn(modifier = Modifier.testTag("animalList.list")) {
 }
 Button(
     onClick = { /*...*/ },
-    modifier = Modifier.testTag("animalList.reportMissingButton.click")
+    modifier = Modifier.testTag("animalList.reportMissingButton")
 )
 ```
 
@@ -318,7 +318,7 @@ ScrollView {
 }
 
 Button("Report a Missing Animal") { /*...*/ }
-    .accessibilityIdentifier("animalList.reportMissingButton.click")
+    .accessibilityIdentifier("animalList.reportMissingButton")
 ```
 
 ```tsx
@@ -330,7 +330,7 @@ Button("Report a Missing Animal") { /*...*/ }
         </li>
     ))}
 </ul>
-<button data-testid="animalList.reportMissingButton.click">
+<button data-testid="animalList.reportMissingButton">
     Report a Missing Animal
 </button>
 ```
@@ -455,7 +455,7 @@ val domainModule = module {
 
 // Android data module
 val dataModule = module {
-    single<AnimalRepository> { MockAnimalRepository() }
+    single<AnimalRepository> { AnimalRepositoryImpl() }
 }
 
 // Android ViewModel module
@@ -481,8 +481,8 @@ No callbacks, RxJava, Combine, or Promise chains used.
 When backend API is ready:
 
 1. **Shared Module**: Add network client dependency (Ktor or similar)
-2. **Create RealAnimalRepository**: Implement `AnimalRepository` interface with HTTP calls
-3. **Update Koin Modules**: Replace `MockAnimalRepository` with `RealAnimalRepository` in DI
+2. **Create RemoteAnimalRepository**: Implement `AnimalRepository` interface with HTTP calls
+3. **Update Koin Modules**: Replace `AnimalRepositoryImpl` (mocked) with `RemoteAnimalRepository` (real API) in DI
 4. **Add Error Handling**: Map HTTP errors to domain errors (network timeout, 404, 500, etc.)
 5. **Add Loading States**: Ensure UI handles loading/error states from real API
 6. **Update Tests**: Add integration tests with mock HTTP server (MockWebServer, WireMock)

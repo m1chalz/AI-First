@@ -32,8 +32,8 @@ Create domain models in `/shared/src/commonMain/kotlin/com/intive/aifirst/petspo
 
 1. **Location.kt**
    - Data class with `city: String`, `radiusKm: Int`
-   - Add `toDisplayString()` method
    - Add `@OptIn(ExperimentalJsExport::class)` and `@JsExport`
+   - Note: Display formatting should be done in UI layer, not here
 
 2. **AnimalSpecies.kt**
    - Enum: DOG, CAT, BIRD, RABBIT, OTHER
@@ -131,13 +131,13 @@ Create in `/shared/src/commonTest/kotlin/com/intive/aifirst/petspot/`:
 
 **Time Estimate**: 2-2.5 hours
 
-#### Step 2.1: Create Mock Repository
+#### Step 2.1: Create Repository Implementation
 
 Create in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/`:
 
-1. **MockAnimalRepository.kt**
+1. **AnimalRepositoryImpl.kt**
    - Implement `AnimalRepository` interface
-   - Return 10 mock Animal entities (see contracts/)
+   - Return 10 mock Animal entities (see contracts/) - mocked data for UI development
    - Simulate 500ms delay with `kotlinx.coroutines.delay()`
 
 **Verification**:
@@ -150,7 +150,7 @@ Create in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/`:
 1. **DataModule.kt** (`/composeApp/src/androidMain/.../di/`):
    ```kotlin
    val dataModule = module {
-       single<AnimalRepository> { MockAnimalRepository() }
+       single<AnimalRepository> { AnimalRepositoryImpl() }
        // ... existing repositories
    }
    ```
@@ -269,13 +269,13 @@ Create in `/composeApp/src/androidUnitTest/.../features/animallist/`:
 
 **Time Estimate**: 2-2.5 hours
 
-#### Step 3.1: Create Mock Repository
+#### Step 3.1: Create Repository Implementation
 
 Create in `/iosApp/iosApp/Repositories/`:
 
-1. **MockAnimalRepository.swift**
+1. **AnimalRepositoryImpl.swift**
    - Function: `async func getAnimals() throws -> [Animal]`
-   - Return 10 mock animals (same as Android)
+   - Return 10 mock animals (same as Android) - mocked data for UI development
    - Simulate delay with `Task.sleep(nanoseconds:)`
 
 **Verification**:

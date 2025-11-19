@@ -102,26 +102,25 @@ import kotlin.js.JsExport
 
 /**
  * Represents a geographic location with search radius.
- * Used to display animal location in format: "City, +Xkm"
+ * Domain model for animal location data.
  *
  * @property city City or area name
- * @property radiusKm Search radius in kilometers (displayed as "+Xkm")
+ * @property radiusKm Search radius in kilometers
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 data class Location(
     val city: String,
     val radiusKm: Int
-) {
-    /** Formatted display string: "City, +Xkm" */
-    fun toDisplayString(): String = "$city, +${radiusKm}km"
-}
+)
 ```
 
 **Example**:
 ```kotlin
-Location(city = "Pruszkow", radiusKm = 5)  // Displays as "Pruszkow, +5km"
+Location(city = "Pruszkow", radiusKm = 5)
 ```
+
+**Note**: Display formatting (e.g., "Pruszkow, +5km") should be handled in the UI/presentation layer, not in the domain model.
 
 ---
 
@@ -393,20 +392,20 @@ listOf(
 ## Data Flow
 
 ```
-MockAnimalRepository
+AnimalRepositoryImpl (mocked data)
     ↓ (returns Result<List<Animal>>)
 GetAnimalsUseCase
     ↓ (invoked by ViewModel)
 ViewModel State Update
     ↓ (StateFlow/Published/useState)
 UI Rendering
-    ↓ (LazyColumn/List/map)
+    ↓ (LazyColumn/LazyVStack/map)
 Animal Cards Displayed
 ```
 
 **Error Flow**:
 ```
-MockRepository throws exception
+Repository throws exception
     ↓
 Use case catches and returns Result.failure(exception)
     ↓
@@ -417,7 +416,7 @@ UI displays error message
 
 **Empty Flow**:
 ```
-MockRepository returns empty list
+Repository returns empty list
     ↓
 Use case returns Result.success(emptyList())
     ↓

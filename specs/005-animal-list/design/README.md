@@ -48,17 +48,19 @@ This directory contains design assets and references for the Animal List Screen 
 
 ### Spacing & Layout
 
-| Element | Value | Description |
-|---------|-------|-------------|
-| Card gap | 8px | Vertical spacing between list items |
-| Card padding | 16px (horizontal) | Internal card padding |
-| Card radius | 4px | Border radius for cards |
-| Badge radius | 10px | Border radius for status badges |
-| Button radius | 2px | Border radius for action buttons |
-| Image size | 63x63px | Circular animal image placeholder |
-| Mobile width | 328px | Content width on mobile |
-| Web content | 1181px | Main content area width on web |
-| Web sidebar | 219px | Navigation sidebar width on web |
+**Note**: Values shown in pixels (px) from Figma designs. For Android implementation, use density-independent pixels (dp) with same numeric values (e.g., 8px → 8dp). iOS and Web use points/pixels respectively.
+
+| Element | Value | Android (dp) | Description |
+|---------|-------|--------------|-------------|
+| Card gap | 8px | 8dp | Vertical spacing between list items |
+| Card padding | 16px (horizontal) | 16dp | Internal card padding |
+| Card radius | 4px | 4dp | Border radius for cards |
+| Badge radius | 10px | 10dp | Border radius for status badges |
+| Button radius | 2px | 2dp | Border radius for action buttons |
+| Image size | 63x63px | 63dp | Circular animal image placeholder |
+| Mobile width | 328px | match_parent with 24dp padding | Content width on mobile (Android uses full width) |
+| Web content | 1181px | N/A | Main content area width on web |
+| Web sidebar | 219px | N/A | Navigation sidebar width on web |
 
 ### Shadows
 
@@ -70,8 +72,10 @@ This directory contains design assets and references for the Animal List Screen 
 
 ### Mobile Card
 
+**Note**: On Android and iOS, cards use full screen width with horizontal padding. Only web designs show fixed widths.
+
 ```
-[Card Container - 328px width, 4px radius, shadow]
+[Card Container - full width with padding, 4px radius, shadow]
   ├─ [Circular Image - 63x63px, gray placeholder]
   ├─ [Content Column]
   │  ├─ [Location Row - icon + text]
@@ -101,7 +105,11 @@ This directory contains design assets and references for the Animal List Screen 
 1. **Scrolling**: The list should be independently scrollable. On mobile, action buttons float outside the scroll area.
 2. **Search Placeholder**: The search/filters area is currently a placeholder button on mobile and a larger area on web.
 3. **Empty State**: Design does not show empty state explicitly - implementation should create an appropriate message.
-4. **Icons**: Location, gender, and search icons are Material Design icons (24dp).
+4. **Icons**: 
+   - **Android**: Material Design icons (24dp) - use Material Icons library
+   - **iOS**: SF Symbols (24pt equivalent) - use built-in SF Symbols catalog
+   - **Web**: Material Design icons or custom SVG icons
+   - Icon types: location pin, gender symbols (male/female), search/filter
 5. **Image Placeholders**: Use a generic animal/pet icon until real images are available.
 6. **Responsive Behavior**: Layout changes significantly between mobile (vertical cards) and web (horizontal table-like cards).
 

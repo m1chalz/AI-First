@@ -86,9 +86,9 @@ interface AnimalRepository {
 
 ## Mock Implementation
 
-### Android Mock Repository
+### Android Repository Implementation
 
-**Location**: `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/MockAnimalRepository.kt`
+**Location**: `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/AnimalRepositoryImpl.kt`
 
 ```kotlin
 package com.intive.aifirst.petspot.data
@@ -98,11 +98,12 @@ import com.intive.aifirst.petspot.domain.repositories.AnimalRepository
 import kotlinx.coroutines.delay
 
 /**
- * Mock implementation of AnimalRepository.
- * Returns hardcoded list of 8-12 animals for UI testing.
+ * Repository implementation with mocked data for UI development.
+ * Returns hardcoded list of 8-12 animals for testing UI flows.
  * Simulates network delay to test loading states.
+ * Will be replaced with RemoteAnimalRepository when backend is ready.
  */
-class MockAnimalRepository : AnimalRepository {
+class AnimalRepositoryImpl : AnimalRepository {
     
     /** Simulated network delay in milliseconds */
     private val networkDelayMs: Long = 500
@@ -275,19 +276,20 @@ class MockAnimalRepository : AnimalRepository {
 
 ---
 
-### iOS Mock Repository
+### iOS Repository Implementation
 
-**Location**: `/iosApp/iosApp/Repositories/MockAnimalRepository.swift`
+**Location**: `/iosApp/iosApp/Repositories/AnimalRepositoryImpl.swift`
 
 ```swift
 import shared
 
 /**
- * Mock implementation of AnimalRepository for iOS.
- * Returns same hardcoded data as Android mock.
+ * Repository implementation with mocked data for iOS UI development.
+ * Returns same hardcoded data as Android implementation.
  * Simulates network delay for testing loading states.
+ * Will be replaced with RemoteAnimalRepository when backend is ready.
  */
-class MockAnimalRepository {
+class AnimalRepositoryImpl {
     /// Network delay simulation (0.5 seconds)
     private let networkDelaySeconds: Double = 0.5
     
@@ -333,18 +335,19 @@ class MockAnimalRepository {
 
 ---
 
-### Web Mock Repository
+### Web Repository Implementation
 
-**Location**: `/webApp/src/services/mockAnimalRepository.ts`
+**Location**: `/webApp/src/services/animalRepository.ts`
 
 ```typescript
 import type { Animal } from 'shared';
 
 /**
- * Mock implementation of animal repository for web.
- * Returns hardcoded test data matching Android/iOS mocks.
+ * Repository implementation with mocked data for web UI development.
+ * Returns hardcoded test data matching Android/iOS implementations.
+ * Will be replaced with RemoteAnimalRepository when backend is ready.
  */
-export class MockAnimalRepository {
+export class AnimalRepositoryImpl {
     private readonly networkDelayMs = 500;
     
     /**
@@ -523,15 +526,15 @@ Repository implementation MUST:
 - [ ] Allow empty list (valid scenario)
 - [ ] Not throw exceptions directly (wrap in Result.failure)
 
-### Mock Implementation Requirements
+### Repository Implementation Requirements (with mocked data)
 
-Mock repository MUST:
+Repository implementation MUST:
 - [ ] Return 8-12 Animal entities (per spec clarification)
 - [ ] Include mix of species (Dog, Cat, Bird, Rabbit)
 - [ ] Include mix of statuses (majority Active, some Found, few Closed)
 - [ ] Include varied locations (different cities)
 - [ ] Simulate realistic network delay (100-1000ms)
-- [ ] Never fail (unless explicitly testing error states with Fake)
+- [ ] Never fail in normal flow (error states tested with FakeAnimalRepository)
 - [ ] Return consistent data (same list every call for UI predictability)
 
 ---
@@ -540,10 +543,10 @@ Mock repository MUST:
 
 - ✅ `AnimalRepository` interface defined with `getAnimals()` method
 - ✅ Contract uses Kotlin Coroutines (`suspend`) and `Result<T>` wrapper
-- ✅ Mock implementations defined for Android, iOS, Web
-- ✅ Mock data consistent across platforms (10 animals with varied attributes)
+- ✅ Repository implementations defined for Android, iOS, Web (with mocked data)
+- ✅ Mocked data consistent across platforms (10 animals with varied attributes)
 - ✅ Fake repository provided for unit testing (control success/failure)
-- ✅ Future real implementation path documented
+- ✅ Future real implementation path documented (will replace with RemoteAnimalRepository)
 - ✅ Contract validation criteria defined
 
 **Status**: Contract complete. Ready for quickstart documentation.
