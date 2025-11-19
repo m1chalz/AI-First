@@ -1,4 +1,7 @@
 import { ExampleScreen } from '../screens/ExampleScreen';
+import { waitForElement } from '../steps/urlSteps';
+import { getElementText, fillInput, isElementDisplayed } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 /**
  * Example E2E test suite demonstrating:
@@ -18,11 +21,11 @@ describe('Example Feature - Mobile', () => {
 
   it('should display welcome message on screen load', async () => {
     // Given - App launches and user is on example screen
-    await exampleScreen.waitForScreenLoad();
+    await waitForElement(driver, exampleScreen.testIds.title);
 
     // When - Screen loads
-    const isTitleVisible = await exampleScreen.isTitleDisplayed();
-    const title = await exampleScreen.getTitle();
+    const isTitleVisible = await isElementDisplayed(driver, exampleScreen.testIds.title);
+    const title = await getElementText(driver, exampleScreen.testIds.title);
 
     // Then - Welcome message is displayed
     expect(isTitleVisible).toBe(true);
@@ -31,36 +34,37 @@ describe('Example Feature - Mobile', () => {
 
   it('should submit form and display result', async () => {
     // Given - User is on the example screen with loaded form
-    await exampleScreen.waitForScreenLoad();
+    await waitForElement(driver, exampleScreen.testIds.title);
 
     // When - User fills input and submits form
     const testInput = 'Hello PetSpot Mobile!';
-    await exampleScreen.fillInput(testInput);
-    await exampleScreen.clickSubmit();
+    await fillInput(driver, exampleScreen.testIds.input, testInput);
+    await clickElement(driver, exampleScreen.testIds.submitButton);
 
     // Then - Result is displayed with correct content
-    const result = await exampleScreen.getResult();
+    await waitForElement(driver, exampleScreen.testIds.result);
+    const result = await getElementText(driver, exampleScreen.testIds.result);
     expect(result).toContain(testInput);
   });
 
   it('should handle empty input submission', async () => {
     // Given - User is on the example screen
-    await exampleScreen.waitForScreenLoad();
+    await waitForElement(driver, exampleScreen.testIds.title);
 
     // When - User submits empty form
-    await exampleScreen.clickSubmit();
+    await clickElement(driver, exampleScreen.testIds.submitButton);
 
     // Then - Appropriate validation or default message is shown
-    const isResultDisplayed = await exampleScreen.isResultDisplayed();
+    const isResultDisplayed = await isElementDisplayed(driver, exampleScreen.testIds.result);
     expect(isResultDisplayed).toBe(true);
     
-    const result = await exampleScreen.getResult();
+    const result = await getElementText(driver, exampleScreen.testIds.result);
     expect(result).toBeDefined();
   });
 
   it('should handle platform-specific behavior', async () => {
     // Given - User is on the example screen
-    await exampleScreen.waitForScreenLoad();
+    await waitForElement(driver, exampleScreen.testIds.title);
 
     // When - Checking platform
     const platform = driver.capabilities.platformName;

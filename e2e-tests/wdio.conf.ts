@@ -16,7 +16,7 @@ export const config: Options.Testrunner = {
   // Specify Test Files
   // ==================
   specs: [
-    './e2e-tests/mobile/specs/**/*.spec.ts'
+    './mobile/specs/**/*.spec.ts'
   ],
   
   // Patterns to exclude.
@@ -36,7 +36,7 @@ export const config: Options.Testrunner = {
     'appium:platformVersion': '13.0',
     'appium:automationName': 'UiAutomator2',
     // Path to your app (update this when you have the app)
-    // 'appium:app': path.join(process.cwd(), './composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
+    // 'appium:app': path.join(process.cwd(), '../composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
     'appium:appPackage': 'com.intive.aifirst.petspot',
     'appium:appActivity': '.MainActivity',
     'appium:noReset': false,
@@ -68,7 +68,7 @@ export const config: Options.Testrunner = {
         address: 'localhost',
         port: 4723,
       },
-      logPath: './e2e-tests/mobile/logs/',
+      logPath: './mobile/logs/',
     }]
   ],
   
@@ -81,7 +81,7 @@ export const config: Options.Testrunner = {
   reporters: [
     'spec',
     ['junit', {
-      outputDir: './e2e-tests/mobile/reports/junit',
+      outputDir: './mobile/reports/junit',
       outputFileFormat: (options) => {
         return `results-${options.cid}.xml`;
       }

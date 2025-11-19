@@ -1,16 +1,22 @@
 import { Page, Locator } from '@playwright/test';
-import { navigateTo, waitForElement } from '../steps/urlSteps';
-import { getElementText, fillInput } from '../steps/elementSteps';
-import { clickElement } from '../steps/mouseSteps';
+import { navigateTo } from '../steps/urlSteps';
 
 /**
  * Page Object Model for Example page.
- * Demonstrates POM pattern with test identifiers and reusable step definitions.
+ * Provides locators and navigation. Use step definitions for interactions.
  */
 export class ExamplePage {
   readonly page: Page;
   
-  // Locators using data-testid pattern: {screen}.{element}.{action}
+  // Test IDs using pattern: {screen}.{element}.{action}
+  readonly testIds = {
+    title: 'example.title.display',
+    input: 'example.input.text',
+    submitButton: 'example.button.submit',
+    result: 'example.result.display',
+  };
+
+  // Locators using data-testid pattern
   readonly titleLocator: Locator;
   readonly inputLocator: Locator;
   readonly submitButtonLocator: Locator;
@@ -18,10 +24,10 @@ export class ExamplePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.titleLocator = page.getByTestId('example.title.display');
-    this.inputLocator = page.getByTestId('example.input.text');
-    this.submitButtonLocator = page.getByTestId('example.button.submit');
-    this.resultLocator = page.getByTestId('example.result.display');
+    this.titleLocator = page.getByTestId(this.testIds.title);
+    this.inputLocator = page.getByTestId(this.testIds.input);
+    this.submitButtonLocator = page.getByTestId(this.testIds.submitButton);
+    this.resultLocator = page.getByTestId(this.testIds.result);
   }
 
   /**
@@ -29,44 +35,6 @@ export class ExamplePage {
    */
   async navigate(): Promise<void> {
     await navigateTo(this.page, '/');
-  }
-
-  /**
-   * Get the page title text.
-   * @returns Title text
-   */
-  async getTitle(): Promise<string> {
-    return await getElementText(this.page, 'example.title.display');
-  }
-
-  /**
-   * Fill the input field with text.
-   * @param text - Text to enter
-   */
-  async fillInput(text: string): Promise<void> {
-    await fillInput(this.page, 'example.input.text', text);
-  }
-
-  /**
-   * Click the submit button.
-   */
-  async clickSubmit(): Promise<void> {
-    await clickElement(this.page, 'example.button.submit');
-  }
-
-  /**
-   * Get the result text after submission.
-   * @returns Result text
-   */
-  async getResult(): Promise<string> {
-    return await getElementText(this.page, 'example.result.display');
-  }
-
-  /**
-   * Wait for page to be fully loaded.
-   */
-  async waitForPageLoad(): Promise<void> {
-    await waitForElement(this.page, 'example.title.display');
   }
 }
 

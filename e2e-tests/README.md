@@ -31,39 +31,43 @@ e2e-tests/
 
 ## Quick Start
 
+### Setup
+
+```bash
+# Install dependencies (in e2e-tests directory)
+cd e2e-tests
+npm install
+
+# Install Playwright browsers
+npx playwright install
+```
+
 ### Prerequisites
 
 **For Web Testing:**
-```bash
-npm install
-npx playwright install  # Install browsers
-```
+- Node.js v20+ installed
+- Playwright browsers installed (via `npx playwright install`)
 
 **For Mobile Testing:**
-```bash
-npm install
-
-# Android
-- Android SDK installed
+- Android SDK (for Android tests)
 - Android emulator running OR physical device connected
-
-# iOS (macOS only)
-- Xcode installed
+- Xcode (macOS only, for iOS tests)
 - iOS Simulator running OR physical device connected
-```
 
 ### Running Tests
 
 **Web E2E Tests:**
 ```bash
-# Run all web tests
-npm run test:e2e:web
+# From e2e-tests directory
+npm run test:web
+npm run test:web:ui
 
-# Run with UI mode (interactive)
+# From project root
+npm run test:e2e:web
 npm run test:e2e:web:ui
 
 # Run specific test file
-npx playwright test e2e-tests/web/specs/example.spec.ts
+npx playwright test web/specs/example.spec.ts
 
 # Run in headed mode (visible browser)
 npx playwright test --headed
@@ -74,10 +78,12 @@ npx playwright test --dry-run
 
 **Mobile E2E Tests:**
 ```bash
-# Run Android tests
+# From e2e-tests directory
 npm run test:mobile:android
+npm run test:mobile:ios
 
-# Run iOS tests
+# From project root
+npm run test:mobile:android
 npm run test:mobile:ios
 
 # Dry run (validate configuration)
@@ -86,28 +92,38 @@ npm run test:mobile:android -- --dry-run
 
 ## Architecture
 
+### Separation of Concerns
+
+**Pages/Screens** → Store only test IDs and locators (Single Responsibility)  
+**Steps** → Contain reusable actions (fillInput, clickElement, navigate)  
+**Tests** → Combine pages and steps into Given-When-Then scenarios
+
 ### Web Testing (Playwright)
 
 - **Framework**: Playwright with TypeScript
-- **Pattern**: Page Object Model (POM)
+- **Pattern**: Page Object Model (POM) + Step Definitions
 - **Test IDs**: `data-testid` attributes with pattern `{screen}.{element}.{action}`
 - **Step Definitions**: Reusable actions in `/web/steps/`
 
 **Example:**
 ```typescript
 import { ExamplePage } from '../pages/ExamplePage';
+import { waitForElement } from '../steps/urlSteps';
+import { fillInput, getElementText } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 test('should submit form', async ({ page }) => {
   // Given
   const examplePage = new ExamplePage(page);
   await examplePage.navigate();
+  await waitForElement(page, examplePage.testIds.title);
   
   // When
-  await examplePage.fillInput('test');
-  await examplePage.clickSubmit();
+  await fillInput(page, examplePage.testIds.input, 'test');
+  await clickElement(page, examplePage.testIds.submitButton);
   
   // Then
-  const result = await examplePage.getResult();
+  const result = await getElementText(page, examplePage.testIds.result);
   expect(result).toContain('test');
 });
 ```
@@ -115,26 +131,29 @@ test('should submit form', async ({ page }) => {
 ### Mobile Testing (Appium + WebdriverIO)
 
 - **Framework**: Appium 2.x + WebdriverIO + TypeScript
-- **Pattern**: Screen Object Model (SOM)
+- **Pattern**: Screen Object Model (SOM) + Step Definitions
 - **Test IDs**: `testTag` (Android) / `accessibilityIdentifier` (iOS) with pattern `{screen}.{element}.{action}`
 - **Step Definitions**: Reusable actions in `/mobile/steps/`
 
 **Example:**
 ```typescript
 import { ExampleScreen } from '../screens/ExampleScreen';
+import { waitForElement } from '../steps/urlSteps';
+import { fillInput, getElementText } from '../steps/elementSteps';
+import { clickElement } from '../steps/mouseSteps';
 
 describe('Example Feature', () => {
   it('should submit form', async () => {
     // Given
     const screen = new ExampleScreen(driver);
-    await screen.waitForScreenLoad();
+    await waitForElement(driver, screen.testIds.title);
     
     // When
-    await screen.fillInput('test');
-    await screen.clickSubmit();
+    await fillInput(driver, screen.testIds.input, 'test');
+    await clickElement(driver, screen.testIds.submitButton);
     
     // Then
-    const result = await screen.getResult();
+    const result = await getElementText(driver, screen.testIds.result);
     expect(result).toContain('test');
   });
 });
@@ -186,21 +205,29 @@ Button("Add Pet")
 
 ### 3. Page/Screen Object Model (MANDATORY)
 
-Separate test logic from element locators:
+Pages/Screens contain ONLY test IDs and locators (no actions):
 
 **Web Page Object:**
 ```typescript
 export class PetListPage {
   readonly page: Page;
+  
+  // Test IDs
+  readonly testIds = {
+    addButton: 'petList.addButton.click',
+    petItem: (id: string) => `petList.item.${id}`,
+  };
+  
+  // Locators (optional, for convenience)
   readonly addButtonLocator: Locator;
   
   constructor(page: Page) {
     this.page = page;
-    this.addButtonLocator = page.getByTestId('petList.addButton.click');
+    this.addButtonLocator = page.getByTestId(this.testIds.addButton);
   }
   
-  async clickAddButton(): Promise<void> {
-    await this.addButtonLocator.click();
+  async navigate(): Promise<void> {
+    await navigateTo(this.page, '/pets');
   }
 }
 ```
@@ -210,15 +237,21 @@ export class PetListPage {
 export class PetListScreen {
   private driver: WebdriverIO.Browser;
   
-  async clickAddButton(): Promise<void> {
-    await clickElement(this.driver, 'petList.addButton.click');
+  // Test IDs only
+  readonly testIds = {
+    addButton: 'petList.addButton.click',
+    petItem: (id: string) => `petList.item.${id}`,
+  };
+  
+  constructor(driver: WebdriverIO.Browser) {
+    this.driver = driver;
   }
 }
 ```
 
-### 4. Reusable Step Definitions
+### 4. Reusable Step Definitions (MANDATORY)
 
-Common actions should be extracted to step definitions:
+All actions are extracted to step definitions:
 
 ```typescript
 // web/steps/urlSteps.ts
@@ -226,9 +259,17 @@ export async function navigateTo(page: Page, url: string) {
   await page.goto(url);
 }
 
+export async function waitForElement(page: Page, testId: string) {
+  await page.getByTestId(testId).waitFor({ state: 'visible' });
+}
+
 // web/steps/elementSteps.ts  
 export async function getElementText(page: Page, testId: string) {
   return await page.getByTestId(testId).textContent() || '';
+}
+
+export async function fillInput(page: Page, testId: string, text: string) {
+  await page.getByTestId(testId).fill(text);
 }
 
 // web/steps/mouseSteps.ts
@@ -236,31 +277,30 @@ export async function clickElement(page: Page, testId: string) {
   await page.getByTestId(testId).click();
 }
 
-// Usage in Page Object
-async navigate(): Promise<void> {
-  await navigateTo(this.page, '/pets');
-}
+// Usage in tests (NOT in Page Objects)
+await clickElement(page, petListPage.testIds.addButton);
 ```
 
 ## Configuration
 
 ### Playwright Configuration
 
-File: `playwright.config.ts` (repo root)
+File: `e2e-tests/playwright.config.ts`
 
 Key settings:
-- Test directory: `./e2e-tests/web/specs`
+- Test directory: `./web/specs`
 - Base URL: `http://localhost:3000`
 - Browsers: Chromium, Firefox, WebKit
 - Reporters: HTML, List
 - Retries: 2 on CI, 0 locally
+- Web server: Auto-start `webApp` on port 3000
 
 ### WebdriverIO Configuration
 
-File: `wdio.conf.ts` (repo root)
+File: `e2e-tests/wdio.conf.ts`
 
 Key settings:
-- Specs: `./e2e-tests/mobile/specs/**/*.spec.ts`
+- Specs: `./mobile/specs/**/*.spec.ts`
 - Appium service: Auto-start on port 4723
 - Capabilities: Android (UiAutomator2), iOS (XCUITest)
 - Framework: Mocha
