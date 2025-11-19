@@ -1,0 +1,138 @@
+import type { Knex } from 'knex';
+
+const ANNOUNCEMENT_MAX_UUID = '11111111-1111-1111-1111-111111111111';
+const ANNOUNCEMENT_LUNA_UUID = '22222222-2222-2222-2222-222222222222';
+const ANNOUNCEMENT_PIORUN_UUID = '33333333-3333-3333-3333-333333333333';
+const ANNOUNCEMENT_BUREK_UUID = '44444444-4444-4444-4444-444444444444';
+const ANNOUNCEMENT_MRUCZEK_UUID = '55555555-5555-5555-5555-555555555555';
+const ANNOUNCEMENT_USZATEK_UUID = '66666666-6666-6666-6666-666666666666';
+const ANNOUNCEMENT_REKSIO_UUID = '77777777-7777-7777-7777-777777777777';
+const ANNOUNCEMENT_FRYTKA_UUID = '88888888-8888-8888-8888-888888888888';
+
+const ANNOUNCEMENTS = [
+  {
+    id: ANNOUNCEMENT_MAX_UUID,
+    pet_name: 'Max',
+    species: 'DOG',
+    breed: 'Golden Retriever',
+    gender: 'MALE',
+    description: 'Przyjazny golden retriever w czerwonej obroży. Reaguje na imię Max. Ma charakterystyczną białą plamę na piersi.',
+    location: 'Warszawa',
+    location_radius: 5,
+    last_seen_date: '2025-11-18',
+    email: 'jan.kowalski@example.pl',
+    phone: '+48 123 456 789',
+    photo_url: 'https://example.com/photos/max.jpg',
+    status: 'ACTIVE',
+  },
+  {
+    id: ANNOUNCEMENT_LUNA_UUID,
+    pet_name: 'Luna',
+    species: 'CAT',
+    breed: null,
+    gender: 'FEMALE',
+    description: 'Czarny kot z białymi łapkami. Bardzo nieśmiały, może się chować przy ludziach.',
+    location: 'Kraków',
+    location_radius: null,
+    last_seen_date: '2025-11-15',
+    email: null,
+    phone: '555-0102',
+    photo_url: null,
+    status: 'ACTIVE',
+  },
+  {
+    id: ANNOUNCEMENT_PIORUN_UUID,
+    pet_name: 'Piorun',
+    species: 'BIRD',
+    breed: 'Papużka falista',
+    gender: 'UNKNOWN',
+    description: 'Żółta papużka, bardzo gadatliwa. Zna zwroty "cześć" i "piękny ptaszek".',
+    location: 'Wrocław',
+    location_radius: 3,
+    last_seen_date: '2025-11-17',
+    email: 'anna.nowak@example.pl',
+    phone: '(555) 123-4567',
+    photo_url: 'https://example.com/photos/piorun.jpg',
+    status: 'ACTIVE',
+  },
+  {
+    id: ANNOUNCEMENT_BUREK_UUID,
+    pet_name: 'Burek',
+    species: 'DOG',
+    breed: 'Mieszaniec labradora',
+    gender: 'MALE',
+    description: 'Brązowy kundelek, średniej wielkości. Nosi niebieską obrożę z identyfikatorem.',
+    location: 'Gdańsk',
+    location_radius: 10,
+    last_seen_date: '2025-11-10',
+    email: 'michal.wisniewski@example.pl',
+    phone: '5551234',
+    photo_url: null,
+    status: 'FOUND',
+  },
+  {
+    id: ANNOUNCEMENT_MRUCZEK_UUID,
+    pet_name: 'Mruczek',
+    species: 'CAT',
+    breed: 'Syjamski',
+    gender: 'MALE',
+    description: 'Kremowy kot syjamski z niebieskimi oczami. Bardzo głośny.',
+    location: 'Poznań',
+    location_radius: 2,
+    last_seen_date: '2025-11-12',
+    email: null,
+    phone: '+48 555 987 654',
+    photo_url: 'https://example.com/photos/mruczek.jpg',
+    status: 'ACTIVE',
+  },
+  {
+    id: ANNOUNCEMENT_USZATEK_UUID,
+    pet_name: 'Uszatek',
+    species: 'RABBIT',
+    breed: 'Królik miniaturka',
+    gender: 'FEMALE',
+    description: 'Mały biały królik z opadającymi uszami. Bardzo łagodny i przyjazny.',
+    location: 'Łódź',
+    location_radius: null,
+    last_seen_date: '2025-11-16',
+    email: 'joanna.mazur@example.pl',
+    phone: '555-0199',
+    photo_url: null,
+    status: 'ACTIVE',
+  },
+  {
+    id: ANNOUNCEMENT_REKSIO_UUID,
+    pet_name: 'Reksio',
+    species: 'DOG',
+    breed: null,
+    gender: 'MALE',
+    description: 'Mały kundelek, płowy. Bez obroży. Lekko kuleie na lewą przednią łapę.',
+    location: 'Katowice',
+    location_radius: 15,
+    last_seen_date: '2025-11-05',
+    email: 'schronisko@example.pl',
+    phone: '555-PETS',
+    photo_url: 'https://example.com/photos/reksio.jpg',
+    status: 'CLOSED',
+  },
+  {
+    id: ANNOUNCEMENT_FRYTKA_UUID,
+    pet_name: 'Frytka',
+    species: 'OTHER',
+    breed: 'Fretka',
+    gender: 'MALE',
+    description: 'Ciemnobrązowa fretka, bardzo zabawna. Nosi małą obrożę z dzwoneczkiem.',
+    location: 'Szczecin',
+    location_radius: 5,
+    last_seen_date: '2025-11-14',
+    email: 'wlasciciel.fretki@example.pl',
+    phone: '+48-312-555-0142',
+    photo_url: 'https://example.com/photos/frytka.jpg',
+    status: 'ACTIVE',
+  },
+];
+
+export async function seed(knex: Knex): Promise<void> {
+  await knex('announcement').del();
+  await knex('announcement').insert(ANNOUNCEMENTS);
+}

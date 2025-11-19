@@ -1,10 +1,9 @@
 import express from 'express'
 import { runDbMigrations } from './database/db-utils.ts';
-import routes from './routes/index.ts';
+import routes from './routes/routes.ts';
 import requestIdMiddleware from './middlewares/request-id-middleware.ts';
 import loggerMiddleware from './middlewares/logger-middleware.ts';
-
-import type { Request, Response } from 'express'
+import notFoundMiddleware from './middlewares/not-found-middleware.ts';
 
 export default async function prepareApp(): Promise<express.Express> {
   console.log('App starting...')
@@ -23,10 +22,9 @@ export default async function prepareApp(): Promise<express.Express> {
 
   app.use(routes);
 
-  app.use((_req: Request, res: Response) => {
-    res.status(404)
-      .send({ message: 'Not found' });
-  });
+  app.use(notFoundMiddleware);
 
   return app;
 }
+
+export const app = await prepareApp();

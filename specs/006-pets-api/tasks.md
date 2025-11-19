@@ -43,12 +43,12 @@
 
 **Purpose**: Database schema and environment setup
 
-- [ ] T001 Create database migration for announcement table in `/server/src/database/migrations/YYYYMMDDHHMMSS_create_announcement_table.ts` using Knex schema builder (no CHECK constraints, use IF NOT EXISTS)
-- [ ] T002 Create seed file in `/server/src/database/seeds/001_announcements.ts` with 5-10 example announcements (all species, mix of statuses, optional fields both present and null)
-- [ ] T003 Run migration to create announcement table in SQLite database: `npm run knex:migrate`
-- [ ] T004 Run seed to populate test data: `npm run knex:seed`
+- [X] T001 Create database migration for announcement table in `/server/src/database/migrations/YYYYMMDDHHMMSS_create_announcement_table.ts` using Knex schema builder (no CHECK constraints, use IF NOT EXISTS)
+- [X] T002 Create seed file in `/server/src/database/seeds/001_announcements.ts` with 5-10 example announcements (all species, mix of statuses, optional fields both present and null)
+- [X] T003 Run migration to create announcement table in SQLite database: `npm run knex:migrate`
+- [X] T004 Run seed to populate test data: `npm run knex:seed`
 
-**Checkpoint**: Database schema ready with test data
+**Checkpoint**: Database schema ready with test data ✅
 
 ---
 
@@ -58,9 +58,9 @@
 
 **⚠️ CRITICAL**: No implementation work can begin until types are defined
 
-- [ ] T005 Create TypeScript types in `/server/src/types/announcement.d.ts` (Species enum, Gender enum, AnnouncementStatus enum, Announcement interface, AnnouncementRow interface per data-model.md)
+- [X] T005 Create TypeScript types in `/server/src/types/announcement.d.ts` (Species enum, Gender enum, AnnouncementStatus enum, Announcement interface, AnnouncementRow interface per data-model.md)
 
-**Checkpoint**: Type definitions ready - TDD workflow can now begin
+**Checkpoint**: Type definitions ready - TDD workflow can now begin ✅
 
 ---
 
@@ -80,21 +80,21 @@
 > **CRITICAL**: Write ALL tests first and verify they FAIL before any implementation
 
 **Integration Tests** (API endpoint behavior):
-- [ ] T006 [P] [US1] RED: Create integration test file `/server/src/__test__/announcements.test.ts` with test "should return 200 with announcements array when database has data" (use SuperTest, Given-When-Then structure)
-- [ ] T007 [P] [US1] RED: Add integration test "should return 200 with empty array when database is empty" in `/server/src/__test__/announcements.test.ts`
+- [X] T006 [P] [US1] RED: Create integration test file `/server/src/__test__/announcements.test.ts` with test "should return 200 with announcements array when database has data" (use SuperTest, Given-When-Then structure)
+- [X] T007 [P] [US1] RED: Add integration test "should return 200 with empty array when database is empty" in `/server/src/__test__/announcements.test.ts`
 
 **Unit Tests** (service layer):
-- [ ] T008 [P] [US1] RED: Create service unit test file `/server/src/services/__test__/announcement-service.test.ts` with test "should return all announcements when repository returns data" (use fake repository, Given-When-Then structure)
-- [ ] T009 [P] [US1] RED: Add service unit test "should return empty array when repository returns no data" in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T008 [P] [US1] RED: Create service unit test file `/server/src/services/__test__/announcement-service.test.ts` with test "should return all announcements when repository returns data" (use fake repository, Given-When-Then structure)
+- [X] T009 [P] [US1] RED: Add service unit test "should return empty array when repository returns no data" in `/server/src/services/__test__/announcement-service.test.ts`
 
 **Unit Tests** (validation utilities):
-- [ ] T010 [P] [US1] RED: Create validator unit test file `/server/src/lib/__test__/validators.test.ts` with tests for isValidEmail (valid formats, invalid formats, edge cases like no @, no domain, etc.)
-- [ ] T011 [P] [US1] RED: Add validator unit tests for isValidPhone in `/server/src/lib/__test__/validators.test.ts` (valid formats with digits, no digits, empty string)
+- [X] T010 [P] [US1] RED: Create validator unit test file `/server/src/lib/__test__/validators.test.ts` with tests for isValidEmail (valid formats, invalid formats, edge cases like no @, no domain, etc.)
+- [X] T011 [P] [US1] RED: Add validator unit tests for isValidPhone in `/server/src/lib/__test__/validators.test.ts` (valid formats with digits, no digits, empty string)
 
 **Verify RED Phase**:
-- [ ] T012 [US1] Run `npm test` from `/server` directory and confirm ALL tests fail with "not implemented" or "module not found" errors
+- [X] T012 [US1] Run `npm test` from `/server` directory and confirm ALL tests fail with "not implemented" or "module not found" errors
 
-**Checkpoint**: All tests written and failing - ready for implementation
+**Checkpoint**: All tests written and failing - ready for implementation ✅
 
 ---
 
@@ -103,25 +103,25 @@
 > **Goal**: Write minimal code to make tests pass (don't optimize yet)
 
 **Repository Layer** (database queries):
-- [ ] T013 [US1] GREEN: Create repository interface IAnnouncementRepository in `/server/src/database/repositories/announcement-repository.ts` with findAll() method signature
-- [ ] T014 [US1] GREEN: Implement AnnouncementRepository class in `/server/src/database/repositories/announcement-repository.ts` with findAll() using Knex query builder (SELECT * FROM announcement, map snake_case to camelCase)
+- [X] T013 [US1] GREEN: Create repository interface IAnnouncementRepository in `/server/src/database/repositories/announcement-repository.ts` with findAll() method signature
+- [X] T014 [US1] GREEN: Implement AnnouncementRepository class in `/server/src/database/repositories/announcement-repository.ts` with findAll() using Knex query builder (SELECT * FROM announcement, map snake_case to camelCase)
 
 **Service Layer** (business logic):
-- [ ] T015 [US1] GREEN: Implement AnnouncementService in `/server/src/services/announcement-service.ts` with getAllAnnouncements() function that calls repository.findAll()
+- [X] T015 [US1] GREEN: Implement AnnouncementService in `/server/src/services/announcement-service.ts` with getAllAnnouncements() function that calls repository.findAll()
 
 **Validation Layer** (utilities):
-- [ ] T016 [P] [US1] GREEN: Implement isValidEmail() in `/server/src/lib/validators.ts` using basic regex /^[^\s@]+@[^\s@]+\.[^\s@]+$/ per research.md
-- [ ] T017 [P] [US1] GREEN: Implement isValidPhone() in `/server/src/lib/validators.ts` using /\d/.test(phone) per research.md
+- [X] T016 [P] [US1] GREEN: Implement isValidEmail() in `/server/src/lib/validators.ts` using basic regex /^[^\s@]+@[^\s@]+\.[^\s@]+$/ per research.md
+- [X] T017 [P] [US1] GREEN: Implement isValidPhone() in `/server/src/lib/validators.ts` using /\d/.test(phone) per research.md
 
 **Route Handler** (HTTP endpoint):
-- [ ] T018 [US1] GREEN: Create Express router in `/server/src/routes/announcements.ts` with GET /api/v1/announcements handler that calls AnnouncementService.getAllAnnouncements()
-- [ ] T019 [US1] GREEN: Register announcements router in `/server/src/routes/index.ts` at path /api/v1/announcements
-- [ ] T020 [US1] GREEN: Mount router in `/server/src/app.ts` (ensure announcements router is registered with Express app)
+- [X] T018 [US1] GREEN: Create Express router in `/server/src/routes/announcements.ts` with GET /api/v1/announcements handler that calls AnnouncementService.getAllAnnouncements()
+- [X] T019 [US1] GREEN: Register announcements router in `/server/src/routes/index.ts` at path /api/v1/announcements
+- [X] T020 [US1] GREEN: Mount router in `/server/src/app.ts` (ensure announcements router is registered with Express app)
 
 **Verify GREEN Phase**:
-- [ ] T021 [US1] Run `npm test` from `/server` directory and confirm ALL tests now pass
+- [X] T021 [US1] Run `npm test` from `/server` directory and confirm ALL tests now pass
 
-**Checkpoint**: Tests passing with minimal implementation - ready for refactoring
+**Checkpoint**: Tests passing with minimal implementation - ready for refactoring ✅
 
 ---
 
@@ -130,27 +130,27 @@
 > **Goal**: Apply Clean Code principles without changing behavior (tests must still pass)
 
 **Code Quality Improvements**:
-- [ ] T022 [P] [US1] REFACTOR: Add JSDoc documentation ONLY for non-obvious logic in `/server/src/services/announcement-service.ts` (skip if function name is self-explanatory, keep brief if needed)
-- [ ] T023 [P] [US1] REFACTOR: Add JSDoc documentation ONLY for non-obvious validation logic in `/server/src/lib/validators.ts` (skip simple validators with clear names)
-- [ ] T024 [P] [US1] REFACTOR: Review `/server/src/database/repositories/announcement-repository.ts` and add JSDoc only if query logic is complex (skip obvious CRUD operations)
-- [ ] T025 [P] [US1] REFACTOR: Review `/server/src/routes/announcements.ts` route handler and add brief JSDoc only if behavior is non-obvious
-- [ ] T026 [US1] REFACTOR: Extract reusable helper functions if any complex logic exists (check for max 3 nesting levels per Clean Code rules)
-- [ ] T027 [US1] REFACTOR: Review naming in all files for clarity (no unclear abbreviations except id, db, api)
-- [ ] T028 [US1] REFACTOR: Apply DRY principle - extract duplicated logic to reusable utilities
+- [X] T022 [P] [US1] REFACTOR: Add JSDoc documentation ONLY for non-obvious logic in `/server/src/services/announcement-service.ts` (skip if function name is self-explanatory, keep brief if needed)
+- [X] T023 [P] [US1] REFACTOR: Add JSDoc documentation ONLY for non-obvious validation logic in `/server/src/lib/validators.ts` (skip simple validators with clear names)
+- [X] T024 [P] [US1] REFACTOR: Review `/server/src/database/repositories/announcement-repository.ts` and add JSDoc only if query logic is complex (skip obvious CRUD operations)
+- [X] T025 [P] [US1] REFACTOR: Review `/server/src/routes/announcements.ts` route handler and add brief JSDoc only if behavior is non-obvious
+- [X] T026 [US1] REFACTOR: Extract reusable helper functions if any complex logic exists (check for max 3 nesting levels per Clean Code rules)
+- [X] T027 [US1] REFACTOR: Review naming in all files for clarity (no unclear abbreviations except id, db, api)
+- [X] T028 [US1] REFACTOR: Apply DRY principle - extract duplicated logic to reusable utilities
 
 **Linting and Type Safety**:
-- [ ] T029 [US1] Run `npm run lint` from `/server` directory and fix all ESLint violations
-- [ ] T030 [US1] Run `npx tsc --noEmit` from `/server` directory and fix all TypeScript type errors
+- [X] T029 [US1] Run `npm run lint` from `/server` directory and fix all ESLint violations
+- [X] T030 [US1] Run `npx tsc --noEmit` from `/server` directory and fix all TypeScript type errors
 
 **Coverage Verification**:
-- [ ] T031 [US1] Run `npm test -- --coverage` from `/server` directory and verify 80% coverage for services and lib
-- [ ] T032 [US1] If coverage below 80%, add missing test cases to reach threshold
+- [X] T031 [US1] Run `npm test -- --coverage` from `/server` directory and verify 80% coverage for services and lib
+- [X] T032 [US1] If coverage below 80%, add missing test cases to reach threshold
 
 **Final Verification**:
-- [ ] T033 [US1] Run `npm test` to confirm all tests still pass after refactoring
-- [ ] T034 [US1] Manual smoke test: Start server with `npm run dev`, verify GET http://localhost:3000/api/v1/announcements returns seed data with HTTP 200
+- [X] T033 [US1] Run `npm test` to confirm all tests still pass after refactoring
+- [X] T034 [US1] Manual smoke test: Start server with `npm run dev`, verify GET http://localhost:3000/api/v1/announcements returns seed data with HTTP 200
 
-**Checkpoint**: User Story 1 complete - fully functional, tested, and documented
+**Checkpoint**: User Story 1 complete - fully functional, tested, and documented ✅
 
 ---
 
@@ -158,14 +158,14 @@
 
 **Purpose**: Final checks and documentation validation
 
-- [ ] T035 [P] Verify all success criteria from spec.md are met (SC-001 through SC-006)
-- [ ] T036 [P] Run quickstart.md manual testing section to validate setup instructions
-- [ ] T037 [P] Verify OpenAPI contract matches actual API behavior (use curl or Postman)
-- [ ] T038 Run final coverage report and confirm 80% threshold: `npm test -- --coverage`
-- [ ] T039 Run final linting and confirm no violations: `npm run lint`
-- [ ] T040 Verify database has seed data: `sqlite3 pets.db "SELECT COUNT(*) FROM announcement;"`
+- [X] T035 [P] Verify all success criteria from spec.md are met (SC-001 through SC-006)
+- [X] T036 [P] Run quickstart.md manual testing section to validate setup instructions
+- [X] T037 [P] Verify OpenAPI contract matches actual API behavior (use curl or Postman)
+- [X] T038 Run final coverage report and confirm 80% threshold: `npm test -- --coverage`
+- [X] T039 Run final linting and confirm no violations: `npm run lint`
+- [X] T040 Verify database has seed data: `sqlite3 pets.db "SELECT COUNT(*) FROM announcement;"`
 
-**Final Checkpoint**: Feature complete and ready for code review
+**Final Checkpoint**: Feature complete and ready for code review ✅
 
 ---
 
