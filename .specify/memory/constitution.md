@@ -2,37 +2,30 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.7.0 → 1.8.0
-Modified principles: None
+Version change: 1.9.0 → 1.10.0
+Modified principles:
+- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
 Added principles:
-- XIII. Backend Architecture & Quality Standards (NON-NEGOTIABLE)
-  - Node.js v24, Express.js, TypeScript stack
-  - ESLint + TypeScript plugin for code quality
-  - Clean Code principles
-  - Dependency minimization strategy
-  - Detailed directory structure (/src/middlewares, /src/routes, /src/services, /src/database, /src/lib)
-  - TDD workflow with Vitest + SuperTest
-  - Unit test locations (/src/services/__test__, /src/lib/__test__)
-  - Integration test locations (/src/__test__)
-  - Knex + SQLite database layer
+- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
 Modified sections:
-- Module Structure: Expanded /server directory structure with detailed subdirectories
-- Testing Standards: Added TDD requirement and detailed test locations for backend
-- Compliance: Added backend code quality checks (ESLint, Clean Code, dependency minimization)
-Rationale: Backend module (/server) needs same level of architectural rigor as KMP platforms.
-Establishes technology stack (Node.js v24, Express, TypeScript), code quality tools (ESLint),
-and testing discipline (TDD). Defines clear separation of concerns (middlewares, routes, services,
-database, lib) to maintain testability and Clean Code principles. Minimizes dependencies to reduce
-security surface and maintenance burden. All business logic MUST be testable in isolation.
+- Module Structure: iOS subsection documents required MVVM-C packaging (Coordinators/, Views/, ViewModels/)
+- Architecture Patterns: Added iOS MVVM-C pattern guidance with coordinator/ViewModel examples
+- Testing Standards: iOS ViewModel tests now cover ObservableObject properties and coordinator communication
+- Compliance: Added iOS MVVM-C audit checklist
 Templates requiring updates:
-- ⚠️ AGENTS.md (PENDING: Add ESLint, Clean Code, TDD, detailed /src structure)
-- ⚠️ plan-template.md (PENDING: Add backend constitution check for XIII)
-- ⚠️ tasks-template.md (PENDING: Add TDD workflow for backend tasks)
-- ✅ constitution.md (Updated with Principle XIII, expanded Module Structure, Testing Standards, Compliance)
+- ✅ .specify/templates/plan-template.md (iOS MVVM-C constitution check already generic, no changes needed)
+- ✅ .specify/templates/tasks-template.md (iOS tasks already generic enough for MVVM-C pattern)
+- ✅ README.md (no changes needed - iOS section remains platform-agnostic)
 Follow-up TODOs:
-- Update AGENTS.md with ESLint configuration and TDD workflow
-- Add Constitution Check for Principle XIII to plan-template.md
-- Add TDD task examples for backend in tasks-template.md
+- None
+Previous changes (v1.9.0):
+- II. Native Presentation (Android bullet now mandates Compose + MVI loop)
+- XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
+- Module Structure: Android MVI packaging
+- Templates updated: plan-template.md, tasks-template.md, README.md
+Previous changes (v1.8.0):
+- Backend Architecture & Quality Standards principle describing Node.js/Express module
+- Templates updated: AGENTS.md, README.md, constitution.md
 Previous changes (v1.7.0):
 - Backend Module (/server) guidelines with testing, documentation requirements
 - Templates updated: AGENTS.md, README.md, constitution.md
@@ -68,11 +61,24 @@ without compromise.
 ### II. Native Presentation (NON-NEGOTIABLE)
 
 Each platform MUST implement its own presentation layer using native frameworks:
-- **Android**: Jetpack Compose + ViewModel (in `/composeApp`)
-- **iOS**: SwiftUI + Swift ViewModels (in `/iosApp`)
+- **Android**: Jetpack Compose + MVI ViewModel loop (in `/composeApp`)
+- **iOS**: SwiftUI + MVVM-C (Model-View-ViewModel-Coordinator) (in `/iosApp`)
 - **Web**: React + TypeScript state management (in `/webApp`)
 
 ViewModels and UI state MUST reside in platform-specific modules, NOT in `/shared`.
+
+Android presentation logic MUST follow the Model-View-Intent pattern:
+- Compose UI renders a single `UiState` data class exposed via `StateFlow`
+- UI interactions emit `UserIntent` sealed classes through a `dispatchIntent` entry point
+- ViewModels reduce intents into new immutable `UiState` values and optional one-off `UiEffect` emissions (`SharedFlow`)
+- Side effects (navigation, snackbars) travel through the effect channel to keep reducers pure
+
+iOS presentation logic MUST follow the Model-View-ViewModel-Coordinator pattern:
+- SwiftUI views created via `UIHostingController` and managed by UIKit coordinators
+- ViewModels are `ObservableObject` classes with `@Published` properties for UI state
+- Coordinators (UIKit-based) handle navigation and flow coordination
+- ViewModels communicate with coordinators via methods or closures (callbacks)
+- View updates driven by `@Published` property changes observed by SwiftUI
 
 **Rationale**: Native presentation ensures best UX, platform idioms, and full access to
 platform capabilities without workarounds.
@@ -134,6 +140,7 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Framework: Playwright with TypeScript
 - Config: `playwright.config.ts` at repo root
 - Test location: `/e2e-tests/web/specs/[feature-name].spec.ts`
+- Step definitions: `/e2e-tests/web/steps/` (reusable test steps)
 - Run command: `npx playwright test`
 - Coverage: All user stories from spec.md
 
@@ -141,6 +148,7 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Framework: Appium with TypeScript + WebdriverIO
 - Config: `wdio.conf.ts` for Android/iOS
 - Test location: `/e2e-tests/mobile/specs/[feature-name].spec.ts`
+- Step definitions: `/e2e-tests/mobile/steps/` (reusable test steps)
 - Run command: `npm run test:mobile:android` or `npm run test:mobile:ios`
 - Coverage: All user stories from spec.md for both Android and iOS
 
@@ -149,7 +157,9 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Each user story MUST have at least one E2E test
 - Tests MUST run against real application builds (not mocked)
 - Tests MUST be executable in CI/CD pipeline
-- Page Object Model pattern REQUIRED for maintainability
+- Page Object Model pattern REQUIRED for web maintainability
+- Screen Object Model pattern REQUIRED for mobile maintainability
+- Step definitions MUST be used for reusable test steps (Given/When/Then actions)
 
 **Rationale**: E2E tests validate complete user flows across platforms, catching integration
 issues that unit tests cannot detect. TypeScript provides type safety and enables sharing
@@ -1351,6 +1361,241 @@ with test doubles. Knex provides type-safe database queries while remaining data
 (SQLite for development, PostgreSQL for production). 80% test coverage on both unit and
 integration levels ensures API reliability and correctness.
 
+### XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
+
+All Android presentation features MUST follow a deterministic Model-View-Intent (MVI) loop to
+keep Compose UI declarative and testable.
+
+**Core contracts**:
+- `UiState`: Immutable data class representing the entire screen (loading flags, data, errors,
+  pending actions). MUST provide a `default` companion for initial state.
+- `UserIntent`: Sealed class capturing every user interaction or external trigger
+  (`Refresh`, `Retry`, `SelectPet(id)`, etc.). No stringly-typed intents.
+- `Reducer`: Pure function that takes current `UiState` and domain results (or `PartialState`)
+  and returns a new `UiState`. Reducers MUST remain side-effect free and unit-tested.
+- `UiEffect`: Sealed class for one-off events (navigation, snackbars). Delivered via `SharedFlow`.
+- `MviViewModel`: Exposes `state: StateFlow<UiState>`, `effects: SharedFlow<UiEffect>`, and
+  `dispatchIntent(intent: UserIntent)` to receive intents.
+
+**Loop requirements**:
+1. Compose UI collects `state` via `collectAsStateWithLifecycle()` and renders purely from `UiState`.
+2. UI emits intents through callbacks, e.g., `viewModel.dispatchIntent(UserIntent.Refresh)`.
+3. ViewModel handles intents inside `viewModelScope`, invokes use cases, then calls reducer to produce
+   the next `UiState`.
+4. Reducer updates the single source of truth (`MutableStateFlow`) and optionally emits `UiEffect`.
+5. UI listens to `effects` using `LaunchedEffect` for navigation or transient messages.
+
+**Implementation rules**:
+- Co-locate `UiState`, `UserIntent`, `UiEffect`, and reducer classes with the owning screen package.
+- Never mutate Compose state directly; only emit via the `MutableStateFlow`.
+- Provide exhaustive `when` handling for all intents and reducer branches.
+- Write unit tests covering reducers and intent handling before wiring UI.
+- Keep side effects (logging, analytics, navigation) inside dedicated effect handlers, not reducers.
+
+```kotlin
+data class PetListUiState(
+    val pets: List<Pet> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    companion object { val Initial = PetListUiState() }
+}
+
+sealed interface PetListIntent {
+    data object Refresh : PetListIntent
+    data class SelectPet(val id: String) : PetListIntent
+}
+
+sealed interface PetListEffect {
+    data class NavigateToDetails(val id: String) : PetListEffect
+}
+
+class PetListViewModel(
+    private val getPets: GetPetsUseCase
+) : ViewModel(), MviViewModel<PetListUiState, PetListEffect, PetListIntent> {
+    private val _state = MutableStateFlow(PetListUiState.Initial)
+    override val state = _state.asStateFlow()
+    private val _effects = MutableSharedFlow<PetListEffect>()
+    override val effects = _effects.asSharedFlow()
+
+    override fun dispatchIntent(intent: PetListIntent) {
+        when (intent) {
+            PetListIntent.Refresh -> refresh()
+            is PetListIntent.SelectPet -> emitEffect(intent.id)
+        }
+    }
+
+    private fun refresh() = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true, error = null) }
+        val result = getPets()
+        _state.value = PetListReducer.reduce(_state.value, result)
+    }
+}
+```
+
+**Rationale**: MVI enforces unidirectional data flow, simplifies reasoning about screen behavior,
+and makes reducers easy to unit test. Immutable `UiState` snapshots prevent UI drift, while
+explicit intents capture every interaction for analytics and debugging. Effect channels keep
+navigation and transient events isolated from state, reducing Compose recompositions and bugs.
+
+### XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+
+All iOS presentation features MUST follow the Model-View-ViewModel-Coordinator (MVVM-C) pattern to
+maintain clear separation of concerns and enable testable, coordinator-driven navigation.
+
+**Core components**:
+- `Model`: Domain models from shared KMP module or platform-specific data structures
+- `View`: SwiftUI views that observe ViewModels via `@ObservedObject` or `@StateObject`
+- `ViewModel`: `ObservableObject` classes containing presentation logic and `@Published` state properties
+- `Coordinator`: UIKit-based objects managing navigation flow and creating `UIHostingController` instances
+
+**Architecture rules**:
+1. **Coordinators manage navigation**: All screen transitions, modal presentations, and flow logic
+   reside in coordinator classes (UIKit-based). SwiftUI views MUST NOT directly trigger navigation.
+
+2. **ViewModels own presentation state**: All UI-related state (loading flags, data, errors) lives
+   in ViewModel `@Published` properties. Views observe and render based on these properties.
+
+3. **ViewModel-Coordinator communication**: ViewModels communicate with coordinators via:
+   - Direct method calls (e.g., `coordinator.showDetails(petId:)`)
+   - Closure/callback properties set by coordinator during ViewModel initialization
+   - Example:
+     ```swift
+     class PetListViewModel: ObservableObject {
+         @Published var pets: [Pet] = []
+         @Published var isLoading = false
+         
+         // Coordinator callback for navigation
+         var onPetSelected: ((String) -> Void)?
+         
+         func selectPet(id: String) {
+             onPetSelected?(id)  // Coordinator handles navigation
+         }
+     }
+     ```
+
+4. **UIHostingController wrapping**: Coordinators create SwiftUI views and wrap them in
+   `UIHostingController` for UIKit integration:
+   ```swift
+   class PetListCoordinator {
+       private let navigationController: UINavigationController
+       
+       func start() {
+           let viewModel = PetListViewModel()
+           viewModel.onPetSelected = { [weak self] petId in
+               self?.showPetDetails(petId: petId)
+           }
+           
+           let view = PetListView(viewModel: viewModel)
+           let hostingController = UIHostingController(rootView: view)
+           navigationController.pushViewController(hostingController, animated: true)
+       }
+       
+       private func showPetDetails(petId: String) {
+           // Navigate to detail screen
+           let detailCoordinator = PetDetailCoordinator(navigationController: navigationController, petId: petId)
+           detailCoordinator.start()
+       }
+   }
+   ```
+
+5. **SwiftUI views remain pure**: Views MUST NOT contain business logic, navigation logic, or
+   direct use case calls. Views only render UI based on ViewModel state and trigger ViewModel methods.
+
+6. **Coordinator hierarchy**: Parent coordinators manage child coordinators for nested flows.
+   Child coordinators notify parents via delegation or closures when flow completes:
+   ```swift
+   protocol PetDetailCoordinatorDelegate: AnyObject {
+       func petDetailCoordinatorDidFinish(_ coordinator: PetDetailCoordinator)
+   }
+   
+   class PetDetailCoordinator {
+       weak var delegate: PetDetailCoordinatorDelegate?
+       
+       func dismiss() {
+           delegate?.petDetailCoordinatorDidFinish(self)
+       }
+   }
+   ```
+
+**Implementation requirements**:
+- Coordinators MUST be UIKit-based classes (not SwiftUI `NavigationStack` coordinators)
+- ViewModels MUST conform to `ObservableObject` protocol
+- ViewModels MUST use `@Published` for all observable state properties
+- ViewModels MUST NOT import UIKit (except for types like `UIImage` if necessary)
+- Coordinators MUST own ViewModels lifecycle and set up coordinator callbacks during initialization
+- Each screen/flow MUST have a dedicated coordinator class
+- Coordinator classes SHOULD be co-located in `/iosApp/iosApp/Coordinators/`
+- ViewModels SHOULD be co-located in `/iosApp/iosApp/ViewModels/`
+- SwiftUI views SHOULD be co-located in `/iosApp/iosApp/Views/`
+
+**Testing requirements**:
+- ViewModels MUST have unit tests in `/iosApp/iosAppTests/ViewModels/`
+- ViewModel tests MUST verify `@Published` property updates
+- ViewModel tests MUST verify coordinator callback invocations (e.g., `onPetSelected` called with correct ID)
+- Coordinators MAY have unit tests verifying navigation logic (optional but recommended)
+- Use XCTest with Swift Concurrency (`async`/`await`) for asynchronous ViewModel operations
+
+**Example ViewModel test**:
+```swift
+final class PetListViewModelTests: XCTestCase {
+    func testLoadPets_whenRepositorySucceeds_shouldUpdatePetsProperty() async {
+        // Given - setup test data
+        let expectedPets = [
+            Pet(id: "1", name: "Max", species: .dog),
+            Pet(id: "2", name: "Luna", species: .cat)
+        ]
+        let fakeRepository = FakePetRepository(pets: expectedPets)
+        let viewModel = PetListViewModel(repository: fakeRepository)
+        
+        // When - perform action
+        await viewModel.loadPets()
+        
+        // Then - verify @Published property updated
+        XCTAssertEqual(viewModel.pets.count, 2)
+        XCTAssertEqual(viewModel.pets.first?.name, "Max")
+        XCTAssertFalse(viewModel.isLoading)
+    }
+    
+    func testSelectPet_shouldTriggerCoordinatorCallback() {
+        // Given - setup ViewModel with coordinator callback
+        let viewModel = PetListViewModel()
+        var capturedPetId: String?
+        viewModel.onPetSelected = { petId in
+            capturedPetId = petId
+        }
+        
+        // When - select pet
+        viewModel.selectPet(id: "123")
+        
+        // Then - verify callback invoked with correct ID
+        XCTAssertEqual(capturedPetId, "123")
+    }
+}
+```
+
+**Prohibited patterns**:
+- ❌ SwiftUI views directly calling coordinators or navigation methods
+- ❌ ViewModels importing UIKit unnecessarily (except unavoidable types)
+- ❌ Business logic in coordinators (coordinators only manage flow, not business rules)
+- ❌ Multiple `@Published` sources for same logical state (maintain single source of truth)
+- ❌ Using SwiftUI `NavigationStack` for coordinator pattern (use UIKit `UINavigationController`)
+- ❌ ViewModels triggering navigation directly without coordinator involvement
+
+**Benefits**:
+- **Testability**: ViewModels testable in isolation without UIKit dependencies
+- **Reusability**: ViewModels can be reused across different flows with different coordinators
+- **Separation of concerns**: Navigation logic isolated from presentation logic
+- **Flexibility**: Easy to refactor navigation flows without touching ViewModels or Views
+- **UIKit interoperability**: Coordinators enable seamless integration with existing UIKit components
+
+**Rationale**: MVVM-C separates navigation responsibility from presentation logic, making both
+independently testable. Coordinators provide a centralized place for flow management and enable
+complex navigation patterns (deep linking, conditional flows, A/B testing different flows).
+UIHostingController integration allows SwiftUI views to participate in UIKit navigation hierarchies,
+providing flexibility for gradual SwiftUI adoption or mixed UIKit/SwiftUI codebases. ViewModels
+remain portable and can be tested without UIKit dependencies, improving test coverage and reliability.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -1391,15 +1636,17 @@ integration levels ensures API reliability and correctness.
 - `utils/` - Pure functions, no platform deps
 
 **`/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/`**
-- `ui/` - Composable functions
-- `viewmodels/` - Android ViewModels
+- `features/<feature>/ui/` - Composable screens that collect `StateFlow<UiState>` and emit intents via callbacks
+- `features/<feature>/presentation/mvi/` - `UiState`, `UserIntent`, `UiEffect`, reducers, and MVI helpers
+- `features/<feature>/presentation/viewmodels/` - `MviViewModel` implementations exposing `state`, `effects`, and `dispatchIntent`
 - `data/` - Android repository implementations
 - `di/` - Koin modules for Android (data + ViewModel modules)
-- `navigation/` - Compose Navigation
+- `navigation/` - Compose Navigation and effect handlers
 
 **`/iosApp/iosApp/`**
-- `Views/` - SwiftUI views
-- `ViewModels/` - Swift observable objects
+- `Coordinators/` - UIKit-based coordinators managing navigation and flow
+- `Views/` - SwiftUI views (wrapped in `UIHostingController` by coordinators)
+- `ViewModels/` - Swift `ObservableObject` classes with `@Published` properties
 - `Repositories/` - iOS repository implementations
 - `DI/` - Koin initialization or native Swift DI
 
@@ -1525,6 +1772,31 @@ class SearchPetsUseCase(
 - Single Responsibility Principle
 - Reusable across platforms
 - Easy to test in isolation
+
+### Android MVI Pattern (NON-NEGOTIABLE)
+
+Android screens MUST implement a unidirectional MVI loop:
+
+- **State**: Immutable `UiState` data class with full screen snapshot and sensible defaults.
+- **Intent**: Sealed class describing every user/system trigger. UI dispatches intents via `viewModel.dispatchIntent()`.
+- **Reducer**: Pure function (often `object FeatureReducer`) converting current `UiState` plus domain result into the next `UiState`.
+- **Effects**: Optional sealed class for one-off events emitted through `SharedFlow`.
+- **ViewModel**: Implements `MviViewModel<UiState, UiEffect, UserIntent>` (or equivalent contract) exposing:
+  - `val state: StateFlow<UiState>`
+  - `val effects: SharedFlow<UiEffect>`
+  - `fun dispatchIntent(intent: UserIntent)`
+- **Compose Binding**: UI collects `state` via `collectAsStateWithLifecycle()`, renders purely from `UiState`,
+  and uses `LaunchedEffect`/`Flow.collect` to handle `effects`.
+
+Testing expectations:
+- Reducers MUST have unit tests covering each branch.
+- Intent handlers MUST be tested with Turbine to assert emitted states/effects.
+- `StateFlow` should never emit mutable references—copy the state before updates.
+
+Prohibited shortcuts:
+- No mutable Compose `var` or `mutableStateOf` in ViewModels.
+- No multiple state sources per screen—`StateFlow<UiState>` is the single truth.
+- No direct navigation calls from UI; emit an effect and handle it centrally.
 
 ### Dependency Injection Setup
 
@@ -1659,7 +1931,12 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Framework**: JUnit 5 + Kotlin Test + Turbine (for Flow testing)
 - **Run command**: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **Report**: `composeApp/build/reports/kover/html/index.html`
-- **Scope**: ViewModels, UI state management
+- **Scope**: MVI ViewModels (reducers, intents, effects, Flow pipelines)
+- **Requirements**:
+  - Write reducer tests that assert `UiState` transitions for every branch
+  - Use Turbine to verify `state` and `effects` emissions after `dispatchIntent`
+  - Mock use cases via Koin to keep tests deterministic
+  - Assert that `UiEffect` emissions occur only once per intent
 
 **iOS**:
 - **Location**: `/iosApp/iosAppTests/ViewModels/`
@@ -1813,6 +2090,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Report**: `playwright-report/index.html`
 - **Requirements**:
   - Page Object Model in `/e2e-tests/web/pages/`
+  - Step definitions in `/e2e-tests/web/steps/` (reusable Given/When/Then actions)
   - Test data fixtures in `/e2e-tests/web/fixtures/`
   - One spec file per feature
   - All user stories from spec.md covered
@@ -1827,6 +2105,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Report**: `e2e-tests/mobile/reports/`
 - **Requirements**:
   - Screen Object Model in `/e2e-tests/mobile/screens/`
+  - Step definitions in `/e2e-tests/mobile/steps/` (reusable Given/When/Then actions)
   - Shared test utilities in `/e2e-tests/mobile/utils/`
   - One spec file per feature (covers both platforms)
   - Platform-specific conditionals when needed
@@ -1895,6 +2174,18 @@ All pull requests MUST:
   - Swift: SwiftDoc format
   - TypeScript: JSDoc format (including backend API endpoints and business logic)
   - Focus on WHAT/WHY, not HOW (1-3 sentences)
+- Verify Android Compose screens follow MVI architecture:
+  - Single `StateFlow<UiState>` source of truth with immutable data classes
+  - Sealed `UserIntent` and optional `UiEffect` types co-located with the feature
+  - `dispatchIntent` entry point wired from UI actions
+  - Reducers implemented as pure functions with exhaustive `when` handling
+  - Effects delivered via `SharedFlow`/`Channel` and handled in Compose through `LaunchedEffect`
+- Verify iOS SwiftUI screens follow MVVM-C architecture:
+  - UIKit-based coordinators manage navigation and create `UIHostingController` instances
+  - ViewModels conform to `ObservableObject` with `@Published` properties for state
+  - ViewModels communicate with coordinators via methods or closures (no direct navigation in ViewModels)
+  - SwiftUI views observe ViewModels and remain free of business/navigation logic
+  - Coordinator hierarchy maintained for nested flows (parent/child coordinator pattern)
 - Verify all new tests follow Given-When-Then structure:
   - Clear separation of setup (Given), action (When), verification (Then)
   - Descriptive test names following platform conventions
@@ -1919,4 +2210,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.8.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-17
+**Version**: 1.10.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18
