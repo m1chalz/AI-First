@@ -1,0 +1,29 @@
+# AI-First Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-11-17
+
+## Active Technologies
+
+- Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
+
+## Recent Changes
+
+- 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
