@@ -12,6 +12,18 @@ export const config: Options.Testrunner = {
   runner: 'local',
   
   //
+  // =====================
+  // TypeScript Compilation
+  // =====================
+  autoCompileOpts: {
+    autoCompile: true,
+    tsNodeOpts: {
+      transpileOnly: true,
+      project: './tsconfig.json'
+    }
+  },
+  
+  //
   // ==================
   // Specify Test Files
   // ==================

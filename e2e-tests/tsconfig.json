@@ -10,6 +10,12 @@
     "resolveJsonModule": true,
     "types": ["node", "mocha", "@wdio/globals/types", "@playwright/test"]
   },
+  "ts-node": {
+    "esm": false,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "include": [
     "web/**/*",
     "mobile/**/*",
