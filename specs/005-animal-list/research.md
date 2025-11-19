@@ -148,6 +148,27 @@ class AnimalListCoordinator {
     }
 }
 
+// View (SwiftUI with LazyVStack for performance)
+struct AnimalListView: View {
+    @ObservedObject var viewModel: AnimalListViewModel
+    
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 8) {  // Lazy loading for large lists
+                ForEach(viewModel.animals) { animal in
+                    AnimalCardView(animal: animal)
+                        .accessibilityIdentifier("animalList.item.\(animal.id)")
+                        .onTapGesture {
+                            viewModel.selectAnimal(id: animal.id)
+                        }
+                }
+            }
+            .padding(.horizontal, 16)
+            .accessibilityIdentifier("animalList.list")
+        }
+    }
+}
+
 // ViewModel (ObservableObject)
 @MainActor
 class AnimalListViewModel: ObservableObject {
@@ -170,6 +191,19 @@ class AnimalListViewModel: ObservableObject {
 - ViewModel tests: Verify @Published property updates, callback invocations
 - Coordinator tests (optional): Verify navigation methods called
 - E2E tests: Verify actual navigation behavior end-to-end
+
+**Performance Note: LazyVStack vs List**:
+- **Decision**: Use `LazyVStack` inside `ScrollView` instead of `List`
+- **Rationale**:
+  - Both are lazy-loaded (render only visible items)
+  - `LazyVStack` provides more layout control and customization
+  - Better for complex layouts and custom scroll behavior
+  - Easier to add pull-to-refresh, infinite scroll, custom animations
+  - More flexible for future enhancements (e.g., sticky headers, parallax effects)
+  - `List` uses UITableView internally (more restrictive for custom designs)
+- **Implementation**: `ScrollView { LazyVStack(spacing: 8) { ForEach(...) } }`
+- **Performance**: Identical to `List` for lazy loading; both recycle views efficiently
+- **Future-proof**: Supports pagination, infinite scroll, custom scroll indicators
 
 ---
 
@@ -272,12 +306,16 @@ Button(
 ```
 
 ```swift
-// iOS
-List(animals) { animal in
-    AnimalCardView(animal: animal)
-        .accessibilityIdentifier("animalList.item.\(animal.id)")
+// iOS - Using LazyVStack for better performance with large lists
+ScrollView {
+    LazyVStack(spacing: 8) {
+        ForEach(animals) { animal in
+            AnimalCardView(animal: animal)
+                .accessibilityIdentifier("animalList.item.\(animal.id)")
+        }
+    }
+    .accessibilityIdentifier("animalList.list")
 }
-.accessibilityIdentifier("animalList.list")
 
 Button("Report a Missing Animal") { /*...*/ }
     .accessibilityIdentifier("animalList.reportMissingButton.click")

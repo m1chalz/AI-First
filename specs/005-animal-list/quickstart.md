@@ -309,7 +309,7 @@ Create in `/iosApp/iosApp/Views/`:
 
 1. **AnimalListView.swift**
    - SwiftUI view observing ViewModel
-   - List with `.accessibilityIdentifier("animalList.list")`
+   - `ScrollView` with `LazyVStack` (for performance with large lists) with `.accessibilityIdentifier("animalList.list")`
    - Loading spinner when `isLoading`
    - Error message when `errorMessage != nil`
    - Empty state when `isEmpty`
