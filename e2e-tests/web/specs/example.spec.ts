@@ -4,14 +4,6 @@ import { waitForElement } from '../steps/urlSteps';
 import { getElementText, fillInput } from '../steps/elementSteps';
 import { clickElement } from '../steps/mouseSteps';
 
-/**
- * Example E2E test suite demonstrating:
- * - Page Object Model pattern
- * - Given-When-Then structure
- * - Test identifier usage (data-testid)
- * - Reusable step definitions
- */
-
 test.describe('Example Feature', () => {
   let examplePage: ExamplePage;
 
@@ -20,42 +12,42 @@ test.describe('Example Feature', () => {
   });
 
   test('should display welcome message on page load', async ({ page }) => {
-    // Given - User navigates to the example page
+    // Given
     await examplePage.navigate();
     await waitForElement(page, examplePage.testIds.title);
 
-    // When - Page loads
+    // When
     const title = await getElementText(page, examplePage.testIds.title);
 
-    // Then - Welcome message is displayed
+    // Then
     expect(title).toBeTruthy();
     expect(examplePage.titleLocator).toBeVisible();
   });
 
   test('should submit form and display result', async ({ page }) => {
-    // Given - User is on the example page with loaded form
+    // Given
     await examplePage.navigate();
     await waitForElement(page, examplePage.testIds.title);
 
-    // When - User fills input and submits form
+    // When
     const testInput = 'Hello PetSpot!';
     await fillInput(page, examplePage.testIds.input, testInput);
     await clickElement(page, examplePage.testIds.submitButton);
 
-    // Then - Result is displayed with correct content
+    // Then
     const result = await getElementText(page, examplePage.testIds.result);
     expect(result).toContain(testInput);
   });
 
   test('should handle empty input submission', async ({ page }) => {
-    // Given - User is on the example page
+    // Given
     await examplePage.navigate();
     await waitForElement(page, examplePage.testIds.title);
 
-    // When - User submits empty form
+    // When
     await clickElement(page, examplePage.testIds.submitButton);
 
-    // Then - Appropriate validation or default message is shown
+    // Then
     const result = await getElementText(page, examplePage.testIds.result);
     expect(result).toBeDefined();
   });
