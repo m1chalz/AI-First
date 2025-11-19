@@ -37,30 +37,32 @@ This directory contains design assets and references for the Animal List Screen 
 
 ### Typography
 
-| Element | Font | Size | Weight | Line Height |
-|---------|------|------|--------|-------------|
-| Screen title | Inter | 24px | Regular (400) | 100% |
-| Card species | Inter | 16px | Regular (400) | 100% |
-| Card breed | Inter | 14px | Regular (400) | 100% |
-| Card location | Inter | 13px | Regular (400) | 100% |
-| Button label | Inter | 16px | Regular (400) | 100% |
-| Status badge | Roboto | 12px | Regular (400) | 140% |
+**Note**: Values shown in pixels (px) from Figma designs. For implementation, use platform-specific units: sp (Android), pt (iOS), px (Web).
+
+| Element | Font | Size (Figma) | Platform Units | Weight | Line Height |
+|---------|------|--------------|----------------|--------|-------------|
+| Screen title | Inter | 24px | 24sp (Android), 24pt (iOS), 24px (Web) | Regular (400) | 100% |
+| Card species | Inter | 16px | 16sp (Android), 16pt (iOS), 16px (Web) | Regular (400) | 100% |
+| Card breed | Inter | 14px | 14sp (Android), 14pt (iOS), 14px (Web) | Regular (400) | 100% |
+| Card location | Inter | 13px | 13sp (Android), 13pt (iOS), 13px (Web) | Regular (400) | 100% |
+| Button label | Inter | 16px | 16sp (Android), 16pt (iOS), 16px (Web) | Regular (400) | 100% |
+| Status badge | Roboto | 12px | 12sp (Android), 12pt (iOS), 12px (Web) | Regular (400) | 140% |
 
 ### Spacing & Layout
 
-**Note**: Values shown in pixels (px) from Figma designs. For Android implementation, use density-independent pixels (dp) with same numeric values (e.g., 8px → 8dp). iOS and Web use points/pixels respectively.
+**Note**: Values shown in pixels (px) from Figma designs. For implementation, use platform-specific units: dp (Android), pt (iOS), px (Web).
 
-| Element | Value | Android (dp) | Description |
-|---------|-------|--------------|-------------|
-| Card gap | 8px | 8dp | Vertical spacing between list items |
-| Card padding | 16px (horizontal) | 16dp | Internal card padding |
-| Card radius | 4px | 4dp | Border radius for cards |
-| Badge radius | 10px | 10dp | Border radius for status badges |
-| Button radius | 2px | 2dp | Border radius for action buttons |
-| Image size | 63x63px | 63dp | Circular animal image placeholder |
-| Mobile width | 328px | match_parent with 24dp padding | Content width on mobile (Android uses full width) |
-| Web content | 1181px | N/A | Main content area width on web |
-| Web sidebar | 219px | N/A | Navigation sidebar width on web |
+| Element | Figma Value | Platform Units | Description |
+|---------|-------------|----------------|-------------|
+| Card gap | 8px | 8dp (Android), 8pt (iOS), 8px (Web) | Vertical spacing between list items |
+| Card padding | 16px (horizontal) | 16dp (Android), 16pt (iOS), 16px (Web) | Internal card padding |
+| Card radius | 4px | 4dp (Android), 4pt (iOS), 4px (Web) | Border radius for cards |
+| Badge radius | 10px | 10dp (Android), 10pt (iOS), 10px (Web) | Border radius for status badges |
+| Button radius | 2px | 2dp (Android), 2pt (iOS), 2px (Web) | Border radius for action buttons |
+| Image size | 63x63px | 63x63dp (Android), 63x63pt (iOS), 63x63px (Web) | Circular animal image placeholder |
+| Mobile width | 328px | match_parent with 24dp padding (Android), full width with 24pt padding (iOS), 328px (Web mobile) | Content width on mobile |
+| Web content | 1181px | N/A (Android/iOS), 1181px (Web) | Main content area width on web |
+| Web sidebar | 219px | N/A (Android/iOS), 219px (Web) | Navigation sidebar width on web |
 
 ### Shadows
 
@@ -72,11 +74,11 @@ This directory contains design assets and references for the Animal List Screen 
 
 ### Mobile Card
 
-**Note**: On Android and iOS, cards use full screen width with horizontal padding. Only web designs show fixed widths.
+**Note**: On Android and iOS, cards use full screen width with horizontal padding. Only web designs show fixed widths. Values below are from Figma (px); use dp (Android), pt (iOS), px (Web) in implementation.
 
 ```
-[Card Container - full width with padding, 4px radius, shadow]
-  ├─ [Circular Image - 63x63px, gray placeholder]
+[Card Container - full width with padding, 4dp/pt/px radius, shadow]
+  ├─ [Circular Image - 63x63dp/pt/px, gray placeholder]
   ├─ [Content Column]
   │  ├─ [Location Row - icon + text]
   │  └─ [Species | Breed Row]

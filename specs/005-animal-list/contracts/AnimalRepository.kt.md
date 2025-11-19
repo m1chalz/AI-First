@@ -544,7 +544,7 @@ Repository implementation MUST:
 - ✅ `AnimalRepository` interface defined with `getAnimals()` method
 - ✅ Contract uses Kotlin Coroutines (`suspend`) and `Result<T>` wrapper
 - ✅ Repository implementations defined for Android, iOS, Web (with mocked data)
-- ✅ Mocked data consistent across platforms (10 animals with varied attributes)
+- ✅ Mocked data consistent across platforms (16 animals with varied attributes, same structure as MockAnimalData from T016a)
 - ✅ Fake repository provided for unit testing (control success/failure)
 - ✅ Future real implementation path documented (will replace with RemoteAnimalRepository)
 - ✅ Contract validation criteria defined

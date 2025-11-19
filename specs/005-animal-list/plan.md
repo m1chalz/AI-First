@@ -23,7 +23,7 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
 **Storage**: Mock data (in-memory lists) - backend integration deferred  
 **Testing**: 
 - Shared: Kotlin Test + Koin Test
-- Android: JUnit 5 + Turbine (Flow testing) + Koin Test
+- Android: JUnit 6 + Turbine (Flow testing) + Koin Test
 - iOS: XCTest with Swift Concurrency
 - Web: Vitest + React Testing Library
 - E2E: Playwright (web), Appium (mobile)
@@ -33,12 +33,12 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
 **Performance Goals**: 60 FPS scrolling (per spec clarification: performance targets removed but still best practice)  
 **Constraints**: 
 - UI-only (no backend calls)
-- Mock data: 8-12 animals with varied species, breeds, names, and statuses
+- Mock data: 16 animals (fixed for MVP) with varied species, breeds, names, and statuses
 - Empty state: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one."
 - Primary button: "Report a Missing Animal" (fixed at bottom on mobile)
 - Reserved space for future search component at top
 
-**Scale/Scope**: Single screen feature, 3 user stories (P1: View List, P2: Report Action, P3: Search Preparation), ~10 animal entities in mock data
+**Scale/Scope**: Single screen feature, 3 user stories (P1: View List, P2: Report Action, P3: Search Preparation), 16 animal entities in mock data (fixed for MVP)
 
 ## Constitution Check
 
@@ -91,8 +91,8 @@ The Animal List Screen serves as the primary entry point for the PetSpot applica
   - Android data module in `/composeApp/src/androidMain/.../di/DataModule.kt` (AnimalRepositoryImpl)
   - Android ViewModel module in `/composeApp/src/androidMain/.../di/ViewModelModule.kt` (AnimalListViewModel)
   - iOS Koin initialization in `/iosApp/iosApp/DI/KoinInitializer.swift`
-  - Web DI setup (if using Koin/JS) in `/webApp/src/di/setup.ts` or native hooks
-  - ✅ COMPLIANT: Koin DI configured for all platforms
+  - Web DI setup in `/webApp/src/di/koinSetup.ts` (Koin/JS initialized via startKoinJs from shared module)
+  - ✅ COMPLIANT: Koin DI configured for all platforms (Koin/JS infrastructure merged in commit 8bf1341)
 
 - [x] **80% Test Coverage - Shared Module**: Plan includes unit tests for shared domain logic
   - Tests in `/shared/src/commonTest/kotlin/.../domain/usecases/GetAnimalsUseCaseTest.kt`
@@ -282,7 +282,7 @@ webApp/src/
 ├── hooks/
 │   └── useAnimalList.ts                       # NEW: Custom hook for state management
 ├── services/
-│   └── mockAnimalRepository.ts                # NEW: Mock repository service
+│   └── animalRepository.ts                    # NEW: AnimalRepositoryImpl with mocked data (production code, backend integration later)
 └── __tests__/
     ├── components/
     │   └── AnimalList.test.tsx                # NEW: Component tests
@@ -311,7 +311,7 @@ e2e-tests/
         └── mockDataHelper.ts                  # NEW: Test utilities
 ```
 
-**Structure Decision**: This is a Kotlin Multiplatform project with thin shared layer (domain models, repository interfaces, use cases only) and native presentation on each platform. The Animal List Screen introduces the first full-featured screen with MVI on Android, MVVM-C on iOS, and React hooks on Web. All three platforms consume the shared GetAnimalsUseCase through their respective mock repository implementations injected via Koin.
+**Structure Decision**: This is a Kotlin Multiplatform project with thin shared layer (domain models, repository interfaces, use cases only) and native presentation on each platform. The Animal List Screen introduces the first full-featured screen with MVI on Android, MVVM-C on iOS, and React hooks on Web. All three platforms consume the shared GetAnimalsUseCase through their respective AnimalRepositoryImpl implementations (containing mocked data for MVP, backend integration later) injected via Koin.
 
 ## Complexity Tracking
 

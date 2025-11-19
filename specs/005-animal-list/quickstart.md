@@ -137,7 +137,7 @@ Create in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/`:
 
 1. **AnimalRepositoryImpl.kt**
    - Implement `AnimalRepository` interface
-   - Return 10 mock Animal entities (see contracts/) - mocked data for UI development
+   - Return 16 mock Animal entities (see contracts/ and MockAnimalData from T016a) - mocked data for UI development
    - Simulate 500ms delay with `kotlinx.coroutines.delay()`
 
 **Verification**:
@@ -275,7 +275,7 @@ Create in `/iosApp/iosApp/Repositories/`:
 
 1. **AnimalRepositoryImpl.swift**
    - Function: `async func getAnimals() throws -> [Animal]`
-   - Return 10 mock animals (same as Android) - mocked data for UI development
+   - Return 16 mock animals (same structure as Android, see MockAnimalData from T016a) - mocked data for UI development
    - Simulate delay with `Task.sleep(nanoseconds:)`
 
 **Verification**:
@@ -380,10 +380,12 @@ xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 
 
 Create in `/webApp/src/services/`:
 
-1. **mockAnimalRepository.ts**
-   - Class with `async getAnimals(): Promise<Animal[]>`
-   - Return 10 mock animals (same as Android/iOS)
-   - Simulate delay with `setTimeout`
+1. **animalRepository.ts**
+   - Export `AnimalRepositoryImpl` class implementing repository interface
+   - Method: `async getAnimals(): Promise<Animal[]>`
+   - Return 16 mock animals (same structure as MockAnimalData from T016a for consistency)
+   - Simulate delay with `setTimeout` (500ms)
+   - Note: This is production code with mocked data - backend integration will replace mock data later
 
 **Verification**:
 ```bash
@@ -554,7 +556,7 @@ Before marking feature complete:
 
 ### Cross-Platform Consistency
 
-- [ ] Mock data identical across Android, iOS, Web (10 animals, same IDs/attributes)
+- [ ] Mock data identical across Android, iOS, Web (16 animals, same structure per MockAnimalData from T016a)
 - [ ] Empty state message identical on all platforms
 - [ ] Test identifiers follow same naming convention (`animalList.element.action`)
 - [ ] Colors, typography, spacing match Figma exactly on all platforms

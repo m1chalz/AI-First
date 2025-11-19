@@ -228,7 +228,8 @@ export function useAnimalList() {
         setIsLoading(true);
         setError(null);
         try {
-            const result = await mockAnimalRepository.getAnimals();
+            // animalRepository is AnimalRepositoryImpl with mocked data (backend integration later)
+            const result = await animalRepository.getAnimals();
             setAnimals(result);
         } catch (err) {
             setError(err.message);
@@ -363,21 +364,21 @@ Button("Report a Missing Animal") { /*...*/ }
   - Primary button: `#2D2D2D`
   - Secondary button: `#E5E9EC`
   
-- **Typography**:
-  - Screen title: Inter 24px Regular
-  - Card species: Inter 16px Regular
-  - Card breed: Inter 14px Regular
-  - Card location: Inter 13px Regular
-  - Status badge: Roboto 12px Regular
-  - Button labels: Inter 16px Regular
+- **Typography** (Figma values in px - implementation uses sp/pt/px per platform):
+  - Screen title: Inter 24px Regular (24sp Android, 24pt iOS, 24px Web)
+  - Card species: Inter 16px Regular (16sp Android, 16pt iOS, 16px Web)
+  - Card breed: Inter 14px Regular (14sp Android, 14pt iOS, 14px Web)
+  - Card location: Inter 13px Regular (13sp Android, 13pt iOS, 13px Web)
+  - Status badge: Roboto 12px Regular (12sp Android, 12pt iOS, 12px Web)
+  - Button labels: Inter 16px Regular (16sp Android, 16pt iOS, 16px Web)
 
-- **Spacing**:
-  - Card gap: 8px
-  - Card padding: 16px horizontal
-  - Card border radius: 4px
-  - Badge radius: 10px
-  - Button radius: 2px
-  - Card shadow: `0px 1px 4px 0px rgba(0,0,0,0.05)`
+- **Spacing** (Figma values in px - implementation uses dp/pt/px per platform):
+  - Card gap: 8px (8dp Android, 8pt iOS, 8px Web)
+  - Card padding: 16px horizontal (16dp Android, 16pt iOS, 16px Web)
+  - Card border radius: 4px (4dp Android, 4pt iOS, 4px Web)
+  - Badge radius: 10px (10dp Android, 10pt iOS, 10px Web)
+  - Button radius: 2px (2dp Android, 2pt iOS, 2px Web)
+  - Card shadow: `0px 1px 4px 0px rgba(0,0,0,0.05)` (elevation 2dp Android, 1pt offset 4pt blur iOS, 0px 1px 4px Web)
 
 **Implementation Strategy**:
 - Android: Define `Color`, `Typography`, and `Dimens` in theme files
