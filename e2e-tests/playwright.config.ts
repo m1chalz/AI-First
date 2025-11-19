@@ -88,11 +88,20 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'cd ../webApp && npm run start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  /* 
+   * NOTE: Auto-start disabled. Start webApp manually before running tests:
+   *   1. Build shared module: ./gradlew :shared:jsBrowserDevelopmentLibraryDistribution
+   *   2. Install webApp dependencies: cd webApp && npm install
+   *   3. Start web server: npm run start (from webApp directory)
+   *   4. Run tests: npm run test:web (from e2e-tests directory)
+   * 
+   * To enable auto-start in future, uncomment webServer block below.
+   */
+  // webServer: {
+  //   command: 'cd ../webApp && npm run start',
+  //   url: 'http://localhost:3000',
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 120000,
+  // },
 });
 

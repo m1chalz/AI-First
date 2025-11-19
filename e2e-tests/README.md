@@ -33,8 +33,21 @@ e2e-tests/
 
 ### Setup
 
+**1. Build shared Kotlin/JS module (required for webApp):**
 ```bash
-# Install dependencies (in e2e-tests directory)
+# From project root
+./gradlew :shared:jsBrowserDevelopmentLibraryDistribution
+```
+
+**2. Install webApp dependencies:**
+```bash
+cd webApp
+npm install
+cd ..
+```
+
+**3. Install e2e-tests dependencies:**
+```bash
 cd e2e-tests
 npm install
 
@@ -46,7 +59,9 @@ npx playwright install
 
 **For Web Testing:**
 - Node.js v20+ installed
+- Java 17+ (for building Kotlin/JS shared module)
 - Playwright browsers installed (via `npx playwright install`)
+- **webApp must be running** before tests (see Running Tests section)
 
 **For Mobile Testing:**
 - Android SDK (for Android tests)
@@ -57,12 +72,20 @@ npx playwright install
 ### Running Tests
 
 **Web E2E Tests:**
+
+⚠️ **IMPORTANT**: You must start webApp server manually before running tests:
+
 ```bash
-# From e2e-tests directory
+# Terminal 1: Start web server (from webApp directory)
+cd webApp
+npm run start  # Runs on http://localhost:3000
+
+# Terminal 2: Run Playwright tests (from e2e-tests directory)
+cd e2e-tests
 npm run test:web
 npm run test:web:ui
 
-# From project root
+# Or from project root
 npm run test:e2e:web
 npm run test:e2e:web:ui
 
