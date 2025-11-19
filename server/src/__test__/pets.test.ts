@@ -13,12 +13,12 @@ describe('Pets ITs', () => {
   })
 
   it('should return a json body', async () => {
-    // Given / when
+    // given / when
     const response = await request(app)
-      .get('/pets')
+      .get('/api/pets')
       .send()
 
-    // Then
+    // then
     assert.equal(200, response.status)
     assert.equal(3, response.body.length)
   })

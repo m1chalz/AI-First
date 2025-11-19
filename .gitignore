@@ -17,6 +17,11 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+dist/
+*.log
+.env*
+*.db
+coverage/
 
 # E2E Test Artifacts
 e2e-tests/web/reports/
