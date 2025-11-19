@@ -4,9 +4,10 @@ import routes from './routes/routes.ts';
 import requestIdMiddleware from './middlewares/request-id-middleware.ts';
 import loggerMiddleware from './middlewares/logger-middleware.ts';
 import notFoundMiddleware from './middlewares/not-found-middleware.ts';
+import log from './lib/logger.ts';
 
 export default async function prepareApp(): Promise<express.Express> {
-  console.log('App starting...')
+  log.info('App starting...')
 
   await runDbMigrations();
 
