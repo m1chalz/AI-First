@@ -176,27 +176,28 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T038 [US1] Add accessibilityIdentifier to all interactive views in [Feature]View (e.g., `.accessibilityIdentifier("[screen].[element].[action]")`)
 - [ ] T039 [P] [US1] Add SwiftDoc documentation to complex iOS APIs (skip self-explanatory methods/properties)
 
-**Web**:
-- [ ] T040 [US1] Create service consuming shared in `/webApp/src/services/[feature]Service.ts`
-- [ ] T041 [US1] Create custom hook in `/webApp/src/hooks/use[Feature].ts`
-- [ ] T042 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
-- [ ] T043 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
-- [ ] T044 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
+**Web** (STANDALONE: no shared module, no Koin):
+- [ ] T040 [US1] Create TypeScript domain models in `/webApp/src/models/[Model].ts` (independent of shared module)
+- [ ] T041 [US1] Create HTTP service consuming backend API in `/webApp/src/services/[feature]Service.ts` (native TypeScript, no Koin)
+- [ ] T042 [US1] Create custom hook in `/webApp/src/hooks/use[Feature].ts`
+- [ ] T043 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
+- [ ] T044 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
+- [ ] T045 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
 
 **Backend** (TDD: Red-Green-Refactor):
-- [ ] T045 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
-- [ ] T046 [US1] GREEN: Implement [Service] in `/server/src/services/[Service].ts` (minimal code to pass test)
-- [ ] T047 [US1] REFACTOR: Improve [Service] code quality (extract helpers, apply Clean Code principles)
-- [ ] T048 [P] [US1] RED: Write failing unit test for utility in `/server/src/lib/__test__/[util].test.ts`
-- [ ] T049 [P] [US1] GREEN: Implement utility in `/server/src/lib/[util].ts` (minimal code to pass test)
-- [ ] T050 [US1] Create database repository in `/server/src/database/repositories/[Repository].ts` (Knex queries)
-- [ ] T051 [US1] Create Express router in `/server/src/routes/[feature]Routes.ts` (endpoint definitions)
-- [ ] T052 [US1] RED: Write failing integration test for endpoint in `/server/src/__test__/[endpoint].test.ts` (SuperTest)
-- [ ] T053 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
-- [ ] T054 [US1] REFACTOR: Add error handling middleware for [feature] routes
-- [ ] T055 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
-- [ ] T056 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
-- [ ] T057 [P] [US1] Run `npm run lint` and fix ESLint violations
+- [ ] T046 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
+- [ ] T047 [US1] GREEN: Implement [Service] in `/server/src/services/[Service].ts` (minimal code to pass test)
+- [ ] T048 [US1] REFACTOR: Improve [Service] code quality (extract helpers, apply Clean Code principles)
+- [ ] T049 [P] [US1] RED: Write failing unit test for utility in `/server/src/lib/__test__/[util].test.ts`
+- [ ] T050 [P] [US1] GREEN: Implement utility in `/server/src/lib/[util].ts` (minimal code to pass test)
+- [ ] T051 [US1] Create database repository in `/server/src/database/repositories/[Repository].ts` (Knex queries)
+- [ ] T052 [US1] Create Express router in `/server/src/routes/[feature]Routes.ts` (endpoint definitions)
+- [ ] T053 [US1] RED: Write failing integration test for endpoint in `/server/src/__test__/[endpoint].test.ts` (SuperTest)
+- [ ] T054 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
+- [ ] T055 [US1] REFACTOR: Add error handling middleware for [feature] routes
+- [ ] T056 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
+- [ ] T057 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
+- [ ] T058 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -238,9 +239,10 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T054 [US2] Implement iOS repository + DI + ViewModel + SwiftUI
 - [ ] T055 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
 - [ ] T056 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
-- [ ] T057 [US2] Implement Web service + hook + React component
-- [ ] T058 [US2] Add data-testid attributes to all Web UI elements for US2
-- [ ] T059 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
+- [ ] T057 [US2] Create TypeScript models for US2 in `/webApp/src/models/` (independent of shared)
+- [ ] T058 [US2] Implement Web HTTP service + hook + React component (native TypeScript, no Koin)
+- [ ] T059 [US2] Add data-testid attributes to all Web UI elements for US2
+- [ ] T060 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

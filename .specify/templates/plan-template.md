@@ -44,7 +44,7 @@
 - [ ] **Native Presentation**: Each platform implements its own presentation layer
   - Android ViewModels in `/composeApp`
   - iOS ViewModels in Swift in `/iosApp`
-  - Web state management in React in `/webApp`
+  - Web state management in React in `/webApp` (STANDALONE: no shared module, no Koin)
   - Violation justification: _[Required if not compliant]_
 
 - [ ] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
@@ -60,12 +60,12 @@
   - Use cases reference interfaces, not concrete implementations
   - Violation justification: _[Required if not compliant]_
 
-- [ ] **Dependency Injection**: Plan includes Koin setup for all platforms
+- [ ] **Dependency Injection**: Plan includes Koin setup for Android/iOS platforms
   - Shared domain module defined in `/shared/src/commonMain/.../di/`
   - Android DI modules in `/composeApp/src/androidMain/.../di/`
   - iOS Koin initialization in `/iosApp/iosApp/DI/`
-  - Web DI setup (if applicable) in `/webApp/src/di/`
-  - Violation justification: _[Required if DI not using Koin]_
+  - Web uses native TypeScript DI (NO Koin) - exempt from this requirement
+  - Violation justification: _[Required if Android/iOS DI not using Koin]_
 
 - [ ] **80% Test Coverage - Shared Module**: Plan includes unit tests for shared domain logic
   - Tests located in `/shared/src/commonTest`

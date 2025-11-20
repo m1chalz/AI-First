@@ -2,22 +2,28 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.6 → 1.11.7
+Version change: 1.11.7 → 1.12.0
 Modified sections:
-- III. 80% Unit Test Coverage - Shared Module: Updated framework from "Kotlin Test (multiplatform)" to "Kotlin Test (multiplatform) with JUnit 6"
-- III. 80% Unit Test Coverage - Android ViewModels: Updated framework from "JUnit 5" to "JUnit 6"
-- XII. Given-When-Then Test Convention - Parameterized Tests: Updated Kotlin/Android section from "JUnit 5" to "JUnit 6"
-- Testing Standards - Unit Tests Shared Module: Updated framework to include "with JUnit 6"
-- Testing Standards - Unit Tests ViewModels Android: Updated framework from "JUnit 5" to "JUnit 6"
-Modified principles: None (test framework version update)
-Added principles: None
+- II. Native Presentation: Added Web-specific exemption (standalone architecture, no shared module dependency)
+- VIII. Dependency Injection with Koin: Added Web platform exemption (native TypeScript DI, no Koin)
+- Platform Architecture Rules - Dependency Flow: Updated diagram and clarifications to reflect Web's standalone architecture
+- Module Structure: Updated /webApp description to remove Koin/DI references
+- Testing Standards - ViewModel Unit Tests: Clarified Web tests focus on hooks/state without shared module dependency
+- Compliance: Updated checklist to reflect Web's exemption from shared module and Koin requirements
+Modified principles:
+- Native Presentation: Expanded with Web platform independence guidance
+- Dependency Injection with Koin: Added Web platform exemption
+Added principles: None (expanded existing principles with Web-specific guidance)
+Removed principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (no changes needed - references testing generically)
-- ✅ .specify/templates/tasks-template.md (no changes needed - references testing generically)
-- ✅ .specify/templates/spec-template.md (no changes needed)
+- ⚠ .specify/templates/plan-template.md - Review Constitution Check for Web platform exemptions
+- ⚠ .specify/templates/tasks-template.md - Review Web implementation sections (no shared/Koin tasks)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 Follow-up TODOs:
-- Update build.gradle.kts files to use JUnit 6 (Jupiter) dependencies for shared and composeApp modules
-Previous changes (v1.11.6):
+- Review existing /webApp code to ensure no shared module or Koin dependencies exist
+- Update any Web-specific documentation to reflect standalone architecture
+- Verify Web CI/CD pipeline doesn't depend on shared module builds
+Previous changes (v1.11.7):
 - plan-template.md Constitution Check: Added note to skip frontend checks for backend-only features
 - tasks-template.md Implementation sections: Added notes to skip frontend platform tasks for backend-only features
 Previous changes (v1.11.5):
@@ -94,9 +100,16 @@ without compromise.
 Each platform MUST implement its own presentation layer using native frameworks:
 - **Android**: Jetpack Compose + MVI ViewModel loop (in `/composeApp`)
 - **iOS**: SwiftUI + MVVM-C (Model-View-ViewModel-Coordinator) (in `/iosApp`)
-- **Web**: React + TypeScript state management (in `/webApp`)
+- **Web**: React + TypeScript state management (in `/webApp`) - **STANDALONE ARCHITECTURE**: Web platform operates independently without shared module or Koin dependencies
 
 ViewModels and UI state MUST reside in platform-specific modules, NOT in `/shared`.
+
+**Web Platform Independence** (NON-NEGOTIABLE):
+- The `/webApp` module MUST NOT depend on the `/shared` Kotlin Multiplatform module
+- The `/webApp` MUST NOT use Koin for dependency injection (use native TypeScript DI patterns instead)
+- The `/webApp` implements its own domain models, services, and state management in TypeScript
+- The `/webApp` consumes backend APIs directly via HTTP (same as other platforms)
+- Rationale: Web ecosystem has mature TypeScript tooling and patterns; KMP-JS integration adds complexity without sufficient benefit
 
 Android presentation logic MUST follow the Model-View-Intent pattern:
 - Compose UI renders a single `UiState` data class exposed via `StateFlow`
@@ -242,7 +255,7 @@ Prototyping with interfaces allows testing domain logic in isolation.
 
 ### VIII. Dependency Injection with Koin (NON-NEGOTIABLE)
 
-All projects MUST use **Koin** for dependency injection across platforms:
+All projects MUST use **Koin** for dependency injection across platforms, **EXCEPT Web platform** which uses native TypeScript DI:
 
 **Shared Module DI** (`/shared/src/commonMain/.../di/`):
 - Define common modules for domain dependencies
@@ -282,16 +295,23 @@ All projects MUST use **Koin** for dependency injection across platforms:
   // Or native Swift DI if preferred for ViewModels
   ```
 
-- **Web** (`/webApp/src/services/di.ts`):
+- **Web** (`/webApp/src/di/` or inline):
   ```typescript
-  // Consume shared Koin modules or use native TS DI
-  import { domainModule } from 'shared'
+  // Web uses native TypeScript DI patterns (NO Koin, NO shared module dependency)
+  // Example: Dependency injection via constructor parameters, React Context, or service locator pattern
+  export class PetService {
+      constructor(private httpClient: HttpClient) {}
+      
+      async getPets(): Promise<Pet[]> {
+          return this.httpClient.get<Pet[]>('/api/pets');
+      }
+  }
   ```
 
 **DI Initialization**:
 - Android: `Application.onCreate()` - `startKoin { modules(...) }`
 - iOS: `@main` app entry - call Koin init from shared
-- Web: App bootstrap - initialize Koin/JS
+- Web: App bootstrap - setup native TypeScript DI (e.g., service instances, React Context providers) - **NO Koin initialization**
 
 **Testing with Koin**:
 - Use `koinTest` module for unit tests
@@ -1826,13 +1846,13 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 ### Dependency Flow
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Platform Clients (composeApp, iosApp, webApp)     │
-│  - ViewModels                                       │
-│  - UI Components                                    │
-│  - Navigation                                       │
-│  - HTTP clients consuming /server REST API         │
-└──────────────┬──────────────────┬───────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  Android (composeApp) + iOS (iosApp)                        │
+│  - ViewModels (using Koin DI)                               │
+│  - UI Components                                            │
+│  - Navigation                                               │
+│  - HTTP clients consuming /server REST API                  │
+└──────────────┬──────────────────┬───────────────────────────┘
                │ depends on       │ HTTP requests
                ▼                  ▼
 ┌─────────────────────────┐   ┌────────────────────────┐
@@ -1840,16 +1860,27 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 │  - Domain Models        │   │  - REST API endpoints  │
 │  - Repository Interfaces│   │  - Business logic      │
 │  - Use Cases            │   │  - Database (SQLite)   │
-│  - NO ViewModels, NO UI │   │  - NOT part of KMP     │
-└─────────────────────────┘   └────────────────────────┘
+│  - Koin DI modules      │   │  - NOT part of KMP     │
+│  - NO ViewModels, NO UI │   │  - NO Koin             │
+└─────────────────────────┘   └────────────┬───────────┘
+                                           │ HTTP requests
+                                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Web (webApp) - STANDALONE ARCHITECTURE                     │
+│  - React components (NO shared module dependency)           │
+│  - TypeScript models (defined in webApp)                    │
+│  - Native TypeScript DI (NO Koin)                           │
+│  - HTTP clients consuming /server REST API                  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 **Clarifications**:
-- Platform clients (Android/iOS/Web) MAY depend on `/shared` for domain models
-- Platform clients MUST consume `/server` via REST API (HTTP requests)
+- **Android/iOS platforms** depend on `/shared` for domain models, use cases, and Koin DI
+- **Web platform** operates STANDALONE: NO `/shared` dependency, NO Koin, implements own models in TypeScript
+- All platforms (Android/iOS/Web) consume `/server` via REST API (HTTP requests)
 - `/shared` MUST NOT depend on platform modules or `/server`
-- `/server` is a standalone Node.js backend (NOT part of KMP)
-- `/server` MAY define its own TypeScript models (does not need to use `/shared`)
+- `/server` is a standalone Node.js backend (NOT part of KMP, NO Koin)
+- `/server` defines its own TypeScript models (does not use `/shared`)
 
 ### Module Structure
 
@@ -1875,11 +1906,12 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 - `Repositories/` - iOS repository implementations
 - `DI/` - Koin initialization or native Swift DI
 
-**`/webApp/src/`**
+**`/webApp/src/`** (STANDALONE - no shared module, no Koin):
 - `components/` - React components
-- `hooks/` - React hooks for state
-- `services/` - Repository implementations consuming shared Kotlin/JS
-- `di/` - DI setup for web (if using Koin/JS)
+- `hooks/` - React hooks for state management
+- `services/` - HTTP services consuming backend REST API (TypeScript implementations)
+- `models/` - TypeScript domain models (defined independently, NOT from shared)
+- `utils/` - Utility functions and helpers
 
 **`/server/src/`** (Node.js/Express Backend - NOT part of KMP):
 - `middlewares/` - Express middlewares (auth, logging, error handling, validation)
@@ -2175,7 +2207,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Framework**: Vitest + React Testing Library
 - **Run command**: `npm test -- --coverage`
 - **Report**: `webApp/coverage/index.html`
-- **Scope**: Custom hooks, state management, view logic
+- **Scope**: Custom hooks, state management, view logic (tests operate independently without shared module or Koin)
 
 ### Unit Tests - Backend Business Logic (MANDATORY)
 
@@ -2372,8 +2404,8 @@ This constitution supersedes all other architectural guidelines.
 ### Compliance
 
 All pull requests MUST:
-- Verify shared module contains no UI/ViewModel code
-- Run `./gradlew :shared:test koverHtmlReport` and ensure 80%+ coverage on shared
+- Verify shared module contains no UI/ViewModel code (applies to Android/iOS; Web doesn't use shared module)
+- Run `./gradlew :shared:test koverHtmlReport` and ensure 80%+ coverage on shared (if shared module affected)
 - Run platform-specific ViewModel tests and ensure 80%+ coverage:
   - Android: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: XCTest with coverage enabled
@@ -2419,6 +2451,7 @@ All pull requests MUST:
 - Check that platform-specific code resides in correct modules
 - Use expect/actual for platform dependencies in shared
 - Verify backend `/server` remains independent (not part of KMP)
+- Verify Web `/webApp` remains independent (no shared module dependency, no Koin usage)
 - Verify backend directory structure follows standards:
   - Business logic in `/src/services` (with unit tests in `__test__/`)
   - Utilities in `/src/lib` (with unit tests in `__test__/`)
@@ -2435,4 +2468,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.7 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.12.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
