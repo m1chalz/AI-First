@@ -1,4 +1,5 @@
 import type { Options } from '@wdio/types';
+import path from 'path';
 
 /**
  * WebdriverIO configuration for PetSpot E2E mobile tests.
@@ -42,24 +43,29 @@ export const config: Options.Testrunner = {
   // ============
   maxInstances: 1,
   
-  capabilities: [
-    // Android Configuration
-    {
-      platformName: 'Android',
+  // Filter capabilities based on PLATFORM env variable
+  capabilities: (() => {
+    const platform = process.env.PLATFORM?.toLowerCase();
+    
+    const androidConfig = {
+      platformName: 'Android' as const,
       'appium:deviceName': 'Android Emulator',
-      'appium:platformVersion': '13.0',
+      // Empty string = auto-detect Android version from connected device/emulator
+      'appium:platformVersion': '',
       'appium:automationName': 'UiAutomator2',
-      // Path to your app (update this when you have the app)
-      // 'appium:app': path.join(process.cwd(), '../composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
+      // Path to your app
+      'appium:app': path.join(process.cwd(), '../composeApp/build/outputs/apk/debug/composeApp-debug.apk'),
       'appium:appPackage': 'com.intive.aifirst.petspot',
       'appium:appActivity': '.MainActivity',
       'appium:noReset': false,
       'appium:fullReset': false,
       'appium:newCommandTimeout': 240,
-    },
-    // iOS Configuration
-    {
-      platformName: 'iOS',
+      // Increase timeout for UIAutomator2 initialization on first run
+      'appium:uiautomator2ServerInstallTimeout': 60000,
+    };
+    
+    const iosConfig = {
+      platformName: 'iOS' as const,
       'appium:deviceName': 'iPhone 15',
       'appium:platformVersion': '17.0',
       'appium:automationName': 'XCUITest',
@@ -69,8 +75,13 @@ export const config: Options.Testrunner = {
       'appium:noReset': false,
       'appium:fullReset': false,
       'appium:newCommandTimeout': 240,
-    }
-  ],
+    };
+    
+    // Return only the specified platform, or all if not specified
+    if (platform === 'android') return [androidConfig];
+    if (platform === 'ios') return [iosConfig];
+    return [androidConfig, iosConfig]; // Default: both platforms
+  })(),
   
   //
   // ===================
@@ -85,20 +96,29 @@ export const config: Options.Testrunner = {
   
   //
   // Test runner services
-  // Services take over a specific job you don't want to take care of. They enhance
-  // your test setup with almost no effort. Unlike plugins, they don't add new
-  // commands. Instead, they hook themselves up into the test process.
+  // NOTE: Appium service is commented out due to issues with auto-start.
+  // Instead, manually start Appium server before running tests:
+  //   cd e2e-tests && ANDROID_HOME=$HOME/Library/Android/sdk npx appium
+  // Or use the helper script: npm run appium:start (from e2e-tests directory)
   services: [
-    ['appium', {
-      // Appium service options
-      args: {
-        // Appium server arguments
-        address: 'localhost',
-        port: 4723,
-      },
-      logPath: './mobile/logs/',
-    }]
+    // ['appium', {
+    //   args: {
+    //     address: 'localhost',
+    //     port: 4723,
+    //     relaxedSecurity: true,
+    //   },
+    //   logPath: './mobile/logs/',
+    //   env: {
+    //     ...process.env,
+    //     ANDROID_HOME: process.env.ANDROID_HOME || `${process.env.HOME}/Library/Android/sdk`,
+    //   },
+    // }]
   ],
+  
+  // Connection configuration for externally-started Appium server
+  hostname: 'localhost',
+  port: 4723,
+  path: '/',
   
   //
   // Framework you want to run your specs with.
