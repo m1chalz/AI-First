@@ -8,8 +8,7 @@ import SwiftUI
  * - Primary: Dark background (#2D2D2D), white text, larger padding
  * - Secondary: Light background (#EFF4F8), dark text, smaller padding
  *
- * - Parameter title: Button label text
- * - Parameter style: Visual style (primary or secondary)
+ * - Parameter model: Button presentation data (FloatingActionButtonModel)
  * - Parameter action: Callback when button is tapped
  */
 struct FloatingActionButton: View {
@@ -46,18 +45,17 @@ struct FloatingActionButton: View {
         }
     }
     
-    let title: String
-    let style: Style
+    let model: FloatingActionButtonModel
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            Text(title)
+            Text(model.title)
                 .font(.system(size: 14))
-                .foregroundColor(style.foregroundColor)
-                .padding(.horizontal, style.horizontalPadding)
-                .padding(.vertical, style.verticalPadding)
-                .background(style.backgroundColor)
+                .foregroundColor(model.style.foregroundColor)
+                .padding(.horizontal, model.style.horizontalPadding)
+                .padding(.vertical, model.style.verticalPadding)
+                .background(model.style.backgroundColor)
                 .cornerRadius(16)
                 .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
         }
@@ -73,14 +71,12 @@ struct FloatingActionButton: View {
         
         VStack(spacing: 30) {
             FloatingActionButton(
-                title: "Report a Missing Animal",
-                style: .primary,
+                model: FloatingActionButtonModel(title: "Report a Missing Animal", style: .primary),
                 action: { print("Primary tapped") }
             )
             
             FloatingActionButton(
-                title: "Report Found Animal",
-                style: .secondary,
+                model: FloatingActionButtonModel(title: "Report Found Animal", style: .secondary),
                 action: { print("Secondary tapped") }
             )
         }

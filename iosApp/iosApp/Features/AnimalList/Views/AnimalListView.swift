@@ -40,7 +40,7 @@ struct AnimalListView: View {
                     .padding(32)
             } else if viewModel.isEmpty {
                 // Empty state
-                EmptyStateView()
+                EmptyStateView(model: EmptyStateModel.default)
             } else {
                 // Animal list
                 ScrollView {
@@ -82,8 +82,7 @@ struct AnimalListView: View {
             // Uncomment when ready to enable
             /*
             FloatingActionButton(
-                title: "Report Found Animal",
-                style: .secondary,
+                model: FloatingActionButtonModel(title: "Report Found Animal", style: .secondary),
                 action: { viewModel.reportFound() }
             )
             .accessibilityIdentifier("animalList.reportFoundButton")
@@ -91,8 +90,7 @@ struct AnimalListView: View {
             
             // Report a Missing Animal button (primary action)
             FloatingActionButton(
-                title: "Report a Missing Animal",
-                style: .primary,
+                model: FloatingActionButtonModel(title: "Report a Missing Animal", style: .primary),
                 action: { viewModel.reportMissing() }
             )
             .accessibilityIdentifier("animalList.reportMissingButton")

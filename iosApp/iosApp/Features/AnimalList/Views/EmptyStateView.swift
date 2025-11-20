@@ -4,14 +4,16 @@ import SwiftUI
  * SwiftUI view for displaying empty state when no animals are available.
  * Shows user-friendly message encouraging action.
  *
- * Message per FR-009: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one."
+ * - Parameter model: Empty state presentation data (EmptyStateModel)
  */
 struct EmptyStateView: View {
+    let model: EmptyStateModel
+    
     var body: some View {
         VStack {
             Spacer()
             
-            Text("No animals reported yet. Tap 'Report a Missing Animal' to add the first one.")
+            Text(model.message)
                 .font(.system(size: 16))
                 .foregroundColor(Color(hex: "#545F71")) // Secondary text color
                 .multilineTextAlignment(.center)
