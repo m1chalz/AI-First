@@ -12,11 +12,32 @@
  * - Secondary button: #E5E9EC
  */
 
-/* Container */
+/* Container - Full page wrapper */
 .container {
-    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
     background-color: #FAFAFA;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main content wrapper - per Figma layout */
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
 }
 
 /* Header */
@@ -24,34 +45,47 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
-    background-color: #FAFAFA;
-    border-bottom: 1px solid #E5E9EC;
+    padding: 20px 32px 24px;
+    margin-bottom: 44px;
 }
 
 .title {
     font-size: 24px;
     font-weight: 400;
+    line-height: 100%;
     color: #2D2D2D;
     margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .headerButtons {
     display: flex;
-    gap: 12px;
+    gap: 16px;
 }
 
-/* Buttons (per Figma web design) */
-.primaryButton {
-    padding: 12px 24px;
+/* Buttons - per Figma web design (327px x 48px) */
+.primaryButton,
+.secondaryButton {
+    width: 327px;
+    height: 48px;
+    padding: 12px 16px;
     font-size: 16px;
     font-weight: 400;
-    color: white;
-    background-color: #2D2D2D;
+    line-height: 0;
     border: none;
     border-radius: 2px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, background-color 0.2s;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.primaryButton {
+    color: #FFFFFF;
+    background-color: #2D2D2D;
 }
 
 .primaryButton:hover {
@@ -59,50 +93,52 @@
 }
 
 .secondaryButton {
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 400;
     color: #2D2D2D;
     background-color: #E5E9EC;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 .secondaryButton:hover {
     background-color: #D5D9DC;
 }
 
-/* Search placeholder (reserved space) */
+/* Search placeholder - Reserved space for search and filters (will be implemented later) */
 .searchPlaceholder {
-    height: 64px;
-    padding: 16px 32px;
-    background-color: #FAFAFA;
-    border-bottom: 1px solid #E5E9EC;
-    /* Width: 582px search bar + filters will go here */
+    min-height: 166px;
+    margin-bottom: 16px;
+    padding: 0 32px;
+    /* Search fields, filters, and buttons will go here */
 }
 
 /* Content area */
 .content {
-    padding: 24px 32px;
-    max-width: 1400px;
-    margin: 0 auto;
+    flex: 1;
+    padding: 0;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar {
+    width: 0;
 }
 
 /* Animal list */
 .animalList {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* 8px gap per Figma */
+    gap: 3.25px; /* Gap per Figma web design (155.25px / 8 cards ≈ 3.25px between each) */
+    padding: 0 32px 20px;
 }
 
-/* Animal card */
+/* Animal card - Horizontal layout matching Figma */
 .animalCard {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     padding: 16px;
+    min-height: 95.25px;
     background-color: white;
     border-radius: 4px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
@@ -114,54 +150,129 @@
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
-/* Photo placeholder */
+/* Photo placeholder - Circular, 162px container per Figma */
 .photoPlaceholder {
-    width: 63px;
+    width: 162px;
+    min-width: 162px;
     height: 63px;
-    border-radius: 50%;
+    border-radius: 105px;
     background-color: #EEEEEE;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    color: #93A2B4;
+    padding: 16.625px;
     flex-shrink: 0;
 }
 
-/* Animal info */
-.animalInfo {
+.photoIcon {
+    font-size: 29.75px;
+    color: #93A2B4;
+}
+
+/* Left section: Basic animal info (location + species/breed) */
+.animalBasicInfo {
+    width: 197px;
+    min-width: 197px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    flex: 1;
+    gap: 14px;
+    padding: 16.625px 24px;
 }
 
-.animalName {
-    font-size: 16px;
-    font-weight: 400;
-    color: #2D2D2D;
+.locationRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.animalLocation {
+.locationIcon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.locationText {
     font-size: 13px;
     font-weight: 400;
     color: #545F71;
+    font-family: 'Inter', sans-serif;
+}
+
+.speciesRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.speciesText {
+    font-size: 16px;
+    font-weight: 400;
+    color: #2D2D2D;
+    font-family: 'Inter', sans-serif;
+}
+
+.separator {
+    font-size: 16px;
+    color: #93A2B4;
+    font-family: 'Inter', sans-serif;
+}
+
+.breedText {
+    font-size: 14px;
+    font-weight: 400;
+    color: #2D2D2D;
+    font-family: 'Inter', sans-serif;
+}
+
+.genderIcon {
+    font-size: 24px;
+    color: #616161;
+}
+
+/* Center section: Description */
+.animalDescription {
+    flex: 1;
+    min-height: 48px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #545F71;
+    line-height: normal;
+    font-family: 'Inter', sans-serif;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Right section: Status badge and date */
+.animalStatusSection {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+    padding: 8px 0;
+    min-width: fit-content;
 }
 
 .statusBadge {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 1px 10px 2px 10px;
     font-size: 12px;
     font-weight: 400;
-    color: white;
+    color: #FAFAFA;
+    background-color: #FF0000;
     border-radius: 10px;
-    width: fit-content;
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.4;
+    text-align: center;
 }
 
 .animalDate {
     font-size: 13px;
     font-weight: 400;
-    color: #93A2B4;
+    color: #545F71;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Loading state */
