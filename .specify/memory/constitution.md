@@ -2,11 +2,12 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.2 → 1.11.3
+Version change: 1.11.3 → 1.11.4
 Modified sections:
 - XIII. Backend Architecture & Quality Standards - Database Layer Standards:
-  - Added: MUST use singular table names (e.g., `announcement`, `pet`, `user` NOT `announcements`, `pets`, `users`)
-  - Updated code example to use singular table name (`pet` instead of `pets`)
+  - Added: MUST use IF EXISTS / IF NOT EXISTS in all DDL statements for idempotent migrations
+  - Added: Migration example showing correct usage of createTableIfNotExists() and dropTableIfExists()
+  - Added: Rationale for idempotent migrations (safe re-run without errors)
 Modified principles: None (clarification of existing backend standards)
 Added principles: None
 Templates requiring updates:
@@ -15,6 +16,10 @@ Templates requiring updates:
 - ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.3):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST use singular table names
+  - Updated code example to use singular table name
 Previous changes (v1.11.2):
 - plan-template.md Technical Context: Made performance requirements optional for low-traffic projects
 Previous changes (v1.11.1):
@@ -1377,11 +1382,45 @@ describe('POST /api/pets', () => {
 - MUST use singular table names (e.g., `announcement`, `pet`, `user` NOT `announcements`, `pets`, `users`)
 - MUST use Knex query builder (avoid raw SQL)
 - MUST create migrations for schema changes (versioned, reversible)
+- MUST use `IF EXISTS` / `IF NOT EXISTS` in all DDL statements for idempotent migrations:
+  - `createTableIfNotExists()` instead of `createTable()`
+  - `dropTableIfExists()` instead of `dropTable()`
+  - Check existence before adding/dropping columns or indexes
+  - Ensures migrations can be safely re-run without errors
 - MUST use repository pattern for data access (enables test doubles)
 - SHOULD design for easy migration from SQLite to PostgreSQL:
   - Avoid SQLite-specific features
   - Use Knex-supported data types
   - Test migrations on both SQLite and PostgreSQL (when possible)
+
+**Migration Example**:
+```typescript
+// ✅ CORRECT - Uses IF NOT EXISTS / IF EXISTS
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTableIfNotExists('pet', (table) => {
+        table.increments('id').primary();
+        table.string('name').notNullable();
+        table.string('species').notNullable();
+        table.integer('ownerId').notNullable();
+    });
+}
+
+export async function down(knex: Knex): Promise<void> {
+    await knex.schema.dropTableIfExists('pet');
+}
+
+// ❌ INCORRECT - Missing IF NOT EXISTS / IF EXISTS
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTable('pet', (table) => {
+        // Will fail if table already exists
+    });
+}
+
+export async function down(knex: Knex): Promise<void> {
+    await knex.schema.dropTable('pet'); // Will fail if table doesn't exist
+}
+```
+
 - Example repository:
   ```typescript
   // /src/database/petRepository.ts
@@ -2347,4 +2386,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.3 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.4 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
