@@ -13,9 +13,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
+import com.intive.aifirst.petspot.navigation.navigateToAnimalDetail
+import com.intive.aifirst.petspot.navigation.navigateToReportFound
+import com.intive.aifirst.petspot.navigation.navigateToReportMissing
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -32,38 +36,31 @@ import org.koin.androidx.compose.koinViewModel
  * - Reserved space for future search component
  * 
  * Layout per FR-010: This is the primary entry point screen.
+ * Navigation handled via NavController - effects trigger navigation actions.
  * 
+ * @param navController Navigation controller for managing screen transitions
  * @param viewModel ViewModel injected via Koin
- * @param onNavigateToDetails Callback for navigating to animal details (mocked)
- * @param onNavigateToReportMissing Callback for navigating to report missing form (mocked)
- * @param onNavigateToReportFound Callback for navigating to report found form (mocked)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimalListScreen(
-    viewModel: AnimalListViewModel = koinViewModel(),
-    onNavigateToDetails: (String) -> Unit = {},
-    onNavigateToReportMissing: () -> Unit = {},
-    onNavigateToReportFound: () -> Unit = {}
+    navController: NavController,
+    viewModel: AnimalListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     
-    // Collect effects for navigation
+    // Collect effects and handle navigation
     LaunchedEffect(Unit) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
                 is AnimalListEffect.NavigateToDetails -> {
-                    // Mocked navigation - log for now
-                    println("Navigate to details: ${effect.animalId}")
-                    onNavigateToDetails(effect.animalId)
+                    navController.navigateToAnimalDetail(effect.animalId)
                 }
                 is AnimalListEffect.NavigateToReportMissing -> {
-                    println("Navigate to report missing")
-                    onNavigateToReportMissing()
+                    navController.navigateToReportMissing()
                 }
                 is AnimalListEffect.NavigateToReportFound -> {
-                    println("Navigate to report found")
-                    onNavigateToReportFound()
+                    navController.navigateToReportFound()
                 }
             }
         }

@@ -2,17 +2,17 @@ package com.intive.aifirst.petspot
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.intive.aifirst.petspot.navigation.PetSpotNavGraph
 
 /**
  * Main application composable.
- * Sets AnimalListScreen as the primary entry point per FR-010.
+ * Sets up navigation with AnimalListScreen as primary entry point per FR-010.
  */
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
-        AnimalListScreen()
+        val navController = rememberNavController()
+        PetSpotNavGraph(navController = navController)
     }
 }
