@@ -18,14 +18,12 @@ e2e-tests/
 │   ├── specs/              # Test specifications
 │   ├── pages/              # Page Object Model
 │   ├── steps/              # Reusable step definitions
-│   ├── fixtures/           # Test data fixtures
-│   └── README.md           # Web testing guide
+│   └── fixtures/           # Test data fixtures
 ├── mobile/                 # Appium tests for mobile platforms
 │   ├── specs/              # Test specifications
 │   ├── screens/            # Screen Object Model
 │   ├── steps/              # Reusable step definitions
-│   ├── utils/              # Shared mobile utilities
-│   └── README.md           # Mobile testing guide
+│   └── utils/              # Shared mobile utilities
 └── README.md               # This file
 ```
 
@@ -658,8 +656,7 @@ npx appium driver install xcuitest      # For iOS
 For issues or questions:
 1. Check this documentation
 2. Review example tests in `specs/`
-3. Check platform-specific README files
-4. Review Constitution principles
+3. Review Constitution principles
 
 ---
 
