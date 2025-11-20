@@ -34,7 +34,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.BASE_URL || 'http://localhost:8080',
     
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -92,14 +92,14 @@ export default defineConfig({
    * NOTE: Auto-start disabled. Start webApp manually before running tests:
    *   1. Build shared module: ./gradlew :shared:jsBrowserDevelopmentLibraryDistribution
    *   2. Install webApp dependencies: cd webApp && npm install
-   *   3. Start web server: npm run start (from webApp directory)
+ *   3. Start web server: npm run start (from webApp directory, serves http://localhost:8080)
    *   4. Run tests: npm run test:web (from e2e-tests directory)
    * 
    * To enable auto-start in future, uncomment webServer block below.
    */
   // webServer: {
   //   command: 'cd ../webApp && npm run start',
-  //   url: 'http://localhost:3000',
+  //   url: 'http://localhost:8080',
   //   reuseExistingServer: !process.env.CI,
   //   timeout: 120000,
   // },
