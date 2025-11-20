@@ -24,9 +24,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        // Create navigation controller
-        let navigationController = UINavigationController()
-        // Navigation bar is visible - coordinator configures it per screen
+        // Create navigation controller with splash screen as root
+        let splashViewController = UIHostingController(rootView: SplashScreenView())
+        splashViewController.navigationItem.hidesBackButton = true
+        let navigationController = UINavigationController(rootViewController: splashViewController)
+        // Hide navigation bar for splash screen
+        navigationController.isNavigationBarHidden = true
         
         // Set window root and make visible
         window.rootViewController = navigationController

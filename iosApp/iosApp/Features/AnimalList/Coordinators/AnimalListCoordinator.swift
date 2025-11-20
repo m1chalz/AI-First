@@ -64,8 +64,9 @@ class AnimalListCoordinator: CoordinatorInterface {
         hostingController.title = "Missing animals list"
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
-        // Push to navigation stack
-        navigationController.pushViewController(hostingController, animated: animated)
+        // Show navigation bar and replace splash screen with animal list
+        navigationController.isNavigationBarHidden = false
+        navigationController.setViewControllers([hostingController], animated: animated)
     }
     
     // MARK: - Navigation Methods
