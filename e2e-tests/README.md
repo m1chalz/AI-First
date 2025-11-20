@@ -47,7 +47,7 @@ cd e2e-tests
 npm run test:mobile:android
 ```
 
-That's it! 🎉
+That's it!
 
 ---
 
