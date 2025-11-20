@@ -39,10 +39,6 @@ export const AnimalList: React.FC = () => {
                     </div>
                 </header>
                 
-                <div className={styles.searchPlaceholder} data-testid="animalList.searchPlaceholder">
-                    {/* Search and filters will be implemented later */}
-                </div>
-                
                 <div className={styles.content}>
                     {isLoading ? (
                         <div className={styles.loading}>
