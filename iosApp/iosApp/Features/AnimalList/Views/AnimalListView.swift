@@ -50,13 +50,8 @@ struct AnimalListView: View {
                             .frame(height: 56) // 48-56pt height per spec
                         
                         // Animal cards
-                        ForEach(viewModel.animals, id: \.id) { animal in
-                            AnimalCardView(
-                                animal: animal,
-                                onTap: {
-                                    viewModel.selectAnimal(id: animal.id)
-                                }
-                            )
+                        ForEach(viewModel.cardViewModels, id: \.id) { cardViewModel in
+                            AnimalCardView(viewModel: cardViewModel)
                         }
                         
                         // Bottom spacing for floating buttons

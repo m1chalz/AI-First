@@ -12,16 +12,19 @@ import Shared
  * - Card padding: 8pt
  * - Image placeholder: 63pt circular (#EEEEEE background)
  * - Location icon before text (13pt)
- * - Species|Breed with separator (16pt | 14pt)
+ * - Species|Breed with separator (16pt | 14pt) - separate Text views for proper wrapping
  * - Status badge: 12pt text, 10pt radius
  * - Date: 13pt text (#545F71)
  *
- * - Parameter animal: Animal entity to display
- * - Parameter onTap: Callback when card is tapped
+ * Note: Uses @ObservedObject (not @StateObject) because ViewModel lifecycle
+ * is managed by parent AnimalListViewModel for performance and data consistency.
+ * View consumes presentation-ready properties from ViewModel (locationText, statusColor, etc.)
+ * and does not access raw Animal model directly.
+ *
+ * - Parameter viewModel: Card ViewModel injected by parent
  */
 struct AnimalCardView: View {
-    let animal: Animal
-    let onTap: () -> Void
+    @ObservedObject var viewModel: AnimalCardViewModel
     
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
@@ -45,14 +48,14 @@ struct AnimalCardView: View {
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "#545F71")) // Secondary text color
                     
-                    Text("\(animal.location.city), +\(animal.location.radiusKm)km")
+                    Text(viewModel.locationText)
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "#545F71")) // Secondary text color
                 }
                 
                 // Species | Breed
                 HStack(spacing: 4) {
-                    Text(animal.species.displayName)
+                    Text(viewModel.speciesName)
                         .font(.system(size: 16))
                         .foregroundColor(Color(hex: "#2D2D2D")) // Primary text color
                     
@@ -60,7 +63,7 @@ struct AnimalCardView: View {
                         .font(.system(size: 16))
                         .foregroundColor(Color(hex: "#93A2B4")) // Tertiary text color
                     
-                    Text(animal.breed)
+                    Text(viewModel.breedName)
                         .font(.system(size: 14))
                         .foregroundColor(Color(hex: "#2D2D2D")) // Primary text color
                 }
@@ -71,16 +74,16 @@ struct AnimalCardView: View {
             // Status column (badge + date) - right aligned
             VStack(alignment: .trailing, spacing: 4) {
                 // Status badge
-                Text(animal.status.displayName)
+                Text(viewModel.statusText)
                     .font(.system(size: 12))
                     .foregroundColor(.white)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 2)
-                    .background(Color(hex: animal.status.badgeColor))
+                    .background(Color(hex: viewModel.statusColorHex))
                     .cornerRadius(10)
                 
                 // Date
-                Text(animal.lastSeenDate)
+                Text(viewModel.dateText)
                     .font(.system(size: 13))
                     .foregroundColor(Color(hex: "#545F71")) // Secondary text color
             }
@@ -90,8 +93,8 @@ struct AnimalCardView: View {
         .background(Color(hex: "#FAFAFA"))
         .cornerRadius(4)
         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 1)
-        .accessibilityIdentifier("animalList.item.\(animal.id)")
-        .onTapGesture(perform: onTap)
+        .accessibilityIdentifier("animalList.item.\(viewModel.id)")
+        .onTapGesture { viewModel.handleTap() }
     }
 }
 

@@ -13,9 +13,9 @@ final class AnimalListViewModelTests: XCTestCase {
     // MARK: - Test loadAnimals Success
     
     /**
-     * Tests that loadAnimals updates @Published animals property on success.
+     * Tests that loadAnimals updates @Published cardViewModels property on success.
      */
-    func testLoadAnimals_whenRepositorySucceeds_shouldUpdateAnimals() async {
+    func testLoadAnimals_whenRepositorySucceeds_shouldUpdateCardViewModels() async {
         // Given - ViewModel with fake repository returning animals
         let fakeRepository = FakeAnimalRepository(
             animalCount: 16,
@@ -28,11 +28,11 @@ final class AnimalListViewModelTests: XCTestCase {
         // When - loadAnimals is called
         await viewModel.loadAnimals()
         
-        // Then - animals should be populated and state updated
-        XCTAssertEqual(viewModel.animals.count, 16, "Should have 16 animals")
+        // Then - cardViewModels should be populated and state updated
+        XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
         XCTAssertFalse(viewModel.isLoading, "Should not be loading")
         XCTAssertNil(viewModel.errorMessage, "Should have no error")
-        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when animals present")
+        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
     }
     
     // MARK: - Test loadAnimals Failure
@@ -53,20 +53,20 @@ final class AnimalListViewModelTests: XCTestCase {
 //        // When - loadAnimals is called
 //        await viewModel.loadAnimals()
 //        
-//        // Then - errorMessage should be set, isLoading false, animals empty
+//        // Then - errorMessage should be set, isLoading false, cardViewModels empty
 //        XCTAssertFalse(viewModel.isLoading, "Should not be loading")
 //        XCTAssertNotNil(viewModel.errorMessage, "Should have error message")
-//        XCTAssertTrue(viewModel.animals.isEmpty, "Should have no animals on error")
+//        XCTAssertTrue(viewModel.cardViewModels.isEmpty, "Should have no card ViewModels on error")
 //        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when error present")
 //    }
     
     // MARK: - Test isEmpty Property
     
     /**
-     * Tests isEmpty computed property returns true when no animals.
+     * Tests isEmpty computed property returns true when no card ViewModels.
      */
-    func test_isEmpty_whenNoAnimalsAndNotLoadingAndNoError_shouldReturnTrue() {
-        // Given - ViewModel with empty animals list
+    func test_isEmpty_whenNoCardViewModelsAndNotLoadingAndNoError_shouldReturnTrue() {
+        // Given - ViewModel with empty cardViewModels list
         let fakeRepository = FakeAnimalRepository(
             animalCount: 0,
             shouldFail: false,
@@ -76,7 +76,7 @@ final class AnimalListViewModelTests: XCTestCase {
         let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
         
         // Manually set state to empty (before loadAnimals runs)
-        viewModel.animals = []
+        viewModel.cardViewModels = []
         viewModel.isLoading = false
         viewModel.errorMessage = nil
         
@@ -84,14 +84,14 @@ final class AnimalListViewModelTests: XCTestCase {
         let isEmpty = viewModel.isEmpty
         
         // Then - should be true
-        XCTAssertTrue(isEmpty, "isEmpty should be true when no animals, not loading, and no error")
+        XCTAssertTrue(isEmpty, "isEmpty should be true when no card ViewModels, not loading, and no error")
     }
     
     /**
-     * Tests isEmpty computed property returns false when animals present.
+     * Tests isEmpty computed property returns false when card ViewModels present.
      */
-    func test_isEmpty_whenAnimalsPresent_shouldReturnFalse() async {
-        // Given - ViewModel with animals loaded
+    func test_isEmpty_whenCardViewModelsPresent_shouldReturnFalse() async {
+        // Given - ViewModel with card ViewModels loaded
         let fakeRepository = FakeAnimalRepository(
             animalCount: 16,
             shouldFail: false,
@@ -100,11 +100,11 @@ final class AnimalListViewModelTests: XCTestCase {
         let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
         let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
         
-        // When - animals are loaded
+        // When - card ViewModels are loaded
         await viewModel.loadAnimals()
         
         // Then - isEmpty should be false
-        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when animals present")
+        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
     }
     
     // MARK: - Test selectAnimal Callback
