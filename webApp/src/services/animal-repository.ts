@@ -1,6 +1,6 @@
 import type { Animal } from '../types/animal';
 
-export class AnimalRepositoryImpl {
+export class AnimalRepository {
     private readonly networkDelayMs = 500;
     
     async getAnimals(): Promise<Animal[]> {
@@ -36,7 +36,6 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '17/11/2025',
                 description: 'Large black and tan dog, wearing red collar.',
                 email: 'anna.smith@example.com',
-                phone: undefined
             },
             {
                 id: '3',
@@ -49,7 +48,6 @@ export class AnimalRepositoryImpl {
                 status: 'FOUND' as any,
                 lastSeenDate: '19/11/2025',
                 description: 'Blue-eyed white cat found near train station.',
-                email: null,
                 phone: '+48 987 654 321'
             },
             {
@@ -78,7 +76,6 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '15/11/2025',
                 description: 'Gray and yellow bird, escaped from balcony.',
                 email: 'sarah@example.com',
-                phone: null
             },
             {
                 id: '6',
@@ -91,8 +88,6 @@ export class AnimalRepositoryImpl {
                 status: 'ACTIVE' as any,
                 lastSeenDate: '14/11/2025',
                 description: 'White long-haired cat, very shy.',
-                email: null,
-                phone: null
             },
             {
                 id: '7',
@@ -133,7 +128,6 @@ export class AnimalRepositoryImpl {
                 status: 'ACTIVE' as any,
                 lastSeenDate: '12/11/2025',
                 description: 'Blue-eyed Siberian Husky, very energetic.',
-                email: null,
                 phone: '+48 888 999 000'
             },
             {
@@ -148,7 +142,6 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '11/11/2025',
                 description: 'Gray tabby cat with green eyes.',
                 email: 'cat.owner@example.com',
-                phone: null
             },
             {
                 id: '11',
@@ -176,7 +169,6 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '21/11/2025',
                 description: 'Blue-eyed ragdoll cat, found in garage.',
                 email: 'finder123@example.com',
-                phone: null
             },
             {
                 id: '13',
@@ -203,7 +195,6 @@ export class AnimalRepositoryImpl {
                 status: 'ACTIVE' as any,
                 lastSeenDate: '08/11/2025',
                 description: "Green parrot, can say 'Hello'.",
-                email: null,
                 phone: '+48 666 777 888'
             },
             {
@@ -232,11 +223,10 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '06/11/2025',
                 description: 'Large rottweiler, friendly despite size.',
                 email: 'rocky.owner@example.com',
-                phone: null
             }
         ];
     }
 }
 
-export const animalRepository = new AnimalRepositoryImpl();
+export const animalRepository = new AnimalRepository();
 

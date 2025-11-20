@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAnimalList } from '../../hooks/useAnimalList';
+import { useAnimalList } from '../../hooks/use-animal-list';
 import { AnimalCard } from './AnimalCard';
 import { EmptyState } from './EmptyState';
 import styles from './AnimalList.module.css';

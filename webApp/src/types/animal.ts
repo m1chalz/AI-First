@@ -40,6 +40,6 @@ export interface Animal {
   status: AnimalStatus;
   lastSeenDate: string;
   description: string;
-  email?: string | null;
-  phone?: string | null;
+  email?: string;
+  phone?: string;
 }

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAnimalList } from '../../hooks/useAnimalList';
-import * as animalRepositoryModule from '../../services/animalRepository';
+import { useAnimalList } from '../../use-animal-list';
+import * as animalRepositoryModule from '../../../services/animal-repository';
 
-vi.mock('../../services/animalRepository', () => ({
+vi.mock('../../services/animal-repository', () => ({
     animalRepository: {
         getAnimals: vi.fn()
     }

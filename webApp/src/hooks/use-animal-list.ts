@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { animalRepository } from '../services/animalRepository';
+import { animalRepository } from '../services/animal-repository';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
