@@ -61,7 +61,7 @@ class AnimalListCoordinator: CoordinatorInterface {
         let hostingController = UIHostingController(rootView: view)
         
         // Configure navigation bar
-        hostingController.title = "Missing animals list"
+        hostingController.title = L10n.AnimalList.navigationTitle
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
         // Show navigation bar and replace splash screen with animal list

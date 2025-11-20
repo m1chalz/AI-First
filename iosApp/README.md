@@ -175,6 +175,33 @@ xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15'
 # Then run Instruments → Leaks
 ```
 
+## Localization
+
+The iOS app supports **English (en)** and **Polish (pl)** localization using SwiftGen for type-safe string access.
+
+### Usage
+
+```swift
+// Type-safe SwiftGen API (used throughout the app)
+let title = L10n.AnimalList.navigationTitle
+let button = L10n.AnimalList.Button.reportMissing
+let location = L10n.AnimalCard.Location.format("Warsaw", 5)
+let error = L10n.AnimalList.Error.prefix("Network timeout")
+```
+
+### Files
+
+- `iosApp/Resources/en.lproj/Localizable.strings` - English translations
+- `iosApp/Resources/pl.lproj/Localizable.strings` - Polish translations
+- `iosApp/Generated/Strings.swift` - SwiftGen generated API
+- `swiftgen.yml` - SwiftGen configuration
+
+To regenerate after adding new strings:
+```bash
+cd iosApp
+swiftgen
+```
+
 ## Testing
 
 ### Unit Tests

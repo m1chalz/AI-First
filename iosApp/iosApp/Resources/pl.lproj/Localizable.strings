@@ -1,0 +1,34 @@
+/* 
+ * Localizable.strings (Polish)
+ * PetSpot iOS App
+ */
+
+/* MARK: - Animal List Screen */
+
+// Navigation
+"animalList.navigationTitle" = "Zaginione zwierzęta";
+
+// Floating action buttons
+"animalList.button.reportMissing" = "Zgłoś zagubione zwierzę";
+"animalList.button.reportFound" = "Zgłoś znalezienie";
+
+// Empty state
+"animalList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
+
+// Error messages
+"animalList.error.prefix" = "Błąd: %@";
+"animalList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
+"animalList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
+
+/* MARK: - Animal Card */
+
+// Location format
+"animalCard.location.format" = "%@, +%dkm";
+
+/* MARK: - Common */
+
+"common.loading" = "Ładowanie...";
+"common.retry" = "Ponów";
+"common.cancel" = "Anuluj";
+"common.ok" = "OK";
+

@@ -13,7 +13,7 @@ struct EmptyStateModel {
     
     /// Default empty state message per FR-009
     static let `default` = EmptyStateModel(
-        message: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one."
+        message: L10n.AnimalList.EmptyState.message
     )
 }
 

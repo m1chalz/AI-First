@@ -35,7 +35,10 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Formatted location text: "City, +XYZkm"
     var locationText: String {
-        "\(animal.location.city), +\(animal.location.radiusKm)km"
+        L10n.AnimalCard.Location.format(
+            animal.location.city,
+            Int(animal.location.radiusKm)
+        )
     }
     
     /// Species display name

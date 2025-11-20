@@ -33,7 +33,7 @@ struct AnimalListView: View {
                     .scaleEffect(1.5)
             } else if let errorMessage = viewModel.errorMessage {
                 // Error message
-                Text("Error: \(errorMessage)")
+                Text(L10n.AnimalList.Error.prefix(errorMessage))
                     .font(.system(size: 16))
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
@@ -82,7 +82,10 @@ struct AnimalListView: View {
             // Uncomment when ready to enable
             /*
             FloatingActionButton(
-                model: FloatingActionButtonModel(title: "Report Found Animal", style: .secondary),
+                model: FloatingActionButtonModel(
+                    title: L10n.AnimalList.Button.reportFound,
+                    style: .secondary
+                ),
                 action: { viewModel.reportFound() }
             )
             .accessibilityIdentifier("animalList.reportFoundButton")
@@ -90,7 +93,10 @@ struct AnimalListView: View {
             
             // Report a Missing Animal button (primary action)
             FloatingActionButton(
-                model: FloatingActionButtonModel(title: "Report a Missing Animal", style: .primary),
+                model: FloatingActionButtonModel(
+                    title: L10n.AnimalList.Button.reportMissing,
+                    style: .primary
+                ),
                 action: { viewModel.reportMissing() }
             )
             .accessibilityIdentifier("animalList.reportMissingButton")
