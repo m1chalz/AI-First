@@ -2,22 +2,24 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.9.0 → 1.10.0
-Modified principles:
-- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
-Added principles:
-- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+Version change: 1.10.0 → 1.11.0
 Modified sections:
-- Module Structure: iOS subsection documents required MVVM-C packaging (Coordinators/, Views/, ViewModels/)
-- Architecture Patterns: Added iOS MVVM-C pattern guidance with coordinator/ViewModel examples
-- Testing Standards: iOS ViewModel tests now cover ObservableObject properties and coordinator communication
-- Compliance: Added iOS MVVM-C audit checklist
+- XII. Given-When-Then Test Convention: Added parameterized test guidance (Backend, Web, Android)
+Modified principles: None (clarification only)
+Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (iOS MVVM-C constitution check already generic, no changes needed)
-- ✅ .specify/templates/tasks-template.md (iOS tasks already generic enough for MVVM-C pattern)
-- ✅ README.md (no changes needed - iOS section remains platform-agnostic)
+- ✅ .specify/templates/plan-template.md (no changes needed - test guidance remains generic)
+- ✅ .specify/templates/tasks-template.md (no changes needed - task structure unchanged)
+- ✅ .specify/templates/spec-template.md (no changes needed - spec format unchanged)
 Follow-up TODOs:
 - None
+Previous changes (v1.10.0):
+- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
+- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+- Module Structure: iOS subsection documents required MVVM-C packaging
+- Architecture Patterns: Added iOS MVVM-C pattern guidance
+- Testing Standards: iOS ViewModel tests now cover ObservableObject properties and coordinator communication
+- Compliance: Added iOS MVVM-C audit checklist
 Previous changes (v1.9.0):
 - II. Native Presentation (Android bullet now mandates Compose + MVI loop)
 - XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
@@ -871,6 +873,86 @@ it('should add new pet when user fills form and taps save button', async () => {
 - MUST include `// Given`, `// When`, `// Then` comments in complex tests
 - MAY omit comments in simple tests where structure is obvious
 - SHOULD use blank lines to visually separate test phases
+
+**Parameterized Tests** (Backend, Web, Android):
+
+When tests share the same logic with different input/output pairs, SHOULD use parameterized tests:
+
+**Kotlin/Android** (JUnit 5):
+```kotlin
+@ParameterizedTest
+@CsvSource(
+    "Max, dog",
+    "Luna, cat",
+    "Buddy, dog"
+)
+fun `should create pet with valid name and species`(name: String, species: String) = runTest {
+    // Given
+    val pet = Pet(id = UUID.randomUUID().toString(), name = name, species = species)
+    
+    // When
+    val result = createPetUseCase(pet)
+    
+    // Then
+    assertTrue(result.isSuccess)
+    assertEquals(name, result.getOrNull()?.name)
+}
+```
+
+**TypeScript/Backend/Web** (Vitest):
+```typescript
+describe('createPet', () => {
+    it.each([
+        ['Max', 'dog'],
+        ['Luna', 'cat'],
+        ['Buddy', 'dog']
+    ])('should create pet with name=%s and species=%s', async (name, species) => {
+        // Given
+        const pet = { name, species, ownerId: 1 };
+        
+        // When
+        const result = await createPet(pet);
+        
+        // Then
+        expect(result.name).toBe(name);
+        expect(result.species).toBe(species);
+    });
+});
+```
+
+**Parameterized Test Guidelines**:
+- SHOULD use parameterized tests when repeating same test logic with different inputs
+- MUST keep test logic identical across all parameter sets (only data differs)
+- When parameters are self-explanatory (single parameter like a number or simple string), MAY skip descriptive comments for each value:
+  ```typescript
+  // ✅ GOOD - self-explanatory values, no comments needed
+  it.each([
+      ['Max', 'dog'],
+      ['Luna', 'cat'],
+      ['Buddy', 'dog']
+  ])('should create pet with name=%s and species=%s', ...)
+  
+  // ❌ AVOID - unnecessary comments for obvious values
+  it.each([
+      ['Max', 'dog'],      // Test with dog
+      ['Luna', 'cat'],     // Test with cat
+      ['Buddy', 'dog']     // Test with another dog
+  ])('should create pet with name=%s and species=%s', ...)
+  ```
+- When parameters represent complex scenarios or edge cases, SHOULD add descriptive test case names or use objects with labels:
+  ```typescript
+  // ✅ GOOD - complex scenarios with descriptive labels
+  it.each([
+      { input: '', expected: 'validation_error', description: 'empty name' },
+      { input: 'A', expected: 'validation_error', description: 'single character' },
+      { input: 'Max', expected: 'success', description: 'valid name' },
+      { input: 'x'.repeat(256), expected: 'validation_error', description: 'too long' }
+  ])('should validate pet name: $description', ({ input, expected }) => {
+      // test logic
+  });
+  ```
+- Parameterized tests count toward coverage requirements
+- Each parameter set MUST represent a distinct test scenario (not redundant combinations)
 
 **Benefits**:
 - **Readability**: Tests serve as living documentation of system behavior
@@ -2210,4 +2292,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.10.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18
+**Version**: 1.11.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
