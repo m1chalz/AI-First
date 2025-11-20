@@ -2,21 +2,25 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.0 → 1.11.1
+Version change: 1.11.1 → 1.11.2
 Modified sections:
-- XI. Public API Documentation: Refined to skip documentation for self-explanatory names
-  - Changed from "document all public APIs" to "document only when name is insufficient"
-  - Added explicit guidance to skip docs for obvious methods, variables, and constants
-  - Updated examples to show selective documentation approach
-  - Emphasized conciseness: skip obvious, document complex behavior
-Modified principles: None (refinement of existing principle)
+- plan-template.md Technical Context: Made performance requirements optional for low-traffic projects
+  - Performance Goals: Changed from required to "Optional for low-traffic projects; ... or N/A"
+  - Constraints: Changed from required to "Optional for low-traffic projects; ... or N/A"
+  - Scale/Scope: Changed from required to "Optional for low-traffic projects; ... or N/A"
+Modified principles: None (template clarification only)
 Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (updated - changed to "document when needed" and "skip self-explanatory")
-- ✅ .specify/templates/tasks-template.md (updated - all doc tasks now specify "complex APIs" and "skip self-explanatory")
-- ✅ .specify/templates/spec-template.md (no changes needed - spec format unchanged)
+- ✅ .specify/templates/plan-template.md (updated - performance fields now optional with N/A option)
+- ✅ .specify/templates/tasks-template.md (no changes needed)
+- ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.1):
+- XI. Public API Documentation: Refined to skip documentation for self-explanatory names
+  - Changed from "document all public APIs" to "document only when name is insufficient"
+  - Updated examples to show selective documentation approach
+  - plan-template.md and tasks-template.md updated accordingly
 Previous changes (v1.11.0):
 - XII. Given-When-Then Test Convention: Added parameterized test guidance (Backend, Web, Android)
 Previous changes (v1.10.0):
@@ -2341,4 +2345,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.2 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20

@@ -23,9 +23,9 @@
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Performance Goals**: [Optional for low-traffic projects; specify if needed, e.g., 1000 req/s, 10k lines/sec, 60 fps or N/A]  
+**Constraints**: [Optional for low-traffic projects; specify if critical, e.g., <200ms p95, <100MB memory, offline-capable or N/A]  
+**Scale/Scope**: [Optional for low-traffic projects; specify if known, e.g., 10k users, 1M LOC, 50 screens or N/A]
 
 ## Constitution Check
 
