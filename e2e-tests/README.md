@@ -553,33 +553,19 @@ npm run start  # In separate terminal
 
 **Problem: Connection refused / Appium not responding**
 ```bash
-# 1. Make sure Appium server is running
+# Make sure Appium server is running
 lsof -i :4723 | grep LISTEN
-# If nothing shows, Appium is not running
 
-# 2. Start Appium server (Terminal 1)
+# Start Appium server (Terminal 1)
 cd e2e-tests
 npm run appium:start
-
-# 3. Run tests (Terminal 2)
-cd e2e-tests
-npm run test:mobile:android
 ```
 
 **Problem: Port already in use**
 ```bash
-# Quick fix: Use the cleanup script
+# Use cleanup script to kill process on port 4723
 cd e2e-tests
 npm run clean:appium
-
-# Or check manually what's using the port
-lsof -i :4723
-
-# Kill process if needed
-lsof -ti :4723 | xargs kill
-
-# Then start Appium again
-npm run appium:start
 ```
 
 **Problem: "Neither ANDROID_HOME nor ANDROID_SDK_ROOT" error**
@@ -588,12 +574,8 @@ npm run appium:start
 export ANDROID_HOME=$HOME/Library/Android/sdk  # macOS
 # Or on Linux: export ANDROID_HOME=$HOME/Android/Sdk
 
-# Verify it's set
-echo $ANDROID_HOME
-
-# Add to your shell profile (~/.zshrc or ~/.bash_profile) to make it permanent:
+# Make permanent by adding to ~/.zshrc or ~/.bash_profile
 echo 'export ANDROID_HOME=$HOME/Library/Android/sdk' >> ~/.zshrc
-source ~/.zshrc
 ```
 
 **Problem: Cannot find device or emulator**
@@ -601,32 +583,8 @@ source ~/.zshrc
 # Check connected devices
 $ANDROID_HOME/platform-tools/adb devices
 
-# If no devices, start an emulator
-$ANDROID_HOME/emulator/emulator -list-avds
+# Start emulator if needed
 $ANDROID_HOME/emulator/emulator -avd <avd-name> &
-
-# Wait for emulator to boot
-$ANDROID_HOME/platform-tools/adb wait-for-device
-```
-
-**Problem: App installation fails**
-```bash
-# Make sure APK is built
-ls -lh ../composeApp/build/outputs/apk/debug/composeApp-debug.apk
-
-# If not found, build it:
-cd .. && ./gradlew :composeApp:assembleDebug
-```
-
-**Problem: Driver not found**
-```bash
-# List installed drivers
-cd e2e-tests
-npx appium driver list --installed
-
-# Install missing driver
-npx appium driver install uiautomator2  # For Android
-npx appium driver install xcuitest      # For iOS
 ```
 
 
