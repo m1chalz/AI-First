@@ -115,13 +115,14 @@
   - List items use stable IDs (e.g., `petList.item.${id}`)
   - Violation justification: _[Required if testIDs missing]_
 
-- [ ] **Public API Documentation**: Plan ensures all public APIs have documentation
+- [ ] **Public API Documentation**: Plan ensures public APIs have documentation when needed
   - Kotlin: KDoc format (`/** ... */`)
   - Swift: SwiftDoc format (`/// ...`)
   - TypeScript: JSDoc format (`/** ... */`)
   - Documentation must be concise and high-level (1-3 sentences: WHAT/WHY, not HOW)
-  - All public classes, methods, and properties documented
-  - Violation justification: _[Required if documentation missing]_
+  - Document only when purpose is not clear from name alone
+  - Skip documentation for self-explanatory methods, variables, and constants
+  - Violation justification: _[Required if complex APIs lack documentation]_
 
 - [ ] **Given-When-Then Test Structure**: Plan ensures all tests follow Given-When-Then convention
   - Unit tests clearly separate setup (Given), action (When), verification (Then)

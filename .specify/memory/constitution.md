@@ -2,17 +2,23 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.10.0 → 1.11.0
+Version change: 1.11.0 → 1.11.1
 Modified sections:
-- XII. Given-When-Then Test Convention: Added parameterized test guidance (Backend, Web, Android)
-Modified principles: None (clarification only)
+- XI. Public API Documentation: Refined to skip documentation for self-explanatory names
+  - Changed from "document all public APIs" to "document only when name is insufficient"
+  - Added explicit guidance to skip docs for obvious methods, variables, and constants
+  - Updated examples to show selective documentation approach
+  - Emphasized conciseness: skip obvious, document complex behavior
+Modified principles: None (refinement of existing principle)
 Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (no changes needed - test guidance remains generic)
-- ✅ .specify/templates/tasks-template.md (no changes needed - task structure unchanged)
+- ✅ .specify/templates/plan-template.md (updated - changed to "document when needed" and "skip self-explanatory")
+- ✅ .specify/templates/tasks-template.md (updated - all doc tasks now specify "complex APIs" and "skip self-explanatory")
 - ✅ .specify/templates/spec-template.md (no changes needed - spec format unchanged)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.0):
+- XII. Given-When-Then Test Convention: Added parameterized test guidance (Backend, Web, Android)
 Previous changes (v1.10.0):
 - II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
 - XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
@@ -482,11 +488,15 @@ and easier to maintain.
 
 ### XI. Public API Documentation (NON-NEGOTIABLE)
 
-All public APIs MUST have concise, high-level documentation:
+Public APIs MUST have concise, high-level documentation when the purpose is not immediately clear from naming:
 
 **Documentation Requirements**:
-- MUST document all public classes, interfaces, functions, and properties
-- MUST use platform-native documentation format:
+- MUST document public APIs ONLY when the name alone is insufficient to convey purpose or usage
+- MUST skip documentation for self-explanatory names:
+  - Methods: `getPets()`, `savePet(pet)`, `deletePet(id)` - names clearly indicate behavior
+  - Variables: `isLoading`, `errorMessage`, `petList` - purpose is obvious
+  - Constants: `MAX_RETRIES`, `DEFAULT_TIMEOUT`, `API_BASE_URL` - intent is clear
+- MUST use platform-native documentation format when documentation is needed:
   - **Kotlin**: KDoc (`/** ... */`)
   - **Swift**: SwiftDoc (`/// ...` or `/** ... */`)
   - **TypeScript/JavaScript**: JSDoc (`/** ... */`)
@@ -494,22 +504,21 @@ All public APIs MUST have concise, high-level documentation:
 - MUST NOT duplicate implementation details visible in code
 - SHOULD be one to three sentences maximum
 - SHOULD answer: "What does this do?" and "When/why would I use it?"
-- MUST NOT explain obvious things (e.g., "Returns a string" for `fun getString(): String`)
+- MUST NOT state the obvious (e.g., "Returns a string" for `fun getString(): String`)
 
 **Documentation Style** - GOOD Examples:
 
 ```kotlin
 // Kotlin (Shared Module)
+
+// ✅ DOCUMENT - Complex behavior needs explanation
 /**
- * Retrieves all pets from the repository with optional filtering.
- * Use for main pet list screen when fresh data is required.
+ * Retrieves all pets with optional filtering and caching strategy.
+ * Returns cached data if network unavailable, automatically syncing when reconnected.
  */
 suspend fun GetPetsUseCase.invoke(filter: PetFilter? = null): Result<List<Pet>>
 
-/**
- * Domain model representing a pet with owner information.
- * Shared across all platforms via KMP.
- */
+// ✅ NO DOCUMENTATION NEEDED - Simple, obvious data class
 data class Pet(
     val id: String,
     val name: String,
@@ -517,31 +526,44 @@ data class Pet(
     val ownerId: String
 )
 
+// ✅ DOCUMENT - Interface contract needs explanation
 /**
- * Repository interface for pet data operations.
+ * Repository for pet data operations.
  * Platform implementations handle persistence and network calls.
  */
 interface PetRepository {
-    /** Fetches all pets, returning cached data if network unavailable. */
+    // ✅ NO DOCUMENTATION - Method name is self-explanatory
     suspend fun getPets(): Result<List<Pet>>
-
-    /** Retrieves single pet by ID, throwing if not found. */
+    
+    // ✅ NO DOCUMENTATION - Obvious what this does
     suspend fun getPetById(id: String): Result<Pet>
+    
+    // ✅ DOCUMENT - Non-obvious caching behavior
+    /** Saves pet and invalidates related caches. */
+    suspend fun savePet(pet: Pet): Result<Unit>
 }
 ```
 
 ```swift
 // Swift (iOS)
-/// Manages pet list state and coordinates data fetching.
-/// Observes repository changes and updates UI automatically.
+
+// ✅ DOCUMENT - Class role needs context
+/// Manages pet list state with automatic repository synchronization.
 @MainActor
 class PetListViewModel: ObservableObject {
-    /// Current list of pets displayed to user.
+    // ✅ NO DOCUMENTATION - Property names are clear
     @Published var pets: [Pet] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
 
-    /// Loads pets from repository and updates published state.
-    /// Call on view appearance or when refresh is needed.
+    // ✅ NO DOCUMENTATION - Method name is self-explanatory
     func loadPets() async {
+        // implementation
+    }
+    
+    // ✅ DOCUMENT - Complex retry behavior
+    /// Retries failed pet sync with exponential backoff.
+    func retrySync() async {
         // implementation
     }
 }
@@ -549,21 +571,24 @@ class PetListViewModel: ObservableObject {
 
 ```typescript
 // TypeScript (Web)
+
+// ✅ DOCUMENT - Hook manages complex state
 /**
- * Custom hook for managing pet list state and operations.
- * Handles loading, error states, and automatic refresh.
+ * Manages pet list state with automatic refresh and error recovery.
  */
 export function usePets() {
     // implementation
 }
 
-/**
- * Fetches all pets from the shared Kotlin module.
- * Returns empty array if service unavailable.
- */
+// ✅ NO DOCUMENTATION - Function name clearly explains behavior
 export async function fetchPets(): Promise<Pet[]> {
     // implementation
 }
+
+// ✅ NO DOCUMENTATION - Constants are self-explanatory
+export const MAX_RETRIES = 3;
+export const DEFAULT_TIMEOUT = 5000;
+export const API_BASE_URL = 'https://api.petspot.com';
 ```
 
 **Documentation Style** - BAD Examples (avoid these):
@@ -577,9 +602,17 @@ export async function fetchPets(): Promise<Pet[]> {
  */
 suspend fun GetPetsUseCase.invoke(): Result<List<Pet>>
 
-// ❌ TOO OBVIOUS - states what's clear from signature
+// ❌ UNNECESSARY - states what's obvious from name
 /** Returns a string. */
 fun getString(): String
+
+// ❌ UNNECESSARY - method name already clear
+/** Gets all pets. */
+suspend fun getPets(): Result<List<Pet>>
+
+// ❌ UNNECESSARY - property name is self-explanatory
+/** Loading state. */
+val isLoading: Boolean
 
 // ❌ TOO LOW-LEVEL - describes internal mechanics
 /**
@@ -589,81 +622,97 @@ fun getString(): String
  */
 fun loadPets()
 
-// ✅ GOOD - concise, high-level, explains purpose
-/** Loads pets from repository and updates UI state. */
+// ✅ GOOD - omit documentation when name is clear
 fun loadPets()
+
+// ✅ GOOD - add documentation only for non-obvious behavior
+/** Loads pets with exponential backoff retry strategy. */
+fun loadPetsWithRetry()
 ```
 
 **What to Document**:
-- ✅ Public classes, interfaces, data classes
-- ✅ Public functions and methods
-- ✅ Public properties (especially non-obvious ones)
-- ✅ Function parameters (if not self-explanatory)
-- ✅ Return values (if not obvious from type)
+- ✅ Classes/interfaces with non-obvious roles or complex responsibilities
+- ✅ Functions with non-obvious behavior (caching, side effects, special algorithms)
+- ✅ Functions with non-obvious parameters or return values
+- ✅ Complex business rules or validation logic
 - ✅ Exceptions thrown (if any)
+- ❌ Self-explanatory functions (`getPets()`, `savePet()`, `deletePet()`)
+- ❌ Self-explanatory variables (`isLoading`, `errorMessage`, `petList`)
+- ❌ Self-explanatory constants (`MAX_RETRIES`, `DEFAULT_TIMEOUT`)
+- ❌ Simple data classes with obvious fields
 - ❌ Private implementation details
 - ❌ Obvious getters/setters
 - ❌ Override methods (unless behavior differs significantly)
 
-**IDE Integration Examples**:
+**When Complex Behavior Requires Documentation**:
 
 ```kotlin
-// KDoc with parameter and return documentation
+// ✅ Document complex search with fuzzy matching
 /**
- * Searches pets by name with fuzzy matching.
+ * Searches pets by name using fuzzy matching algorithm.
+ * Supports typos and partial matches with relevance scoring.
  *
  * @param query Search term (minimum 2 characters)
- * @param limit Maximum results to return (default: 20)
- * @return Matching pets ordered by relevance
+ * @param limit Maximum results to return
  * @throws InvalidQueryException if query too short
  */
 suspend fun searchPets(query: String, limit: Int = 20): Result<List<Pet>>
+
+// ✅ No documentation needed - simple CRUD operation
+suspend fun savePet(pet: Pet): Result<Unit>
+
+// ✅ No documentation needed - parameters are obvious
+suspend fun getPetById(id: String): Result<Pet>
 ```
 
 ```swift
-// SwiftDoc with parameter documentation
-/// Saves pet data to repository with validation.
-///
-/// - Parameters:
-///   - pet: Pet instance to save
-///   - validateOwner: Whether to verify owner exists (default: true)
-/// - Returns: Saved pet with generated ID
-/// - Throws: `ValidationError` if pet data invalid
+// ✅ Document when validation behavior is non-trivial
+/// Saves pet with owner validation and automatic profile image optimization.
 func savePet(_ pet: Pet, validateOwner: Bool = true) async throws -> Pet
+
+// ✅ No documentation needed - obvious behavior
+func deletePet(id: String) async throws
+
+// ✅ No documentation needed - clear property names
+@Published var pets: [Pet] = []
+@Published var isLoading = false
 ```
 
 ```typescript
-// JSDoc with complete signature documentation
+// ✅ Document complex update logic
 /**
- * Updates pet information in the database.
+ * Updates pet with optimistic UI updates and conflict resolution.
+ * Automatically retries on network failure with exponential backoff.
  *
- * @param petId - Unique identifier of pet to update
- * @param updates - Partial pet data to merge
- * @returns Promise resolving to updated pet
  * @throws {NotFoundError} If pet doesn't exist
- * @throws {ValidationError} If updates invalid
+ * @throws {ConflictError} If concurrent modification detected
  */
-async function updatePet(
-    petId: string,
-    updates: Partial<Pet>
-): Promise<Pet>
+async function updatePet(petId: string, updates: Partial<Pet>): Promise<Pet>
+
+// ✅ No documentation needed - straightforward CRUD
+async function deletePet(petId: string): Promise<void>
+
+// ✅ No documentation needed - self-explanatory constants
+const MAX_RETRIES = 3;
+const DEFAULT_TIMEOUT = 5000;
 ```
 
-**Documentation Checklist**:
-- [ ] Explains WHAT the API does (purpose)
-- [ ] Explains WHY/WHEN to use it (use case)
-- [ ] Avoids explaining HOW (implementation)
-- [ ] 1-3 sentences maximum (concise)
-- [ ] Adds value beyond what code signature shows
-- [ ] Uses platform-native doc format
-- [ ] Documents parameters/returns if non-obvious
-- [ ] Notes exceptions/errors thrown
+**Documentation Decision Checklist**:
+- [ ] Is the purpose unclear from the name alone? → Document
+- [ ] Does it have non-obvious side effects? → Document
+- [ ] Does it use complex algorithms or business rules? → Document
+- [ ] Are parameters or return values ambiguous? → Document
+- [ ] Does it throw exceptions? → Document exceptions only
+- [ ] Is it a simple CRUD operation with obvious name? → Skip
+- [ ] Is it a self-explanatory variable or constant? → Skip
+- [ ] Would documentation just repeat the name? → Skip
 
-**Rationale**: Concise, high-level documentation improves API discoverability, enables better
-IDE assistance (autocomplete hints, parameter info), and accelerates onboarding for new developers.
-Focusing on WHAT/WHY rather than HOW keeps docs maintainable and prevents duplication of information
-already visible in code. Platform-native formats ensure documentation appears in IDE tooltips and
-generated API docs.
+**Rationale**: Selective, purposeful documentation improves code maintainability by reducing noise
+and focusing attention on truly complex or non-obvious APIs. Self-explanatory names eliminate the
+need for redundant comments, while strategic documentation highlights important behavior, edge cases,
+and usage patterns that aren't immediately apparent. This approach accelerates onboarding by making
+critical information stand out rather than being buried in obvious statements. Platform-native formats
+ensure meaningful documentation appears in IDE tooltips.
 
 ### XII. Given-When-Then Test Convention (NON-NEGOTIABLE)
 
@@ -2292,4 +2341,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
