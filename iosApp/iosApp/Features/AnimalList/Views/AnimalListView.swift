@@ -68,46 +68,43 @@ struct AnimalListView: View {
                 .accessibilityIdentifier("animalList.list")
             }
             
-            // Floating buttons at bottom right (node 71:7472)
-            VStack(alignment: .trailing, spacing: 30) {
-                Spacer()
-                
-                // Report Found Animal button (optional - not in MVP mobile)
-                // Commented out per design decision for mobile
-                /*
-                Button(action: {
-                    viewModel.reportFound()
-                }) {
-                    Text("Report Found Animal")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color(hex: "#2D2D2D"))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 10)
-                        .background(Color(hex: "#EFF4F8"))
-                        .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-                }
-                */
-                
-                // Report a Missing Animal button (primary action)
-                Button(action: {
-                    viewModel.reportMissing()
-                }) {
-                    Text("Report a Missing Animal")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 21)
-                        .padding(.vertical, 21)
-                        .background(Color(hex: "#2D2D2D"))
-                        .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-                }
-                .accessibilityIdentifier("animalList.reportMissingButton")
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            .padding(.trailing, 19)
-            .padding(.bottom, 32)
+            floatingButtonsSection
         }
+    }
+    
+    // MARK: - Floating Buttons Section
+    
+    /**
+     * Floating action buttons section positioned at bottom-right.
+     * Contains primary "Report Missing" button and optional "Report Found" button.
+     */
+    @ViewBuilder
+    private var floatingButtonsSection: some View {
+        VStack(alignment: .trailing, spacing: 30) {
+            Spacer()
+            
+            // Report Found Animal button (optional - not in MVP mobile)
+            // Uncomment when ready to enable
+            /*
+            FloatingActionButton(
+                title: "Report Found Animal",
+                style: .secondary,
+                action: { viewModel.reportFound() }
+            )
+            .accessibilityIdentifier("animalList.reportFoundButton")
+            */
+            
+            // Report a Missing Animal button (primary action)
+            FloatingActionButton(
+                title: "Report a Missing Animal",
+                style: .primary,
+                action: { viewModel.reportMissing() }
+            )
+            .accessibilityIdentifier("animalList.reportMissingButton")
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+        .padding(.trailing, 19)
+        .padding(.bottom, 32)
     }
 }
 
