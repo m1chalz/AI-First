@@ -1,39 +1,14 @@
-import type { Animal } from '../../../shared/build/js/packages/shared/kotlin/shared';
+import type { Animal } from '../types/animal';
 
-/**
- * Repository implementation with mocked data for web UI development.
- * Returns hardcoded test data matching Android/iOS implementations.
- * Will be replaced with RemoteAnimalRepository when backend is ready.
- * 
- * This is production code with mocked data - backend integration will replace mock data later.
- */
 export class AnimalRepositoryImpl {
     private readonly networkDelayMs = 500;
     
-    /**
-     * Fetches mock animal data.
-     * Simulates network delay and returns list of animals.
-     * Uses same mock data structure as Android/iOS for cross-platform consistency.
-     * 
-     * @returns Promise resolving to array of Animal entities
-     */
     async getAnimals(): Promise<Animal[]> {
-        // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, this.networkDelayMs));
-        
-        // Return mock data (matching MockAnimalData from shared module)
         return this.getMockAnimals();
     }
     
-    /**
-     * Generates mock animal list.
-     * Data matches Android/iOS MockAnimalData for consistency across platforms.
-     * 
-     * @returns Array of 16 Animal entities with varied attributes
-     */
     private getMockAnimals(): Animal[] {
-        // Note: Using shared Kotlin/JS types imported from built shared module
-        // Animal, Location, AnimalSpecies, AnimalGender, AnimalStatus are from shared
         return [
             {
                 id: '1',
@@ -61,7 +36,7 @@ export class AnimalRepositoryImpl {
                 lastSeenDate: '17/11/2025',
                 description: 'Large black and tan dog, wearing red collar.',
                 email: 'anna.smith@example.com',
-                phone: null
+                phone: undefined
             },
             {
                 id: '3',
@@ -263,6 +238,5 @@ export class AnimalRepositoryImpl {
     }
 }
 
-// Export singleton instance
 export const animalRepository = new AnimalRepositoryImpl();
 
