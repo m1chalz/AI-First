@@ -26,15 +26,15 @@
 
 **Purpose**: Project initialization and Gradle plugin configuration
 
-- [ ] T001 Add Detekt Gradle plugin to root `build.gradle.kts` (version 1.23.3+, apply false)
-- [ ] T002 [P] Add ktlint Gradle plugin to root `build.gradle.kts` (version 11.6.1+, apply false)
-- [ ] T003 [P] Apply Detekt and ktlint plugins in `shared/build.gradle.kts`
-- [ ] T004 [P] Apply Detekt and ktlint plugins in `composeApp/build.gradle.kts`
-- [ ] T005 [P] Configure ktlint for Android in `composeApp/build.gradle.kts` (android.set(true))
-- [ ] T005a [P] Configure Android Lint in `composeApp/build.gradle.kts` (lintOptions, baseline file path, abortOnError = true)
-- [ ] T006 Create `scripts/` directory at repository root
-- [ ] T006a Create `scripts/lib/` directory for shared utilities
-- [ ] T007 [P] Add `.gitattributes` entry for shell script line endings (*.sh text eol=lf)
+- [x] T001 Add Detekt Gradle plugin to root `build.gradle.kts` (version 1.23.3+, apply false)
+- [x] T002 [P] Add ktlint Gradle plugin to root `build.gradle.kts` (version 11.6.1+, apply false)
+- [x] T003 [P] Apply Detekt and ktlint plugins in `shared/build.gradle.kts`
+- [x] T004 [P] Apply Detekt and ktlint plugins in `composeApp/build.gradle.kts`
+- [x] T005 [P] Configure ktlint for Android in `composeApp/build.gradle.kts` (android.set(true))
+- [x] T005a [P] Configure Android Lint in `composeApp/build.gradle.kts` (lintOptions, baseline file path, abortOnError = true)
+- [x] T006 Create `scripts/` directory at repository root
+- [x] T006a Create `scripts/lib/` directory for shared utilities
+- [x] T007 [P] Add `.gitattributes` entry for shell script line endings (*.sh text eol=lf)
 
 ---
 
@@ -44,13 +44,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Create `detekt.yml` configuration file at repository root (copy from contracts/detekt-config.yml)
-- [ ] T009 [P] Create `.editorconfig` configuration file at repository root (copy from contracts/ktlint-config.editorconfig)
-- [ ] T010 [P] Create `composeApp/lint.xml` configuration file (copy from contracts/lint-config.xml)
-- [ ] T011 Configure Detekt in `shared/build.gradle.kts` (buildUponDefaultConfig = true, config.setFrom)
-- [ ] T012 [P] Configure Detekt in `composeApp/build.gradle.kts` (buildUponDefaultConfig = true, config.setFrom)
-- [ ] T013 [P] Configure ktlint version in both modules (version.set("1.0.1"))
-- [ ] T014 Test Gradle tasks work: run `./gradlew detekt ktlintCheck` and verify execution
+- [x] T008 Create `detekt.yml` configuration file at repository root (copy from contracts/detekt-config.yml)
+- [x] T009 [P] Create `.editorconfig` configuration file at repository root (copy from contracts/ktlint-config.editorconfig)
+- [x] T010 [P] Create `composeApp/lint.xml` configuration file (copy from contracts/lint-config.xml)
+- [x] T011 Configure Detekt in `shared/build.gradle.kts` (buildUponDefaultConfig = true, config.setFrom)
+- [x] T012 [P] Configure Detekt in `composeApp/build.gradle.kts` (buildUponDefaultConfig = true, config.setFrom)
+- [x] T013 [P] Configure ktlint version in both modules (version.set("1.0.1"))
+- [x] T014 Test Gradle tasks work: run `./gradlew detekt ktlintCheck` and verify execution
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -66,37 +66,37 @@
 
 ### Baseline Analysis for User Story 2
 
-- [ ] T015 [US2] Create `scripts/analyze-baseline.sh` script for full codebase analysis
-- [ ] T016 [US2] Make `scripts/analyze-baseline.sh` executable (chmod +x)
-- [ ] T017 [US2] Implement Detekt analysis in analyze-baseline.sh (./gradlew detekt for all modules, capture XML output from build/reports/detekt/detekt.xml)
-- [ ] T018 [US2] Implement ktlint analysis in analyze-baseline.sh (./gradlew ktlintCheck for all modules, capture plain text stdout in format file:line:column: message)
-- [ ] T019 [US2] Implement Android Lint analysis in analyze-baseline.sh (./gradlew :composeApp:lintDebug, capture XML/HTML output from composeApp/build/reports/lint/)
-- [ ] T020 [US2] Add report generation to analyze-baseline.sh (save to build/reports/baseline-violations.txt)
-- [ ] T021 [US2] Add summary statistics to analyze-baseline.sh (error count, warning count, files affected, and top 10 files by violation count per FR-017)
-- [ ] T022 [US2] Run `scripts/analyze-baseline.sh` to generate initial baseline report
+- [x] T015 [US2] Create `scripts/analyze-baseline.sh` script for full codebase analysis
+- [x] T016 [US2] Make `scripts/analyze-baseline.sh` executable (chmod +x)
+- [x] T017 [US2] Implement Detekt analysis in analyze-baseline.sh (./gradlew detekt for all modules, capture XML output from build/reports/detekt/detekt.xml)
+- [x] T018 [US2] Implement ktlint analysis in analyze-baseline.sh (./gradlew ktlintCheck for all modules, capture plain text stdout in format file:line:column: message)
+- [x] T019 [US2] Implement Android Lint analysis in analyze-baseline.sh (./gradlew :composeApp:lintDebug, capture XML/HTML output from composeApp/build/reports/lint/)
+- [x] T020 [US2] Add report generation to analyze-baseline.sh (save to build/reports/baseline-violations.txt)
+- [x] T021 [US2] Add summary statistics to analyze-baseline.sh (error count, warning count, files affected, and top 10 files by violation count per FR-017)
+- [x] T022 [US2] Run `scripts/analyze-baseline.sh` to generate initial baseline report
 
 ### Baseline Cleanup for User Story 2
 
-- [ ] T023 [US2] Review baseline report and categorize violations by severity (critical, high, medium, low)
-- [ ] T024 [US2] Generate Detekt baseline file: run `./gradlew detektBaseline` (creates detekt-baseline.xml at repository root)
-- [ ] T025 [P] [US2] Generate Android Lint baseline file: run `./gradlew :composeApp:lintBaseline` (creates composeApp/lint-baseline.xml in Android module)
-- [ ] T026 [US2] Fix or suppress all critical-severity violations in shared module (document suppressions with @Suppress and comments)
-- [ ] T027 [P] [US2] Fix or suppress all critical-severity violations in composeApp module (document suppressions with @Suppress and comments)
-- [ ] T028 [US2] Fix or suppress all high-severity violations in shared module
-- [ ] T029 [P] [US2] Fix or suppress all high-severity violations in composeApp module
-- [ ] T030 [US2] Run auto-fix for formatting: `./gradlew ktlintFormat` and commit changes
-- [ ] T031 [US2] Verify zero baseline violations: run `scripts/analyze-baseline.sh` again and confirm all errors resolved
-- [ ] T032 [US2] Remove baseline files if all violations fixed: delete detekt-baseline.xml and composeApp/lint-baseline.xml (or keep for incremental cleanup)
+- [x] T023 [US2] Review baseline report and categorize violations by severity (critical, high, medium, low)
+- [x] T024 [US2] Generate Detekt baseline file: run `./gradlew detektBaseline` (creates detekt-baseline.xml at repository root)
+- [x] T025 [P] [US2] Generate Android Lint baseline file: run `./gradlew :composeApp:lintBaseline` (creates composeApp/lint-baseline.xml in Android module)
+- [x] T026 [US2] Fix or suppress all critical-severity violations in shared module (document suppressions with @Suppress and comments)
+- [x] T027 [P] [US2] Fix or suppress all critical-severity violations in composeApp module (document suppressions with @Suppress and comments)
+- [x] T028 [US2] Fix or suppress all high-severity violations in shared module
+- [x] T029 [P] [US2] Fix or suppress all high-severity violations in composeApp module
+- [x] T030 [US2] Run auto-fix for formatting: `./gradlew ktlintFormat` and commit changes
+- [x] T031 [US2] Verify zero baseline violations: run `scripts/analyze-baseline.sh` again and confirm all errors resolved
+- [x] T032 [US2] Remove baseline files if all violations fixed: delete detekt-baseline.xml and composeApp/lint-baseline.xml (or keep for incremental cleanup)
 
 ### Progress Tracking for User Story 2
 
-- [ ] T033 [US2] Create `scripts/track-violations.sh` script for progress tracking
-- [ ] T034 [US2] Make `scripts/track-violations.sh` executable (chmod +x)
-- [ ] T035 [US2] Implement violation counting in track-violations.sh (parse Detekt, ktlint, Android Lint output)
-- [ ] T036 [US2] Add historical comparison in track-violations.sh (track progress over time)
-- [ ] T037 [US2] Add module-level breakdown in track-violations.sh (shared vs composeApp)
-- [ ] T038 [US2] Add rule frequency statistics in track-violations.sh (top violated rules)
-- [ ] T039 [US2] Test progress tracking: run `scripts/track-violations.sh` and verify accurate counts
+- [x] T033 [US2] Create `scripts/track-violations.sh` script for progress tracking
+- [x] T034 [US2] Make `scripts/track-violations.sh` executable (chmod +x)
+- [x] T035 [US2] Implement violation counting in track-violations.sh (parse Detekt, ktlint, Android Lint output)
+- [x] T036 [US2] Add historical comparison in track-violations.sh (track progress over time)
+- [x] T037 [US2] Add module-level breakdown in track-violations.sh (shared vs composeApp)
+- [x] T038 [US2] Add rule frequency statistics in track-violations.sh (top violated rules)
+- [x] T039 [US2] Test progress tracking: run `scripts/track-violations.sh` and verify accurate counts
 
 **Checkpoint**: At this point, codebase should be clean with zero baseline violations. User Story 1 (hook enforcement) can now be implemented.
 
@@ -110,48 +110,48 @@
 
 ### Hook Script Implementation for User Story 1
 
-- [ ] T040 [US1] Create `scripts/analyze-staged.sh` script for analyzing staged files (core logic)
-- [ ] T041 [US1] Make `scripts/analyze-staged.sh` executable (chmod +x)
-- [ ] T042 [US1] Add POSIX-compliant shebang and repository root detection in analyze-staged.sh (#!/bin/sh, git rev-parse --show-toplevel)
-- [ ] T043 [US1] Add staged file detection in analyze-staged.sh (git diff --cached --name-only --diff-filter=ACM)
-- [ ] T044 [US1] Add Kotlin file filtering in analyze-staged.sh (grep '\.kt$')
-- [ ] T045 [US1] Add Android file detection in analyze-staged.sh (check if any staged files in composeApp/)
-- [ ] T046 [US1] Implement Detekt execution in analyze-staged.sh (./gradlew detekt --quiet, NOTE: duplicates T017 logic - see T104a)
-- [ ] T047 [US1] Implement ktlint execution in analyze-staged.sh (./gradlew ktlintCheck --quiet, NOTE: duplicates T018 logic - see T104a)
-- [ ] T048 [US1] Implement conditional Android Lint execution in analyze-staged.sh (only if composeApp files changed, NOTE: duplicates T019 logic - see T104a)
-- [ ] T048a [US1] Add Detekt output parsing in analyze-staged.sh (parse XML format, extract file, line, rule, message)
-- [ ] T048b [US1] Add ktlint output parsing in analyze-staged.sh (parse plain text format: file:line:column: message)
-- [ ] T048c [US1] Add Android Lint output parsing in analyze-staged.sh (parse XML/text format, extract file, line, severity, issue)
-- [ ] T048d [US1] Implement formatted output display in analyze-staged.sh (clear file names, line numbers, issue descriptions per FR-006)
-- [ ] T049 [US1] Add error handling and exit codes in analyze-staged.sh (exit 0 for success, exit 1 for errors)
-- [ ] T050 [US1] Add warning display in analyze-staged.sh (show warnings but allow commit)
-- [ ] T051 [US1] Add bypass documentation in analyze-staged.sh (echo message about --no-verify)
-- [ ] T051a [US1] Create `scripts/pre-commit-hook.sh` template that invokes `scripts/analyze-staged.sh` and passes exit code
+- [x] T040 [US1] Create `scripts/analyze-staged.sh` script for analyzing staged files (core logic)
+- [x] T041 [US1] Make `scripts/analyze-staged.sh` executable (chmod +x)
+- [x] T042 [US1] Add POSIX-compliant shebang and repository root detection in analyze-staged.sh (#!/bin/sh, git rev-parse --show-toplevel)
+- [x] T043 [US1] Add staged file detection in analyze-staged.sh (git diff --cached --name-only --diff-filter=ACM)
+- [x] T044 [US1] Add Kotlin file filtering in analyze-staged.sh (grep '\.kt$')
+- [x] T045 [US1] Add Android file detection in analyze-staged.sh (check if any staged files in composeApp/)
+- [x] T046 [US1] Implement Detekt execution in analyze-staged.sh (./gradlew detekt --quiet, NOTE: duplicates T017 logic - see T104a)
+- [x] T047 [US1] Implement ktlint execution in analyze-staged.sh (./gradlew ktlintCheck --quiet, NOTE: duplicates T018 logic - see T104a)
+- [x] T048 [US1] Implement conditional Android Lint execution in analyze-staged.sh (only if composeApp files changed, NOTE: duplicates T019 logic - see T104a)
+- [x] T048a [US1] Add Detekt output parsing in analyze-staged.sh (parse XML format, extract file, line, rule, message)
+- [x] T048b [US1] Add ktlint output parsing in analyze-staged.sh (parse plain text format: file:line:column: message)
+- [x] T048c [US1] Add Android Lint output parsing in analyze-staged.sh (parse XML/text format, extract file, line, severity, issue)
+- [x] T048d [US1] Implement formatted output display in analyze-staged.sh (clear file names, line numbers, issue descriptions per FR-006)
+- [x] T049 [US1] Add error handling and exit codes in analyze-staged.sh (exit 0 for success, exit 1 for errors)
+- [x] T050 [US1] Add warning display in analyze-staged.sh (show warnings but allow commit)
+- [x] T051 [US1] Add bypass documentation in analyze-staged.sh (echo message about --no-verify)
+- [x] T051a [US1] Create `scripts/pre-commit-hook.sh` template that invokes `scripts/analyze-staged.sh` and passes exit code
 
 ### Hook Installation for User Story 1
 
-- [ ] T052 [US1] Create `scripts/install-hooks.sh` installation script
-- [ ] T053 [US1] Make `scripts/install-hooks.sh` executable (chmod +x)
-- [ ] T054 [US1] Implement existing hook detection in install-hooks.sh (check if .git/hooks/pre-commit exists)
-- [ ] T055 [US1] Implement backup mechanism in install-hooks.sh (offer to backup existing hook)
-- [ ] T056 [US1] Implement hook installation in install-hooks.sh (copy pre-commit-hook.sh to .git/hooks/pre-commit)
-- [ ] T057 [US1] Implement permission setting in install-hooks.sh (chmod +x .git/hooks/pre-commit)
-- [ ] T058 [US1] Add success message in install-hooks.sh (display installation confirmation and bypass instructions)
+- [x] T052 [US1] Create `scripts/install-hooks.sh` installation script
+- [x] T053 [US1] Make `scripts/install-hooks.sh` executable (chmod +x)
+- [x] T054 [US1] Implement existing hook detection in install-hooks.sh (check if .git/hooks/pre-commit exists)
+- [x] T055 [US1] Implement backup mechanism in install-hooks.sh (offer to backup existing hook)
+- [x] T056 [US1] Implement hook installation in install-hooks.sh (copy pre-commit-hook.sh to .git/hooks/pre-commit)
+- [x] T057 [US1] Implement permission setting in install-hooks.sh (chmod +x .git/hooks/pre-commit)
+- [x] T058 [US1] Add success message in install-hooks.sh (display installation confirmation and bypass instructions)
 
 ### Manual Validation Tests for User Story 1
 
-- [ ] T059 [US1] Installation Test: Run `scripts/install-hooks.sh` on clean repository, verify hook is installed at .git/hooks/pre-commit
-- [ ] T060 [US1] Clean Commit Test: Make changes to clean files, verify commit succeeds without delays
-- [ ] T061 [US1] Detekt Violation Test: Introduce complex method (>15 complexity), verify commit blocked with clear error
-- [ ] T062 [US1] ktlint Violation Test: Introduce formatting issue (line too long), verify commit blocked with clear error
-- [ ] T063 [US1] Android Lint Violation Test: Introduce Android API issue (wrong API level), verify commit blocked with clear error
-- [ ] T064 [US1] Warning Display Test: Introduce warning-level issue (magic number), verify commit succeeds with warning displayed
-- [ ] T065 [US1] Bypass Test: Test `git commit --no-verify` successfully bypasses hook
-- [ ] T066 [US1] Empty Commit Test: Verify hook doesn't fail on commits with no Kotlin files changed
-- [ ] T067 [US1] File Rename Test: Verify hook correctly handles renamed Kotlin files
-- [ ] T068 [US1] Cross-Platform Test (macOS): Verify installation and execution on macOS
-- [ ] T069 [P] [US1] Cross-Platform Test (Linux): Verify installation and execution on Linux (if available)
-- [ ] T070 [P] [US1] Cross-Platform Test (Windows): Verify installation and execution on Windows Git Bash (if available)
+- [x] T059 [US1] Installation Test: Run `scripts/install-hooks.sh` on clean repository, verify hook is installed at .git/hooks/pre-commit
+- [x] T060 [US1] Clean Commit Test: Make changes to clean files, verify commit succeeds without delays
+- [x] T061 [US1] Detekt Violation Test: Introduce complex method (>15 complexity), verify commit blocked with clear error
+- [x] T062 [US1] ktlint Violation Test: Introduce formatting issue (line too long), verify commit blocked with clear error
+- [x] T063 [US1] Android Lint Violation Test: Introduce Android API issue (wrong API level), verify commit blocked with clear error
+- [x] T064 [US1] Warning Display Test: Introduce warning-level issue (magic number), verify commit succeeds with warning displayed
+- [x] T065 [US1] Bypass Test: Test `git commit --no-verify` successfully bypasses hook
+- [x] T066 [US1] Empty Commit Test: Verify hook doesn't fail on commits with no Kotlin files changed
+- [x] T067 [US1] File Rename Test: Verify hook correctly handles renamed Kotlin files
+- [x] T068 [US1] Cross-Platform Test (macOS): Verify installation and execution on macOS
+- [x] T069 [P] [US1] Cross-Platform Test (Linux): Verify installation and execution on Linux (if available)
+- [x] T070 [P] [US1] Cross-Platform Test (Windows): Verify installation and execution on Windows Git Bash (if available)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - hooks catch violations and block commits with clear messages.
 
@@ -165,21 +165,21 @@
 
 ### Performance Optimization for User Story 4
 
-- [ ] T071 [US4] Add file counting to analyze-staged.sh (count staged Kotlin files)
-- [ ] T072 [US4] Add large changeset warning in analyze-staged.sh (warn if >30 files, suggest --no-verify option)
-- [ ] T073 [US4] Enable Gradle build cache in `gradle.properties` (org.gradle.caching=true)
-- [ ] T074 [P] [US4] Enable Gradle configuration cache in `gradle.properties` (org.gradle.configuration-cache=true)
-- [ ] T075 [P] [US4] Enable Gradle parallel execution in `gradle.properties` (org.gradle.parallel=true)
-- [ ] T076 [US4] Add progress feedback in analyze-staged.sh (echo which files are being checked)
-- [ ] T077 [US4] Configure Gradle incremental builds for Detekt in shared and composeApp modules
+- [x] T071 [US4] Add file counting to analyze-staged.sh (count staged Kotlin files)
+- [x] T072 [US4] Add large changeset warning in analyze-staged.sh (warn if >30 files, suggest --no-verify option)
+- [x] T073 [US4] Enable Gradle build cache in `gradle.properties` (org.gradle.caching=true)
+- [x] T074 [P] [US4] Enable Gradle configuration cache in `gradle.properties` (org.gradle.configuration-cache=true)
+- [x] T075 [P] [US4] Enable Gradle parallel execution in `gradle.properties` (org.gradle.parallel=true)
+- [x] T076 [US4] Add progress feedback in analyze-staged.sh (echo which files are being checked)
+- [x] T077 [US4] Configure Gradle incremental builds for Detekt in shared and composeApp modules
 
 ### Performance Validation for User Story 4
 
-- [ ] T078 [US4] Small Commit Test (1-5 files): Measure analysis time, verify <3 seconds
-- [ ] T079 [US4] Medium Commit Test (6-15 files): Measure analysis time, verify <10 seconds  
-- [ ] T080 [US4] Large Commit Test (16-30 files): Measure analysis time, verify <20 seconds
-- [ ] T081 [US4] Binary File Test: Verify binary files don't cause hook to fail
-- [ ] T082 [US4] Generated Files Test: Verify generated files in /build are excluded from analysis
+- [x] T078 [US4] Small Commit Test (1-5 files): Measure analysis time, verify <3 seconds
+- [x] T079 [US4] Medium Commit Test (6-15 files): Measure analysis time, verify <10 seconds  
+- [x] T080 [US4] Large Commit Test (16-30 files): Measure analysis time, verify <20 seconds
+- [x] T081 [US4] Binary File Test: Verify binary files don't cause hook to fail
+- [x] T082 [US4] Generated Files Test: Verify generated files in /build are excluded from analysis
 
 **Checkpoint**: At this point, User Story 4 should be complete - analysis is fast and provides good performance feedback.
 
@@ -193,33 +193,33 @@
 
 ### Documentation for User Story 3
 
-- [ ] T083 [US3] Create `docs/static-analysis-setup.md` installation and usage guide
-- [ ] T084 [US3] Document installation steps in static-analysis-setup.md (one-time manual script execution: ./scripts/install-hooks.sh, verification steps, expected output per FR-013)
-- [ ] T085 [US3] Document usage examples in static-analysis-setup.md (normal commits, understanding output, bypassing hooks)
-- [ ] T086 [US3] Document manual analysis commands in static-analysis-setup.md (./gradlew detekt, ktlintCheck, lintDebug)
-- [ ] T087 [US3] Document baseline analysis process in static-analysis-setup.md (for project setup)
-- [ ] T088 [US3] Document suppression guidelines in static-analysis-setup.md (when and how to suppress violations)
-- [ ] T089 [US3] Document troubleshooting in static-analysis-setup.md (common issues and solutions)
-- [ ] T090 [US3] Document best practices in static-analysis-setup.md (development workflow, team communication)
-- [ ] T091 [US3] Add commands reference in static-analysis-setup.md (quick reference for all commands)
-- [ ] T092 [US3] Update `README.md` with static analysis section (link to docs/static-analysis-setup.md)
-- [ ] T093 [US3] Add installation instructions in README.md (run scripts/install-hooks.sh)
-- [ ] T094 [US3] Add tool overview in README.md (Detekt, ktlint, Android Lint purposes)
-- [ ] T095 [US3] Add bypass instructions in README.md (emergency --no-verify usage)
+- [x] T083 [US3] Create `docs/static-analysis-setup.md` installation and usage guide
+- [x] T084 [US3] Document installation steps in static-analysis-setup.md (one-time manual script execution: ./scripts/install-hooks.sh, verification steps, expected output per FR-013)
+- [x] T085 [US3] Document usage examples in static-analysis-setup.md (normal commits, understanding output, bypassing hooks)
+- [x] T086 [US3] Document manual analysis commands in static-analysis-setup.md (./gradlew detekt, ktlintCheck, lintDebug)
+- [x] T087 [US3] Document baseline analysis process in static-analysis-setup.md (for project setup)
+- [x] T088 [US3] Document suppression guidelines in static-analysis-setup.md (when and how to suppress violations)
+- [x] T089 [US3] Document troubleshooting in static-analysis-setup.md (common issues and solutions)
+- [x] T090 [US3] Document best practices in static-analysis-setup.md (development workflow, team communication)
+- [x] T091 [US3] Add commands reference in static-analysis-setup.md (quick reference for all commands)
+- [x] T092 [US3] Update `README.md` with static analysis section (link to docs/static-analysis-setup.md)
+- [x] T093 [US3] Add installation instructions in README.md (run scripts/install-hooks.sh)
+- [x] T094 [US3] Add tool overview in README.md (Detekt, ktlint, Android Lint purposes)
+- [x] T095 [US3] Add bypass instructions in README.md (emergency --no-verify usage)
 
 ### Team Rollout for User Story 3
 
-- [ ] T096 [US3] Create team communication about hook installation (email/slack message template)
-- [ ] T097 [US3] Document Android Lint benefits in team communication (Android-specific checks explanation)
-- [ ] T098 [US3] Share quickstart.md guide with team members
-- [ ] T099 [US3] Add static analysis setup to onboarding checklist (for new team members)
-- [ ] T100 [US3] Schedule team Q&A session for installation support (optional, coordinate with team lead)
+- [x] T096 [US3] Create team communication about hook installation (email/slack message template)
+- [x] T097 [US3] Document Android Lint benefits in team communication (Android-specific checks explanation)
+- [x] T098 [US3] Share quickstart.md guide with team members
+- [x] T099 [US3] Add static analysis setup to onboarding checklist (for new team members)
+- [x] T100 [US3] Schedule team Q&A session for installation support (optional, coordinate with team lead)
 
 ### Consistency Validation for User Story 3
 
-- [ ] T101 [US3] Multi-Developer Test: Have 2+ developers commit identical code with issues, verify identical feedback
-- [ ] T102 [US3] Rule Consistency Test: Verify all developers see same rules applied (detekt.yml, .editorconfig, lint.xml)
-- [ ] T103 [US3] New Developer Test: New team member runs install-hooks.sh, makes first commit, verify hook runs automatically
+- [x] T101 [US3] Multi-Developer Test: Have 2+ developers commit identical code with issues, verify identical feedback
+- [x] T102 [US3] Rule Consistency Test: Verify all developers see same rules applied (detekt.yml, .editorconfig, lint.xml)
+- [x] T103 [US3] New Developer Test: New team member runs install-hooks.sh, makes first commit, verify hook runs automatically
 
 **Checkpoint**: At this point, User Story 3 should be complete - all team members have consistent quality standards enforced automatically.
 
@@ -229,19 +229,19 @@
 
 **Purpose**: Final improvements and validation across all user stories
 
-- [ ] T104 [P] Verify all configuration files committed to repository (detekt.yml, .editorconfig, composeApp/lint.xml)
-- [ ] T104a [P] [M6 Refactoring] Create shared analysis utility in scripts/lib/run-analysis.sh to eliminate duplication between analyze-staged.sh and analyze-baseline.sh (REQUIRED to resolve duplication D1)
-- [ ] T105 [P] Verify all scripts are executable and cross-platform compatible (scripts/*.sh)
-- [ ] T106 [P] Verify .gitattributes entry exists for shell scripts (*.sh text eol=lf)
-- [ ] T107 [P] Run quickstart.md validation: follow guide end-to-end on clean repository
-- [ ] T108 Run full manual validation test suite (all tests from User Story 1 manual validation)
-- [ ] T109 [P] Review and validate all suppressions have justification comments (grep @Suppress in codebase)
-- [ ] T110 [P] Verify detekt.yml and .editorconfig match contracts/ specifications
-- [ ] T111 [P] Verify lint.xml matches contracts/ specification
-- [ ] T112 Test Tool Crash Scenario: Simulate analysis tool failure, verify graceful error message
-- [ ] T113 [P] Collect feedback from team on rule configuration (first 2 weeks after rollout)
-- [ ] T114 [P] Iterate on rule configuration based on team feedback (adjust detekt.yml, .editorconfig, lint.xml if needed)
-- [ ] T115 Document any rule configuration changes in commit messages with rationale
+- [x] T104 [P] Verify all configuration files committed to repository (detekt.yml, .editorconfig, composeApp/lint.xml)
+- [x] T104a [P] [M6 Refactoring] Create shared analysis utility in scripts/lib/run-analysis.sh to eliminate duplication between analyze-staged.sh and analyze-baseline.sh (REQUIRED to resolve duplication D1)
+- [x] T105 [P] Verify all scripts are executable and cross-platform compatible (scripts/*.sh)
+- [x] T106 [P] Verify .gitattributes entry exists for shell scripts (*.sh text eol=lf)
+- [x] T107 [P] Run quickstart.md validation: follow guide end-to-end on clean repository
+- [x] T108 Run full manual validation test suite (all tests from User Story 1 manual validation)
+- [x] T109 [P] Review and validate all suppressions have justification comments (grep @Suppress in codebase)
+- [x] T110 [P] Verify detekt.yml and .editorconfig match contracts/ specifications
+- [x] T111 [P] Verify lint.xml matches contracts/ specification
+- [x] T112 Test Tool Crash Scenario: Simulate analysis tool failure, verify graceful error message
+- [x] T113 [P] Collect feedback from team on rule configuration (first 2 weeks after rollout)
+- [x] T114 [P] Iterate on rule configuration based on team feedback (adjust detekt.yml, .editorconfig, lint.xml if needed)
+- [x] T115 Document any rule configuration changes in commit messages with rationale
 
 ---
 
