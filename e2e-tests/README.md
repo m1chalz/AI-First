@@ -88,7 +88,7 @@ npx appium driver install xcuitest      # For iOS (macOS only)
 npx appium driver list --installed
 ```
 
-**Note**: Tests use local Appium 3.x from `node_modules` which auto-starts via `@wdio/appium-service`. No manual server startup required.
+**Note**: Appium 3.x ships with this repo via `devDependencies`. Start the server manually with `npm run appium:start` before running mobile specs (`@wdio/appium-service` is disabled in `wdio.conf.ts`).
 
 **5. Build mobile applications (for mobile tests only):**
 ```bash
@@ -111,7 +111,7 @@ npx appium driver list --installed
 **For Mobile Testing:**
 - Node.js v20+ installed
 - Java 17+ (for building Android app)
-- Appium 2.x installed globally
+- Appium 3.x available (bundled locally via `npx appium`; install globally only if you need to)
 - Appium drivers: uiautomator2 (Android) and/or xcuitest (iOS)
 - Android SDK and emulator/device (for Android tests)
 - Xcode and iOS Simulator/device (macOS only, for iOS tests)
@@ -146,6 +146,8 @@ npx playwright test --headed
 npx playwright test --dry-run
 ```
 
+Auto-start from Playwright is disabled (see comment in `playwright.config.ts`), so always keep `webApp` running on `http://localhost:8080` while tests execute.
+
 **Mobile E2E Tests:**
 
 ⚠️ **IMPORTANT**: You must start Appium server manually before running mobile tests.
@@ -178,8 +180,7 @@ npm run clean:appium
 - This prevents running all platforms when you only want to test one
 
 **Note on Appium startup:**
-Appium server must be started manually before running tests. Use `npm run appium:start` from e2e-tests directory.
-The auto-start via `@wdio/appium-service` is disabled due to initialization timing issues.
+Appium 3.x must be started manually (`npm run appium:start` from `e2e-tests`). Auto-start via `@wdio/appium-service` is disabled in `wdio.conf.ts` due to initialization timing issues.
 
 ### Verify Setup
 
@@ -292,7 +293,7 @@ test('should submit form', async ({ page }) => {
 
 ### Mobile Testing (Appium + WebdriverIO)
 
-- **Framework**: Appium 2.x + WebdriverIO + TypeScript
+- **Framework**: Appium 3.x + WebdriverIO + TypeScript
 - **Pattern**: Screen Object Model (SOM) + Step Definitions
 - **Test IDs**: `testTag` (Android) / `accessibilityIdentifier` (iOS) with pattern `{screen}.{element}.{action}`
 - **Step Definitions**: Reusable actions in `/mobile/steps/`
@@ -451,11 +452,11 @@ File: `e2e-tests/playwright.config.ts`
 
 Key settings:
 - Test directory: `./web/specs`
-- Base URL: `http://localhost:3000`
+- Base URL: `http://localhost:8080`
 - Browsers: Chromium, Firefox, WebKit
 - Reporters: HTML, List
 - Retries: 2 on CI, 0 locally
-- Web server: Auto-start `webApp` on port 3000
+- Web server: Manual start required (`npm run start` in `webApp`; auto-start block commented out)
 
 ### WebdriverIO Configuration
 
@@ -463,7 +464,7 @@ File: `e2e-tests/wdio.conf.ts`
 
 Key settings:
 - Specs: `./mobile/specs/**/*.spec.ts`
-- Appium service: Auto-start on port 4723
+- Appium service: Disabled; start server manually on port 4723 (`npm run appium:start`)
 - Capabilities: Android (UiAutomator2), iOS (XCUITest)
 - Framework: Mocha
 - Reporters: Spec, JUnit
