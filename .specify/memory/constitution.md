@@ -2,21 +2,24 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.5 → 1.11.6
+Version change: 1.11.6 → 1.11.7
 Modified sections:
-- plan-template.md Constitution Check: Added note to skip frontend checks for backend-only features
-- tasks-template.md Implementation sections: Added notes to skip frontend platform tasks for backend-only features
-  - User Story 1 and 2 implementation sections now include guidance
-  - Frontend tasks (Shared, Android, iOS, Web) can be skipped for backend-only specs
-  - Focus on Backend tasks and backend-specific tests only
-Modified principles: None (template efficiency improvement)
+- III. 80% Unit Test Coverage - Shared Module: Updated framework from "Kotlin Test (multiplatform)" to "Kotlin Test (multiplatform) with JUnit 6"
+- III. 80% Unit Test Coverage - Android ViewModels: Updated framework from "JUnit 5" to "JUnit 6"
+- XII. Given-When-Then Test Convention - Parameterized Tests: Updated Kotlin/Android section from "JUnit 5" to "JUnit 6"
+- Testing Standards - Unit Tests Shared Module: Updated framework to include "with JUnit 6"
+- Testing Standards - Unit Tests ViewModels Android: Updated framework from "JUnit 5" to "JUnit 6"
+Modified principles: None (test framework version update)
 Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (updated - added backend-only note to Constitution Check)
-- ✅ .specify/templates/tasks-template.md (updated - added backend-only notes to user story sections)
+- ✅ .specify/templates/plan-template.md (no changes needed - references testing generically)
+- ✅ .specify/templates/tasks-template.md (no changes needed - references testing generically)
 - ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
-- None
+- Update build.gradle.kts files to use JUnit 6 (Jupiter) dependencies for shared and composeApp modules
+Previous changes (v1.11.6):
+- plan-template.md Constitution Check: Added note to skip frontend checks for backend-only features
+- tasks-template.md Implementation sections: Added notes to skip frontend platform tasks for backend-only features
 Previous changes (v1.11.5):
 - XIII. Backend Architecture & Quality Standards - Database Layer Standards:
   - Added: MUST NOT use database-level enum types or CHECK constraints
@@ -117,14 +120,14 @@ platform capabilities without workarounds.
 - Line coverage
 - Branch coverage
 - Location: `/shared/src/commonTest/kotlin/`
-- Framework: Kotlin Test (multiplatform)
+- Framework: Kotlin Test (multiplatform) with JUnit 6
 - Run command: `./gradlew :shared:test koverHtmlReport`
 
 All domain logic, use cases, and business rules MUST have corresponding unit tests.
 
 **ViewModels**: Each platform's ViewModels MUST maintain minimum 80% unit test coverage:
 - **Android**: ViewModels in `/composeApp/src/androidUnitTest/`
-  - Framework: JUnit 5 + Kotlin Test + Turbine (for testing Kotlin Flow)
+  - Framework: JUnit 6 + Kotlin Test + Turbine (for testing Kotlin Flow)
   - Run command: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **iOS**: ViewModels (Swift observable objects) in `/iosApp/iosAppTests/`
   - Framework: XCTest with Swift Concurrency (async/await)
@@ -947,7 +950,7 @@ it('should add new pet when user fills form and taps save button', async () => {
 
 When tests share the same logic with different input/output pairs, SHOULD use parameterized tests:
 
-**Kotlin/Android** (JUnit 5):
+**Kotlin/Android** (JUnit 6):
 ```kotlin
 @ParameterizedTest
 @CsvSource(
@@ -2086,7 +2089,7 @@ struct PetSpotApp: App {
 
 - **Location**: `/shared/src/commonTest/kotlin/`
 - **Target**: 80% line + branch coverage on commonMain
-- **Framework**: Kotlin Test (multiplatform) + Koin Test
+- **Framework**: Kotlin Test (multiplatform) with JUnit 6 + Koin Test
 - **Run command**: `./gradlew :shared:test koverHtmlReport`
 - **Report**: `shared/build/reports/kover/html/index.html`
 - **Scope**: Domain models, use cases, business logic
@@ -2150,7 +2153,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 
 **Android**:
 - **Location**: `/composeApp/src/androidUnitTest/kotlin/`
-- **Framework**: JUnit 5 + Kotlin Test + Turbine (for Flow testing)
+- **Framework**: JUnit 6 + Kotlin Test + Turbine (for Flow testing)
 - **Run command**: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **Report**: `composeApp/build/reports/kover/html/index.html`
 - **Scope**: MVI ViewModels (reducers, intents, effects, Flow pipelines)
@@ -2432,4 +2435,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.6 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.7 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
