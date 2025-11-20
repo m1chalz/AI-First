@@ -18,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		2A04A5CA2ECE538D00E42E56 /* iosAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A2916E72ECF0E07007064CA /* iosApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iosApp.xctestplan; sourceTree = "<group>"; };
 		CBC62C9161255F26AECB5FF7 /* PetSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,6 +74,7 @@
 		7152FCA7FDB19756A273F00F = {
 			isa = PBXGroup;
 			children = (
+				2A2916E72ECF0E07007064CA /* iosApp.xctestplan */,
 				C612D8486E6514CE4B10608C /* Configuration */,
 				FCBE363B66E066C6E0D39C14 /* iosApp */,
 				2A04A5CB2ECE538D00E42E56 /* iosAppTests */,
