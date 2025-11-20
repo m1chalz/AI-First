@@ -1,6 +1,5 @@
-import prepareApp from "./app.ts";
-
-const app = await prepareApp();
+import server from './server.ts';
+import log from './lib/logger.ts';
 
 const port = 3000
-app.listen(port, (err) => !err ? console.log(`Server running on port ${port}`) : console.error(err))
+server.listen(port, (err) => !err ? log.info(`Server running on port ${port}`) : log.error(err))

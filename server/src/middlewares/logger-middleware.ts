@@ -1,7 +1,6 @@
 import { pinoHttp, stdSerializers } from 'pino-http';
-import { pino } from 'pino';
 import { serializeBody } from '../lib/log-serializers.ts';
-import { getRequestId } from '../lib/request-context.ts';
+import log from '../lib/logger.ts';
 
 /**
  * Pino HTTP logger middleware with comprehensive request/response logging.
@@ -9,14 +8,7 @@ import { getRequestId } from '../lib/request-context.ts';
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default pinoHttp({
-  logger: pino({
-    timestamp: pino.stdTimeFunctions.isoTime,
-    formatters: {
-      level: (label: string) => {
-        return { level: label.toUpperCase() };
-      },
-    },
-  }),
+  logger: log,
 
   serializers: {
     req(req: any) {
@@ -53,11 +45,6 @@ export default pinoHttp({
     censor: '***',
   },
 
-  customProps: () => {
-    const requestId = getRequestId();
-    return requestId ? { requestId } : {};
-  },
-
   customAttributeKeys: {
     responseTime: 'responseTime',
   },
@@ -77,4 +64,3 @@ export default pinoHttp({
   },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
