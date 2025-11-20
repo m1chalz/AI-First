@@ -31,7 +31,7 @@ nvm use 24
 Navigate to the server directory and install packages:
 
 ```bash
-cd /Users/pawelkedra/code/AI-First/server
+cd server
 npm install
 ```
 
@@ -50,7 +50,7 @@ npm install
 Generate a new Knex migration for the `announcement` table:
 
 ```bash
-cd /Users/pawelkedra/code/AI-First/server
+cd server
 npm run knex:add-migration create_announcement_table
 ```
 
@@ -233,7 +233,7 @@ npm test -- --coverage
 #### Development Mode (with auto-reload)
 
 ```bash
-cd /Users/pawelkedra/code/AI-First/server
+cd server
 npm run dev
 ```
 
@@ -318,7 +318,7 @@ npm run knex:seed
 #### Run All Tests
 
 ```bash
-cd /Users/pawelkedra/code/AI-First/server
+cd server
 npm test
 ```
 
