@@ -2,12 +2,15 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.3 → 1.11.4
+Version change: 1.11.4 → 1.11.5
 Modified sections:
 - XIII. Backend Architecture & Quality Standards - Database Layer Standards:
-  - Added: MUST use IF EXISTS / IF NOT EXISTS in all DDL statements for idempotent migrations
-  - Added: Migration example showing correct usage of createTableIfNotExists() and dropTableIfExists()
-  - Added: Rationale for idempotent migrations (safe re-run without errors)
+  - Added: MUST NOT use database-level enum types or CHECK constraints for enum validation
+  - Store enums as strings (VARCHAR) in database
+  - Validate enum values at application layer (TypeScript types, validation functions)
+  - Added: Enum validation example showing application-level validation pattern
+  - Updated: Migration example to show correct string-based enum storage vs incorrect DB enum type
+  - Rationale: Database enum types are inflexible and require migrations to modify
 Modified principles: None (clarification of existing backend standards)
 Added principles: None
 Templates requiring updates:
@@ -16,6 +19,10 @@ Templates requiring updates:
 - ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.4):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST use IF EXISTS / IF NOT EXISTS in all DDL statements
+  - Added: Migration example showing idempotent pattern
 Previous changes (v1.11.3):
 - XIII. Backend Architecture & Quality Standards - Database Layer Standards:
   - Added: MUST use singular table names
@@ -1388,6 +1395,11 @@ describe('POST /api/pets', () => {
   - Check existence before adding/dropping columns or indexes
   - Ensures migrations can be safely re-run without errors
 - MUST use repository pattern for data access (enables test doubles)
+- MUST NOT use database-level enum types or CHECK constraints for enum validation:
+  - Store enums as strings (VARCHAR) in database
+  - Validate enum values at application layer (TypeScript types, validation functions)
+  - Rationale: Database enum types are inflexible and require migrations to modify
+  - Application-level validation allows easy enum value additions without schema changes
 - SHOULD design for easy migration from SQLite to PostgreSQL:
   - Avoid SQLite-specific features
   - Use Knex-supported data types
@@ -1395,12 +1407,13 @@ describe('POST /api/pets', () => {
 
 **Migration Example**:
 ```typescript
-// ✅ CORRECT - Uses IF NOT EXISTS / IF EXISTS
+// ✅ CORRECT - Idempotent migrations with string enum storage
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTableIfNotExists('pet', (table) => {
         table.increments('id').primary();
         table.string('name').notNullable();
-        table.string('species').notNullable();
+        table.string('species').notNullable(); // ✅ Store enum as string
+        table.string('status').notNullable(); // ✅ Store enum as string
         table.integer('ownerId').notNullable();
     });
 }
@@ -1416,9 +1429,39 @@ export async function up(knex: Knex): Promise<void> {
     });
 }
 
-export async function down(knex: Knex): Promise<void> {
-    await knex.schema.dropTable('pet'); // Will fail if table doesn't exist
+// ❌ INCORRECT - Using database enum type (PostgreSQL specific)
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTableIfNotExists('pet', (table) => {
+        table.increments('id').primary();
+        table.string('name').notNullable();
+        table.enum('species', ['dog', 'cat', 'bird']); // ❌ Hard to modify
+        table.integer('ownerId').notNullable();
+    });
 }
+```
+
+**Enum Validation Example** (Application Layer):
+```typescript
+// ✅ CORRECT - Application-level enum validation
+export type PetSpecies = 'dog' | 'cat' | 'bird' | 'rabbit';
+export type PetStatus = 'available' | 'adopted' | 'pending';
+
+export function isValidSpecies(value: string): value is PetSpecies {
+    return ['dog', 'cat', 'bird', 'rabbit'].includes(value);
+}
+
+export function validatePetData(data: any): Pet {
+    if (!isValidSpecies(data.species)) {
+        throw new ValidationError(`Invalid species: ${data.species}`);
+    }
+    // ... other validations
+    return data as Pet;
+}
+
+// ❌ INCORRECT - Relying on database CHECK constraint
+// CREATE TABLE pet (
+//   species VARCHAR(50) CHECK (species IN ('dog', 'cat', 'bird'))
+// ); -- Hard to add new values without migration
 ```
 
 - Example repository:
@@ -2386,4 +2429,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.4 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.5 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
