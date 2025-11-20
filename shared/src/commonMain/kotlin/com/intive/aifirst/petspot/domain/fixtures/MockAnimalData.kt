@@ -253,7 +253,7 @@ object MockAnimalData {
             )
         )
         
-        return allAnimals.take(count.coerceIn(1, 16))
+        return allAnimals.take(count.coerceIn(0, 16))
     }
 }
 
