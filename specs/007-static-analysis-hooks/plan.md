@@ -79,7 +79,7 @@ Implement git pre-commit hooks that automatically run static analysis on Kotlin 
   - All tests written in TypeScript
   - Page Object Model / Screen Object Model used
   - Each user story has at least one E2E test
-  - Violation justification: N/A - Feature is developer tooling infrastructure, not user-facing functionality requiring E2E tests. Validation done through manual testing and real commit attempts.
+  - **Constitution Exception Justification**: E2E tests waived for developer tooling infrastructure with no user-facing UI. This feature provides git hooks and shell scripts for code quality enforcement, not user-facing functionality. Validation through manual installation tests (tasks.md T059-T070) and real commit attempts provides equivalent coverage for verifying hook behavior, cross-platform compatibility, and violation detection. Manual validation tests cover all acceptance scenarios from user stories without requiring E2E test infrastructure.
 
 - [x] **Platform Independence**: Shared code uses expect/actual for platform dependencies
   - No direct UIKit/Android SDK/Browser API imports in `commonMain`

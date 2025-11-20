@@ -106,9 +106,9 @@ As a developer, I want the static analysis to run quickly by only checking files
 - **FR-004**: System MUST identify which files have been changed in the current commit (staged files)
 - **FR-005**: System MUST analyze only the changed files, not the entire codebase
 - **FR-006**: System MUST display analysis results clearly showing file names, line numbers, and issue descriptions
-- **FR-007**: System MUST block commits when critical or error-level issues are detected (enforced immediately after baseline violations are resolved)
+- **FR-007**: System MUST block commits when critical or error-level issues are detected. Enforcement begins immediately after baseline file is generated, blocking NEW violations while baseline violations are temporarily allowed via detekt-baseline.xml and composeApp/lint-baseline.xml files during incremental cleanup phase
 - **FR-008**: System MUST allow commits to proceed when only warning-level issues are detected (warnings displayed in commit output without interrupting workflow)
-- **FR-009**: System MUST complete analysis and provide feedback without significantly impacting the commit workflow
+- **FR-009**: System MUST complete analysis and provide feedback promptly without significantly impacting the commit workflow (target: <3s for 1-5 files, <10s for 6-15 files, <20s for 16-30 files per plan.md performance goals)
 - **FR-010**: System MUST provide a bypass mechanism for emergency situations (e.g., `--no-verify` flag)
 - **FR-011**: System MUST exclude generated files, build artifacts, and binary files from analysis
 - **FR-012**: System MUST work consistently across different developer machines (macOS, Linux, Windows)
