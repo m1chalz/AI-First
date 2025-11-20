@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Create navigation controller
         let navigationController = UINavigationController()
-        navigationController.navigationBar.isHidden = true // Hide nav bar (views manage their own)
+        // Navigation bar is visible - coordinator configures it per screen
         
         // Set window root and make visible
         window.rootViewController = navigationController
@@ -45,11 +45,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Navigation Bar Configuration
     
-    /// Configures transparent green semi-transparent navigation bar for all appearances.
+    /// Configures navigation bar appearance per design system.
+    /// Uses background color #FAFAFA and text color #2D2D2D.
     private func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.green.withAlphaComponent(0.5)
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(hex: "#FAFAFA")
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(hex: "#2D2D2D")
+        ]
+        appearance.shadowColor = nil // No border shadow
         
         // Apply to all appearance states
         UINavigationBar.appearance().standardAppearance = appearance
@@ -86,6 +91,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// Use this method to save data, release shared resources, and store enough scene-specific state.
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.
+    }
+}
+
+// MARK: - UIColor Extension
+
+extension UIColor {
+    /// Creates a UIColor from a hex string.
+    /// Supports 3, 6, or 8 character hex strings (RGB, RRGGBB, AARRGGBB).
+    convenience init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 0, 0, 0)
+        }
+        
+        self.init(
+            red: CGFloat(r) / 255,
+            green: CGFloat(g) / 255,
+            blue: CGFloat(b) / 255,
+            alpha: CGFloat(a) / 255
+        )
     }
 }
 

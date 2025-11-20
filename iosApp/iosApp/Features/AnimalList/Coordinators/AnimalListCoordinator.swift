@@ -60,6 +60,10 @@ class AnimalListCoordinator: CoordinatorInterface {
         // Wrap in UIHostingController for UIKit navigation
         let hostingController = UIHostingController(rootView: view)
         
+        // Configure navigation bar
+        hostingController.title = "Missing animals list"
+        hostingController.navigationItem.largeTitleDisplayMode = .never
+        
         // Push to navigation stack
         navigationController.pushViewController(hostingController, animated: animated)
     }

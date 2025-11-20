@@ -26,14 +26,6 @@ struct AnimalListView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Top bar with title
-                Text("Missing animals list")
-                    .font(.system(size: 24))
-                    .foregroundColor(Color(hex: "#2D2D2D")) // Primary text color
-                    .padding(.vertical, 16)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(hex: "#FAFAFA"))
-                
                 // Content area
                 ZStack {
                     if viewModel.isLoading {
@@ -97,7 +89,6 @@ struct AnimalListView: View {
                 .accessibilityIdentifier("animalList.reportMissingButton")
             }
         }
-        .navigationBarHidden(true)
     }
 }
 
