@@ -2,23 +2,26 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.4 → 1.11.5
+Version change: 1.11.5 → 1.11.6
 Modified sections:
-- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
-  - Added: MUST NOT use database-level enum types or CHECK constraints for enum validation
-  - Store enums as strings (VARCHAR) in database
-  - Validate enum values at application layer (TypeScript types, validation functions)
-  - Added: Enum validation example showing application-level validation pattern
-  - Updated: Migration example to show correct string-based enum storage vs incorrect DB enum type
-  - Rationale: Database enum types are inflexible and require migrations to modify
-Modified principles: None (clarification of existing backend standards)
+- plan-template.md Constitution Check: Added note to skip frontend checks for backend-only features
+- tasks-template.md Implementation sections: Added notes to skip frontend platform tasks for backend-only features
+  - User Story 1 and 2 implementation sections now include guidance
+  - Frontend tasks (Shared, Android, iOS, Web) can be skipped for backend-only specs
+  - Focus on Backend tasks and backend-specific tests only
+Modified principles: None (template efficiency improvement)
 Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (no changes needed)
-- ✅ .specify/templates/tasks-template.md (no changes needed)
+- ✅ .specify/templates/plan-template.md (updated - added backend-only note to Constitution Check)
+- ✅ .specify/templates/tasks-template.md (updated - added backend-only notes to user story sections)
 - ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.5):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST NOT use database-level enum types or CHECK constraints
+  - Store enums as strings, validate at application layer
+  - Added enum validation examples
 Previous changes (v1.11.4):
 - XIII. Backend Architecture & Quality Standards - Database Layer Standards:
   - Added: MUST use IF EXISTS / IF NOT EXISTS in all DDL statements
@@ -2429,4 +2432,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.5 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.6 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20

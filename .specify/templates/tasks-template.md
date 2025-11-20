@@ -150,6 +150,8 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 1
 
+> **Note**: For backend-only features, SKIP Shared Module, Android, iOS, and Web sections below. Only implement Backend tasks and backend-specific tests. Update E2E tests only if API endpoints need E2E coverage.
+
 **Shared Module**:
 - [ ] T023 [P] [US1] Create [Entity] model in `/shared/src/commonMain/.../models/[Entity].kt`
 - [ ] T024 [P] [US1] Create [Repository] interface in `/shared/src/commonMain/.../repositories/[Repository].kt`
@@ -221,6 +223,8 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T044 [P] [US2] Mobile E2E test in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
 
 ### Implementation for User Story 2
+
+> **Note**: For backend-only features, SKIP Shared Module, Android, iOS, and Web sections. Only implement Backend tasks.
 
 - [ ] T045 [P] [US2] Create [Entity] model in `/shared/src/commonMain/.../models/[Entity].kt`
 - [ ] T046 [P] [US2] Create [Repository] interface in `/shared/src/commonMain/.../repositories/[Repository].kt`

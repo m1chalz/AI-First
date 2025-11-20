@@ -31,6 +31,8 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
+> **Note**: For backend-only features (affecting only `/server` module), you may mark frontend-related checks (Thin Shared Layer, Native Presentation, Android MVI, Test Identifiers for UI, E2E Tests for mobile/web) as N/A. Focus on Backend Architecture & Quality Standards checks.
+
 ### KMP Architecture Compliance
 
 - [ ] **Thin Shared Layer**: Feature design keeps `/shared` limited to domain models, repository interfaces, and use cases
