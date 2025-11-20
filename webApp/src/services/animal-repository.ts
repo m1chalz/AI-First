@@ -13,7 +13,7 @@ export class AnimalRepository {
             {
                 id: '1',
                 name: 'Fluffy',
-                photoUrl: 'placeholder_cat',
+                photoUrl: 'https://koty.pl/wp-content/uploads/2025/08/tuxedo_cat_7b7e699fc0.jpg',
                 location: { city: 'Pruszkow', radiusKm: 5 },
                 species: AnimalSpecies.CAT,
                 breed: 'Maine Coon',
@@ -27,7 +27,7 @@ export class AnimalRepository {
             {
                 id: '2',
                 name: 'Rex',
-                photoUrl: 'placeholder_dog',
+                photoUrl: 'https://pets-style.pl/wp-content/uploads/2023/01/header-york-dog.jpg',
                 location: { city: 'Warsaw', radiusKm: 10 },
                 species: AnimalSpecies.DOG,
                 breed: 'German Shepherd',
@@ -40,7 +40,7 @@ export class AnimalRepository {
             {
                 id: '3',
                 name: 'Bella',
-                photoUrl: 'placeholder_cat',
+                photoUrl: 'https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg',
                 location: { city: 'Krakow', radiusKm: 3 },
                 species: AnimalSpecies.CAT,
                 breed: 'Siamese',
@@ -53,7 +53,7 @@ export class AnimalRepository {
             {
                 id: '4',
                 name: 'Buddy',
-                photoUrl: 'placeholder_dog',
+                photoUrl: 'https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg',
                 location: { city: 'Wroclaw', radiusKm: 7 },
                 species: AnimalSpecies.DOG,
                 breed: 'Labrador Retriever',
@@ -67,7 +67,7 @@ export class AnimalRepository {
             {
                 id: '5',
                 name: 'Tweety',
-                photoUrl: 'placeholder_bird',
+                photoUrl: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400',
                 location: { city: 'Gdansk', radiusKm: 15 },
                 species: AnimalSpecies.BIRD,
                 breed: 'Cockatiel',

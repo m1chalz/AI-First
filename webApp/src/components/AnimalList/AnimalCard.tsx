@@ -22,9 +22,18 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onClick }) => {
             data-testid={`animalList.item.${animal.id}`}
             onClick={onClick}
         >
-            {/* Photo placeholder - circular with icon */}
+            {/* Photo placeholder - circular with optional photo */}
             <div className={styles.photoPlaceholder}>
-                <span className={styles.photoIcon}>🐾</span>
+                {animal.photoUrl ? (
+                    <img
+                        src={animal.photoUrl}
+                        alt={`${animal.name} photo`}
+                        className={styles.photoImage}
+                        loading="lazy"
+                    />
+                ) : (
+                    <span className={styles.photoIcon} aria-hidden="true">🐾</span>
+                )}
             </div>
             
             {/* Left section: Location and species/breed info */}
