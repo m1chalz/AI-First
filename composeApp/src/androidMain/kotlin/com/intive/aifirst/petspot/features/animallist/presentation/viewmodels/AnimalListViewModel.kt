@@ -63,7 +63,7 @@ class AnimalListViewModel(
             _state.value = AnimalListReducer.loading(_state.value)
             
             // Call use case
-            val result = getAnimalsUseCase()
+            val result = runCatching { getAnimalsUseCase() }
             
             // Reduce result to new state
             _state.value = AnimalListReducer.reduce(_state.value, result)

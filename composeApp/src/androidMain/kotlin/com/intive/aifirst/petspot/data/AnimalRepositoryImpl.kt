@@ -20,14 +20,14 @@ class AnimalRepositoryImpl : AnimalRepository {
      * Retrieves mock animal data after simulated delay.
      * Uses MockAnimalData as single source of truth for consistency across platforms.
      *
-     * @return Result.success with 16 mock animals
+     * @return List of 16 mock animals
      */
-    override suspend fun getAnimals(): Result<List<Animal>> {
+    override suspend fun getAnimals(): List<Animal> {
         // Simulate network delay
         delay(networkDelayMs)
         
         // Return mock data from shared test fixtures
-        return Result.success(MockAnimalData.generateMockAnimals())
+        return MockAnimalData.generateMockAnimals()
     }
 }
 

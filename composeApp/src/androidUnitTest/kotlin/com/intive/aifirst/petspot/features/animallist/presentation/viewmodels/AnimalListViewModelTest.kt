@@ -69,6 +69,38 @@ class AnimalListViewModelTest {
     }
     
     @Test
+    fun `dispatchIntent Refresh should emit loading then error state when repository fails`() = runTest {
+        // Given - ViewModel with fake repository configured to fail
+        val fakeRepository = FakeAnimalRepository(
+            animalCount = 0,
+            shouldFail = true,
+            exception = Exception("Network error")
+        )
+        val useCase = GetAnimalsUseCase(fakeRepository)
+        val viewModel = AnimalListViewModel(useCase)
+        
+        // When - observing state changes
+        viewModel.state.test {
+            // Initial state emitted immediately
+            awaitItem()
+            
+            // Advance coroutine to process Refresh intent
+            advanceUntilIdle()
+            
+            // Then - should emit loading state then error state
+            val loadingState = awaitItem()
+            assertTrue(loadingState.isLoading, "Should be loading")
+            
+            val errorState = awaitItem()
+            assertFalse(errorState.isLoading, "Should not be loading after failure")
+            assertEquals("Network error", errorState.error, "Should expose error message from failure")
+            assertTrue(errorState.animals.isEmpty(), "Should not update animals on failure")
+            
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+    
+    @Test
     fun `dispatchIntent SelectAnimal should emit NavigateToDetails effect`() = runTest {
         // Given - ViewModel with fake repository
         val fakeRepository = FakeAnimalRepository(animalCount = 3)

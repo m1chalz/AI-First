@@ -4,7 +4,7 @@ import com.intive.aifirst.petspot.domain.repositories.FakeAnimalRepository
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 /**
@@ -21,12 +21,9 @@ class GetAnimalsUseCaseTest {
         val useCase = GetAnimalsUseCase(fakeRepository)
         
         // When - use case is invoked
-        val result = useCase()
+        val animals = useCase()
         
-        // Then - result is success with 16 animals
-        assertTrue(result.isSuccess, "Result should be success")
-        val animals = result.getOrNull()
-        assertNotNull(animals, "Animals list should not be null")
+        // Then - returns 16 animals list
         assertEquals(16, animals.size, "Should return 16 animals")
         assertEquals(1, fakeRepository.getAnimalsCallCount, "Repository should be called once")
     }
@@ -42,12 +39,11 @@ class GetAnimalsUseCaseTest {
         val useCase = GetAnimalsUseCase(fakeRepository)
         
         // When - use case is invoked
-        val result = useCase()
+        val exception = assertFailsWith<Exception> {
+            useCase()
+        }
         
-        // Then - result is failure with exception
-        assertTrue(result.isFailure, "Result should be failure")
-        val exception = result.exceptionOrNull()
-        assertNotNull(exception, "Exception should not be null")
+        // Then - exception message matches
         assertEquals("Network error", exception.message, "Exception message should match")
         assertEquals(1, fakeRepository.getAnimalsCallCount, "Repository should be called once")
     }
@@ -59,12 +55,9 @@ class GetAnimalsUseCaseTest {
         val useCase = GetAnimalsUseCase(fakeRepository)
         
         // When - use case is invoked
-        val result = useCase()
+        val animals = useCase()
         
-        // Then - result is success with empty list
-        assertTrue(result.isSuccess, "Result should be success")
-        val animals = result.getOrNull()
-        assertNotNull(animals, "Animals list should not be null")
+        // Then - returns empty list
         assertTrue(animals.isEmpty(), "Animals list should be empty")
         assertEquals(1, fakeRepository.getAnimalsCallCount, "Repository should be called once")
     }
