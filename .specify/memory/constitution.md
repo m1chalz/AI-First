@@ -2,20 +2,21 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.11.1 → 1.11.2
+Version change: 1.11.2 → 1.11.3
 Modified sections:
-- plan-template.md Technical Context: Made performance requirements optional for low-traffic projects
-  - Performance Goals: Changed from required to "Optional for low-traffic projects; ... or N/A"
-  - Constraints: Changed from required to "Optional for low-traffic projects; ... or N/A"
-  - Scale/Scope: Changed from required to "Optional for low-traffic projects; ... or N/A"
-Modified principles: None (template clarification only)
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST use singular table names (e.g., `announcement`, `pet`, `user` NOT `announcements`, `pets`, `users`)
+  - Updated code example to use singular table name (`pet` instead of `pets`)
+Modified principles: None (clarification of existing backend standards)
 Added principles: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (updated - performance fields now optional with N/A option)
+- ✅ .specify/templates/plan-template.md (no changes needed)
 - ✅ .specify/templates/tasks-template.md (no changes needed)
 - ✅ .specify/templates/spec-template.md (no changes needed)
 Follow-up TODOs:
 - None
+Previous changes (v1.11.2):
+- plan-template.md Technical Context: Made performance requirements optional for low-traffic projects
 Previous changes (v1.11.1):
 - XI. Public API Documentation: Refined to skip documentation for self-explanatory names
   - Changed from "document all public APIs" to "document only when name is insufficient"
@@ -1373,6 +1374,7 @@ describe('POST /api/pets', () => {
   ```
 
 **Database Layer Standards**:
+- MUST use singular table names (e.g., `announcement`, `pet`, `user` NOT `announcements`, `pets`, `users`)
 - MUST use Knex query builder (avoid raw SQL)
 - MUST create migrations for schema changes (versioned, reversible)
 - MUST use repository pattern for data access (enables test doubles)
@@ -1398,7 +1400,7 @@ describe('POST /api/pets', () => {
       constructor(private db: Knex) {}
 
       async findAll(filter?: PetFilter): Promise<Pet[]> {
-          let query = this.db<Pet>('pets');
+          let query = this.db<Pet>('pet');
 
           if (filter?.species) {
               query = query.where('species', filter.species);
@@ -2345,4 +2347,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.11.2 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
+**Version**: 1.11.3 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
