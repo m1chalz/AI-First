@@ -9,6 +9,12 @@ import {
     whenUserClicksReportMissing
 } from '../steps/animalListSteps';
 import { waitForElement, scrollToElement } from '../steps/elementSteps';
+import { 
+    getAnimalById, 
+    getExpectedLocation, 
+    getExpectedAnimalDetailsMessage,
+    testConstants 
+} from '../fixtures/animal-data';
 
 /**
  * E2E tests for Animal List screen (Web).
@@ -23,8 +29,8 @@ test.describe('Animal List Screen - User Story 1: View Animal List', () => {
         // When - page loads
         await waitForElement(page, animalListPage.testIds.listContainer);
         
-        // Then - animal cards should be visible (16 animals from mock data)
-        await thenAnimalCardsAreVisible(animalListPage, 16);
+        // Then - animal cards should be visible (all animals from mock data)
+        await thenAnimalCardsAreVisible(animalListPage, testConstants.totalAnimalsCount);
         
         // And - list should be scrollable
         const cards = animalListPage.getAnimalCards();
@@ -54,16 +60,21 @@ test.describe('Animal List Screen - User Story 1: View Animal List', () => {
         const animalListPage = await givenUserIsOnAnimalListPage(page);
         await waitForElement(page, animalListPage.testIds.listContainer);
         
-        // When - viewing first animal card
-        const firstCard = animalListPage.getAnimalCard('1');
+        // And - expected data for first animal
+        const testAnimal = getAnimalById(testConstants.defaultTestAnimalId);
+        expect(testAnimal).toBeDefined();
         
-        // Then - card should display all required information
+        // When - viewing first animal card
+        const firstCard = animalListPage.getAnimalCard(testConstants.defaultTestAnimalId);
+        
+        // Then - card should display all required information from data source
         await expect(firstCard).toBeVisible();
-        await expect(firstCard).toContainText('Fluffy'); // Name from mock data
-        await expect(firstCard).toContainText('Cat'); // Species
-        await expect(firstCard).toContainText('Maine Coon'); // Breed
-        await expect(firstCard).toContainText('Pruszkow'); // Location
-        await expect(firstCard).toContainText('Active'); // Status
+        await expect(firstCard).toContainText(getExpectedLocation(testAnimal!)); // Location with radius
+        await expect(firstCard).toContainText(testAnimal!.species); // Species
+        await expect(firstCard).toContainText(testAnimal!.breed); // Breed
+        await expect(firstCard).toContainText(testAnimal!.status); // Status
+        await expect(firstCard).toContainText(testAnimal!.lastSeenDate); // Last seen date
+        await expect(firstCard).toContainText(testAnimal!.description); // Full description
     });
 });
 
@@ -115,8 +126,8 @@ test.describe('Animal List Screen - User Story 2: Report Action Button', () => {
         await whenUserClicksReportMissing(animalListPage);
         
         // Then - action should be triggered (mocked - console log)
-        await page.waitForTimeout(100); // Small delay for console log
-        expect(consoleMessages.some(msg => msg.includes('Navigate to report missing'))).toBe(true);
+        await page.waitForTimeout(testConstants.consoleLogTimeoutMs);
+        expect(consoleMessages.some(msg => msg.includes(testConstants.expectedReportMissingMessage))).toBe(true);
     });
 });
 
@@ -134,7 +145,7 @@ test.describe('Animal List Screen - User Story 3: Search Preparation', () => {
         // And - should have correct dimensions (64px height per web design)
         const searchBox = await animalListPage.searchPlaceholder.boundingBox();
         expect(searchBox).not.toBeNull();
-        expect(searchBox!.height).toBeGreaterThanOrEqual(60); // ~64px with tolerance
+        expect(searchBox!.height).toBeGreaterThanOrEqual(testConstants.searchPlaceholderMinHeightPx);
     });
 });
 
@@ -149,10 +160,12 @@ test.describe('Animal List Screen - Card Interaction', () => {
         const consoleMessages: string[] = [];
         page.on('console', msg => consoleMessages.push(msg.text()));
         
-        await whenUserClicksAnimalCard(animalListPage, '1');
+        await whenUserClicksAnimalCard(animalListPage, testConstants.defaultTestAnimalId);
         
         // Then - navigation should be triggered (mocked - console log)
-        await page.waitForTimeout(100); // Small delay for console log
-        expect(consoleMessages.some(msg => msg.includes('Navigate to animal details: 1'))).toBe(true);
+        await page.waitForTimeout(testConstants.consoleLogTimeoutMs);
+        expect(consoleMessages.some(msg => 
+            msg.includes(getExpectedAnimalDetailsMessage(testConstants.defaultTestAnimalId))
+        )).toBe(true);
     });
 });
