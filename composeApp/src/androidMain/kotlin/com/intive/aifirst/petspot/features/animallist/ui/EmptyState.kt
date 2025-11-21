@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
+
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import androidx.compose.foundation.layout.*
@@ -28,7 +30,8 @@ fun EmptyState(modifier: Modifier = Modifier) {
         Text(
             text = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.",
             fontSize = 16.sp,
-            color = Color(0xFF545F71), // Secondary text color
+            // Secondary text color
+            color = Color(0xFF545F71),
             textAlign = TextAlign.Center,
             lineHeight = 24.sp,
         )

@@ -30,7 +30,8 @@ object AnimalListReducer {
             },
             onFailure = { exception ->
                 AnimalListUiState(
-                    animals = currentState.animals, // Preserve previous data on error
+                    // Preserve previous data on error
+                    animals = currentState.animals,
                     isLoading = false,
                     error = exception.message ?: "Unknown error",
                 )

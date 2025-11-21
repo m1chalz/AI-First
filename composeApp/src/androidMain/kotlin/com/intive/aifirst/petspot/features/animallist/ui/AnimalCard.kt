@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
+
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import androidx.compose.foundation.background
@@ -89,7 +91,8 @@ fun AnimalCard(
                 Text(
                     text = placeholderInitial,
                     fontSize = 24.sp,
-                    color = Color(0xFF93A2B4), // Tertiary text color
+                    // Tertiary text color
+                    color = Color(0xFF93A2B4),
                 )
             }
 
@@ -103,7 +106,8 @@ fun AnimalCard(
                     text = "${animal.species.displayName} | ${animal.breed}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF2D2D2D), // Primary text color
+                    // Primary text color
+                    color = Color(0xFF2D2D2D),
                 )
 
                 // Location
@@ -111,7 +115,8 @@ fun AnimalCard(
                     text = "${animal.location.city}, +${animal.location.radiusKm}km",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF545F71), // Secondary text color
+                    // Secondary text color
+                    color = Color(0xFF545F71),
                 )
 
                 // Status badge
@@ -133,7 +138,8 @@ fun AnimalCard(
                     text = "Last seen: ${animal.lastSeenDate}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF93A2B4), // Tertiary text color
+                    // Tertiary text color
+                    color = Color(0xFF93A2B4),
                 )
             }
         }

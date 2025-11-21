@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
+
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import androidx.compose.foundation.layout.Arrangement

@@ -4,13 +4,11 @@ import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 
-/**
- * Extension functions for type-safe navigation with NavController.
- * Provides convenient methods to navigate to specific routes.
- *
- * These extensions wrap the NavController.navigate() calls with type-safe routes,
- * making navigation more explicit and preventing typos in route strings.
- */
+// Extension functions for type-safe navigation with NavController.
+// Provides convenient methods to navigate to specific routes.
+//
+// These extensions wrap the NavController.navigate() calls with type-safe routes,
+// making navigation more explicit and preventing typos in route strings.
 
 /**
  * Navigate to Animal List screen.
