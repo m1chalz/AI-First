@@ -2,7 +2,26 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.0.0 → 2.0.1
+Version change: 2.0.1 → 2.1.0
+MINOR: Added Android Navigation Component architectural requirement
+
+Changes (v2.1.0):
+- UPDATED: Principle X "Android Model-View-Intent Architecture" - added mandatory Jetpack Navigation Component requirement
+- UPDATED: Module Structure - clarified that Android navigation MUST use Jetpack Navigation Component
+- UPDATED: .specify/templates/plan-template.md - added Android Navigation Component compliance check
+- UPDATED: .specify/templates/tasks-template.md - clarified navigation setup requirements
+
+Modified principles:
+- X. Android Model-View-Intent Architecture (UPDATED - added Navigation Component requirement)
+
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md - Added Android Navigation Component check
+- ✅ .specify/templates/tasks-template.md - Updated navigation setup guidance
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Follow-up TODOs: None
+
+Previous changes (v2.0.1):
 PATCH: Clarified dependency injection requirements and iOS architecture patterns
 
 Clarifications (v2.0.1):
@@ -912,6 +931,13 @@ keep Compose UI declarative and testable.
 - `MviViewModel`: Exposes `state: StateFlow<UiState>`, `effects: SharedFlow<UiEffect>`, and
   `dispatchIntent(intent: UserIntent)` to receive intents.
 
+**Navigation requirements**:
+- Android navigation MUST use Jetpack Navigation Component (androidx.navigation:navigation-compose)
+- Navigation graph MUST be defined declaratively using `NavHost` composable
+- Deep links SHOULD be supported via Navigation Component's deep link mechanism
+- ViewModels MUST NOT trigger navigation directly - use `UiEffect` for navigation events
+- Navigation state MUST be managed by `NavController`, not application state
+
 **Loop requirements**:
 1. Compose UI collects `state` via `collectAsStateWithLifecycle()` and renders purely from `UiState`.
 2. UI emits intents through callbacks, e.g., `viewModel.dispatchIntent(UserIntent.Refresh)`.
@@ -1174,8 +1200,8 @@ test utilities across web and mobile test suites.
 - `features/<feature>/ui/` - Composable screens (collect StateFlow<UiState>, dispatch intents)
 - `features/<feature>/presentation/mvi/` - UiState, UserIntent, UiEffect, reducers
 - `features/<feature>/presentation/viewmodels/` - MviViewModel implementations
-- `di/` - Dependency injection modules (Koin, Hilt, or manual)
-- `navigation/` - Compose Navigation and effect handlers
+- `di/` - Dependency injection modules (Koin mandatory)
+- `navigation/` - Jetpack Navigation Component graph (NavHost) and effect handlers
 
 **`/iosApp/iosApp/`** (iOS - Full Stack):
 - `Domain/Models/` - Swift structs/classes for domain entities
@@ -1490,4 +1516,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.0.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21
+**Version**: 2.1.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21

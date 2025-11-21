@@ -48,7 +48,10 @@
   - Sealed `UserIntent` and optional `UiEffect` types co-located with feature packages
   - Reducers implemented as pure functions (no side effects) and unit-tested
   - `dispatchIntent` entry wired from UI → ViewModel → reducer, with effects delivered via `SharedFlow`
-  - Violation justification: _[Required if Android diverges from MVI]_
+  - Navigation MUST use Jetpack Navigation Component (androidx.navigation:navigation-compose)
+  - Navigation graph defined with `NavHost` composable
+  - ViewModels trigger navigation via `UiEffect`, not direct `NavController` calls
+  - Violation justification: _[Required if Android diverges from MVI or Navigation Component]_
 
 - [ ] **iOS MVVM-C Architecture**: iOS features follow MVVM-Coordinator pattern
   - UIKit-based coordinators manage navigation and create `UIHostingController` instances
