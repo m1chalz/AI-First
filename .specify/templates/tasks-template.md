@@ -167,46 +167,49 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T040 [US1] Add repository to Android DI module in `/composeApp/src/androidMain/.../di/DataModule.kt`
 - [ ] T041 [US1] Create MVI artifacts (immutable `UiState`, sealed `UserIntent`, optional `UiEffect`, reducer) and ViewModel in `/composeApp/src/androidMain/.../presentation/[Feature]/`
 - [ ] T042 [US1] Add ViewModel to DI module in `/composeApp/src/androidMain/.../di/ViewModelModule.kt`
-- [ ] T043 [US1] Create Composable UI in `/composeApp/src/androidMain/.../ui/[Feature]Screen.kt` that collects `state` and dispatches intents
-- [ ] T044 [US1] Add Navigation Component route for [Feature] in `/composeApp/src/androidMain/.../navigation/NavGraph.kt` (NavHost configuration)
-- [ ] T045 [US1] Add testTag modifiers to all interactive composables in [Feature]Screen (e.g., `Modifier.testTag("[screen].[element].[action]")`)
-- [ ] T046 [P] [US1] Add KDoc documentation to complex Android APIs (skip self-explanatory methods/properties)
+- [ ] T043 [US1] Create state host composable `[Feature]Screen` in `/composeApp/src/androidMain/.../ui/[Feature]Screen.kt` (collects state, dispatches intents)
+- [ ] T044 [US1] Create stateless composable `[Feature]Content` in same file (pure presentation, no ViewModel dependency)
+- [ ] T045 [US1] Create `PreviewParameterProvider<[Feature]UiState>` with sample states (loading, success, error)
+- [ ] T046 [US1] Add `@Preview` function for `[Feature]Content` using `@PreviewParameter` (light mode only, callbacks defaulted to no-ops)
+- [ ] T047 [US1] Add Navigation Component route for [Feature] in `/composeApp/src/androidMain/.../navigation/NavGraph.kt` (NavHost configuration)
+- [ ] T048 [US1] Add testTag modifiers to all interactive composables in [Feature]Content (e.g., `Modifier.testTag("[screen].[element].[action]")`)
+- [ ] T049 [P] [US1] Add KDoc documentation to complex Android APIs (skip self-explanatory methods/properties)
 
 **iOS** (Full Stack Implementation - NO use cases, ViewModels call repositories directly):
-- [ ] T047 [P] [US1] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
-- [ ] T048 [P] [US1] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
-- [ ] T049 [US1] Implement repository in `/iosApp/iosApp/Data/Repositories/[Repository]Impl.swift`
-- [ ] T050 [US1] Add repository to iOS manual DI in `/iosApp/iosApp/DI/ServiceContainer.swift`
-- [ ] T051 [US1] Create ViewModel in `/iosApp/iosApp/ViewModels/[Feature]ViewModel.swift` (inject repository, NO use case)
-- [ ] T052 [US1] Create Coordinator in `/iosApp/iosApp/Coordinators/[Feature]Coordinator.swift` (manual DI: inject repository)
-- [ ] T053 [US1] Create SwiftUI view in `/iosApp/iosApp/Views/[Feature]View.swift`
-- [ ] T054 [US1] Add accessibilityIdentifier to all interactive views in [Feature]View (e.g., `.accessibilityIdentifier("[screen].[element].[action]")`)
-- [ ] T055 [P] [US1] Add SwiftDoc documentation to complex iOS APIs (skip self-explanatory methods/properties)
+- [ ] T050 [P] [US1] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
+- [ ] T051 [P] [US1] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
+- [ ] T052 [US1] Implement repository in `/iosApp/iosApp/Data/Repositories/[Repository]Impl.swift`
+- [ ] T053 [US1] Add repository to iOS manual DI in `/iosApp/iosApp/DI/ServiceContainer.swift`
+- [ ] T054 [US1] Create ViewModel in `/iosApp/iosApp/ViewModels/[Feature]ViewModel.swift` (inject repository, NO use case)
+- [ ] T055 [US1] Create Coordinator in `/iosApp/iosApp/Coordinators/[Feature]Coordinator.swift` (manual DI: inject repository)
+- [ ] T056 [US1] Create SwiftUI view in `/iosApp/iosApp/Views/[Feature]View.swift`
+- [ ] T057 [US1] Add accessibilityIdentifier to all interactive views in [Feature]View (e.g., `.accessibilityIdentifier("[screen].[element].[action]")`)
+- [ ] T058 [P] [US1] Add SwiftDoc documentation to complex iOS APIs (skip self-explanatory methods/properties)
 
 **Web** (Full Stack Implementation):
-- [ ] T056 [P] [US1] Create TypeScript domain models in `/webApp/src/models/[Model].ts`
-- [ ] T057 [P] [US1] Create service interface in `/webApp/src/services/[Service].ts`
-- [ ] T058 [US1] Implement HTTP service consuming backend API in `/webApp/src/services/[Service]Impl.ts`
-- [ ] T059 [US1] Add service to Web DI in `/webApp/src/di/ServiceProvider.tsx` (React Context or other DI pattern)
-- [ ] T060 [US1] Create custom hook in `/webApp/src/hooks/use[Feature].ts`
-- [ ] T061 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
-- [ ] T062 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
-- [ ] T063 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
+- [ ] T059 [P] [US1] Create TypeScript domain models in `/webApp/src/models/[Model].ts`
+- [ ] T060 [P] [US1] Create service interface in `/webApp/src/services/[Service].ts`
+- [ ] T061 [US1] Implement HTTP service consuming backend API in `/webApp/src/services/[Service]Impl.ts`
+- [ ] T062 [US1] Add service to Web DI in `/webApp/src/di/ServiceProvider.tsx` (React Context or other DI pattern)
+- [ ] T063 [US1] Create custom hook in `/webApp/src/hooks/use[Feature].ts`
+- [ ] T064 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
+- [ ] T065 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
+- [ ] T066 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
 
 **Backend** (TDD: Red-Green-Refactor):
-- [ ] T064 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
-- [ ] T065 [US1] GREEN: Implement [Service] in `/server/src/services/[Service].ts` (minimal code to pass test)
-- [ ] T066 [US1] REFACTOR: Improve [Service] code quality (extract helpers, apply Clean Code principles)
-- [ ] T067 [P] [US1] RED: Write failing unit test for utility in `/server/src/lib/__test__/[util].test.ts`
-- [ ] T068 [P] [US1] GREEN: Implement utility in `/server/src/lib/[util].ts` (minimal code to pass test)
-- [ ] T069 [US1] Create database repository in `/server/src/database/repositories/[Repository].ts` (Knex queries)
-- [ ] T070 [US1] Create Express router in `/server/src/routes/[feature]Routes.ts` (endpoint definitions)
-- [ ] T071 [US1] RED: Write failing integration test for endpoint in `/server/src/__test__/[endpoint].test.ts` (SuperTest)
-- [ ] T072 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
-- [ ] T073 [US1] REFACTOR: Add error handling middleware for [feature] routes
-- [ ] T074 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
-- [ ] T075 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
-- [ ] T076 [P] [US1] Run `npm run lint` and fix ESLint violations
+- [ ] T067 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
+- [ ] T068 [US1] GREEN: Implement [Service] in `/server/src/services/[Service].ts` (minimal code to pass test)
+- [ ] T069 [US1] REFACTOR: Improve [Service] code quality (extract helpers, apply Clean Code principles)
+- [ ] T070 [P] [US1] RED: Write failing unit test for utility in `/server/src/lib/__test__/[util].test.ts`
+- [ ] T071 [P] [US1] GREEN: Implement utility in `/server/src/lib/[util].ts` (minimal code to pass test)
+- [ ] T072 [US1] Create database repository in `/server/src/database/repositories/[Repository].ts` (Knex queries)
+- [ ] T073 [US1] Create Express router in `/server/src/routes/[feature]Routes.ts` (endpoint definitions)
+- [ ] T074 [US1] RED: Write failing integration test for endpoint in `/server/src/__test__/[endpoint].test.ts` (SuperTest)
+- [ ] T075 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
+- [ ] T076 [US1] REFACTOR: Add error handling middleware for [feature] routes
+- [ ] T077 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
+- [ ] T078 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
+- [ ] T079 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -242,28 +245,31 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T083 [P] [US2] Create [Entity] model in `/composeApp/src/androidMain/.../domain/models/[Entity].kt`
 - [ ] T084 [P] [US2] Create [Repository] interface in `/composeApp/src/androidMain/.../domain/repositories/[Repository].kt`
 - [ ] T085 [US2] Implement [UseCase] in `/composeApp/src/androidMain/.../domain/usecases/[UseCase].kt`
-- [ ] T086 [US2] Implement repository + DI + ViewModel + UI
-- [ ] T087 [US2] Add Navigation Component route for US2 in NavGraph
-- [ ] T088 [US2] Add testTag modifiers to all Android UI elements for US2
-- [ ] T089 [P] [US2] Add KDoc documentation to complex US2 Android APIs (skip self-explanatory)
+- [ ] T086 [US2] Implement repository + DI + ViewModel
+- [ ] T087 [US2] Create state host composable `[Feature]Screen` (stateful)
+- [ ] T088 [US2] Create stateless composable `[Feature]Content` (pure presentation)
+- [ ] T089 [US2] Create `PreviewParameterProvider` and `@Preview` for stateless composable
+- [ ] T090 [US2] Add Navigation Component route for US2 in NavGraph
+- [ ] T091 [US2] Add testTag modifiers to all Android UI elements for US2
+- [ ] T092 [P] [US2] Add KDoc documentation to complex US2 Android APIs (skip self-explanatory)
 
 **iOS** (Full Stack - NO use cases):
-- [ ] T090 [P] [US2] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
-- [ ] T091 [P] [US2] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
-- [ ] T092 [US2] Implement repository + manual DI + ViewModel (calls repository directly) + Coordinator + SwiftUI view
-- [ ] T093 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
-- [ ] T094 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
+- [ ] T093 [P] [US2] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
+- [ ] T094 [P] [US2] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
+- [ ] T095 [US2] Implement repository + manual DI + ViewModel (calls repository directly) + Coordinator + SwiftUI view
+- [ ] T096 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
+- [ ] T097 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
 
 **Web** (Full Stack):
-- [ ] T095 [P] [US2] Create TypeScript models for US2 in `/webApp/src/models/`
-- [ ] T096 [US2] Implement HTTP service + DI + hook + React component
-- [ ] T097 [US2] Add data-testid attributes to all Web UI elements for US2
-- [ ] T098 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
+- [ ] T098 [P] [US2] Create TypeScript models for US2 in `/webApp/src/models/`
+- [ ] T099 [US2] Implement HTTP service + DI + hook + React component
+- [ ] T100 [US2] Add data-testid attributes to all Web UI elements for US2
+- [ ] T101 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
 
 **Backend** (TDD):
-- [ ] T099 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
-- [ ] T100 [US2] Run `npm test -- --coverage` and verify 80% coverage
-- [ ] T101 [P] [US2] Run `npm run lint` and fix ESLint violations
+- [ ] T102 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
+- [ ] T103 [US2] Run `npm test -- --coverage` and verify 80% coverage
+- [ ] T104 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -277,15 +283,15 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T102 [P] [US3] Platform-specific unit tests (follow same pattern as US1/US2)
-- [ ] T103 [P] [US3] E2E tests for US3
+- [ ] T105 [P] [US3] Platform-specific unit tests (follow same pattern as US1/US2)
+- [ ] T106 [P] [US3] E2E tests for US3
 
 ### Implementation for User Story 3
 
-- [ ] T104 [P] [US3] Android implementation (domain + data + presentation + Navigation Component route)
-- [ ] T105 [P] [US3] iOS implementation (domain + data + presentation)
-- [ ] T106 [P] [US3] Web implementation (models + services + UI)
-- [ ] T107 [P] [US3] Backend implementation (TDD workflow)
+- [ ] T107 [P] [US3] Android implementation (domain + data + presentation + stateless composable + preview + Navigation Component route)
+- [ ] T108 [P] [US3] iOS implementation (domain + data + presentation)
+- [ ] T109 [P] [US3] Web implementation (models + services + UI)
+- [ ] T110 [P] [US3] Backend implementation (TDD workflow)
 
 **Checkpoint**: All user stories should now be independently functional
 

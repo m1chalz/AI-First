@@ -51,7 +51,11 @@
   - Navigation MUST use Jetpack Navigation Component (androidx.navigation:navigation-compose)
   - Navigation graph defined with `NavHost` composable
   - ViewModels trigger navigation via `UiEffect`, not direct `NavController` calls
-  - Violation justification: _[Required if Android diverges from MVI or Navigation Component]_
+  - Composable screens follow two-layer pattern: state host (stateful) + stateless content composable
+  - Stateless composables MUST have `@Preview` with `@PreviewParameter` using custom `PreviewParameterProvider<UiState>`
+  - Callback lambdas MUST be defaulted to no-ops in stateless composables
+  - Previews focus on light mode only (no dark mode previews required)
+  - Violation justification: _[Required if Android diverges from MVI, Navigation Component, or Composable pattern]_
 
 - [ ] **iOS MVVM-C Architecture**: iOS features follow MVVM-Coordinator pattern
   - UIKit-based coordinators manage navigation and create `UIHostingController` instances
