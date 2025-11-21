@@ -2,10 +2,22 @@ import { Page, Locator } from '@playwright/test';
 
 /**
  * Page Object Model for Animal List screen (web).
- * Provides locators and methods for interacting with the animal list UI.
+ * Contains ONLY test IDs and locator getters (no actions).
  */
 export class AnimalListPage {
     readonly page: Page;
+
+    /**
+     * Test IDs for animal list page elements.
+     */
+    readonly testIds = {
+        listContainer: 'animalList.list',
+        reportMissingButton: 'animalList.reportMissingButton',
+        reportFoundButton: 'animalList.reportFoundButton',
+        searchPlaceholder: 'animalList.searchPlaceholder',
+        animalCard: (id: string) => `animalList.item.${id}`,
+    };
+
     readonly listContainer: Locator;
     readonly reportMissingButton: Locator;
     readonly reportFoundButton: Locator;
@@ -13,17 +25,10 @@ export class AnimalListPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.listContainer = page.locator('[data-testid="animalList.list"]');
-        this.reportMissingButton = page.locator('[data-testid="animalList.reportMissingButton"]');
-        this.reportFoundButton = page.locator('[data-testid="animalList.reportFoundButton"]');
-        this.searchPlaceholder = page.locator('[data-testid="animalList.searchPlaceholder"]');
-    }
-
-    /**
-     * Navigates to the animal list page.
-     */
-    async goto() {
-        await this.page.goto('/');
+        this.listContainer = page.getByTestId(this.testIds.listContainer);
+        this.reportMissingButton = page.getByTestId(this.testIds.reportMissingButton);
+        this.reportFoundButton = page.getByTestId(this.testIds.reportFoundButton);
+        this.searchPlaceholder = page.getByTestId(this.testIds.searchPlaceholder);
     }
 
     /**
@@ -37,28 +42,7 @@ export class AnimalListPage {
      * Returns a specific animal card by ID.
      */
     getAnimalCard(id: string) {
-        return this.page.locator(`[data-testid="animalList.item.${id}"]`);
-    }
-
-    /**
-     * Clicks the "Report a Missing Animal" button.
-     */
-    async clickReportMissing() {
-        await this.reportMissingButton.click();
-    }
-
-    /**
-     * Clicks the "Report Found Animal" button.
-     */
-    async clickReportFound() {
-        await this.reportFoundButton.click();
-    }
-
-    /**
-     * Clicks on a specific animal card.
-     */
-    async clickAnimalCard(id: string) {
-        await this.getAnimalCard(id).click();
+        return this.page.getByTestId(this.testIds.animalCard(id));
     }
 }
 

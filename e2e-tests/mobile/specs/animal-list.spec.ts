@@ -1,5 +1,4 @@
 import { expect } from '@wdio/globals';
-import { AnimalListScreen } from '../screens/AnimalListScreen';
 import {
     givenUserIsOnAnimalListScreen,
     whenUserScrollsList,
@@ -8,23 +7,20 @@ import {
     whenUserClicksAnimalCard,
     whenUserClicksReportMissing
 } from '../steps/animalListSteps';
+import { waitForElementDisplayed } from '../steps/elementSteps';
 
 /**
- * End-to-end tests for Animal List screen (Mobile Android).
- * Tests user stories with Appium following Given-When-Then pattern.
- * 
- * Note: These tests require actual mobile app build and Appium server running.
- * They serve as test specifications - implementation requires app deployment.
+ * E2E tests for Animal List screen (Mobile Android).
  */
 
 describe('Animal List Screen - User Story 1: View Animal List', () => {
     
     it('should display scrollable list of animals on Android', async () => {
         // Given - user has the app open on animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
+        const screen = await givenUserIsOnAnimalListScreen(driver);
         
         // When - screen loads
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // Then - animal cards should be visible (16 animals from mock data)
         await thenAnimalCardsAreVisible(screen, 16);
@@ -32,20 +28,19 @@ describe('Animal List Screen - User Story 1: View Animal List', () => {
     
     it('should allow scrolling through animal list', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - user scrolls the list
         await whenUserScrollsList(screen);
         
         // Then - more animals should become visible
-        // (Verification handled by scroll step)
     });
     
     it('should display animal card with all details on Android', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - viewing first animal card
         const firstCard = screen.getAnimalCard('1');
@@ -60,8 +55,8 @@ describe('Animal List Screen - User Story 2: Report Action Button', () => {
     
     it('should display Report a Missing Animal button on Android', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - checking for report missing button
         // Then - Report Missing button should be visible
@@ -70,8 +65,8 @@ describe('Animal List Screen - User Story 2: Report Action Button', () => {
     
     it('should remain visible when scrolling on Android', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - user scrolls the list
         await whenUserScrollsList(screen);
@@ -82,15 +77,14 @@ describe('Animal List Screen - User Story 2: Report Action Button', () => {
     
     it('should trigger action when Report Missing button is tapped', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - user taps Report Missing button
         await whenUserClicksReportMissing(screen);
         
         // Then - action should be triggered
-        // (Mocked navigation - no assertion needed for prototype)
-        // Future: Verify navigation to report form screen
+        // (Navigation not implemented yet)
     });
 });
 
@@ -98,8 +92,8 @@ describe('Animal List Screen - User Story 3: Search Preparation', () => {
     
     it('should display reserved search space on Android', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - checking for search placeholder
         const searchPlaceholder = screen.searchPlaceholder;
@@ -113,26 +107,14 @@ describe('Animal List Screen - Card Interaction', () => {
     
     it('should trigger navigation when animal card is tapped', async () => {
         // Given - user is on the animal list screen
-        const screen = await givenUserIsOnAnimalListScreen();
-        await screen.listContainer.waitForDisplayed({ timeout: 5000 });
+        const screen = await givenUserIsOnAnimalListScreen(driver);
+        await waitForElementDisplayed(driver, screen.testIds.listContainer);
         
         // When - user taps an animal card
         await whenUserClicksAnimalCard(screen, '1');
         
         // Then - navigation should be triggered
-        // (Mocked navigation - no assertion needed for prototype)
-        // Future: Verify navigation to detail screen
+        // (Navigation not implemented yet)
     });
 });
-
-/**
- * Note: These tests require:
- * 1. Android app built with debug configuration
- * 2. Appium server running
- * 3. Android emulator or physical device connected
- * 4. Proper capabilities configured in wdio.conf.ts
- * 
- * To run:
- * npm run test:mobile:android
- */
 

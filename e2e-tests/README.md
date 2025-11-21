@@ -137,7 +137,7 @@ npm run test:e2e:web
 npm run test:e2e:web:ui
 
 # Run specific test file
-npx playwright test web/specs/example.spec.ts
+npx playwright test web/specs/animal-list.spec.ts
 
 # Run in headed mode (visible browser)
 npx playwright test --headed
@@ -257,7 +257,7 @@ npm run test:mobile:android -- --dry-run
 
 ### Separation of Concerns
 
-**Pages/Screens** → Store only test IDs and locators (Single Responsibility)  
+**Pages/Screens** → Store only test IDs and locator getters (Single Responsibility)  
 **Steps** → Contain reusable actions (fillInput, clickElement, navigate)  
 **Tests** → Combine pages and steps into Given-When-Then scenarios
 
@@ -270,24 +270,19 @@ npm run test:mobile:android -- --dry-run
 
 **Example:**
 ```typescript
-import { ExamplePage } from '../pages/ExamplePage';
-import { waitForElement } from '../steps/urlSteps';
-import { fillInput, getElementText } from '../steps/elementSteps';
-import { clickElement } from '../steps/mouseSteps';
+import { AnimalListPage } from '../pages/AnimalListPage';
+import { givenUserIsOnAnimalListPage, whenUserClicksReportMissing } from '../steps/animalListSteps';
+import { waitForElement } from '../steps/elementSteps';
 
-test('should submit form', async ({ page }) => {
+test('should display Report Missing button', async ({ page }) => {
   // Given
-  const examplePage = new ExamplePage(page);
-  await examplePage.navigate();
-  await waitForElement(page, examplePage.testIds.title);
+  const animalListPage = await givenUserIsOnAnimalListPage(page);
   
   // When
-  await fillInput(page, examplePage.testIds.input, 'test');
-  await clickElement(page, examplePage.testIds.submitButton);
+  await waitForElement(page, animalListPage.testIds.listContainer);
   
   // Then
-  const result = await getElementText(page, examplePage.testIds.result);
-  expect(result).toContain('test');
+  await expect(animalListPage.reportMissingButton).toBeVisible();
 });
 ```
 
@@ -300,24 +295,19 @@ test('should submit form', async ({ page }) => {
 
 **Example:**
 ```typescript
-import { ExampleScreen } from '../screens/ExampleScreen';
-import { waitForElement } from '../steps/urlSteps';
-import { fillInput, getElementText } from '../steps/elementSteps';
-import { clickElement } from '../steps/mouseSteps';
+import { givenUserIsOnAnimalListScreen, thenReportMissingButtonIsVisible } from '../steps/animalListSteps';
+import { waitForElementDisplayed } from '../steps/elementSteps';
 
-describe('Example Feature', () => {
-  it('should submit form', async () => {
+describe('Animal List Screen', () => {
+  it('should display Report Missing button', async () => {
     // Given
-    const screen = new ExampleScreen(driver);
-    await waitForElement(driver, screen.testIds.title);
+    const screen = await givenUserIsOnAnimalListScreen(driver);
     
     // When
-    await fillInput(driver, screen.testIds.input, 'test');
-    await clickElement(driver, screen.testIds.submitButton);
+    await waitForElementDisplayed(driver, screen.testIds.listContainer);
     
     // Then
-    const result = await getElementText(driver, screen.testIds.result);
-    expect(result).toContain('test');
+    await thenReportMissingButtonIsVisible(screen);
   });
 });
 ```
@@ -329,16 +319,15 @@ describe('Example Feature', () => {
 All tests MUST follow Given-When-Then (Arrange-Act-Assert) pattern:
 
 ```typescript
-test('descriptive test name', async () => {
+test('should display animal cards', async ({ page }) => {
   // Given - Setup initial state
-  const page = new ExamplePage(driver);
-  await page.navigate();
+  const animalListPage = await givenUserIsOnAnimalListPage(page);
   
-  // When - Perform action
-  await page.clickSubmit();
+  // When - Page loads
+  await waitForElement(page, animalListPage.testIds.listContainer);
   
   // Then - Verify outcome
-  expect(await page.getResult()).toBe('expected');
+  await thenAnimalCardsAreVisible(animalListPage, 16);
 });
 ```
 
@@ -436,12 +425,12 @@ export async function fillInput(page: Page, testId: string, text: string) {
 }
 
 // web/steps/mouseSteps.ts
-export async function clickElement(page: Page, testId: string) {
-  await page.getByTestId(testId).click();
+export async function clickElement(locator: Locator) {
+  await locator.click();
 }
 
 // Usage in tests (NOT in Page Objects)
-await clickElement(page, petListPage.testIds.addButton);
+await clickElement(petListPage.addButton);
 ```
 
 ## Configuration
@@ -481,7 +470,7 @@ npx playwright test --ui
 npx playwright test --headed
 
 # Debug specific test
-npx playwright test --debug example.spec.ts
+npx playwright test --debug animal-list.spec.ts
 
 # Trace viewer (after test run)
 npx playwright show-trace trace.zip
@@ -614,7 +603,7 @@ $ANDROID_HOME/emulator/emulator -avd <avd-name> &
 
 For issues or questions:
 1. Check this documentation
-2. Review example tests in `specs/`
+2. Review actual tests in `web/specs/` and `mobile/specs/`
 3. Review Constitution principles
 
 ---

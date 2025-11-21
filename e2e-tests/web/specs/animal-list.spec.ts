@@ -8,10 +8,10 @@ import {
     whenUserClicksAnimalCard,
     whenUserClicksReportMissing
 } from '../steps/animalListSteps';
+import { waitForElement, scrollToElement } from '../steps/elementSteps';
 
 /**
- * End-to-end tests for Animal List screen (Web).
- * Tests user stories with Playwright following Given-When-Then pattern.
+ * E2E tests for Animal List screen (Web).
  */
 
 test.describe('Animal List Screen - User Story 1: View Animal List', () => {
@@ -21,7 +21,7 @@ test.describe('Animal List Screen - User Story 1: View Animal List', () => {
         const animalListPage = await givenUserIsOnAnimalListPage(page);
         
         // When - page loads
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // Then - animal cards should be visible (16 animals from mock data)
         await thenAnimalCardsAreVisible(animalListPage, 16);
@@ -33,26 +33,26 @@ test.describe('Animal List Screen - User Story 1: View Animal List', () => {
         
         await expect(firstCard).toBeVisible();
         // Scroll to last card
-        await lastCard.scrollIntoViewIfNeeded();
+        await scrollToElement(lastCard);
         await expect(lastCard).toBeVisible();
     });
     
     test('should show loading indicator initially', async ({ page }) => {
         // Given - user navigates to animal list page
+        const animalListPage = new AnimalListPage(page);
         await page.goto('/');
         
         // When - page is loading
-        // Note: With fast mock data this might be hard to catch, but test structure is correct
         
         // Then - eventually animals should be visible (loading complete)
-        const listContainer = page.locator('[data-testid="animalList.list"]');
-        await expect(listContainer).toBeVisible();
+        await waitForElement(page, animalListPage.testIds.listContainer);
+        await expect(animalListPage.listContainer).toBeVisible();
     });
     
     test('should display animal card with all details', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - viewing first animal card
         const firstCard = animalListPage.getAnimalCard('1');
@@ -74,7 +74,7 @@ test.describe('Animal List Screen - User Story 2: Report Action Button', () => {
         const animalListPage = await givenUserIsOnAnimalListPage(page);
         
         // When - page loads
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // Then - Report Missing button should be visible
         await thenReportMissingButtonIsVisible(animalListPage);
@@ -83,7 +83,7 @@ test.describe('Animal List Screen - User Story 2: Report Action Button', () => {
     test('should display Report Found Animal button (web only)', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - checking for report found button
         // Then - Report Found button should be visible (web has two buttons per Figma)
@@ -93,7 +93,7 @@ test.describe('Animal List Screen - User Story 2: Report Action Button', () => {
     test('should remain visible when scrolling', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - user scrolls the list
         await whenUserScrollsList(page);
@@ -106,7 +106,7 @@ test.describe('Animal List Screen - User Story 2: Report Action Button', () => {
     test('should trigger action when Report Missing button is clicked', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - user clicks Report Missing button
         const consoleMessages: string[] = [];
@@ -125,7 +125,7 @@ test.describe('Animal List Screen - User Story 3: Search Preparation', () => {
     test('should display reserved search space', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - checking for search placeholder
         // Then - search placeholder should exist
@@ -143,7 +143,7 @@ test.describe('Animal List Screen - Card Interaction', () => {
     test('should trigger navigation when animal card is clicked', async ({ page }) => {
         // Given - user is on the animal list page
         const animalListPage = await givenUserIsOnAnimalListPage(page);
-        await animalListPage.listContainer.waitFor({ state: 'visible' });
+        await waitForElement(page, animalListPage.testIds.listContainer);
         
         // When - user clicks an animal card
         const consoleMessages: string[] = [];

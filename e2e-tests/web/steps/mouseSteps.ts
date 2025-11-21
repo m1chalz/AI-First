@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test';
+import { Locator } from '@playwright/test';
 
-export async function clickElement(page: Page, testId: string): Promise<void> {
-  await page.getByTestId(testId).click();
+export async function clickElement(locator: Locator): Promise<void> {
+  await locator.click();
 }
 

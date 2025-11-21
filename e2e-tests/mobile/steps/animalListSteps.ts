@@ -1,5 +1,7 @@
 import { expect } from '@wdio/globals';
 import { AnimalListScreen } from '../screens/AnimalListScreen';
+import { waitForElementDisplayed } from './elementSteps';
+import { clickElement } from './mouseSteps';
 
 /**
  * Reusable step definitions for Animal List E2E tests (mobile).
@@ -9,9 +11,9 @@ import { AnimalListScreen } from '../screens/AnimalListScreen';
 /**
  * GIVEN: User has the app open and is on the animal list screen.
  */
-export async function givenUserIsOnAnimalListScreen(): Promise<AnimalListScreen> {
+export async function givenUserIsOnAnimalListScreen(driver: WebdriverIO.Browser): Promise<AnimalListScreen> {
     const screen = new AnimalListScreen();
-    await screen.waitForDisplayed();
+    await waitForElementDisplayed(driver, screen.testIds.listContainer);
     return screen;
 }
 
@@ -22,7 +24,7 @@ export async function whenUserScrollsList(screen: AnimalListScreen) {
     const cards = await screen.getAnimalCards();
     if (cards.length > 0) {
         const lastCard = cards[cards.length - 1];
-        await screen.scrollToElement(lastCard);
+        await lastCard.scrollIntoView();
     }
 }
 
@@ -45,13 +47,14 @@ export async function thenReportMissingButtonIsVisible(screen: AnimalListScreen)
  * WHEN: User clicks on an animal card.
  */
 export async function whenUserClicksAnimalCard(screen: AnimalListScreen, animalId: string) {
-    await screen.clickAnimalCard(animalId);
+    const card = screen.getAnimalCard(animalId);
+    await clickElement(card);
 }
 
 /**
  * WHEN: User clicks Report Missing button.
  */
 export async function whenUserClicksReportMissing(screen: AnimalListScreen) {
-    await screen.clickReportMissing();
+    await clickElement(screen.reportMissingButton);
 }
 

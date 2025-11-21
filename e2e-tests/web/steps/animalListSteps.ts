@@ -1,5 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { AnimalListPage } from '../pages/AnimalListPage';
+import { clickElement } from './mouseSteps';
+import { waitForElement } from './elementSteps';
 
 /**
  * Reusable step definitions for Animal List E2E tests (web).
@@ -11,7 +13,8 @@ import { AnimalListPage } from '../pages/AnimalListPage';
  */
 export async function givenUserIsOnAnimalListPage(page: Page): Promise<AnimalListPage> {
     const animalListPage = new AnimalListPage(page);
-    await animalListPage.goto();
+    await page.goto('/');
+    await waitForElement(page, animalListPage.testIds.listContainer);
     return animalListPage;
 }
 
@@ -20,6 +23,7 @@ export async function givenUserIsOnAnimalListPage(page: Page): Promise<AnimalLis
  */
 export async function whenUserScrollsList(page: Page) {
     await page.evaluate(() => {
+        // @ts-expect-error - window is available in browser context
         window.scrollBy(0, window.innerHeight);
     });
 }
@@ -43,13 +47,21 @@ export async function thenReportMissingButtonIsVisible(animalListPage: AnimalLis
  * WHEN: User clicks on an animal card.
  */
 export async function whenUserClicksAnimalCard(animalListPage: AnimalListPage, animalId: string) {
-    await animalListPage.clickAnimalCard(animalId);
+    const card = animalListPage.getAnimalCard(animalId);
+    await clickElement(card);
 }
 
 /**
  * WHEN: User clicks Report Missing button.
  */
 export async function whenUserClicksReportMissing(animalListPage: AnimalListPage) {
-    await animalListPage.clickReportMissing();
+    await clickElement(animalListPage.reportMissingButton);
+}
+
+/**
+ * WHEN: User clicks Report Found button.
+ */
+export async function whenUserClicksReportFound(animalListPage: AnimalListPage) {
+    await clickElement(animalListPage.reportFoundButton);
 }
 

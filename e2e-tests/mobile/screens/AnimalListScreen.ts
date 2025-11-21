@@ -1,29 +1,37 @@
-import { browser } from '@wdio/globals';
-
 /**
  * Screen Object Model for Animal List screen (mobile).
- * Provides selectors and methods for interacting with the animal list UI.
+ * Contains ONLY test IDs and locator getters (no actions).
  */
 export class AnimalListScreen {
+    /**
+     * Test IDs for animal list screen elements.
+     */
+    readonly testIds = {
+        listContainer: 'animalList.list',
+        reportMissingButton: 'animalList.reportMissingButton',
+        searchPlaceholder: 'animalList.searchPlaceholder',
+        animalCard: (id: string) => `animalList.item.${id}`,
+    };
+
     /**
      * Returns the main list container element.
      */
     get listContainer() {
-        return $('~animalList.list');
+        return $(`~${this.testIds.listContainer}`);
     }
 
     /**
      * Returns the "Report a Missing Animal" button.
      */
     get reportMissingButton() {
-        return $('~animalList.reportMissingButton');
+        return $(`~${this.testIds.reportMissingButton}`);
     }
 
     /**
      * Returns the search placeholder element.
      */
     get searchPlaceholder() {
-        return $('~animalList.searchPlaceholder');
+        return $(`~${this.testIds.searchPlaceholder}`);
     }
 
     /**
@@ -39,35 +47,7 @@ export class AnimalListScreen {
      * Returns a specific animal card by ID.
      */
     getAnimalCard(id: string) {
-        return $(`~animalList.item.${id}`);
-    }
-
-    /**
-     * Clicks the "Report a Missing Animal" button.
-     */
-    async clickReportMissing() {
-        await this.reportMissingButton.click();
-    }
-
-    /**
-     * Clicks on a specific animal card.
-     */
-    async clickAnimalCard(id: string) {
-        await this.getAnimalCard(id).click();
-    }
-
-    /**
-     * Waits for the list to be displayed.
-     */
-    async waitForDisplayed() {
-        await this.listContainer.waitForDisplayed({ timeout: 5000 });
-    }
-
-    /**
-     * Scrolls the list to bring an element into view.
-     */
-    async scrollToElement(element: WebdriverIO.Element) {
-        await element.scrollIntoView();
+        return $(`~${this.testIds.animalCard(id)}`);
     }
 }
 

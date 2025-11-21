@@ -1,8 +1,6 @@
-import { getElementByTestId } from './urlSteps';
+import type { ChainablePromiseElement } from 'webdriverio';
 
-export async function clickElement(driver: WebdriverIO.Browser, testId: string): Promise<void> {
-  const selector = getElementByTestId(testId);
-  const element = await driver.$(selector);
+export async function clickElement(element: ChainablePromiseElement<WebdriverIO.Element>): Promise<void> {
   await element.click();
 }
 
