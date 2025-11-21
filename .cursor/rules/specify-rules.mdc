@@ -5,6 +5,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 ## Active Technologies
 - Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature) (005-animal-list)
 - Mock data (in-memory lists) - backend integration deferred (005-animal-list)
+- TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin (006-pets-api)
+- SQLite (initial phase), designed for easy migration to PostgreSQL using Knex migrations (006-pets-api)
 
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
 
@@ -25,6 +27,7 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 
 ## Recent Changes
 - 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
+- 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
 
 - 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 

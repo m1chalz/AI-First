@@ -18,18 +18,38 @@ e2e-tests/
 │   ├── specs/              # Test specifications
 │   ├── pages/              # Page Object Model
 │   ├── steps/              # Reusable step definitions
-│   ├── fixtures/           # Test data fixtures
-│   └── README.md           # Web testing guide
+│   └── fixtures/           # Test data fixtures
 ├── mobile/                 # Appium tests for mobile platforms
 │   ├── specs/              # Test specifications
 │   ├── screens/            # Screen Object Model
 │   ├── steps/              # Reusable step definitions
-│   ├── utils/              # Shared mobile utilities
-│   └── README.md           # Mobile testing guide
+│   └── utils/              # Shared mobile utilities
 └── README.md               # This file
 ```
 
 ## Quick Start
+
+### TL;DR - Run Android E2E Tests
+
+**Prerequisites:**
+- Android emulator running (or physical device connected)
+- Android APK built: `./gradlew :composeApp:assembleDebug`
+- Dependencies installed: `cd e2e-tests && npm install`
+
+**Run tests:**
+```bash
+# Terminal 1: Start Appium (leave running)
+cd e2e-tests
+npm run appium:start
+
+# Terminal 2: Run Android tests
+cd e2e-tests
+npm run test:mobile:android
+```
+
+That's it!
+
+---
 
 ### Setup
 
@@ -55,6 +75,31 @@ npm install
 npx playwright install
 ```
 
+**4. Install Appium drivers (for mobile tests only):**
+```bash
+# Appium 3.x is already installed locally via node_modules (package.json)
+# Install drivers for the local Appium instance
+
+cd e2e-tests
+npx appium driver install uiautomator2  # For Android
+npx appium driver install xcuitest      # For iOS (macOS only)
+
+# Verify drivers are installed
+npx appium driver list --installed
+```
+
+**Note**: Appium 3.x ships with this repo via `devDependencies`. Start the server manually with `npm run appium:start` before running mobile specs (`@wdio/appium-service` is disabled in `wdio.conf.ts`).
+
+**5. Build mobile applications (for mobile tests only):**
+```bash
+# Android
+./gradlew :composeApp:assembleDebug
+
+# iOS (requires Xcode on macOS)
+# Open iosApp/iosApp.xcodeproj in Xcode
+# Build for simulator: Product > Build (Cmd+B)
+```
+
 ### Prerequisites
 
 **For Web Testing:**
@@ -64,10 +109,12 @@ npx playwright install
 - **webApp must be running** before tests (see Running Tests section)
 
 **For Mobile Testing:**
-- Android SDK (for Android tests)
-- Android emulator running OR physical device connected
-- Xcode (macOS only, for iOS tests)
-- iOS Simulator running OR physical device connected
+- Node.js v20+ installed
+- Java 17+ (for building Android app)
+- Appium 3.x available (bundled locally via `npx appium`; install globally only if you need to)
+- Appium drivers: uiautomator2 (Android) and/or xcuitest (iOS)
+- Android SDK and emulator/device (for Android tests)
+- Xcode and iOS Simulator/device (macOS only, for iOS tests)
 
 ### Running Tests
 
@@ -78,7 +125,7 @@ npx playwright install
 ```bash
 # Terminal 1: Start web server (from webApp directory)
 cd webApp
-npm run start  # Runs on http://localhost:3000
+npm run start  # Runs on http://localhost:8080
 
 # Terminal 2: Run Playwright tests (from e2e-tests directory)
 cd e2e-tests
@@ -99,17 +146,110 @@ npx playwright test --headed
 npx playwright test --dry-run
 ```
 
-**Mobile E2E Tests:**
-```bash
-# From e2e-tests directory
-npm run test:mobile:android
-npm run test:mobile:ios
+Auto-start from Playwright is disabled (see comment in `playwright.config.ts`), so always keep `webApp` running on `http://localhost:8080` while tests execute.
 
-# From project root
+**Mobile E2E Tests:**
+
+⚠️ **IMPORTANT**: You must start Appium server manually before running mobile tests.
+
+```bash
+# Terminal 1: Start Appium server (from e2e-tests directory)
+cd e2e-tests
+npm run appium:start  # Runs on http://localhost:4723
+
+# Terminal 2: Run mobile tests (from e2e-tests directory)
+cd e2e-tests
+npm run test:mobile:android  # Runs ONLY Android tests
+npm run test:mobile:ios       # Runs ONLY iOS tests
+
+# Or from project root
 npm run test:mobile:android
 npm run test:mobile:ios
 
 # Dry run (validate configuration)
+npm run test:mobile:android -- --dry-run
+
+# To stop Appium and free port 4723
+npm run clean:appium
+```
+
+**Note on platform selection:**
+- Tests are filtered by platform using `PLATFORM` environment variable (see `wdio.conf.ts`)
+- `test:mobile:android` runs **ONLY** Android platform capabilities
+- `test:mobile:ios` runs **ONLY** iOS platform capabilities
+- This prevents running all platforms when you only want to test one
+
+**Note on Appium startup:**
+Appium 3.x must be started manually (`npm run appium:start` from `e2e-tests`). Auto-start via `@wdio/appium-service` is disabled in `wdio.conf.ts` due to initialization timing issues.
+
+### Verify Setup
+
+Before running tests, verify your environment is configured correctly:
+
+**Check installed tools:**
+```bash
+# Node.js version (should be v20+)
+node --version
+
+# Java version (should be 17+)
+java -version
+
+# Playwright version
+npx playwright --version
+
+# Local Appium version (should be 3.x)
+cd e2e-tests && npx appium --version
+
+# Appium drivers (for mobile tests)
+cd e2e-tests && npx appium driver list --installed
+# Should show: uiautomator2@6.x (Android) and/or xcuitest (iOS)
+
+# Android SDK location (for Android tests)
+echo $ANDROID_HOME
+# Should show something like: /Users/yourname/Library/Android/sdk (macOS)
+# If empty, set it: export ANDROID_HOME=$HOME/Library/Android/sdk
+```
+
+**Check devices (for mobile tests):**
+```bash
+# Android: List connected devices/emulators
+$ANDROID_HOME/platform-tools/adb devices
+# Should show at least one device in 'device' state
+# Example output:
+#   List of devices attached
+#   emulator-5554	device
+
+# If no devices, start an emulator:
+$ANDROID_HOME/emulator/emulator -list-avds
+$ANDROID_HOME/emulator/emulator -avd <avd-name> &
+
+# iOS: List available simulators (macOS only)
+xcrun simctl list devices | grep Booted
+# Should show at least one booted simulator
+```
+
+**Check built applications (for mobile tests):**
+```bash
+# Verify Android APK exists
+ls -lh composeApp/build/outputs/apk/debug/composeApp-debug.apk
+
+# Verify iOS app exists (macOS only)
+ls -lh iosApp/build/Build/Products/Debug-iphonesimulator/iosApp.app
+```
+
+**Quick smoke test:**
+```bash
+# Web: Validate Playwright configuration
+cd e2e-tests
+npx playwright test --list
+
+# Mobile: Validate WebdriverIO configuration
+# First, ensure Appium is running (Terminal 1):
+cd e2e-tests
+npm run appium:start
+
+# Then in Terminal 2:
+cd e2e-tests
 npm run test:mobile:android -- --dry-run
 ```
 
@@ -153,7 +293,7 @@ test('should submit form', async ({ page }) => {
 
 ### Mobile Testing (Appium + WebdriverIO)
 
-- **Framework**: Appium 2.x + WebdriverIO + TypeScript
+- **Framework**: Appium 3.x + WebdriverIO + TypeScript
 - **Pattern**: Screen Object Model (SOM) + Step Definitions
 - **Test IDs**: `testTag` (Android) / `accessibilityIdentifier` (iOS) with pattern `{screen}.{element}.{action}`
 - **Step Definitions**: Reusable actions in `/mobile/steps/`
@@ -312,11 +452,11 @@ File: `e2e-tests/playwright.config.ts`
 
 Key settings:
 - Test directory: `./web/specs`
-- Base URL: `http://localhost:3000`
+- Base URL: `http://localhost:8080`
 - Browsers: Chromium, Firefox, WebKit
 - Reporters: HTML, List
 - Retries: 2 on CI, 0 locally
-- Web server: Auto-start `webApp` on port 3000
+- Web server: Manual start required (`npm run start` in `webApp`; auto-start block commented out)
 
 ### WebdriverIO Configuration
 
@@ -324,7 +464,7 @@ File: `e2e-tests/wdio.conf.ts`
 
 Key settings:
 - Specs: `./mobile/specs/**/*.spec.ts`
-- Appium service: Auto-start on port 4723
+- Appium service: Disabled; start server manually on port 4723 (`npm run appium:start`)
 - Capabilities: Android (UiAutomator2), iOS (XCUITest)
 - Framework: Mocha
 - Reporters: Spec, JUnit
@@ -412,39 +552,42 @@ npm run start  # In separate terminal
 
 ### Mobile (Appium)
 
-**Problem: Appium server not starting**
+**Problem: Connection refused / Appium not responding**
 ```bash
-# Install/update Appium
-npm install -g appium
+# Make sure Appium server is running
+lsof -i :4723 | grep LISTEN
 
-# Start manually
-appium --port 4723
+# Start Appium server (Terminal 1)
+cd e2e-tests
+npm run appium:start
 ```
 
-**Problem: No emulator/simulator**
+**Problem: Port already in use**
 ```bash
-# Android
-emulator -list-avds
-emulator -avd <avd-name>
-
-# iOS
-xcrun simctl list devices
-open -a Simulator
+# Use cleanup script to kill process on port 4723
+cd e2e-tests
+npm run clean:appium
 ```
 
-**Problem: App not installed**
+**Problem: "Neither ANDROID_HOME nor ANDROID_SDK_ROOT" error**
 ```bash
-# Build Android app
-./gradlew :composeApp:assembleDebug
+# Set ANDROID_HOME environment variable
+export ANDROID_HOME=$HOME/Library/Android/sdk  # macOS
+# Or on Linux: export ANDROID_HOME=$HOME/Android/Sdk
 
-# Build iOS app
-# Open Xcode and build for simulator
+# Make permanent by adding to ~/.zshrc or ~/.bash_profile
+echo 'export ANDROID_HOME=$HOME/Library/Android/sdk' >> ~/.zshrc
 ```
 
-**Problem: Element not found**
-- Verify test identifiers in app code
-- Use Appium Inspector to check actual IDs
-- Check if element needs wait time to appear
+**Problem: Cannot find device or emulator**
+```bash
+# Check connected devices
+$ANDROID_HOME/platform-tools/adb devices
+
+# Start emulator if needed
+$ANDROID_HOME/emulator/emulator -avd <avd-name> &
+```
+
 
 ## Best Practices
 
@@ -472,8 +615,7 @@ open -a Simulator
 For issues or questions:
 1. Check this documentation
 2. Review example tests in `specs/`
-3. Check platform-specific README files
-4. Review Constitution principles
+3. Review Constitution principles
 
 ---
 

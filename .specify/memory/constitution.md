@@ -2,22 +2,59 @@
 
 <!--
 Sync Impact Report:
-Version change: 1.9.0 → 1.10.0
-Modified principles:
-- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
-Added principles:
-- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+Version change: 1.11.7 → 1.12.0
 Modified sections:
-- Module Structure: iOS subsection documents required MVVM-C packaging (Coordinators/, Views/, ViewModels/)
-- Architecture Patterns: Added iOS MVVM-C pattern guidance with coordinator/ViewModel examples
+- II. Native Presentation: Added Web-specific exemption (standalone architecture, no shared module dependency)
+- VIII. Dependency Injection with Koin: Added Web platform exemption (native TypeScript DI, no Koin)
+- Platform Architecture Rules - Dependency Flow: Updated diagram and clarifications to reflect Web's standalone architecture
+- Module Structure: Updated /webApp description to remove Koin/DI references
+- Testing Standards - ViewModel Unit Tests: Clarified Web tests focus on hooks/state without shared module dependency
+- Compliance: Updated checklist to reflect Web's exemption from shared module and Koin requirements
+Modified principles:
+- Native Presentation: Expanded with Web platform independence guidance
+- Dependency Injection with Koin: Added Web platform exemption
+Added principles: None (expanded existing principles with Web-specific guidance)
+Removed principles: None
+Templates requiring updates:
+- ⚠ .specify/templates/plan-template.md - Review Constitution Check for Web platform exemptions
+- ⚠ .specify/templates/tasks-template.md - Review Web implementation sections (no shared/Koin tasks)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+Follow-up TODOs:
+- Review existing /webApp code to ensure no shared module or Koin dependencies exist
+- Update any Web-specific documentation to reflect standalone architecture
+- Verify Web CI/CD pipeline doesn't depend on shared module builds
+Previous changes (v1.11.7):
+- plan-template.md Constitution Check: Added note to skip frontend checks for backend-only features
+- tasks-template.md Implementation sections: Added notes to skip frontend platform tasks for backend-only features
+Previous changes (v1.11.5):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST NOT use database-level enum types or CHECK constraints
+  - Store enums as strings, validate at application layer
+  - Added enum validation examples
+Previous changes (v1.11.4):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST use IF EXISTS / IF NOT EXISTS in all DDL statements
+  - Added: Migration example showing idempotent pattern
+Previous changes (v1.11.3):
+- XIII. Backend Architecture & Quality Standards - Database Layer Standards:
+  - Added: MUST use singular table names
+  - Updated code example to use singular table name
+Previous changes (v1.11.2):
+- plan-template.md Technical Context: Made performance requirements optional for low-traffic projects
+Previous changes (v1.11.1):
+- XI. Public API Documentation: Refined to skip documentation for self-explanatory names
+  - Changed from "document all public APIs" to "document only when name is insufficient"
+  - Updated examples to show selective documentation approach
+  - plan-template.md and tasks-template.md updated accordingly
+Previous changes (v1.11.0):
+- XII. Given-When-Then Test Convention: Added parameterized test guidance (Backend, Web, Android)
+Previous changes (v1.10.0):
+- II. Native Presentation (iOS bullet now mandates SwiftUI + MVVM-C with UIKit coordinators)
+- XV. iOS Model-View-ViewModel-Coordinator Architecture (NON-NEGOTIABLE)
+- Module Structure: iOS subsection documents required MVVM-C packaging
+- Architecture Patterns: Added iOS MVVM-C pattern guidance
 - Testing Standards: iOS ViewModel tests now cover ObservableObject properties and coordinator communication
 - Compliance: Added iOS MVVM-C audit checklist
-Templates requiring updates:
-- ✅ .specify/templates/plan-template.md (iOS MVVM-C constitution check already generic, no changes needed)
-- ✅ .specify/templates/tasks-template.md (iOS tasks already generic enough for MVVM-C pattern)
-- ✅ README.md (no changes needed - iOS section remains platform-agnostic)
-Follow-up TODOs:
-- None
 Previous changes (v1.9.0):
 - II. Native Presentation (Android bullet now mandates Compose + MVI loop)
 - XIV. Android Model-View-Intent Architecture (NON-NEGOTIABLE)
@@ -63,9 +100,16 @@ without compromise.
 Each platform MUST implement its own presentation layer using native frameworks:
 - **Android**: Jetpack Compose + MVI ViewModel loop (in `/composeApp`)
 - **iOS**: SwiftUI + MVVM-C (Model-View-ViewModel-Coordinator) (in `/iosApp`)
-- **Web**: React + TypeScript state management (in `/webApp`)
+- **Web**: React + TypeScript state management (in `/webApp`) - **STANDALONE ARCHITECTURE**: Web platform operates independently without shared module or Koin dependencies
 
 ViewModels and UI state MUST reside in platform-specific modules, NOT in `/shared`.
+
+**Web Platform Independence** (NON-NEGOTIABLE):
+- The `/webApp` module MUST NOT depend on the `/shared` Kotlin Multiplatform module
+- The `/webApp` MUST NOT use Koin for dependency injection (use native TypeScript DI patterns instead)
+- The `/webApp` implements its own domain models, services, and state management in TypeScript
+- The `/webApp` consumes backend APIs directly via HTTP (same as other platforms)
+- Rationale: Web ecosystem has mature TypeScript tooling and patterns; KMP-JS integration adds complexity without sufficient benefit
 
 Android presentation logic MUST follow the Model-View-Intent pattern:
 - Compose UI renders a single `UiState` data class exposed via `StateFlow`
@@ -89,14 +133,14 @@ platform capabilities without workarounds.
 - Line coverage
 - Branch coverage
 - Location: `/shared/src/commonTest/kotlin/`
-- Framework: Kotlin Test (multiplatform)
+- Framework: Kotlin Test (multiplatform) with JUnit 6
 - Run command: `./gradlew :shared:test koverHtmlReport`
 
 All domain logic, use cases, and business rules MUST have corresponding unit tests.
 
 **ViewModels**: Each platform's ViewModels MUST maintain minimum 80% unit test coverage:
 - **Android**: ViewModels in `/composeApp/src/androidUnitTest/`
-  - Framework: JUnit 5 + Kotlin Test + Turbine (for testing Kotlin Flow)
+  - Framework: JUnit 6 + Kotlin Test + Turbine (for testing Kotlin Flow)
   - Run command: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **iOS**: ViewModels (Swift observable objects) in `/iosApp/iosAppTests/`
   - Framework: XCTest with Swift Concurrency (async/await)
@@ -211,7 +255,7 @@ Prototyping with interfaces allows testing domain logic in isolation.
 
 ### VIII. Dependency Injection with Koin (NON-NEGOTIABLE)
 
-All projects MUST use **Koin** for dependency injection across platforms:
+All projects MUST use **Koin** for dependency injection across platforms, **EXCEPT Web platform** which uses native TypeScript DI:
 
 **Shared Module DI** (`/shared/src/commonMain/.../di/`):
 - Define common modules for domain dependencies
@@ -251,16 +295,23 @@ All projects MUST use **Koin** for dependency injection across platforms:
   // Or native Swift DI if preferred for ViewModels
   ```
 
-- **Web** (`/webApp/src/services/di.ts`):
+- **Web** (`/webApp/src/di/` or inline):
   ```typescript
-  // Consume shared Koin modules or use native TS DI
-  import { domainModule } from 'shared'
+  // Web uses native TypeScript DI patterns (NO Koin, NO shared module dependency)
+  // Example: Dependency injection via constructor parameters, React Context, or service locator pattern
+  export class PetService {
+      constructor(private httpClient: HttpClient) {}
+      
+      async getPets(): Promise<Pet[]> {
+          return this.httpClient.get<Pet[]>('/api/pets');
+      }
+  }
   ```
 
 **DI Initialization**:
 - Android: `Application.onCreate()` - `startKoin { modules(...) }`
 - iOS: `@main` app entry - call Koin init from shared
-- Web: App bootstrap - initialize Koin/JS
+- Web: App bootstrap - setup native TypeScript DI (e.g., service instances, React Context providers) - **NO Koin initialization**
 
 **Testing with Koin**:
 - Use `koinTest` module for unit tests
@@ -480,11 +531,15 @@ and easier to maintain.
 
 ### XI. Public API Documentation (NON-NEGOTIABLE)
 
-All public APIs MUST have concise, high-level documentation:
+Public APIs MUST have concise, high-level documentation when the purpose is not immediately clear from naming:
 
 **Documentation Requirements**:
-- MUST document all public classes, interfaces, functions, and properties
-- MUST use platform-native documentation format:
+- MUST document public APIs ONLY when the name alone is insufficient to convey purpose or usage
+- MUST skip documentation for self-explanatory names:
+  - Methods: `getPets()`, `savePet(pet)`, `deletePet(id)` - names clearly indicate behavior
+  - Variables: `isLoading`, `errorMessage`, `petList` - purpose is obvious
+  - Constants: `MAX_RETRIES`, `DEFAULT_TIMEOUT`, `API_BASE_URL` - intent is clear
+- MUST use platform-native documentation format when documentation is needed:
   - **Kotlin**: KDoc (`/** ... */`)
   - **Swift**: SwiftDoc (`/// ...` or `/** ... */`)
   - **TypeScript/JavaScript**: JSDoc (`/** ... */`)
@@ -492,22 +547,21 @@ All public APIs MUST have concise, high-level documentation:
 - MUST NOT duplicate implementation details visible in code
 - SHOULD be one to three sentences maximum
 - SHOULD answer: "What does this do?" and "When/why would I use it?"
-- MUST NOT explain obvious things (e.g., "Returns a string" for `fun getString(): String`)
+- MUST NOT state the obvious (e.g., "Returns a string" for `fun getString(): String`)
 
 **Documentation Style** - GOOD Examples:
 
 ```kotlin
 // Kotlin (Shared Module)
+
+// ✅ DOCUMENT - Complex behavior needs explanation
 /**
- * Retrieves all pets from the repository with optional filtering.
- * Use for main pet list screen when fresh data is required.
+ * Retrieves all pets with optional filtering and caching strategy.
+ * Returns cached data if network unavailable, automatically syncing when reconnected.
  */
 suspend fun GetPetsUseCase.invoke(filter: PetFilter? = null): Result<List<Pet>>
 
-/**
- * Domain model representing a pet with owner information.
- * Shared across all platforms via KMP.
- */
+// ✅ NO DOCUMENTATION NEEDED - Simple, obvious data class
 data class Pet(
     val id: String,
     val name: String,
@@ -515,31 +569,44 @@ data class Pet(
     val ownerId: String
 )
 
+// ✅ DOCUMENT - Interface contract needs explanation
 /**
- * Repository interface for pet data operations.
+ * Repository for pet data operations.
  * Platform implementations handle persistence and network calls.
  */
 interface PetRepository {
-    /** Fetches all pets, returning cached data if network unavailable. */
+    // ✅ NO DOCUMENTATION - Method name is self-explanatory
     suspend fun getPets(): Result<List<Pet>>
-
-    /** Retrieves single pet by ID, throwing if not found. */
+    
+    // ✅ NO DOCUMENTATION - Obvious what this does
     suspend fun getPetById(id: String): Result<Pet>
+    
+    // ✅ DOCUMENT - Non-obvious caching behavior
+    /** Saves pet and invalidates related caches. */
+    suspend fun savePet(pet: Pet): Result<Unit>
 }
 ```
 
 ```swift
 // Swift (iOS)
-/// Manages pet list state and coordinates data fetching.
-/// Observes repository changes and updates UI automatically.
+
+// ✅ DOCUMENT - Class role needs context
+/// Manages pet list state with automatic repository synchronization.
 @MainActor
 class PetListViewModel: ObservableObject {
-    /// Current list of pets displayed to user.
+    // ✅ NO DOCUMENTATION - Property names are clear
     @Published var pets: [Pet] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
 
-    /// Loads pets from repository and updates published state.
-    /// Call on view appearance or when refresh is needed.
+    // ✅ NO DOCUMENTATION - Method name is self-explanatory
     func loadPets() async {
+        // implementation
+    }
+    
+    // ✅ DOCUMENT - Complex retry behavior
+    /// Retries failed pet sync with exponential backoff.
+    func retrySync() async {
         // implementation
     }
 }
@@ -547,21 +614,24 @@ class PetListViewModel: ObservableObject {
 
 ```typescript
 // TypeScript (Web)
+
+// ✅ DOCUMENT - Hook manages complex state
 /**
- * Custom hook for managing pet list state and operations.
- * Handles loading, error states, and automatic refresh.
+ * Manages pet list state with automatic refresh and error recovery.
  */
 export function usePets() {
     // implementation
 }
 
-/**
- * Fetches all pets from the shared Kotlin module.
- * Returns empty array if service unavailable.
- */
+// ✅ NO DOCUMENTATION - Function name clearly explains behavior
 export async function fetchPets(): Promise<Pet[]> {
     // implementation
 }
+
+// ✅ NO DOCUMENTATION - Constants are self-explanatory
+export const MAX_RETRIES = 3;
+export const DEFAULT_TIMEOUT = 5000;
+export const API_BASE_URL = 'https://api.petspot.com';
 ```
 
 **Documentation Style** - BAD Examples (avoid these):
@@ -575,9 +645,17 @@ export async function fetchPets(): Promise<Pet[]> {
  */
 suspend fun GetPetsUseCase.invoke(): Result<List<Pet>>
 
-// ❌ TOO OBVIOUS - states what's clear from signature
+// ❌ UNNECESSARY - states what's obvious from name
 /** Returns a string. */
 fun getString(): String
+
+// ❌ UNNECESSARY - method name already clear
+/** Gets all pets. */
+suspend fun getPets(): Result<List<Pet>>
+
+// ❌ UNNECESSARY - property name is self-explanatory
+/** Loading state. */
+val isLoading: Boolean
 
 // ❌ TOO LOW-LEVEL - describes internal mechanics
 /**
@@ -587,81 +665,97 @@ fun getString(): String
  */
 fun loadPets()
 
-// ✅ GOOD - concise, high-level, explains purpose
-/** Loads pets from repository and updates UI state. */
+// ✅ GOOD - omit documentation when name is clear
 fun loadPets()
+
+// ✅ GOOD - add documentation only for non-obvious behavior
+/** Loads pets with exponential backoff retry strategy. */
+fun loadPetsWithRetry()
 ```
 
 **What to Document**:
-- ✅ Public classes, interfaces, data classes
-- ✅ Public functions and methods
-- ✅ Public properties (especially non-obvious ones)
-- ✅ Function parameters (if not self-explanatory)
-- ✅ Return values (if not obvious from type)
+- ✅ Classes/interfaces with non-obvious roles or complex responsibilities
+- ✅ Functions with non-obvious behavior (caching, side effects, special algorithms)
+- ✅ Functions with non-obvious parameters or return values
+- ✅ Complex business rules or validation logic
 - ✅ Exceptions thrown (if any)
+- ❌ Self-explanatory functions (`getPets()`, `savePet()`, `deletePet()`)
+- ❌ Self-explanatory variables (`isLoading`, `errorMessage`, `petList`)
+- ❌ Self-explanatory constants (`MAX_RETRIES`, `DEFAULT_TIMEOUT`)
+- ❌ Simple data classes with obvious fields
 - ❌ Private implementation details
 - ❌ Obvious getters/setters
 - ❌ Override methods (unless behavior differs significantly)
 
-**IDE Integration Examples**:
+**When Complex Behavior Requires Documentation**:
 
 ```kotlin
-// KDoc with parameter and return documentation
+// ✅ Document complex search with fuzzy matching
 /**
- * Searches pets by name with fuzzy matching.
+ * Searches pets by name using fuzzy matching algorithm.
+ * Supports typos and partial matches with relevance scoring.
  *
  * @param query Search term (minimum 2 characters)
- * @param limit Maximum results to return (default: 20)
- * @return Matching pets ordered by relevance
+ * @param limit Maximum results to return
  * @throws InvalidQueryException if query too short
  */
 suspend fun searchPets(query: String, limit: Int = 20): Result<List<Pet>>
+
+// ✅ No documentation needed - simple CRUD operation
+suspend fun savePet(pet: Pet): Result<Unit>
+
+// ✅ No documentation needed - parameters are obvious
+suspend fun getPetById(id: String): Result<Pet>
 ```
 
 ```swift
-// SwiftDoc with parameter documentation
-/// Saves pet data to repository with validation.
-///
-/// - Parameters:
-///   - pet: Pet instance to save
-///   - validateOwner: Whether to verify owner exists (default: true)
-/// - Returns: Saved pet with generated ID
-/// - Throws: `ValidationError` if pet data invalid
+// ✅ Document when validation behavior is non-trivial
+/// Saves pet with owner validation and automatic profile image optimization.
 func savePet(_ pet: Pet, validateOwner: Bool = true) async throws -> Pet
+
+// ✅ No documentation needed - obvious behavior
+func deletePet(id: String) async throws
+
+// ✅ No documentation needed - clear property names
+@Published var pets: [Pet] = []
+@Published var isLoading = false
 ```
 
 ```typescript
-// JSDoc with complete signature documentation
+// ✅ Document complex update logic
 /**
- * Updates pet information in the database.
+ * Updates pet with optimistic UI updates and conflict resolution.
+ * Automatically retries on network failure with exponential backoff.
  *
- * @param petId - Unique identifier of pet to update
- * @param updates - Partial pet data to merge
- * @returns Promise resolving to updated pet
  * @throws {NotFoundError} If pet doesn't exist
- * @throws {ValidationError} If updates invalid
+ * @throws {ConflictError} If concurrent modification detected
  */
-async function updatePet(
-    petId: string,
-    updates: Partial<Pet>
-): Promise<Pet>
+async function updatePet(petId: string, updates: Partial<Pet>): Promise<Pet>
+
+// ✅ No documentation needed - straightforward CRUD
+async function deletePet(petId: string): Promise<void>
+
+// ✅ No documentation needed - self-explanatory constants
+const MAX_RETRIES = 3;
+const DEFAULT_TIMEOUT = 5000;
 ```
 
-**Documentation Checklist**:
-- [ ] Explains WHAT the API does (purpose)
-- [ ] Explains WHY/WHEN to use it (use case)
-- [ ] Avoids explaining HOW (implementation)
-- [ ] 1-3 sentences maximum (concise)
-- [ ] Adds value beyond what code signature shows
-- [ ] Uses platform-native doc format
-- [ ] Documents parameters/returns if non-obvious
-- [ ] Notes exceptions/errors thrown
+**Documentation Decision Checklist**:
+- [ ] Is the purpose unclear from the name alone? → Document
+- [ ] Does it have non-obvious side effects? → Document
+- [ ] Does it use complex algorithms or business rules? → Document
+- [ ] Are parameters or return values ambiguous? → Document
+- [ ] Does it throw exceptions? → Document exceptions only
+- [ ] Is it a simple CRUD operation with obvious name? → Skip
+- [ ] Is it a self-explanatory variable or constant? → Skip
+- [ ] Would documentation just repeat the name? → Skip
 
-**Rationale**: Concise, high-level documentation improves API discoverability, enables better
-IDE assistance (autocomplete hints, parameter info), and accelerates onboarding for new developers.
-Focusing on WHAT/WHY rather than HOW keeps docs maintainable and prevents duplication of information
-already visible in code. Platform-native formats ensure documentation appears in IDE tooltips and
-generated API docs.
+**Rationale**: Selective, purposeful documentation improves code maintainability by reducing noise
+and focusing attention on truly complex or non-obvious APIs. Self-explanatory names eliminate the
+need for redundant comments, while strategic documentation highlights important behavior, edge cases,
+and usage patterns that aren't immediately apparent. This approach accelerates onboarding by making
+critical information stand out rather than being buried in obvious statements. Platform-native formats
+ensure meaningful documentation appears in IDE tooltips.
 
 ### XII. Given-When-Then Test Convention (NON-NEGOTIABLE)
 
@@ -871,6 +965,86 @@ it('should add new pet when user fills form and taps save button', async () => {
 - MUST include `// Given`, `// When`, `// Then` comments in complex tests
 - MAY omit comments in simple tests where structure is obvious
 - SHOULD use blank lines to visually separate test phases
+
+**Parameterized Tests** (Backend, Web, Android):
+
+When tests share the same logic with different input/output pairs, SHOULD use parameterized tests:
+
+**Kotlin/Android** (JUnit 6):
+```kotlin
+@ParameterizedTest
+@CsvSource(
+    "Max, dog",
+    "Luna, cat",
+    "Buddy, dog"
+)
+fun `should create pet with valid name and species`(name: String, species: String) = runTest {
+    // Given
+    val pet = Pet(id = UUID.randomUUID().toString(), name = name, species = species)
+    
+    // When
+    val result = createPetUseCase(pet)
+    
+    // Then
+    assertTrue(result.isSuccess)
+    assertEquals(name, result.getOrNull()?.name)
+}
+```
+
+**TypeScript/Backend/Web** (Vitest):
+```typescript
+describe('createPet', () => {
+    it.each([
+        ['Max', 'dog'],
+        ['Luna', 'cat'],
+        ['Buddy', 'dog']
+    ])('should create pet with name=%s and species=%s', async (name, species) => {
+        // Given
+        const pet = { name, species, ownerId: 1 };
+        
+        // When
+        const result = await createPet(pet);
+        
+        // Then
+        expect(result.name).toBe(name);
+        expect(result.species).toBe(species);
+    });
+});
+```
+
+**Parameterized Test Guidelines**:
+- SHOULD use parameterized tests when repeating same test logic with different inputs
+- MUST keep test logic identical across all parameter sets (only data differs)
+- When parameters are self-explanatory (single parameter like a number or simple string), MAY skip descriptive comments for each value:
+  ```typescript
+  // ✅ GOOD - self-explanatory values, no comments needed
+  it.each([
+      ['Max', 'dog'],
+      ['Luna', 'cat'],
+      ['Buddy', 'dog']
+  ])('should create pet with name=%s and species=%s', ...)
+  
+  // ❌ AVOID - unnecessary comments for obvious values
+  it.each([
+      ['Max', 'dog'],      // Test with dog
+      ['Luna', 'cat'],     // Test with cat
+      ['Buddy', 'dog']     // Test with another dog
+  ])('should create pet with name=%s and species=%s', ...)
+  ```
+- When parameters represent complex scenarios or edge cases, SHOULD add descriptive test case names or use objects with labels:
+  ```typescript
+  // ✅ GOOD - complex scenarios with descriptive labels
+  it.each([
+      { input: '', expected: 'validation_error', description: 'empty name' },
+      { input: 'A', expected: 'validation_error', description: 'single character' },
+      { input: 'Max', expected: 'success', description: 'valid name' },
+      { input: 'x'.repeat(256), expected: 'validation_error', description: 'too long' }
+  ])('should validate pet name: $description', ({ input, expected }) => {
+      // test logic
+  });
+  ```
+- Parameterized tests count toward coverage requirements
+- Each parameter set MUST represent a distinct test scenario (not redundant combinations)
 
 **Benefits**:
 - **Readability**: Tests serve as living documentation of system behavior
@@ -1238,13 +1412,84 @@ describe('POST /api/pets', () => {
   ```
 
 **Database Layer Standards**:
+- MUST use singular table names (e.g., `announcement`, `pet`, `user` NOT `announcements`, `pets`, `users`)
 - MUST use Knex query builder (avoid raw SQL)
 - MUST create migrations for schema changes (versioned, reversible)
+- MUST use `IF EXISTS` / `IF NOT EXISTS` in all DDL statements for idempotent migrations:
+  - `createTableIfNotExists()` instead of `createTable()`
+  - `dropTableIfExists()` instead of `dropTable()`
+  - Check existence before adding/dropping columns or indexes
+  - Ensures migrations can be safely re-run without errors
 - MUST use repository pattern for data access (enables test doubles)
+- MUST NOT use database-level enum types or CHECK constraints for enum validation:
+  - Store enums as strings (VARCHAR) in database
+  - Validate enum values at application layer (TypeScript types, validation functions)
+  - Rationale: Database enum types are inflexible and require migrations to modify
+  - Application-level validation allows easy enum value additions without schema changes
 - SHOULD design for easy migration from SQLite to PostgreSQL:
   - Avoid SQLite-specific features
   - Use Knex-supported data types
   - Test migrations on both SQLite and PostgreSQL (when possible)
+
+**Migration Example**:
+```typescript
+// ✅ CORRECT - Idempotent migrations with string enum storage
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTableIfNotExists('pet', (table) => {
+        table.increments('id').primary();
+        table.string('name').notNullable();
+        table.string('species').notNullable(); // ✅ Store enum as string
+        table.string('status').notNullable(); // ✅ Store enum as string
+        table.integer('ownerId').notNullable();
+    });
+}
+
+export async function down(knex: Knex): Promise<void> {
+    await knex.schema.dropTableIfExists('pet');
+}
+
+// ❌ INCORRECT - Missing IF NOT EXISTS / IF EXISTS
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTable('pet', (table) => {
+        // Will fail if table already exists
+    });
+}
+
+// ❌ INCORRECT - Using database enum type (PostgreSQL specific)
+export async function up(knex: Knex): Promise<void> {
+    await knex.schema.createTableIfNotExists('pet', (table) => {
+        table.increments('id').primary();
+        table.string('name').notNullable();
+        table.enum('species', ['dog', 'cat', 'bird']); // ❌ Hard to modify
+        table.integer('ownerId').notNullable();
+    });
+}
+```
+
+**Enum Validation Example** (Application Layer):
+```typescript
+// ✅ CORRECT - Application-level enum validation
+export type PetSpecies = 'dog' | 'cat' | 'bird' | 'rabbit';
+export type PetStatus = 'available' | 'adopted' | 'pending';
+
+export function isValidSpecies(value: string): value is PetSpecies {
+    return ['dog', 'cat', 'bird', 'rabbit'].includes(value);
+}
+
+export function validatePetData(data: any): Pet {
+    if (!isValidSpecies(data.species)) {
+        throw new ValidationError(`Invalid species: ${data.species}`);
+    }
+    // ... other validations
+    return data as Pet;
+}
+
+// ❌ INCORRECT - Relying on database CHECK constraint
+// CREATE TABLE pet (
+//   species VARCHAR(50) CHECK (species IN ('dog', 'cat', 'bird'))
+// ); -- Hard to add new values without migration
+```
+
 - Example repository:
   ```typescript
   // /src/database/petRepository.ts
@@ -1263,7 +1508,7 @@ describe('POST /api/pets', () => {
       constructor(private db: Knex) {}
 
       async findAll(filter?: PetFilter): Promise<Pet[]> {
-          let query = this.db<Pet>('pets');
+          let query = this.db<Pet>('pet');
 
           if (filter?.species) {
               query = query.where('species', filter.species);
@@ -1601,13 +1846,13 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 ### Dependency Flow
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Platform Clients (composeApp, iosApp, webApp)     │
-│  - ViewModels                                       │
-│  - UI Components                                    │
-│  - Navigation                                       │
-│  - HTTP clients consuming /server REST API         │
-└──────────────┬──────────────────┬───────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  Android (composeApp) + iOS (iosApp)                        │
+│  - ViewModels (using Koin DI)                               │
+│  - UI Components                                            │
+│  - Navigation                                               │
+│  - HTTP clients consuming /server REST API                  │
+└──────────────┬──────────────────┬───────────────────────────┘
                │ depends on       │ HTTP requests
                ▼                  ▼
 ┌─────────────────────────┐   ┌────────────────────────┐
@@ -1615,16 +1860,27 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 │  - Domain Models        │   │  - REST API endpoints  │
 │  - Repository Interfaces│   │  - Business logic      │
 │  - Use Cases            │   │  - Database (SQLite)   │
-│  - NO ViewModels, NO UI │   │  - NOT part of KMP     │
-└─────────────────────────┘   └────────────────────────┘
+│  - Koin DI modules      │   │  - NOT part of KMP     │
+│  - NO ViewModels, NO UI │   │  - NO Koin             │
+└─────────────────────────┘   └────────────┬───────────┘
+                                           │ HTTP requests
+                                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Web (webApp) - STANDALONE ARCHITECTURE                     │
+│  - React components (NO shared module dependency)           │
+│  - TypeScript models (defined in webApp)                    │
+│  - Native TypeScript DI (NO Koin)                           │
+│  - HTTP clients consuming /server REST API                  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 **Clarifications**:
-- Platform clients (Android/iOS/Web) MAY depend on `/shared` for domain models
-- Platform clients MUST consume `/server` via REST API (HTTP requests)
+- **Android/iOS platforms** depend on `/shared` for domain models, use cases, and Koin DI
+- **Web platform** operates STANDALONE: NO `/shared` dependency, NO Koin, implements own models in TypeScript
+- All platforms (Android/iOS/Web) consume `/server` via REST API (HTTP requests)
 - `/shared` MUST NOT depend on platform modules or `/server`
-- `/server` is a standalone Node.js backend (NOT part of KMP)
-- `/server` MAY define its own TypeScript models (does not need to use `/shared`)
+- `/server` is a standalone Node.js backend (NOT part of KMP, NO Koin)
+- `/server` defines its own TypeScript models (does not use `/shared`)
 
 ### Module Structure
 
@@ -1650,11 +1906,12 @@ remain portable and can be tested without UIKit dependencies, improving test cov
 - `Repositories/` - iOS repository implementations
 - `DI/` - Koin initialization or native Swift DI
 
-**`/webApp/src/`**
+**`/webApp/src/`** (STANDALONE - no shared module, no Koin):
 - `components/` - React components
-- `hooks/` - React hooks for state
-- `services/` - Repository implementations consuming shared Kotlin/JS
-- `di/` - DI setup for web (if using Koin/JS)
+- `hooks/` - React hooks for state management
+- `services/` - HTTP services consuming backend REST API (TypeScript implementations)
+- `models/` - TypeScript domain models (defined independently, NOT from shared)
+- `utils/` - Utility functions and helpers
 
 **`/server/src/`** (Node.js/Express Backend - NOT part of KMP):
 - `middlewares/` - Express middlewares (auth, logging, error handling, validation)
@@ -1864,7 +2121,7 @@ struct PetSpotApp: App {
 
 - **Location**: `/shared/src/commonTest/kotlin/`
 - **Target**: 80% line + branch coverage on commonMain
-- **Framework**: Kotlin Test (multiplatform) + Koin Test
+- **Framework**: Kotlin Test (multiplatform) with JUnit 6 + Koin Test
 - **Run command**: `./gradlew :shared:test koverHtmlReport`
 - **Report**: `shared/build/reports/kover/html/index.html`
 - **Scope**: Domain models, use cases, business logic
@@ -1928,7 +2185,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 
 **Android**:
 - **Location**: `/composeApp/src/androidUnitTest/kotlin/`
-- **Framework**: JUnit 5 + Kotlin Test + Turbine (for Flow testing)
+- **Framework**: JUnit 6 + Kotlin Test + Turbine (for Flow testing)
 - **Run command**: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - **Report**: `composeApp/build/reports/kover/html/index.html`
 - **Scope**: MVI ViewModels (reducers, intents, effects, Flow pipelines)
@@ -1950,7 +2207,7 @@ Platform-specific ViewModel tests with 80% coverage requirement:
 - **Framework**: Vitest + React Testing Library
 - **Run command**: `npm test -- --coverage`
 - **Report**: `webApp/coverage/index.html`
-- **Scope**: Custom hooks, state management, view logic
+- **Scope**: Custom hooks, state management, view logic (tests operate independently without shared module or Koin)
 
 ### Unit Tests - Backend Business Logic (MANDATORY)
 
@@ -2147,8 +2404,8 @@ This constitution supersedes all other architectural guidelines.
 ### Compliance
 
 All pull requests MUST:
-- Verify shared module contains no UI/ViewModel code
-- Run `./gradlew :shared:test koverHtmlReport` and ensure 80%+ coverage on shared
+- Verify shared module contains no UI/ViewModel code (applies to Android/iOS; Web doesn't use shared module)
+- Run `./gradlew :shared:test koverHtmlReport` and ensure 80%+ coverage on shared (if shared module affected)
 - Run platform-specific ViewModel tests and ensure 80%+ coverage:
   - Android: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: XCTest with coverage enabled
@@ -2194,6 +2451,7 @@ All pull requests MUST:
 - Check that platform-specific code resides in correct modules
 - Use expect/actual for platform dependencies in shared
 - Verify backend `/server` remains independent (not part of KMP)
+- Verify Web `/webApp` remains independent (no shared module dependency, no Koin usage)
 - Verify backend directory structure follows standards:
   - Business logic in `/src/services` (with unit tests in `__test__/`)
   - Utilities in `/src/lib` (with unit tests in `__test__/`)
@@ -2210,4 +2468,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.claude/commands/speckit.*.md` files.
 
-**Version**: 1.10.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-18
+**Version**: 1.12.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-20
