@@ -12,10 +12,9 @@ import kotlinx.coroutines.delay
  * Will be replaced with RemoteAnimalRepository when backend is ready.
  */
 class AnimalRepositoryImpl : AnimalRepository {
-    
     /** Simulated network delay in milliseconds */
     private val networkDelayMs: Long = 500
-    
+
     /**
      * Retrieves mock animal data after simulated delay.
      * Uses MockAnimalData as single source of truth for consistency across platforms.
@@ -25,9 +24,8 @@ class AnimalRepositoryImpl : AnimalRepository {
     override suspend fun getAnimals(): List<Animal> {
         // Simulate network delay
         delay(networkDelayMs)
-        
+
         // Return mock data from shared test fixtures
         return MockAnimalData.generateMockAnimals()
     }
 }
-

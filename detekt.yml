@@ -1,0 +1,570 @@
+# Detekt Configuration for PetSpot Static Analysis
+# Version: 1.0.0
+# Date: 2025-11-19
+#
+# This configuration enforces code quality standards for Kotlin code in:
+# - /shared module (Kotlin Multiplatform shared code)
+# - /composeApp module (Android-specific code)
+#
+# Usage:
+# - Copy this file to repository root as 'detekt.yml'
+# - Run analysis: ./gradlew detekt
+# - Generate baseline: ./gradlew detektBaseline
+# - View report: open build/reports/detekt/detekt.html
+
+build:
+  maxIssues: 0              # Fail if any error-level issues found (warnings allowed)
+  excludeCorrectable: false  # Include auto-correctable issues in report
+  weights:
+    complexity: 2           # Higher weight for complexity issues
+    LongParameterList: 1
+    style: 1
+    comments: 1
+    naming: 1
+    performance: 2
+
+config:
+  validation: true          # Validate this config file structure
+  warningsAsErrors: false   # Don't treat warnings as errors (per spec)
+  checkExhaustiveness: false # Don't require all rules to be configured
+
+processors:
+  active: true
+  exclude:
+    - 'DetektProgressListener'
+
+console-reports:
+  active: true
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'NotificationReport'
+
+output-reports:
+  active: true
+  exclude: []
+
+# Complexity Rules
+complexity:
+  active: true
+  ComplexCondition:
+    active: true
+    threshold: 4
+  ComplexInterface:
+    active: true
+    threshold: 10
+    includeStaticDeclarations: false
+    includePrivateDeclarations: false
+  ComplexMethod:
+    active: true
+    threshold: 15                    # Max cyclomatic complexity per function
+    ignoreSingleWhenExpression: true  # Single when expressions often look complex
+    ignoreSimpleWhenEntries: true
+    ignoreNestingFunctions: false
+  LabeledExpression:
+    active: false                     # Allow labeled expressions for clarity
+  LargeClass:
+    active: true
+    threshold: 600                    # Max lines in class
+  LongMethod:
+    active: true
+    threshold: 60                     # Max lines in function
+  LongParameterList:
+    active: true
+    functionThreshold: 6              # Max parameters in functions
+    constructorThreshold: 7           # Max parameters in constructors
+    ignoreDefaultParameters: true     # Default parameters don't count
+    ignoreDataClasses: true           # Data classes can have many properties
+    ignoreAnnotatedParameter: []
+  MethodOverloading:
+    active: true
+    threshold: 6
+  NestedBlockDepth:
+    active: true
+    threshold: 4                      # Max nesting depth
+  ReplaceSafeCallChainWithRun:
+    active: false                     # Allow safe call chains
+  StringLiteralDuplication:
+    active: false                     # Allow duplicate strings (often necessary)
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 11              # Max top-level functions in file
+    thresholdInClasses: 11            # Max functions in class
+    thresholdInInterfaces: 11
+    thresholdInObjects: 11
+    thresholdInEnums: 11
+    ignoreDeprecated: false
+    ignorePrivate: false
+    ignoreOverridden: false
+
+# Coroutines Rules
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true                      # Discourage GlobalScope usage
+  InjectDispatcher:
+    active: true                      # Encourage dispatcher injection for testability
+  RedundantSuspendModifier:
+    active: true                      # Remove unnecessary suspend modifiers
+  SleepInsteadOfDelay:
+    active: true                      # Use delay() instead of Thread.sleep()
+  SuspendFunWithCoroutineScopeReceiver:
+    active: false                     # Allow suspend fun with CoroutineScope
+
+# Empty Blocks
+empty-blocks:
+  active: true
+  EmptyCatchBlock:
+    active: true
+    allowedExceptionNameRegex: '_|(ignore|expected).*'
+  EmptyClassBlock:
+    active: true
+  EmptyDefaultConstructor:
+    active: true
+  EmptyDoWhileBlock:
+    active: true
+  EmptyElseBlock:
+    active: true
+  EmptyFinallyBlock:
+    active: true
+  EmptyForBlock:
+    active: true
+  EmptyFunctionBlock:
+    active: true
+    ignoreOverridden: false
+  EmptyIfBlock:
+    active: true
+  EmptyInitBlock:
+    active: true
+  EmptyKtFile:
+    active: true
+  EmptySecondaryConstructor:
+    active: true
+  EmptyTryBlock:
+    active: true
+  EmptyWhenBlock:
+    active: true
+  EmptyWhileBlock:
+    active: true
+
+# Exception Rules
+exceptions:
+  active: true
+  ExceptionRaisedInUnexpectedLocation:
+    active: true
+    methodNames:
+      - 'equals'
+      - 'finalize'
+      - 'hashCode'
+      - 'toString'
+  InstanceOfCheckForException:
+    active: false                     # Allow instanceof checks for exception types
+  NotImplementedDeclaration:
+    active: false                     # Allow TODO() for work in progress
+  ObjectExtendsThrowable:
+    active: true                      # Objects should not extend Throwable
+  PrintStackTrace:
+    active: true                      # Discourage printStackTrace() usage
+  RethrowCaughtException:
+    active: true                      # Don't rethrow without adding context
+  ReturnFromFinally:
+    active: true                      # Don't return from finally
+  SwallowedException:
+    active: true                      # Don't silently catch exceptions
+    ignoredExceptionTypes:
+      - 'InterruptedException'
+      - 'MalformedURLException'
+      - 'NumberFormatException'
+      - 'ParseException'
+    allowedExceptionNameRegex: '_|(ignore|expected).*'
+  ThrowingExceptionFromFinally:
+    active: true
+  ThrowingExceptionInMain:
+    active: false                     # Allow throwing from main
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: true                      # Require exception messages
+    exceptions:
+      - 'ArrayIndexOutOfBoundsException'
+      - 'Exception'
+      - 'IllegalArgumentException'
+      - 'IllegalMonitorStateException'
+      - 'IllegalStateException'
+      - 'IndexOutOfBoundsException'
+      - 'NullPointerException'
+      - 'RuntimeException'
+      - 'Throwable'
+  ThrowingNewInstanceOfSameException:
+    active: true
+  TooGenericExceptionCaught:
+    active: true
+    exceptionNames:
+      - 'ArrayIndexOutOfBoundsException'
+      - 'Error'
+      - 'Exception'
+      - 'IllegalMonitorStateException'
+      - 'IndexOutOfBoundsException'
+      - 'NullPointerException'
+      - 'RuntimeException'
+      - 'Throwable'
+    allowedExceptionNameRegex: '_|(ignore|expected).*'
+  TooGenericExceptionThrown:
+    active: true
+    exceptionNames:
+      - 'Error'
+      - 'Exception'
+      - 'RuntimeException'
+      - 'Throwable'
+
+# Naming Conventions
+naming:
+  active: true
+  BooleanPropertyNaming:
+    active: false                     # Allow flexible boolean naming
+  ClassNaming:
+    active: true
+    classPattern: '[A-Z][a-zA-Z0-9]*'
+  ConstructorParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+    privateParameterPattern: '[a-z][A-Za-z0-9]*'
+    excludeClassPattern: '$^'
+  EnumNaming:
+    active: true
+    enumEntryPattern: '[A-Z][_a-zA-Z0-9]*'
+  ForbiddenClassName:
+    active: false                     # No forbidden class names
+  FunctionMaxLength:
+    active: false                     # No max function name length
+  FunctionMinLength:
+    active: false                     # No min function name length
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-z][a-zA-Z0-9]*'
+    excludeClassPattern: '$^'
+    ignoreAnnotated: ['Composable']   # Allow PascalCase for Compose functions
+  FunctionParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+  InvalidPackageDeclaration:
+    active: true
+    rootPackage: 'com.intive.aifirst.petspot'
+  LambdaParameterNaming:
+    active: false                     # Allow flexible lambda parameter names
+  MatchingDeclarationName:
+    active: true
+    mustBeFirst: true
+  MemberNameEqualsClassName:
+    active: true
+    ignoreOverridden: true
+  NoNameShadowing:
+    active: true
+  NonBooleanPropertyPrefixedWithIs:
+    active: false                     # Allow "is" prefix on non-boolean properties
+  ObjectPropertyNaming:
+    active: true
+    constantPattern: '[A-Za-z][_A-Za-z0-9]*'
+    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+    privatePropertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+  PackageNaming:
+    active: true
+    packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][_A-Z0-9]*'
+    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+    privatePropertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+  VariableMaxLength:
+    active: false                     # No max variable name length
+  VariableMinLength:
+    active: false                     # No min variable name length
+  VariableNaming:
+    active: true
+    variablePattern: '[a-z][A-Za-z0-9]*'
+    privateVariablePattern: '[a-z][A-Za-z0-9]*'
+    excludeClassPattern: '$^'
+
+# Performance Rules
+performance:
+  active: true
+  ArrayPrimitive:
+    active: true                      # Prefer IntArray over Array<Int>
+  CouldBeSequence:
+    active: false                     # Don't enforce sequence usage
+  ForEachOnRange:
+    active: true                      # Use indices loop instead of forEach on range
+  SpreadOperator:
+    active: false                     # Allow spread operator
+  UnnecessaryTemporaryInstantiation:
+    active: true                      # Avoid unnecessary temporary objects
+
+# Potential Bugs
+potential-bugs:
+  active: true
+  AvoidReferentialEquality:
+    active: true                      # Use equals() instead of === for content equality
+    forbiddenTypePatterns:
+      - 'kotlin.String'
+  CastToNullableType:
+    active: false                     # Allow casts to nullable types
+  Deprecation:
+    active: false                     # Don't fail on deprecation (warnings only)
+  DontDowncastCollectionTypes:
+    active: false                     # Allow downcasting collections when needed
+  DoubleMutabilityForCollection:
+    active: false                     # Allow mutable collections in vars
+  ElseCaseInsteadOfExhaustiveWhen:
+    active: false                     # Allow else in when for non-sealed classes
+  EqualsAlwaysReturnsTrueOrFalse:
+    active: true
+  EqualsWithHashCodeExist:
+    active: true
+  ExitOutsideMain:
+    active: false                     # Allow exitProcess outside main
+  ExplicitGarbageCollectionCall:
+    active: true                      # Don't call System.gc()
+  HasPlatformType:
+    active: true                      # Discourage platform types
+  IgnoredReturnValue:
+    active: true                      # Don't ignore return values
+  ImplicitDefaultLocale:
+    active: true                      # Require explicit locale
+  ImplicitUnitReturnType:
+    active: false                     # Allow implicit Unit
+  InvalidRange:
+    active: true
+  IteratorHasNextCallsNextMethod:
+    active: true
+  IteratorNotThrowingNoSuchElementException:
+    active: true
+  LateinitUsage:
+    active: false                     # Allow lateinit when appropriate
+  MapGetWithNotNullAssertionOperator:
+    active: true                      # Use getValue() instead of get()!!
+  MissingPackageDeclaration:
+    active: false                     # Allow files without package
+  NullableToStringCall:
+    active: false                     # Allow toString() on nullables
+  UnconditionalJumpStatementInLoop:
+    active: true
+  UnnecessaryNotNullOperator:
+    active: true                      # Remove unnecessary !!
+  UnnecessarySafeCall:
+    active: true                      # Remove unnecessary ?.
+  UnreachableCatchBlock:
+    active: true
+  UnreachableCode:
+    active: true
+  UnsafeCallOnNullableType:
+    active: true                      # Don't use !! without good reason
+  UnsafeCast:
+    active: true                      # Use safe cast "as?" when possible
+  UnusedUnaryOperator:
+    active: true
+  UselessPostfixExpression:
+    active: true
+  WrongEqualsTypeParameter:
+    active: true
+
+# Style Rules
+style:
+  active: true
+  CanBeNonNullable:
+    active: false                     # Don't enforce non-nullable when nullable is clearer
+  CascadingCallWrapping:
+    active: false                     # Allow flexible call wrapping
+  ClassOrdering:
+    active: false                     # Allow flexible class member ordering
+  CollapsibleIfStatements:
+    active: false                     # Allow explicit if nesting for clarity
+  DataClassContainsFunctions:
+    active: false                     # Allow functions in data classes
+  DataClassShouldBeImmutable:
+    active: true                      # Data classes should be immutable
+  DestructuringDeclarationWithTooManyEntries:
+    active: true
+    maxDestructuringEntries: 3
+  EqualsNullCall:
+    active: true                      # Use == null instead of equals(null)
+  EqualsOnSignatureLine:
+    active: false                     # Allow flexible equals placement
+  ExplicitCollectionElementAccessMethod:
+    active: false                     # Allow [] instead of get/set
+  ExplicitItLambdaParameter:
+    active: false                     # Allow implicit 'it'
+  ExpressionBodySyntax:
+    active: false                     # Allow both expression and block body
+  ForbiddenComment:
+    active: true
+    values:
+      - 'FIXME:'
+      - 'STOPSHIP:'
+      - 'TODO:'
+    allowedPatterns: ''
+  ForbiddenImport:
+    active: false                     # No forbidden imports
+  ForbiddenMethodCall:
+    active: false                     # No forbidden method calls
+  ForbiddenVoid:
+    active: true                      # Use Unit instead of Void
+  FunctionOnlyReturningConstant:
+    active: true
+    ignoreOverridableFunction: true
+    ignoreActualFunction: true
+  LoopWithTooManyJumpStatements:
+    active: true
+    maxJumpCount: 1
+  MagicNumber:
+    active: true
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+    ignoreHashCodeFunction: true
+    ignorePropertyDeclaration: true
+    ignoreLocalVariableDeclaration: false
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotation: true
+    ignoreNamedArgument: true
+    ignoreEnums: true
+    ignoreRanges: true
+    ignoreExtensionFunctions: true
+  MandatoryBracesIfStatements:
+    active: false                     # Allow single-line if without braces
+  MandatoryBracesLoops:
+    active: false                     # Allow single-line loops without braces
+  MaxChainedCallsOnSameLine:
+    active: false                     # Allow flexible call chaining
+  MaxLineLength:
+    active: true
+    maxLineLength: 120                # Match project standard
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: false
+  MayBeConst:
+    active: true                      # Suggest const where applicable
+  ModifierOrder:
+    active: true                      # Enforce standard modifier order
+  MultilineLambdaItParameter:
+    active: false                     # Allow 'it' in multiline lambdas
+  MultilineRawStringIndentation:
+    active: false                     # Allow flexible raw string indentation
+  NestedClassesVisibility:
+    active: true                      # Nested classes should be private
+  NewLineAtEndOfFile:
+    active: true                      # Require newline at end of file
+  NoTabs:
+    active: true                      # Use spaces, not tabs
+  NullableBooleanCheck:
+    active: false                     # Allow nullable boolean checks
+  ObjectLiteralToLambda:
+    active: true                      # Use lambdas instead of object literals
+  OptionalAbstractKeyword:
+    active: true                      # Remove redundant abstract in interfaces
+  OptionalUnit:
+    active: false                     # Allow explicit Unit return type
+  PreferToOverPairSyntax:
+    active: false                     # Allow Pair() constructor
+  ProtectedMemberInFinalClass:
+    active: true                      # No protected members in final classes
+  RedundantExplicitType:
+    active: false                     # Allow explicit types for clarity
+  RedundantHigherOrderMapUsage:
+    active: true                      # Simplify map().flatten() to flatMap()
+  RedundantVisibilityModifierRule:
+    active: false                     # Allow explicit public modifier
+  ReturnCount:
+    active: true
+    max: 2                            # Max return statements in function
+    excludedFunctions:
+      - 'equals'
+    excludeLabeled: false
+    excludeReturnFromLambda: true
+    excludeGuardClauses: false
+  SafeCast:
+    active: true                      # Prefer safe cast 'as?' over 'as'
+  SerialVersionUIDInSerializableClass:
+    active: true
+  SpacingBetweenPackageAndImports:
+    active: false                     # Allow flexible spacing
+  StringShouldBeRawString:
+    active: false                     # Don't enforce raw strings
+  ThrowsCount:
+    active: true
+    max: 2                            # Max throws declarations
+  TrailingWhitespace:
+    active: false                     # Handled by ktlint
+  TrimMultilineRawString:
+    active: false                     # Allow flexible raw string formatting
+  UnderscoresInNumericLiterals:
+    active: false                     # Allow numbers without underscores
+  UnnecessaryAbstractClass:
+    active: true                      # Use interface instead of abstract class with no implementation
+  UnnecessaryAnnotationUseSiteTarget:
+    active: false                     # Allow explicit use-site targets
+  UnnecessaryApply:
+    active: true                      # Remove unnecessary apply
+  UnnecessaryBackticks:
+    active: false                     # Allow backticks for readability
+  UnnecessaryBracesAroundTrailingLambda:
+    active: false                     # Allow braces for clarity
+  UnnecessaryFilter:
+    active: true                      # Simplify filter().count() to count{}
+  UnnecessaryInheritance:
+    active: true                      # Remove unnecessary Any inheritance
+  UnnecessaryInnerClass:
+    active: false                     # Allow inner classes when needed
+  UnnecessaryLet:
+    active: false                     # Allow let for scope clarity
+  UnnecessaryParentheses:
+    active: false                     # Allow parentheses for clarity
+  UntilInsteadOfRangeTo:
+    active: false                     # Allow '..' instead of 'until'
+  UnusedImports:
+    active: false                     # Handled by ktlint
+  UnusedParameter:
+    active: true
+    allowedNames: 'ignored|expected|_'
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateMember:
+    active: true
+    allowedNames: '(_|ignored|expected|serialVersionUID)'
+  UnusedPrivateProperty:
+    active: true
+    allowedNames: '_|ignored|expected|serialVersionUID'
+  UseAnyOrNoneInsteadOfFind:
+    active: false                     # Allow find for clarity
+  UseArrayLiteralsInAnnotations:
+    active: true                      # Use [] instead of arrayOf()
+  UseCheckNotNull:
+    active: true                      # Use checkNotNull() instead of check() ?: throw
+  UseCheckOrError:
+    active: true                      # Use check() instead of if-throw
+  UseDataClass:
+    active: false                     # Don't enforce data class
+  UseEmptyCounterpart:
+    active: false                     # Allow .size == 0 instead of .isEmpty()
+  UseIfEmptyOrIfBlank:
+    active: false                     # Allow explicit empty checks
+  UseIfInsteadOfWhen:
+    active: false                     # Allow when for single condition
+  UseIsNullOrEmpty:
+    active: false                     # Allow explicit null/empty checks
+  UseOrEmpty:
+    active: false                     # Allow explicit Elvis for empty collections
+  UseRequire:
+    active: true                      # Use require() for parameter validation
+  UseRequireNotNull:
+    active: true                      # Use requireNotNull() instead of require() ?: throw
+  UseSumOfInsteadOfFlatMapSize:
+    active: false                     # Allow flatMap().size
+  UselessCallOnNotNull:
+    active: true                      # Remove useless calls on non-null
+  UtilityClassWithPublicConstructor:
+    active: true                      # Utility classes should have private constructor
+  VarCouldBeVal:
+    active: true                      # Suggest val where variable isn't reassigned
+  WildcardImport:
+    active: false                     # Allow wildcard imports
+

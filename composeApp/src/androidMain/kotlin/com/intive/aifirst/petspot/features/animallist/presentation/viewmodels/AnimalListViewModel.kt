@@ -21,26 +21,25 @@ import kotlinx.coroutines.launch
  *
  * State flow:
  * Intent → ViewModel → UseCase → Reducer → State → UI
- * 
+ *
  * Effects (one-off events like navigation) emitted via SharedFlow.
  */
 class AnimalListViewModel(
-    private val getAnimalsUseCase: GetAnimalsUseCase
+    private val getAnimalsUseCase: GetAnimalsUseCase,
 ) : ViewModel() {
-    
     // State
     private val _state = MutableStateFlow(AnimalListUiState.Initial)
     val state: StateFlow<AnimalListUiState> = _state.asStateFlow()
-    
+
     // Effects (one-off events)
     private val _effects = MutableSharedFlow<AnimalListEffect>()
     val effects: SharedFlow<AnimalListEffect> = _effects.asSharedFlow()
-    
+
     init {
         // Load animals on ViewModel creation
         dispatchIntent(AnimalListIntent.Refresh)
     }
-    
+
     /**
      * Processes user intents and updates state accordingly.
      * Entry point for all user actions.
@@ -53,7 +52,7 @@ class AnimalListViewModel(
             is AnimalListIntent.ReportFound -> handleReportFound()
         }
     }
-    
+
     /**
      * Handles Refresh intent: loads animals from repository.
      */
@@ -61,15 +60,15 @@ class AnimalListViewModel(
         viewModelScope.launch {
             // Set loading state
             _state.value = AnimalListReducer.loading(_state.value)
-            
+
             // Call use case
             val result = runCatching { getAnimalsUseCase() }
-            
+
             // Reduce result to new state
             _state.value = AnimalListReducer.reduce(_state.value, result)
         }
     }
-    
+
     /**
      * Handles SelectAnimal intent: emits navigation effect.
      */
@@ -78,7 +77,7 @@ class AnimalListViewModel(
             _effects.emit(AnimalListEffect.NavigateToDetails(animalId))
         }
     }
-    
+
     /**
      * Handles ReportMissing intent: emits navigation effect.
      */
@@ -87,7 +86,7 @@ class AnimalListViewModel(
             _effects.emit(AnimalListEffect.NavigateToReportMissing)
         }
     }
-    
+
     /**
      * Handles ReportFound intent: emits navigation effect.
      */
@@ -97,4 +96,3 @@ class AnimalListViewModel(
         }
     }
 }
-

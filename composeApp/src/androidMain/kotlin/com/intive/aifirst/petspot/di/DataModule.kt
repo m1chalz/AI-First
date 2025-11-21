@@ -14,8 +14,8 @@ import org.koin.dsl.module
  *
  * @see org.koin.dsl.module
  */
-val dataModule = module {
-    // Repository implementations
-    single<AnimalRepository> { AnimalRepositoryImpl() }
-}
-
+val dataModule =
+    module {
+        // Repository implementations
+        single<AnimalRepository> { AnimalRepositoryImpl() }
+    }

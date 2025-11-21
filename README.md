@@ -140,6 +140,53 @@ The backend server provides REST API endpoints for all platform clients.
 
 See [server/README.md](./server/README.md) for more backend commands and documentation.
 
+### Static Analysis
+
+This project uses automated static analysis tools (Detekt, ktlint, and Android Lint) to ensure consistent code quality across the Kotlin codebase (shared module and Android platform).
+
+#### Quick Setup
+
+1. Install the git pre-commit hook (one-time setup):
+   ```shell
+   ./scripts/install-hooks.sh
+   ```
+
+2. The hook will automatically run on every commit, checking:
+   - **Detekt**: Kotlin code quality (complexity, code smells, potential bugs)
+   - **ktlint**: Kotlin code formatting and style
+   - **Android Lint**: Android-specific issues (API usage, resources, Compose)
+
+#### Tools & Commands
+
+- **Run all checks manually**:
+  ```shell
+  ./gradlew detekt ktlintCheck :composeApp:lintDebug
+  ```
+
+- **Auto-fix formatting issues**:
+  ```shell
+  ./gradlew ktlintFormat
+  ```
+
+- **Full codebase analysis** (for baseline assessment):
+  ```shell
+  ./scripts/analyze-baseline.sh
+  ```
+
+- **Track violation progress**:
+  ```shell
+  ./scripts/track-violations.sh
+  ```
+
+- **Emergency bypass** (use sparingly):
+  ```shell
+  git commit --no-verify -m "Your message"
+  ```
+
+For detailed setup instructions, troubleshooting, and best practices, see [docs/static-analysis-setup.md](./docs/static-analysis-setup.md).
+
+---
+
 ## Testing
 
 Each platform maintains its own test suites with 80% coverage requirement:

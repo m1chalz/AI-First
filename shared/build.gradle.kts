@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -61,4 +63,15 @@ android {
                 .get()
                 .toInt()
     }
+}
+
+// Detekt Configuration
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("$rootDir/detekt.yml"))
+}
+
+// ktlint Configuration
+ktlint {
+    version.set(libs.versions.ktlint.engine.get())
 }

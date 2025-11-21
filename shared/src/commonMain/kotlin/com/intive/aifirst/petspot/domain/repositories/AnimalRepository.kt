@@ -24,4 +24,3 @@ interface AnimalRepository {
      */
     suspend fun getAnimals(): List<Animal>
 }
-
