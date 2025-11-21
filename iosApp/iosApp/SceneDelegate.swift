@@ -24,35 +24,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        // Create navigation controller
-        let navigationController = UINavigationController()
-        
-        // Create splash screen as initial root view controller
-        let splashView = SplashScreenView()
-        let splashHostingController = UIHostingController(rootView: splashView)
-        navigationController.setViewControllers([splashHostingController], animated: false)
+        // Create navigation controller with splash screen as root
+        let splashViewController = UIHostingController(rootView: SplashScreenView())
+        splashViewController.navigationItem.hidesBackButton = true
+        let navigationController = UINavigationController(rootViewController: splashViewController)
+        // Hide navigation bar for splash screen
+        navigationController.isNavigationBarHidden = true
         
         // Set window root and make visible
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
         // Initialize and start app coordinator
-        let coordinator = AppCoordinator()
-        coordinator.navigationController = navigationController
+        // Sets AnimalListScreen as primary entry point per FR-010
+        let coordinator = AppCoordinator(navigationController: navigationController)
         self.appCoordinator = coordinator
         
+        // Start coordinator asynchronously without animation (initial load)
         Task {
-            await coordinator.start(animated: true)
+            await coordinator.start(animated: false)
         }
     }
     
     // MARK: - Navigation Bar Configuration
     
-    /// Configures transparent green semi-transparent navigation bar for all appearances.
+    /// Configures navigation bar appearance per design system.
+    /// Uses background color #FAFAFA and text color #2D2D2D.
     private func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.green.withAlphaComponent(0.5)
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(hex: "#FAFAFA")
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(hex: "#2D2D2D")
+        ]
+        appearance.shadowColor = nil // No border shadow
         
         // Apply to all appearance states
         UINavigationBar.appearance().standardAppearance = appearance

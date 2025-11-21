@@ -1,0 +1,40 @@
+## SwiftGen Configuration File
+## See: https://github.com/SwiftGen/SwiftGen
+
+# Input/Output Paths
+input_dir: iosApp
+output_dir: iosApp
+
+# Strings (Localizable.strings)
+strings:
+  inputs:
+    - Resources/en.lproj
+  outputs:
+    - templateName: structured-swift5
+      output: Generated/Strings.swift
+      params:
+        enumName: L10n
+        publicAccess: true
+
+# Assets (if needed in future)
+# xcassets:
+#   inputs:
+#     - iosApp/Assets.xcassets
+#   outputs:
+#     - templateName: swift5
+#       output: iosApp/Generated/Assets.swift
+#       params:
+#         enumName: Asset
+#         publicAccess: true
+
+# Colors (if using color assets in future)
+# colors:
+#   inputs:
+#     - iosApp/Assets.xcassets
+#   outputs:
+#     - templateName: swift5
+#       output: iosApp/Generated/Colors.swift
+#       params:
+#         enumName: ColorName
+#         publicAccess: true
+

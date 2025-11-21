@@ -1,0 +1,25 @@
+package com.intive.aifirst.petspot.features.animallist.presentation.mvi
+
+import com.intive.aifirst.petspot.domain.models.Animal
+
+/**
+ * Immutable UI state for Animal List screen.
+ * Single source of truth for Compose UI rendering.
+ */
+data class AnimalListUiState(
+    val animals: List<Animal> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    /**
+     * Computed property: true when data loaded but list is empty.
+     * Distinguishes empty state from loading or error states.
+     */
+    val isEmpty: Boolean
+        get() = animals.isEmpty() && !isLoading && error == null
+    
+    companion object {
+        val Initial = AnimalListUiState()
+    }
+}
+

@@ -9,7 +9,7 @@ struct SplashScreenView: View {
                 .ignoresSafeArea()
             
             Circle()
-                .fill(Color.red)
+                .fill(Color.green)
                 .frame(width: 100, height: 100)
         }
     }

@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Greeting } from './components/Greeting/Greeting.tsx';
-import { initializeKoin } from './di/koinSetup';
-
-// Initialize Koin dependency injection before rendering
-initializeKoin();
+import { AnimalList } from './components/AnimalList/AnimalList.tsx';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <Greeting />
+    <AnimalList />
   </React.StrictMode>
 );
