@@ -145,6 +145,10 @@ ktlint_standard_modifier-order = enabled
 # Enforce wrapping of multiline expressions
 ktlint_standard_wrapping = enabled
 
+# Disable ktlint for generated code and build outputs
+[{**/build/**,**/generated/**,**/.gradle/**,**/kotlin-js-store/**}]
+ktlint = disabled
+
 # Gradle build files (Kotlin DSL)
 [*.gradle.kts]
 indent_size = 4
