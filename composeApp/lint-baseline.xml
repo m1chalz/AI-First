@@ -24,6 +24,50 @@
     </issue>
 
     <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt"
+            line="55"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt"
+            line="55"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt"
+            line="108"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt"
+            line="175"
+            column="5"/>
+    </issue>
+
+    <issue
         id="ObsoleteSdkInt"
         message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 24. Merge all the resources in this folder into `drawable`.">
         <location
@@ -50,6 +94,17 @@
             file="src/androidMain/res/mipmap-anydpi-v26/ic_launcher_round.xml"
             line="2"
             column="1"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="                    color = Color(android.graphics.Color.parseColor(animal.status.badgeColor)),"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt"
+            line="125"
+            column="35"/>
     </issue>
 
 </issues>
