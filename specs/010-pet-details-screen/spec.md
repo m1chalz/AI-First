@@ -12,9 +12,8 @@
 - Q: What are all possible pet status values that need to be displayed? → A: MISSING, FOUND, CLOSED
 - Q: What colors should be used for each status badge? → A: Red for MISSING, Blue for FOUND, Gray for CLOSED
 - Q: Which fields are required vs optional? → A: Required: Photo, Status, Date of disappearance, Species, At least one of phone or email, Sex. All other fields are optional.
-- Q: What is the exact phone number masking pattern? → A: Show country code + last 3 digits, mask rest (e.g., "+48 *******789")
+- Q: Should phone and email be masked? → A: No, display phone and email in full without masking
 - Q: Should the "Remove Report" button be visible for all users or only for owners? → A: Show button always (permission handling will be done by backend)
-- Q: Should email addresses be masked or displayed in full? → A: Mask email similar to phone (e.g., "m***@e***.com")
 - Q: How should long text be handled in different fields? → A: Truncate short data fields (species, breed, age, location) with ellipsis after 1-2 lines; allow full multi-line display for description field (Additional Description) with screen scrolling
 - Q: What should be displayed as fallback when pet photo fails to load? → A: Gray box with "Image not available" text
 - Q: What should be shown during initial data loading? → A: Full-screen spinner/progress indicator only
@@ -56,17 +55,17 @@ Users can view critical identification information including microchip number, s
 
 ### User Story 3 - Access Location and Contact Information (Priority: P2)
 
-Users can view where the pet was last seen or found, including city and radius, along with masked contact information for reaching the pet owner.
+Users can view where the pet was last seen or found, including city and radius, along with contact information for reaching the pet owner.
 
-**Why this priority**: Location context helps users determine proximity and relevance. Contact information enables users to report sightings or arrange pet returns while maintaining owner privacy through masking.
+**Why this priority**: Location context helps users determine proximity and relevance. Contact information enables users to report sightings or arrange pet returns.
 
-**Independent Test**: Can be tested by displaying location data with various city names and distances, and verifying contact information is properly masked.
+**Independent Test**: Can be tested by displaying location data with various city names and distances, and verifying contact information is properly displayed.
 
 **Acceptance Scenarios**:
 
 1. **Given** a pet has a disappearance location, **When** viewing the details screen, **Then** the city name and approximate radius are displayed (e.g., "Warsaw • ±15 km") with a location icon
-2. **Given** a pet listing includes contact information, **When** viewing the details screen, **Then** the phone number is partially masked showing country code and last 3 digits (e.g., "+48 *******789")
-3. **Given** a pet listing includes an email, **When** viewing the details screen, **Then** the email is partially masked showing first character of username and first character of domain (e.g., "m***@e***.com") under "Contact owner"
+2. **Given** a pet listing includes contact information, **When** viewing the details screen, **Then** the phone number is displayed in full (e.g., "+48 123 456 789")
+3. **Given** a pet listing includes an email, **When** viewing the details screen, **Then** the email is displayed in full (e.g., "owner@email.com") under "Contact owner"
 4. **Given** a user wants to see the location on a map, **When** they tap the "Show on the map" button, **Then** they are navigated to a map view centered on the disappearance location
 
 ---
@@ -149,22 +148,20 @@ Users can attempt to remove pet reports from the system when the pet is found or
 - **FR-003**: Screen MUST display a status badge (MISSING, FOUND, or CLOSED) overlaid on the pet photo with colors: red for MISSING, blue for FOUND, gray for CLOSED
 - **FR-004**: Screen MUST display a reward badge on the pet photo when reward information is available, showing the reward text as-is without formatting
 - **FR-005**: Screen MUST display date of disappearance in the format "MMM DD, YYYY" (e.g., "Nov 18, 2025")
-- **FR-006**: Screen MUST display two contact fields labeled "Contact owner" showing phone number and email
-- **FR-007**: Screen MUST partially mask phone numbers by showing country code and last 3 digits, masking the rest with asterisks (e.g., "+48 *******789")
-- **FR-007a**: Screen MUST partially mask email addresses by showing first character of username and first character of domain, masking the rest with asterisks (e.g., "m***@e***.com")
-- **FR-008**: Screen MUST display microchip number in the format "000-000-000-000"
-- **FR-009**: Screen MUST display animal species and breed in a two-column grid layout
-- **FR-010**: Screen MUST display animal sex and approximate age in a two-column grid layout
-- **FR-011**: Screen MUST display sex with an appropriate icon (male or female symbol)
-- **FR-012**: Screen MUST display place of disappearance with city name, radius (e.g., "±15 km"), and location icon
-- **FR-013**: Screen MUST provide a "Show on the map" button below the location information
-- **FR-014**: Screen MUST display multi-line animal additional description text without truncation (full display with screen scrolling)
-- **FR-015**: Screen MUST truncate short data fields (species, breed, age, microchip, location city) with ellipsis if text exceeds 1-2 lines
-- **FR-016**: Screen MUST display a "Remove Report" button at the bottom of the screen for all users (permission validation is handled by backend)
-- **FR-017**: All interactive elements MUST have test identifiers in the format "petDetails.element"
-- **FR-018**: Screen MUST handle scrolling when content exceeds screen height
-- **FR-019**: Screen MUST maintain proper spacing and layout according to the design specifications
-- **FR-020**: Screen MUST display a full-screen spinner/progress indicator while initial data is loading
+- **FR-006**: Screen MUST display two contact fields labeled "Contact owner" showing phone number and email in full without masking
+- **FR-007**: Screen MUST display microchip number in the format "000-000-000-000"
+- **FR-008**: Screen MUST display animal species and breed in a two-column grid layout
+- **FR-009**: Screen MUST display animal sex and approximate age in a two-column grid layout
+- **FR-010**: Screen MUST display sex with an appropriate icon (male or female symbol)
+- **FR-011**: Screen MUST display place of disappearance with city name, radius (e.g., "±15 km"), and location icon
+- **FR-012**: Screen MUST provide a "Show on the map" button below the location information
+- **FR-013**: Screen MUST display multi-line animal additional description text without truncation (full display with screen scrolling)
+- **FR-014**: Screen MUST truncate short data fields (species, breed, age, microchip, location city) with ellipsis if text exceeds 1-2 lines
+- **FR-015**: Screen MUST display a "Remove Report" button at the bottom of the screen for all users (permission validation is handled by backend)
+- **FR-016**: All interactive elements MUST have test identifiers in the format "petDetails.element"
+- **FR-017**: Screen MUST handle scrolling when content exceeds screen height
+- **FR-018**: Screen MUST maintain proper spacing and layout according to the design specifications
+- **FR-019**: Screen MUST display a full-screen spinner/progress indicator while initial data is loading
 
 ### Key Entities
 
