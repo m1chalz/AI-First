@@ -15,6 +15,7 @@
 - Q: Should the endpoint enforce maximum length validation on text fields? → A: Use the limits defined in announcement DB table (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500)
 - Q: Should validation continue after finding the first error to report all problems at once? → A: Stop at first error, return only that error (fail-fast validation)
 - Q: What error response format should be used with fail-fast validation? → A: Simplified format with field-level code directly: `{ error: { code, message, field } }` (no nested details array needed)
+- Q: How should unexpected errors (database failures, etc.) be handled? → A: Return HTTP 500 with generic error response `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` (no field property, no internal details exposed)
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -59,6 +60,7 @@ A user submits an announcement with invalid or missing required fields and recei
 - **Whitespace-only fields**: System treats whitespace-only values in required text fields as empty and returns HTTP 400 validation error
 - **Extremely long input values**: System enforces maximum length limits from database schema (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500) and returns HTTP 400 when exceeded
 - **Multiple invalid fields**: System uses fail-fast validation - returns HTTP 400 with only the first validation error encountered, not all errors at once
+- **Unexpected system errors**: System returns HTTP 500 with generic error response `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without exposing internal details (database errors, crashes, etc.)
 - How does the system handle special characters or encoded content in announcement fields?
 - What happens if the announcement data contains fields not defined in the model?
 - How does the system handle concurrent requests trying to create identical announcements?
@@ -74,17 +76,19 @@ A user submits an announcement with invalid or missing required fields and recei
 - **FR-005**: System MUST validate phone format using existing phone validator when phone is provided
 - **FR-006**: System MUST return HTTP 201 status code when announcement is successfully created
 - **FR-007**: System MUST return HTTP 400 status code when validation fails
-- **FR-008**: System MUST return the newly created announcement in the response body using the same model as GET `/api/v1/announcements` endpoint
-- **FR-009**: System MUST validate all required announcement fields and reject requests missing required data
-- **FR-010**: System MUST treat required text fields containing only whitespace as empty and reject them with validation error
-- **FR-011**: System MUST enforce maximum length validation on text fields matching database column limits (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500 characters)
-- **FR-012**: System MUST return structured error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
-- **FR-013**: System MUST use fail-fast validation (stop at first error and return only that single error)
-- **FR-014**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "TOO_LONG" for length violations, "MISSING_CONTACT" for missing email/phone)
-- **FR-015**: System MUST include the field name in the `field` property of error responses to identify which field caused the validation failure
-- **FR-016**: System MUST persist successfully created announcements to the database
-- **FR-017**: System MUST assign a unique identifier to each newly created announcement
-- **FR-018**: System MUST set the status field to "ACTIVE" for all newly created announcements (user cannot specify status in request)
+- **FR-008**: System MUST return HTTP 500 status code when unexpected errors occur (database failures, system errors, etc.)
+- **FR-009**: System MUST return the newly created announcement in the response body using the same model as GET `/api/v1/announcements` endpoint
+- **FR-010**: System MUST validate all required announcement fields and reject requests missing required data
+- **FR-011**: System MUST treat required text fields containing only whitespace as empty and reject them with validation error
+- **FR-012**: System MUST enforce maximum length validation on text fields matching database column limits (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500 characters)
+- **FR-013**: System MUST return structured validation error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
+- **FR-014**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without exposing internal details
+- **FR-015**: System MUST use fail-fast validation (stop at first error and return only that single error)
+- **FR-016**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "TOO_LONG" for length violations, "MISSING_CONTACT" for missing email/phone)
+- **FR-017**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
+- **FR-018**: System MUST persist successfully created announcements to the database
+- **FR-019**: System MUST assign a unique identifier to each newly created announcement
+- **FR-020**: System MUST set the status field to "ACTIVE" for all newly created announcements (user cannot specify status in request)
 
 #### Error Response Examples
 
@@ -132,6 +136,16 @@ A user submits an announcement with invalid or missing required fields and recei
 }
 ```
 
+**Unexpected system error** (HTTP 500):
+```json
+{
+    "error": {
+        "code": "INTERNAL_SERVER_ERROR",
+        "message": "Internal server error"
+    }
+}
+```
+
 ### Key Entities
 
 - **Announcement**: Represents a pet announcement (lost/found pet listing) containing:
@@ -169,3 +183,4 @@ A user submits an announcement with invalid or missing required fields and recei
 - Moderation or approval workflow before announcements go live
 - Duplicate detection logic (e.g., preventing multiple identical submissions)
 - Rate limiting for announcement creation
+- Testing unexpected error scenarios (database failures, system crashes) - focus on happy path and validation errors only
