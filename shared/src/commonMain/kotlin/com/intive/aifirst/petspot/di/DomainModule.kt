@@ -1,6 +1,5 @@
 package com.intive.aifirst.petspot.di
 
-import com.intive.aifirst.petspot.domain.usecases.GetAnimalsUseCase
 import org.koin.dsl.module
 
 /**
@@ -11,10 +10,18 @@ import org.koin.dsl.module
  * - Domain services
  * - Repository interfaces (implementations provided by platform-specific modules)
  *
+ * Example usage (future):
+ * ```kotlin
+ * val domainModule = module {
+ *     single { GetPetsUseCase(get()) }
+ *     single { SavePetUseCase(get()) }
+ * }
+ * ```
+ *
  * @see org.koin.dsl.module
  */
-val domainModule = module {
-    // Use cases
-    factory { GetAnimalsUseCase(get()) }
-}
-
+val domainModule =
+    module {
+        // Empty module - will be populated when domain logic is added
+        // Future dependencies: use cases, domain services, validators
+    }

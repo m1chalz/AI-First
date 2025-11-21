@@ -13,26 +13,24 @@ import androidx.compose.ui.unit.sp
 /**
  * Composable for displaying empty state when no animals are available.
  * Shows user-friendly message encouraging action.
- * 
+ *
  * Message per FR-009: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one."
  */
 @Composable
-fun EmptyState(
-    modifier: Modifier = Modifier
-) {
+fun EmptyState(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(32.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.",
             fontSize = 16.sp,
             color = Color(0xFF545F71), // Secondary text color
             textAlign = TextAlign.Center,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
     }
 }
-

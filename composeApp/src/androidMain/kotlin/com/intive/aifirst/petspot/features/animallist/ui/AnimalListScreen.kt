@@ -17,7 +17,7 @@ import org.koin.androidx.compose.koinViewModel
 /**
  * Main screen for displaying list of animals.
  * Follows MVI architecture with ViewModel managing state and effects.
- * 
+ *
  * Features:
  * - Scrollable list of animal cards (LazyColumn)
  * - Loading indicator
@@ -25,17 +25,17 @@ import org.koin.androidx.compose.koinViewModel
  * - Empty state message
  * - "Report a Missing Animal" button (fixed at bottom)
  * - Reserved space for future search component
- * 
+ *
  * Layout per FR-010: This is the primary entry point screen.
  * Navigation handled via NavController - effects trigger navigation actions.
- * 
+ *
  * @param navController Navigation controller for managing screen transitions
  * @param viewModel ViewModel injected via Koin
  */
 @Composable
 fun AnimalListScreen(
     navController: NavController,
-    viewModel: AnimalListViewModel = koinViewModel()
+    viewModel: AnimalListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -60,7 +60,6 @@ fun AnimalListScreen(
         onAnimalClick = { id ->
             viewModel.dispatchIntent(AnimalListIntent.SelectAnimal(id))
         },
-        onRetry = { viewModel.dispatchIntent(AnimalListIntent.Refresh) }
+        onRetry = { viewModel.dispatchIntent(AnimalListIntent.Refresh) },
     )
 }
-

@@ -8,7 +8,6 @@ import com.intive.aifirst.petspot.domain.models.Animal
  * No side effects - testable in isolation.
  */
 object AnimalListReducer {
-    
     /**
      * Reduces state based on use case result.
      * Maps Result<List<Animal>> to appropriate UiState.
@@ -19,26 +18,26 @@ object AnimalListReducer {
      */
     fun reduce(
         currentState: AnimalListUiState,
-        result: Result<List<Animal>>
+        result: Result<List<Animal>>,
     ): AnimalListUiState {
         return result.fold(
             onSuccess = { animals ->
                 AnimalListUiState(
                     animals = animals,
                     isLoading = false,
-                    error = null
+                    error = null,
                 )
             },
             onFailure = { exception ->
                 AnimalListUiState(
                     animals = currentState.animals, // Preserve previous data on error
                     isLoading = false,
-                    error = exception.message ?: "Unknown error"
+                    error = exception.message ?: "Unknown error",
                 )
-            }
+            },
         )
     }
-    
+
     /**
      * Returns loading state.
      */
@@ -46,4 +45,3 @@ object AnimalListReducer {
         return currentState.copy(isLoading = true, error = null)
     }
 }
-

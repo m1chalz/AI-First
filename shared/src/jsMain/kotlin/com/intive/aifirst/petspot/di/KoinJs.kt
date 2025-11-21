@@ -24,6 +24,8 @@ fun startKoinJs(modules: Array<Module> = arrayOf(domainModule)): KoinApplication
     }
 }
 
+// Not exported to JS - reified types not supported
+
 /**
  * Retrieves a dependency from the Koin container.
  *
@@ -37,7 +39,6 @@ fun startKoinJs(modules: Array<Module> = arrayOf(domainModule)): KoinApplication
  * fun getGetPetsUseCase(): GetPetsUseCase = org.koin.core.context.GlobalContext.get().get()
  * ```
  */
-// Not exported to JS - reified types not supported
 inline fun <reified T : Any> getKoin(): T {
     return org.koin.core.context.GlobalContext.get().get()
 }
@@ -48,4 +49,3 @@ inline fun <reified T : Any> getKoin(): T {
  */
 @JsExport
 val domainModuleJs: Module = domainModule
-

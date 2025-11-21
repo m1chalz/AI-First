@@ -14,6 +14,5 @@ import kotlin.js.JsExport
 @JsExport
 data class Location(
     val city: String,
-    val radiusKm: Int
+    val radiusKm: Int,
 )
-

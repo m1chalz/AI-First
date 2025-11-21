@@ -32,4 +32,3 @@ fun initKoin(): KoinApplication {
         modules(domainModule)
     }
 }
-
