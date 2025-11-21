@@ -1,5 +1,7 @@
 package com.intive.aifirst.petspot.di
 
+import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -11,18 +13,10 @@ import org.koin.dsl.module
  * ViewModels are registered with `viewModel { }` scope for automatic lifecycle management
  * and integration with Jetpack Compose via `koinViewModel()` function.
  *
- * Example usage (future):
- * ```kotlin
- * val viewModelModule = module {
- *     viewModel { PetListViewModel(get()) }
- *     viewModel { PetDetailViewModel(get(), get()) }
- * }
- * ```
- *
  * Usage in Compose:
  * ```kotlin
  * @Composable
- * fun PetListScreen(viewModel: PetListViewModel = koinViewModel()) {
+ * fun AnimalListScreen(viewModel: AnimalListViewModel = koinViewModel()) {
  *     // ViewModel is automatically injected with dependencies
  * }
  * ```
@@ -32,6 +26,6 @@ import org.koin.dsl.module
  */
 val viewModelModule =
     module {
-        // Empty module - will be populated when ViewModels are added
-        // Future dependencies: ViewModels for each screen
+        // ViewModels
+        viewModel { AnimalListViewModel(get()) }
     }

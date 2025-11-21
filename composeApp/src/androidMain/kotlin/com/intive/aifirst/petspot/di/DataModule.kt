@@ -1,5 +1,7 @@
 package com.intive.aifirst.petspot.di
 
+import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
+import com.intive.aifirst.petspot.domain.repositories.AnimalRepository
 import org.koin.dsl.module
 
 /**
@@ -10,19 +12,10 @@ import org.koin.dsl.module
  * - Data sources (API clients, DAOs)
  * - Platform-specific services (Android system services)
  *
- * Example usage (future):
- * ```kotlin
- * val dataModule = module {
- *     single<PetRepository> { PetRepositoryImpl(get(), get()) }
- *     single { PetApi(get()) }
- *     single { PetDatabase.getInstance(androidContext()) }
- * }
- * ```
- *
  * @see org.koin.dsl.module
  */
 val dataModule =
     module {
-        // Empty module - will be populated when repository implementations are added
-        // Future dependencies: repositories, API clients, databases, data sources
+        // Repository implementations
+        single<AnimalRepository> { AnimalRepositoryImpl() }
     }
