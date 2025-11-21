@@ -1,0 +1,328 @@
+openapi: 3.0.3
+info:
+  title: Pet Announcement Details API
+  description: |
+    REST API endpoint for retrieving individual pet announcement details by unique identifier.
+    
+    This endpoint extends the existing `/api/v1/announcements` API with the ability to fetch
+    a single announcement by its UUID. It returns the complete announcement object for existing
+    pets or a structured error response for non-existent or malformed IDs.
+    
+    **Feature**: 008-pet-details-api
+    **Date**: 2025-11-21
+  version: 1.0.0
+  contact:
+    name: PetSpot API Team
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.petspot.example.com
+    description: Production server (placeholder)
+
+paths:
+  /api/v1/announcements/{id}:
+    get:
+      summary: Get announcement by ID
+      description: |
+        Retrieves a single pet announcement by its unique identifier (UUID).
+        
+        Returns HTTP 200 with the full announcement object if the ID exists, or HTTP 404
+        with a structured error response if the ID does not exist or is malformed.
+        
+        **Performance**: Response time < 500ms (direct database query, no caching).
+        
+        **Behavior**:
+        - Malformed UUIDs are treated as non-existent (return 404)
+        - All announcement statuses are returned (ACTIVE, FOUND, CLOSED)
+        - Optional fields are included with `null` value when not present in database
+      operationId: getAnnouncementById
+      tags:
+        - Announcements
+      parameters:
+        - name: id
+          in: path
+          description: |
+            Unique identifier (UUID) of the announcement to retrieve.
+            
+            **Format**: Standard UUID format (e.g., `123e4567-e89b-12d3-a456-426614174000`)
+            
+            **Malformed IDs**: Treated as non-existent, returns 404 (no validation error)
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: |
+            Success - Announcement found and returned.
+            
+            The response is the announcement object directly (no data wrapper).
+            Optional fields (`breed`, `email`, `photoUrl`, `locationRadius`) are
+            included with `null` value when not present in the database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+              examples:
+                fullAnnouncement:
+                  summary: Announcement with all fields populated
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    petName: "Max"
+                    species: "DOG"
+                    breed: "Golden Retriever"
+                    gender: "MALE"
+                    description: "Friendly golden retriever, answers to Max. Has a red collar with name tag."
+                    location: "Central Park, New York"
+                    locationRadius: 5.0
+                    lastSeenDate: "2025-11-20"
+                    email: "owner@example.com"
+                    phone: "+1-555-0123"
+                    photoUrl: "https://example.com/photos/max.jpg"
+                    status: "ACTIVE"
+                
+                announcementWithNulls:
+                  summary: Announcement with optional fields as null
+                  value:
+                    id: "987fcdeb-51a2-43d7-9876-543210fedcba"
+                    petName: "Luna"
+                    species: "CAT"
+                    breed: null
+                    gender: "FEMALE"
+                    description: "Gray tabby cat with white paws. Very shy."
+                    location: "Downtown Seattle"
+                    locationRadius: null
+                    lastSeenDate: "2025-11-19"
+                    email: null
+                    phone: "+1-555-9876"
+                    photoUrl: null
+                    status: "FOUND"
+        
+        '404':
+          description: |
+            Not Found - Announcement with given ID does not exist, or ID is malformed.
+            
+            **Triggers**:
+            - Valid UUID that doesn't exist in database
+            - Malformed UUID (treated as non-existent, no validation error)
+            
+            Returns a structured error response with machine-readable code and
+            human-readable message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  summary: Announcement not found
+                  value:
+                    error:
+                      code: "NOT_FOUND"
+                      message: "Resource not found"
+                
+                malformedUuid:
+                  summary: Malformed UUID (treated as not found)
+                  value:
+                    error:
+                      code: "NOT_FOUND"
+                      message: "Resource not found"
+        
+        '500':
+          description: |
+            Internal Server Error - Unexpected server error (database failure, etc.).
+            
+            Sensitive error details (stack traces, database errors) are logged server-side
+            but not exposed to clients.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "INTERNAL_ERROR"
+                  message: "Internal server error"
+
+components:
+  schemas:
+    Announcement:
+      type: object
+      description: |
+        Represents a pet announcement (report of a missing pet).
+        
+        All fields match the database schema for the `announcement` table.
+        Optional fields are included with `null` value when not present in database.
+      required:
+        - id
+        - petName
+        - species
+        - breed
+        - gender
+        - description
+        - location
+        - locationRadius
+        - lastSeenDate
+        - email
+        - phone
+        - photoUrl
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier (UUID) for the announcement
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        
+        petName:
+          type: string
+          description: Name of the missing pet
+          minLength: 1
+          example: "Max"
+        
+        species:
+          type: string
+          enum:
+            - DOG
+            - CAT
+            - BIRD
+            - RABBIT
+            - OTHER
+          description: |
+            Species/type of the pet.
+            
+            Enum values are validated at application layer (stored as string in database).
+          example: "DOG"
+        
+        breed:
+          type: string
+          nullable: true
+          description: |
+            Breed of the pet (optional, free-form text).
+            
+            `null` if not specified in database.
+          example: "Golden Retriever"
+        
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - UNKNOWN
+          description: |
+            Gender of the pet.
+            
+            Enum values are validated at application layer (stored as string in database).
+          example: "MALE"
+        
+        description:
+          type: string
+          description: Detailed description of the pet (appearance, behavior, distinguishing features)
+          minLength: 1
+          example: "Friendly golden retriever, answers to Max. Has a red collar with name tag."
+        
+        location:
+          type: string
+          description: Location where the pet was last seen
+          minLength: 1
+          example: "Central Park, New York"
+        
+        locationRadius:
+          type: number
+          format: float
+          nullable: true
+          description: |
+            Search radius around the last seen location (in kilometers).
+            
+            `null` if not specified in database.
+          minimum: 0
+          example: 5.0
+        
+        lastSeenDate:
+          type: string
+          format: date
+          description: |
+            Date when the pet was last seen.
+            
+            **Format**: ISO 8601 date format (`YYYY-MM-DD`)
+          example: "2025-11-20"
+        
+        email:
+          type: string
+          format: email
+          nullable: true
+          description: |
+            Reporter's email address (optional).
+            
+            `null` if not provided in database.
+          example: "owner@example.com"
+        
+        phone:
+          type: string
+          description: Reporter's phone number
+          minLength: 1
+          example: "+1-555-0123"
+        
+        photoUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: |
+            URL to the pet's photo (optional).
+            
+            `null` if not provided in database.
+          example: "https://example.com/photos/max.jpg"
+        
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - FOUND
+            - CLOSED
+          description: |
+            Current status of the announcement.
+            
+            - **ACTIVE**: Pet is still missing, announcement is actively seeking information
+            - **FOUND**: Pet has been found and reunited with owner
+            - **CLOSED**: Announcement closed for other reasons
+            
+            **Note**: This endpoint returns announcements in all statuses (no filtering).
+          example: "ACTIVE"
+    
+    ErrorResponse:
+      type: object
+      description: |
+        Structured error response for API errors.
+        
+        Provides both machine-readable error code and human-readable message.
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: |
+                Machine-readable error code for programmatic handling.
+                
+                **Possible values**:
+                - `NOT_FOUND`: Resource not found (404)
+                - `INTERNAL_ERROR`: Internal server error (500)
+              enum:
+                - NOT_FOUND
+                - INTERNAL_ERROR
+              example: "NOT_FOUND"
+            
+            message:
+              type: string
+              description: Human-readable error message for debugging and logging
+              example: "Resource not found"
+
+tags:
+  - name: Announcements
+    description: Operations for managing and retrieving pet announcements
+
