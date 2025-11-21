@@ -1,72 +1,113 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, with a standalone Node.js backend.
+# PetSpot - Multi-Platform Application
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that's common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple's CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
-  - Android UI screens use Jetpack Compose with a strict Model-View-Intent loop:
-    `UiState` data classes are emitted via `StateFlow`, Compose dispatches sealed `UserIntent`
-    events, reducers update immutable state, and navigation/snackbar side effects are emitted
-    through a `SharedFlow` of `UiEffect`.
+This is a multi-platform project with independent implementations for Android, iOS, and Web, backed by a Node.js REST API.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications using **MVVM-C architecture** (UIKit coordinators + SwiftUI views).
-  The app uses coordinator pattern for navigation management with UIHostingController wrapping SwiftUI views.
-  See [iosApp/README.md](./iosApp/README.md) for architecture details.
+## Architecture Overview
 
-* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
+Each platform implements its own full stack independently:
+- **Android**: Kotlin with Jetpack Compose (MVI architecture)
+- **iOS**: Swift with SwiftUI (MVVM-C architecture)
+- **Web**: TypeScript with React
+- **Backend**: Node.js with Express (REST API for all platforms)
 
-* [/webApp](./webApp) contains web React application. It uses the Kotlin/JS library produced
-  by the [shared](./shared) module.
+**No shared compiled code** between platforms - each platform maintains its own domain models, business logic, and presentation layer.
 
-* [/server](./server) contains the Node.js/Express backend API. This is a standalone TypeScript
-  service (NOT part of KMP) that provides REST API endpoints consumed by all platform clients
-  (Android, iOS, Web). See [server/README.md](./server/README.md) for backend-specific documentation.
+## Project Structure
 
-### Build and Run Android Application
+### `/composeApp` - Android Application (Full Stack)
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+Android application implementing the complete technology stack in Kotlin:
+- **Domain layer**: Models, use cases, repository interfaces
+- **Data layer**: Repository implementations, API clients, database
+- **Presentation layer**: ViewModels with MVI architecture
+- **UI layer**: Jetpack Compose screens
+- **Dependency Injection**: Koin (mandatory)
 
-### Build and Run Web Application
+**MVI Architecture** (Model-View-Intent):
+- Single `StateFlow<UiState>` source of truth with immutable data classes
+- Sealed `UserIntent` for all user interactions
+- Pure reducer functions for state transitions
+- `SharedFlow<UiEffect>` for one-off events (navigation, snackbars)
+- Koin for dependency injection (ViewModels, repositories, use cases)
 
-To build and run the development version of the web app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-1. Install [Node.js](https://nodejs.org/en/download) (which includes `npm`)
-2. Build Kotlin/JS shared code:
-   - on macOS/Linux
-     ```shell
-     ./gradlew :shared:jsBrowserDevelopmentLibraryDistribution
-     ```
-   - on Windows
-     ```shell
-     .\gradlew.bat :shared:jsBrowserDevelopmentLibraryDistribution
-     ```
-3. Build and run the web application
+### `/iosApp` - iOS Application (Full Stack)
+
+iOS application implementing the complete technology stack in Swift:
+- **Domain layer**: Models, repository protocols
+- **Data layer**: Repository implementations, HTTP clients
+- **Presentation layer**: ViewModels (ObservableObject with @Published properties) - call repositories directly
+- **Coordinators**: UIKit-based navigation management
+- **UI layer**: SwiftUI views wrapped in UIHostingController
+- **Dependency Injection**: Manual DI with constructor injection (NO use cases layer)
+
+**MVVM-C Architecture** (Model-View-ViewModel-Coordinator):
+- UIKit coordinators manage navigation flow
+- ViewModels call repositories directly (NO use cases)
+- ViewModels contain presentation logic with @Published state
+- SwiftUI views observe ViewModels (no business/navigation logic in views)
+- Coordinators create views and inject repositories via manual DI
+
+See [iosApp/README.md](./iosApp/README.md) for iOS architecture details.
+
+### `/webApp` - Web Application (Full Stack)
+
+React application implementing the complete technology stack in TypeScript:
+- **Domain layer**: TypeScript models and interfaces
+- **Service layer**: HTTP services consuming backend API
+- **State management**: React hooks and Context
+- **UI layer**: React components
+
+The web app operates independently with native TypeScript patterns - no Kotlin/JS dependencies.
+
+### `/server` - Backend API (Node.js/Express)
+
+Standalone Node.js backend providing REST API endpoints for all platform clients:
+- **REST API**: Express routers with endpoint definitions
+- **Business logic**: Service layer (testable, pure functions)
+- **Database**: Knex query builder + SQLite (designed for PostgreSQL migration)
+- **Testing**: Vitest (unit) + SuperTest (integration)
+- **Code quality**: ESLint with TypeScript, 80% test coverage requirement
+
+**NOT part of any platform** - backend is consumed via HTTP by Android, iOS, and Web.
+
+See [server/README.md](./server/README.md) for backend-specific documentation.
+
+## Building and Running
+
+### Android Application
+
+Build and run the Android app from the terminal:
+
+**macOS/Linux:**
+```shell
+./gradlew :composeApp:assembleDebug
+```
+
+**Windows:**
+```shell
+.\gradlew.bat :composeApp:assembleDebug
+```
+
+Or use the run configuration from your IDE's toolbar.
+
+### iOS Application
+
+Open the `/iosApp` directory in Xcode and run it from there, or use the run configuration from your IDE's toolbar.
+
+### Web Application
+
+1. Install [Node.js](https://nodejs.org/en/download) (includes `npm`)
+2. Navigate to webApp directory and install dependencies:
    ```shell
+   cd webApp
    npm install
+   ```
+3. Run the development server:
+   ```shell
    npm run start
    ```
 
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE's toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
-
-### Build and Run Backend Server
+### Backend Server
 
 The backend server provides REST API endpoints for all platform clients.
 
@@ -99,6 +140,65 @@ The backend server provides REST API endpoints for all platform clients.
 
 See [server/README.md](./server/README.md) for more backend commands and documentation.
 
----
+## Testing
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Each platform maintains its own test suites with 80% coverage requirement:
+
+**Android** (JUnit + Turbine):
+```shell
+./gradlew :composeApp:testDebugUnitTest koverHtmlReport
+```
+
+**iOS** (XCTest):
+```shell
+xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES
+```
+
+**Web** (Vitest + React Testing Library):
+```shell
+cd webApp
+npm test -- --coverage
+```
+
+**Backend** (Vitest + SuperTest):
+```shell
+cd server
+npm test -- --coverage
+```
+
+**End-to-End Tests** (Playwright + Appium):
+```shell
+# Web E2E tests
+npx playwright test
+
+# Mobile E2E tests (Android)
+npm run test:mobile:android
+
+# Mobile E2E tests (iOS)
+npm run test:mobile:ios
+```
+
+## Architecture Principles
+
+This project follows strict architectural principles defined in `.specify/memory/constitution.md`:
+
+1. **Platform Independence**: Each platform implements full stack independently (no shared compiled code)
+2. **80% Test Coverage**: Unit tests for all domain logic and ViewModels per platform
+3. **Interface-Based Design**: Repository interfaces per platform for testability
+4. **Dependency Injection**: 
+   - Android: Koin (mandatory)
+   - iOS: Manual DI with constructor injection (mandatory)
+   - Web: React Context (recommended)
+5. **Asynchronous Programming**: Platform-native async patterns (Kotlin Coroutines, Swift Concurrency, JS async/await)
+6. **Test Identifiers**: All interactive UI elements have stable test IDs for E2E testing
+7. **Given-When-Then Tests**: All tests follow Given-When-Then structure
+8. **Android MVI Architecture**: Mandatory for Android Compose screens (with use cases)
+9. **iOS MVVM-C Architecture**: Mandatory for iOS SwiftUI screens (ViewModels call repositories directly - NO use cases)
+10. **Backend Quality Standards**: TDD workflow, Clean Code principles, ESLint enforcement
+
+## Learn More
+
+- [Kotlin for Android](https://kotlinlang.org/docs/android-overview.html)
+- [Swift and SwiftUI](https://developer.apple.com/swift/)
+- [React with TypeScript](https://react.dev/learn/typescript)
+- [Node.js and Express](https://expressjs.com/)
