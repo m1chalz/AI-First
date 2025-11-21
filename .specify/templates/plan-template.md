@@ -31,20 +31,16 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-> **Note**: For backend-only features (affecting only `/server` module), you may mark frontend-related checks (Thin Shared Layer, Native Presentation, Android MVI, Test Identifiers for UI, E2E Tests for mobile/web) as N/A. Focus on Backend Architecture & Quality Standards checks.
+> **Note**: For backend-only features (affecting only `/server` module), you may mark frontend-related checks (Platform Independence, Android MVI, iOS MVVM-C, Test Identifiers for UI, E2E Tests for mobile/web) as N/A. Focus on Backend Architecture & Quality Standards checks.
 
-### KMP Architecture Compliance
+### Platform Architecture Compliance
 
-- [ ] **Thin Shared Layer**: Feature design keeps `/shared` limited to domain models, repository interfaces, and use cases
-  - No UI components in `/shared`
-  - No ViewModels in `/shared`
-  - No platform-specific code in `commonMain`
-  - Violation justification: _[Required if not compliant]_
-
-- [ ] **Native Presentation**: Each platform implements its own presentation layer
-  - Android ViewModels in `/composeApp`
-  - iOS ViewModels in Swift in `/iosApp`
-  - Web state management in React in `/webApp` (STANDALONE: no shared module, no Koin)
+- [ ] **Platform Independence**: Each platform implements full stack independently
+  - Android: Domain models, use cases, repositories, ViewModels in `/composeApp`
+  - iOS: Domain models, use cases, repositories, ViewModels in `/iosApp`
+  - Web: Domain models, services, state management in `/webApp`
+  - Backend: Independent Node.js/Express API in `/server`
+  - NO shared compiled code between platforms
   - Violation justification: _[Required if not compliant]_
 
 - [ ] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
@@ -54,30 +50,34 @@
   - `dispatchIntent` entry wired from UI → ViewModel → reducer, with effects delivered via `SharedFlow`
   - Violation justification: _[Required if Android diverges from MVI]_
 
-- [ ] **Interface-Based Design**: Domain logic uses interfaces for repositories
-  - Repository interfaces in `/shared/src/commonMain/.../repositories/`
-  - Implementations in platform-specific modules
+- [ ] **iOS MVVM-C Architecture**: iOS features follow MVVM-Coordinator pattern
+  - UIKit-based coordinators manage navigation and create `UIHostingController` instances
+  - ViewModels conform to `ObservableObject` with `@Published` properties
+  - ViewModels communicate with coordinators via methods or closures
+  - SwiftUI views observe ViewModels (no business/navigation logic in views)
+  - Violation justification: _[Required if iOS diverges from MVVM-C]_
+
+- [ ] **Interface-Based Design**: Domain logic uses interfaces for repositories (per platform)
+  - Android: Repository interfaces in `/composeApp/src/androidMain/.../domain/repositories/`
+  - iOS: Repository protocols in `/iosApp/iosApp/Domain/Repositories/`
+  - Web: Service interfaces in `/webApp/src/services/`
+  - Backend: Repository interfaces in `/server/src/database/repositories/`
+  - Implementations in platform-specific data/repositories modules
   - Use cases reference interfaces, not concrete implementations
   - Violation justification: _[Required if not compliant]_
 
-- [ ] **Dependency Injection**: Plan includes Koin setup for Android/iOS platforms
-  - Shared domain module defined in `/shared/src/commonMain/.../di/`
-  - Android DI modules in `/composeApp/src/androidMain/.../di/`
-  - iOS Koin initialization in `/iosApp/iosApp/DI/`
-  - Web uses native TypeScript DI (NO Koin) - exempt from this requirement
-  - Violation justification: _[Required if Android/iOS DI not using Koin]_
+- [ ] **Dependency Injection**: Plan includes DI setup for each platform
+  - Android: MUST use Koin - DI modules in `/composeApp/src/androidMain/.../di/`
+  - iOS: MUST use manual DI - setup in `/iosApp/iosApp/DI/` (ServiceContainer with constructor injection)
+  - Web: SHOULD use React Context - setup in `/webApp/src/di/`
+  - Backend: Manual DI in `/server/src/` (constructor injection, factory functions)
+  - Violation justification: _[Required if DI not using specified approach]_
 
-- [ ] **80% Test Coverage - Shared Module**: Plan includes unit tests for shared domain logic
-  - Tests located in `/shared/src/commonTest`
-  - Coverage target: 80% line + branch coverage
-  - Run command: `./gradlew :shared:test koverHtmlReport`
-  - Tests use Koin Test for DI in tests
-  - Violation justification: _[Required if coverage < 80%]_
-
-- [ ] **80% Test Coverage - ViewModels**: Plan includes unit tests for ViewModels on each platform
+- [ ] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform
   - Android: Tests in `/composeApp/src/androidUnitTest/`, run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
-  - iOS: Tests in `/iosApp/iosAppTests/ViewModels/`, run via XCTest
-  - Web: Tests in `/webApp/src/__tests__/hooks/`, run `npm test -- --coverage`
+  - iOS: Tests in `/iosApp/iosAppTests/`, run via XCTest
+  - Web: Tests in `/webApp/src/__tests__/`, run `npm test -- --coverage`
+  - Backend: Tests in `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`, run `npm test -- --coverage`
   - Coverage target: 80% line + branch coverage per platform
   - Violation justification: _[Required if coverage < 80%]_
 
@@ -89,23 +89,11 @@
   - Each user story has at least one E2E test
   - Violation justification: _[Required if E2E tests missing]_
 
-- [ ] **Platform Independence**: Shared code uses expect/actual for platform dependencies
-  - No direct UIKit/Android SDK/Browser API imports in `commonMain`
-  - Platform-specific implementations in `androidMain`, `iosMain`, `jsMain`
-  - Repository implementations provided via DI, not expect/actual
-  - Violation justification: _[Required if not compliant]_
-
-- [ ] **Clear Contracts**: Repository interfaces and use cases have explicit APIs
-  - Typed return values (`Result<T>`, sealed classes)
-  - KDoc documentation for public APIs
-  - `@JsExport` for web consumption where needed
-  - Violation justification: _[Required if not compliant]_
-
 - [ ] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
-  - Shared: Kotlin Coroutines with `suspend` functions
   - Android: Kotlin Coroutines (`viewModelScope`) + Flow for state
   - iOS: Swift Concurrency (`async`/`await`) with `@MainActor`
   - Web: Native `async`/`await` (no Promise chains)
+  - Backend: Native `async`/`await` (Express async handlers)
   - No Combine, RxJava, RxSwift, or callback-based patterns for new code
   - Violation justification: _[Required if using prohibited patterns]_
 
