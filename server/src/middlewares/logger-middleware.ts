@@ -62,5 +62,15 @@ export default pinoHttp({
   customErrorMessage: (_req: any, _res: any, err: any) => {
     return `Request failed: ${err.message}`;
   },
+
+  customLogLevel: (_req: any, res: any, err: any) => {
+    if (err || res.statusCode >= 500) {
+      return 'error';
+    }
+    if (res.statusCode >= 400) {
+      return 'warn';
+    }
+    return 'info';
+  },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

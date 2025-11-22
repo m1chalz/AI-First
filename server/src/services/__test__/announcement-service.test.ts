@@ -54,7 +54,7 @@ describe('AnnouncementService', () => {
       // Given: Repository with test announcement
       const fakeRepository = {
         ...defaultMockRepository,
-        findById: async (id: string) => MOCK_ANNOUNCEMENT
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT
       };
       
       const service = new AnnouncementService(fakeRepository);
@@ -91,7 +91,7 @@ describe('AnnouncementService', () => {
       
       const fakeRepository = {
         ...defaultMockRepository,
-        findById: async (id: string) => announcementWithNulls
+        findById: async (_id: string) => announcementWithNulls
       };
       
       const service = new AnnouncementService(fakeRepository);
