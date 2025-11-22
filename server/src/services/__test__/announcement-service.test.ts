@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement } from '../../types/announcement.ts';
-import type { AnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
+import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -21,6 +21,11 @@ const MOCK_ANNOUNCEMENT: Announcement = {
   updatedAt: '2025-11-19T10:00:00Z',
 };
 
+const defaultMockRepository: IAnnouncementRepository = {
+  findAll: async () => [],
+  findById: async () => null,
+};
+
 describe('AnnouncementService', () => {
   describe('getAllAnnouncements', () => {
     it.each([
@@ -29,11 +34,11 @@ describe('AnnouncementService', () => {
     ])('should return $expectedLength announcements when repository returns $expectedLength items', async ({ announcements, expectedLength }) => {
       // Given: Repository returns specified announcements
       const fakeRepository = {
+        ...defaultMockRepository,
         findAll: async () => announcements,
-        findById: async () => null,
-      } as Pick<AnnouncementRepository, 'findAll' | 'findById'>;
+      };
       
-      const service = new AnnouncementService(fakeRepository as AnnouncementRepository);
+      const service = new AnnouncementService(fakeRepository);
       
       // When: Service retrieves all announcements
       const result = await service.getAllAnnouncements();
@@ -48,11 +53,11 @@ describe('AnnouncementService', () => {
     it('should return announcement when ID exists', async () => {
       // Given: Repository with test announcement
       const fakeRepository = {
-        findAll: async () => [MOCK_ANNOUNCEMENT],
-        findById: async (id: string) => id === MOCK_ANNOUNCEMENT.id ? MOCK_ANNOUNCEMENT : null,
-      } as Pick<AnnouncementRepository, 'findAll' | 'findById'>;
+        ...defaultMockRepository,
+        findById: async (id: string) => MOCK_ANNOUNCEMENT
+      };
       
-      const service = new AnnouncementService(fakeRepository as AnnouncementRepository);
+      const service = new AnnouncementService(fakeRepository);
       
       // When: Service is called with existing ID
       const result = await service.getAnnouncementById(MOCK_ANNOUNCEMENT.id);
@@ -63,12 +68,9 @@ describe('AnnouncementService', () => {
 
     it('should return null when ID does not exist', async () => {
       // Given: Repository with empty data
-      const fakeRepository = {
-        findAll: async () => [],
-        findById: async () => null,
-      } as Pick<AnnouncementRepository, 'findAll' | 'findById'>;
+      const fakeRepository = defaultMockRepository;
       
-      const service = new AnnouncementService(fakeRepository as AnnouncementRepository);
+      const service = new AnnouncementService(fakeRepository);
       
       // When: Service is called with non-existent ID
       const result = await service.getAnnouncementById('non-existent-id');
@@ -88,11 +90,11 @@ describe('AnnouncementService', () => {
       };
       
       const fakeRepository = {
-        findAll: async () => [announcementWithNulls],
-        findById: async (id: string) => id === announcementWithNulls.id ? announcementWithNulls : null,
-      } as Pick<AnnouncementRepository, 'findAll' | 'findById'>;
+        ...defaultMockRepository,
+        findById: async (id: string) => announcementWithNulls
+      };
       
-      const service = new AnnouncementService(fakeRepository as AnnouncementRepository);
+      const service = new AnnouncementService(fakeRepository);
       
       // When: Service is called
       const result = await service.getAnnouncementById(announcementWithNulls.id);

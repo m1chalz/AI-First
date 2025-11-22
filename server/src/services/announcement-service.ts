@@ -1,8 +1,8 @@
 import type { Announcement } from '../types/announcement.ts';
-import type { AnnouncementRepository } from '../database/repositories/announcement-repository.ts';
+import type { IAnnouncementRepository } from '../database/repositories/announcement-repository.ts';
 
 export class AnnouncementService {
-  constructor(private repository: AnnouncementRepository) {}
+  constructor(private repository: IAnnouncementRepository) {}
 
   async getAllAnnouncements(): Promise<Announcement[]> {
     return this.repository.findAll();

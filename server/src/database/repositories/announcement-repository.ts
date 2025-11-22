@@ -1,7 +1,12 @@
 import type { Knex } from 'knex';
 import type { Announcement, AnnouncementRow } from '../../types/announcement.ts';
 
-export class AnnouncementRepository {
+export interface IAnnouncementRepository {
+  findAll(): Promise<Announcement[]>;
+  findById(id: string): Promise<Announcement | null>;
+}
+
+export class AnnouncementRepository implements IAnnouncementRepository {
   constructor(private db: Knex) {}
 
   async findAll(): Promise<Announcement[]> {
