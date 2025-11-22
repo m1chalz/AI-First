@@ -63,8 +63,8 @@ export default pinoHttp({
     return `Request failed: ${err.message}`;
   },
 
-  customLogLevel: (_req: any, res: any, err: any) => {
-    if (err || res.statusCode >= 500) {
+  customLogLevel: (_req: any, res: any) => {
+    if (res.statusCode >= 500) {
       return 'error';
     }
     if (res.statusCode >= 400) {
