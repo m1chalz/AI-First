@@ -5,7 +5,11 @@ export class AnnouncementService {
   constructor(private repository: AnnouncementRepository) {}
 
   async getAllAnnouncements(): Promise<Announcement[]> {
-    return await this.repository.findAll();
+    return this.repository.findAll();
+  }
+
+  async getAnnouncementById(id: string): Promise<Announcement | null> {
+    return this.repository.findById(id);
   }
 }
 

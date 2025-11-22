@@ -52,15 +52,15 @@ export default pinoHttp({
   autoLogging: true,
 
   customReceivedMessage: () => {
-    return 'request received';
+    return 'Request received';
   },
 
   customSuccessMessage: () => {
-    return 'request completed';
+    return 'Request completed';
   },
 
   customErrorMessage: (_req: any, _res: any, err: any) => {
-    return `request failed: ${err.message}`;
+    return `Request failed: ${err.message}`;
   },
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

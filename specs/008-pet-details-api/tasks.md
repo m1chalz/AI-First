@@ -44,14 +44,14 @@ All paths are in `/server` backend module:
 
 **Purpose**: Verify existing backend infrastructure is ready for extension
 
-- [ ] T001 Verify Node.js v24 (LTS) is installed: `node --version`
-- [ ] T002 Verify existing `/server` directory structure (src/, routes/, services/, database/)
-- [ ] T003 Verify existing files: `announcement-routes.ts`, `announcement-service.ts`, `announcement-repository.ts`
-- [ ] T004 Verify existing `announcement` database table schema matches data-model.md requirements
-- [ ] T005 [P] Verify ESLint config exists at `/server/.eslintrc.js` with TypeScript plugin
-- [ ] T006 [P] Verify Vitest config exists at `/server/vitest.config.ts` with coverage thresholds (80%)
-- [ ] T007 [P] Verify SuperTest is installed: check `/server/package.json` for `supertest` dependency
-- [ ] T008 Run `npm test` from `/server` to verify test infrastructure works
+- [X] T001 Verify Node.js v24 (LTS) is installed: `node --version`
+- [X] T002 Verify existing `/server` directory structure (src/, routes/, services/, database/)
+- [X] T003 Verify existing files: `announcement-routes.ts`, `announcement-service.ts`, `announcement-repository.ts`
+- [X] T004 Verify existing `announcement` database table schema matches data-model.md requirements
+- [X] T005 [P] Verify ESLint config exists at `/server/.eslintrc.js` with TypeScript plugin
+- [X] T006 [P] Verify Vitest config exists at `/server/vitest.config.ts` with coverage thresholds (80%)
+- [X] T007 [P] Verify SuperTest is installed: check `/server/package.json` for `supertest` dependency
+- [X] T008 Run `npm test` from `/server` to verify test infrastructure works
 
 ---
 
@@ -61,10 +61,10 @@ All paths are in `/server` backend module:
 
 **⚠️ CRITICAL**: This phase must complete before User Story 1 implementation begins
 
-- [ ] T009 Verify or create test database helper at `/server/src/__test__/test-db-helper.ts` (setupTestDatabase, teardownTestDatabase, clearDatabase, seedDatabase functions)
-- [ ] T010 [P] Verify or create fake repository pattern: check if `/server/src/database/__test__/` directory exists for test doubles
-- [ ] T011 [P] Verify existing error response structure in codebase (structured JSON with code + message)
-- [ ] T012 Run `npm test -- --coverage` from `/server` to establish baseline coverage
+- [X] T009 Verify or create test database helper at `/server/src/__test__/test-db-helper.ts` (setupTestDatabase, teardownTestDatabase, clearDatabase, seedDatabase functions)
+- [X] T010 [P] Verify or create fake repository pattern: check if `/server/src/database/__test__/` directory exists for test doubles
+- [X] T011 [P] Verify existing error response structure in codebase (structured JSON with code + message)
+- [X] T012 Run `npm test -- --coverage` from `/server` to establish baseline coverage
 
 **Checkpoint**: Backend test infrastructure ready - User Story 1 TDD workflow can begin
 
@@ -91,17 +91,17 @@ All paths are in `/server` backend module:
 
 **Backend Unit Tests** (Service Layer):
 
-- [ ] T013 [P] [US1] RED: Write failing unit test for `getAnnouncementById` service function - success case in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with mock announcement, When: service called with valid ID, Then: returns announcement object)
-- [ ] T014 [P] [US1] RED: Write failing unit test for `getAnnouncementById` - not found case in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with empty data, When: service called with non-existent ID, Then: returns null)
-- [ ] T015 [P] [US1] RED: Write failing unit test for `getAnnouncementById` - optional fields with null in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with announcement having null optional fields, When: service called, Then: returns announcement with nulls preserved)
+- [X] T013 [P] [US1] RED: Write failing unit test for `getAnnouncementById` service function - success case in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with mock announcement, When: service called with valid ID, Then: returns announcement object)
+- [X] T014 [P] [US1] RED: Write failing unit test for `getAnnouncementById` - not found case in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with empty data, When: service called with non-existent ID, Then: returns null)
+- [X] T015 [P] [US1] RED: Write failing unit test for `getAnnouncementById` - optional fields with null in `/server/src/services/__test__/announcement-service.test.ts` (Given: fake repository with announcement having null optional fields, When: service called, Then: returns announcement with nulls preserved)
 
 **Backend Integration Tests** (API Endpoint):
 
-- [ ] T016 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 200 success case in `/server/src/__test__/announcement-routes.test.ts` (Given: database seeded with test announcement, When: GET request with valid ID, Then: HTTP 200 with announcement JSON)
-- [ ] T017 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 404 not found in `/server/src/__test__/announcement-routes.test.ts` (Given: empty database, When: GET request with non-existent UUID, Then: HTTP 404 with error structure)
-- [ ] T018 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 404 malformed UUID in `/server/src/__test__/announcement-routes.test.ts` (Given: empty database, When: GET request with malformed UUID like "abc-123", Then: HTTP 404 same as non-existent)
-- [ ] T019 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - optional fields with null in `/server/src/__test__/announcement-routes.test.ts` (Given: database with announcement having null optional fields, When: GET request, Then: response includes null values not omitted)
-- [ ] T020 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - all status values in `/server/src/__test__/announcement-routes.test.ts` (Given: announcements with ACTIVE/FOUND/CLOSED status, When: GET request for each, Then: returns announcements regardless of status)
+- [X] T016 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 200 success case in `/server/src/__test__/announcement-routes.test.ts` (Given: database seeded with test announcement, When: GET request with valid ID, Then: HTTP 200 with announcement JSON)
+- [X] T017 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 404 not found in `/server/src/__test__/announcement-routes.test.ts` (Given: empty database, When: GET request with non-existent UUID, Then: HTTP 404 with error structure)
+- [X] T018 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - HTTP 404 malformed UUID in `/server/src/__test__/announcement-routes.test.ts` (Given: empty database, When: GET request with malformed UUID like "abc-123", Then: HTTP 404 same as non-existent)
+- [X] T019 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - optional fields with null in `/server/src/__test__/announcement-routes.test.ts` (Given: database with announcement having null optional fields, When: GET request, Then: response includes null values not omitted)
+- [X] T020 [P] [US1] RED: Write failing integration test for GET `/api/v1/announcements/:id` - all status values in `/server/src/__test__/announcement-routes.test.ts` (Given: announcements with ACTIVE/FOUND/CLOSED status, When: GET request for each, Then: returns announcements regardless of status)
 
 ### Implementation for User Story 1
 
@@ -109,37 +109,37 @@ All paths are in `/server` backend module:
 
 **Test Infrastructure** (prerequisite for unit tests):
 
-- [ ] T021 [US1] Create `FakeAnnouncementRepository` class in `/server/src/database/__test__/fake-announcement-repository.ts` implementing AnnouncementRepository interface with in-memory storage and `findById` method
+- [X] T021 [US1] Create `FakeAnnouncementRepository` class in `/server/src/database/__test__/fake-announcement-repository.ts` implementing AnnouncementRepository interface with in-memory storage and `findById` method
 
 **Service Layer Implementation** (GREEN phase):
 
-- [ ] T022 [US1] GREEN: Extend AnnouncementRepository interface in `/server/src/database/announcement-repository.ts` to add `findById(id: string): Promise<Announcement | null>` method signature
-- [ ] T023 [US1] GREEN: Implement `findById` method in KnexAnnouncementRepository class in `/server/src/database/announcement-repository.ts` using Knex `.where('id', id).first()` pattern
-- [ ] T024 [US1] GREEN: Implement `getAnnouncementById(repository, id)` function in `/server/src/services/announcement-service.ts` that calls repository.findById and returns result
-- [ ] T025 [US1] Run unit tests for announcement-service.ts and verify all tests pass (T013-T015)
-- [ ] T026 [US1] REFACTOR: Review service code for Clean Code principles (function size, naming, DRY) and refactor if needed
+- [X] T022 [US1] GREEN: Extend AnnouncementRepository interface in `/server/src/database/announcement-repository.ts` to add `findById(id: string): Promise<Announcement | null>` method signature
+- [X] T023 [US1] GREEN: Implement `findById` method in KnexAnnouncementRepository class in `/server/src/database/announcement-repository.ts` using Knex `.where('id', id).first()` pattern
+- [X] T024 [US1] GREEN: Implement `getAnnouncementById(repository, id)` function in `/server/src/services/announcement-service.ts` that calls repository.findById and returns result
+- [X] T025 [US1] Run unit tests for announcement-service.ts and verify all tests pass (T013-T015)
+- [X] T026 [US1] REFACTOR: Review service code for Clean Code principles (function size, naming, DRY) and refactor if needed
 
 **API Endpoint Implementation** (GREEN phase):
 
-- [ ] T027 [US1] GREEN: Add GET `/api/v1/announcements/:id` route handler in `/server/src/routes/announcement-routes.ts` that calls announcementService.getAnnouncementById
-- [ ] T028 [US1] GREEN: Implement null check in route handler - if announcement is null, return HTTP 404 with structured error: `{ error: { code: "NOT_FOUND", message: "Resource not found" } }`
-- [ ] T029 [US1] GREEN: If announcement found, return HTTP 200 with announcement object directly (no data wrapper)
-- [ ] T030 [US1] Run integration tests for announcement-routes.ts and verify all tests pass (T016-T020)
-- [ ] T031 [US1] REFACTOR: Extract error response structure to `/server/src/lib/error-responses.ts` if duplicated across routes (optional)
+- [X] T027 [US1] GREEN: Add GET `/api/v1/announcements/:id` route handler in `/server/src/routes/announcement-routes.ts` that calls announcementService.getAnnouncementById
+- [X] T028 [US1] GREEN: Implement null check in route handler - if announcement is null, return HTTP 404 with structured error: `{ error: { code: "NOT_FOUND", message: "Resource not found" } }`
+- [X] T029 [US1] GREEN: If announcement found, return HTTP 200 with announcement object directly (no data wrapper)
+- [X] T030 [US1] Run integration tests for announcement-routes.ts and verify all tests pass (T016-T020)
+- [X] T031 [US1] REFACTOR: Extract error response structure to `/server/src/lib/error-responses.ts` if duplicated across routes (optional)
 
 **Documentation** (required for public APIs):
 
-- [ ] T032 [P] [US1] Add JSDoc to `getAnnouncementById` service function in `/server/src/services/announcement-service.ts` (describe params, returns, behavior - 1-3 sentences)
-- [ ] T033 [P] [US1] Add JSDoc to `findById` repository method in `/server/src/database/announcement-repository.ts` (describe params, returns)
-- [ ] T034 [P] [US1] Add JSDoc to GET `/api/v1/announcements/:id` route handler in `/server/src/routes/announcement-routes.ts` (HTTP method, path, params, response codes)
+- [X] T032 [P] [US1] Add JSDoc to `getAnnouncementById` service function in `/server/src/services/announcement-service.ts` (describe params, returns, behavior - 1-3 sentences)
+- [X] T033 [P] [US1] Add JSDoc to `findById` repository method in `/server/src/database/announcement-repository.ts` (describe params, returns)
+- [X] T034 [P] [US1] Add JSDoc to GET `/api/v1/announcements/:id` route handler in `/server/src/routes/announcement-routes.ts` (HTTP method, path, params, response codes)
 
 **Quality Assurance**:
 
-- [ ] T035 [US1] Run `npm test -- --coverage` from `/server` and verify 80%+ coverage for `announcement-service.ts`
-- [ ] T036 [US1] Run `npm test -- --coverage` from `/server` and verify 80%+ coverage for `announcement-routes.ts`
-- [ ] T037 [US1] Run `npm run lint` from `/server` and fix any ESLint violations
-- [ ] T038 [US1] Run all tests (`npm test`) and verify 100% pass rate
-- [ ] T039 [US1] Manual test: Start dev server (`npm run dev`) and test endpoint with curl/Postman for all scenarios (200, 404 not found, 404 malformed UUID, optional fields)
+- [X] T035 [US1] Run `npm test -- --coverage` from `/server` and verify 80%+ coverage for `announcement-service.ts`
+- [X] T036 [US1] Run `npm test -- --coverage` from `/server` and verify 80%+ coverage for `announcement-routes.ts`
+- [X] T037 [US1] Run `npm run lint` from `/server` and fix any ESLint violations
+- [X] T038 [US1] Run all tests (`npm test`) and verify 100% pass rate
+- [X] T039 [US1] Manual test: Start dev server (`npm run dev`) and test endpoint with curl/Postman for all scenarios (200, 404 not found, 404 malformed UUID, optional fields)
 
 **Checkpoint**: User Story 1 complete and independently testable. Endpoint fully functional with 80%+ test coverage.
 
@@ -149,12 +149,12 @@ All paths are in `/server` backend module:
 
 **Purpose**: Final improvements and validation
 
-- [ ] T040 [P] Verify quickstart.md instructions match implemented code structure (file paths, naming conventions)
-- [ ] T041 [P] Run performance test: verify response time < 500ms for single announcement retrieval (use Apache Bench or similar: `ab -n 100 -c 10 http://localhost:3000/api/v1/announcements/{uuid}`)
-- [ ] T042 [P] Review all JSDoc documentation for consistency and completeness (services, repositories, routes)
-- [ ] T043 [P] Run `npm audit` from `/server` to check for security vulnerabilities in dependencies
-- [ ] T044 Final validation: Run complete test suite with coverage (`npm test -- --coverage`) and verify all success criteria from spec.md
-- [ ] T045 Create summary of implementation: list all modified files, test coverage percentages, performance metrics
+- [X] T040 [P] Verify quickstart.md instructions match implemented code structure (file paths, naming conventions)
+- [X] T041 [P] Run performance test: verify response time < 500ms for single announcement retrieval (use Apache Bench or similar: `ab -n 100 -c 10 http://localhost:3000/api/v1/announcements/{uuid}`)
+- [X] T042 [P] Review all JSDoc documentation for consistency and completeness (services, repositories, routes)
+- [X] T043 [P] Run `npm audit` from `/server` to check for security vulnerabilities in dependencies
+- [X] T044 Final validation: Run complete test suite with coverage (`npm test -- --coverage`) and verify all success criteria from spec.md
+- [X] T045 Create summary of implementation: list all modified files, test coverage percentages, performance metrics
 
 ---
 
