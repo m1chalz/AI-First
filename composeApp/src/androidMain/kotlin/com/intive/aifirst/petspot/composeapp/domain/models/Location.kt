@@ -9,6 +9,5 @@ package com.intive.aifirst.petspot.composeapp.domain.models
  */
 data class Location(
     val city: String,
-    val radiusKm: Int
+    val radiusKm: Int,
 )
-

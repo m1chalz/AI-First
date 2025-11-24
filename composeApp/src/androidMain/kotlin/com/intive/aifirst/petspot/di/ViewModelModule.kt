@@ -24,8 +24,8 @@ import org.koin.dsl.module
  * @see org.koin.androidx.viewmodel.dsl.viewModel
  * @see org.koin.androidx.compose.koinViewModel
  */
-val viewModelModule = module {
-    // ViewModels
-    viewModel { AnimalListViewModel(get()) }
-}
-
+val viewModelModule =
+    module {
+        // ViewModels
+        viewModel { AnimalListViewModel(get()) }
+    }

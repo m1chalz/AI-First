@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -7,6 +6,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -96,4 +97,26 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+// Detekt Configuration
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("$rootDir/detekt.yml"))
+}
+
+// ktlint Configuration
+ktlint {
+    android.set(true)
+    version.set(libs.versions.ktlint.engine.get())
+}
+
+// Android Lint Configuration
+android {
+    lint {
+        baseline = file("lint-baseline.xml")
+        abortOnError = true
+        xmlReport = true
+        htmlReport = true
+    }
 }

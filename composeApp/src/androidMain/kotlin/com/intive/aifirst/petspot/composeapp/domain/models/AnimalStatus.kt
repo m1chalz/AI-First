@@ -9,10 +9,10 @@ package com.intive.aifirst.petspot.composeapp.domain.models
  */
 enum class AnimalStatus(
     val displayName: String,
-    val badgeColor: String  // Hex color
+    // Hex color
+    val badgeColor: String,
 ) {
-    ACTIVE("Active", "#FF0000"),    // Red badge - actively missing/searching
-    FOUND("Found", "#0074FF"),      // Blue badge - animal has been found
-    CLOSED("Closed", "#93A2B4")     // Gray badge - case closed/resolved
+    ACTIVE("Active", "#FF0000"), // Red badge - actively missing/searching
+    FOUND("Found", "#0074FF"), // Blue badge - animal has been found
+    CLOSED("Closed", "#93A2B4"), // Gray badge - case closed/resolved
 }
-

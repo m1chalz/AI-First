@@ -9,6 +9,5 @@ enum class AnimalSpecies(val displayName: String) {
     CAT("Cat"),
     BIRD("Bird"),
     RABBIT("Rabbit"),
-    OTHER("Other")
+    OTHER("Other"),
 }
-

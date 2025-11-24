@@ -21,15 +21,18 @@ package com.intive.aifirst.petspot.composeapp.domain.models
 data class Animal(
     val id: String,
     val name: String,
-    val photoUrl: String,  // URL or placeholder identifier
+    // URL or placeholder identifier
+    val photoUrl: String,
     val location: Location,
     val species: AnimalSpecies,
     val breed: String,
     val gender: AnimalGender,
     val status: AnimalStatus,
-    val lastSeenDate: String,  // Format: DD/MM/YYYY (as specified in spec)
+    // Format: DD/MM/YYYY (as specified in spec)
+    val lastSeenDate: String,
     val description: String,
-    val email: String?,  // Optional contact email
-    val phone: String?   // Optional contact phone
+    // Optional contact email
+    val email: String?,
+    // Optional contact phone
+    val phone: String?,
 )
-

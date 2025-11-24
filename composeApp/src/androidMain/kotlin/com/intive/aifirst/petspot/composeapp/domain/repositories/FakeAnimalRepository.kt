@@ -16,15 +16,14 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 class FakeAnimalRepository(
     private val animalCount: Int = 16,
     private val shouldFail: Boolean = false,
-    private val exception: Throwable = Exception("Fake repository error")
+    private val exception: Throwable = Exception("Fake repository error"),
 ) : AnimalRepository {
-    
     var getAnimalsCallCount = 0
         private set
-    
+
     override suspend fun getAnimals(): List<Animal> {
         getAnimalsCallCount++
-        
+
         return if (shouldFail) {
             throw exception
         } else {

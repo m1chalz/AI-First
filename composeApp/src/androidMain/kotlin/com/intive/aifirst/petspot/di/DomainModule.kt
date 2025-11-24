@@ -1,4 +1,4 @@
-package com.intive.aifirst.petspot.composeapp.di
+package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import org.koin.dsl.module
@@ -13,8 +13,8 @@ import org.koin.dsl.module
  *
  * @see org.koin.dsl.module
  */
-val domainModule = module {
-    // Use cases
-    factory { GetAnimalsUseCase(get()) }
-}
-
+val domainModule =
+    module {
+        // Use cases
+        factory { GetAnimalsUseCase(get()) }
+    }

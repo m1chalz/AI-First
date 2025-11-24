@@ -7,6 +7,5 @@ package com.intive.aifirst.petspot.composeapp.domain.models
 enum class AnimalGender(val displayName: String) {
     MALE("Male"),
     FEMALE("Female"),
-    UNKNOWN("Unknown")
+    UNKNOWN("Unknown"),
 }
-

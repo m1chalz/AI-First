@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
+
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -50,30 +52,33 @@ fun AnimalListContent(
     onReportMissing: () -> Unit = {},
     onAnimalClick: (String) -> Unit = {},
     onRetry: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = { AnimalListTopBar() },
         bottomBar = { ReportMissingBottomBar(onReportMissing = onReportMissing) },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
         ) {
             when {
                 state.isLoading -> LoadingIndicator()
-                state.error != null -> ErrorState(
-                    message = state.error,
-                    onRetry = onRetry
-                )
+                state.error != null ->
+                    ErrorState(
+                        message = state.error,
+                        onRetry = onRetry,
+                    )
                 state.isEmpty -> EmptyState()
-                else -> AnimalList(
-                    animals = state.animals,
-                    onAnimalClick = onAnimalClick
-                )
+                else ->
+                    AnimalList(
+                        animals = state.animals,
+                        onAnimalClick = onAnimalClick,
+                    )
             }
         }
     }
@@ -87,41 +92,44 @@ private fun AnimalListTopBar() {
             Text(
                 text = "Missing animals list",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors =
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
     )
 }
 
 @Composable
 private fun ReportMissingBottomBar(
     onReportMissing: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 3.dp,
-        shadowElevation = 8.dp
+        shadowElevation = 8.dp,
     ) {
         Button(
             onClick = onReportMissing,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .testTag("animalList.reportMissingButton"),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            shape = MaterialTheme.shapes.small
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .testTag("animalList.reportMissingButton"),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+            shape = MaterialTheme.shapes.small,
         ) {
             Text(
                 text = "Report a Missing Animal",
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
             )
         }
     }
@@ -131,27 +139,28 @@ private fun ReportMissingBottomBar(
 private fun BoxScope.LoadingIndicator() {
     CircularProgressIndicator(
         modifier = Modifier.align(Alignment.Center),
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
 }
 
 @Composable
 private fun BoxScope.ErrorState(
     message: String,
-    onRetry: () -> Unit = {}
+    onRetry: () -> Unit = {},
 ) {
     Column(
-        modifier = Modifier
-            .align(Alignment.Center)
-            .padding(32.dp),
+        modifier =
+            Modifier
+                .align(Alignment.Center)
+                .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
             text = "Error: $message",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Button(onClick = onRetry) {
             Text(text = "Try again")
@@ -163,24 +172,25 @@ private fun BoxScope.ErrorState(
 private fun AnimalList(
     animals: List<Animal>,
     onAnimalClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("animalList.list"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("animalList.list"),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item { Spacer(modifier = Modifier.height(56.dp)) }
 
         items(
             items = animals,
-            key = { animal -> animal.id }
+            key = { animal -> animal.id },
         ) { animal ->
             AnimalCard(
                 animal = animal,
-                onClick = { onAnimalClick(animal.id) }
+                onClick = { onAnimalClick(animal.id) },
             )
         }
     }
@@ -188,55 +198,55 @@ private fun AnimalList(
 
 private class AnimalListStatePreviewProvider :
     PreviewParameterProvider<AnimalListUiState> {
-
     private val warsaw = Location(city = "Warsaw", radiusKm = 15)
     private val krakow = Location(city = "Kraków", radiusKm = 10)
 
-    private val animals = listOf(
-        Animal(
-            id = "1",
-            name = "Luna",
-            photoUrl = "",
-            location = warsaw,
-            species = AnimalSpecies.DOG,
-            breed = "Border Collie",
-            gender = AnimalGender.FEMALE,
-            status = AnimalStatus.ACTIVE,
-            lastSeenDate = "12/11/2025",
-            description = "Energetic dog wearing a red collar.",
-            email = "owner@example.com",
-            phone = "+48 111 222 333"
-        ),
-        Animal(
-            id = "2",
-            name = "Milo",
-            photoUrl = "",
-            location = krakow,
-            species = AnimalSpecies.CAT,
-            breed = "Maine Coon",
-            gender = AnimalGender.MALE,
-            status = AnimalStatus.FOUND,
-            lastSeenDate = "10/11/2025",
-            description = "Large fluffy cat with green eyes.",
-            email = null,
-            phone = "+48 999 888 777"
+    private val animals =
+        listOf(
+            Animal(
+                id = "1",
+                name = "Luna",
+                photoUrl = "",
+                location = warsaw,
+                species = AnimalSpecies.DOG,
+                breed = "Border Collie",
+                gender = AnimalGender.FEMALE,
+                status = AnimalStatus.ACTIVE,
+                lastSeenDate = "12/11/2025",
+                description = "Energetic dog wearing a red collar.",
+                email = "owner@example.com",
+                phone = "+48 111 222 333",
+            ),
+            Animal(
+                id = "2",
+                name = "Milo",
+                photoUrl = "",
+                location = krakow,
+                species = AnimalSpecies.CAT,
+                breed = "Maine Coon",
+                gender = AnimalGender.MALE,
+                status = AnimalStatus.FOUND,
+                lastSeenDate = "10/11/2025",
+                description = "Large fluffy cat with green eyes.",
+                email = null,
+                phone = "+48 999 888 777",
+            ),
         )
-    )
 
-    override val values: Sequence<AnimalListUiState> = sequenceOf(
-        AnimalListUiState(isLoading = true),
-        AnimalListUiState(error = "Network timeout"),
-        AnimalListUiState(animals = animals)
-    )
+    override val values: Sequence<AnimalListUiState> =
+        sequenceOf(
+            AnimalListUiState(isLoading = true),
+            AnimalListUiState(error = "Network timeout"),
+            AnimalListUiState(animals = animals),
+        )
 }
 
 @Preview(name = "Animal list", showBackground = true)
 @Composable
 private fun AnimalListContentPreview(
-    @PreviewParameter(AnimalListStatePreviewProvider::class) state: AnimalListUiState
+    @PreviewParameter(AnimalListStatePreviewProvider::class) state: AnimalListUiState,
 ) {
     MaterialTheme {
         AnimalListContent(state = state)
     }
 }
-

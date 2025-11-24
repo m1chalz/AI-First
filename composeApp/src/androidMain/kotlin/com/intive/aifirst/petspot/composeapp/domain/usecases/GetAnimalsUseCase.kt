@@ -8,7 +8,7 @@ import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepositor
  * Returns mock data until backend integration is implemented.
  */
 class GetAnimalsUseCase(
-    private val repository: AnimalRepository
+    private val repository: AnimalRepository,
 ) {
     /**
      * Fetches all animals from the repository.
@@ -17,7 +17,5 @@ class GetAnimalsUseCase(
      * @return List of animals
      * @throws Exception if data fetch fails
      */
-    suspend operator fun invoke(): List<Animal> =
-        repository.getAnimals()
+    suspend operator fun invoke(): List<Animal> = repository.getAnimals()
 }
-
