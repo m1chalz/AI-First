@@ -57,8 +57,8 @@ handoffs:
 
 ### Implementation for User Story 1
 - [ ] T013 [US1] Implement `PetDetailsViewModel` loading logic (call repo, update state)
-- [ ] T014 [US1] Implement `PetDetailsView` main structure in `/iosApp/iosApp/Views/PetDetailsView.swift` (handle .loading, .error, .loaded cases)
-- [ ] T015 [US1] Implement basic Photo display in `PetDetailsView` (simple Image for now, or placeholder)
+- [ ] T014 [US1] Implement `PetDetailsView` main structure in `/iosApp/iosApp/Views/PetDetailsView.swift` (handle .loading, .error, .loaded cases; ensure root is ScrollView)
+- [ ] T015 [US1] Implement basic Photo display in `PetDetailsView` (include fallback "Image not available" state)
 - [ ] T016 [US1] Implement `PetDetailsCoordinator` navigation logic (start method, hosting controller)
 - [ ] T017 [US1] Implement Retry button logic in `PetDetailsView` and ViewModel
 - [ ] T018 [US1] Add accessibility identifiers for View, Retry Button, Error Message
@@ -99,7 +99,8 @@ handoffs:
 - [ ] T029 [US2] Add Species and Breed rows to `PetDetailsView`
 - [ ] T030 [US2] Add Sex and Age rows to `PetDetailsView` (implement sex symbol mapping)
 - [ ] T031 [US2] Add Microchip number row to `PetDetailsView`
-- [ ] T032 [US2] Add accessibility identifiers for all identification fields
+- [ ] T032 [US2] Add Date of Disappearance row to `PetDetailsView`
+- [ ] T033 [US2] Add accessibility identifiers for all identification fields
 
 ---
 
@@ -110,14 +111,14 @@ handoffs:
 **Independent Test**: Verify location display, tappable phone/email, and map button.
 
 ### Tests for User Story 3
-- [ ] T033 [US3] Add location and contact scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [ ] T034 [US3] Add location and contact scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 3
-- [ ] T034 [US3] Add Location and Radius rows to `PetDetailsView`
-- [ ] T035 [US3] Implement "Show on the map" button in `PetDetailsView` (console log action)
-- [ ] T036 [US3] Add Phone row to `PetDetailsView` with URL opener logic (`tel://`)
-- [ ] T037 [US3] Add Email row to `PetDetailsView` with URL opener logic (`mailto:`)
-- [ ] T038 [US3] Add accessibility identifiers for location, map button, phone, and email
+- [ ] T035 [US3] Add Location and Radius rows to `PetDetailsView`
+- [ ] T036 [US3] Implement "Show on the map" button in `PetDetailsView` (console log action)
+- [ ] T037 [US3] Add Phone row to `PetDetailsView` with URL opener logic (`tel://`)
+- [ ] T038 [US3] Add Email row to `PetDetailsView` with URL opener logic (`mailto:`)
+- [ ] T039 [US3] Add accessibility identifiers for location, map button, phone, and email
 
 ---
 
@@ -128,11 +129,11 @@ handoffs:
 **Independent Test**: Verify long text displays correctly and screen scrolls.
 
 ### Tests for User Story 4
-- [ ] T039 [US4] Add description scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [ ] T040 [US4] Add description scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 4
-- [ ] T040 [US4] Add Additional Description section to `PetDetailsView` (ensure ScrollView works)
-- [ ] T041 [US4] Add accessibility identifier for description text
+- [ ] T041 [US4] Add Additional Description section to `PetDetailsView` (ensure ScrollView works)
+- [ ] T042 [US4] Add accessibility identifier for description text
 
 ---
 
@@ -143,13 +144,13 @@ handoffs:
 **Independent Test**: Verify reward badge appears only when reward is present.
 
 ### Tests for User Story 5
-- [ ] T042 [US5] Add reward scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [ ] T043 [US5] Add reward scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 5
-- [ ] T043 [US5] Update `PetPhotoWithBadgesModel` to accept reward text
-- [ ] T044 [US5] Update `PetPhotoWithBadges` view to render reward badge
-- [ ] T045 [US5] Pass reward data from `PetDetailsView` to `PetPhotoWithBadges`
-- [ ] T046 [US5] Add accessibility identifier for reward badge
+- [ ] T044 [US5] Update `PetPhotoWithBadgesModel` to accept reward text
+- [ ] T045 [US5] Update `PetPhotoWithBadges` view to render reward badge
+- [ ] T046 [US5] Pass reward data from `PetDetailsView` to `PetPhotoWithBadges`
+- [ ] T047 [US5] Add accessibility identifier for reward badge
 
 ---
 
@@ -160,11 +161,11 @@ handoffs:
 **Independent Test**: Verify button exists and logs to console.
 
 ### Tests for User Story 7
-- [ ] T047 [US7] Add remove button scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [ ] T048 [US7] Add remove button scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 7
-- [ ] T048 [US7] Add "Remove Report" button to `PetDetailsView` footer
-- [ ] T049 [US7] Add accessibility identifier for remove button
+- [ ] T049 [US7] Add "Remove Report" button to `PetDetailsView` footer
+- [ ] T050 [US7] Add accessibility identifier for remove button
 
 ---
 
@@ -172,10 +173,10 @@ handoffs:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T050 [P] Add SwiftDoc documentation to all new public APIs
-- [ ] T051 [P] Verify all accessibility identifiers against requirements
-- [ ] T052 [P] Run full test suite to ensure 80% coverage
-- [ ] T053 [P] Perform final code cleanup and formatting
+- [ ] T051 [P] Add SwiftDoc documentation to all new public APIs
+- [ ] T052 [P] Verify all accessibility identifiers against requirements
+- [ ] T053 [P] Run full test suite to ensure 80% coverage
+- [ ] T054 [P] Perform final code cleanup and formatting
 
 ---
 
