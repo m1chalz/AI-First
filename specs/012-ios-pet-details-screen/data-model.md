@@ -264,7 +264,7 @@ PetDetailsUiState
 
 **Backend endpoint `GET /api/v1/announcements/:id` is already implemented!** ✅
 
-`PetRepositoryImpl` will call the real backend endpoint:
+In **Phase 1 (mock-first)**, `PetRepositoryImpl` will return hardcoded `PetDetails` instances matching this contract structure, without making network calls. In **Phase 2**, `PetRepositoryImpl` will call the real backend endpoint:
 
 **Real API response example**:
 
@@ -322,7 +322,7 @@ PetDetails(
 - **Primary entity**: `PetDetails` struct with required and optional fields
 - **UI state**: `PetDetailsUiState` enum (loading/loaded/error)
 - **Component models**: `PetPhotoWithBadgesModel`, `LabelValueRowModel`
-- **Mock strategy**: Hardcoded data in repository until backend endpoint available
+- **Mock strategy**: Hardcoded data in repository for Phase 1 (endpoint already exists; integration deferred to Phase 2)
 - **Testing focus**: ViewModel state transitions, model mapping, error handling
 
 Next phase: Generate API contracts (mock JSON structure) and quickstart guide.

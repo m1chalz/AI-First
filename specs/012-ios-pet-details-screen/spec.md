@@ -190,7 +190,7 @@ Users see a "Remove Report" button that will enable removal functionality in the
 - **FR-018**: Screen MUST maintain proper spacing and layout according to the design specifications
 - **FR-019**: ViewModel MUST expose UI state as Swift enum with cases: .loading (triggers full-screen spinner), .loaded(PetDetails) (displays content), .error(String) (shows error message with retry button)
 - **FR-020**: Coordinator MUST pass pet ID as String parameter during navigation initialization; ViewModel MUST expose loadPetDetails() method that requests full pet details from repository using the provided ID; method called in async init task and by retry button
-- **FR-021**: Repository MAY return mocked data for development and testing until backend endpoint for single pet details is implemented
+- **FR-021**: Repository WILL return mocked data for Phase 1 development (backend endpoint `GET /api/v1/announcements/:id` already exists, but integration is deferred to Phase 2)
 - **FR-022**: Screen MUST use a reusable label-value component for displaying information pairs (e.g., "Date of Disappearance" + value, "Microchip number" + value); component MUST accept a model struct (defined as nested type in extension) via constructor containing: label: String, value: String, valueProcessor: ((String) -> String)? = nil, onTap: (() -> Void)? = nil; phone field uses onTap to open dialer, email field uses onTap to open mail composer; other fields use nil for non-interactive display
 - **FR-023**: Screen MUST display a full-screen error message "Unable to load pet details" with retry button when pet details fail to load from repository; retry button MUST call ViewModel.loadPetDetails() method to re-attempt loading (same method used in init); retry button MUST remain enabled for unlimited retry attempts
 - **FR-024**: Pet photo with overlaid badges (status + reward) MUST be implemented as a separate reusable SwiftUI view component; component MUST accept a model struct (defined as nested type in extension) via constructor containing: imageUrl: String, status: String, rewardText: String? (nil when no reward); component MUST provide a convenience init extension accepting PetDetails object to map properties automatically
@@ -212,7 +212,7 @@ Users see a "Remove Report" button that will enable removal functionality in the
   - Disappearance location (optional: city, coordinates, radius) → maps to API `location` and `locationRadius` (coordinates not available in API)
   - Additional description (optional) → maps to API `description`
   
-  **Note**: Until a dedicated endpoint for single pet details is created (e.g., `GET /api/v1/announcements/:id`), the repository will provide mocked data. Fields not available in the current API (`/api/v1/announcements`) will return mock values or null.
+  **Note**: Backend endpoint `GET /api/v1/announcements/:id` already exists on main branch. In Phase 1, the iOS repository will provide mocked data structured according to this contract to enable independent UI development. Fields not available in the backend API (microchipNumber, approximateAge, reward) will be mocked locally. Phase 2 will integrate with the real API.
 
 ## Success Criteria *(mandatory)*
 

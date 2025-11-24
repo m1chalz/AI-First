@@ -7,7 +7,7 @@
 
 ## Summary
 
-Implementing a new iOS screen that displays comprehensive pet details with navigation from the pet list. Users can view pet photos, status badges, identification information, location data, contact details, and additional descriptions. The screen follows iOS MVVM-C architecture with SwiftUI views, UIKit-based coordinator navigation, and repository-based data fetching. Backend API endpoint `GET /api/v1/announcements/:id` is already implemented on main branch, so repository will call real API instead of using mock data. This is a UI-only implementation with placeholder actions for map view and report removal.
+Implementing a new iOS screen that displays comprehensive pet details with navigation from the pet list. Users can view pet photos, status badges, identification information, location data, contact details, and additional descriptions. The screen follows iOS MVVM-C architecture with SwiftUI views, UIKit-based coordinator navigation, and repository-based data fetching. Backend API endpoint `GET /api/v1/announcements/:id` is already implemented on main branch, but **Phase 1** will use mock data in the iOS repository to enable independent UI development; real API integration will be done in Phase 2. This is a UI-only implementation with placeholder actions for map view and report removal.
 
 ## Technical Context
 
@@ -33,7 +33,7 @@ Implementing a new iOS screen that displays comprehensive pet details with navig
   - Android: N/A (not affected by this iOS-only feature)
   - iOS: ✅ Domain models, repositories, ViewModels in `/iosApp` (no use cases per constitution)
   - Web: N/A (not affected by this iOS-only feature)
-  - Backend: N/A (no backend changes, repository will mock data until endpoint available)
+  - Backend: N/A (no backend changes; endpoint already exists but repository uses mocks in Phase 1 for independent development)
   - NO shared compiled code between platforms
   - Violation justification: N/A - compliant
 
@@ -51,7 +51,7 @@ Implementing a new iOS screen that displays comprehensive pet details with navig
 - [x] **Interface-Based Design**: Domain logic uses interfaces for repositories
   - Android: N/A
   - iOS: ✅ Repository protocol `PetRepository` in `/iosApp/iosApp/Domain/Repositories/` with method `getPetDetails(id: String) async throws -> PetDetails`
-  - ✅ Implementation `PetRepositoryImpl` in `/iosApp/iosApp/Data/Repositories/` (mocked data until backend endpoint available)
+  - ✅ Implementation `PetRepositoryImpl` in `/iosApp/iosApp/Data/Repositories/` (mocked data in Phase 1; endpoint already exists on main)
   - ✅ ViewModel references protocol, not concrete implementation
   - Web: N/A
   - Backend: N/A
