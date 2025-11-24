@@ -1,8 +1,8 @@
 package com.intive.aifirst.petspot.features.animallist.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.intive.aifirst.petspot.domain.repositories.FakeAnimalRepository
-import com.intive.aifirst.petspot.domain.usecases.GetAnimalsUseCase
+import com.intive.aifirst.petspot.composeapp.domain.repositories.FakeAnimalRepository
+import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
 import kotlinx.coroutines.Dispatchers

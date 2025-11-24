@@ -1,13 +1,30 @@
 import type { Knex } from 'knex';
 import type { Announcement, AnnouncementRow } from '../../types/announcement.ts';
 
-export class AnnouncementRepository {
+export interface IAnnouncementRepository {
+  findAll(): Promise<Announcement[]>;
+  findById(id: string): Promise<Announcement | null>;
+}
+
+export class AnnouncementRepository implements IAnnouncementRepository {
   constructor(private db: Knex) {}
 
   async findAll(): Promise<Announcement[]> {
     const rows: AnnouncementRow[] = await this.db('announcement').select('*');
     
-    return rows.map((row) => ({
+    return rows.map(this.mapRowToAnnouncement);
+  }
+
+  async findById(id: string): Promise<Announcement | null> {
+    const row: AnnouncementRow | undefined = await this.db('announcement')
+      .where('id', id)
+      .first();
+    
+    return row ? this.mapRowToAnnouncement(row) : null;
+  }
+
+  private mapRowToAnnouncement(row: AnnouncementRow): Announcement {
+    return {
       id: row.id,
       petName: row.pet_name,
       species: row.species,
@@ -23,7 +40,7 @@ export class AnnouncementRepository {
       status: row.status,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
-    }));
+    };
   }
 }
 

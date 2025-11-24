@@ -2,7 +2,7 @@ package com.intive.aifirst.petspot.features.animallist.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.intive.aifirst.petspot.domain.usecases.GetAnimalsUseCase
+import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListReducer

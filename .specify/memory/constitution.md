@@ -2,7 +2,46 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.0.0 → 2.0.1
+Version change: 2.1.0 → 2.2.0
+MINOR: Added Android Composable screen separation pattern for previews and testing
+
+Changes (v2.2.0):
+- UPDATED: Principle X "Android Model-View-Intent Architecture" - added mandatory Composable screen separation pattern
+- Added requirements for state host + stateless composable pattern
+- Added preview requirements with PreviewParameterProvider
+- UPDATED: .specify/templates/plan-template.md - added Composable pattern compliance check
+- UPDATED: .specify/templates/tasks-template.md - added preview creation tasks
+
+Modified principles:
+- X. Android Model-View-Intent Architecture (UPDATED - added Composable screen pattern requirement)
+
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md - Added Composable screen pattern check
+- ✅ .specify/templates/tasks-template.md - Added preview tasks
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Follow-up TODOs: None
+
+Previous changes (v2.1.0):
+MINOR: Added Android Navigation Component architectural requirement
+
+Changes (v2.1.0):
+- UPDATED: Principle X "Android Model-View-Intent Architecture" - added mandatory Jetpack Navigation Component requirement
+- UPDATED: Module Structure - clarified that Android navigation MUST use Jetpack Navigation Component
+- UPDATED: .specify/templates/plan-template.md - added Android Navigation Component compliance check
+- UPDATED: .specify/templates/tasks-template.md - clarified navigation setup requirements
+
+Modified principles:
+- X. Android Model-View-Intent Architecture (UPDATED - added Navigation Component requirement)
+
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md - Added Android Navigation Component check
+- ✅ .specify/templates/tasks-template.md - Updated navigation setup guidance
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Follow-up TODOs: None
+
+Previous changes (v2.0.1):
 PATCH: Clarified dependency injection requirements and iOS architecture patterns
 
 Clarifications (v2.0.1):
@@ -912,6 +951,13 @@ keep Compose UI declarative and testable.
 - `MviViewModel`: Exposes `state: StateFlow<UiState>`, `effects: SharedFlow<UiEffect>`, and
   `dispatchIntent(intent: UserIntent)` to receive intents.
 
+**Navigation requirements**:
+- Android navigation MUST use Jetpack Navigation Component (androidx.navigation:navigation-compose)
+- Navigation graph MUST be defined declaratively using `NavHost` composable
+- Deep links SHOULD be supported via Navigation Component's deep link mechanism
+- ViewModels MUST NOT trigger navigation directly - use `UiEffect` for navigation events
+- Navigation state MUST be managed by `NavController`, not application state
+
 **Loop requirements**:
 1. Compose UI collects `state` via `collectAsStateWithLifecycle()` and renders purely from `UiState`.
 2. UI emits intents through callbacks, e.g., `viewModel.dispatchIntent(UserIntent.Refresh)`.
@@ -926,6 +972,107 @@ keep Compose UI declarative and testable.
 - Provide exhaustive `when` handling for all intents and reducer branches.
 - Write unit tests covering reducers and intent handling before wiring UI.
 - Keep side effects (logging, analytics, navigation) inside dedicated effect handlers, not reducers.
+
+**Composable screen pattern** (NON-NEGOTIABLE):
+
+All screen composables MUST follow a two-layer pattern for testability and preview support:
+
+1. **State Host Composable** (lightweight, stateful):
+   - Collects state from ViewModel (`collectAsStateWithLifecycle()`)
+   - Observes effects using `LaunchedEffect`
+   - Dispatches intents to ViewModel
+   - Delegates rendering to stateless composable
+   - Contains NO UI logic or layout code
+   - Example name: `PetListScreen(viewModel: PetListViewModel)`
+
+2. **Stateless Composable** (pure presentation):
+   - Accepts `UiState` as immutable parameter
+   - Accepts callback lambdas for user interactions (e.g., `onPetClick: (String) -> Unit`)
+   - Contains ALL UI logic and layout code
+   - NO ViewModel dependency
+   - NO runtime dependencies (Koin, navigation, etc.)
+   - Example name: `PetListContent(state: PetListUiState, onPetClick: (String) -> Unit)`
+
+**Preview requirements** (MANDATORY):
+- Stateless composable MUST have at least one `@Preview` function
+- Preview data MUST be delivered via `@PreviewParameter` with custom `PreviewParameterProvider<UiState>`
+- Callback lambdas MUST be defaulted to no-ops (e.g., `onPetClick: (String) -> Unit = {}`)
+- Previews MUST focus on light mode only (no `@Preview(uiMode = UI_MODE_NIGHT_YES)` required)
+- Preview functions MUST be co-located with stateless composable in same file
+- `PreviewParameterProvider` MUST provide realistic sample data (loading, success, error states)
+
+Example:
+```kotlin
+// State host (with ViewModel dependency)
+@Composable
+fun PetListScreen(viewModel: PetListViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is PetListEffect.NavigateToDetails -> { /* navigate */ }
+            }
+        }
+    }
+    
+    PetListContent(
+        state = state,
+        onPetClick = { viewModel.dispatchIntent(PetListIntent.SelectPet(it)) },
+        onRefresh = { viewModel.dispatchIntent(PetListIntent.Refresh) }
+    )
+}
+
+// Stateless composable (pure, previewable)
+@Composable
+fun PetListContent(
+    state: PetListUiState,
+    onPetClick: (String) -> Unit = {},
+    onRefresh: () -> Unit = {}
+) {
+    // All UI layout code here
+    when {
+        state.isLoading -> LoadingIndicator()
+        state.error != null -> ErrorView(state.error, onRefresh)
+        else -> LazyColumn {
+            items(state.pets) { pet ->
+                PetItem(pet = pet, onClick = { onPetClick(pet.id) })
+            }
+        }
+    }
+}
+
+// Preview with PreviewParameterProvider
+class PetListUiStateProvider : PreviewParameterProvider<PetListUiState> {
+    override val values = sequenceOf(
+        PetListUiState.Initial.copy(isLoading = true),
+        PetListUiState.Initial.copy(
+            pets = listOf(
+                Pet(id = "1", name = "Max", species = Species.DOG),
+                Pet(id = "2", name = "Luna", species = Species.CAT)
+            )
+        ),
+        PetListUiState.Initial.copy(error = "Network error")
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PetListContentPreview(
+    @PreviewParameter(PetListUiStateProvider::class) state: PetListUiState
+) {
+    MaterialTheme {
+        PetListContent(state = state)
+    }
+}
+```
+
+**Rationale**: Separating stateful orchestration from stateless presentation enables:
+- **Previews without runtime dependencies**: Stateless composables can be previewed without Koin, ViewModel, or navigation setup
+- **Faster preview rendering**: No dependency injection or lifecycle overhead
+- **Easier testing**: Pure functions with predictable inputs/outputs
+- **Design iteration**: UI changes can be previewed instantly with various states via `PreviewParameterProvider`
+- **Consistent pattern**: Clear separation of concerns across all screens
 
 Example MVI ViewModel:
 ```kotlin
@@ -1174,8 +1321,8 @@ test utilities across web and mobile test suites.
 - `features/<feature>/ui/` - Composable screens (collect StateFlow<UiState>, dispatch intents)
 - `features/<feature>/presentation/mvi/` - UiState, UserIntent, UiEffect, reducers
 - `features/<feature>/presentation/viewmodels/` - MviViewModel implementations
-- `di/` - Dependency injection modules (Koin, Hilt, or manual)
-- `navigation/` - Compose Navigation and effect handlers
+- `di/` - Dependency injection modules (Koin mandatory)
+- `navigation/` - Jetpack Navigation Component graph (NavHost) and effect handlers
 
 **`/iosApp/iosApp/`** (iOS - Full Stack):
 - `Domain/Models/` - Swift structs/classes for domain entities
@@ -1490,4 +1637,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.0.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21
+**Version**: 2.2.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21

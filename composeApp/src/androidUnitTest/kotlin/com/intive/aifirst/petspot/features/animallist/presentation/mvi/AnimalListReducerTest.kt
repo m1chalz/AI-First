@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.animallist.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -36,7 +36,7 @@ class AnimalListReducerTest {
         val previousAnimals = MockAnimalData.generateMockAnimals(3)
         val currentState = AnimalListUiState(animals = previousAnimals, isLoading = true)
         val exception = Exception("Network error")
-        val result = Result.failure<List<com.intive.aifirst.petspot.domain.models.Animal>>(exception)
+        val result = Result.failure<List<com.intive.aifirst.petspot.composeapp.domain.models.Animal>>(exception)
 
         // When - reducer processes the failure
         val newState = AnimalListReducer.reduce(currentState, result)
@@ -52,7 +52,7 @@ class AnimalListReducerTest {
     fun `reduce should return empty state when result is success with empty list`() {
         // Given - initial state and successful result with empty list
         val currentState = AnimalListUiState.Initial
-        val result = Result.success(emptyList<com.intive.aifirst.petspot.domain.models.Animal>())
+        val result = Result.success(emptyList<com.intive.aifirst.petspot.composeapp.domain.models.Animal>())
 
         // When - reducer processes the empty result
         val newState = AnimalListReducer.reduce(currentState, result)
