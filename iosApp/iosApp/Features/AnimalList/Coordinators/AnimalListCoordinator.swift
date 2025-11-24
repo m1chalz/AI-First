@@ -1,6 +1,5 @@
 import UIKit
 import SwiftUI
-import Shared
 
 /**
  * Coordinator for Animal List flow following MVVM-C architecture.

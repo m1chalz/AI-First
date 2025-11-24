@@ -1,5 +1,4 @@
 import Foundation
-import Shared
 
 /**
  * Repository implementation with mocked data for iOS UI development.

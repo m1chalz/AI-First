@@ -1,5 +1,4 @@
 import Foundation
-import Shared
 
 /// Initializes Koin dependency injection for iOS platform.
 ///

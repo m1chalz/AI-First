@@ -1,5 +1,4 @@
 import Foundation
-import Shared
 
 /**
  * Actions that can be performed on an animal card.
