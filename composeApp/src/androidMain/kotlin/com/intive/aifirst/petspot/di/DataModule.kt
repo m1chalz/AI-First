@@ -1,7 +1,7 @@
 package com.intive.aifirst.petspot.di
 
-import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
 import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
+import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
 import org.koin.dsl.module
 
 /**
