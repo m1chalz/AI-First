@@ -32,36 +32,35 @@ struct LabelValueRowModel: Equatable {
     }
 }
 
-/// Reusable component displaying a label-value pair in a horizontal layout
+/// Reusable component displaying a label-value pair in a vertical layout (label on top, value below)
 struct LabelValueRow: View {
     let model: LabelValueRowModel
     
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            // Label (leading, secondary style)
+        VStack(alignment: .leading, spacing: 4) {
+            // Label (top, secondary color)
             Text(model.label)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.system(size: 16))
+                .foregroundColor(Color(hex: "#6a7282"))
             
-            // Value (trailing, primary style)
+            // Value (bottom, primary color or interactive)
             if let onTap = model.onTap {
                 Button(action: onTap) {
                     valueText
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(hex: "#101828"))
                 }
             } else {
                 valueText
-                    .foregroundColor(.primary)
+                    .foregroundColor(Color(hex: "#101828"))
             }
         }
-        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var valueText: some View {
         Text(processedValue)
-            .font(.subheadline)
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .font(.system(size: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var processedValue: String {

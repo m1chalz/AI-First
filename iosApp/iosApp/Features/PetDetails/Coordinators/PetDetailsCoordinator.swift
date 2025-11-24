@@ -8,8 +8,8 @@ class PetDetailsCoordinator: CoordinatorInterface {
     
     weak var parentCoordinator: CoordinatorInterface?
     var childCoordinators: [CoordinatorInterface] = []
-    var navigationController: UINavigationController
-    
+    var navigationController: UINavigationController?
+
     private let petId: String
     private let repository: AnimalRepositoryProtocol
     
@@ -21,7 +21,7 @@ class PetDetailsCoordinator: CoordinatorInterface {
     ///   - petId: ID of the pet to display
     ///   - repository: Repository for fetching pet data
     init(
-        navigationController: UINavigationController,
+        navigationController: UINavigationController?,
         petId: String,
         repository: AnimalRepositoryProtocol
     ) {
@@ -33,7 +33,7 @@ class PetDetailsCoordinator: CoordinatorInterface {
     // MARK: - CoordinatorInterface
     
     /// Starts the pet details flow by pushing the details screen
-    func start() {
+    func start(animated: Bool) async {
         let viewModel = PetDetailsViewModel(
             repository: repository,
             petId: petId
@@ -47,13 +47,13 @@ class PetDetailsCoordinator: CoordinatorInterface {
         let detailsView = PetDetailsView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: detailsView)
         
-        navigationController.pushViewController(hostingController, animated: true)
+        navigationController?.pushViewController(hostingController, animated: animated)
     }
     
     /// Cleans up coordinator when flow is finished
     func finish() {
-        navigationController.popViewController(animated: true)
-        parentCoordinator?.childDidFinish(self)
+        navigationController?.popViewController(animated: true)
+//        parentCoordinator?.childDidFinish(self)
     }
 }
 

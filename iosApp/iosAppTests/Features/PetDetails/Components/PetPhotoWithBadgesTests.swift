@@ -30,6 +30,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
             microchipNumber: "123-456-789",
             approximateAge: "2 years",
             reward: reward,
+            vaccinationId: "VAC-2023-TEST",
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
         )

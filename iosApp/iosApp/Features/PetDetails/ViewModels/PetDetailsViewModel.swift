@@ -1,7 +1,7 @@
 import Foundation
 
 /// UI state for the Pet Details Screen
-enum PetDetailsUiState: Equatable {
+enum PetDetailsUiState {
     /// Initial state or loading data
     case loading
     

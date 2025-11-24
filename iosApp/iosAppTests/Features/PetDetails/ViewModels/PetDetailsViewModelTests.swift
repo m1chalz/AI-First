@@ -70,7 +70,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             locationRadius: 5,
             microchipNumber: "123-456-789",
             approximateAge: "2 years",
-            reward: "$100",
+            reward: "100 PLN",
+            vaccinationId: "VAC-2023-TEST",
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
         )

@@ -56,6 +56,9 @@ struct PetDetails: Identifiable, Codable {
     /// Reward amount text (optional, will be mocked until backend adds this field)
     let reward: String?
     
+    /// Vaccination ID (optional, will be mocked until backend adds this field)
+    let vaccinationId: String?
+    
     // MARK: - Metadata (not displayed in UI)
     
     /// Timestamp when announcement was created

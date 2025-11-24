@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Main view for Pet Details Screen.
-/// Displays comprehensive pet information with loading and error states.
+/// Displays comprehensive pet information following Figma design specifications.
 struct PetDetailsView: View {
     @ObservedObject var viewModel: PetDetailsViewModel
     
@@ -67,186 +67,186 @@ struct PetDetailsView: View {
     
     private func detailsView(petDetails: PetDetails) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Pet Photo with Badges
-                PetPhotoWithBadges(model: PetPhotoWithBadgesModel(from: petDetails))
+            VStack(alignment: .leading, spacing: 0) {
+                // Pet Photo with Badges and Back Button
+                PetPhotoWithBadges(
+                    model: PetPhotoWithBadgesModel(from: petDetails),
+                    onBack: { viewModel.handleBack() }
+                )
                 
-                // Identification Information Section
-                identificationSection(petDetails: petDetails)
-                    .padding(.horizontal)
-                
-                // Location and Contact Section
-                locationContactSection(petDetails: petDetails)
-                    .padding(.horizontal)
-                
-                // Description Section
-                descriptionSection(petDetails: petDetails)
-                    .padding(.horizontal)
-                
-                // Remove Report Button (footer)
-                removeReportButton
-                    .padding()
-                
-                Spacer()
-            }
-        }
-    }
-    
-    // MARK: - Identification Section
-    
-    private func identificationSection(petDetails: PetDetails) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Section Header
-            Text("Identification")
-                .font(.headline)
-                .padding(.bottom, 8)
-            
-            // Microchip Number
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Microchip",
-                value: formatMicrochip(petDetails.microchipNumber)
-            ))
-            .accessibilityIdentifier("petDetails.microchip.field")
-            
-            Divider()
-            
-            // Species and Breed (two-column layout)
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Species",
-                value: formatSpecies(petDetails.species)
-            ))
-            .accessibilityIdentifier("petDetails.species.field")
-            
-            Divider()
-            
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Breed",
-                value: petDetails.breed ?? "—"
-            ))
-            .accessibilityIdentifier("petDetails.breed.field")
-            
-            Divider()
-            
-            // Sex
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Sex",
-                value: petDetails.gender,
-                valueProcessor: formatGender
-            ))
-            .accessibilityIdentifier("petDetails.sex.field")
-            
-            Divider()
-            
-            // Age
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Approximate Age",
-                value: petDetails.approximateAge ?? "—"
-            ))
-            .accessibilityIdentifier("petDetails.age.field")
-            
-            Divider()
-            
-            // Date of Disappearance
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Date of Disappearance",
-                value: formatDate(petDetails.lastSeenDate)
-            ))
-            .accessibilityIdentifier("petDetails.date.field")
-        }
-    }
-    
-    // MARK: - Location and Contact Section
-    
-    private func locationContactSection(petDetails: PetDetails) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Section Header
-            Text("Location & Contact")
-                .font(.headline)
-                .padding(.bottom, 8)
-            
-            // Location
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Location",
-                value: petDetails.location
-            ))
-            .accessibilityIdentifier("petDetails.location.field")
-            
-            Divider()
-            
-            // Radius
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Radius",
-                value: formatRadius(petDetails.locationRadius)
-            ))
-            .accessibilityIdentifier("petDetails.radius.field")
-            
-            Divider()
-            
-            // Show on the map button
-            Button(action: handleShowMap) {
-                HStack {
-                    Image(systemName: "map")
-                    Text("Show on the map")
+                // Content Container with padding
+                VStack(alignment: .leading, spacing: 20) {
+                    // Date of Disappearance (full width)
+                    LabelValueRow(model: LabelValueRowModel(
+                        label: "Date of Disappearance",
+                        value: formatDate(petDetails.lastSeenDate)
+                    ))
+                    .accessibilityIdentifier("petDetails.date.field")
+                    .padding(.bottom, 10.667)
+                    .overlay(
+                        Divider().background(Color.gray.opacity(0.2)),
+                        alignment: .bottom
+                    )
+                    
+                    // Contact Owner - Phone
+                    LabelValueRow(model: LabelValueRowModel(
+                        label: "Contact owner",
+                        value: petDetails.phone,
+                        onTap: { handlePhoneTap(petDetails.phone) }
+                    ))
+                    .accessibilityIdentifier("petDetails.phone.tap")
+                    
+                    // Contact Owner - Email
+                    LabelValueRow(model: LabelValueRowModel(
+                        label: "Contact owner",
+                        value: petDetails.email ?? "—",
+                        onTap: petDetails.email != nil ? { handleEmailTap(petDetails.email!) } : nil
+                    ))
+                    .accessibilityIdentifier("petDetails.email.tap")
+                    .padding(.bottom, 10.667)
+                    .overlay(
+                        Divider().background(Color.gray.opacity(0.2)),
+                        alignment: .bottom
+                    )
+                    
+                    // Animal Name & Microchip (2 columns)
+                    HStack(spacing: 12) {
+                        LabelValueRow(model: LabelValueRowModel(
+                            label: "Animal Name",
+                            value: petDetails.petName
+                        ))
+                        .accessibilityIdentifier("petDetails.name.field")
+                        
+                        LabelValueRow(model: LabelValueRowModel(
+                            label: "Microchip number",
+                            value: formatMicrochip(petDetails.microchipNumber)
+                        ))
+                        .accessibilityIdentifier("petDetails.microchip.field")
+                    }
+                    
+                    // Species & Breed (2 columns)
+                    HStack(spacing: 12) {
+                        LabelValueRow(model: LabelValueRowModel(
+                            label: "Animal Species",
+                            value: formatSpecies(petDetails.species)
+                        ))
+                        .accessibilityIdentifier("petDetails.species.field")
+                        
+                        LabelValueRow(model: LabelValueRowModel(
+                            label: "Animal Race",
+                            value: petDetails.breed ?? "—"
+                        ))
+                        .accessibilityIdentifier("petDetails.breed.field")
+                    }
+                    
+                    // Sex & Age (2 columns)
+                    HStack(spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Animal Sex")
+                                .font(.system(size: 16))
+                                .foregroundColor(Color(hex: "#6a7282"))
+                            
+                            HStack(spacing: 8) {
+                                Image(systemName: genderIcon(petDetails.gender))
+                                    .font(.system(size: 20))
+                                    .foregroundColor(Color(hex: "#155dfc"))
+                                
+                                Text(petDetails.gender.capitalized)
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(hex: "#101828"))
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityIdentifier("petDetails.sex.field")
+                        
+                        LabelValueRow(model: LabelValueRowModel(
+                            label: "Animal Approx. Age",
+                            value: petDetails.approximateAge ?? "—"
+                        ))
+                        .accessibilityIdentifier("petDetails.age.field")
+                    }
+                    
+                    // Place of Disappearance / City
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Place of Disappearance / City")
+                            .font(.system(size: 16))
+                            .foregroundColor(Color(hex: "#6a7282"))
+                        
+                        HStack(spacing: 8) {
+                            Image(systemName: "mappin.circle")
+                                .font(.system(size: 20))
+                                .foregroundColor(Color(hex: "#101828"))
+                            
+                            Text(petDetails.location)
+                                .font(.system(size: 16))
+                                .foregroundColor(Color(hex: "#101828"))
+                            
+                            if let radius = petDetails.locationRadius {
+                                Text("•")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(hex: "#6a7282"))
+                                
+                                Text("±\(radius) km")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(hex: "#4a5565"))
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("petDetails.location.field")
+                    
+                    // Show on the map button (bordered, blue)
+                    Button(action: handleShowMap) {
+                        Text("Show on the map")
+                            .font(.system(size: 16))
+                            .foregroundColor(Color(hex: "#155dfc"))
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 8)
+                            .frame(height: 40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(hex: "#155dfc"), lineWidth: 2)
+                            )
+                    }
+                    .accessibilityIdentifier("petDetails.showMap.button")
+                    
+                    // Vaccination ID
+                    LabelValueRow(model: LabelValueRowModel(
+                        label: "Vaccination ID",
+                        value: petDetails.vaccinationId ?? "—"
+                    ))
+                    .accessibilityIdentifier("petDetails.vaccination.field")
+                    
+                    // Animal Additional Description
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Animal Additional Description")
+                            .font(.system(size: 16))
+                            .foregroundColor(Color(hex: "#6a7282"))
+                        
+                        Text(petDetails.description)
+                            .font(.system(size: 16))
+                            .foregroundColor(Color(hex: "#101828"))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .accessibilityIdentifier("petDetails.description.text")
+                    
+                    // Remove Report button (full width, red)
+                    Button(action: handleRemoveReport) {
+                        Text("Remove Report")
+                            .font(.system(size: 16))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color(hex: "#fb2c36"))
+                            .cornerRadius(10)
+                    }
+                    .accessibilityIdentifier("petDetails.removeReport.button")
                 }
-                .font(.subheadline)
-                .foregroundColor(.blue)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
+                .padding(.horizontal, 23)
+                .padding(.top, 20)
+                .padding(.bottom, 30)
             }
-            .accessibilityIdentifier("petDetails.showMap.button")
-            
-            Divider()
-            
-            // Phone
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Phone",
-                value: petDetails.phone,
-                onTap: { handlePhoneTap(petDetails.phone) }
-            ))
-            .accessibilityIdentifier("petDetails.phone.tap")
-            
-            Divider()
-            
-            // Email
-            LabelValueRow(model: LabelValueRowModel(
-                label: "Email",
-                value: petDetails.email ?? "—",
-                onTap: petDetails.email != nil ? { handleEmailTap(petDetails.email!) } : nil
-            ))
-            .accessibilityIdentifier("petDetails.email.tap")
         }
-    }
-    
-    // MARK: - Description Section
-    
-    private func descriptionSection(petDetails: PetDetails) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Section Header
-            Text("Additional Information")
-                .font(.headline)
-            
-            // Description Text
-            Text(petDetails.description)
-                .font(.subheadline)
-                .foregroundColor(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("petDetails.description.text")
-        }
-    }
-    
-    // MARK: - Remove Report Button
-    
-    private var removeReportButton: some View {
-        Button(action: handleRemoveReport) {
-            Text("Remove Report")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.red)
-                .cornerRadius(12)
-        }
-        .accessibilityIdentifier("petDetails.removeReport.button")
+        .background(Color.white)
     }
     
     // MARK: - Action Handlers
@@ -289,11 +289,6 @@ struct PetDetailsView: View {
     
     // MARK: - Formatting Helpers
     
-    private func formatRadius(_ radius: Int?) -> String {
-        guard let radius = radius else { return "—" }
-        return "±\(radius) km"
-    }
-    
     private func formatMicrochip(_ microchip: String?) -> String {
         guard let microchip = microchip else { return "—" }
         
@@ -315,16 +310,14 @@ struct PetDetailsView: View {
         return species.capitalized
     }
     
-    private func formatGender(_ gender: String) -> String {
+    private func genderIcon(_ gender: String) -> String {
         switch gender.uppercased() {
         case "MALE":
-            return "♂ Male"
+            return "arrow.up.right"
         case "FEMALE":
-            return "♀ Female"
-        case "UNKNOWN":
-            return "? Unknown"
+            return "arrow.down.right"
         default:
-            return gender
+            return "questionmark"
         }
     }
     
@@ -360,21 +353,22 @@ struct PetDetailsView_Previews: PreviewProvider {
             func getPetDetails(id: String) async throws -> PetDetails {
                 return PetDetails(
                     id: "preview-id",
-                    petName: "Preview Pet",
+                    petName: "Max",
                     photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
                     status: "ACTIVE",
                     lastSeenDate: "2025-11-20",
                     species: "DOG",
                     gender: "MALE",
-                    description: "Test description",
+                    description: "Friendly and energetic golden retriever looking for a loving home. Great with kids and other pets.",
                     location: "Warsaw",
                     phone: "+48 123 456 789",
                     email: "test@example.com",
-                    breed: "York",
-                    locationRadius: 5,
-                    microchipNumber: "123-456-789",
+                    breed: "Doberman",
+                    locationRadius: 15,
+                    microchipNumber: "000-000-000-000",
                     approximateAge: "3 years",
-                    reward: "$500",
+                    reward: "500 PLN",
+                    vaccinationId: "VAC-2023-001234",
                     createdAt: "2025-11-20T10:00:00Z",
                     updatedAt: "2025-11-20T10:00:00Z"
                 )
@@ -385,9 +379,8 @@ struct PetDetailsView_Previews: PreviewProvider {
         
         return NavigationView {
             PetDetailsView(viewModel: viewModel)
-                .navigationTitle("Pet Details")
+                .navigationBarHidden(true)
         }
     }
 }
 #endif
-

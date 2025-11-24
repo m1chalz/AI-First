@@ -30,22 +30,46 @@ struct PetPhotoWithBadgesModel: Equatable {
 /// Reusable component displaying pet photo with status and optional reward badges
 struct PetPhotoWithBadges: View {
     let model: PetPhotoWithBadgesModel
+    var onBack: (() -> Void)?
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             // Pet Photo
             photoView
             
-            // Status Badge (upper right)
-            statusBadge
-                .padding(12)
+            // Back button (top left)
+            VStack {
+                HStack {
+                    backButton
+                        .padding(18)
+                    Spacer()
+                }
+                Spacer()
+            }
             
-            // Reward Badge (lower left)
+            // Status Badge (top right)
+            VStack {
+                HStack {
+                    Spacer()
+                    statusBadge
+                        .padding(18)
+                }
+                Spacer()
+            }
+            
+            // Reward Badge (bottom left, over photo)
             if let rewardText = model.rewardText {
-                rewardBadge(text: rewardText)
+                VStack {
+                    Spacer()
+                    HStack {
+                        rewardBadge(text: rewardText)
+                            .padding(20)
+                        Spacer()
+                    }
+                }
             }
         }
-        .frame(height: 300)
+        .frame(height: 229)
     }
     
     // MARK: - Photo View
@@ -90,17 +114,34 @@ struct PetPhotoWithBadges: View {
         .accessibilityIdentifier("petDetails.photo.image")
     }
     
+    // MARK: - Back Button
+    
+    private var backButton: some View {
+        Button(action: { onBack?() }) {
+            Image(systemName: "xmark")
+                .font(.system(size: 16))
+                .foregroundColor(Color(hex: "#101828"))
+                .frame(width: 44, height: 44)
+                .background(Color.white)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color(hex: "#e5e9ec"), lineWidth: 0.667)
+                )
+        }
+        .accessibilityIdentifier("petDetails.back.button")
+    }
+    
     // MARK: - Status Badge
     
     private var statusBadge: some View {
         Text(model.status)
-            .font(.caption)
-            .fontWeight(.bold)
+            .font(.system(size: 16))
             .foregroundColor(.white)
             .padding(.horizontal, 12)
-            .padding(.vertical, 6)
+            .padding(.vertical, 2)
             .background(statusBadgeColor)
-            .cornerRadius(8)
+            .cornerRadius(22369600)
             .accessibilityIdentifier("petDetails.status.badge")
     }
     
@@ -120,22 +161,21 @@ struct PetPhotoWithBadges: View {
     // MARK: - Reward Badge
     
     private func rewardBadge(text: String) -> some View {
-        VStack {
-            Spacer()
-            HStack {
-                Text(text)
-                    .font(.caption)
-                    .fontWeight(.bold)
+        HStack(spacing: 12) {
+            Image(systemName: "bag")
+                .font(.system(size: 24))
+                .foregroundColor(.white)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Reward")
+                    .font(.system(size: 16))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.orange)
-                    .cornerRadius(8)
-                    .accessibilityIdentifier("petDetails.reward.badge")
-                Spacer()
+                Text(text)
+                    .font(.system(size: 16))
+                    .foregroundColor(.white)
             }
-            .padding(12)
         }
+        .accessibilityIdentifier("petDetails.reward.badge")
     }
 }
 

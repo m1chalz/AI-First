@@ -315,7 +315,8 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 locationRadius: 5,
                 microchipNumber: "616-093-400-123",
                 approximateAge: "3 years",
-                reward: "$500 reward",
+                reward: "500 PLN",
+                vaccinationId: "VAC-2023-001234",
                 createdAt: "2025-11-19T15:47:14.000Z",
                 updatedAt: "2025-11-19T15:47:14.000Z"
             )
@@ -338,6 +339,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 microchipNumber: "616-093-400-456",
                 approximateAge: "2 years",
                 reward: nil,
+                vaccinationId: "VAC-2023-004567",
                 createdAt: "2025-11-20T10:30:00.000Z",
                 updatedAt: "2025-11-20T10:30:00.000Z"
             )
@@ -360,6 +362,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 microchipNumber: nil,
                 approximateAge: nil,
                 reward: nil,
+                vaccinationId: nil,
                 createdAt: "2025-11-21T14:15:00.000Z",
                 updatedAt: "2025-11-21T14:15:00.000Z"
             )
@@ -381,7 +384,8 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 locationRadius: 10,
                 microchipNumber: "616-093-400-789",
                 approximateAge: "5 years",
-                reward: "$200 reward",
+                reward: "200 PLN",
+                vaccinationId: "VAC-2023-007890",
                 createdAt: "2025-11-15T08:00:00.000Z",
                 updatedAt: "2025-11-15T08:00:00.000Z"
             )
