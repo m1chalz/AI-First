@@ -67,14 +67,11 @@ iosApp/iosApp/
 │   ├── Models/
 │   │   └── PetDetails.swift              # NEW: Domain model
 │   └── Repositories/
-│       └── PetRepository.swift           # MODIFIED: Add getPetDetails(id:) method
-│
-├── Data/
-│   └── Repositories/
-│       └── PetRepositoryImpl.swift       # MODIFIED: Add getPetDetails implementation (calls real API)
+│       ├── AnimalRepositoryProtocol.swift # MODIFIED: Add getPetDetails(id:) method
+│       └── AnimalRepository.swift         # MODIFIED: Add getPetDetails(id:) mock implementation
 │
 ├── Coordinators/
-│   ├── PetListCoordinator.swift          # MODIFIED: Add navigation to details
+│   ├── AnimalListCoordinator.swift       # MODIFIED: Add navigation to details
 │   └── PetDetailsCoordinator.swift       # NEW: Coordinator for details screen
 │
 ├── ViewModels/
@@ -161,7 +158,7 @@ If backend adds new fields (e.g., `weight`, `color`):
    let color: String?
    ```
 
-2. **Update repository** (`PetRepositoryImpl.swift`):
+2. **Update repository** (`AnimalRepository.swift`):
    ```swift
    // Add to mock data
    weight: "25 kg",
@@ -180,7 +177,7 @@ If backend adds new fields (e.g., `weight`, `color`):
 
 Backend endpoint `GET /api/v1/announcements/:id` is **already implemented** ✅
 
-**Repository implementation** (`PetRepositoryImpl.swift`):
+**Repository implementation** (`AnimalRepository.swift`):
 ```swift
 func getPetDetails(id: String) async throws -> PetDetails {
     let url = URL(string: "\(baseUrl)/api/v1/announcements/\(id)")!
@@ -212,7 +209,7 @@ Backend has seed data with multiple pet records. Use these IDs for testing:
 **Problem**: Pet details screen shows loading spinner indefinitely
 
 **Solution**:
-- Check repository method is being called (add breakpoint in `PetRepositoryImpl.getPetDetails`)
+- Check repository method is being called (add breakpoint in `AnimalRepository.getPetDetails`)
 - Verify async task is started in ViewModel (check `loadPetDetails()` method)
 - Ensure `@MainActor` is applied to ViewModel class
 

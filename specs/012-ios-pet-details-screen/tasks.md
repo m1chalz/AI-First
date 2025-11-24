@@ -33,9 +33,9 @@ handoffs:
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
 - [ ] T003 Create `PetDetails` domain model in `/iosApp/iosApp/Domain/Models/PetDetails.swift` (full definition from data-model.md)
-- [ ] T004 Create `PetRepository` protocol in `/iosApp/iosApp/Domain/Repositories/PetRepository.swift`
-- [ ] T005 Create `PetRepositoryImpl` in `/iosApp/iosApp/Data/Repositories/PetRepositoryImpl.swift` (implement `getPetDetails` with mock data)
-- [ ] T006 Register `PetRepository` in `/iosApp/iosApp/DI/ServiceContainer.swift`
+- [ ] T004 Extend existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` with `getPetDetails(id: String) async throws -> PetDetails` method (no separate PetRepository type)
+- [ ] T005 Extend existing `AnimalRepository` implementation in `/iosApp/iosApp/Domain/Repositories/AnimalRepository.swift` with `getPetDetails` mock implementation
+- [ ] T006 (Future) Register `AnimalRepositoryProtocol` implementation in `/iosApp/iosApp/DI/ServiceContainer.swift` once ServiceContainer is introduced for iOS DI (for now, coordinator creates `AnimalRepository` directly)
 - [ ] T007 Create `PetDetailsUiState` enum in `/iosApp/iosApp/ViewModels/PetDetailsUiState.swift` (or nested in ViewModel)
 - [ ] T008 Create `PetDetailsViewModel` skeleton in `/iosApp/iosApp/ViewModels/PetDetailsViewModel.swift` (inject Repository)
 - [ ] T009 Create `PetDetailsCoordinator` skeleton in `/iosApp/iosApp/Coordinators/PetDetailsCoordinator.swift`

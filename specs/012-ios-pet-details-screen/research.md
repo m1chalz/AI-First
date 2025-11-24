@@ -76,17 +76,17 @@ This document consolidates technical decisions and best practices for implementi
 - **Service locator without container**: Rejected for lack of centralized configuration and harder testing setup
 
 **Implementation approach**:
-- Extend existing `ServiceContainer` with `petRepository` property
-- Coordinator receives repository from ServiceContainer during initialization
+- Extend existing `ServiceContainer` (once introduced) with `animalRepository` property of type `AnimalRepositoryProtocol`
+- Coordinator receives repository from ServiceContainer during initialization (or creates `AnimalRepository` directly until ServiceContainer exists)
 - Coordinator passes repository to ViewModel via constructor injection
 - Unit tests create fake repository implementations and inject into ViewModel
 - Example:
   ```swift
   // In ServiceContainer
-  lazy var petRepository: PetRepository = PetRepositoryImpl(httpClient: httpClient)
+  lazy var animalRepository: AnimalRepositoryProtocol = AnimalRepository(httpClient: httpClient)
   
   // In Coordinator
-  let viewModel = PetDetailsViewModel(repository: ServiceContainer.shared.petRepository)
+  let viewModel = PetDetailsViewModel(repository: ServiceContainer.shared.animalRepository)
   ```
 
 ---
@@ -108,11 +108,10 @@ This document consolidates technical decisions and best practices for implementi
 - **Shared repository from Android/KMP**: Rejected because constitution mandates platform-independent implementations (Principle I)
 
 **Implementation approach**:
-- Define `PetRepository` protocol in `/iosApp/iosApp/Domain/Repositories/`
-- Protocol method: `func getPetDetails(id: String) async throws -> PetDetails`
-- Implement `PetRepositoryImpl` in `/iosApp/iosApp/Data/Repositories/` returning hardcoded mock data
-- ViewModel depends on protocol type, not concrete implementation
-- When backend endpoint `GET /api/v1/announcements/:id` is available, update implementation to call real API
+- Reuse existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/` and extend it with method: `func getPetDetails(id: String) async throws -> PetDetails`
+- Keep a single repository implementation (`AnimalRepository`) in `/iosApp/iosApp/Domain/Repositories/` that returns hardcoded mock data for both `getAnimals()` and `getPetDetails(id:)` in Phase 1
+- ViewModel depends on protocol type (`AnimalRepositoryProtocol`), not concrete implementation
+- When backend endpoint `GET /api/v1/announcements/:id` is used in Phase 2, update `AnimalRepository` to call real API from `getPetDetails(id:)`
 
 ---
 
@@ -253,8 +252,8 @@ This document consolidates technical decisions and best practices for implementi
    - Enables easy mocking in unit tests
 
 3. **Testing with fake implementations**:
-   - Create protocol for each service (e.g., `PetRepository`)
-   - Create fake implementation for tests (e.g., `FakePetRepository`)
+   - Create protocol for each service (e.g., `AnimalRepositoryProtocol`)
+   - Create fake implementation for tests (e.g., `FakeAnimalRepository`)
    - Inject fake via constructor in test setup
    - No need for mocking frameworks (Mockito, etc.)
 

@@ -16,7 +16,7 @@ This directory contains API contract definitions for the Pet Details Screen feat
 
 **Description**: Retrieves comprehensive details for a single pet by ID.
 
-**Implementation**: Backend endpoint is live on main branch. iOS `PetRepositoryImpl` calls this endpoint via HTTP client.
+**Implementation**: Backend endpoint is live on main branch. iOS uses the existing `AnimalRepository` implementation (conforming to `AnimalRepositoryProtocol`) to call this endpoint via its `getPetDetails(id:)` method.
 
 **Request**:
 - Method: `GET`
@@ -100,12 +100,12 @@ This directory contains API contract definitions for the Pet Details Screen feat
 - `locationRadius` is a number (kilometers); ViewModel formats to "±X km" for display
 
 **Mocked Fields**:
-The following fields are NOT available in the current backend API (`GET /api/v1/announcements`) and are mocked in iOS repository until backend adds them:
+The following fields are NOT available in the current backend API (`GET /api/v1/announcements`) and are mocked in iOS `AnimalRepository` until backend adds them:
 - `microchipNumber`
 - `approximateAge`
 - `reward`
 
-When these fields are added to the backend, update `PetRepositoryImpl` to parse them from the real API response.
+When these fields are added to the backend, update the `AnimalRepository` implementation to parse them from the real API response.
 
 ---
 
@@ -113,11 +113,11 @@ When these fields are added to the backend, update `PetRepositoryImpl` to parse 
 
 **Current State**:
 - Backend endpoint `GET /api/v1/announcements/:id` is **already live** on main branch ✅
-- iOS will use **mock data** for initial implementation 🔨
+- iOS will use **mock data** for initial implementation via `AnimalRepository` 🔨
 - Real API integration planned for later phase
 
 **Phase 1 - Mock Implementation** (Current):
-1. iOS `PetRepositoryImpl` returns hard-coded `PetDetails` instances
+1. iOS `AnimalRepository` returns hard-coded `PetDetails` instances from `getPetDetails(id:)`
 2. Mock data matches the contract structure defined in `pet-details-response.json`
 3. Mock different scenarios: success, not found, network error
 4. Include mock values for fields not in backend API: `microchipNumber`, `approximateAge`, `reward`
@@ -125,7 +125,7 @@ When these fields are added to the backend, update `PetRepositoryImpl` to parse 
 6. E2E tests also use mock data (no backend dependency yet)
 
 **Phase 2 - Real API Integration** (Future):
-1. Update `PetRepositoryImpl` to call `GET /api/v1/announcements/:id` via HTTP client
+1. Update `AnimalRepository` to call `GET /api/v1/announcements/:id` via HTTP client from `getPetDetails(id:)`
 2. Parse JSON response using `Codable` conformance on `PetDetails` model
 3. Handle network errors (404, 500, timeouts) matching error response format
 4. Fields `microchipNumber`, `approximateAge`, `reward` remain mocked until backend adds them

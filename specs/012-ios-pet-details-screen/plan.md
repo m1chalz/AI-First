@@ -50,9 +50,9 @@ Implementing a new iOS screen that displays comprehensive pet details with navig
 
 - [x] **Interface-Based Design**: Domain logic uses interfaces for repositories
   - Android: N/A
-  - iOS: ✅ Repository protocol `PetRepository` in `/iosApp/iosApp/Domain/Repositories/` with method `getPetDetails(id: String) async throws -> PetDetails`
-  - ✅ Implementation `PetRepositoryImpl` in `/iosApp/iosApp/Data/Repositories/` (mocked data in Phase 1; endpoint already exists on main)
-  - ✅ ViewModel references protocol, not concrete implementation
+  - iOS: ✅ Existing repository protocol `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/` is extended with method `getPetDetails(id: String) async throws -> PetDetails` (no separate `PetRepository` type)
+  - ✅ Implementation class `AnimalRepository` in `/iosApp/iosApp/Domain/Repositories/` provides mocked data for both `getAnimals()` and `getPetDetails(...)` in Phase 1; later it will call the real backend endpoint
+  - ✅ ViewModels reference the protocol (`AnimalRepositoryProtocol`), not the concrete implementation
   - Web: N/A
   - Backend: N/A
   - Violation justification: N/A - compliant
@@ -160,11 +160,8 @@ iosApp/iosApp/
 │   ├── Models/
 │   │   └── PetDetails.swift              # Domain model for pet details
 │   └── Repositories/
-│       └── PetRepository.swift           # Repository protocol
-│
-├── Data/
-│   └── Repositories/
-│       └── PetRepositoryImpl.swift       # Repository implementation (mocked data)
+│       ├── AnimalRepositoryProtocol.swift # Repository protocol (getAnimals, getPetDetails)
+│       └── AnimalRepository.swift         # Repository implementation with mock data
 │
 ├── Coordinators/
 │   └── PetDetailsCoordinator.swift       # UIKit-based navigation coordinator
@@ -179,7 +176,7 @@ iosApp/iosApp/
 │   │   └── LabelValueRow.swift           # Reusable label-value pair component
 │
 └── DI/
-    └── ServiceContainer.swift            # Manual DI setup (existing, extends with pet details)
+    └── ServiceContainer.swift            # Manual DI setup (to be extended with animal repository when introduced)
 
 iosApp/iosAppTests/
 ├── ViewModels/

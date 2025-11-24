@@ -264,7 +264,7 @@ PetDetailsUiState
 
 **Backend endpoint `GET /api/v1/announcements/:id` is already implemented!** ✅
 
-In **Phase 1 (mock-first)**, `PetRepositoryImpl` will return hardcoded `PetDetails` instances matching this contract structure, without making network calls. In **Phase 2**, `PetRepositoryImpl` will call the real backend endpoint:
+In **Phase 1 (mock-first)**, the iOS implementation of `AnimalRepositoryProtocol` (`AnimalRepository`) will return hardcoded `PetDetails` instances matching this contract structure via a new `getPetDetails(id: String)` method, without making network calls. In **Phase 2**, the same `AnimalRepository` implementation will call the real backend endpoint:
 
 **Real API response example**:
 
@@ -292,7 +292,7 @@ PetDetails(
 ```
 
 **Implementation approach**:
-- `PetRepositoryImpl` calls `GET /api/v1/announcements/:id` via HTTP client
+- `AnimalRepository` (conforming to `AnimalRepositoryProtocol`) calls `GET /api/v1/announcements/:id` via HTTP client
 - Parse JSON response using `Codable` conformance
 - Handle errors: 404 (pet not found), 500 (server error), network errors
 - Fields not available from backend (`microchipNumber`, `approximateAge`, `reward`) remain `nil` until backend adds them
