@@ -177,6 +177,7 @@ handoffs:
 - [ ] T052 [P] Verify all accessibility identifiers against requirements
 - [ ] T053 [P] Run full test suite to ensure 80% coverage
 - [ ] T054 [P] Perform final code cleanup and formatting
+- [ ] T055 Refactor iOS repository module structure to comply with constitution (move `AnimalRepository.swift` implementation from `Domain/Repositories` to `Data/Repositories` and update references)
 
 ---
 
