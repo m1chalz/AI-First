@@ -40,8 +40,8 @@ class AnimalListViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let repository: AnimalRepository
-    
+    private let repository: AnimalRepositoryProtocol
+
     // MARK: - Initialization
     
     /**
@@ -50,7 +50,7 @@ class AnimalListViewModel: ObservableObject {
      *
      * - Parameter repository: Repository for fetching animals (injected)
      */
-    init(repository: AnimalRepository) {
+    init(repository: AnimalRepositoryProtocol) {
         self.repository = repository
         
         // Load animals on initialization
@@ -99,15 +99,28 @@ class AnimalListViewModel: ObservableObject {
      * Updates card ViewModels with fresh animal data.
      * Creates new VMs for new animals, updates existing ones, removes deleted ones.
      * Maintains array order from animals list.
+     * Deduplicates animals by ID (keeps first occurrence).
      *
      * - Parameter animals: Fresh list of animals from repository
      */
     private func updateCardViewModels(with animals: [Animal]) {
+        // Deduplicate animals by ID (keep first occurrence)
+        var seenIDs = Set<String>()
+        let uniqueAnimals = animals.filter { animal in
+            seenIDs.insert(animal.id).inserted
+//            if seenIDs.contains(animal.id) {
+//                return false
+//            } else {
+//                seenIDs.insert(animal.id)
+//                return true
+//            }
+        }
+        
         // Create dictionary of existing ViewModels by ID for fast lookup
         let existingVMsByID = Dictionary(uniqueKeysWithValues: cardViewModels.map { ($0.animal.id, $0) })
         
         // Build new array maintaining order, reusing or creating ViewModels
-        self.cardViewModels = animals.map { animal in
+        self.cardViewModels = uniqueAnimals.map { animal in
             if let existingVM = existingVMsByID[animal.id] {
                 // Reuse and update existing ViewModel
                 existingVM.update(with: animal)

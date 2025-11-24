@@ -21,17 +21,38 @@ final class AnimalListViewModelTests: XCTestCase {
             shouldFail: false
         )
         let viewModel = AnimalListViewModel(repository: fakeRepository)
-        
+
         // When - loadAnimals is called
         await viewModel.loadAnimals()
-        
+
         // Then - cardViewModels should be populated and state updated
         XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
         XCTAssertFalse(viewModel.isLoading, "Should not be loading")
         XCTAssertNil(viewModel.errorMessage, "Should have no error")
         XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
     }
-    
+
+    /**
+     * Tests that loadAnimals handles incorrect data with duplicated animal ids with no crash.
+     */
+    func testLoadAnimals_whenRepositorySucceeds_shouldNotCrashIfIdsRepeatButIgnoreDuplicates() async {
+        // Given - ViewModel with fake repository returning animals
+        let fakeRepository = FakeAnimalRepository(
+            animalCount: 20,
+            shouldFail: false
+        )
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
+
+        // When - loadAnimals is called
+        await viewModel.loadAnimals()
+
+        // Then - cardViewModels should be populated and state updated
+        XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
+        XCTAssertFalse(viewModel.isLoading, "Should not be loading")
+        XCTAssertNil(viewModel.errorMessage, "Should have no error")
+        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
+    }
+
     // MARK: - Test loadAnimals Failure
     
     /**
