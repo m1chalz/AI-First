@@ -27,12 +27,14 @@ struct PetDetailsView: View {
     private var loadingView: some View {
         VStack(spacing: 20) {
             ProgressView()
+                .tint(Color(hex: "#155dfc"))
                 .accessibilityIdentifier("petDetails.loading")
             Text("Loading pet details...")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.system(size: 16))
+                .foregroundColor(Color(hex: "#6a7282"))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(hex: "#f5f7fa"))
     }
     
     // MARK: - Error State
@@ -40,15 +42,16 @@ struct PetDetailsView: View {
     private func errorView(message: String) -> some View {
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle")
-                .font(.largeTitle)
-                .foregroundColor(.red)
+                .font(.system(size: 48))
+                .foregroundColor(Color(hex: "#fb2c36"))
             
             Text("Failed to load pet details")
-                .font(.headline)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Color(hex: "#101828"))
             
             Text(message)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.system(size: 16))
+                .foregroundColor(Color(hex: "#6a7282"))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
                 .accessibilityIdentifier("petDetails.error.message")
@@ -56,10 +59,16 @@ struct PetDetailsView: View {
             Button("Retry") {
                 viewModel.retry()
             }
-            .buttonStyle(.borderedProminent)
+            .font(.system(size: 16))
+            .foregroundColor(.white)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 12)
+            .background(Color(hex: "#155dfc"))
+            .cornerRadius(10)
             .accessibilityIdentifier("petDetails.retry.button")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(hex: "#f5f7fa"))
         .padding()
     }
     
