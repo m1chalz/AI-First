@@ -1,5 +1,4 @@
 import SwiftUI
-import Shared
 
 /**
  * SwiftUI view for displaying a single animal card in the list.

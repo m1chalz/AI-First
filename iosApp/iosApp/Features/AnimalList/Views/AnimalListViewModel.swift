@@ -1,5 +1,4 @@
 import Foundation
-import Shared
 
 /**
  * ViewModel for Animal List screen following MVVM-C architecture.
