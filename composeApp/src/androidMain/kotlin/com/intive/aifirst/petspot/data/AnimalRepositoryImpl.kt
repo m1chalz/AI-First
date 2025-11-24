@@ -1,8 +1,8 @@
 package com.intive.aifirst.petspot.data
 
-import com.intive.aifirst.petspot.domain.fixtures.MockAnimalData
-import com.intive.aifirst.petspot.domain.models.Animal
-import com.intive.aifirst.petspot.domain.repositories.AnimalRepository
+import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
 import kotlinx.coroutines.delay
 
 /**

@@ -32,11 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.intive.aifirst.petspot.domain.models.Animal
-import com.intive.aifirst.petspot.domain.models.AnimalGender
-import com.intive.aifirst.petspot.domain.models.AnimalSpecies
-import com.intive.aifirst.petspot.domain.models.AnimalStatus
-import com.intive.aifirst.petspot.domain.models.Location
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListUiState
 
 /**
