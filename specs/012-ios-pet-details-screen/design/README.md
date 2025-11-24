@@ -82,4 +82,5 @@ All information is displayed in a card-like container with consistent spacing:
 - Handle image loading states (loading, error, success)
 - Ensure responsive layout for various screen sizes (iPhone SE to iPad Pro)
 - Follow iOS Human Interface Guidelines while maintaining design fidelity
+- Create a reusable label-value component for displaying information pairs (e.g., label + value fields like "Date of Disappearance" with its date value)
 

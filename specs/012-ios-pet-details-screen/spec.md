@@ -167,6 +167,7 @@ Users can attempt to remove pet reports from the system when the pet is found or
 - **FR-019**: Screen MUST display a full-screen spinner/progress indicator while initial data is loading
 - **FR-020**: Screen MUST fetch pet details from repository when the view loads (viewDidLoad equivalent in iOS)
 - **FR-021**: Repository MAY return mocked data for development and testing until backend endpoint for single pet details is implemented
+- **FR-022**: Screen MUST use a reusable label-value component for displaying information pairs (e.g., "Date of Disappearance" + value, "Microchip number" + value)
 
 ### Key Entities
 
