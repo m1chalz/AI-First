@@ -52,16 +52,20 @@ This directory contains API contract definitions for the Pet Details Screen feat
 - **404 Not Found**: Pet with specified ID does not exist
   ```json
   {
-    "statusCode": 404,
-    "message": "Not Found"
+    "error": {
+      "code": "NOT_FOUND",
+      "message": "Resource not found"
+    }
   }
   ```
 
 - **500 Internal Server Error**: Server error
   ```json
   {
-    "statusCode": 500,
-    "message": "Internal Server Error"
+    "error": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "message": "Internal server error"
+    }
   }
   ```
 
