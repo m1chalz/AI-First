@@ -9,6 +9,15 @@
 
 ### Session 2025-11-24
 
+- Q: What specific sanitization strategy should be used for text fields to prevent XSS attacks? → A: Strip all HTML tags completely - removes any `<tag>` content, keeps only plain text
+- Q: Should the system validate that coordinates fall within valid geographic ranges? → A: Validate coordinate ranges (latitude: -90 to 90, longitude: -180 to 180) - reject invalid coordinates
+- Q: Should the system validate the photoUrl field format? → A: Validate URL format only - ensure it's a valid URL structure (http/https protocol)
+- Q: Should the system validate lastSeenDate to prevent illogical dates? → A: Reject future dates only - lastSeenDate must be today or in the past
+- Q: How should the system handle management password collisions during generation? → A: Allow duplicates - accept that multiple announcements may share the same password (passwords are tied to specific announcement IDs for management operations)
+- Q: What is the maximum request payload size limit? → A: Standard web limit (10 MB) with HTTP 413 response when exceeded
+- Q: Should rate limiting be implemented in the endpoint code? → A: Defer to infrastructure/middleware layer (configure separately from this feature)
+- Q: What logging strategy should be used for PII protection? → A: Log operation metadata with redacted PII - phone numbers show only last 3 digits (rest replaced with *), email addresses show only first letter and @domain (rest replaced with *)
+
 - **Specification updates**: Updated data model and field requirements based on evolving product requirements:
   - Made `petName` field optional (was required)
   - Renamed `gender` field to `sex` (no length limit)
@@ -77,12 +86,16 @@ A user submits an announcement with invalid or missing required fields and recei
 6. **Given** a user submits an announcement without optional fields (e.g., description, breed), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
 7. **Given** a user submits an announcement with a microchip number containing non-numeric characters, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the microchipNumber field
 8. **Given** a user submits an announcement with unknown fields not defined in the model, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FIELD" and the name of the unknown field
-9. **Given** a user submits an announcement with special characters or HTML tags in text fields, **When** the system processes the input, **Then** it sanitizes the input to prevent XSS attacks and stores the safe version
+9. **Given** a user submits an announcement with HTML tags in text fields (e.g., `<script>alert('xss')</script>`), **When** the system processes the input, **Then** it strips all HTML tags and stores only the plain text content
 10. **Given** a user submits an announcement with multiple validation errors, **When** the system validates the request, **Then** it returns HTTP 400 with only the first validation error in the simplified format `{ error: { code, message, field } }`
 11. **Given** a user submits an announcement with an invalid status value (not "MISSING" or "FOUND"), **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the status field
 12. **Given** a user submits an announcement with a negative or zero age value, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the age field
 13. **Given** a user submits an announcement with non-numeric location coordinates, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the locationLatitude or locationLongitude field
-14. **Given** a user submits an announcement without optional fields (petName, locationCity, age, reward), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
+14. **Given** a user submits an announcement with out-of-range coordinates (e.g., latitude 100 or longitude -200), **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the out-of-range field
+15. **Given** a user submits an announcement with an invalid photoUrl format (e.g., not a URL or missing http/https protocol), **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the photoUrl field
+16. **Given** a user submits an announcement with a future lastSeenDate, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the lastSeenDate field
+17. **Given** a user submits an announcement without optional fields (petName, locationCity, age, reward), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
+18. **Given** a user submits an announcement with a request payload exceeding 10 MB, **When** the system validates the request, **Then** it returns HTTP 413 with error code "PAYLOAD_TOO_LARGE"
 
 ---
 
@@ -108,15 +121,19 @@ A user attempts to create an announcement for a pet with a microchip number that
 - **Whitespace-only fields**: System treats whitespace-only values in required text fields as empty and returns HTTP 400 validation error
 - **Invalid microchip format**: System validates that microchip numbers contain only digits (numeric characters) and returns HTTP 400 with "INVALID_FORMAT" if non-numeric characters are present
 - **Invalid age value**: System validates that age is a positive integer (greater than 0) when provided and returns HTTP 400 with "INVALID_FORMAT" if negative, zero, or non-integer value is provided
-- **Invalid location coordinates**: System validates that locationLatitude and locationLongitude are valid decimal numbers (real/float type) and returns HTTP 400 with "INVALID_FORMAT" if non-numeric values are provided
+- **Invalid location coordinates**: System validates that locationLatitude and locationLongitude are valid decimal numbers within geographic ranges (latitude: -90 to 90, longitude: -180 to 180) and returns HTTP 400 with "INVALID_FORMAT" if non-numeric or out-of-range values are provided
 - **Invalid status value**: System validates that status is either "MISSING" or "FOUND" and returns HTTP 400 with "INVALID_FORMAT" if other values are provided
+- **Invalid photoUrl format**: System validates that photoUrl is a valid URL with http or https protocol and returns HTTP 400 with "INVALID_FORMAT" if malformed or using unsupported protocol
+- **Invalid lastSeenDate**: System validates that lastSeenDate is in ISO 8601 format and is not a future date (must be today or in the past) and returns HTTP 400 with "INVALID_FORMAT" if date is in the future or has invalid format
 - **Multiple invalid fields**: System uses fail-fast validation - returns HTTP 400 with only the first validation error encountered, not all errors at once
 - **Duplicate microchip numbers**: System checks for existing announcements with the same microchip number and returns HTTP 409 if found (only when microchip number is provided)
-- **Special characters and XSS prevention**: System sanitizes all text input to prevent XSS attacks by escaping/removing dangerous HTML/script tags (e.g., `<script>`, `<iframe>`, etc.) while preserving safe special characters
+- **Special characters and XSS prevention**: System sanitizes all text input to prevent XSS attacks by stripping all HTML tags completely (removes any `<tag>` content). Plain text with special characters (quotes, apostrophes, etc.) is preserved
 - **Unknown fields in request**: System rejects requests containing fields not defined in the announcement model with HTTP 400 and error code "INVALID_FIELD" (strict validation for security)
-- **Management password security**: System generates unique 6-digit password for each announcement, returns it only in POST response (one-time exposure), stores it hashed in database, and never includes it in GET responses
+- **Management password security**: System generates 6-digit password for each announcement (not guaranteed globally unique), returns it only in POST response (one-time exposure), stores it hashed in database, and never includes it in GET responses. Management operations use both announcement ID and password for authentication.
 - **User-provided management password**: System ignores any management_password provided in POST request body (system-generated only, user cannot specify)
 - **Unexpected system errors**: System returns HTTP 500 with generic error response `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without exposing internal details (database errors, crashes, etc.)
+- **Large request payloads**: System enforces a maximum request body size of 10 MB to prevent DoS attacks. Returns HTTP 413 (Payload Too Large) with error response `{ error: { code: "PAYLOAD_TOO_LARGE", message: "Request payload exceeds maximum size limit" } }` when exceeded
+- **Logging with PII protection**: System logs announcement creation events with redacted contact information for privacy protection. Phone numbers are redacted to show only last 3 digits (e.g., `***-***-*101`), email addresses are redacted to show only first letter and domain (e.g., `j***@example.com`). Logs include timestamp, announcement ID, HTTP status code, and validation error codes (if any) but exclude full PII, pet descriptions, and other sensitive content
 
 ## Requirements *(mandatory)*
 
@@ -130,31 +147,36 @@ A user attempts to create an announcement for a pet with a microchip number that
 - **FR-006**: System MUST return HTTP 201 status code when announcement is successfully created
 - **FR-007**: System MUST return HTTP 400 status code when validation fails
 - **FR-008**: System MUST return HTTP 409 status code when an announcement with the same microchip number already exists
-- **FR-009**: System MUST return HTTP 500 status code when unexpected errors occur (database failures, system errors, etc.)
-- **FR-010**: System MUST return the newly created announcement in the response body using the same model as GET `/api/v1/announcements` endpoint, with the addition of the management_password field (only present in POST response)
-- **FR-011**: System MUST validate all required announcement fields and reject requests missing required data (required fields: species, sex, lastSeenDate, photoUrl, status, locationLatitude, locationLongitude, and at least one contact method - email OR phone)
-- **FR-012**: System MUST accept optional fields without validation errors when not provided (optional fields: petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age)
-- **FR-013**: System MUST treat required text fields containing only whitespace as empty and reject them with validation error
-- **FR-014**: System MUST validate that microchip number contains only digits (numeric characters only) when provided
-- **FR-015**: System MUST check if an announcement with the provided microchip number already exists (when microchip number is provided)
-- **FR-016**: System MUST return structured validation error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
-- **FR-017**: System MUST return conflict error responses in the format: `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` when duplicate microchip detected
-- **FR-018**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without field property and without exposing internal details
-- **FR-019**: System MUST use fail-fast validation (stop at first error and return only that single error)
-- **FR-020**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields)
-- **FR-021**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
-- **FR-022**: System MUST persist successfully created announcements to the database
-- **FR-023**: System MUST assign a unique identifier to each newly created announcement
-- **FR-024**: System MUST accept and validate the status field from the request body, allowing only "MISSING" or "FOUND" values (no default value assigned by database)
-- **FR-025**: System MUST generate a unique 6-digit numeric management_password for each newly created announcement
-- **FR-026**: System MUST return the management_password in the POST response body when creating an announcement
-- **FR-027**: System MUST NOT include management_password in GET responses (list or detail views)
-- **FR-028**: System MUST store management_password securely (hashed) in the database
-- **FR-029**: System MUST sanitize all text input fields to prevent XSS attacks by escaping or removing dangerous HTML/script tags
-- **FR-030**: System MUST reject requests containing fields not defined in the announcement model with HTTP 400 and error code "INVALID_FIELD"
-- **FR-031**: System MUST validate that age is a positive integer (greater than 0) when provided and reject negative, zero, or non-integer values with HTTP 400 and error code "INVALID_FORMAT"
-- **FR-032**: System MUST validate that locationLatitude and locationLongitude are valid decimal numbers (real/float type) and reject non-numeric values with HTTP 400 and error code "INVALID_FORMAT"
-- **FR-033**: System MUST validate that status field contains only "MISSING" or "FOUND" values and reject other values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-009**: System MUST return HTTP 413 status code when request payload exceeds maximum size limit (10 MB)
+- **FR-010**: System MUST return HTTP 500 status code when unexpected errors occur (database failures, system errors, etc.)
+- **FR-011**: System MUST return the newly created announcement in the response body using the same model as GET `/api/v1/announcements` endpoint, with the addition of the management_password field (only present in POST response)
+- **FR-012**: System MUST validate all required announcement fields and reject requests missing required data (required fields: species, sex, lastSeenDate, photoUrl, status, locationLatitude, locationLongitude, and at least one contact method - email OR phone)
+- **FR-013**: System MUST accept optional fields without validation errors when not provided (optional fields: petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age)
+- **FR-014**: System MUST treat required text fields containing only whitespace as empty and reject them with validation error
+- **FR-015**: System MUST validate that microchip number contains only digits (numeric characters only) when provided
+- **FR-016**: System MUST check if an announcement with the provided microchip number already exists (when microchip number is provided)
+- **FR-017**: System MUST return structured validation error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
+- **FR-018**: System MUST return conflict error responses in the format: `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` when duplicate microchip detected
+- **FR-019**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without field property and without exposing internal details
+- **FR-020**: System MUST use fail-fast validation (stop at first error and return only that single error)
+- **FR-021**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields, "PAYLOAD_TOO_LARGE" for oversized requests)
+- **FR-022**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
+- **FR-023**: System MUST persist successfully created announcements to the database
+- **FR-024**: System MUST assign a unique identifier to each newly created announcement
+- **FR-025**: System MUST accept and validate the status field from the request body, allowing only "MISSING" or "FOUND" values (no default value assigned by database)
+- **FR-026**: System MUST generate a 6-digit numeric management_password for each newly created announcement (passwords are not required to be globally unique across all announcements)
+- **FR-027**: System MUST return the management_password in the POST response body when creating an announcement
+- **FR-028**: System MUST NOT include management_password in GET responses (list or detail views)
+- **FR-029**: System MUST store management_password securely (hashed) in the database
+- **FR-030**: System MUST sanitize all text input fields to prevent XSS attacks by stripping all HTML tags completely (removes any `<tag>` content, keeps only plain text)
+- **FR-031**: System MUST reject requests containing fields not defined in the announcement model with HTTP 400 and error code "INVALID_FIELD"
+- **FR-032**: System MUST validate that age is a positive integer (greater than 0) when provided and reject negative, zero, or non-integer values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-033**: System MUST validate that locationLatitude and locationLongitude are valid decimal numbers within geographic ranges (latitude: -90 to 90, longitude: -180 to 180) and reject non-numeric or out-of-range values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-034**: System MUST validate that status field contains only "MISSING" or "FOUND" values and reject other values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-035**: System MUST validate that photoUrl is a valid URL with http or https protocol and reject invalid URL formats with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-036**: System MUST validate that lastSeenDate is in ISO 8601 format and is not a future date (must be today or in the past) and reject invalid or future dates with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-037**: System MUST enforce a maximum request payload size of 10 MB and return HTTP 413 (Payload Too Large) when the request body exceeds this limit
+- **FR-038**: System MUST log announcement creation events with redacted PII for privacy protection - phone numbers MUST show only last 3 digits (rest replaced with *), email addresses MUST show only first letter and @domain portion (rest replaced with *), logging MUST include timestamp, announcement ID, HTTP status code, and validation error codes (if any)
 
 #### Success Response Example
 
@@ -288,13 +310,56 @@ A user attempts to create an announcement for a pet with a microchip number that
 }
 ```
 
-**Invalid location coordinate** (HTTP 400):
+**Invalid location coordinate format** (HTTP 400):
 ```json
 {
     "error": {
         "code": "INVALID_FORMAT",
         "message": "must be a valid decimal number",
         "field": "locationLatitude"
+    }
+}
+```
+
+**Out-of-range location coordinate** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "latitude must be between -90 and 90",
+        "field": "locationLatitude"
+    }
+}
+```
+
+**Invalid photoUrl format** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "must be a valid URL with http or https protocol",
+        "field": "photoUrl"
+    }
+}
+```
+
+**Future lastSeenDate** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "lastSeenDate cannot be in the future",
+        "field": "lastSeenDate"
+    }
+}
+```
+
+**Payload too large** (HTTP 413):
+```json
+{
+    "error": {
+        "code": "PAYLOAD_TOO_LARGE",
+        "message": "Request payload exceeds maximum size limit"
     }
 }
 ```
@@ -328,8 +393,9 @@ A user attempts to create an announcement for a pet with a microchip number that
 - **SC-006**: System prevents XSS attacks by sanitizing all text input before storage
 - **SC-007**: System rejects 100% of requests containing unknown fields (strict validation)
 - **SC-008**: Management password is never exposed in GET endpoints (100% secure - only returned once in POST response)
-- **SC-009**: Each announcement receives a unique 6-digit management password for future management operations
+- **SC-009**: Each announcement receives a 6-digit management password for future management operations (tied to announcement ID)
 - **SC-010**: Error responses follow the simplified format `{ error: { code, message, field } }` consistently for validation failures and conflicts, and `{ error: { code, message } }` (without field) for system errors
+- **SC-011**: All logged data protects user privacy by redacting PII (phone numbers show only last 3 digits, emails show only first letter and @domain) while maintaining operational visibility for debugging and monitoring
 
 ## Assumptions
 
@@ -340,7 +406,9 @@ A user attempts to create an announcement for a pet with a microchip number that
 - Input sanitization library/function is available for XSS prevention
 - Request body parser can be configured for strict validation (reject unknown fields)
 - Cryptographic library is available for secure password hashing (e.g., bcrypt)
-- Random number generation for 6-digit passwords can produce sufficiently unique values
+- Random number generation for 6-digit passwords is available (passwords need not be globally unique, as they're tied to specific announcement IDs)
+- Rate limiting (if needed) will be configured at infrastructure/middleware layer (API Gateway, reverse proxy, or Express middleware) independently of this endpoint implementation
+- Logging infrastructure is available for recording operation events with PII redaction capabilities
 
 ## Out of Scope
 
@@ -351,5 +419,5 @@ A user attempts to create an announcement for a pet with a microchip number that
 - Real-time notifications when announcements are created
 - Moderation or approval workflow before announcements go live
 - Duplicate detection based on other fields (e.g., pet name + location similarity) - only microchip-based duplicate detection is implemented
-- Rate limiting for announcement creation
+- Rate limiting implementation in endpoint code - rate limiting should be configured at infrastructure/middleware layer (API Gateway, reverse proxy, or Express middleware) separately from this feature
 - Testing unexpected error scenarios (database failures, system crashes) - focus on happy path and validation errors only
