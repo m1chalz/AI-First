@@ -35,10 +35,9 @@ class AnimalListCoordinator: CoordinatorInterface {
         
         // Create repository (mock implementation for now)
         let repository = AnimalRepositoryImpl()
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: repository)
         
-        // Create ViewModel
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        // Create ViewModel with repository (iOS MVVM-C: ViewModels call repositories directly)
+        let viewModel = AnimalListViewModel(repository: repository)
         
         // Set up coordinator closures for navigation
         viewModel.onAnimalSelected = { [weak self] animalId in

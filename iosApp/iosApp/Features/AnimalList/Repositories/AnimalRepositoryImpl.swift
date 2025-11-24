@@ -2,6 +2,7 @@ import Foundation
 
 /**
  * Repository implementation with mocked data for iOS UI development.
+ * Conforms to local AnimalRepository protocol.
  * Returns same hardcoded data as Android implementation for consistency.
  * Simulates network delay for testing loading states.
  * Will be replaced with RemoteAnimalRepository when backend is ready.
