@@ -26,6 +26,11 @@ class PetDetailsViewModel: ObservableObject {
     private let repository: AnimalRepositoryProtocol
     private let petId: String
     
+    // MARK: - Coordinator Communication
+    
+    /// Callback to coordinator when user wants to navigate back
+    var onBack: (() -> Void)?
+    
     // MARK: - Initialization
     
     /// Creates a new PetDetailsViewModel
@@ -56,6 +61,11 @@ class PetDetailsViewModel: ObservableObject {
         Task {
             await loadPetDetails()
         }
+    }
+    
+    /// Handles back navigation
+    func handleBack() {
+        onBack?()
     }
 }
 

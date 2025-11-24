@@ -39,6 +39,11 @@ class PetDetailsCoordinator: CoordinatorInterface {
             petId: petId
         )
         
+        // Setup coordinator callbacks
+        viewModel.onBack = { [weak self] in
+            self?.finish()
+        }
+        
         let detailsView = PetDetailsView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: detailsView)
         
@@ -46,22 +51,30 @@ class PetDetailsCoordinator: CoordinatorInterface {
         hostingController.title = "Pet Details"
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
-        // Configure back button appearance
+        // Configure navigation bar appearance
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white
         appearance.shadowColor = .clear
         
-        // Style back button text
-        let backButtonAppearance = UIBarButtonItemAppearance()
-        backButtonAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor(hex: "#007AFF"),
-            .font: UIFont.systemFont(ofSize: 17)
-        ]
-        appearance.backButtonAppearance = backButtonAppearance
-        
         hostingController.navigationItem.standardAppearance = appearance
         hostingController.navigationItem.scrollEdgeAppearance = appearance
+        
+        // Hide default back button
+        hostingController.navigationItem.hidesBackButton = true
+        
+        // Create custom back button
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.setTitle(" Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        backButton.tintColor = UIColor(hex: "#007AFF")
+        backButton.addAction(UIAction { [weak viewModel] _ in
+            viewModel?.handleBack()
+        }, for: .touchUpInside)
+        
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        hostingController.navigationItem.leftBarButtonItem = backBarButtonItem
         
         navigationController?.pushViewController(hostingController, animated: animated)
     }
