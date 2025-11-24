@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "I'd like to update the @composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListScreen.kt according to the new designs: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=170-6166&m=dev . Back navigation is for now ignored. List/Map tab switcher is also out of context. Search & filters button too."
 
-> **Platform Scope**: This specification applies **only** to the Android app’s Animal List screen (`AnimalListScreen` in the Compose UI layer). iOS and Web implementations MUST remain visually and behaviourally unchanged by this feature.
+> **Platform Scope**: This specification applies **only** to the Android app's Animal List screen (`AnimalListScreen` in the Compose UI layer). iOS and Web implementations MUST remain visually and behaviourally unchanged by this feature.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -32,7 +32,7 @@
    **Then** additional animal cards appear and scrolling stops at the last available card.
 3. **Given** an animal card is visible in the list,  
    **When** the user quickly scans the card,  
-   **Then** they can clearly see the animal’s name, location, species/breed information, status, and last seen date without needing to open another screen.
+   **Then** they can clearly see the animal's name, location, species/breed information, status, and last seen date without needing to open another screen.
 
 ---
 
@@ -47,19 +47,19 @@
 **Independent Test**: Can be fully tested by verifying that the primary button:
 - Is visible on the screen without scrolling to a specific position  
 - Uses the label and styling defined in the updated Figma design  
-- Can be tapped to initiate the “report missing animal” flow (or the current placeholder action) without requiring any other navigation changes
+- Can be tapped to initiate the "report missing animal" flow (or the current placeholder action) without requiring any other navigation changes
 
 **Acceptance Scenarios**:
 
 1. **Given** the Animal List screen is displayed,  
    **When** the user looks at the bottom area of the content,  
-   **Then** a primary button labelled “Report a Missing Animal” is visible and clearly distinguished as the main action.
+   **Then** a primary button labelled "Report a Missing Animal" is visible and clearly distinguished as the main action.
 2. **Given** the user scrolls the list of animals up and down,  
    **When** they reach any scroll position,  
-   **Then** the primary “Report a Missing Animal” action remains accessible from the screen (no extra navigation required).
+   **Then** the primary "Report a Missing Animal" action remains accessible from the screen (no extra navigation required).
 3. **Given** the primary button is visible,  
    **When** the user taps it,  
-   **Then** the app starts the “report missing animal” flow or current placeholder behaviour, consistent with existing specifications for that flow.
+   **Then** the app starts the "report missing animal" flow or current placeholder behaviour, consistent with existing specifications for that flow.
 
 ---
 
@@ -98,14 +98,14 @@
 
 ### Functional Requirements
 
-- **FR-001**: The Android `AnimalListScreen` MUST present a vertically scrollable list of missing animals using the updated mobile “Missing animals list” layout from Figma, including a clear screen title and visually grouped content.
-- **FR-002**: Each animal card in the list MUST display, at minimum, the animal’s name, approximate location, species/breed information, status, and last seen date, using visual styling (typography, spacing, grouping) that follows the updated card design.
+- **FR-001**: The Android `AnimalListScreen` MUST present a vertically scrollable list of missing animals using the updated mobile "Missing animals list" layout from Figma, including a clear screen title and visually grouped content.
+- **FR-002**: Each animal card in the list MUST display, at minimum, the animal's name, approximate location, species/breed information, status, and last seen date, using visual styling (typography, spacing, grouping) that follows the updated card design.
 - **FR-003**: When there are more animals than fit on a single screen, the list MUST allow vertical scrolling and MUST stop at the last available item, with the updated card styling applied uniformly to all visible and off-screen items.
-- **FR-004**: The screen MUST include a clearly identified primary button labelled “Report a Missing Animal”, positioned and styled according to the updated design (colour, shape, paddings, and alignment).
-- **FR-005**: When the user taps the primary “Report a Missing Animal” button, the app MUST continue to trigger the existing “report missing animal” flow or placeholder action exactly as before; this feature MUST NOT change the underlying behaviour.
+- **FR-004**: The screen MUST include a clearly identified primary button labelled "Report a Missing Animal", positioned and styled according to the updated design (colour, shape, paddings, and alignment).
+- **FR-005**: When the user taps the primary "Report a Missing Animal" button, the app MUST continue to trigger the existing "report missing animal" flow or placeholder action exactly as before; this feature MUST NOT change the underlying behaviour.
 - **FR-006**: Existing empty, loading, and error states on the Android Animal List screen MUST continue to function as they do today; any changes introduced by this feature are limited to harmonising their visual appearance (spacing, background, typography) with the new overall layout.
 - **FR-007**: This feature MUST NOT introduce new behaviours for back navigation, List/Map view switching, or Search & Filters; those elements from the updated design remain out of scope and are not implemented or made interactive.
-- **FR-008**: The Android Animal List screen MUST continue to function as the primary entry point into the app’s “missing animals” experience, preserving existing navigation flows into and out of the screen.
+- **FR-008**: The Android Animal List screen MUST continue to function as the primary entry point into the app's "missing animals" experience, preserving existing navigation flows into and out of the screen.
 - **FR-009**: iOS and Web Animal List implementations MUST remain unaffected by this feature; no visual, layout, or behavioural changes are introduced on those platforms as part of this work.
 
 ### Key Entities
@@ -113,14 +113,14 @@
 - **Animal (list view)**: Represents a missing animal as shown on the list screen, focusing on the fields users need to quickly identify a case:
   - **Name**: A short display name for the animal.
   - **Location**: A human-readable area description (for example, city name and nearby area) that helps users understand where the animal was last seen.
-  - **Species/Breed**: A concise description of what kind of animal it is (for example, “Dog · Labrador”).
-  - **Status**: A label indicating the current status of the case (for example, “Missing”, “Found”, or “Closed”), visually emphasised in the card.
+  - **Species/Breed**: A concise description of what kind of animal it is (for example, "Dog · Labrador").
+  - **Status**: A label indicating the current status of the case (for example, "Missing", "Found", or "Closed"), visually emphasised in the card.
   - **Last Seen Date**: The date the animal was last seen or reported, giving users a sense of recency.
 
 ### Dependencies & Assumptions
 
-- **Design dependency**: The updated mobile “Missing animals list” frame from Figma (`https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=170-6166&m=dev`) is the single source of truth for visual layout and hierarchy on the **Android** Animal List screen.
-- **Existing behaviour**: This feature assumes existing behaviour for the “Report a Missing Animal” flow and overall navigation on Android, and does not redefine those flows.
+- **Design dependency**: The updated mobile "Missing animals list" frame from Figma (`https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=170-6166&m=dev`) is the single source of truth for visual layout and hierarchy on the **Android** Animal List screen.
+- **Existing behaviour**: This feature assumes existing behaviour for the "Report a Missing Animal" flow and overall navigation on Android, and does not redefine those flows.
 - **Platform scope**: Only the Android implementation (`AnimalListScreen` and related Compose UI elements) is in scope. iOS and Web implementations are explicitly out of scope and must not change as a result of this feature.
 - **Search and filters**: Search and filters remain future work. The current feature does not require fully implemented search or filter interactions on Android, even if the design shows related controls.
 
@@ -128,9 +128,24 @@
 
 ### Measurable Outcomes
 
-- **SC-001**: In usability checks, at least 90% of test participants are able to correctly describe what the screen shows and identify the primary “Report a Missing Animal” action within 5 seconds of seeing the updated Animal List screen.
+- **SC-001**: In usability checks, at least 90% of test participants are able to correctly describe what the screen shows and identify the primary "Report a Missing Animal" action within 5 seconds of seeing the updated Animal List screen.
 - **SC-002**: Visual review against the updated Figma design confirms that the Animal List screen matches the intended layout and hierarchy for the title, list, cards, and primary button with no material discrepancies that would confuse users.
 - **SC-003**: QA can independently verify all core states of the screen (loading, populated list, empty state, and error with retry) without needing knowledge of internal implementation details.
 - **SC-004**: No regressions are observed in existing navigation flows into and out of the Animal List screen; users can still reach this screen as their primary entry point to the missing animals experience, and existing downstream flows (such as reporting) continue to work as before.
 
+## Clarifications
 
+### Session 2025-11-24
+
+- Q: When creating new animal card composables and the primary button, should each card instance use a unique testTag per animal or a single generic testTag for all cards? → A: Use a generic testTag `animalList.cardItem` for all cards, and `animalList.reportButton` for the primary button (no action suffix).
+- Q: When the Animal List screen is in loading, empty, or error states, should the primary "Report a Missing Animal" button remain visible/enabled? → A: Follow current Android implementation; preserve existing button visibility and enabled/disabled behaviour during all screen states (purely visual refresh).
+
+### Testing & Test Identifiers
+
+- **Animal card list item**: All card composables in the LazyColumn MUST use the generic testTag `animalList.cardItem` via `Modifier.testTag("animalList.cardItem")`.
+- **Primary button**: The "Report a Missing Animal" button MUST use the testTag `animalList.reportButton` via `Modifier.testTag("animalList.reportButton")`.
+- This simpler approach reduces test identifier boilerplate while maintaining sufficient precision for E2E test automation to locate and interact with the primary affordances on the screen.
+
+### Button State Behaviour During Loading/Empty/Error States
+
+- The primary "Report a Missing Animal" button visibility and enabled/disabled state MUST match the current Android implementation exactly. This feature performs only visual styling updates (colour, shape, paddings, alignment) and does NOT change button state logic or conditional rendering.
