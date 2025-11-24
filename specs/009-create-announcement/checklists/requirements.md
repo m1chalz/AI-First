@@ -2,6 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning  
 **Created**: 2025-11-20  
+**Last Updated**: 2025-11-24  
 **Feature**: [spec.md](../spec.md)
 
 ## Content Quality
@@ -61,4 +62,18 @@ Key strengths:
 - Clear user stories with independent testability
 - Well-defined edge cases covering security concerns
 - Proper scoping with explicit out-of-scope items
+
+### Update 2025-11-24
+
+Specification updated with data model changes:
+- Made `petName` optional (was required)
+- Renamed `gender` → `sex` (no length limit)
+- Status now user-specified (MISSING/FOUND), no database default
+- Added optional fields: `reward` (string), `age` (positive int)
+- Renamed required `location` → optional `locationCity`
+- Added required fields: `locationLatitude`, `locationLongitude` (decimal)
+- Changed all text field database types from varchar to text
+- **Removed all string length validation** - text fields accept unlimited length
+
+All changes maintain specification quality standards. Checklist items remain valid ✅
 

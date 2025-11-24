@@ -7,20 +7,32 @@
 
 ## Clarifications
 
+### Session 2025-11-24
+
+- **Specification updates**: Updated data model and field requirements based on evolving product requirements:
+  - Made `petName` field optional (was required)
+  - Renamed `gender` field to `sex` (no length limit)
+  - Changed status handling: users can now specify "MISSING" or "FOUND" status in POST request (no database default)
+  - Added new optional fields: `reward` (string, unlimited length), `age` (positive integer)
+  - Renamed `location` field to `locationCity` and made it optional (was required)
+  - Added new required fields: `locationLatitude` and `locationLongitude` (both decimal/real type)
+  - Changed all text field database types from varchar to text
+  - **Removed all string length validation** - system accepts text fields of any length (validation only for format and required/optional status)
+
 ### Session 2025-11-21
 
 - Q: Should the POST `/api/v1/announcements` endpoint require authentication? → A: Public endpoint (no authentication required, anyone can create announcements)
-- Q: What status should be assigned to newly created announcements? → A: Always set status to MISSING for new announcements (indicating the pet is currently missing)
+- Q: What status should be assigned to newly created announcements? → A: User can specify status as either MISSING or FOUND in the request body (no default value assigned by database)
 - Q: How should the system handle required text fields containing only whitespace? → A: Reject whitespace-only values (treat as empty/missing, return validation error)
-- Q: Should the endpoint enforce maximum length validation on text fields? → A: Use the limits defined in announcement DB table (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500)
+- Q: Should the endpoint enforce maximum length validation on text fields? → A: No length validation - all text fields accept unlimited length strings
 - Q: Should validation continue after finding the first error to report all problems at once? → A: Stop at first error, return only that error (fail-fast validation)
 - Q: What error response format should be used with fail-fast validation? → A: Simplified format with field-level code directly: `{ error: { code, message, field } }` (no nested details array needed)
 - Q: How should unexpected errors (database failures, etc.) be handled? → A: Return HTTP 500 with generic error response `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` (no field property, no internal details exposed)
-- Q: Should the system include pet microchip number and prevent duplicate announcements? → A: Yes, add optional microchip_number field (max 15 chars, numeric only). Return HTTP 409 with format `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` if duplicate exists
+- Q: Should the system include pet microchip number and prevent duplicate announcements? → A: Yes, add optional microchip_number field (numeric only, no length limit). Return HTTP 409 with format `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` if duplicate exists
 - Q: How should the system handle special characters or encoded content in announcement fields? → A: Sanitize all text input to prevent XSS attacks (escape/remove dangerous HTML/script tags while preserving safe special characters)
 - Q: What should happen if the request data contains fields not defined in the model? → A: Reject the request with HTTP 400 (strict validation for security - unknown fields indicate potential attack or API misuse)
 - Q: Should the system provide a way to manage announcements without full user authentication? → A: Yes, generate a 6-digit numeric management_password for each announcement. Return it only once in POST response, never expose it in GET endpoints
-- Q: Which announcement fields are required in the POST request body? → A: Required: petName, species, gender, location, lastSeenDate, photoUrl, contact (email OR phone). Optional: breed, description, locationRadius, microchipNumber
+- Q: Which announcement fields are required in the POST request body? → A: Required: species, sex, lastSeenDate, photoUrl, contact (email OR phone), locationLatitude, locationLongitude. Optional: petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -38,9 +50,10 @@ A user wants to post a new pet announcement (lost/found pet) by submitting annou
 2. **Given** a user has valid announcement details with phone contact, **When** they submit the announcement, **Then** the system creates the announcement and returns it with HTTP 201 status
 3. **Given** a user has valid announcement details with both email and phone, **When** they submit the announcement, **Then** the system creates the announcement and returns it with HTTP 201 status
 4. **Given** a user submits a valid announcement with a microchip number, **When** no other announcement exists with that microchip number, **Then** the system creates the announcement and returns it with HTTP 201 status
-5. **Given** a user submits a valid announcement, **When** the announcement is created, **Then** the returned announcement has status set to "MISSING"
-6. **Given** a user submits a valid announcement, **When** the announcement is created, **Then** the response includes a 6-digit management_password that can be used to manage the announcement
-7. **Given** a user creates an announcement, **When** they retrieve announcements via GET endpoint, **Then** the management_password is not included in the response
+5. **Given** a user submits a valid announcement with status "MISSING", **When** the announcement is created, **Then** the returned announcement has status set to "MISSING"
+6. **Given** a user submits a valid announcement with status "FOUND", **When** the announcement is created, **Then** the returned announcement has status set to "FOUND"
+7. **Given** a user submits a valid announcement, **When** the announcement is created, **Then** the response includes a 6-digit management_password that can be used to manage the announcement
+8. **Given** a user creates an announcement, **When** they retrieve announcements via GET endpoint, **Then** the management_password is not included in the response
 
 ---
 
@@ -60,13 +73,16 @@ A user submits an announcement with invalid or missing required fields and recei
 2. **Given** a user submits an announcement with an invalid email format, **When** the system validates the request, **Then** it returns HTTP 400 with error details specifying the email format is invalid
 3. **Given** a user submits an announcement with an invalid phone format, **When** the system validates the request, **Then** it returns HTTP 400 with error details specifying the phone format is invalid
 4. **Given** a user submits an announcement with required fields containing only whitespace, **When** the system validates the request, **Then** it returns HTTP 400 with error details indicating those fields are required
-5. **Given** a user submits an announcement without a required field (e.g., petName, photoUrl), **When** the system validates the request, **Then** it returns HTTP 400 with error code "NOT_EMPTY" for the missing field
+5. **Given** a user submits an announcement without a required field (e.g., species, photoUrl, status), **When** the system validates the request, **Then** it returns HTTP 400 with error code "NOT_EMPTY" for the missing field
 6. **Given** a user submits an announcement without optional fields (e.g., description, breed), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
-7. **Given** a user submits an announcement with text fields exceeding maximum length limits, **When** the system validates the request, **Then** it returns HTTP 400 with error details specifying which fields exceed their maximum length
-8. **Given** a user submits an announcement with a microchip number containing non-numeric characters, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the microchipNumber field
-9. **Given** a user submits an announcement with unknown fields not defined in the model, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FIELD" and the name of the unknown field
-10. **Given** a user submits an announcement with special characters or HTML tags in text fields, **When** the system processes the input, **Then** it sanitizes the input to prevent XSS attacks and stores the safe version
-11. **Given** a user submits an announcement with multiple validation errors, **When** the system validates the request, **Then** it returns HTTP 400 with only the first validation error in the simplified format `{ error: { code, message, field } }`
+7. **Given** a user submits an announcement with a microchip number containing non-numeric characters, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the microchipNumber field
+8. **Given** a user submits an announcement with unknown fields not defined in the model, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FIELD" and the name of the unknown field
+9. **Given** a user submits an announcement with special characters or HTML tags in text fields, **When** the system processes the input, **Then** it sanitizes the input to prevent XSS attacks and stores the safe version
+10. **Given** a user submits an announcement with multiple validation errors, **When** the system validates the request, **Then** it returns HTTP 400 with only the first validation error in the simplified format `{ error: { code, message, field } }`
+11. **Given** a user submits an announcement with an invalid status value (not "MISSING" or "FOUND"), **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the status field
+12. **Given** a user submits an announcement with a negative or zero age value, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the age field
+13. **Given** a user submits an announcement with non-numeric location coordinates, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the locationLatitude or locationLongitude field
+14. **Given** a user submits an announcement without optional fields (petName, locationCity, age, reward), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
 
 ---
 
@@ -88,10 +104,12 @@ A user attempts to create an announcement for a pet with a microchip number that
 
 ### Edge Cases
 
-- **Required vs Optional fields**: System validates that all required fields (petName, species, gender, location, lastSeenDate, photoUrl, and email OR phone) are present and non-empty. Optional fields (breed, description, locationRadius, microchipNumber) can be omitted without error.
+- **Required vs Optional fields**: System validates that all required fields (species, sex, lastSeenDate, photoUrl, locationLatitude, locationLongitude, status, and email OR phone) are present and non-empty. Optional fields (petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age) can be omitted without error.
 - **Whitespace-only fields**: System treats whitespace-only values in required text fields as empty and returns HTTP 400 validation error
-- **Extremely long input values**: System enforces maximum length limits from database schema (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500, microchipNumber: 15) and returns HTTP 400 when exceeded
 - **Invalid microchip format**: System validates that microchip numbers contain only digits (numeric characters) and returns HTTP 400 with "INVALID_FORMAT" if non-numeric characters are present
+- **Invalid age value**: System validates that age is a positive integer (greater than 0) when provided and returns HTTP 400 with "INVALID_FORMAT" if negative, zero, or non-integer value is provided
+- **Invalid location coordinates**: System validates that locationLatitude and locationLongitude are valid decimal numbers (real/float type) and returns HTTP 400 with "INVALID_FORMAT" if non-numeric values are provided
+- **Invalid status value**: System validates that status is either "MISSING" or "FOUND" and returns HTTP 400 with "INVALID_FORMAT" if other values are provided
 - **Multiple invalid fields**: System uses fail-fast validation - returns HTTP 400 with only the first validation error encountered, not all errors at once
 - **Duplicate microchip numbers**: System checks for existing announcements with the same microchip number and returns HTTP 409 if found (only when microchip number is provided)
 - **Special characters and XSS prevention**: System sanitizes all text input to prevent XSS attacks by escaping/removing dangerous HTML/script tags (e.g., `<script>`, `<iframe>`, etc.) while preserving safe special characters
@@ -114,27 +132,29 @@ A user attempts to create an announcement for a pet with a microchip number that
 - **FR-008**: System MUST return HTTP 409 status code when an announcement with the same microchip number already exists
 - **FR-009**: System MUST return HTTP 500 status code when unexpected errors occur (database failures, system errors, etc.)
 - **FR-010**: System MUST return the newly created announcement in the response body using the same model as GET `/api/v1/announcements` endpoint, with the addition of the management_password field (only present in POST response)
-- **FR-011**: System MUST validate all required announcement fields and reject requests missing required data (required fields: petName, species, gender, location, lastSeenDate, photoUrl, and at least one contact method - email OR phone)
-- **FR-012**: System MUST accept optional fields without validation errors when not provided (optional fields: breed, description, locationRadius, microchipNumber)
+- **FR-011**: System MUST validate all required announcement fields and reject requests missing required data (required fields: species, sex, lastSeenDate, photoUrl, status, locationLatitude, locationLongitude, and at least one contact method - email OR phone)
+- **FR-012**: System MUST accept optional fields without validation errors when not provided (optional fields: petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age)
 - **FR-013**: System MUST treat required text fields containing only whitespace as empty and reject them with validation error
-- **FR-014**: System MUST enforce maximum length validation on text fields matching database column limits (petName: 100, description: 1000, location: 255, email: 255, phone: 50, breed: 100, photoUrl: 500, microchipNumber: 15 characters)
-- **FR-015**: System MUST validate that microchip number contains only digits (numeric characters only) when provided
-- **FR-016**: System MUST check if an announcement with the provided microchip number already exists (when microchip number is provided)
-- **FR-017**: System MUST return structured validation error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
-- **FR-018**: System MUST return conflict error responses in the format: `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` when duplicate microchip detected
-- **FR-019**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without field property and without exposing internal details
-- **FR-020**: System MUST use fail-fast validation (stop at first error and return only that single error)
-- **FR-021**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "TOO_LONG" for length violations, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields)
-- **FR-022**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
-- **FR-023**: System MUST persist successfully created announcements to the database
-- **FR-024**: System MUST assign a unique identifier to each newly created announcement
-- **FR-025**: System MUST set the status field to "MISSING" for all newly created announcements (user cannot specify status in request)
-- **FR-026**: System MUST generate a unique 6-digit numeric management_password for each newly created announcement
-- **FR-027**: System MUST return the management_password in the POST response body when creating an announcement
-- **FR-028**: System MUST NOT include management_password in GET responses (list or detail views)
-- **FR-029**: System MUST store management_password securely (hashed) in the database
-- **FR-030**: System MUST sanitize all text input fields to prevent XSS attacks by escaping or removing dangerous HTML/script tags
-- **FR-031**: System MUST reject requests containing fields not defined in the announcement model with HTTP 400 and error code "INVALID_FIELD"
+- **FR-014**: System MUST validate that microchip number contains only digits (numeric characters only) when provided
+- **FR-015**: System MUST check if an announcement with the provided microchip number already exists (when microchip number is provided)
+- **FR-016**: System MUST return structured validation error responses in the format: `{ error: { code, message, field } }` where code is the specific validation error code
+- **FR-017**: System MUST return conflict error responses in the format: `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` when duplicate microchip detected
+- **FR-018**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without field property and without exposing internal details
+- **FR-019**: System MUST use fail-fast validation (stop at first error and return only that single error)
+- **FR-020**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields)
+- **FR-021**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
+- **FR-022**: System MUST persist successfully created announcements to the database
+- **FR-023**: System MUST assign a unique identifier to each newly created announcement
+- **FR-024**: System MUST accept and validate the status field from the request body, allowing only "MISSING" or "FOUND" values (no default value assigned by database)
+- **FR-025**: System MUST generate a unique 6-digit numeric management_password for each newly created announcement
+- **FR-026**: System MUST return the management_password in the POST response body when creating an announcement
+- **FR-027**: System MUST NOT include management_password in GET responses (list or detail views)
+- **FR-028**: System MUST store management_password securely (hashed) in the database
+- **FR-029**: System MUST sanitize all text input fields to prevent XSS attacks by escaping or removing dangerous HTML/script tags
+- **FR-030**: System MUST reject requests containing fields not defined in the announcement model with HTTP 400 and error code "INVALID_FIELD"
+- **FR-031**: System MUST validate that age is a positive integer (greater than 0) when provided and reject negative, zero, or non-integer values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-032**: System MUST validate that locationLatitude and locationLongitude are valid decimal numbers (real/float type) and reject non-numeric values with HTTP 400 and error code "INVALID_FORMAT"
+- **FR-033**: System MUST validate that status field contains only "MISSING" or "FOUND" values and reject other values with HTTP 400 and error code "INVALID_FORMAT"
 
 #### Success Response Example
 
@@ -143,26 +163,30 @@ A user attempts to create an announcement for a pet with a microchip number that
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "petName": "Max",
-  "species": "DOG",
+  "species": "Golden Retriever",
   "breed": "Golden Retriever",
-  "gender": "MALE",
+  "sex": "MALE",
+  "age": 3,
   "description": "Friendly golden retriever with red collar",
   "microchipNumber": "123456789012345",
-  "location": "Central Park, New York, NY",
+  "locationCity": "New York",
+  "locationLatitude": 40.785091,
+  "locationLongitude": -73.968285,
   "locationRadius": 5,
   "lastSeenDate": "2025-11-21",
   "email": "john@example.com",
   "phone": "+1-555-0101",
   "photoUrl": "https://example.com/photos/max.jpg",
   "status": "MISSING",
+  "reward": "500 USD reward for safe return",
   "managementPassword": "847362"
 }
 ```
 
 **Notes**: 
 - The `managementPassword` field is **only included in the POST response**. It will **not** appear in GET responses.
-- Optional fields (breed, description, locationRadius, microchipNumber) can be omitted from the request or set to null.
-- Required fields: petName, species, gender, location, lastSeenDate, photoUrl, and at least one contact method (email OR phone).
+- Optional fields (petName, breed, description, locationCity, locationRadius, microchipNumber, reward, age) can be omitted from the request or set to null.
+- Required fields: species, sex, lastSeenDate, photoUrl, status, locationLatitude, locationLongitude, and at least one contact method (email OR phone).
 
 #### Error Response Examples
 
@@ -195,17 +219,6 @@ A user attempts to create an announcement for a pet with a microchip number that
         "code": "INVALID_FORMAT",
         "message": "must contain only digits",
         "field": "microchipNumber"
-    }
-}
-```
-
-**Field exceeds maximum length**:
-```json
-{
-    "error": {
-        "code": "TOO_LONG",
-        "message": "exceeds maximum length of 100 characters",
-        "field": "petName"
     }
 }
 ```
@@ -253,19 +266,55 @@ A user attempts to create an announcement for a pet with a microchip number that
 }
 ```
 
+**Invalid status value** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "status must be either MISSING or FOUND",
+        "field": "status"
+    }
+}
+```
+
+**Invalid age value** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "age must be a positive integer",
+        "field": "age"
+    }
+}
+```
+
+**Invalid location coordinate** (HTTP 400):
+```json
+{
+    "error": {
+        "code": "INVALID_FORMAT",
+        "message": "must be a valid decimal number",
+        "field": "locationLatitude"
+    }
+}
+```
+
 ### Key Entities
 
 - **Announcement**: Represents a pet announcement (lost/found pet listing) containing:
   - Unique identifier (generated by system)
-  - Pet details (name max 100 chars REQUIRED, description max 1000 chars OPTIONAL, type/species REQUIRED, breed max 100 chars OPTIONAL, gender REQUIRED)
-  - Microchip number (optional, max 15 chars, numeric only, must be unique across all announcements)
+  - Pet details (petName OPTIONAL, description OPTIONAL, species REQUIRED, breed OPTIONAL, sex REQUIRED, age positive integer OPTIONAL)
+  - Microchip number (OPTIONAL, numeric only, must be unique across all announcements)
   - Management password (6 digits, system-generated, returned only once in POST response, never exposed in GET endpoints)
-  - Contact information (email max 255 chars and/or phone max 50 chars - at least one required)
-  - Location information (location max 255 chars REQUIRED, optional radius in kilometers)
+  - Contact information (email and/or phone - at least one required)
+  - Location information (locationCity OPTIONAL, locationLatitude REQUIRED real/float, locationLongitude REQUIRED real/float, locationRadius OPTIONAL in kilometers)
   - Last seen date (ISO 8601 date format REQUIRED)
-  - Photo URL (REQUIRED, max 500 chars)
+  - Photo URL (REQUIRED)
   - Timestamp of creation
-  - Status indicator (automatically set to MISSING for new announcements)
+  - Status indicator (REQUIRED, must be "MISSING" or "FOUND", no default value)
+  - Reward information (OPTIONAL, string describing reward offered)
+  
+  **Note**: All text fields are stored as text type in database with no length constraints. No length validation is performed at application level - all text fields accept unlimited length.
 
 ## Success Criteria *(mandatory)*
 
