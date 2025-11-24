@@ -7,7 +7,7 @@
 
 ## Summary
 
-This feature completes the migration from Kotlin Multiplatform (KMP) architecture to platform-independent implementations. The primary requirement is to eliminate the shared KMP module by migrating all domain models, repository interfaces, use cases, and DI modules to platform-specific code (Android Kotlin, iOS Swift). Migration follows a sequential approach: iOS first (with Kotlin-to-Swift translation), then Android (straightforward copy). After content migration, the shared module and all KMP build configuration will be removed. This fulfills the constitutional requirement for platform independence established in constitution v2.0.0.
+This feature completes the migration from Kotlin Multiplatform (KMP) architecture to platform-independent implementations. The primary requirement is to eliminate the shared KMP module by migrating all domain models, repository interfaces, Android use cases, and DI modules to platform-specific code (Android Kotlin, iOS Swift). Migration follows a sequential approach: iOS first (with Kotlin-to-Swift translation), then Android (straightforward copy). After content migration, the shared module and all KMP build configuration will be removed. This fulfills the constitutional requirement for platform independence established in constitution v2.0.0 and includes explicit contract validation plus full-platform (Android, iOS, Web, Backend) coverage checks.
 
 ## Technical Context
 
@@ -28,6 +28,7 @@ This feature completes the migration from Kotlin Multiplatform (KMP) architectur
 **Testing**: 
 - Android: JUnit 6 + Kotlin Test + Turbine + Kover (coverage)
 - iOS: XCTest with Swift Concurrency + Xcode coverage
+- Backend: Vitest + SuperTest with coverage enforced via `npm test -- --coverage` in `/server`
 - Run commands documented in spec.md
 
 **Target Platform**: 
@@ -52,7 +53,7 @@ This feature completes the migration from Kotlin Multiplatform (KMP) architectur
 **Scale/Scope**: 
 - 5 domain models to migrate: Animal, Location, AnimalSpecies, AnimalGender, AnimalStatus
 - 1 repository interface: AnimalRepository
-- 1 use case: GetAnimalsUseCase
+- 1 Android use case: GetAnimalsUseCase
 - 1 DI module: DomainModule (Koin)
 - Test fixtures: MockAnimalData
 - 2 platforms affected: Android + iOS
@@ -68,7 +69,7 @@ This feature completes the migration from Kotlin Multiplatform (KMP) architectur
 
 - [x] **Platform Independence**: Each platform implements full stack independently
   - Android: Domain models, use cases, repositories will be migrated to `/composeApp/src/androidMain/.../domain/`
-  - iOS: Domain models, use cases, repositories will be migrated to `/iosApp/iosApp/Domain/`
+  - iOS: Domain models and repository protocols will be migrated to `/iosApp/iosApp/Domain/` while ViewModels continue calling repositories directly (no use cases per constitution)
   - Web: Already independent (not affected by this migration)
   - Backend: Already independent (not affected by this migration)
   - After migration: NO shared compiled code between platforms (shared module will be deleted)
@@ -82,7 +83,7 @@ This feature completes the migration from Kotlin Multiplatform (KMP) architectur
   - Violation justification: _N/A - Presentation layer not modified_
 
 - [x] **iOS MVVM-C Architecture**: N/A for infrastructure migration
-  - Migration only affects domain layer (models, repositories, use cases)
+  - Migration only affects domain layer (models and repository protocols; no new use cases introduced)
   - Existing iOS ViewModels and coordinators remain unchanged (already follow MVVM-C)
   - Only import statements will be updated (remove `import Shared`)
   - Violation justification: _N/A - Presentation layer not modified_
@@ -165,9 +166,9 @@ This feature completes the migration from Kotlin Multiplatform (KMP) architectur
   - No backend implementation changes requiring TDD
   - Violation justification: _N/A - /server module not affected_
 
-- [x] **Backend Testing Strategy**: N/A - Backend not affected by migration
-  - Backend test coverage remains unchanged
-  - Violation justification: _N/A - /server module not affected_
+- [x] **Backend Testing Strategy**: Coverage verification required even though code is untouched
+  - Run `npm test -- --coverage` in `/server` to confirm FR-018 remains satisfied post-migration
+  - Violation justification: _N/A - No backend implementation changes, but we still re-run tests to prove coverage_
 
 ## Project Structure
 
@@ -246,8 +247,6 @@ iosApp/iosApp/
 │   │   └── AnimalStatus.swift (translated from Kotlin)
 │   ├── Repositories/
 │   │   └── AnimalRepository.swift (translated from Kotlin)
-│   └── UseCases/
-│       └── GetAnimalsUseCase.swift (translated from Kotlin, transitional)
 ├── Features/AnimalList/
 │   ├── Repositories/
 │   │   └── AnimalRepositoryImpl.swift (imports updated to local Domain)
@@ -267,6 +266,8 @@ composeApp/src/androidUnitTest/kotlin/.../
 iosApp/iosAppTests/
 └── Features/ (tests updated with local imports)
 ```
+
+**Contract Validation Artifacts**: `specs/011-migrate-from-kmp/contracts/` remains the canonical mapping reference, and verification notes will be captured in `specs/011-migrate-from-kmp/contract-validation.md` once Android/iOS parity reviews are complete.
 
 **Structure Decision**: Multi-platform mobile architecture with independent platform implementations. Migration moves domain layer code from shared KMP module to platform-specific modules (Android in Kotlin, iOS in Swift). After migration, each platform has a complete domain layer with no cross-platform dependencies. The shared module is completely removed, achieving constitutional Platform Independence.
 
