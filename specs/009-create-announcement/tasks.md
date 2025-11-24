@@ -51,13 +51,13 @@ Each phase delivers a complete, independently testable increment.
 
 ### Tasks
 
-- [ ] T001 Install production dependencies in server/package.json (xss@^1.0.14, zod@^3.22.4)
-- [ ] T002 Verify dependencies installed correctly with `npm list xss zod`
-- [ ] T003 Create database migration file: server/src/database/migrations/YYYYMMDDHHMMSS_create-announcement-table.ts
-- [ ] T004 Write migration up() function with announcement table schema (all fields, UNIQUE constraint on microchip_number)
-- [ ] T005 Write migration down() function to drop announcement table
-- [ ] T006 Run migration with `npm run knex:migrate` and verify table created
-- [ ] T007 Verify database schema with `sqlite3 pets.db ".schema announcement"`
+- [X] T001 Install production dependencies in server/package.json (xss@^1.0.14, zod@^3.22.4)
+- [X] T002 Verify dependencies installed correctly with `npm list xss zod`
+- [X] T003 Create database migration file: server/src/database/migrations/YYYYMMDDHHMMSS_create-announcement-table.ts
+- [X] T004 Write migration up() function with announcement table schema (all fields, UNIQUE constraint on microchip_number)
+- [X] T005 Write migration down() function to drop announcement table
+- [X] T006 Run migration with `npm run knex:migrate` and verify table created
+- [X] T007 Verify database schema with `sqlite3 pets.db ".schema announcement"`
 
 ---
 
@@ -439,7 +439,7 @@ All implementation tasks follow Test-Driven Development (Red-Green-Refactor):
 
 ### Phase Completion Checklist
 
-- [ ] **Phase 1**: Dependencies installed, database schema created
+- [X] **Phase 1**: Dependencies installed, database schema created
 - [ ] **Phase 2**: All utility functions implemented with ≥80% test coverage
 - [ ] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
 - [ ] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
