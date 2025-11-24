@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement } from '../../types/announcement.ts';
-import type { AnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
+import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -21,6 +21,11 @@ const MOCK_ANNOUNCEMENT: Announcement = {
   updatedAt: '2025-11-19T10:00:00Z',
 };
 
+const defaultMockRepository: IAnnouncementRepository = {
+  findAll: async () => [],
+  findById: async () => null,
+};
+
 describe('AnnouncementService', () => {
   describe('getAllAnnouncements', () => {
     it.each([
@@ -29,8 +34,9 @@ describe('AnnouncementService', () => {
     ])('should return $expectedLength announcements when repository returns $expectedLength items', async ({ announcements, expectedLength }) => {
       // Given: Repository returns specified announcements
       const fakeRepository = {
+        ...defaultMockRepository,
         findAll: async () => announcements,
-      } as AnnouncementRepository;
+      };
       
       const service = new AnnouncementService(fakeRepository);
       
@@ -40,6 +46,65 @@ describe('AnnouncementService', () => {
       // Then: Returns expected announcements from repository
       expect(result).toEqual(announcements);
       expect(result.length).toBe(expectedLength);
+    });
+  });
+
+  describe('getAnnouncementById', () => {
+    it('should return announcement when ID exists', async () => {
+      // Given: Repository with test announcement
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT
+      };
+      
+      const service = new AnnouncementService(fakeRepository);
+      
+      // When: Service is called with existing ID
+      const result = await service.getAnnouncementById(MOCK_ANNOUNCEMENT.id);
+      
+      // Then: Announcement is returned
+      expect(result).toEqual(MOCK_ANNOUNCEMENT);
+    });
+
+    it('should return null when ID does not exist', async () => {
+      // Given: Repository with empty data
+      const fakeRepository = defaultMockRepository;
+      
+      const service = new AnnouncementService(fakeRepository);
+      
+      // When: Service is called with non-existent ID
+      const result = await service.getAnnouncementById('non-existent-id');
+      
+      // Then: Null is returned
+      expect(result).toBeNull();
+    });
+
+    it('should return announcement with null optional fields', async () => {
+      // Given: Announcement with null optional fields
+      const announcementWithNulls: Announcement = {
+        ...MOCK_ANNOUNCEMENT,
+        breed: null,
+        email: null,
+        photoUrl: null,
+        locationRadius: null,
+      };
+      
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => announcementWithNulls
+      };
+      
+      const service = new AnnouncementService(fakeRepository);
+      
+      // When: Service is called
+      const result = await service.getAnnouncementById(announcementWithNulls.id);
+      
+      // Then: Announcement with nulls is returned
+      expect(result).toEqual(announcementWithNulls);
+      expect(result?.breed).toBeNull();
+      expect(result?.email).toBeNull();
+      expect(result?.photoUrl).toBeNull();
+      expect(result?.locationRadius).toBeNull();
     });
   });
 });

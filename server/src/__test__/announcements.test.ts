@@ -89,3 +89,76 @@ describe('GET /api/v1/announcements', () => {
     expect(response.body).toEqual({ data: [] });
   });
 });
+
+describe('GET /api/v1/announcements/:id', () => {
+  beforeEach(async () => {
+    await db('announcement').del();
+  });
+
+  it('should return 200 and announcement when ID exists', async () => {
+    // Given: Database seeded with test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+    
+    // When: Client requests announcement by ID
+    const response = await request(server)
+      .get(`/api/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    
+    // Then: Response contains announcement
+    expect(response.body).toEqual({
+      id: TEST_ANNOUNCEMENT_1.id,
+      petName: TEST_ANNOUNCEMENT_1.pet_name,
+      species: TEST_ANNOUNCEMENT_1.species,
+      breed: TEST_ANNOUNCEMENT_1.breed,
+      gender: TEST_ANNOUNCEMENT_1.gender,
+      description: TEST_ANNOUNCEMENT_1.description,
+      location: TEST_ANNOUNCEMENT_1.location,
+      locationRadius: TEST_ANNOUNCEMENT_1.location_radius,
+      lastSeenDate: TEST_ANNOUNCEMENT_1.last_seen_date,
+      email: TEST_ANNOUNCEMENT_1.email,
+      phone: TEST_ANNOUNCEMENT_1.phone,
+      photoUrl: TEST_ANNOUNCEMENT_1.photo_url,
+      status: TEST_ANNOUNCEMENT_1.status,
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    });
+  });
+
+  it.each([
+    { id: '123e4567-e89b-12d3-a456-426614174000', description: 'non-existent ID' },
+    { id: 'abc-123', description: 'malformed UUID' },
+  ])('should return 404 when $description', async ({ id }) => {
+    // Given: Empty database (cleared by beforeEach)
+    
+    // When: Client requests with invalid ID
+    const response = await request(server)
+      .get(`/api/v1/announcements/${id}`)
+      .expect('Content-Type', /json/)
+      .expect(404);
+    
+    // Then: Error response returned
+    expect(response.body).toEqual({
+      error: {
+        code: 'NOT_FOUND',
+        message: 'Resource not found'
+      }
+    });
+  });
+
+  it('should include optional fields with null values', async () => {
+    // Given: Announcement with null optional fields
+    await db('announcement').insert(TEST_ANNOUNCEMENT_2);
+    
+    // When: Client requests announcement
+    const response = await request(server)
+      .get(`/api/v1/announcements/${TEST_ANNOUNCEMENT_2.id}`)
+      .expect(200);
+    
+    // Then: Response includes null optional fields
+    expect(response.body.breed).toBeNull();
+    expect(response.body.email).toBeNull();
+    expect(response.body.photoUrl).toBeNull();
+    expect(response.body.locationRadius).toBeNull();
+  });
+});
