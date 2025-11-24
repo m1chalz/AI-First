@@ -25,56 +25,21 @@ struct PetDetailsView: View {
     // MARK: - Loading State
     
     private var loadingView: some View {
-        VStack(spacing: 20) {
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: "#2D2D2D")))
-                .scaleEffect(1.5)
-                .accessibilityIdentifier("petDetails.loading")
-            Text(L10n.PetDetails.Loading.message)
-                .font(.system(size: 16))
-                .foregroundColor(Color(hex: "#6a7282"))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "#f5f7fa"))
+        LoadingView(model: .init(
+            message: L10n.PetDetails.Loading.message,
+            accessibilityIdentifier: "petDetails.loading"
+        ))
     }
     
     // MARK: - Error State
     
     private func errorView(message: String) -> some View {
-        ZStack {
-            Color(hex: "#f5f7fa")
-                .ignoresSafeArea()
-            
-            VStack(spacing: 20) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.system(size: 48))
-                    .foregroundColor(Color(hex: "#fb2c36"))
-                
-                Text(L10n.PetDetails.Error.title)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(Color(hex: "#101828"))
-                
-                Text(message)
-                    .font(.system(size: 16))
-                    .foregroundColor(Color(hex: "#6a7282"))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-                    .accessibilityIdentifier("petDetails.error.message")
-                
-                Button(action: { viewModel.retry() }) {
-                    Text(L10n.Common.retry)
-                        .font(.system(size: 16))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 12)
-                        .background(Color(hex: "#155dfc"))
-                        .cornerRadius(10)
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("petDetails.retry.button")
-            }
-            .padding()
-        }
+        ErrorView(model: .init(
+            title: L10n.PetDetails.Error.title,
+            message: message,
+            onRetry: { viewModel.retry() },
+            accessibilityIdentifier: "petDetails.error"
+        ))
     }
     
     // MARK: - Loaded State
@@ -90,7 +55,7 @@ struct PetDetailsView: View {
                     // Date of Disappearance (full width)
                     LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.dateOfDisappearance,
-                        value: formatDate(petDetails.lastSeenDate)
+                        value: viewModel.formatDate(petDetails.lastSeenDate)
                     ))
                     .accessibilityIdentifier("petDetails.date.field")
                     .padding(.bottom, 10.667)
@@ -128,7 +93,7 @@ struct PetDetailsView: View {
                         
                         LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.microchipNumber,
-                            value: formatMicrochip(petDetails.microchipNumber)
+                            value: viewModel.formatMicrochip(petDetails.microchipNumber)
                         ))
                         .accessibilityIdentifier("petDetails.microchip.field")
                     }
@@ -137,7 +102,7 @@ struct PetDetailsView: View {
                     HStack(spacing: 12) {
                         LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalSpecies,
-                            value: formatSpecies(petDetails.species)
+                            value: viewModel.formatSpecies(petDetails.species)
                         ))
                         .accessibilityIdentifier("petDetails.species.field")
                         
@@ -156,7 +121,7 @@ struct PetDetailsView: View {
                                 .foregroundColor(Color(hex: "#6a7282"))
                             
                             HStack(spacing: 8) {
-                                Image(systemName: genderIcon(petDetails.gender))
+                                Image(systemName: viewModel.genderIcon(petDetails.gender))
                                     .font(.system(size: 20))
                                     .foregroundColor(Color(hex: "#155dfc"))
                                 
@@ -190,12 +155,12 @@ struct PetDetailsView: View {
                                 .font(.system(size: 16))
                                 .foregroundColor(Color(hex: "#101828"))
                             
-                            if let radius = petDetails.locationRadius {
+                            if let radiusText = viewModel.formatRadius(petDetails.locationRadius) {
                                 Text("•")
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#6a7282"))
                                 
-                                Text(L10n.PetDetails.Location.radiusFormat(radius))
+                                Text(radiusText)
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#4a5565"))
                             }
@@ -259,55 +224,6 @@ struct PetDetailsView: View {
     }
     
     // MARK: - Formatting Helpers
-    
-    private func formatMicrochip(_ microchip: String?) -> String {
-        guard let microchip = microchip else { return "—" }
-        
-        // Format as 000-000-000-000 if it's a plain number
-        let digits = microchip.filter { $0.isNumber }
-        guard digits.count >= 12 else { return microchip }
-        
-        let formatted = digits.enumerated().map { index, char -> String in
-            if index > 0 && index % 3 == 0 && index < 12 {
-                return "-\(char)"
-            }
-            return String(char)
-        }.joined()
-        
-        return formatted
-    }
-    
-    private func formatSpecies(_ species: String) -> String {
-        return species.capitalized
-    }
-    
-    private func genderIcon(_ gender: String) -> String {
-        switch gender.uppercased() {
-        case "MALE":
-            return "arrow.up.right"
-        case "FEMALE":
-            return "arrow.down.right"
-        default:
-            return "questionmark"
-        }
-    }
-    
-    private func formatDate(_ dateString: String) -> String {
-        // Input format: YYYY-MM-DD (e.g., "2025-11-18")
-        // Output format: MMM DD, YYYY (e.g., "Nov 18, 2025")
-        
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let date = inputFormatter.date(from: dateString) else {
-            return dateString // Return as-is if parsing fails
-        }
-        
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "MMM dd, yyyy"
-        
-        return outputFormatter.string(from: date)
-    }
 }
 
 // MARK: - Previews

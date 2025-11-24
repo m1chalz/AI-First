@@ -15,7 +15,11 @@
 // Empty state
 "animalList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
 
+// Loading state
+"animalList.loading.message" = "Ładowanie listy zwierząt...";
+
 // Error messages
+"animalList.error.title" = "Błąd";
 "animalList.error.prefix" = "Błąd: %@";
 "animalList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
 "animalList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";

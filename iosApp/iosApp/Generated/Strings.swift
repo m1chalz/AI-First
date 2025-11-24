@@ -40,6 +40,12 @@ public enum L10n {
       public static func `prefix`(_ p1: Any) -> String {
         return L10n.tr("Localizable", "animalList.error.prefix", String(describing: p1), fallback: "Error: %@")
       }
+      /// Error
+      public static let title = L10n.tr("Localizable", "animalList.error.title", fallback: "Error")
+    }
+    public enum Loading {
+      /// Loading animals...
+      public static let message = L10n.tr("Localizable", "animalList.loading.message", fallback: "Loading animals...")
     }
   }
   public enum Common {

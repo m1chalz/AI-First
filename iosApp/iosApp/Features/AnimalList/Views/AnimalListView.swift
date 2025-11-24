@@ -27,16 +27,22 @@ struct AnimalListView: View {
             // Content area with scrollable list
             if viewModel.isLoading {
                 // Loading indicator
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: "#2D2D2D")))
-                    .scaleEffect(1.5)
+                LoadingView(model: .init(
+                    message: L10n.AnimalList.Loading.message,
+                    accessibilityIdentifier: "animalList.loading"
+                ))
             } else if let errorMessage = viewModel.errorMessage {
                 // Error message
-                Text(L10n.AnimalList.Error.prefix(errorMessage))
-                    .font(.system(size: 16))
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
-                    .padding(32)
+                ErrorView(model: .init(
+                    title: L10n.AnimalList.Error.title,
+                    message: L10n.AnimalList.Error.prefix(errorMessage),
+                    onRetry: {
+                        Task {
+                            await viewModel.loadAnimals()
+                        }
+                    },
+                    accessibilityIdentifier: "animalList.error"
+                ))
             } else if viewModel.isEmpty {
                 // Empty state
                 EmptyStateView(model: EmptyStateModel.default)

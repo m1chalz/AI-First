@@ -56,6 +56,62 @@ class PetDetailsViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Formatting Helpers
+    
+    func formatMicrochip(_ microchip: String?) -> String {
+        guard let microchip = microchip else { return "—" }
+        
+        // Format as 000-000-000-000 if it's a plain number
+        let digits = microchip.filter { $0.isNumber }
+        guard digits.count >= 12 else { return microchip }
+        
+        let formatted = digits.enumerated().map { index, char -> String in
+            if index > 0 && index % 3 == 0 && index < 12 {
+                return "-\(char)"
+            }
+            return String(char)
+        }.joined()
+        
+        return formatted
+    }
+    
+    func formatSpecies(_ species: String) -> String {
+        return species.capitalized
+    }
+    
+    func genderIcon(_ gender: String) -> String {
+        switch gender.uppercased() {
+        case "MALE":
+            return "arrow.up.right"
+        case "FEMALE":
+            return "arrow.down.right"
+        default:
+            return "questionmark"
+        }
+    }
+    
+    func formatDate(_ dateString: String) -> String {
+        // Input format: YYYY-MM-DD (e.g., "2025-11-18")
+        // Output format: MMM DD, YYYY (e.g., "Nov 18, 2025")
+        
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd"
+        
+        guard let date = inputFormatter.date(from: dateString) else {
+            return dateString // Return as-is if parsing fails
+        }
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MMM dd, yyyy"
+        
+        return outputFormatter.string(from: date)
+    }
+    
+    func formatRadius(_ radius: Int?) -> String? {
+        guard let radius = radius else { return nil }
+        return L10n.PetDetails.Location.radiusFormat(radius)
+    }
+
     /// Retries loading pet details after an error
     func retry() {
         Task {

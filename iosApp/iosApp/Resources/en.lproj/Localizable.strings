@@ -15,7 +15,11 @@
 // Empty state
 "animalList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
 
+// Loading state
+"animalList.loading.message" = "Loading animals...";
+
 // Error messages
+"animalList.error.title" = "Error";
 "animalList.error.prefix" = "Error: %@";
 "animalList.error.generic" = "Something went wrong. Please try again.";
 "animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
