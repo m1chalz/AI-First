@@ -1,6 +1,6 @@
 # Feature Specification: Complete KMP to Platform-Independent Migration
 
-**Feature Branch**: `011-migrate-from-kmp`  
+**Feature Branch**: `009-migrate-from-kmp`  
 **Created**: 2025-11-21  
 **Status**: Draft  
 **Input**: User description: "I'd like to prepare the project for migrating from KMP into independent platform projects: Android, iOS and web. Current shared module should no longer exist."
@@ -10,7 +10,7 @@
 ### Session 2025-11-21
 
 - Q: How strict is the backend API compatibility requirement for field naming in domain models? → A: Domain models use platform conventions (Kotlin camelCase, Swift camelCase), serialization annotations handle conversion to backend format
-- Q: Should the iOS use case (GetAnimalsUseCase) be migrated during this migration, or should iOS ViewModels be refactored to call repositories directly? → A: Per constitution, iOS ViewModels MUST call repositories directly; remove shared use case dependency instead of recreating a Swift use case layer
+- Q: Should the iOS use case (GetAnimalsUseCase) be migrated during this migration, or should iOS ViewModels be refactored to call repositories directly? → A: Migrate use case as optional transitional code; document that iOS should remove it in future refactoring
 - Q: How should the Koin DomainModule from the shared module be handled during migration? → A: Create new domainModule in Android's DI directory, copy shared DomainModule bindings there
 - Q: Should Android and iOS platforms be migrated in sequence or in parallel? → A: Sequential migration, iOS first (complete iOS migration fully), then Android
 - Q: Should migration phases be committed and reviewed as separate PRs, or as a single large PR with multiple commits? → A: Single PR with multiple commits (one per phase), review once at end
@@ -31,23 +31,22 @@ Developers need each platform to have its own domain models (Animal, Location, A
 2. **Given** iOS domain models have been migrated, **When** developer inspects `/iosApp/iosApp/Domain/Models/`, **Then** all domain models exist as Swift structs with equivalent properties
 3. **Given** domain models are platform-local, **When** developer searches codebase for `import com.intive.aifirst.petspot.domain.models` (Android) or `import Shared` (iOS), **Then** no imports from shared module remain in domain layer code
 4. **Given** platforms use local models, **When** developer runs platform builds, **Then** builds succeed with local model references
-5. **Given** backend contracts documented in `specs/011-migrate-from-kmp/contracts/`, **When** developers compare platform models to those contracts, **Then** field names, types, and nullability match across Android/iOS implementations
 
 ---
 
-### User Story 2 - Platform Repository Independence (Priority: P1)
+### User Story 2 - Platform Repository and Use Case Independence (Priority: P1)
 
-Developers need repository interfaces implemented in each platform's codebase so business logic can evolve independently. Android retains its use case layer, while iOS adheres to the constitutional rule of calling repositories directly from ViewModels (no use cases).
+Developers need repository interfaces and use cases implemented in each platform's codebase, allowing business logic to evolve per platform without coordinating changes across KMP module.
 
 **Why this priority**: Business logic independence enables platforms to adapt to platform-specific needs. Required before shared module can be removed.
 
-**Independent Test**: Can be fully tested by verifying repository interfaces exist in platform directories with platform-native patterns (Android + iOS) and that Android-specific use cases remain local while ViewModels/coordinators consume the correct contracts.
+**Independent Test**: Can be fully tested by verifying repository interfaces and use cases exist in platform directories with platform-native patterns, and that ViewModels/coordinators successfully consume them.
 
 **Acceptance Scenarios**:
 
 1. **Given** Android repositories migrated, **When** developer inspects `/composeApp/src/androidMain/.../domain/repositories/`, **Then** AnimalRepository interface and use cases exist using Kotlin coroutines
-2. **Given** iOS repositories migrated, **When** developer inspects `/iosApp/iosApp/Domain/Repositories/`, **Then** AnimalRepository protocol exists using Swift async/await and ViewModels reference that protocol directly
-3. **Given** Android use cases migrated, **When** ViewModels reference use cases, **Then** they import from platform-local packages, not shared module
+2. **Given** iOS repositories migrated, **When** developer inspects `/iosApp/iosApp/Domain/Repositories/`, **Then** AnimalRepository protocol exists using Swift async/await
+3. **Given** use cases migrated, **When** ViewModels reference use cases, **Then** they import from platform-local packages, not shared module
 4. **Given** platforms use local business logic, **When** developer runs unit tests, **Then** all tests pass using platform-local implementations
 
 ---
@@ -137,7 +136,7 @@ Continuous Integration pipeline should build and test all platforms successfully
 - **FR-003**: Android MUST have local copies of repository interfaces in `/composeApp/src/androidMain/.../domain/repositories/` (AnimalRepository)
 - **FR-004**: iOS MUST have Swift protocol definitions of repository interfaces in `/iosApp/iosApp/Domain/Repositories/`
 - **FR-005**: Android MUST have local copies of use cases in `/composeApp/src/androidMain/.../domain/usecases/` (GetAnimalsUseCase)
-- **FR-006**: iOS MUST NOT introduce a use case layer; ViewModels MUST call local repository protocols directly after removing `Shared` dependencies, and any prior `GetAnimalsUseCase` references MUST be eliminated
+- **FR-006**: iOS MUST migrate GetAnimalsUseCase to `/iosApp/iosApp/Domain/UseCases/` as transitional code during this migration; iOS architecture SHOULD refactor ViewModels to call repositories directly in future (per constitution iOS MAY skip use case layer, but this migration preserves current architecture)
 - **FR-007**: Android code MUST NOT import from `com.intive.aifirst.petspot.shared.*` or shared module packages
 - **FR-008**: iOS code MUST NOT import `Shared` framework from KMP
 - **FR-009**: Mock/test fixture data (MockAnimalData) MUST be migrated to platform-specific test directories or hardcoded in implementations

@@ -35,8 +35,8 @@
 - [ ] T004 Capture iOS test coverage baseline with coverage-enabled test run and document in `specs/011-migrate-from-kmp/baseline-metrics.txt`
 - [ ] T005 Audit Android code for shared module imports with `grep -r "import com.intive.aifirst.petspot.domain" composeApp/src/androidMain/` and document files requiring updates
 - [ ] T006 Audit iOS code for Shared framework imports with `grep -r "import Shared" iosApp/` and document files requiring updates
-- [ ] T007 Create inventory of shared module contents by listing all files in `shared/src/commonMain/.../domain/`
-- [ ] T008 Document current Gradle sync time baseline for comparison after migration
+- [ ] T007 Create inventory of shared module contents by listing all files in `shared/src/commonMain/.../domain/` and document entity counts (5 models, 1 repository interface, 1 Android use case, 1 DI module, test fixtures)
+- [ ] T008 Document current Gradle sync time baseline and repository size (.git folder size) for comparison after migration (SC-007 validation)
 
 **Checkpoint**: Baseline metrics captured - ready to begin content migration
 
@@ -83,30 +83,35 @@
 
 **Checkpoint**: User Story 1 complete - Both platforms have independent domain models, builds succeed, tests pass
 
+### Contract Validation (FR-010 / SC-011)
+
+- [ ] T130 [US1] Compare Android domain models against backend contracts defined in `specs/011-migrate-from-kmp/contracts/kotlin-swift-mapping.md` and document parity results (fields, types, nullability) in `specs/011-migrate-from-kmp/contract-validation.md`
+- [ ] T131 [US1] Compare iOS domain models against the same backend contracts and record results in `specs/011-migrate-from-kmp/contract-validation.md`, flagging any discrepancies for follow-up before proceeding
+
 ---
 
-## Phase 3: User Story 2 - Platform Repository and Use Case Independence (Priority: P1)
+## Phase 3: User Story 2 - Platform Repository Independence (Priority: P1)
 
-**Goal**: Repository interfaces and use cases implemented in each platform's codebase, allowing business logic to evolve per platform without coordinating changes across KMP module.
+**Goal**: Repository interfaces are implemented in each platform's codebase, allowing business logic to evolve per platform without coordinating changes across the former KMP module. Android retains its use case layer; iOS ViewModels call repositories directly per constitution.
 
-**Independent Test**: Verify repository interfaces and use cases exist in platform directories with platform-native patterns, and ViewModels/coordinators successfully consume them.
+**Independent Test**: Verify repository interfaces (and Android use cases) exist in platform directories with platform-native patterns, and ViewModels/coordinators successfully consume those contracts without shared dependencies.
 
-### iOS Repositories and Use Cases Migration (Kotlin → Swift Translation)
+### iOS Repository Migration (Kotlin → Swift Translation, No Use Cases)
 
 - [ ] T036 [US2] Create `iosApp/iosApp/Domain/Repositories/` directory structure
-- [ ] T037 [US2] Create `iosApp/iosApp/Domain/UseCases/` directory structure
+- [ ] T037 [US2] Ensure `iosApp/iosApp/Domain/` contains only `Models/` and `Repositories/` (remove legacy `UseCases/` folders or references)
 - [ ] T038 [US2] Create `iosApp/iosAppTests/Fakes/` directory structure for test doubles
 - [ ] T039 [US2] Translate AnimalRepository interface to Swift protocol in `iosApp/iosApp/Domain/Repositories/AnimalRepository.swift` (Kotlin `suspend fun` → Swift `func ... async throws`)
-- [ ] T040 [US2] Translate GetAnimalsUseCase to Swift class in `iosApp/iosApp/Domain/UseCases/GetAnimalsUseCase.swift` (invoke() → execute() method, add doc comment noting iOS SHOULD remove use cases in future)
+- [ ] T040 [US2] Update AnimalListViewModel (and any other ViewModels) to call local repository protocols directly, removing `GetAnimalsUseCase` dependencies entirely
 - [ ] T041 [US2] Translate FakeAnimalRepository to Swift class in `iosApp/iosAppTests/Fakes/FakeAnimalRepository.swift`
-- [ ] T042 [US2] Update ServiceContainer in `iosApp/iosApp/DI/ServiceContainer.swift` to provide local repository and use case with manual DI (constructor injection)
+- [ ] T042 [US2] Update ServiceContainer in `iosApp/iosApp/DI/ServiceContainer.swift` to provide local repository via manual DI (constructor injection) with no intermediary use case layer
 - [ ] T043 [US2] Update AnimalListViewModel imports in `iosApp/iosApp/Features/AnimalList/ViewModels/` to use local domain types
 - [ ] T044 [US2] Update AnimalRepositoryImpl in `iosApp/iosApp/Features/AnimalList/Repositories/` to conform to local protocol
 - [ ] T045 [US2] Verify no `import Shared` statements remain in iOS codebase with `git grep "import Shared" iosApp/`
 - [ ] T046 [US2] Verify iOS builds successfully with `xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' build`
 - [ ] T047 [US2] Update iOS test imports to use local fakes and domain types
 - [ ] T048 [US2] Run iOS unit tests and verify they pass with 80%+ coverage maintained
-- [ ] T049 [US2] Commit Phase 2 (iOS repos/use cases) with git tag `migration-phase-2-ios-repos`
+- [ ] T049 [US2] Commit Phase 2 (iOS repositories) with git tag `migration-phase-2-ios-repos`
 
 ### Android Repositories and Use Cases Migration (Kotlin Copy)
 
@@ -127,7 +132,7 @@
 - [ ] T064 [US2] Run Android unit tests and verify they pass with 80%+ coverage maintained with `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - [ ] T065 [US2] Commit Phase 4 (Android repos/use cases) with git tag `migration-phase-4-android-repos`
 
-**Checkpoint**: User Story 2 complete - Both platforms have independent repository interfaces and use cases, ViewModels consume local types
+**Checkpoint**: User Story 2 complete - Both platforms have independent repository interfaces, Android maintains local use cases, and ViewModels consume local types without shared dependencies
 
 ---
 
@@ -170,9 +175,10 @@
 - [ ] T086 [US3] Run full Android test suite with `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
 - [ ] T087 [US3] Run full iOS test suite with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - [ ] T088 [US3] Run E2E web tests with `npx playwright test` from repo root
-- [ ] T089 [US3] Create archive branch with `git checkout migration-phase-6-ios-xcode-config && git branch archive/shared-module && git checkout 011-migrate-from-kmp`
-- [ ] T090 [US3] Push archive branch to remote with `git push origin archive/shared-module`
-- [ ] T091 [US3] Commit Phase 7 (shared module deletion) with git tag `migration-phase-7-delete-shared`
+- [ ] T089 [US3] Run mobile E2E tests with `npm run test:mobile:android && npm run test:mobile:ios` from repo root (if mobile E2E configured per FR-020)
+- [ ] T090 [US3] Create archive branch with `git checkout migration-phase-6-ios-xcode-config && git branch archive/shared-module && git checkout 011-migrate-from-kmp`
+- [ ] T091 [US3] Push archive branch to remote with `git push origin archive/shared-module`
+- [ ] T092 [US3] Commit Phase 7 (shared module deletion) with git tag `migration-phase-7-delete-shared`
 
 **Checkpoint**: User Story 3 complete - Shared module deleted, all platforms build independently, all tests pass
 
@@ -180,18 +186,20 @@
 
 ## Phase 5: User Story 4 - Platform Test Execution (Priority: P1)
 
-**Goal**: Run platform-specific unit tests to verify business logic and presentation logic work correctly after migration with 80%+ coverage maintained.
+**Goal**: Run platform-specific unit tests (Android, iOS, Web, Backend) to verify business logic and presentation logic work correctly after migration with 80%+ coverage maintained everywhere.
 
-**Independent Test**: Run platform-specific test commands and verify they pass with expected coverage thresholds.
+**Independent Test**: Run each platform's test command and verify results meet expected coverage thresholds.
 
-- [ ] T092 [US4] Run Android tests and generate coverage report with `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
-- [ ] T093 [US4] Verify Android coverage meets 80%+ threshold by inspecting `composeApp/build/reports/kover/html/index.html`
-- [ ] T094 [US4] Run iOS tests with coverage with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
-- [ ] T095 [US4] Verify iOS coverage meets 80%+ threshold in Xcode coverage report
-- [ ] T096 [US4] Run web tests with coverage with `npm test -- --coverage` from `webApp/`
-- [ ] T097 [US4] Verify web coverage meets 80%+ threshold by inspecting `webApp/coverage/index.html`
-- [ ] T098 [US4] Compare post-migration coverage to baseline captured in T002 and T004
-- [ ] T099 [US4] Document test results in `specs/011-migrate-from-kmp/test-validation-results.txt`
+- [ ] T093 [US4] Run Android tests and generate coverage report with `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
+- [ ] T094 [US4] Verify Android coverage meets 80%+ threshold by inspecting `composeApp/build/reports/kover/html/index.html`
+- [ ] T095 [US4] Run iOS tests with coverage with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
+- [ ] T096 [US4] Verify iOS coverage meets 80%+ threshold in Xcode coverage report
+- [ ] T097 [US4] Run web tests with coverage with `npm test -- --coverage` from `webApp/`
+- [ ] T098 [US4] Verify web coverage meets 80%+ threshold by inspecting `webApp/coverage/index.html`
+- [ ] T132 [US4] Run backend tests with coverage using `npm test -- --coverage` from `server/`
+- [ ] T133 [US4] Verify backend coverage meets 80%+ threshold by reviewing `server/coverage/index.html` and capture results in `specs/011-migrate-from-kmp/test-validation-results.txt`
+- [ ] T099 [US4] Compare post-migration coverage to baseline captured in T002 and T004
+- [ ] T100 [US4] Document test results in `specs/011-migrate-from-kmp/test-validation-results.txt`
 
 **Checkpoint**: User Story 4 complete - All platform tests pass with 80%+ coverage maintained
 
@@ -203,17 +211,17 @@
 
 **Independent Test**: Trigger CI/CD pipeline and verify all build, test, and lint jobs pass without KMP-related steps.
 
-- [ ] T100 [US6] Review CI/CD configuration files (`.github/workflows/`, `.gitlab-ci.yml`, or `Jenkinsfile`) to identify shared module build steps
-- [ ] T101 [US6] Remove shared module build job from CI/CD pipeline configuration
-- [ ] T102 [US6] Remove KMP framework generation step for iOS from CI/CD pipeline
-- [ ] T103 [US6] Remove shared module test execution from CI/CD pipeline
-- [ ] T104 [US6] Update Android build job to build composeApp without shared dependency
-- [ ] T105 [US6] Update iOS build job to build iosApp without KMP framework
-- [ ] T106 [US6] Commit CI/CD pipeline updates
-- [ ] T107 [US6] Trigger CI/CD pipeline manually or push commit to verify pipeline runs
-- [ ] T108 [US6] Verify all CI/CD jobs pass (Android build, iOS build, tests, linting)
-- [ ] T109 [US6] Compare CI/CD build times to baseline and document improvements
-- [ ] T110 [US6] Commit Phase 8 (CI/CD updates) with git tag `migration-phase-8-cicd-update`
+- [ ] T101 [US6] Review CI/CD configuration files (`.github/workflows/`, `.gitlab-ci.yml`, or `Jenkinsfile`) to identify shared module build steps
+- [ ] T102 [US6] Remove shared module build job from CI/CD pipeline configuration
+- [ ] T103 [US6] Remove KMP framework generation step for iOS from CI/CD pipeline
+- [ ] T104 [US6] Remove shared module test execution from CI/CD pipeline
+- [ ] T105 [US6] Update Android build job to build composeApp without shared dependency
+- [ ] T106 [US6] Update iOS build job to build iosApp without KMP framework
+- [ ] T107 [US6] Commit CI/CD pipeline updates
+- [ ] T108 [US6] Trigger CI/CD pipeline manually or push commit to verify pipeline runs
+- [ ] T109 [US6] Verify all CI/CD jobs pass (Android build, iOS build, tests, linting)
+- [ ] T110 [US6] Compare CI/CD build times to baseline and document improvements
+- [ ] T111 [US6] Commit Phase 8 (CI/CD updates) with git tag `migration-phase-8-cicd-update`
 
 **Checkpoint**: User Story 6 complete - CI/CD pipeline updated and passing
 
@@ -227,33 +235,33 @@
 
 ### Documentation Updates
 
-- [ ] T111 [US5] Update root `README.md` to remove shared module references and update build instructions
-- [ ] T112 [P] [US5] Update `composeApp/README.md` (if exists) to remove shared module references
-- [ ] T113 [P] [US5] Update `iosApp/README.md` to remove KMP setup instructions
-- [ ] T114 [P] [US5] Create migration guide for developers with open branches in `docs/migration/kmp-removal.md`
-- [ ] T115 [US5] Update `CONTRIBUTING.md` (if exists) to reflect platform-independent contribution workflow
-- [ ] T116 [US5] Update architecture documentation to show three independent platforms + backend
-- [ ] T117 [US5] Document build time improvements by comparing to baseline in `specs/011-migrate-from-kmp/performance-improvements.md`
+- [ ] T112 [US5] Update root `README.md` to remove shared module references and update build instructions
+- [ ] T113 [P] [US5] Update `composeApp/README.md` (if exists) to remove shared module references
+- [ ] T114 [P] [US5] Update `iosApp/README.md` to remove KMP setup instructions
+- [ ] T115 [P] [US5] Create migration guide for developers with open branches in `docs/migration/kmp-removal.md`
+- [ ] T116 [US5] Update `CONTRIBUTING.md` (if exists) to reflect platform-independent contribution workflow
+- [ ] T117 [US5] Update architecture documentation to show three independent platforms + backend
+- [ ] T118 [US5] Document build time improvements by comparing to baseline in `specs/011-migrate-from-kmp/performance-improvements.md`
 
 ### Gradle Cleanup
 
-- [ ] T118 [US5] Review `gradle/libs.versions.toml` and optionally remove unused KMP plugin aliases (kotlinMultiplatform, composeMultiplatform if not used)
-- [ ] T119 [US5] Verify `settings.gradle.kts` has no shared module references
-- [ ] T120 [US5] Verify root `build.gradle.kts` has no KMP plugin configuration
+- [ ] T119 [US5] Review `gradle/libs.versions.toml` and remove unused KMP plugin aliases per FR-017 (kotlinMultiplatform, composeMultiplatform if not used)
+- [ ] T120 [US5] Verify `settings.gradle.kts` has no shared module references
+- [ ] T121 [US5] Verify root `build.gradle.kts` has no KMP plugin configuration
 
 ### Final Validation
 
-- [ ] T121 [US5] Test fresh clone: Clone repository to new directory and run `./gradlew clean build`
-- [ ] T122 [US5] Verify Gradle sync completes without mentioning shared module or KMP plugins
-- [ ] T123 [US5] Open project in Android Studio and verify IDE indexing completes without errors
-- [ ] T124 [US5] Open `iosApp.xcodeproj` in Xcode and verify no shared module references in project structure
-- [ ] T125 [US5] Commit Phase 9 (documentation and cleanup) with git tag `migration-phase-9-documentation`
+- [ ] T122 [US5] Test fresh clone: Clone repository to new directory and run `./gradlew clean build`
+- [ ] T123 [US5] Verify Gradle sync completes without mentioning shared module or KMP plugins
+- [ ] T124 [US5] Open project in Android Studio and verify IDE indexing completes without errors
+- [ ] T125 [US5] Open `iosApp.xcodeproj` in Xcode and verify no shared module references in project structure
+- [ ] T126 [US5] Commit Phase 9 (documentation and cleanup) with git tag `migration-phase-9-documentation`
 
 ### Team Communication
 
-- [ ] T126 [US5] Send team announcement: "KMP to platform-independent migration complete on branch 011-migrate-from-kmp"
-- [ ] T127 [US5] Share migration guide URL with team for developers with open feature branches
-- [ ] T128 [US5] Provide contact for migration questions
+- [ ] T127 [US5] Send team announcement: "KMP to platform-independent migration complete on branch 011-migrate-from-kmp"
+- [ ] T128 [US5] Share migration guide URL with team for developers with open feature branches
+- [ ] T129 [US5] Provide contact for migration questions
 
 **Checkpoint**: User Story 5 complete - Documentation updated, environment clean, team notified
 
@@ -297,7 +305,7 @@ Within Android domain models phase:
 - [ ] T024-T028: All 5 model files can be copied in parallel
 
 Within documentation phase:
-- [ ] T111-T117: Documentation files can be updated in parallel
+- [ ] T112-T118: Documentation files can be updated in parallel
 
 **NO platform parallelization**: iOS MUST complete fully before Android begins (sequential migration strategy)
 
@@ -326,7 +334,7 @@ Task T015-T021: "Remove imports, update code, verify build, run tests"
 This is NOT an MVP-first approach. Migration must proceed sequentially through all phases:
 
 1. **Phase 1**: Pre-migration validation (baseline capture)
-2. **Phase 2**: iOS content migration (domain models + repositories/use cases)
+2. **Phase 2**: iOS content migration (domain models + repositories)
 3. **Phase 3**: Android content migration (domain models + repositories/use cases)
 4. **Phase 4**: Build configuration removal (Gradle + Xcode)
 5. **Phase 5**: Shared module deletion
@@ -378,7 +386,7 @@ Each phase gets its own commit with descriptive message and git tag:
 ## Success Criteria
 
 - ✅ All 5 domain models exist independently in Android (Kotlin) and iOS (Swift)
-- ✅ All repository interfaces and use cases exist independently per platform
+- ✅ All repository interfaces exist independently per platform, and Android use cases are local-only
 - ✅ No `import Shared` statements remain in iOS codebase
 - ✅ No shared package imports remain in Android domain layer
 - ✅ Android builds successfully without shared module: `./gradlew :composeApp:assembleDebug`
