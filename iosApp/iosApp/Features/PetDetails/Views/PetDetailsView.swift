@@ -102,16 +102,14 @@ struct PetDetailsView: View {
                     // Contact Owner - Phone
                     LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
-                        value: petDetails.phone,
-                        onTap: { handlePhoneTap(petDetails.phone) }
+                        value: petDetails.phone
                     ))
                     .accessibilityIdentifier("petDetails.phone.tap")
                     
                     // Contact Owner - Email
                     LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
-                        value: petDetails.email ?? "—",
-                        onTap: petDetails.email != nil ? { handleEmailTap(petDetails.email!) } : nil
+                        value: petDetails.email ?? "—"
                     ))
                     .accessibilityIdentifier("petDetails.email.tap")
                     .padding(.bottom, 10.667)
@@ -206,7 +204,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.location.field")
                     
                     // Show on the map button (bordered, blue)
-                    Button(action: handleShowMap) {
+                    Button(action: viewModel.handleShowMap) {
                         Text(L10n.PetDetails.Button.showOnMap)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#155dfc"))
@@ -241,7 +239,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.description.text")
                     
                     // Remove Report button (full width, red)
-                    Button(action: handleRemoveReport) {
+                    Button(action: viewModel.handleRemoveReport) {
                         Text(L10n.PetDetails.Button.removeReport)
                             .font(.system(size: 16))
                             .foregroundColor(.white)
@@ -258,44 +256,6 @@ struct PetDetailsView: View {
             }
         }
         .background(Color.white)
-    }
-    
-    // MARK: - Action Handlers
-    
-    private func handleRemoveReport() {
-        print("Remove Report button tapped (placeholder)")
-        // TODO: Implement report removal in future feature
-    }
-    
-    private func handleShowMap() {
-        print("Show on the map button tapped (placeholder)")
-        // TODO: Implement map view navigation in future feature
-    }
-    
-    private func handlePhoneTap(_ phone: String) {
-        guard let url = URL(string: "tel://\(phone.filter { !$0.isWhitespace })") else {
-            print("Invalid phone number")
-            return
-        }
-        
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        } else {
-            print("Cannot open dialer")
-        }
-    }
-    
-    private func handleEmailTap(_ email: String) {
-        guard let url = URL(string: "mailto:\(email)") else {
-            print("Invalid email address")
-            return
-        }
-        
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        } else {
-            print("Cannot open mail composer")
-        }
     }
     
     // MARK: - Formatting Helpers

@@ -67,5 +67,19 @@ class PetDetailsViewModel: ObservableObject {
     func handleBack() {
         onBack?()
     }
+    
+    // MARK: - Action Handlers
+    
+    /// Handles remove report action (placeholder for future feature)
+    func handleRemoveReport() {
+        print("Remove Report button tapped (placeholder)")
+        // TODO: Implement report removal in future feature
+    }
+    
+    /// Handles show on map action (placeholder for future feature)
+    func handleShowMap() {
+        print("Show on the map button tapped (placeholder)")
+        // TODO: Implement map view navigation in future feature
+    }
 }
 
