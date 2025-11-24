@@ -71,7 +71,7 @@ iosApp/iosApp/
 │
 ├── Data/
 │   └── Repositories/
-│       └── PetRepositoryImpl.swift       # MODIFIED: Add mock getPetDetails implementation
+│       └── PetRepositoryImpl.swift       # MODIFIED: Add getPetDetails implementation (calls real API)
 │
 ├── Coordinators/
 │   ├── PetListCoordinator.swift          # MODIFIED: Add navigation to details
@@ -176,31 +176,36 @@ If backend adds new fields (e.g., `weight`, `color`):
 
 4. **Update tests**: Add test cases for new fields
 
-### Switching from Mock to Real API
+### Backend Integration
 
-When backend implements `GET /api/v1/announcements/:id`:
+Backend endpoint `GET /api/v1/announcements/:id` is **already implemented** ✅
 
-1. **Update repository implementation** (`PetRepositoryImpl.swift`):
-   ```swift
-   func getPetDetails(id: String) async throws -> PetDetails {
-       // Replace mock data with HTTP call
-       let url = URL(string: "\(baseUrl)/api/v1/announcements/\(id)")!
-       let (data, response) = try await httpClient.data(from: url)
-       
-       guard let httpResponse = response as? HTTPURLResponse,
-             httpResponse.statusCode == 200 else {
-           throw RepositoryError.serverError
-       }
-       
-       return try JSONDecoder().decode(PetDetails.self, from: data)
-   }
-   ```
+**Repository implementation** (`PetRepositoryImpl.swift`):
+```swift
+func getPetDetails(id: String) async throws -> PetDetails {
+    let url = URL(string: "\(baseUrl)/api/v1/announcements/\(id)")!
+    let (data, response) = try await httpClient.data(from: url)
+    
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw RepositoryError.networkError
+    }
+    
+    switch httpResponse.statusCode {
+    case 200:
+        return try JSONDecoder().decode(PetDetails.self, from: data)
+    case 404:
+        throw RepositoryError.notFound
+    default:
+        throw RepositoryError.serverError
+    }
+}
+```
 
-2. **Update error handling**: Add specific error cases (404, 500, network errors)
-
-3. **Update unit tests**: Mock HTTP client instead of repository
-
-4. **Update E2E tests**: Use real backend with seeded test data
+**Test Data**:
+Backend has seed data with multiple pet records. Use these IDs for testing:
+- `11111111-1111-1111-1111-111111111111` - Fredi (DOG, ACTIVE)
+- `22222222-2222-2222-2222-222222222222` - Luna (CAT, ACTIVE, no email)
+- `44444444-4444-4444-4444-444444444444` - Burek (DOG, FOUND)
 
 ### Debugging Tips
 

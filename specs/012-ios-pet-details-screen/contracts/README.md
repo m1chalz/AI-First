@@ -2,21 +2,21 @@
 
 **Feature**: 012-ios-pet-details-screen  
 **Date**: November 24, 2025  
-**Status**: Mock Contract (Backend endpoint not yet implemented)
+**Status**: ✅ Backend Endpoint Already Implemented
 
 ## Overview
 
-This directory contains API contract definitions for the Pet Details Screen feature. Since the backend endpoint `GET /api/v1/announcements/:id` does not exist yet, these contracts define the expected structure for mock data used by `PetRepositoryImpl`.
+This directory contains API contract definitions for the Pet Details Screen feature. The backend endpoint `GET /api/v1/announcements/:id` is **already implemented** on the main branch, so iOS `PetRepositoryImpl` will call the real API instead of using mock data.
 
 ## Contracts
 
 ### pet-details-response.json
 
-**Endpoint** (future): `GET /api/v1/announcements/:id`
+**Endpoint**: `GET /api/v1/announcements/:id` ✅
 
 **Description**: Retrieves comprehensive details for a single pet by ID.
 
-**Mock Implementation**: Until the backend endpoint is implemented, `PetRepositoryImpl` (iOS) returns hardcoded data matching this structure.
+**Implementation**: Backend endpoint is live on main branch. iOS `PetRepositoryImpl` calls this endpoint via HTTP client.
 
 **Request**:
 - Method: `GET`
@@ -29,21 +29,21 @@ This directory contains API contract definitions for the Pet Details Screen feat
 **Response** (200 OK):
 ```json
 {
-  "id": "mock-pet-123",
-  "photoUrl": "https://example.com/pets/mock-pet-123.jpg",
+  "id": "11111111-1111-1111-1111-111111111111",
+  "petName": "Fredi Kamionka Gmina Burzenin",
+  "photoUrl": "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
   "status": "ACTIVE",
-  "lastSeenDate": "2025-11-18T10:30:00Z",
-  "species": "Dog",
-  "gender": "male",
+  "lastSeenDate": "2025-11-18",
+  "species": "DOG",
+  "breed": "York",
+  "gender": "MALE",
+  "description": "Zaginął piesek York wabi się Fredi Kamionka gmina burzenin",
+  "location": "Kamionka",
+  "locationRadius": 5,
   "phone": "+48 123 456 789",
-  "email": "owner@example.com",
-  "breed": "Golden Retriever",
-  "microchipNumber": "123-456-789-012",
-  "approximateAge": "3 years",
-  "reward": "500 PLN",
-  "location": "Warsaw",
-  "locationRadius": "15 km",
-  "description": "Friendly golden retriever, responds to 'Max'. Last seen near Lazienki Park wearing a red collar."
+  "email": "spotterka@example.pl",
+  "createdAt": "2025-11-19T15:47:14.000Z",
+  "updatedAt": "2025-11-19T15:47:14.000Z"
 }
 ```
 
@@ -52,16 +52,16 @@ This directory contains API contract definitions for the Pet Details Screen feat
 - **404 Not Found**: Pet with specified ID does not exist
   ```json
   {
-    "error": "Pet not found",
-    "message": "No pet with ID 'abc-123' exists"
+    "statusCode": 404,
+    "message": "Not Found"
   }
   ```
 
 - **500 Internal Server Error**: Server error
   ```json
   {
-    "error": "Internal server error",
-    "message": "An unexpected error occurred"
+    "statusCode": 500,
+    "message": "Internal Server Error"
   }
   ```
 
@@ -69,26 +69,31 @@ This directory contains API contract definitions for the Pet Details Screen feat
 
 | JSON Field | iOS Model Field | Type | Required | Notes |
 |------------|----------------|------|----------|-------|
-| `id` | `id` | String | Yes | Unique identifier |
-| `photoUrl` | `photoUrl` | String | Yes | URL to pet photo |
+| `id` | `id` | String | Yes | Unique identifier (UUID) |
+| `petName` | `petName` | String | Yes | Pet name (not displayed in UI) |
+| `photoUrl` | `photoUrl` | String? | No | URL to pet photo (nullable) |
 | `status` | `status` | String | Yes | Values: ACTIVE, FOUND, CLOSED |
-| `lastSeenDate` | `lastSeenDate` | String | Yes | ISO 8601 timestamp |
-| `species` | `species` | String | Yes | Pet species |
-| `gender` | `gender` | String | Yes | "male" or "female" |
-| `phone` | `phone` | String? | No | Owner's phone (at least one of phone/email required) |
-| `email` | `email` | String? | No | Owner's email (at least one of phone/email required) |
+| `lastSeenDate` | `lastSeenDate` | String | Yes | YYYY-MM-DD format |
+| `species` | `species` | String | Yes | Pet species (uppercase: DOG, CAT, etc.) |
+| `gender` | `gender` | String | Yes | MALE, FEMALE, UNKNOWN (uppercase) |
+| `description` | `description` | String | Yes | Multi-line description |
+| `location` | `location` | String | Yes | City name |
+| `phone` | `phone` | String | Yes | Owner's phone |
+| `email` | `email` | String? | No | Owner's email |
 | `breed` | `breed` | String? | No | Pet breed |
-| `microchipNumber` | `microchipNumber` | String? | No | **MOCKED** (not in current API) |
-| `approximateAge` | `approximateAge` | String? | No | **MOCKED** (not in current API) |
-| `reward` | `reward` | String? | No | **MOCKED** (not in current API) |
-| `location` | `location` | String? | No | City name |
-| `locationRadius` | `locationRadius` | String? | No | Search radius (e.g., "15 km") |
-| `description` | `description` | String? | No | Multi-line description |
+| `locationRadius` | `locationRadius` | Int? | No | Search radius in kilometers (number) |
+| `createdAt` | `createdAt` | String | Yes | ISO 8601 timestamp |
+| `updatedAt` | `updatedAt` | String | Yes | ISO 8601 timestamp |
+| N/A | `microchipNumber` | String? | No | **MOCKED** (not in backend API) |
+| N/A | `approximateAge` | String? | No | **MOCKED** (not in backend API) |
+| N/A | `reward` | String? | No | **MOCKED** (not in backend API) |
 
 **Business Rules**:
-- At least one of `phone` or `email` MUST be non-null (validated at application layer)
+- `phone` is required in backend schema (not nullable)
+- `email` is optional (nullable)
 - `status` value "ACTIVE" is displayed as "MISSING" in iOS UI
-- `gender` values ("male", "female") are displayed as symbols (♂, ♀) in iOS UI
+- `gender` values (MALE, FEMALE, UNKNOWN) are displayed as symbols (♂, ♀, ?) in iOS UI
+- `locationRadius` is a number (kilometers); ViewModel formats to "±X km" for display
 
 **Mocked Fields**:
 The following fields are NOT available in the current backend API (`GET /api/v1/announcements`) and are mocked in iOS repository until backend adds them:
@@ -100,41 +105,48 @@ When these fields are added to the backend, update `PetRepositoryImpl` to parse 
 
 ---
 
-## Migration Path
+## Implementation Approach
 
-**Current State** (Phase 1 - Mock):
-- iOS `PetRepositoryImpl` returns hardcoded `PetDetails` struct
-- No network calls to backend
-- Enables UI development and testing without backend dependency
+**Current State** ✅:
+- Backend endpoint `GET /api/v1/announcements/:id` is **already live** on main branch
+- iOS `PetRepositoryImpl` will call real API endpoint via HTTP client
+- Seed data available for development and testing
 
-**Future State** (Phase 2 - Real API):
-1. Backend team implements `GET /api/v1/announcements/:id` endpoint
-2. Backend adds missing fields (`microchipNumber`, `approximateAge`, `reward`) to response
-3. Update iOS `PetRepositoryImpl` to:
-   - Call real endpoint via HTTP client
-   - Parse JSON response using `Codable`
-   - Handle network errors (timeout, no connection, 404, 500)
-4. Remove mock data logic from repository
-5. Update E2E tests to use real backend (or test backend with seeded data)
+**Implementation Steps**:
+1. iOS `PetRepositoryImpl` calls `GET /api/v1/announcements/:id` via HTTP client (URLSession or Alamofire)
+2. Parse JSON response using `Codable` conformance on `PetDetails` model
+3. Handle network errors:
+   - 404 Not Found → show error state "Unable to load pet details"
+   - 500 Server Error → show error state with retry button
+   - Network timeout/no connection → show error state with retry button
+4. Missing fields (`microchipNumber`, `approximateAge`, `reward`) remain `nil` until backend adds them
+5. E2E tests use real backend with seeded data (or test backend)
 
-**No Breaking Changes**: The iOS domain model (`PetDetails`) remains unchanged. Only repository implementation changes from mock to HTTP client.
+**Future Enhancement**:
+When backend adds missing fields (`microchipNumber`, `approximateAge`, `reward`), iOS implementation requires no changes - fields will automatically populate from API response thanks to `Codable`.
 
 ---
 
 ## Testing
 
-**Mock Data Usage**:
-- **Unit Tests**: Use fake repository returning specific `PetDetails` instances
-- **E2E Tests**: Use real backend with seeded test data (when backend available)
-- **Development**: Use mock repository implementation for local development
+**Test Data Usage**:
+- **Unit Tests**: Use fake repository returning specific `PetDetails` instances (no network calls)
+- **E2E Tests**: Use real backend with seeded test data (seed file: `server/src/database/seeds/001_announcements.ts`)
+- **Development**: Use real backend running locally with seed data
+
+**Available Test Pet IDs** (from seed data):
+- `11111111-1111-1111-1111-111111111111` - Fredi (DOG, ACTIVE, with photo)
+- `22222222-2222-2222-2222-222222222222` - Luna (CAT, ACTIVE, with photo, no email, no radius)
+- `33333333-3333-3333-3333-333333333333` - Piorun (BIRD, ACTIVE, no phone)
+- `44444444-4444-4444-4444-444444444444` - Burek (DOG, FOUND, with photo)
 
 **Test Scenarios**:
-1. Successfully load pet details (happy path)
-2. Pet not found (404 error)
-3. Network error (timeout, no connection)
-4. Invalid response format (malformed JSON)
-5. Missing required fields (validation error)
-6. Missing both phone and email (business rule violation)
+1. Successfully load pet details (happy path) - use any valid ID from seed data
+2. Pet not found (404 error) - use invalid ID like "invalid-uuid"
+3. Network error (timeout, no connection) - stop backend server
+4. Invalid response format (malformed JSON) - unlikely with backend, test with unit tests
+5. Missing optional fields - use Luna (no email, no locationRadius)
+6. Status FOUND - use Burek (status: FOUND, not ACTIVE)
 
 ---
 

@@ -26,84 +26,102 @@ struct PetDetails: Identifiable, Codable {
     /// Unique identifier for the pet
     let id: String
     
-    /// URL string for the pet's photo
-    let photoUrl: String
+    /// Name of the pet (from backend, not displayed in current UI design)
+    let petName: String
+    
+    /// URL string for the pet's photo (nullable, show fallback if nil)
+    let photoUrl: String?
     
     /// Status of the pet report (ACTIVE, FOUND, or CLOSED from API)
     /// Note: ViewModel maps ACTIVE → "MISSING" for display
     let status: String
     
-    /// Date when the pet was last seen (ISO 8601 format from API)
+    /// Date when the pet was last seen (YYYY-MM-DD format from API)
     let lastSeenDate: String
     
-    /// Species of the pet (e.g., "Dog", "Cat")
+    /// Species of the pet (e.g., "DOG", "CAT")
     let species: String
     
-    /// Sex of the pet ("male" or "female")
+    /// Sex of the pet (MALE, FEMALE, or UNKNOWN - uppercase from backend)
     let gender: String
     
-    // MARK: - Contact Information (at least one required)
+    /// Additional description text (required in backend, multi-line)
+    let description: String
     
-    /// Owner's phone number (optional, but at least one of phone/email required)
-    let phone: String?
+    /// City where pet was last seen (required in backend)
+    let location: String
     
-    /// Owner's email address (optional, but at least one of phone/email required)
-    let email: String?
+    /// Owner's phone number (required in backend)
+    let phone: String
     
     // MARK: - Optional Fields
+    
+    /// Owner's email address (optional)
+    let email: String?
     
     /// Breed of the pet (optional)
     let breed: String?
     
-    /// Microchip number (optional, will be mocked until API provides)
+    /// Search radius around location in kilometers (optional, number from backend)
+    /// Note: ViewModel formats to "±X km" for display
+    let locationRadius: Int?
+    
+    /// Microchip number (optional, will be mocked until backend adds this field)
     let microchipNumber: String?
     
-    /// Approximate age of the pet (optional, will be mocked until API provides)
+    /// Approximate age of the pet (optional, will be mocked until backend adds this field)
     let approximateAge: String?
     
-    /// Reward amount text (optional, will be mocked until API provides)
+    /// Reward amount text (optional, will be mocked until backend adds this field)
     let reward: String?
     
-    /// City where pet was last seen (optional)
-    let location: String?
+    // MARK: - Metadata (not displayed in UI)
     
-    /// Search radius around location (optional, e.g., "15 km")
-    let locationRadius: String?
+    /// Timestamp when announcement was created
+    let createdAt: String
     
-    /// Additional description text (optional, multi-line)
-    let description: String?
+    /// Timestamp when announcement was last updated
+    let updatedAt: String
 }
 ```
 
-**Field Mapping from API** (`GET /api/v1/announcements`):
+**Field Mapping from API** (`GET /api/v1/announcements/:id`):
 
 | Domain Field | API Field | Notes |
 |--------------|-----------|-------|
 | `id` | `id` | String identifier |
-| `photoUrl` | `photoUrl` | String URL |
+| `petName` | `petName` | String (not displayed in UI) |
+| `photoUrl` | `photoUrl` | String URL (nullable) |
 | `status` | `status` | Values: ACTIVE, FOUND, CLOSED |
-| `lastSeenDate` | `lastSeenDate` | ISO 8601 string |
-| `species` | `species` | String |
-| `gender` | `gender` | String ("male" or "female") |
-| `phone` | `phone` | Optional string |
+| `lastSeenDate` | `lastSeenDate` | YYYY-MM-DD format (e.g., "2025-11-18") |
+| `species` | `species` | String (uppercase: DOG, CAT, BIRD, RABBIT, OTHER) |
+| `gender` | `gender` | String (uppercase: MALE, FEMALE, UNKNOWN) |
+| `description` | `description` | String (required, multi-line) |
+| `location` | `location` | String (required, city name) |
+| `phone` | `phone` | String (required) |
 | `email` | `email` | Optional string |
 | `breed` | `breed` | Optional string |
+| `locationRadius` | `locationRadius` | Optional number (kilometers) |
 | `microchipNumber` | N/A | **MOCKED** (not in current API) |
 | `approximateAge` | N/A | **MOCKED** (not in current API) |
 | `reward` | N/A | **MOCKED** (not in current API) |
-| `location` | `location` | Optional string (city name) |
-| `locationRadius` | `locationRadius` | Optional string (e.g., "15 km") |
-| `description` | `description` | Optional string |
+| `createdAt` | `createdAt` | ISO 8601 timestamp |
+| `updatedAt` | `updatedAt` | ISO 8601 timestamp |
 
 **Validation Rules**:
 
-- `id`: Must be non-empty string
-- `photoUrl`: Must be valid URL string (validated at ViewModel layer)
+- `id`: Must be non-empty string (UUID format from backend)
+- `petName`: Must be non-empty string (not displayed in current UI)
+- `photoUrl`: Optional; if nil, ViewModel displays "Image not available" fallback
 - `status`: Must be one of: "ACTIVE", "FOUND", "CLOSED" (ViewModel maps ACTIVE → "MISSING" for display)
-- `lastSeenDate`: ISO 8601 date string (ViewModel formats to "MMM DD, YYYY")
-- `species`: Must be non-empty string
-- `gender`: Must be "male" or "female" (ViewModel maps to symbols ♂/♀)
-- `phone` OR `email`: At least one must be non-nil (business rule validated at ViewModel layer)
+- `lastSeenDate`: YYYY-MM-DD format (ViewModel formats to "MMM DD, YYYY")
+- `species`: Must be non-empty string (uppercase: DOG, CAT, BIRD, RABBIT, OTHER)
+- `gender`: Must be one of: "MALE", "FEMALE", "UNKNOWN" (ViewModel maps to symbols ♂/♀/?)
+- `description`: Must be non-empty string (required in backend)
+- `location`: Must be non-empty string (required in backend)
+- `phone`: Must be non-empty string (required in backend)
+- `email`: Optional string
+- `locationRadius`: Optional integer; ViewModel formats to "±X km" for display
 - `microchipNumber`: If present, formatted as "000-000-000-000" (ViewModel formats)
 - Optional fields: Can be `nil`, display "—" as fallback in UI
 
@@ -242,37 +260,43 @@ PetDetailsUiState
 
 ---
 
-## Mock Data Strategy
+## Backend Integration
 
-Until backend endpoint `GET /api/v1/announcements/:id` is available, `PetRepositoryImpl` returns hardcoded mock data:
+**Backend endpoint `GET /api/v1/announcements/:id` is already implemented!** ✅
 
-**Mock `PetDetails` example**:
+`PetRepositoryImpl` will call the real backend endpoint:
+
+**Real API response example**:
 
 ```swift
 PetDetails(
-    id: "mock-pet-123",
-    photoUrl: "https://example.com/pet-photo.jpg",
+    id: "11111111-1111-1111-1111-111111111111",
+    petName: "Fredi Kamionka Gmina Burzenin",
+    photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
     status: "ACTIVE",
-    lastSeenDate: "2025-11-18T10:30:00Z",
-    species: "Dog",
-    gender: "male",
+    lastSeenDate: "2025-11-18",
+    species: "DOG",
+    gender: "MALE",
+    description: "Zaginął piesek York wabi się Fredi Kamionka gmina burzenin",
+    location: "Kamionka",
     phone: "+48 123 456 789",
-    email: "owner@example.com",
-    breed: "Golden Retriever",
-    microchipNumber: "123-456-789-012", // Mocked field
-    approximateAge: "3 years", // Mocked field
-    reward: "500 PLN", // Mocked field
-    location: "Warsaw",
-    locationRadius: "15 km",
-    description: "Friendly golden retriever, responds to 'Max'. Last seen near Lazienki Park wearing a red collar."
+    email: "spotterka@example.pl",
+    breed: "York",
+    locationRadius: 5,
+    microchipNumber: nil, // Not yet in backend
+    approximateAge: nil, // Not yet in backend
+    reward: nil, // Not yet in backend
+    createdAt: "2025-11-19T15:47:14.000Z",
+    updatedAt: "2025-11-19T15:47:14.000Z"
 )
 ```
 
-**When backend endpoint is ready**:
-- Update `PetRepositoryImpl` to call `GET /api/v1/announcements/:id`
-- Parse JSON response to `PetDetails` model (Codable conformance)
-- Remove mock data logic
-- Fields not available from API (`microchipNumber`, `approximateAge`, `reward`) remain `nil` until backend adds them
+**Implementation approach**:
+- `PetRepositoryImpl` calls `GET /api/v1/announcements/:id` via HTTP client
+- Parse JSON response using `Codable` conformance
+- Handle errors: 404 (pet not found), 500 (server error), network errors
+- Fields not available from backend (`microchipNumber`, `approximateAge`, `reward`) remain `nil` until backend adds them
+- ViewModel handles nil values with fallback "—" in UI
 
 ---
 

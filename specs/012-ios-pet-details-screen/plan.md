@@ -7,7 +7,7 @@
 
 ## Summary
 
-Implementing a new iOS screen that displays comprehensive pet details with navigation from the pet list. Users can view pet photos, status badges, identification information, location data, contact details, and additional descriptions. The screen follows iOS MVVM-C architecture with SwiftUI views, UIKit-based coordinator navigation, and repository-based data fetching. This is a UI-only implementation with placeholder actions for map view and report removal.
+Implementing a new iOS screen that displays comprehensive pet details with navigation from the pet list. Users can view pet photos, status badges, identification information, location data, contact details, and additional descriptions. The screen follows iOS MVVM-C architecture with SwiftUI views, UIKit-based coordinator navigation, and repository-based data fetching. Backend API endpoint `GET /api/v1/announcements/:id` is already implemented on main branch, so repository will call real API instead of using mock data. This is a UI-only implementation with placeholder actions for map view and report removal.
 
 ## Technical Context
 
