@@ -41,36 +41,40 @@ struct PetDetailsView: View {
     // MARK: - Error State
     
     private func errorView(message: String) -> some View {
-        VStack(spacing: 20) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundColor(Color(hex: "#fb2c36"))
+        ZStack {
+            Color(hex: "#f5f7fa")
+                .ignoresSafeArea()
             
-            Text("Failed to load pet details")
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundColor(Color(hex: "#101828"))
-            
-            Text(message)
-                .font(.system(size: 16))
-                .foregroundColor(Color(hex: "#6a7282"))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .accessibilityIdentifier("petDetails.error.message")
-            
-            Button(action: { viewModel.retry() }) {
-                Text("Retry")
+            VStack(spacing: 20) {
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 48))
+                    .foregroundColor(Color(hex: "#fb2c36"))
+                
+                Text("Failed to load pet details")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(Color(hex: "#101828"))
+                
+                Text(message)
                     .font(.system(size: 16))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(hex: "#6a7282"))
+                    .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
-                    .padding(.vertical, 12)
-                    .background(Color(hex: "#155dfc"))
-                    .cornerRadius(10)
+                    .accessibilityIdentifier("petDetails.error.message")
+                
+                Button(action: { viewModel.retry() }) {
+                    Text("Retry")
+                        .font(.system(size: 16))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 12)
+                        .background(Color(hex: "#155dfc"))
+                        .cornerRadius(10)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("petDetails.retry.button")
             }
-            .accessibilityIdentifier("petDetails.retry.button")
+            .padding()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "#f5f7fa"))
-        .padding()
     }
     
     // MARK: - Loaded State
