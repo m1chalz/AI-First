@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.animallist.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 
 /**
  * Pure reducer for Animal List screen state transitions.
