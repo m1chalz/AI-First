@@ -30,7 +30,7 @@ struct PetDetailsView: View {
                 .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: "#2D2D2D")))
                 .scaleEffect(1.5)
                 .accessibilityIdentifier("petDetails.loading")
-            Text("Loading pet details...")
+            Text(L10n.PetDetails.Loading.message)
                 .font(.system(size: 16))
                 .foregroundColor(Color(hex: "#6a7282"))
         }
@@ -50,7 +50,7 @@ struct PetDetailsView: View {
                     .font(.system(size: 48))
                     .foregroundColor(Color(hex: "#fb2c36"))
                 
-                Text("Failed to load pet details")
+                Text(L10n.PetDetails.Error.title)
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(Color(hex: "#101828"))
                 
@@ -62,7 +62,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.error.message")
                 
                 Button(action: { viewModel.retry() }) {
-                    Text("Retry")
+                    Text(L10n.Common.retry)
                         .font(.system(size: 16))
                         .foregroundColor(.white)
                         .padding(.horizontal, 32)
@@ -89,7 +89,7 @@ struct PetDetailsView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     // Date of Disappearance (full width)
                     LabelValueRow(model: LabelValueRowModel(
-                        label: "Date of Disappearance",
+                        label: L10n.PetDetails.Label.dateOfDisappearance,
                         value: formatDate(petDetails.lastSeenDate)
                     ))
                     .accessibilityIdentifier("petDetails.date.field")
@@ -101,7 +101,7 @@ struct PetDetailsView: View {
                     
                     // Contact Owner - Phone
                     LabelValueRow(model: LabelValueRowModel(
-                        label: "Contact owner",
+                        label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.phone,
                         onTap: { handlePhoneTap(petDetails.phone) }
                     ))
@@ -109,7 +109,7 @@ struct PetDetailsView: View {
                     
                     // Contact Owner - Email
                     LabelValueRow(model: LabelValueRowModel(
-                        label: "Contact owner",
+                        label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.email ?? "—",
                         onTap: petDetails.email != nil ? { handleEmailTap(petDetails.email!) } : nil
                     ))
@@ -123,13 +123,13 @@ struct PetDetailsView: View {
                     // Animal Name & Microchip (2 columns)
                     HStack(spacing: 12) {
                         LabelValueRow(model: LabelValueRowModel(
-                            label: "Animal Name",
+                            label: L10n.PetDetails.Label.animalName,
                             value: petDetails.petName
                         ))
                         .accessibilityIdentifier("petDetails.name.field")
                         
                         LabelValueRow(model: LabelValueRowModel(
-                            label: "Microchip number",
+                            label: L10n.PetDetails.Label.microchipNumber,
                             value: formatMicrochip(petDetails.microchipNumber)
                         ))
                         .accessibilityIdentifier("petDetails.microchip.field")
@@ -138,13 +138,13 @@ struct PetDetailsView: View {
                     // Species & Breed (2 columns)
                     HStack(spacing: 12) {
                         LabelValueRow(model: LabelValueRowModel(
-                            label: "Animal Species",
+                            label: L10n.PetDetails.Label.animalSpecies,
                             value: formatSpecies(petDetails.species)
                         ))
                         .accessibilityIdentifier("petDetails.species.field")
                         
                         LabelValueRow(model: LabelValueRowModel(
-                            label: "Animal Race",
+                            label: L10n.PetDetails.Label.animalRace,
                             value: petDetails.breed ?? "—"
                         ))
                         .accessibilityIdentifier("petDetails.breed.field")
@@ -153,7 +153,7 @@ struct PetDetailsView: View {
                     // Sex & Age (2 columns)
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Animal Sex")
+                            Text(L10n.PetDetails.Label.animalSex)
                                 .font(.system(size: 16))
                                 .foregroundColor(Color(hex: "#6a7282"))
                             
@@ -171,7 +171,7 @@ struct PetDetailsView: View {
                         .accessibilityIdentifier("petDetails.sex.field")
                         
                         LabelValueRow(model: LabelValueRowModel(
-                            label: "Animal Approx. Age",
+                            label: L10n.PetDetails.Label.animalAge,
                             value: petDetails.approximateAge ?? "—"
                         ))
                         .accessibilityIdentifier("petDetails.age.field")
@@ -179,7 +179,7 @@ struct PetDetailsView: View {
                     
                     // Place of Disappearance / City
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Place of Disappearance / City")
+                        Text(L10n.PetDetails.Label.placeOfDisappearance)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#6a7282"))
                         
@@ -197,7 +197,7 @@ struct PetDetailsView: View {
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#6a7282"))
                                 
-                                Text("±\(radius) km")
+                                Text(L10n.PetDetails.Location.radiusFormat(radius))
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#4a5565"))
                             }
@@ -207,7 +207,7 @@ struct PetDetailsView: View {
                     
                     // Show on the map button (bordered, blue)
                     Button(action: handleShowMap) {
-                        Text("Show on the map")
+                        Text(L10n.PetDetails.Button.showOnMap)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#155dfc"))
                             .padding(.horizontal, 24)
@@ -222,14 +222,14 @@ struct PetDetailsView: View {
                     
                     // Vaccination ID
                     LabelValueRow(model: LabelValueRowModel(
-                        label: "Vaccination ID",
+                        label: L10n.PetDetails.Label.vaccinationId,
                         value: petDetails.vaccinationId ?? "—"
                     ))
                     .accessibilityIdentifier("petDetails.vaccination.field")
                     
                     // Animal Additional Description
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Animal Additional Description")
+                        Text(L10n.PetDetails.Label.additionalDescription)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#6a7282"))
                         
@@ -242,7 +242,7 @@ struct PetDetailsView: View {
                     
                     // Remove Report button (full width, red)
                     Button(action: handleRemoveReport) {
-                        Text("Remove Report")
+                        Text(L10n.PetDetails.Button.removeReport)
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)

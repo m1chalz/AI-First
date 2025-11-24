@@ -25,6 +25,34 @@
 // Location format
 "animalCard.location.format" = "%@, +%dkm";
 
+/* MARK: - Pet Details Screen */
+
+// Loading state
+"petDetails.loading.message" = "Loading pet details...";
+
+// Error state
+"petDetails.error.title" = "Failed to load pet details";
+
+// Labels
+"petDetails.label.dateOfDisappearance" = "Date of Disappearance";
+"petDetails.label.contactOwner" = "Contact owner";
+"petDetails.label.animalName" = "Animal Name";
+"petDetails.label.microchipNumber" = "Microchip number";
+"petDetails.label.animalSpecies" = "Animal Species";
+"petDetails.label.animalRace" = "Animal Race";
+"petDetails.label.animalSex" = "Animal Sex";
+"petDetails.label.animalAge" = "Animal Approx. Age";
+"petDetails.label.placeOfDisappearance" = "Place of Disappearance / City";
+"petDetails.label.vaccinationId" = "Vaccination ID";
+"petDetails.label.additionalDescription" = "Animal Additional Description";
+
+// Buttons
+"petDetails.button.showOnMap" = "Show on the map";
+"petDetails.button.removeReport" = "Remove Report";
+
+// Formats
+"petDetails.location.radiusFormat" = "±%d km";
+
 /* MARK: - Common */
 
 "common.loading" = "Loading...";

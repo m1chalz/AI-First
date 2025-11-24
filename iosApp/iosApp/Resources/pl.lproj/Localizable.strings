@@ -25,6 +25,34 @@
 // Location format
 "animalCard.location.format" = "%@, +%dkm";
 
+/* MARK: - Pet Details Screen */
+
+// Loading state
+"petDetails.loading.message" = "Ładowanie szczegółów zwierzęcia...";
+
+// Error state
+"petDetails.error.title" = "Nie udało się załadować szczegółów zwierzęcia";
+
+// Labels
+"petDetails.label.dateOfDisappearance" = "Data zaginięcia";
+"petDetails.label.contactOwner" = "Skontaktuj się z właścicielem";
+"petDetails.label.animalName" = "Imię zwierzęcia";
+"petDetails.label.microchipNumber" = "Numer mikroczipu";
+"petDetails.label.animalSpecies" = "Gatunek zwierzęcia";
+"petDetails.label.animalRace" = "Rasa zwierzęcia";
+"petDetails.label.animalSex" = "Płeć zwierzęcia";
+"petDetails.label.animalAge" = "Przybliżony wiek zwierzęcia";
+"petDetails.label.placeOfDisappearance" = "Miejsce zaginięcia / Miasto";
+"petDetails.label.vaccinationId" = "Numer szczepienia";
+"petDetails.label.additionalDescription" = "Dodatkowy opis zwierzęcia";
+
+// Buttons
+"petDetails.button.showOnMap" = "Pokaż na mapie";
+"petDetails.button.removeReport" = "Usuń zgłoszenie";
+
+// Formats
+"petDetails.location.radiusFormat" = "±%d km";
+
 /* MARK: - Common */
 
 "common.loading" = "Ładowanie...";

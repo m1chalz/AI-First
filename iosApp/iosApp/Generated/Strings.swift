@@ -52,6 +52,52 @@ public enum L10n {
     /// Retry
     public static let retry = L10n.tr("Localizable", "common.retry", fallback: "Retry")
   }
+  public enum PetDetails {
+    public enum Button {
+      /// Remove Report
+      public static let removeReport = L10n.tr("Localizable", "petDetails.button.removeReport", fallback: "Remove Report")
+      /// Show on the map
+      public static let showOnMap = L10n.tr("Localizable", "petDetails.button.showOnMap", fallback: "Show on the map")
+    }
+    public enum Error {
+      /// Failed to load pet details
+      public static let title = L10n.tr("Localizable", "petDetails.error.title", fallback: "Failed to load pet details")
+    }
+    public enum Label {
+      /// Animal Additional Description
+      public static let additionalDescription = L10n.tr("Localizable", "petDetails.label.additionalDescription", fallback: "Animal Additional Description")
+      /// Animal Approx. Age
+      public static let animalAge = L10n.tr("Localizable", "petDetails.label.animalAge", fallback: "Animal Approx. Age")
+      /// Animal Name
+      public static let animalName = L10n.tr("Localizable", "petDetails.label.animalName", fallback: "Animal Name")
+      /// Animal Race
+      public static let animalRace = L10n.tr("Localizable", "petDetails.label.animalRace", fallback: "Animal Race")
+      /// Animal Sex
+      public static let animalSex = L10n.tr("Localizable", "petDetails.label.animalSex", fallback: "Animal Sex")
+      /// Animal Species
+      public static let animalSpecies = L10n.tr("Localizable", "petDetails.label.animalSpecies", fallback: "Animal Species")
+      /// Contact owner
+      public static let contactOwner = L10n.tr("Localizable", "petDetails.label.contactOwner", fallback: "Contact owner")
+      /// Date of Disappearance
+      public static let dateOfDisappearance = L10n.tr("Localizable", "petDetails.label.dateOfDisappearance", fallback: "Date of Disappearance")
+      /// Microchip number
+      public static let microchipNumber = L10n.tr("Localizable", "petDetails.label.microchipNumber", fallback: "Microchip number")
+      /// Place of Disappearance / City
+      public static let placeOfDisappearance = L10n.tr("Localizable", "petDetails.label.placeOfDisappearance", fallback: "Place of Disappearance / City")
+      /// Vaccination ID
+      public static let vaccinationId = L10n.tr("Localizable", "petDetails.label.vaccinationId", fallback: "Vaccination ID")
+    }
+    public enum Loading {
+      /// MARK: - Pet Details Screen
+      public static let message = L10n.tr("Localizable", "petDetails.loading.message", fallback: "Loading pet details...")
+    }
+    public enum Location {
+      /// ±%d km
+      public static func radiusFormat(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "petDetails.location.radiusFormat", p1, fallback: "±%d km")
+      }
+    }
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
