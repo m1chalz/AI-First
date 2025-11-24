@@ -6,6 +6,8 @@
 
 **Node ID**: 179-8157
 
+**Reference Frame**: "Pet detail streched" (this is the primary design reference for implementation)
+
 ## Design Overview
 
 The pet details screen shows comprehensive information about a missing or found pet. The design follows a vertical scrolling layout with the following key sections:
