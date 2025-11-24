@@ -83,12 +83,12 @@ struct PetDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Pet Photo with Badges
-                PetPhotoWithBadges(model: PetPhotoWithBadgesModel(from: petDetails))
+                PetPhotoWithBadges(model: .init(from: petDetails))
                 
                 // Content Container with padding
                 VStack(alignment: .leading, spacing: 20) {
                     // Date of Disappearance (full width)
-                    LabelValueRow(model: LabelValueRowModel(
+                    LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.dateOfDisappearance,
                         value: formatDate(petDetails.lastSeenDate)
                     ))
@@ -100,7 +100,7 @@ struct PetDetailsView: View {
                     )
                     
                     // Contact Owner - Phone
-                    LabelValueRow(model: LabelValueRowModel(
+                    LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.phone,
                         onTap: { handlePhoneTap(petDetails.phone) }
@@ -108,7 +108,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.phone.tap")
                     
                     // Contact Owner - Email
-                    LabelValueRow(model: LabelValueRowModel(
+                    LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.email ?? "—",
                         onTap: petDetails.email != nil ? { handleEmailTap(petDetails.email!) } : nil
@@ -122,13 +122,13 @@ struct PetDetailsView: View {
                     
                     // Animal Name & Microchip (2 columns)
                     HStack(spacing: 12) {
-                        LabelValueRow(model: LabelValueRowModel(
+                        LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalName,
                             value: petDetails.petName
                         ))
                         .accessibilityIdentifier("petDetails.name.field")
                         
-                        LabelValueRow(model: LabelValueRowModel(
+                        LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.microchipNumber,
                             value: formatMicrochip(petDetails.microchipNumber)
                         ))
@@ -137,13 +137,13 @@ struct PetDetailsView: View {
                     
                     // Species & Breed (2 columns)
                     HStack(spacing: 12) {
-                        LabelValueRow(model: LabelValueRowModel(
+                        LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalSpecies,
                             value: formatSpecies(petDetails.species)
                         ))
                         .accessibilityIdentifier("petDetails.species.field")
                         
-                        LabelValueRow(model: LabelValueRowModel(
+                        LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalRace,
                             value: petDetails.breed ?? "—"
                         ))
@@ -170,7 +170,7 @@ struct PetDetailsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("petDetails.sex.field")
                         
-                        LabelValueRow(model: LabelValueRowModel(
+                        LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalAge,
                             value: petDetails.approximateAge ?? "—"
                         ))
@@ -221,7 +221,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.showMap.button")
                     
                     // Vaccination ID
-                    LabelValueRow(model: LabelValueRowModel(
+                    LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.vaccinationId,
                         value: petDetails.vaccinationId ?? "—"
                     ))

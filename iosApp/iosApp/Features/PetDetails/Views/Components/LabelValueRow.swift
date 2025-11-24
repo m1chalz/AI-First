@@ -1,40 +1,8 @@
 import SwiftUI
 
-/// Model for configuring a label-value row component
-struct LabelValueRowModel: Equatable {
-    /// Label text (e.g., "Date of Disappearance")
-    let label: String
-    
-    /// Value text (e.g., "Nov 18, 2025")
-    let value: String
-    
-    /// Optional processor to format value before display
-    let valueProcessor: ((String) -> String)?
-    
-    /// Optional tap handler for interactive values (e.g., phone, email)
-    let onTap: (() -> Void)?
-    
-    init(
-        label: String,
-        value: String,
-        valueProcessor: ((String) -> String)? = nil,
-        onTap: (() -> Void)? = nil
-    ) {
-        self.label = label
-        self.value = value
-        self.valueProcessor = valueProcessor
-        self.onTap = onTap
-    }
-    
-    // Equatable conformance (ignore closures)
-    static func == (lhs: LabelValueRowModel, rhs: LabelValueRowModel) -> Bool {
-        lhs.label == rhs.label && lhs.value == rhs.value
-    }
-}
-
 /// Reusable component displaying a label-value pair in a vertical layout (label on top, value below)
 struct LabelValueRow: View {
-    let model: LabelValueRowModel
+    let model: Model
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -58,16 +26,9 @@ struct LabelValueRow: View {
     }
     
     private var valueText: some View {
-        Text(processedValue)
+        Text(model.value)
             .font(.system(size: 16))
             .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var processedValue: String {
-        if let processor = model.valueProcessor {
-            return processor(model.value)
-        }
-        return model.value
     }
 }
 
@@ -78,7 +39,7 @@ struct LabelValueRow_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 0) {
             // Simple row
-            LabelValueRow(model: LabelValueRowModel(
+            LabelValueRow(model: .init(
                 label: "Species",
                 value: "Dog"
             ))
@@ -86,7 +47,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Row with value processor
-            LabelValueRow(model: LabelValueRowModel(
+            LabelValueRow(model: .init(
                 label: "Sex",
                 value: "MALE",
                 valueProcessor: { gender in
@@ -101,7 +62,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Interactive row (tappable)
-            LabelValueRow(model: LabelValueRowModel(
+            LabelValueRow(model: .init(
                 label: "Phone",
                 value: "+48 123 456 789",
                 onTap: {
@@ -112,7 +73,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Row with fallback value
-            LabelValueRow(model: LabelValueRowModel(
+            LabelValueRow(model: .init(
                 label: "Email",
                 value: "—"
             ))

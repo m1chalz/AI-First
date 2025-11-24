@@ -50,6 +50,12 @@
 "petDetails.button.showOnMap" = "Show on the map";
 "petDetails.button.removeReport" = "Remove Report";
 
+// Photo
+"petDetails.photo.notAvailable" = "Image not available";
+
+// Reward badge
+"petDetails.reward.label" = "Reward";
+
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 

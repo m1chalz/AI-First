@@ -97,6 +97,14 @@ public enum L10n {
         return L10n.tr("Localizable", "petDetails.location.radiusFormat", p1, fallback: "±%d km")
       }
     }
+    public enum Photo {
+      /// Image not available
+      public static let notAvailable = L10n.tr("Localizable", "petDetails.photo.notAvailable", fallback: "Image not available")
+    }
+    public enum Reward {
+      /// Reward
+      public static let label = L10n.tr("Localizable", "petDetails.reward.label", fallback: "Reward")
+    }
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

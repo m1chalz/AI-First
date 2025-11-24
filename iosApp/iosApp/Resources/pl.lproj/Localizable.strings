@@ -50,6 +50,12 @@
 "petDetails.button.showOnMap" = "Pokaż na mapie";
 "petDetails.button.removeReport" = "Usuń zgłoszenie";
 
+// Photo
+"petDetails.photo.notAvailable" = "Zdjęcie niedostępne";
+
+// Reward badge
+"petDetails.reward.label" = "Nagroda";
+
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 

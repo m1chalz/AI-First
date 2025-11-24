@@ -1,35 +1,8 @@
 import SwiftUI
 
-/// Model for configuring the pet photo with overlaid badges
-struct PetPhotoWithBadgesModel: Equatable {
-    /// URL string for the pet photo (nullable)
-    let imageUrl: String?
-    
-    /// Status text for the badge ("MISSING", "FOUND", or "CLOSED")
-    let status: String
-    
-    /// Optional reward text (nil if no reward)
-    let rewardText: String?
-    
-    /// Convenience initializer mapping from PetDetails
-    init(from petDetails: PetDetails) {
-        self.imageUrl = petDetails.photoUrl
-        // Map ACTIVE → MISSING for display
-        self.status = petDetails.status == "ACTIVE" ? "MISSING" : petDetails.status
-        self.rewardText = petDetails.reward
-    }
-    
-    /// Direct initializer for testing and custom usage
-    init(imageUrl: String?, status: String, rewardText: String?) {
-        self.imageUrl = imageUrl
-        self.status = status
-        self.rewardText = rewardText
-    }
-}
-
 /// Reusable component displaying pet photo with status and optional reward badges
 struct PetPhotoWithBadges: View {
-    let model: PetPhotoWithBadgesModel
+    let model: Model
     
     var body: some View {
         ZStack {
@@ -94,7 +67,7 @@ struct PetPhotoWithBadges: View {
             Image(systemName: "photo")
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
-            Text("Image not available")
+            Text(L10n.PetDetails.Photo.notAvailable)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
@@ -138,7 +111,7 @@ struct PetPhotoWithBadges: View {
                 .foregroundColor(.white)
             
             VStack(alignment: .leading, spacing: 0) {
-                Text("Reward")
+                Text(L10n.PetDetails.Reward.label)
                     .font(.system(size: 16))
                     .foregroundColor(.white)
                 Text(text)
@@ -157,21 +130,21 @@ struct PetPhotoWithBadges_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             // Missing pet with reward
-            PetPhotoWithBadges(model: PetPhotoWithBadgesModel(
+            PetPhotoWithBadges(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
                 status: "MISSING",
                 rewardText: "$500 reward"
             ))
             
             // Found pet without reward
-            PetPhotoWithBadges(model: PetPhotoWithBadgesModel(
+            PetPhotoWithBadges(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/shepherd-german/n02106662_10908.jpg",
                 status: "FOUND",
                 rewardText: nil
             ))
             
             // No photo available
-            PetPhotoWithBadges(model: PetPhotoWithBadgesModel(
+            PetPhotoWithBadges(model: .init(
                 imageUrl: nil,
                 status: "MISSING",
                 rewardText: "$200"
