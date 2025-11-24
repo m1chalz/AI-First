@@ -17,5 +17,14 @@ protocol AnimalRepositoryProtocol {
     /// - Returns: Array of animals
     /// - Throws: Error if data fetch fails
     func getAnimals() async throws -> [Animal]
+    
+    /// Retrieves detailed information for a specific pet by ID.
+    /// Mock implementation returns hardcoded pet details.
+    /// Real implementation will call GET /api/v1/announcements/:id endpoint.
+    ///
+    /// - Parameter id: Unique pet identifier
+    /// - Returns: Pet details
+    /// - Throws: Error if pet not found or data fetch fails
+    func getPetDetails(id: String) async throws -> PetDetails
 }
 

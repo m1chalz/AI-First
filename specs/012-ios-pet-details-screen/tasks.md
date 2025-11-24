@@ -23,8 +23,8 @@ handoffs:
 
 **Purpose**: iOS-specific project initialization and structure
 
-- [ ] T001 Create feature directory structure in `/iosApp/iosApp/Features/PetDetails/` (optional organization, or stick to standard MVVM-C folders)
-- [ ] T002 [P] Verify `iosApp.xcodeproj` is ready for new files
+- [X] T001 Create feature directory structure in `/iosApp/iosApp/Features/PetDetails/` (optional organization, or stick to standard MVVM-C folders)
+- [X] T002 [P] Verify `iosApp.xcodeproj` is ready for new files
 
 ---
 
@@ -32,13 +32,13 @@ handoffs:
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T003 Create `PetDetails` domain model in `/iosApp/iosApp/Domain/Models/PetDetails.swift` (full definition from data-model.md)
-- [ ] T004 Extend existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` with `getPetDetails(id: String) async throws -> PetDetails` method (no separate PetRepository type)
-- [ ] T005 Extend existing `AnimalRepository` implementation in `/iosApp/iosApp/Domain/Repositories/AnimalRepository.swift` with `getPetDetails` mock implementation
-- [ ] T006 (Future) Register `AnimalRepositoryProtocol` implementation in `/iosApp/iosApp/DI/ServiceContainer.swift` once ServiceContainer is introduced for iOS DI (for now, coordinator creates `AnimalRepository` directly)
-- [ ] T007 Create `PetDetailsUiState` enum in `/iosApp/iosApp/ViewModels/PetDetailsUiState.swift` (or nested in ViewModel)
-- [ ] T008 Create `PetDetailsViewModel` skeleton in `/iosApp/iosApp/ViewModels/PetDetailsViewModel.swift` (inject Repository)
-- [ ] T009 Create `PetDetailsCoordinator` skeleton in `/iosApp/iosApp/Coordinators/PetDetailsCoordinator.swift`
+- [X] T003 Create `PetDetails` domain model in `/iosApp/iosApp/Domain/Models/PetDetails.swift` (full definition from data-model.md)
+- [X] T004 Extend existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` with `getPetDetails(id: String) async throws -> PetDetails` method (no separate PetRepository type)
+- [X] T005 Extend existing `AnimalRepository` implementation in `/iosApp/iosApp/Domain/Repositories/AnimalRepository.swift` with `getPetDetails` mock implementation
+- [X] T006 (Future) Register `AnimalRepositoryProtocol` implementation in `/iosApp/iosApp/DI/ServiceContainer.swift` once ServiceContainer is introduced for iOS DI (for now, coordinator creates `AnimalRepository` directly)
+- [X] T007 Create `PetDetailsUiState` enum in `/iosApp/iosApp/ViewModels/PetDetailsUiState.swift` (or nested in ViewModel)
+- [X] T008 Create `PetDetailsViewModel` skeleton in `/iosApp/iosApp/ViewModels/PetDetailsViewModel.swift` (inject Repository)
+- [X] T009 Create `PetDetailsCoordinator` skeleton in `/iosApp/iosApp/Coordinators/PetDetailsCoordinator.swift`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -51,17 +51,17 @@ handoffs:
 **Independent Test**: Verify navigation from list, loading spinner, error handling with retry, and successful data load (displaying at least the photo).
 
 ### Tests for User Story 1
-- [ ] T010 [US1] Create unit tests for ViewModel loading/error states in `/iosApp/iosAppTests/ViewModels/PetDetailsViewModelTests.swift`
-- [ ] T011 [US1] Create Screen Object in `/e2e-tests/mobile/screens/PetDetailsScreen.ts`
-- [ ] T012 [US1] Create E2E test spec in `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts` (cover navigation and state scenarios)
+- [X] T010 [US1] Create unit tests for ViewModel loading/error states in `/iosApp/iosAppTests/ViewModels/PetDetailsViewModelTests.swift`
+- [X] T011 [US1] Create Screen Object in `/e2e-tests/mobile/screens/PetDetailsScreen.ts`
+- [X] T012 [US1] Create E2E test spec in `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts` (cover navigation and state scenarios)
 
 ### Implementation for User Story 1
-- [ ] T013 [US1] Implement `PetDetailsViewModel` loading logic (call repo, update state)
-- [ ] T014 [US1] Implement `PetDetailsView` main structure in `/iosApp/iosApp/Views/PetDetailsView.swift` (handle .loading, .error, .loaded cases; ensure root is ScrollView)
-- [ ] T015 [US1] Implement basic Photo display in `PetDetailsView` (include fallback "Image not available" state)
-- [ ] T016 [US1] Implement `PetDetailsCoordinator` navigation logic (start method, hosting controller)
-- [ ] T017 [US1] Implement Retry button logic in `PetDetailsView` and ViewModel
-- [ ] T018 [US1] Add accessibility identifiers for View, Retry Button, Error Message
+- [X] T013 [US1] Implement `PetDetailsViewModel` loading logic (call repo, update state)
+- [X] T014 [US1] Implement `PetDetailsView` main structure in `/iosApp/iosApp/Views/PetDetailsView.swift` (handle .loading, .error, .loaded cases; ensure root is ScrollView)
+- [X] T015 [US1] Implement basic Photo display in `PetDetailsView` (include fallback "Image not available" state)
+- [X] T016 [US1] Implement `PetDetailsCoordinator` navigation logic (start method, hosting controller)
+- [X] T017 [US1] Implement Retry button logic in `PetDetailsView` and ViewModel
+- [X] T018 [US1] Add accessibility identifiers for View, Retry Button, Error Message
 
 ---
 
@@ -72,14 +72,14 @@ handoffs:
 **Independent Test**: Verify correct badge color and text appears based on pet status.
 
 ### Tests for User Story 6
-- [ ] T019 [US6] Add status badge scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
-- [ ] T020 [US6] Create unit test for `PetPhotoWithBadgesModel` mapping in `/iosApp/iosAppTests/Components/PetPhotoWithBadgesTests.swift`
+- [X] T019 [US6] Add status badge scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T020 [US6] Create unit test for `PetPhotoWithBadgesModel` mapping in `/iosApp/iosAppTests/Components/PetPhotoWithBadgesTests.swift`
 
 ### Implementation for User Story 6
-- [ ] T021 [US6] Create `PetPhotoWithBadgesModel` struct in `/iosApp/iosApp/Views/Components/PetPhotoWithBadges.swift` (nested or separate)
-- [ ] T022 [US6] Implement `PetPhotoWithBadges` component in `/iosApp/iosApp/Views/Components/PetPhotoWithBadges.swift`
-- [ ] T023 [US6] Integrate `PetPhotoWithBadges` into `PetDetailsView` header
-- [ ] T024 [US6] Add accessibility identifiers for status badge
+- [X] T021 [US6] Create `PetPhotoWithBadgesModel` struct in `/iosApp/iosApp/Views/Components/PetPhotoWithBadges.swift` (nested or separate)
+- [X] T022 [US6] Implement `PetPhotoWithBadges` component in `/iosApp/iosApp/Views/Components/PetPhotoWithBadges.swift`
+- [X] T023 [US6] Integrate `PetPhotoWithBadges` into `PetDetailsView` header
+- [X] T024 [US6] Add accessibility identifiers for status badge
 
 ---
 
@@ -90,17 +90,17 @@ handoffs:
 **Independent Test**: Verify identification fields display correctly with proper formatting.
 
 ### Tests for User Story 2
-- [ ] T025 [US2] Add identification field scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
-- [ ] T026 [US2] Create unit tests for `LabelValueRow` in `/iosApp/iosAppTests/Components/LabelValueRowTests.swift`
+- [X] T025 [US2] Add identification field scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T026 [US2] Create unit tests for `LabelValueRow` in `/iosApp/iosAppTests/Components/LabelValueRowTests.swift`
 
 ### Implementation for User Story 2
-- [ ] T027 [US2] Create `LabelValueRowModel` struct in `/iosApp/iosApp/Views/Components/LabelValueRow.swift`
-- [ ] T028 [US2] Implement `LabelValueRow` component in `/iosApp/iosApp/Views/Components/LabelValueRow.swift`
-- [ ] T029 [US2] Add Species and Breed rows to `PetDetailsView`
-- [ ] T030 [US2] Add Sex and Age rows to `PetDetailsView` (implement sex symbol mapping)
-- [ ] T031 [US2] Add Microchip number row to `PetDetailsView`
-- [ ] T032 [US2] Add Date of Disappearance row to `PetDetailsView`
-- [ ] T033 [US2] Add accessibility identifiers for all identification fields
+- [X] T027 [US2] Create `LabelValueRowModel` struct in `/iosApp/iosApp/Views/Components/LabelValueRow.swift`
+- [X] T028 [US2] Implement `LabelValueRow` component in `/iosApp/iosApp/Views/Components/LabelValueRow.swift`
+- [X] T029 [US2] Add Species and Breed rows to `PetDetailsView`
+- [X] T030 [US2] Add Sex and Age rows to `PetDetailsView` (implement sex symbol mapping)
+- [X] T031 [US2] Add Microchip number row to `PetDetailsView`
+- [X] T032 [US2] Add Date of Disappearance row to `PetDetailsView`
+- [X] T033 [US2] Add accessibility identifiers for all identification fields
 
 ---
 
@@ -111,14 +111,14 @@ handoffs:
 **Independent Test**: Verify location display, tappable phone/email, and map button.
 
 ### Tests for User Story 3
-- [ ] T034 [US3] Add location and contact scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T034 [US3] Add location and contact scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 3
-- [ ] T035 [US3] Add Location and Radius rows to `PetDetailsView`
-- [ ] T036 [US3] Implement "Show on the map" button in `PetDetailsView` (console log action)
-- [ ] T037 [US3] Add Phone row to `PetDetailsView` with URL opener logic (`tel://`)
-- [ ] T038 [US3] Add Email row to `PetDetailsView` with URL opener logic (`mailto:`)
-- [ ] T039 [US3] Add accessibility identifiers for location, map button, phone, and email
+- [X] T035 [US3] Add Location and Radius rows to `PetDetailsView`
+- [X] T036 [US3] Implement "Show on the map" button in `PetDetailsView` (console log action)
+- [X] T037 [US3] Add Phone row to `PetDetailsView` with URL opener logic (`tel://`)
+- [X] T038 [US3] Add Email row to `PetDetailsView` with URL opener logic (`mailto:`)
+- [X] T039 [US3] Add accessibility identifiers for location, map button, phone, and email
 
 ---
 
@@ -129,11 +129,11 @@ handoffs:
 **Independent Test**: Verify long text displays correctly and screen scrolls.
 
 ### Tests for User Story 4
-- [ ] T040 [US4] Add description scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T040 [US4] Add description scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 4
-- [ ] T041 [US4] Add Additional Description section to `PetDetailsView` (ensure ScrollView works)
-- [ ] T042 [US4] Add accessibility identifier for description text
+- [X] T041 [US4] Add Additional Description section to `PetDetailsView` (ensure ScrollView works)
+- [X] T042 [US4] Add accessibility identifier for description text
 
 ---
 
@@ -144,13 +144,13 @@ handoffs:
 **Independent Test**: Verify reward badge appears only when reward is present.
 
 ### Tests for User Story 5
-- [ ] T043 [US5] Add reward scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T043 [US5] Add reward scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 5
-- [ ] T044 [US5] Update `PetPhotoWithBadgesModel` to accept reward text
-- [ ] T045 [US5] Update `PetPhotoWithBadges` view to render reward badge
-- [ ] T046 [US5] Pass reward data from `PetDetailsView` to `PetPhotoWithBadges`
-- [ ] T047 [US5] Add accessibility identifier for reward badge
+- [X] T044 [US5] Update `PetPhotoWithBadgesModel` to accept reward text
+- [X] T045 [US5] Update `PetPhotoWithBadges` view to render reward badge
+- [X] T046 [US5] Pass reward data from `PetDetailsView` to `PetPhotoWithBadges`
+- [X] T047 [US5] Add accessibility identifier for reward badge
 
 ---
 
@@ -161,11 +161,11 @@ handoffs:
 **Independent Test**: Verify button exists and logs to console.
 
 ### Tests for User Story 7
-- [ ] T048 [US7] Add remove button scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
+- [X] T048 [US7] Add remove button scenarios to `/e2e-tests/mobile/specs/012-ios-pet-details-screen.spec.ts`
 
 ### Implementation for User Story 7
-- [ ] T049 [US7] Add "Remove Report" button to `PetDetailsView` footer
-- [ ] T050 [US7] Add accessibility identifier for remove button
+- [X] T049 [US7] Add "Remove Report" button to `PetDetailsView` footer
+- [X] T050 [US7] Add accessibility identifier for remove button
 
 ---
 
@@ -173,11 +173,11 @@ handoffs:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T051 [P] Add SwiftDoc documentation to all new public APIs
-- [ ] T052 [P] Verify all accessibility identifiers against requirements
-- [ ] T053 [P] Run full test suite to ensure 80% coverage
-- [ ] T054 [P] Perform final code cleanup and formatting
-- [ ] T055 Refactor iOS repository module structure to comply with constitution (move `AnimalRepository.swift` implementation from `Domain/Repositories` to `Data/Repositories` and update references)
+- [X] T051 [P] Add SwiftDoc documentation to all new public APIs
+- [X] T052 [P] Verify all accessibility identifiers against requirements
+- [X] T053 [P] Run full test suite to ensure 80% coverage
+- [X] T054 [P] Perform final code cleanup and formatting
+- [X] T055 Refactor iOS repository module structure to comply with constitution (move `AnimalRepository.swift` implementation from `Domain/Repositories` to `Data/Repositories` and update references)
 
 ---
 
