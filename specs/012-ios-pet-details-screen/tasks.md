@@ -179,6 +179,15 @@ handoffs:
 - [X] T054 [P] Perform final code cleanup and formatting
 - [X] T055 Refactor iOS repository module structure to comply with constitution (move `AnimalRepository.swift` implementation from `Domain/Repositories` to `Data/Repositories` and update references)
 
+## Phase 11: Refactoring & Enhancements (Completed)
+
+- [X] T056 Extract reusable `LoadingView` and `ErrorView` components
+- [X] T057 Integrate reusable components into `PetDetailsView` and `AnimalListView`
+- [X] T058 Localize all hardcoded strings in `PetDetailsView` (English & Polish)
+- [X] T059 Refactor View Models to extension pattern (`extension View { struct Model }`)
+- [X] T060 Move presentation logic and formatting from View to ViewModel
+- [X] T061 Remove UIKit dependency from ViewModels
+
 ---
 
 ## Dependencies & Execution Order
@@ -200,4 +209,3 @@ handoffs:
 3. **Components (US6, US2)**: Build the reusable components (`PetPhotoWithBadges`, `LabelValueRow`).
 4. **Content**: Populate the screen with data sections using the components (US2, US3, US4, US5).
 5. **Actions**: Add remaining actions (US7).
-
