@@ -120,11 +120,11 @@
 		325A5F9AE3D8C4437438C52D /* iosApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49C9DB85DB0A99CFE61E2D55 /* Build configuration list for PBXNativeTarget "iosApp" */;
-		buildPhases = (
-			496954E74B9338F908DE706E /* Sources */,
-			5F62324787C55572F478688F /* Frameworks */,
-			A318B28FE912D2A0FD634361 /* Resources */,
-		);
+			buildPhases = (
+				496954E74B9338F908DE706E /* Sources */,
+				5F62324787C55572F478688F /* Frameworks */,
+				A318B28FE912D2A0FD634361 /* Resources */,
+			);
 			buildRules = (
 			);
 			dependencies = (
@@ -195,9 +195,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2A04A5C62ECE538D00E42E56 /* Sources */ = {
