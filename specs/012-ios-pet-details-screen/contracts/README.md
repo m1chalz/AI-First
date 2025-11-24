@@ -6,7 +6,7 @@
 
 ## Overview
 
-This directory contains API contract definitions for the Pet Details Screen feature. The backend endpoint `GET /api/v1/announcements/:id` is **already implemented** on the main branch, so iOS `PetRepositoryImpl` will call the real API instead of using mock data.
+This directory contains API contract definitions for the Pet Details Screen feature. The backend endpoint `GET /api/v1/announcements/:id` is **already implemented** on the main branch, but iOS will initially use mock data for development. Real API integration will be done in a later phase.
 
 ## Contracts
 
@@ -111,20 +111,25 @@ When these fields are added to the backend, update `PetRepositoryImpl` to parse 
 
 ## Implementation Approach
 
-**Current State** ✅:
-- Backend endpoint `GET /api/v1/announcements/:id` is **already live** on main branch
-- iOS `PetRepositoryImpl` will call real API endpoint via HTTP client
-- Seed data available for development and testing
+**Current State**:
+- Backend endpoint `GET /api/v1/announcements/:id` is **already live** on main branch ✅
+- iOS will use **mock data** for initial implementation 🔨
+- Real API integration planned for later phase
 
-**Implementation Steps**:
-1. iOS `PetRepositoryImpl` calls `GET /api/v1/announcements/:id` via HTTP client (URLSession or Alamofire)
+**Phase 1 - Mock Implementation** (Current):
+1. iOS `PetRepositoryImpl` returns hard-coded `PetDetails` instances
+2. Mock data matches the contract structure defined in `pet-details-response.json`
+3. Mock different scenarios: success, not found, network error
+4. Include mock values for fields not in backend API: `microchipNumber`, `approximateAge`, `reward`
+5. Unit tests use fake repository with specific mock data
+6. E2E tests also use mock data (no backend dependency yet)
+
+**Phase 2 - Real API Integration** (Future):
+1. Update `PetRepositoryImpl` to call `GET /api/v1/announcements/:id` via HTTP client
 2. Parse JSON response using `Codable` conformance on `PetDetails` model
-3. Handle network errors:
-   - 404 Not Found → show error state "Unable to load pet details"
-   - 500 Server Error → show error state with retry button
-   - Network timeout/no connection → show error state with retry button
-4. Missing fields (`microchipNumber`, `approximateAge`, `reward`) remain `nil` until backend adds them
-5. E2E tests use real backend with seeded data (or test backend)
+3. Handle network errors (404, 500, timeouts) matching error response format
+4. Fields `microchipNumber`, `approximateAge`, `reward` remain mocked until backend adds them
+5. E2E tests switch to real backend with seeded data
 
 **Future Enhancement**:
 When backend adds missing fields (`microchipNumber`, `approximateAge`, `reward`), iOS implementation requires no changes - fields will automatically populate from API response thanks to `Codable`.
@@ -133,16 +138,17 @@ When backend adds missing fields (`microchipNumber`, `approximateAge`, `reward`)
 
 ## Testing
 
-**Test Data Usage**:
+**Test Data Usage** (Phase 1 - Mock Implementation):
 - **Unit Tests**: Use fake repository returning specific `PetDetails` instances (no network calls)
-- **E2E Tests**: Use real backend with seeded test data (seed file: `server/src/database/seeds/001_announcements.ts`)
-- **Development**: Use real backend running locally with seed data
+- **E2E Tests**: Use mock data embedded in repository (no backend dependency)
+- **Development**: Use mock data from repository
 
-**Available Test Pet IDs** (from seed data):
-- `11111111-1111-1111-1111-111111111111` - Fredi (DOG, ACTIVE, with photo)
+**Mock Pet Data Examples**:
+- `11111111-1111-1111-1111-111111111111` - Fredi (DOG, ACTIVE, with photo, with reward)
 - `22222222-2222-2222-2222-222222222222` - Luna (CAT, ACTIVE, with photo, no email, no radius)
-- `33333333-3333-3333-3333-333333333333` - Piorun (BIRD, ACTIVE, no phone)
+- `33333333-3333-3333-3333-333333333333` - Piorun (BIRD, ACTIVE, optional fields null)
 - `44444444-4444-4444-4444-444444444444` - Burek (DOG, FOUND, with photo)
+- `non-existent-id` - Returns error (for testing error states)
 
 **Test Scenarios**:
 1. Successfully load pet details (happy path) - use any valid ID from seed data
@@ -164,8 +170,9 @@ When backend adds missing fields (`microchipNumber`, `approximateAge`, `reward`)
 
 ## Notes
 
-- This contract is a **proposed structure** based on feature requirements
-- Backend team should validate and adjust based on database schema and API conventions
-- When backend endpoint is ready, update this README with actual endpoint documentation
-- Consider adding pagination if endpoint returns multiple related entities in the future
+- This contract matches the **existing backend implementation** on main branch
+- iOS will use **mock data initially** to avoid backend dependency during development
+- Error response format has been validated against actual backend implementation
+- Mock data includes additional fields (`microchipNumber`, `approximateAge`, `reward`) not yet in backend API
+- Real API integration will be done in Phase 2 after UI implementation is complete and tested
 
