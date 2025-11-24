@@ -40,18 +40,18 @@ class AnimalListViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let getAnimalsUseCase: GetAnimalsUseCase
+    private let repository: AnimalRepository
     
     // MARK: - Initialization
     
     /**
-     * Initializes ViewModel with use case.
+     * Initializes ViewModel with repository.
      * Immediately loads animals on creation.
      *
-     * - Parameter getAnimalsUseCase: Use case for fetching animals (injected)
+     * - Parameter repository: Repository for fetching animals (injected)
      */
-    init(getAnimalsUseCase: GetAnimalsUseCase) {
-        self.getAnimalsUseCase = getAnimalsUseCase
+    init(repository: AnimalRepository) {
+        self.repository = repository
         
         // Load animals on initialization
         Task {
@@ -65,13 +65,15 @@ class AnimalListViewModel: ObservableObject {
      * Loads animals from repository.
      * Updates @Published properties (cardViewModels, isLoading, errorMessage).
      * Called automatically on init and can be called manually to refresh.
+     *
+     * Note: Calls repository directly per iOS MVVM-C architecture (no use case layer).
      */
     func loadAnimals() async {
         isLoading = true
         errorMessage = nil
         
         do {
-            let animals = try await getAnimalsUseCase.invoke()
+            let animals = try await repository.getAnimals()
             updateCardViewModels(with: animals)
         } catch {
             self.errorMessage = error.localizedDescription

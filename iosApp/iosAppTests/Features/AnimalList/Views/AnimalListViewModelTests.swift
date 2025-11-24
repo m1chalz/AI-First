@@ -18,11 +18,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with fake repository returning animals
         let fakeRepository = FakeAnimalRepository(
             animalCount: 16,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         // When - loadAnimals is called
         await viewModel.loadAnimals()
@@ -68,11 +66,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with empty cardViewModels list
         let fakeRepository = FakeAnimalRepository(
             animalCount: 0,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         // Manually set state to empty (before loadAnimals runs)
         viewModel.cardViewModels = []
@@ -93,11 +89,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with card ViewModels loaded
         let fakeRepository = FakeAnimalRepository(
             animalCount: 16,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         // When - card ViewModels are loaded
         await viewModel.loadAnimals()
@@ -115,11 +109,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with callback closure
         let fakeRepository = FakeAnimalRepository(
             animalCount: 0,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         var capturedAnimalId: String?
         viewModel.onAnimalSelected = { animalId in
@@ -142,11 +134,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with callback closure
         let fakeRepository = FakeAnimalRepository(
             animalCount: 0,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         var callbackInvoked = false
         viewModel.onReportMissing = {
@@ -170,11 +160,9 @@ final class AnimalListViewModelTests: XCTestCase {
         // Given - ViewModel with callback closure
         let fakeRepository = FakeAnimalRepository(
             animalCount: 0,
-            shouldFail: false,
-            exception: KotlinException(message: "")
+            shouldFail: false
         )
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        let viewModel = AnimalListViewModel(repository: fakeRepository)
         
         var callbackInvoked = false
         viewModel.onReportFound = {
