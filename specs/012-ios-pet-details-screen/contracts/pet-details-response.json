@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pet Details Response",
+  "description": "Mock API response structure for GET /api/v1/announcements/:id (not yet implemented). Used by PetRepositoryImpl for mocked data until backend endpoint is available.",
+  "type": "object",
+  "required": [
+    "id",
+    "photoUrl",
+    "status",
+    "lastSeenDate",
+    "species",
+    "gender"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the pet",
+      "example": "mock-pet-123"
+    },
+    "photoUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the pet's photo",
+      "example": "https://example.com/pets/mock-pet-123.jpg"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "FOUND", "CLOSED"],
+      "description": "Status of the pet report (ACTIVE will be displayed as MISSING in UI)",
+      "example": "ACTIVE"
+    },
+    "lastSeenDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the pet was last seen",
+      "example": "2025-11-18T10:30:00Z"
+    },
+    "species": {
+      "type": "string",
+      "description": "Species of the pet",
+      "example": "Dog"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["male", "female"],
+      "description": "Sex of the pet (displayed as ♂/♀ symbols in UI)",
+      "example": "male"
+    },
+    "phone": {
+      "type": ["string", "null"],
+      "description": "Owner's phone number (at least one of phone/email required). Displayed as tappable link opening dialer.",
+      "example": "+48 123 456 789"
+    },
+    "email": {
+      "type": ["string", "null"],
+      "format": "email",
+      "description": "Owner's email address (at least one of phone/email required). Displayed as tappable link opening mail composer.",
+      "example": "owner@example.com"
+    },
+    "breed": {
+      "type": ["string", "null"],
+      "description": "Breed of the pet (optional)",
+      "example": "Golden Retriever"
+    },
+    "microchipNumber": {
+      "type": ["string", "null"],
+      "description": "Microchip number (MOCKED - not available in current API, will be added later)",
+      "example": "123-456-789-012"
+    },
+    "approximateAge": {
+      "type": ["string", "null"],
+      "description": "Approximate age of the pet (MOCKED - not available in current API, will be added later)",
+      "example": "3 years"
+    },
+    "reward": {
+      "type": ["string", "null"],
+      "description": "Reward amount text (MOCKED - not available in current API, will be added later). Displayed as-is without formatting.",
+      "example": "500 PLN"
+    },
+    "location": {
+      "type": ["string", "null"],
+      "description": "City where the pet was last seen (optional)",
+      "example": "Warsaw"
+    },
+    "locationRadius": {
+      "type": ["string", "null"],
+      "description": "Search radius around location (optional)",
+      "example": "15 km"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Additional description about the pet (optional, multi-line text allowed)",
+      "example": "Friendly golden retriever, responds to 'Max'. Last seen near Lazienki Park wearing a red collar."
+    }
+  },
+  "examples": [
+    {
+      "id": "mock-pet-123",
+      "photoUrl": "https://example.com/pets/mock-pet-123.jpg",
+      "status": "ACTIVE",
+      "lastSeenDate": "2025-11-18T10:30:00Z",
+      "species": "Dog",
+      "gender": "male",
+      "phone": "+48 123 456 789",
+      "email": "owner@example.com",
+      "breed": "Golden Retriever",
+      "microchipNumber": "123-456-789-012",
+      "approximateAge": "3 years",
+      "reward": "500 PLN",
+      "location": "Warsaw",
+      "locationRadius": "15 km",
+      "description": "Friendly golden retriever, responds to 'Max'. Last seen near Lazienki Park wearing a red collar."
+    },
+    {
+      "id": "mock-pet-456",
+      "photoUrl": "https://example.com/pets/mock-pet-456.jpg",
+      "status": "FOUND",
+      "lastSeenDate": "2025-11-20T14:15:00Z",
+      "species": "Cat",
+      "gender": "female",
+      "phone": null,
+      "email": "finder@example.com",
+      "breed": null,
+      "microchipNumber": null,
+      "approximateAge": null,
+      "reward": null,
+      "location": "Krakow",
+      "locationRadius": "5 km",
+      "description": "White cat with blue eyes found near Main Square. Very friendly and well-groomed."
+    }
+  ]
+}
+
