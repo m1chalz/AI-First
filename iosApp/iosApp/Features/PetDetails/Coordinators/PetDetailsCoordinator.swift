@@ -50,7 +50,6 @@ class PetDetailsCoordinator: CoordinatorInterface {
         let hostingController = UIHostingController(rootView: detailsView)
         
         // Configure navigation bar
-        hostingController.title = "Pet Details"
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
         // Configure navigation bar appearance
@@ -65,11 +64,9 @@ class PetDetailsCoordinator: CoordinatorInterface {
         hostingController.navigationItem.standardAppearance = appearance
         hostingController.navigationItem.scrollEdgeAppearance = appearance
         
-        // Create custom back button
+        // Create custom back button (chevron only, no text)
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        backButton.setTitle(" Back", for: .normal)
-        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         backButton.tintColor = UIColor(hex: "#2D2D2D")
         backButton.addAction(UIAction { [weak viewModel] _ in
             viewModel?.handleBack()
