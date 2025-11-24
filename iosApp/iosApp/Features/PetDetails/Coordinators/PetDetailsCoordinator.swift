@@ -56,7 +56,10 @@ class PetDetailsCoordinator: CoordinatorInterface {
         // Configure navigation bar appearance
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = UIColor(hex: "#FAFAFA")
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(hex: "#2D2D2D")
+        ]
         appearance.shadowColor = .clear
         
         hostingController.navigationItem.standardAppearance = appearance
@@ -67,7 +70,7 @@ class PetDetailsCoordinator: CoordinatorInterface {
         backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         backButton.setTitle(" Back", for: .normal)
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-        backButton.tintColor = UIColor(hex: "#007AFF")
+        backButton.tintColor = UIColor(hex: "#2D2D2D")
         backButton.addAction(UIAction { [weak viewModel] _ in
             viewModel?.handleBack()
         }, for: .touchUpInside)
