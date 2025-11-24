@@ -34,7 +34,7 @@ class AnimalListCoordinator: CoordinatorInterface {
         guard let navigationController = navigationController else { return }
         
         // Create repository (mock implementation for now)
-        let repository = AnimalRepositoryImpl()
+        let repository = AnimalRepository()
         
         // Create ViewModel with repository (iOS MVVM-C: ViewModels call repositories directly)
         let viewModel = AnimalListViewModel(repository: repository)
