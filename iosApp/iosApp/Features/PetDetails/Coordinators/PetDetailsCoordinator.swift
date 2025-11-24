@@ -44,7 +44,9 @@ class PetDetailsCoordinator: CoordinatorInterface {
             self?.finish()
         }
         
-        let detailsView = PetDetailsView(viewModel: viewModel)
+        let detailsView = NavigationBackHiding {
+            PetDetailsView(viewModel: viewModel)
+        }
         let hostingController = UIHostingController(rootView: detailsView)
         
         // Configure navigation bar
@@ -59,9 +61,6 @@ class PetDetailsCoordinator: CoordinatorInterface {
         
         hostingController.navigationItem.standardAppearance = appearance
         hostingController.navigationItem.scrollEdgeAppearance = appearance
-        
-        // Hide default back button
-        hostingController.navigationItem.hidesBackButton = true
         
         // Create custom back button
         let backButton = UIButton(type: .system)
