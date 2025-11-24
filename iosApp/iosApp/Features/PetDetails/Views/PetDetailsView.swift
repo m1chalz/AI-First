@@ -82,11 +82,8 @@ struct PetDetailsView: View {
     private func detailsView(petDetails: PetDetails) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                // Pet Photo with Badges and Back Button
-                PetPhotoWithBadges(
-                    model: PetPhotoWithBadgesModel(from: petDetails),
-                    onBack: { viewModel.handleBack() }
-                )
+                // Pet Photo with Badges
+                PetPhotoWithBadges(model: PetPhotoWithBadgesModel(from: petDetails))
                 
                 // Content Container with padding
                 VStack(alignment: .leading, spacing: 20) {

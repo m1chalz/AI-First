@@ -30,22 +30,11 @@ struct PetPhotoWithBadgesModel: Equatable {
 /// Reusable component displaying pet photo with status and optional reward badges
 struct PetPhotoWithBadges: View {
     let model: PetPhotoWithBadgesModel
-    var onBack: (() -> Void)?
     
     var body: some View {
         ZStack {
             // Pet Photo
             photoView
-            
-            // Back button (top left)
-            VStack {
-                HStack {
-                    backButton
-                        .padding(18)
-                    Spacer()
-                }
-                Spacer()
-            }
             
             // Status Badge (top right)
             VStack {
@@ -112,24 +101,6 @@ struct PetPhotoWithBadges: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.1))
         .accessibilityIdentifier("petDetails.photo.image")
-    }
-    
-    // MARK: - Back Button
-    
-    private var backButton: some View {
-        Button(action: { onBack?() }) {
-            Image(systemName: "xmark")
-                .font(.system(size: 16))
-                .foregroundColor(Color(hex: "#101828"))
-                .frame(width: 44, height: 44)
-                .background(Color.white)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Color(hex: "#e5e9ec"), lineWidth: 0.667)
-                )
-        }
-        .accessibilityIdentifier("petDetails.back.button")
     }
     
     // MARK: - Status Badge

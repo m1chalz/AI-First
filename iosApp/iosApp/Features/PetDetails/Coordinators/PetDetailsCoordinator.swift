@@ -39,13 +39,29 @@ class PetDetailsCoordinator: CoordinatorInterface {
             petId: petId
         )
         
-        // Setup coordinator callbacks
-        viewModel.onBack = { [weak self] in
-            self?.finish()
-        }
-        
         let detailsView = PetDetailsView(viewModel: viewModel)
         let hostingController = UIHostingController(rootView: detailsView)
+        
+        // Configure navigation bar
+        hostingController.title = "Pet Details"
+        hostingController.navigationItem.largeTitleDisplayMode = .never
+        
+        // Configure back button appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+        
+        // Style back button text
+        let backButtonAppearance = UIBarButtonItemAppearance()
+        backButtonAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor(hex: "#007AFF"),
+            .font: UIFont.systemFont(ofSize: 17)
+        ]
+        appearance.backButtonAppearance = backButtonAppearance
+        
+        hostingController.navigationItem.standardAppearance = appearance
+        hostingController.navigationItem.scrollEdgeAppearance = appearance
         
         navigationController?.pushViewController(hostingController, animated: animated)
     }
