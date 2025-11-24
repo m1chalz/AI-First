@@ -1,0 +1,109 @@
+KMP to Platform-Independent Migration - Baseline Metrics
+========================================================
+Date: 2025-11-24
+Branch: 011-migrate-from-kmp
+
+ANDROID BASELINE (T001-T002)
+-----------------------------
+Build Time: 5.5 seconds (./gradlew :composeApp:assembleDebug)
+Build Status: SUCCESS (63 actionable tasks: 36 executed, 27 from cache)
+Test Status: PASS (./gradlew :composeApp:testDebugUnitTest)
+Test Coverage: Kover not configured yet - coverage report unavailable
+Test Report Location: composeApp/build/reports/tests/testDebugUnitTest
+
+iOS BASELINE (T003-T004)
+-------------------------
+Build Time: 22.5 seconds (xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 17' build)
+Build Status: BUILD SUCCEEDED
+Test Configuration: Test action not configured for iosApp scheme
+Test Coverage: Unable to capture baseline (tests not configured)
+
+ANDROID SHARED MODULE IMPORTS (T005)
+-------------------------------------
+Files with shared imports: 8 files
+Import patterns found:
+- com.intive.aifirst.petspot.domain.models.* (Animal, Location, AnimalSpecies, AnimalGender, AnimalStatus)
+- com.intive.aifirst.petspot.domain.repositories.* (AnimalRepository)
+- com.intive.aifirst.petspot.domain.usecases.* (GetAnimalsUseCase)
+- com.intive.aifirst.petspot.domain.fixtures.* (MockAnimalData)
+
+Affected files:
+- composeApp/src/androidMain/.../di/DataModule.kt
+- composeApp/src/androidMain/.../features/animallist/ui/AnimalCard.kt
+- composeApp/src/androidMain/.../features/animallist/ui/AnimalListContent.kt
+- composeApp/src/androidMain/.../features/animallist/presentation/viewmodels/AnimalListViewModel.kt
+- composeApp/src/androidMain/.../features/animallist/presentation/mvi/AnimalListReducer.kt
+- composeApp/src/androidMain/.../features/animallist/presentation/mvi/AnimalListUiState.kt
+- composeApp/src/androidMain/.../data/AnimalRepositoryImpl.kt
+
+iOS SHARED FRAMEWORK IMPORTS (T006)
+------------------------------------
+Files with Shared imports: 9 files
+
+Affected files:
+- iosApp/iosApp/DI/KoinInitializer.swift
+- iosApp/iosApp/Features/AnimalList/Coordinators/AnimalListCoordinator.swift
+- iosApp/iosApp/Features/AnimalList/Repositories/AnimalRepositoryImpl.swift
+- iosApp/iosApp/Features/AnimalList/Views/AnimalCardViewModel.swift
+- iosApp/iosApp/Features/AnimalList/Views/AnimalCardView.swift
+- iosApp/iosApp/Features/AnimalList/Views/AnimalListView.swift
+- iosApp/iosApp/Features/AnimalList/Views/AnimalListViewModel.swift
+- iosApp/iosAppTests/Features/AnimalList/Views/AnimalCardViewModelTests.swift
+- iosApp/iosAppTests/Features/AnimalList/Views/AnimalListViewModelTests.swift
+
+SHARED MODULE INVENTORY (T007)
+-------------------------------
+Total files to migrate: 12 Kotlin files
+
+Domain Models (5):
+- Animal.kt
+- AnimalGender.kt
+- AnimalSpecies.kt
+- AnimalStatus.kt
+- Location.kt
+
+Repository Interfaces (2):
+- AnimalRepository.kt
+- FakeAnimalRepository.kt (test fixture)
+
+Use Cases (1):
+- GetAnimalsUseCase.kt
+
+Test Fixtures (1):
+- MockAnimalData.kt
+
+DI Modules (1):
+- DomainModule.kt
+
+Other (2):
+- Greeting.kt (not migrated - example code)
+- Platform.kt (not migrated - platform detection)
+
+REPOSITORY & GRADLE METRICS (T008)
+-----------------------------------
+Repository size: (calculated below)
+Gradle sync time: ~1-2 seconds (configuration cache enabled)
+
+$ du -sh shared/
+ 3.2M	shared/
+
+$ du -sh .git/
+ 9.3M	.git/
+
+Expected improvements post-migration:
+- Android build time: Same or faster (no KMP overhead)
+- iOS build time: 10-20% faster (2-4 seconds improvement)
+- Gradle sync time: 10-30% improvement
+- Repository size reduction: ~50-100MB (shared module build artifacts)
+
+MIGRATION READINESS
+-------------------
+✅ Android builds successfully with shared module
+✅ iOS builds successfully with KMP framework
+✅ Android tests pass
+⚠️  iOS tests not configured (will skip test baseline)
+✅ Shared module content inventory complete
+✅ Import audit complete (8 Android files, 9 iOS files to update)
+
+NEXT PHASE: Phase 1 - iOS Domain Models Migration (T009-T022)
+

@@ -3,7 +3,7 @@ package com.intive.aifirst.petspot
 import android.app.Application
 import com.intive.aifirst.petspot.di.dataModule
 import com.intive.aifirst.petspot.di.viewModelModule
-import com.intive.aifirst.petspot.di.domainModule
+import com.intive.aifirst.petspot.composeapp.di.domainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

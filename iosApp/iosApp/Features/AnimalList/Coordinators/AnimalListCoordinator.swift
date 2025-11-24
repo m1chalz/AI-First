@@ -1,6 +1,5 @@
 import UIKit
 import SwiftUI
-import Shared
 
 /**
  * Coordinator for Animal List flow following MVVM-C architecture.
@@ -35,11 +34,10 @@ class AnimalListCoordinator: CoordinatorInterface {
         guard let navigationController = navigationController else { return }
         
         // Create repository (mock implementation for now)
-        let repository = AnimalRepositoryImpl()
-        let getAnimalsUseCase = GetAnimalsUseCase(repository: repository)
+        let repository = AnimalRepository()
         
-        // Create ViewModel
-        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+        // Create ViewModel with repository (iOS MVVM-C: ViewModels call repositories directly)
+        let viewModel = AnimalListViewModel(repository: repository)
         
         // Set up coordinator closures for navigation
         viewModel.onAnimalSelected = { [weak self] animalId in
