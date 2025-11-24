@@ -28,11 +28,10 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 009-create-announcement: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
 - 008-pet-details-api: Added TypeScript with Node.js v24 (LTS) + Express.js (REST framework), Knex (query builder), SQLite3 (database driver), Vitest (testing), SuperTest (API integration tests)
-- 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
 
-- 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
