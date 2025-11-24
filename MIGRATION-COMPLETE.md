@@ -138,3 +138,33 @@ git checkout archive/shared-module
 ---
 
 **🎉 Migration Complete - Platform Independence Achieved!**
+
+---
+
+## Merge Status with Main Branch
+
+**Checked**: November 24, 2025  
+**Merge Base**: `e93468e` (CONSTITUTION Android architecture updates)  
+**Branch Ahead**: 12 commits  
+**Main Ahead**: 1 commit (`008-pet-details-api`)
+
+### Conflicts
+
+**1 minor conflict** in `.cursor/rules/specify-rules.mdc` (auto-generated documentation):
+- Both branches added content in same location
+- **Resolution**: Keep both additions (trivial merge)
+
+### Auto-Mergeable Changes from Main
+
+✅ `server/eslint.config.mjs` - ESLint rule for unused vars  
+✅ `server/src/__test__/announcements.test.ts` - Tests for GET /:id endpoint
+
+### Impact Assessment
+
+- **Code conflicts**: NONE
+- **Backend compatibility**: ✅ Compatible (backend changes are isolated)
+- **Platform independence**: ✅ Unaffected (migration is iOS/Android only)
+- **Merge difficulty**: TRIVIAL (documentation conflict only)
+
+**Status**: Ready for PR - conflict will be resolved during merge.
+
