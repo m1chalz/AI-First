@@ -32,7 +32,7 @@ Users can tap on a pet listing in the animal list to view comprehensive details 
 **Acceptance Scenarios**:
 
 1. **Given** a user is viewing the pet list, **When** they tap on any pet list item, **Then** they are navigated to the pet details screen and the system immediately begins fetching that pet's details from the repository
-2. **Given** a user is on the pet details screen, **When** they tap the back button in the header, **Then** they return to the pet list screen
+2. **Given** a user is on the pet details screen, **When** they tap the back button in the navigation bar, **Then** they return to the pet list screen
 3. **Given** the pet details data has loaded successfully, **When** the user views the screen, **Then** they see the pet's photo, status badge, and all available information fields displayed
 4. **Given** the pet details screen is loading data, **When** the repository is fetching pet information, **Then** the user sees a full-screen loading indicator
 
@@ -147,7 +147,7 @@ Users can attempt to remove pet reports from the system when the pet is found or
 ### Functional Requirements
 
 - **FR-001**: Screen MUST display a hero image of the pet at the top of the screen, or a gray box with "Image not available" text if the photo fails to load
-- **FR-002**: Screen MUST display a back button in the header that navigates to the previous screen
+- **FR-002**: Screen MUST display a standard iOS navigation bar with back button that navigates to the previous screen
 - **FR-003**: Screen MUST display a status badge (MISSING, FOUND, or CLOSED) overlaid on the pet photo with colors: red for MISSING, blue for FOUND, gray for CLOSED
 - **FR-004**: Screen MUST display a reward badge on the pet photo when reward information is available, showing the reward text as-is without formatting
 - **FR-005**: Screen MUST display date of disappearance in the format "MMM DD, YYYY" (e.g., "Nov 18, 2025")

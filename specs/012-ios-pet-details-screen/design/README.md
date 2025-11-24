@@ -13,9 +13,9 @@
 The pet details screen shows comprehensive information about a missing or found pet. The design follows a vertical scrolling layout with the following key sections:
 
 ### Header Section
-- Mobile phone status bar
-- Back button (X icon) in top-left corner
-- Device notch placeholder
+- Standard iOS navigation bar with back button (chevron left)
+- Navigation bar title (optional)
+- Device status bar and notch
 
 ### Hero Image Section
 - Full-width pet photo
@@ -74,7 +74,7 @@ All information is displayed in a card-like container with consistent spacing:
 - Male/Female symbols for sex
 - Location pin icon
 - Money bag icon for reward
-- Back (X) icon in header
+- Standard iOS back chevron in navigation bar
 
 ## Implementation Notes for iOS
 
