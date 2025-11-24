@@ -1,4 +1,4 @@
-package com.intive.aifirst.petspot.composeapp.di
+package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import org.koin.dsl.module
