@@ -27,7 +27,8 @@ struct PetDetailsView: View {
     private var loadingView: some View {
         VStack(spacing: 20) {
             ProgressView()
-                .tint(Color(hex: "#155dfc"))
+                .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: "#2D2D2D")))
+                .scaleEffect(1.5)
                 .accessibilityIdentifier("petDetails.loading")
             Text("Loading pet details...")
                 .font(.system(size: 16))
@@ -56,15 +57,15 @@ struct PetDetailsView: View {
                 .padding(.horizontal)
                 .accessibilityIdentifier("petDetails.error.message")
             
-            Button("Retry") {
-                viewModel.retry()
+            Button(action: { viewModel.retry() }) {
+                Text("Retry")
+                    .font(.system(size: 16))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 12)
+                    .background(Color(hex: "#155dfc"))
+                    .cornerRadius(10)
             }
-            .font(.system(size: 16))
-            .foregroundColor(.white)
-            .padding(.horizontal, 32)
-            .padding(.vertical, 12)
-            .background(Color(hex: "#155dfc"))
-            .cornerRadius(10)
             .accessibilityIdentifier("petDetails.retry.button")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
