@@ -68,6 +68,122 @@ describe('validateCreateAnnouncement', () => {
     ])('should not throw when $description', ({ data }) => {
       expect(() => validateCreateAnnouncement(data)).not.toThrow();
     });
+
+    it('should accept boundary values for latitude', () => {
+      // Given: Data with boundary latitude values
+      const testCases = [
+        { latitude: -90, description: 'minimum latitude' },
+        { latitude: 90, description: 'maximum latitude' },
+        { latitude: 0, description: 'equator' },
+      ];
+
+      testCases.forEach(({ latitude }) => {
+        const data = {
+          ...VALID_ANNOUNCEMENT_DATA,
+          locationLatitude: latitude,
+        };
+
+        // When: Validation is called
+        // Then: Validation passes
+        expect(() => validateCreateAnnouncement(data)).not.toThrow();
+      });
+    });
+
+    it('should accept boundary values for longitude', () => {
+      // Given: Data with boundary longitude values
+      const testCases = [
+        { longitude: -180, description: 'minimum longitude' },
+        { longitude: 180, description: 'maximum longitude' },
+        { longitude: 0, description: 'prime meridian' },
+      ];
+
+      testCases.forEach(({ longitude, description }) => {
+        const data = {
+          ...VALID_ANNOUNCEMENT_DATA,
+          locationLongitude: longitude,
+        };
+
+        // When: Validation is called
+        // Then: Validation passes
+        expect(() => validateCreateAnnouncement(data)).not.toThrow();
+      });
+    });
+
+    it('should accept today\'s date as valid lastSeenDate', () => {
+      // Given: Data with today's date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayString = today.toISOString().split('T')[0];
+      
+      const data = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        lastSeenDate: todayString,
+      };
+
+      // When: Validation is called
+      // Then: Validation passes
+      expect(() => validateCreateAnnouncement(data)).not.toThrow();
+    });
+
+    it('should accept yesterday\'s date as valid lastSeenDate', () => {
+      // Given: Data with yesterday's date
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setHours(0, 0, 0, 0);
+      const yesterdayString = yesterday.toISOString().split('T')[0];
+      
+      const data = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        lastSeenDate: yesterdayString,
+      };
+
+      // When: Validation is called
+      // Then: Validation passes
+      expect(() => validateCreateAnnouncement(data)).not.toThrow();
+    });
+
+    it('should accept valid microchip number with only digits', () => {
+      // Given: Data with valid microchip number
+      const data = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        microchipNumber: '123456789012345',
+      };
+
+      // When: Validation is called
+      // Then: Validation passes
+      expect(() => validateCreateAnnouncement(data)).not.toThrow();
+    });
+
+    it.each([
+      { status: 'MISSING' as const },
+      { status: 'FOUND' as const },
+    ])('should accept status $description', ({ status }) => {
+      // Given: Data with status
+      const data = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        status,
+      };
+
+      // When: Validation is called
+      // Then: Validation passes
+      expect(() => validateCreateAnnouncement(data)).not.toThrow();
+    });
+
+    it('should accept valid positive integer age', () => {
+      // Given: Data with valid age
+      const testCases = [1, 2, 5, 10, 20];
+
+      testCases.forEach((age) => {
+        const data = {
+          ...VALID_ANNOUNCEMENT_DATA,
+          age,
+        };
+
+        // When: Validation is called
+        // Then: Validation passes
+        expect(() => validateCreateAnnouncement(data)).not.toThrow();
+      });
+    });
   });
 
   describe('validation errors', () => {
@@ -83,6 +199,9 @@ describe('validateCreateAnnouncement', () => {
       // Empty string fields
       { description: 'species is empty string', fieldName: 'species', fieldValue: '', expectedCode: 'MISSING_VALUE' },
       { description: 'sex is empty string', fieldName: 'sex', fieldValue: '', expectedCode: 'MISSING_VALUE' },
+      { description: 'photoUrl is empty string', fieldName: 'photoUrl', fieldValue: '', expectedCode: 'MISSING_VALUE' },
+      // lastSeenDate empty string fails regex first, so returns INVALID_FORMAT
+      { description: 'lastSeenDate is empty string', fieldName: 'lastSeenDate', fieldValue: '', expectedCode: 'INVALID_FORMAT' },
       // Invalid formats
       { description: 'email format is invalid', fieldName: 'email', fieldValue: 'invalid-email', expectedCode: 'INVALID_FORMAT' },
       { description: 'phone format is invalid', fieldName: 'phone', fieldValue: 'no-digits', expectedCode: 'INVALID_FORMAT' },
@@ -136,8 +255,33 @@ describe('validateCreateAnnouncement', () => {
       };
 
       // When: Validation is called
-      // Then: ValidationError is thrown
-      expect(() => validateCreateAnnouncement(data)).toThrow(ValidationError);
+      // Then: ValidationError is thrown with INVALID_FIELD code
+      expectValidationError(data, 'INVALID_FIELD', 'unknownField');
+    });
+
+    it('should throw ValidationError with first unknown field only (fail-fast)', () => {
+      // Given: Data with multiple unknown fields
+      const data = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        unknownField1: 'value1',
+        unknownField2: 'value2',
+      };
+
+      // When: Validation is called
+      // Then: Only first unknown field error is thrown
+      expectValidationError(data, 'INVALID_FIELD', 'unknownField1');
+    });
+
+    it('should trim whitespace from string fields', () => {
+      // Given: Data with whitespace-only required fields
+      const dataWithWhitespace = {
+        ...VALID_ANNOUNCEMENT_DATA,
+        species: '   ',
+      };
+
+      // When: Validation is called
+      // Then: ValidationError is thrown with MISSING_VALUE code
+      expectValidationError(dataWithWhitespace, 'MISSING_VALUE', 'species');
     });
   });
 });

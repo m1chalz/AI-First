@@ -75,13 +75,13 @@ CREATE TABLE IF NOT EXISTS announcement (
 
 | Field | Type | Constraints | Error Code |
 |-------|------|-------------|------------|
-| `species` | string | Non-empty, non-whitespace | `NOT_EMPTY` |
-| `sex` | string | Non-empty, non-whitespace | `NOT_EMPTY` |
-| `lastSeenDate` | string | ISO 8601 date, not future | `NOT_EMPTY`, `INVALID_FORMAT` |
-| `photoUrl` | string | Valid URL with http/https | `NOT_EMPTY`, `INVALID_FORMAT` |
-| `status` | string | "MISSING" or "FOUND" only | `NOT_EMPTY`, `INVALID_FORMAT` |
-| `locationLatitude` | number | Decimal, -90 to 90 | `NOT_EMPTY`, `INVALID_FORMAT` |
-| `locationLongitude` | number | Decimal, -180 to 180 | `NOT_EMPTY`, `INVALID_FORMAT` |
+| `species` | string | Non-empty, non-whitespace | `MISSING_VALUE` |
+| `sex` | string | Non-empty, non-whitespace | `MISSING_VALUE` |
+| `lastSeenDate` | string | ISO 8601 date, not future | `MISSING_VALUE`, `INVALID_FORMAT` |
+| `photoUrl` | string | Valid URL with http/https | `MISSING_VALUE`, `INVALID_FORMAT` |
+| `status` | string | "MISSING" or "FOUND" only | `MISSING_VALUE`, `INVALID_FORMAT` |
+| `locationLatitude` | number | Decimal, -90 to 90 | `MISSING_VALUE`, `INVALID_FORMAT` |
+| `locationLongitude` | number | Decimal, -180 to 180 | `MISSING_VALUE`, `INVALID_FORMAT` |
 | `email` OR `phone` | string | At least one contact required | `MISSING_CONTACT` |
 
 ### Optional Fields (can be omitted or null)
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS announcement (
 ### 2. Required Field Presence (Priority 2)
 
 **Rule**: All required fields must be present and non-empty  
-**Error Code**: `NOT_EMPTY`  
+**Error Code**: `MISSING_VALUE`  
 **HTTP Status**: 400  
 
 **Required Fields**:

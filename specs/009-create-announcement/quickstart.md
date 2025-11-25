@@ -809,12 +809,12 @@ function validateRequiredFields(data: CreateAnnouncementDto): void {
     const value = (data as any)[field];
     
     if (value === undefined || value === null) {
-      throw new ValidationError('NOT_EMPTY', 'cannot be empty', field);
+      throw new ValidationError('MISSING_VALUE', 'cannot be empty', field);
     }
     
     // Check whitespace-only strings
     if (typeof value === 'string' && value.trim() === '') {
-      throw new ValidationError('NOT_EMPTY', 'cannot be empty', field);
+      throw new ValidationError('MISSING_VALUE', 'cannot be empty', field);
     }
   }
 }
@@ -1102,7 +1102,7 @@ describe('POST /api/v1/announcements', () => {
       .expect(400);
     
     // Then
-    expect(response.body.error.code).toBe('NOT_EMPTY');
+    expect(response.body.error.code).toBe('MISSING_VALUE');
     expect(response.body.error.field).toBe('species');
   });
   

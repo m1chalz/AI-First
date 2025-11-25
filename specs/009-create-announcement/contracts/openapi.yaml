@@ -134,7 +134,7 @@ paths:
                   summary: Required field is empty
                   value:
                     error:
-                      code: "NOT_EMPTY"
+                      code: "MISSING_VALUE"
                       message: "cannot be empty"
                       field: "species"
                 
@@ -401,7 +401,7 @@ components:
             code:
               type: string
               enum:
-                - NOT_EMPTY
+                - MISSING_VALUE
                 - INVALID_FORMAT
                 - MISSING_CONTACT
                 - INVALID_FIELD

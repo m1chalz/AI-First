@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS announcement (
 // Validation error
 {
   error: {
-    code: "NOT_EMPTY" | "INVALID_FORMAT" | "MISSING_CONTACT" | "INVALID_FIELD",
+    code: "MISSING_VALUE" | "INVALID_FORMAT" | "MISSING_CONTACT" | "INVALID_FIELD",
     message: "descriptive error message",
     field: "fieldName"
   }

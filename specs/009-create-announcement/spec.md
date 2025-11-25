@@ -82,7 +82,7 @@ A user submits an announcement with invalid or missing required fields and recei
 2. **Given** a user submits an announcement with an invalid email format, **When** the system validates the request, **Then** it returns HTTP 400 with error details specifying the email format is invalid
 3. **Given** a user submits an announcement with an invalid phone format, **When** the system validates the request, **Then** it returns HTTP 400 with error details specifying the phone format is invalid
 4. **Given** a user submits an announcement with required fields containing only whitespace, **When** the system validates the request, **Then** it returns HTTP 400 with error details indicating those fields are required
-5. **Given** a user submits an announcement without a required field (e.g., species, photoUrl, status), **When** the system validates the request, **Then** it returns HTTP 400 with error code "NOT_EMPTY" for the missing field
+5. **Given** a user submits an announcement without a required field (e.g., species, photoUrl, status), **When** the system validates the request, **Then** it returns HTTP 400 with error code "MISSING_VALUE" for the missing field
 6. **Given** a user submits an announcement without optional fields (e.g., description, breed), **When** the system validates the request, **Then** it accepts the announcement and creates it successfully
 7. **Given** a user submits an announcement with a microchip number containing non-numeric characters, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FORMAT" for the microchipNumber field
 8. **Given** a user submits an announcement with unknown fields not defined in the model, **When** the system validates the request, **Then** it returns HTTP 400 with error code "INVALID_FIELD" and the name of the unknown field
@@ -159,7 +159,7 @@ A user attempts to create an announcement for a pet with a microchip number that
 - **FR-018**: System MUST return conflict error responses in the format: `{ error: { code: "CONFLICT", message: "An entity with this value already exists", field: "microchipNumber" } }` when duplicate microchip detected
 - **FR-019**: System MUST return generic error responses for unexpected errors in the format: `{ error: { code: "INTERNAL_SERVER_ERROR", message: "Internal server error" } }` without field property and without exposing internal details
 - **FR-020**: System MUST use fail-fast validation (stop at first error and return only that single error)
-- **FR-021**: System MUST set validation error codes to specific types (e.g., "NOT_EMPTY" for required fields, "INVALID_FORMAT" for format errors, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields, "PAYLOAD_TOO_LARGE" for oversized requests)
+- **FR-021**: System MUST set validation error codes to specific types (e.g., "MISSING_VALUE" for required fields, "INVALID_FORMAT" for format errors, "MISSING_CONTACT" for missing email/phone, "INVALID_FIELD" for unknown fields, "PAYLOAD_TOO_LARGE" for oversized requests)
 - **FR-022**: System MUST include the field name in the `field` property of validation error responses to identify which field caused the validation failure
 - **FR-023**: System MUST persist successfully created announcements to the database
 - **FR-024**: System MUST assign a unique identifier to each newly created announcement
@@ -216,7 +216,7 @@ A user attempts to create an announcement for a pet with a microchip number that
 ```json
 {
     "error": {
-        "code": "NOT_EMPTY",
+        "code": "MISSING_VALUE",
         "message": "cannot be empty",
         "field": "petName"
     }

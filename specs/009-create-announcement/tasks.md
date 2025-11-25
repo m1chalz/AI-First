@@ -181,36 +181,36 @@ Each phase delivers a complete, independently testable increment.
 
 #### Enhanced Zod Schema Validation
 
-- [ ] T040 [P] [US2] Add all format validations to Zod schema in server/src/services/announcement-service.ts (email, phone, URL, date, microchip, age, status, coordinates)
-- [ ] T041 [P] [US2] Add range validations to Zod schema in server/src/services/announcement-service.ts (latitude -90 to 90, longitude -180 to 180, age > 0)
-- [ ] T042 [P] [US2] Add custom date refinement to Zod schema in server/src/services/announcement-service.ts (reject future dates)
-- [ ] T043 [P] [US2] Add whitespace trimming to all string fields in Zod schema
+- [X] T040 [P] [US2] Add all format validations to Zod schema in server/src/services/announcement-service.ts (email, phone, URL, date, microchip, age, status, coordinates)
+- [X] T041 [P] [US2] Add range validations to Zod schema in server/src/services/announcement-service.ts (latitude -90 to 90, longitude -180 to 180, age > 0)
+- [X] T042 [P] [US2] Add custom date refinement to Zod schema in server/src/services/announcement-service.ts (reject future dates)
+- [X] T043 [P] [US2] Add whitespace trimming to all string fields in Zod schema
 
 #### Validation Error Mapping
 
-- [ ] T044 [US2] Implement Zod error code mapping in server/src/services/announcement-service.ts (map Zod errors to API error codes: NOT_EMPTY, INVALID_FORMAT, INVALID_FIELD, MISSING_CONTACT)
-- [ ] T045 [US2] Update error handler middleware in server/src/middlewares/error-handler.ts (handle HTTP 413 payload too large)
+- [X] T044 [US2] Implement Zod error code mapping in server/src/services/announcement-service.ts (map Zod errors to API error codes: MISSING_VALUE, INVALID_FORMAT, INVALID_FIELD, MISSING_CONTACT)
+- [X] T045 [US2] Update error handler middleware in server/src/middlewares/error-handler.ts (handle HTTP 413 payload too large)
 
 #### Integration Tests for Validation (TDD)
 
-- [ ] T046 [US2] Write integration test for missing contact in server/src/__test__/announcements.test.ts (no email or phone)
-- [ ] T047 [US2] Write integration test for invalid email format in server/src/__test__/announcements.test.ts
-- [ ] T048 [US2] Write integration test for invalid phone format in server/src/__test__/announcements.test.ts
-- [ ] T049 [US2] Write integration test for whitespace-only fields in server/src/__test__/announcements.test.ts
-- [ ] T050 [US2] Write integration test for missing required field in server/src/__test__/announcements.test.ts (species)
-- [ ] T051 [US2] Write integration test for optional fields in server/src/__test__/announcements.test.ts (breed, description omitted)
-- [ ] T052 [US2] Write integration test for invalid microchip format in server/src/__test__/announcements.test.ts (non-numeric)
-- [ ] T053 [US2] Write integration test for unknown fields in server/src/__test__/announcements.test.ts (INVALID_FIELD error)
-- [ ] T054 [US2] Write integration test for XSS prevention in server/src/__test__/announcements.test.ts (HTML tags stripped)
-- [ ] T055 [US2] Write integration test for fail-fast validation in server/src/__test__/announcements.test.ts (multiple errors, returns first only)
-- [ ] T056 [US2] Write integration test for invalid status in server/src/__test__/announcements.test.ts (not MISSING or FOUND)
-- [ ] T057 [US2] Write integration test for invalid age in server/src/__test__/announcements.test.ts (negative or zero)
-- [ ] T058 [US2] Write integration test for invalid coordinates in server/src/__test__/announcements.test.ts (non-numeric)
-- [ ] T059 [US2] Write integration test for out-of-range coordinates in server/src/__test__/announcements.test.ts (latitude > 90)
-- [ ] T060 [US2] Write integration test for invalid photoUrl in server/src/__test__/announcements.test.ts (not http/https)
-- [ ] T061 [US2] Write integration test for future lastSeenDate in server/src/__test__/announcements.test.ts
-- [ ] T062 [US2] Write integration test for payload too large in server/src/__test__/announcements.test.ts (>10MB, HTTP 413)
-- [ ] T063 [US2] Verify all User Story 2 integration tests pass with `npm test -- announcements.test.ts`
+- [X] T046 [US2] Write integration test for missing contact in server/src/__test__/announcements.test.ts (no email or phone)
+- [X] T047 [US2] Write integration test for invalid email format in server/src/__test__/announcements.test.ts
+- [X] T048 [US2] Write integration test for invalid phone format in server/src/__test__/announcements.test.ts
+- [X] T049 [US2] Write integration test for whitespace-only fields in server/src/__test__/announcements.test.ts
+- [X] T050 [US2] Write integration test for missing required field in server/src/__test__/announcements.test.ts (species)
+- [X] T051 [US2] Write integration test for optional fields in server/src/__test__/announcements.test.ts (breed, description omitted)
+- [X] T052 [US2] Write integration test for invalid microchip format in server/src/__test__/announcements.test.ts (non-numeric)
+- [X] T053 [US2] Write integration test for unknown fields in server/src/__test__/announcements.test.ts (INVALID_FIELD error)
+- [X] T054 [US2] Write integration test for XSS prevention in server/src/__test__/announcements.test.ts (HTML tags stripped)
+- [X] T055 [US2] Write integration test for fail-fast validation in server/src/__test__/announcements.test.ts (multiple errors, returns first only)
+- [X] T056 [US2] Write integration test for invalid status in server/src/__test__/announcements.test.ts (not MISSING or FOUND)
+- [X] T057 [US2] Write integration test for invalid age in server/src/__test__/announcements.test.ts (negative or zero)
+- [X] T058 [US2] Write integration test for invalid coordinates in server/src/__test__/announcements.test.ts (non-numeric)
+- [X] T059 [US2] Write integration test for out-of-range coordinates in server/src/__test__/announcements.test.ts (latitude > 90)
+- [X] T060 [US2] Write integration test for invalid photoUrl in server/src/__test__/announcements.test.ts (not http/https)
+- [X] T061 [US2] Write integration test for future lastSeenDate in server/src/__test__/announcements.test.ts
+- [X] T062 [US2] Write integration test for payload too large in server/src/__test__/announcements.test.ts (>10MB, HTTP 413)
+- [X] T063 [US2] Verify all User Story 2 integration tests pass with `npm test -- announcements.test.ts`
 
 ---
 
@@ -442,7 +442,7 @@ All implementation tasks follow Test-Driven Development (Red-Green-Refactor):
 - [X] **Phase 1**: Dependencies installed, database schema created
 - [X] **Phase 2**: All utility functions implemented with ≥80% test coverage
 - [X] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
-- [ ] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
+- [X] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
 - [ ] **Phase 5**: Duplicate prevention functional, User Story 3 acceptance scenarios pass
 - [ ] **Phase 6**: Code quality verified, manual testing completed, documentation updated
 

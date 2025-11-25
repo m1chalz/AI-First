@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import server from '../server.ts';
 import { db } from '../database/db-utils.ts';
@@ -353,84 +353,6 @@ describe('POST /api/v1/announcements', () => {
     });
   });
 
-  it('should return 400 when invalid email format', async () => {
-    // given
-    const data = {
-      species: 'Dog',
-      sex: 'MALE',
-      lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
-      status: 'MISSING',
-      locationLatitude: 40.785091,
-      locationLongitude: -73.968285,
-      email: 'invalid-email'
-    };
-    
-    // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
-    // then
-    expect(response.body.error).toMatchObject({
-      code: 'INVALID_FORMAT',
-      field: 'email'
-    });
-  });
-
-  it('should return 400 when invalid status', async () => {
-    // given
-    const data = {
-      species: 'Dog',
-      sex: 'MALE',
-      lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
-      status: 'UNKNOWN',
-      locationLatitude: 40.785091,
-      locationLongitude: -73.968285,
-      email: 'john@example.com'
-    };
-    
-    // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
-    // then
-    expect(response.body.error).toMatchObject({
-      code: 'INVALID_FORMAT',
-      field: 'status'
-    });
-  });
-
-  it('should return 400 when latitude out of range', async () => {
-    // given
-    const data = {
-      species: 'Dog',
-      sex: 'MALE',
-      lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
-      status: 'MISSING',
-      locationLatitude: 100,
-      locationLongitude: -73.968285,
-      email: 'john@example.com'
-    };
-    
-    // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
-    // then
-    expect(response.body.error).toMatchObject({
-      code: 'INVALID_FORMAT',
-      field: 'locationLatitude'
-    });
-  });
-
   it('should sanitize text fields removing HTML tags', async () => {
     // given
     const data = {
@@ -460,41 +382,32 @@ describe('POST /api/v1/announcements', () => {
     expect(response.body.status).toBe(data.status);
   });
 
-  it('should include all optional fields in response', async () => {
+  it('should return 400 when unknown fields present', async () => {
     // given
     const data = {
-      petName: 'Buddy',
-      species: 'Golden Retriever',
-      breed: 'Purebred',
+      species: 'Dog',
       sex: 'MALE',
-      age: 5,
-      description: 'Friendly dog',
-      microchipNumber: '123456789',
-      locationCity: 'New York',
-      locationLatitude: 40.785091,
-      locationLongitude: -73.968285,
-      locationRadius: 5,
       lastSeenDate: '2025-11-20',
       photoUrl: 'https://example.com/photo.jpg',
-      status: 'MISSING' as const,
+      status: 'MISSING',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
       email: 'john@example.com',
-      phone: '+1 555 123 4567',
-      reward: '500 USD'
+      unknownField: 'value' // Unknown field
     };
     
     // when
     const response = await request(server)
       .post('/api/v1/announcements')
       .send(data)
-      .expect(201);
+      .expect(400);
     
     // then
-    expect(response.body.petName).toBe('Buddy');
-    expect(response.body.breed).toBe('Purebred');
-    expect(response.body.age).toBe(5);
-    expect(response.body.microchipNumber).toBe('123456789');
-    expect(response.body.locationCity).toBe('New York');
-    expect(response.body.locationRadius).toBe(5);
-    expect(response.body.reward).toBe('500 USD');
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_FIELD',
+      field: 'unknownField'
+    });
   });
+
+
 });
