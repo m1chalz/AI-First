@@ -61,26 +61,13 @@ class PetDetailsViewModel: ObservableObject {
     /// Formats microchip number as 000-000-000-000 if it's a plain number
     var formattedMicrochip: String {
         guard case .loaded(let petDetails) = state else { return "—" }
-        guard let microchip = petDetails.microchipNumber else { return "—" }
-        
-        // Format as 000-000-000-000 if it's a plain number
-        let digits = microchip.filter { $0.isNumber }
-        guard digits.count >= 12 else { return microchip }
-        
-        let formatted = digits.enumerated().map { index, char -> String in
-            if index > 0 && index % 3 == 0 && index < 12 {
-                return "-\(char)"
-            }
-            return String(char)
-        }.joined()
-        
-        return formatted
+        return formatMicrochip(petDetails.microchipNumber)
     }
     
-    /// Returns capitalized species name
+    /// Returns formatted species name
     var formattedSpecies: String {
         guard case .loaded(let petDetails) = state else { return "" }
-        return petDetails.species.capitalized
+        return petDetails.species.displayName
     }
     
     /// Returns gender symbol (Unicode character)
@@ -99,20 +86,7 @@ class PetDetailsViewModel: ObservableObject {
     /// Returns formatted date string (MMM dd, yyyy format)
     var formattedDate: String {
         guard case .loaded(let petDetails) = state else { return "" }
-        // Input format: YYYY-MM-DD (e.g., "2025-11-18")
-        // Output format: MMM DD, YYYY (e.g., "Nov 18, 2025")
-        
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let date = inputFormatter.date(from: petDetails.lastSeenDate) else {
-            return petDetails.lastSeenDate // Return as-is if parsing fails
-        }
-        
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "MMM dd, yyyy"
-        
-        return outputFormatter.string(from: date)
+        return formatDate(petDetails.lastSeenDate)
     }
     
     /// Returns formatted coordinates string (latitude, longitude)
@@ -136,63 +110,6 @@ class PetDetailsViewModel: ObservableObject {
             status: petDetails.status,
             rewardText: petDetails.reward
         )
-    }
-    
-    // MARK: - Static Formatting Helpers (for testing and reuse)
-    
-    /// Static helper to format microchip number
-    static func formatMicrochip(_ microchip: String?) -> String {
-        guard let microchip = microchip else { return "—" }
-        
-        let digits = microchip.filter { $0.isNumber }
-        guard digits.count >= 12 else { return microchip }
-        
-        let formatted = digits.enumerated().map { index, char -> String in
-            if index > 0 && index % 3 == 0 && index < 12 {
-                return "-\(char)"
-            }
-            return String(char)
-        }.joined()
-        
-        return formatted
-    }
-    
-    /// Static helper to format species
-    static func formatSpecies(_ species: String) -> String {
-        return species.capitalized
-    }
-    
-    /// Static helper to get gender symbol (Unicode character)
-    static func genderSymbol(_ gender: AnimalGender) -> String {
-        switch gender {
-        case .male:
-            return "♂"
-        case .female:
-            return "♀"
-        case .unknown:
-            return "?"
-        }
-    }
-    
-    /// Static helper to format date string
-    static func formatDate(_ dateString: String) -> String {
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let date = inputFormatter.date(from: dateString) else {
-            return dateString
-        }
-        
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "MMM dd, yyyy"
-        
-        return outputFormatter.string(from: date)
-    }
-    
-    /// Static helper to format radius
-    static func formatRadius(_ radius: Int?) -> String? {
-        guard let radius = radius else { return nil }
-        return L10n.PetDetails.Location.radiusFormat(radius)
     }
 
     /// Retries loading pet details after an error
@@ -219,6 +136,42 @@ class PetDetailsViewModel: ObservableObject {
     func handleShowMap() {
         print("Show on the map button tapped (placeholder)")
         // TODO: Implement map view navigation in future feature
+    }
+}
+
+// MARK: - Private Formatting Helpers
+
+private extension PetDetailsViewModel {
+    /// Formats microchip number as 000-000-000-000 if it's a plain number
+    func formatMicrochip(_ microchip: String?) -> String {
+        guard let microchip = microchip else { return "—" }
+        
+        let digits = microchip.filter { $0.isNumber }
+        guard digits.count >= 12 else { return microchip }
+        
+        let formatted = digits.enumerated().map { index, char -> String in
+            if index > 0 && index % 3 == 0 && index < 12 {
+                return "-\(char)"
+            }
+            return String(char)
+        }.joined()
+        
+        return formatted
+    }
+    
+    /// Formats date string from YYYY-MM-DD to MMM dd, yyyy format
+    func formatDate(_ dateString: String) -> String {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd"
+        
+        guard let date = inputFormatter.date(from: dateString) else {
+            return dateString
+        }
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MMM dd, yyyy"
+        
+        return outputFormatter.string(from: date)
     }
 }
 

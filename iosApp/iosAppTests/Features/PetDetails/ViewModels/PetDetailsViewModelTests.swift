@@ -68,7 +68,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             photoUrl: photoUrl,
             status: status,
             lastSeenDate: "2025-11-20",
-            species: "DOG",
+            species: .dog,
             gender: .male,
             description: "Test description",
             phone: "+48 123 456 789",
@@ -354,7 +354,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(result, "")
     }
     
-    func testFormattedSpecies_whenSpeciesIsUppercase_shouldReturnCapitalized() async {
+    func testFormattedSpecies_whenSpeciesIsDog_shouldReturnDisplayName() async {
         // Given
         let (sut, repository) = makeSUT()
         var petDetails = makeMockPetDetails()
@@ -364,7 +364,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             photoUrl: petDetails.photoUrl,
             status: petDetails.status,
             lastSeenDate: petDetails.lastSeenDate,
-            species: "DOG",
+            species: .dog,
             gender: petDetails.gender,
             description: petDetails.description,
             phone: petDetails.phone,
@@ -386,7 +386,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         let result = sut.formattedSpecies
         
         // Then
-        XCTAssertEqual(result, "Dog")
+        XCTAssertEqual(result, L10n.AnimalSpecies.dog)
     }
     
     func testGenderSymbol_whenStateIsLoading_shouldReturnQuestionMark() {
@@ -737,81 +737,5 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(result, "52.2297, 21.0122")
     }
     
-    // MARK: - Static Formatter Tests
-    
-    func testStaticFormatMicrochip_whenMicrochipIsNil_shouldReturnDash() {
-        // Given + When
-        let result = PetDetailsViewModel.formatMicrochip(nil)
-        
-        // Then
-        XCTAssertEqual(result, "—")
-    }
-    
-    func testStaticFormatMicrochip_whenMicrochipHas12Digits_shouldFormatWithDashes() {
-        // Given + When
-        let result = PetDetailsViewModel.formatMicrochip("123456789012")
-        
-        // Then
-        XCTAssertEqual(result, "123-456-789-012")
-    }
-    
-    func testStaticFormatSpecies_whenSpeciesIsUppercase_shouldReturnCapitalized() {
-        // Given + When
-        let result = PetDetailsViewModel.formatSpecies("DOG")
-        
-        // Then
-        XCTAssertEqual(result, "Dog")
-    }
-    
-    func testStaticGenderSymbol_whenGenderIsMale_shouldReturnMarsSymbol() {
-        // Given + When
-        let result = PetDetailsViewModel.genderSymbol(.male)
-        
-        // Then
-        XCTAssertEqual(result, "♂")
-    }
-    
-    func testStaticGenderSymbol_whenGenderIsFemale_shouldReturnVenusSymbol() {
-        // Given + When
-        let result = PetDetailsViewModel.genderSymbol(.female)
-        
-        // Then
-        XCTAssertEqual(result, "♀")
-    }
-    
-    func testStaticGenderSymbol_whenGenderIsUnknown_shouldReturnQuestionMark() {
-        // Given + When
-        let result = PetDetailsViewModel.genderSymbol(.unknown)
-        
-        // Then
-        XCTAssertEqual(result, "?")
-    }
-    
-    func testStaticFormatDate_whenDateIsValid_shouldFormatCorrectly() {
-        // Given + When
-        let result = PetDetailsViewModel.formatDate("2025-11-20")
-        
-        // Then
-        XCTAssertEqual(result, "Nov 20, 2025")
-    }
-    
-    func testStaticFormatRadius_whenRadiusIsNil_shouldReturnNil() {
-        // Given + When
-        let result = PetDetailsViewModel.formatRadius(nil)
-        
-        // Then
-        XCTAssertNil(result)
-    }
-    
-    func testStaticFormatRadius_whenRadiusIsValid_shouldReturnFormattedString() {
-        // Given + When
-        let result = PetDetailsViewModel.formatRadius(5)
-        
-        // Then
-        XCTAssertNotNil(result)
-        if let radiusText = result {
-            XCTAssertFalse(radiusText.isEmpty)
-        }
-    }
 }
 
