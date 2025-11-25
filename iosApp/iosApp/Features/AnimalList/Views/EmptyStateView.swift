@@ -4,10 +4,10 @@ import SwiftUI
  * SwiftUI view for displaying empty state when no animals are available.
  * Shows user-friendly message encouraging action.
  *
- * - Parameter model: Empty state presentation data (EmptyStateModel)
+ * - Parameter model: Empty state presentation data (EmptyStateView.Model)
  */
 struct EmptyStateView: View {
-    let model: EmptyStateModel
+    let model: Model
     
     var body: some View {
         VStack {

@@ -45,7 +45,7 @@ struct AnimalListView: View {
                 ))
             } else if viewModel.isEmpty {
                 // Empty state
-                EmptyStateView(model: EmptyStateModel.default)
+                EmptyStateView(model: .default)
             } else {
                 // Animal list
                 ScrollView {
