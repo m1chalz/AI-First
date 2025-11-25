@@ -69,7 +69,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             status: status,
             lastSeenDate: "2025-11-20",
             species: "DOG",
-            gender: "MALE",
+            gender: .male,
             description: "Test description",
             phone: "+48 123 456 789",
             email: "test@example.com",
@@ -411,7 +411,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             status: petDetails.status,
             lastSeenDate: petDetails.lastSeenDate,
             species: petDetails.species,
-            gender: "MALE",
+            gender: .male,
             description: petDetails.description,
             phone: petDetails.phone,
             email: petDetails.email,
@@ -446,7 +446,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             status: petDetails.status,
             lastSeenDate: petDetails.lastSeenDate,
             species: petDetails.species,
-            gender: "FEMALE",
+            gender: .female,
             description: petDetails.description,
             phone: petDetails.phone,
             email: petDetails.email,
@@ -481,7 +481,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             status: petDetails.status,
             lastSeenDate: petDetails.lastSeenDate,
             species: petDetails.species,
-            gender: "UNKNOWN",
+            gender: .unknown,
             description: petDetails.description,
             phone: petDetails.phone,
             email: petDetails.email,
@@ -765,7 +765,7 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     func testStaticGenderSymbol_whenGenderIsMale_shouldReturnMarsSymbol() {
         // Given + When
-        let result = PetDetailsViewModel.genderSymbol("MALE")
+        let result = PetDetailsViewModel.genderSymbol(.male)
         
         // Then
         XCTAssertEqual(result, "♂")
@@ -773,10 +773,18 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     func testStaticGenderSymbol_whenGenderIsFemale_shouldReturnVenusSymbol() {
         // Given + When
-        let result = PetDetailsViewModel.genderSymbol("FEMALE")
+        let result = PetDetailsViewModel.genderSymbol(.female)
         
         // Then
         XCTAssertEqual(result, "♀")
+    }
+    
+    func testStaticGenderSymbol_whenGenderIsUnknown_shouldReturnQuestionMark() {
+        // Given + When
+        let result = PetDetailsViewModel.genderSymbol(.unknown)
+        
+        // Then
+        XCTAssertEqual(result, "?")
     }
     
     func testStaticFormatDate_whenDateIsValid_shouldFormatCorrectly() {

@@ -129,7 +129,7 @@ struct PetDetailsView: View {
                                     .font(.system(size: 20))
                                     .foregroundColor(Color(hex: "#155dfc"))
                                 
-                                Text(petDetails.gender.capitalized)
+                                Text(petDetails.gender.displayName)
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#101828"))
                             }
@@ -242,7 +242,7 @@ struct PetDetailsView_Previews: PreviewProvider {
                     status: .active,
                     lastSeenDate: "2025-11-20",
                     species: "DOG",
-                    gender: "MALE",
+                    gender: .male,
                     description: "Friendly and energetic golden retriever looking for a loving home. Great with kids and other pets.",
                     phone: "+48 123 456 789",
                     email: "test@example.com",

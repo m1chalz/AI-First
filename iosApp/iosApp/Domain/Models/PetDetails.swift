@@ -23,8 +23,8 @@ struct PetDetails: Identifiable, Codable {
     /// Species of the pet (e.g., "DOG", "CAT")
     let species: String
     
-    /// Sex of the pet (MALE, FEMALE, or UNKNOWN - uppercase from backend)
-    let gender: String
+    /// Sex of the pet (MALE, FEMALE, or UNKNOWN)
+    let gender: AnimalGender
     
     /// Additional description text (required in backend, multi-line)
     let description: String

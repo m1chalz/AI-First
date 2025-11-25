@@ -86,12 +86,12 @@ class PetDetailsViewModel: ObservableObject {
     /// Returns gender symbol (Unicode character)
     var genderSymbol: String {
         guard case .loaded(let petDetails) = state else { return "?" }
-        switch petDetails.gender.uppercased() {
-        case "MALE":
+        switch petDetails.gender {
+        case .male:
             return "♂"
-        case "FEMALE":
+        case .female:
             return "♀"
-        default:
+        case .unknown:
             return "?"
         }
     }
@@ -163,13 +163,13 @@ class PetDetailsViewModel: ObservableObject {
     }
     
     /// Static helper to get gender symbol (Unicode character)
-    static func genderSymbol(_ gender: String) -> String {
-        switch gender.uppercased() {
-        case "MALE":
+    static func genderSymbol(_ gender: AnimalGender) -> String {
+        switch gender {
+        case .male:
             return "♂"
-        case "FEMALE":
+        case .female:
             return "♀"
-        default:
+        case .unknown:
             return "?"
         }
     }
