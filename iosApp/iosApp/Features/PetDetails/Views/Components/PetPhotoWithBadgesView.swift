@@ -58,7 +58,6 @@ struct PetPhotoWithBadgesView: View {
                         }
                     }
                 )
-                .clipped()
                 .accessibilityIdentifier("petDetails.photo.image")
         } else {
             imagePlaceholder
@@ -75,7 +74,7 @@ struct PetPhotoWithBadgesView: View {
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.gray.opacity(0.1))
+        .background(Color.red)
         .accessibilityIdentifier("petDetails.photo.image")
     }
     
