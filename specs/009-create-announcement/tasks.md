@@ -126,36 +126,36 @@ Each phase delivers a complete, independently testable increment.
 
 #### Type Definitions
 
-- [ ] T022 [US1] Create CreateAnnouncementDto interface in server/src/types/announcement.ts (all request fields)
-- [ ] T023 [US1] Create AnnouncementDto interface in server/src/types/announcement.ts (extends CreateAnnouncementDto with id, createdAt, managementPassword)
+- [X] T022 [US1] Create CreateAnnouncementDto interface in server/src/types/announcement.ts (all request fields)
+- [X] T023 [US1] Create AnnouncementDto interface in server/src/types/announcement.ts (extends CreateAnnouncementDto with id, createdAt, managementPassword)
 
 #### Zod Validation Schema
 
-- [ ] T024 [US1] Create Zod schema in server/src/services/announcement-service.ts (required fields, basic format validation, .strict() mode)
-- [ ] T025 [US1] Add contact method refinement to Zod schema (email OR phone required)
+- [X] T024 [US1] Create Zod schema in server/src/services/announcement-service.ts (required fields, basic format validation, .strict() mode)
+- [X] T025 [US1] Add contact method refinement to Zod schema (email OR phone required)
 
 #### Service Layer (TDD)
 
-- [ ] T026 [US1] Write failing unit tests for createAnnouncement() success case in server/src/services/__test__/announcement-service.test.ts
-- [ ] T027 [US1] Implement createAnnouncement() function in server/src/services/announcement-service.ts (validation, sanitization, password generation, database insert)
-- [ ] T028 [US1] Verify service unit tests pass with `npm test -- announcement-service.test.ts`
+- [X] T026 [US1] Write failing unit tests for createAnnouncement() success case in server/src/services/__test__/announcement-service.test.ts
+- [X] T027 [US1] Implement createAnnouncement() function in server/src/services/announcement-service.ts (validation, sanitization, password generation, database insert)
+- [X] T028 [US1] Verify service unit tests pass with `npm test -- announcement-service.test.ts`
 
 #### Route Layer
 
-- [ ] T029 [US1] Create POST /announcements route handler in server/src/routes/announcements.ts (call service, return 201)
-- [ ] T030 [US1] Create error handler middleware in server/src/middlewares/error-handler.ts (handle ValidationError, ConflictError, payload size, generic errors)
-- [ ] T031 [US1] Register announcement routes in server/src/app.ts (set 10MB payload limit, register error handler)
+- [X] T029 [US1] Create POST /announcements route handler in server/src/routes/announcements.ts (call service, return 201)
+- [X] T030 [US1] Create error handler middleware in server/src/middlewares/error-handler.ts (handle ValidationError, ConflictError, payload size, generic errors)
+- [X] T031 [US1] Register announcement routes in server/src/app.ts (set 10MB payload limit, register error handler)
 
 #### Integration Tests (TDD)
 
-- [ ] T032 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (email contact)
-- [ ] T033 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (phone contact)
-- [ ] T034 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (both email and phone)
-- [ ] T035 [US1] Write integration test for microchip number in server/src/__test__/announcements.test.ts (unique microchip)
-- [ ] T036 [US1] Write integration test for status field in server/src/__test__/announcements.test.ts (MISSING status)
-- [ ] T037 [US1] Write integration test for status field in server/src/__test__/announcements.test.ts (FOUND status)
-- [ ] T038 [US1] Write integration test for managementPassword in server/src/__test__/announcements.test.ts (6-digit returned in POST)
-- [ ] T039 [US1] Verify all User Story 1 integration tests pass with `npm test -- announcements.test.ts`
+- [X] T032 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (email contact)
+- [X] T033 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (phone contact)
+- [X] T034 [US1] Write integration test for successful announcement creation in server/src/__test__/announcements.test.ts (both email and phone)
+- [X] T035 [US1] Write integration test for microchip number in server/src/__test__/announcements.test.ts (unique microchip)
+- [X] T036 [US1] Write integration test for status field in server/src/__test__/announcements.test.ts (MISSING status)
+- [X] T037 [US1] Write integration test for status field in server/src/__test__/announcements.test.ts (FOUND status)
+- [X] T038 [US1] Write integration test for managementPassword in server/src/__test__/announcements.test.ts (6-digit returned in POST)
+- [X] T039 [US1] Verify all User Story 1 integration tests pass with `npm test -- announcements.test.ts`
 
 ---
 
@@ -441,7 +441,7 @@ All implementation tasks follow Test-Driven Development (Red-Green-Refactor):
 
 - [X] **Phase 1**: Dependencies installed, database schema created
 - [X] **Phase 2**: All utility functions implemented with ≥80% test coverage
-- [ ] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
+- [X] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
 - [ ] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
 - [ ] **Phase 5**: Duplicate prevention functional, User Story 3 acceptance scenarios pass
 - [ ] **Phase 6**: Code quality verified, manual testing completed, documentation updated

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
 import server from '../server.ts';
 import { db } from '../database/db-utils.ts';
@@ -9,15 +9,23 @@ const TEST_ANNOUNCEMENT_1 = {
   pet_name: 'Azor',
   species: 'DOG',
   breed: 'Owczarek niemiecki',
-  gender: 'MALE',
+  sex: 'MALE',
+  age: 5,
   description: 'Duży owczarek niemiecki, bardzo przyjazny. Nosi czerwoną obrożę.',
-  location: 'Gdynia',
+  microchip_number: null,
+  location_city: 'Gdynia',
+  location_latitude: 54.48,
+  location_longitude: 18.53,
   location_radius: 10,
   last_seen_date: '2025-11-19',
   email: 'test@example.pl',
   phone: '+48 600 700 800',
   photo_url: 'https://example.com/azor.jpg',
-  status: 'ACTIVE',
+  status: 'MISSING',
+  reward: null,
+  management_password_hash: 'test_hash_1',
+  created_at: '2025-11-19T10:00:00.000Z',
+  updated_at: '2025-11-19T10:00:00.000Z',
 };
 
 const TEST_ANNOUNCEMENT_2 = {
@@ -25,15 +33,23 @@ const TEST_ANNOUNCEMENT_2 = {
   pet_name: 'Filemon',
   species: 'CAT',
   breed: null,
-  gender: 'MALE',
+  sex: 'MALE',
+  age: 3,
   description: 'Rudy kot, bardzo nieśmiały.',
-  location: 'Sopot',
+  microchip_number: null,
+  location_city: 'Sopot',
+  location_latitude: 54.43,
+  location_longitude: 18.57,
   location_radius: null,
   last_seen_date: '2025-11-18',
   email: null,
   phone: '555-123-456',
-  photo_url: null,
-  status: 'ACTIVE',
+  photo_url: 'https://example.com/filemon.jpg',
+  status: 'FOUND',
+  reward: null,
+  management_password_hash: 'test_hash_2',
+  created_at: '2025-11-18T12:00:00.000Z',
+  updated_at: '2025-11-18T12:00:00.000Z',
 };
 
 describe('GET /api/v1/announcements', () => {
@@ -64,15 +80,20 @@ describe('GET /api/v1/announcements', () => {
       petName: TEST_ANNOUNCEMENT_1.pet_name,
       species: TEST_ANNOUNCEMENT_1.species,
       breed: TEST_ANNOUNCEMENT_1.breed,
-      gender: TEST_ANNOUNCEMENT_1.gender,
+      sex: TEST_ANNOUNCEMENT_1.sex,
+      age: TEST_ANNOUNCEMENT_1.age,
       description: TEST_ANNOUNCEMENT_1.description,
-      location: TEST_ANNOUNCEMENT_1.location,
+      microchipNumber: TEST_ANNOUNCEMENT_1.microchip_number,
+      locationCity: TEST_ANNOUNCEMENT_1.location_city,
+      locationLatitude: TEST_ANNOUNCEMENT_1.location_latitude,
+      locationLongitude: TEST_ANNOUNCEMENT_1.location_longitude,
       locationRadius: TEST_ANNOUNCEMENT_1.location_radius,
       lastSeenDate: TEST_ANNOUNCEMENT_1.last_seen_date,
       email: TEST_ANNOUNCEMENT_1.email,
       phone: TEST_ANNOUNCEMENT_1.phone,
       photoUrl: TEST_ANNOUNCEMENT_1.photo_url,
       status: TEST_ANNOUNCEMENT_1.status,
+      reward: TEST_ANNOUNCEMENT_1.reward,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
     });
@@ -111,15 +132,20 @@ describe('GET /api/v1/announcements/:id', () => {
       petName: TEST_ANNOUNCEMENT_1.pet_name,
       species: TEST_ANNOUNCEMENT_1.species,
       breed: TEST_ANNOUNCEMENT_1.breed,
-      gender: TEST_ANNOUNCEMENT_1.gender,
+      sex: TEST_ANNOUNCEMENT_1.sex,
+      age: TEST_ANNOUNCEMENT_1.age,
       description: TEST_ANNOUNCEMENT_1.description,
-      location: TEST_ANNOUNCEMENT_1.location,
+      microchipNumber: TEST_ANNOUNCEMENT_1.microchip_number,
+      locationCity: TEST_ANNOUNCEMENT_1.location_city,
+      locationLatitude: TEST_ANNOUNCEMENT_1.location_latitude,
+      locationLongitude: TEST_ANNOUNCEMENT_1.location_longitude,
       locationRadius: TEST_ANNOUNCEMENT_1.location_radius,
       lastSeenDate: TEST_ANNOUNCEMENT_1.last_seen_date,
       email: TEST_ANNOUNCEMENT_1.email,
       phone: TEST_ANNOUNCEMENT_1.phone,
       photoUrl: TEST_ANNOUNCEMENT_1.photo_url,
       status: TEST_ANNOUNCEMENT_1.status,
+      reward: TEST_ANNOUNCEMENT_1.reward,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
     });
@@ -158,7 +184,317 @@ describe('GET /api/v1/announcements/:id', () => {
     // Then: Response includes null optional fields
     expect(response.body.breed).toBeNull();
     expect(response.body.email).toBeNull();
-    expect(response.body.photoUrl).toBeNull();
     expect(response.body.locationRadius).toBeNull();
+    expect(response.body.microchipNumber).toBeNull();
+  });
+});
+
+describe('POST /api/v1/announcements', () => {
+  beforeEach(async () => {
+    await db('announcement').del();
+  });
+
+  it('should create announcement with email contact and return 201', async () => {
+    // given
+    const data = {
+      species: 'Golden Retriever',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING' as const,
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'john@example.com'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(201);
+    
+    // then
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('managementPassword');
+    expect(response.body).not.toHaveProperty('managementPasswordHash');
+    expect(response.body.managementPassword).toMatch(/^\d{6}$/);
+    expect(response.body.species).toBe(data.species);
+    expect(response.body.email).toBe(data.email);
+    expect(response.body.status).toBe(data.status);
+  });
+
+  it('should create announcement with all fields and return 201', async () => {
+    // given
+    const data = {
+      petName: 'Buddy',
+      species: 'Golden Retriever',
+      breed: 'Purebred',
+      sex: 'MALE',
+      age: 5,
+      description: 'Friendly dog with brown fur',
+      microchipNumber: '123456789012345',
+      locationCity: 'New York',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      locationRadius: 5,
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING' as const,
+      email: 'john@example.com',
+      phone: '+1 555 123 4567',
+      reward: '500 USD'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(201);
+    
+    // then
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('managementPassword');
+    expect(response.body).not.toHaveProperty('managementPasswordHash');
+    expect(response.body.managementPassword).toMatch(/^\d{6}$/);
+    expect(response.body.petName).toBe(data.petName);
+    expect(response.body.species).toBe(data.species);
+    expect(response.body.breed).toBe(data.breed);
+    expect(response.body.sex).toBe(data.sex);
+    expect(response.body.age).toBe(data.age);
+    expect(response.body.description).toBe(data.description);
+    expect(response.body.microchipNumber).toBe(data.microchipNumber);
+    expect(response.body.locationCity).toBe(data.locationCity);
+    expect(response.body.locationLatitude).toBe(data.locationLatitude);
+    expect(response.body.locationLongitude).toBe(data.locationLongitude);
+    expect(response.body.locationRadius).toBe(data.locationRadius);
+    expect(response.body.lastSeenDate).toBe(data.lastSeenDate);
+    expect(response.body.photoUrl).toBe(data.photoUrl);
+    expect(response.body.status).toBe(data.status);
+    expect(response.body.email).toBe(data.email);
+    expect(response.body.phone).toBe(data.phone);
+    expect(response.body.reward).toBe(data.reward);
+    expect(response.body).toHaveProperty('createdAt');
+    expect(response.body).toHaveProperty('updatedAt');
+  });
+
+  it('should create announcement with phone contact and return 201', async () => {
+    // given
+    const data = {
+      species: 'Siamese Cat',
+      sex: 'FEMALE',
+      lastSeenDate: '2025-11-19',
+      photoUrl: 'https://example.com/cat.jpg',
+      status: 'FOUND' as const,
+      locationLatitude: 51.5074,
+      locationLongitude: -0.1278,
+      phone: '+44 20 7946 0958'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(201);
+    
+    // then
+    expect(response.body.id).toBeDefined();
+    expect(response.body.managementPassword).toMatch(/^\d{6}$/);
+    expect(response.body.phone).toBe(data.phone);
+    expect(response.body.status).toBe(data.status);
+  });
+
+  it('should return 400 when missing required species field', async () => {
+    // given
+    const data = {
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'john@example.com'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(400);
+    
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'MISSING_VALUE',
+      field: 'species'
+    });
+  });
+
+  it('should return 400 when no contact method provided', async () => {
+    // given
+    const data = {
+      species: 'Dog',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(400);
+    
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'MISSING_CONTACT',
+      field: 'contact'
+    });
+  });
+
+  it('should return 400 when invalid email format', async () => {
+    // given
+    const data = {
+      species: 'Dog',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'invalid-email'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(400);
+    
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_FORMAT',
+      field: 'email'
+    });
+  });
+
+  it('should return 400 when invalid status', async () => {
+    // given
+    const data = {
+      species: 'Dog',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'UNKNOWN',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'john@example.com'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(400);
+    
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_FORMAT',
+      field: 'status'
+    });
+  });
+
+  it('should return 400 when latitude out of range', async () => {
+    // given
+    const data = {
+      species: 'Dog',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING',
+      locationLatitude: 100,
+      locationLongitude: -73.968285,
+      email: 'john@example.com'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(400);
+    
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_FORMAT',
+      field: 'locationLatitude'
+    });
+  });
+
+  it('should sanitize text fields removing HTML tags', async () => {
+    // given
+    const data = {
+      species: 'Golden<b>Retriever</b>',
+      sex: 'MALE',
+      description: '<img src=x onerror=alert(1)>Test<div>content</div>',
+      petName: '<div>Buddy</div>',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING' as const,
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'john@example.com'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(201);
+    
+    // then
+    expect(response.body.species).toBe('GoldenRetriever');
+    expect(response.body.petName).toBe('Buddy');
+    expect(response.body.description).toBe('Testcontent');
+    expect(response.body.email).toBe(data.email);
+    expect(response.body.status).toBe(data.status);
+  });
+
+  it('should include all optional fields in response', async () => {
+    // given
+    const data = {
+      petName: 'Buddy',
+      species: 'Golden Retriever',
+      breed: 'Purebred',
+      sex: 'MALE',
+      age: 5,
+      description: 'Friendly dog',
+      microchipNumber: '123456789',
+      locationCity: 'New York',
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      locationRadius: 5,
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo.jpg',
+      status: 'MISSING' as const,
+      email: 'john@example.com',
+      phone: '+1 555 123 4567',
+      reward: '500 USD'
+    };
+    
+    // when
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(data)
+      .expect(201);
+    
+    // then
+    expect(response.body.petName).toBe('Buddy');
+    expect(response.body.breed).toBe('Purebred');
+    expect(response.body.age).toBe(5);
+    expect(response.body.microchipNumber).toBe('123456789');
+    expect(response.body.locationCity).toBe('New York');
+    expect(response.body.locationRadius).toBe(5);
+    expect(response.body.reward).toBe('500 USD');
   });
 });
