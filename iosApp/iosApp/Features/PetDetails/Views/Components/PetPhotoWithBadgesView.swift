@@ -31,7 +31,6 @@ struct PetPhotoWithBadgesView: View {
                 }
             }
         }
-        .frame(height: 229)
     }
     
     // MARK: - Photo View
@@ -48,7 +47,6 @@ struct PetPhotoWithBadgesView: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: 300)
                         .clipped()
                 case .failure:
                     imagePlaceholder
@@ -135,6 +133,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
                 status: "MISSING",
                 rewardText: "$500 reward"
             ))
+            .frame(height: 229)
             
             // Found pet without reward
             PetPhotoWithBadgesView(model: .init(
@@ -142,6 +141,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
                 status: "FOUND",
                 rewardText: nil
             ))
+            .frame(height: 229)
             
             // No photo available
             PetPhotoWithBadgesView(model: .init(
@@ -149,6 +149,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
                 status: "MISSING",
                 rewardText: "$200"
             ))
+            .frame(height: 229)
         }
     }
 }
