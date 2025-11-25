@@ -112,30 +112,30 @@
 **Purpose**: Final validation, testing, and documentation
 
 ### Testing
-- [ ] T033 [P] Run Android unit tests: `./gradlew :composeApp:testDebugUnitTest` and verify all tests pass
-- [ ] T034 [P] Run Android coverage report: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify coverage maintained
-- [ ] T035 [P] Update mobile E2E test selectors to use `animalList.cardItem` and `animalList.reportButton` in `/e2e-tests/mobile/specs/` or `/e2e-tests/mobile/screens/`
+- [x] T033 [P] Run Android unit tests: `./gradlew :composeApp:testDebugUnitTest` and verify all tests pass
+- [x] T034 [P] Run Android coverage report: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify coverage maintained
+- [x] T035 [P] Update mobile E2E test selectors to use `animalList.cardItem` and `animalList.reportButton` in `/e2e-tests/mobile/specs/` or `/e2e-tests/mobile/screens/`
 - [ ] T036 [P] Run mobile E2E tests: `npm run test:mobile:android` and verify Animal List scenarios pass
 
 ### Visual Review
-- [ ] T037 [P] Compare implemented screen against Figma design (node-id=297-7556) for title styling
-- [ ] T038 [P] Compare implemented cards against Figma design for layout and colors
-- [ ] T039 [P] Compare implemented button against Figma design for shape and positioning
+- [x] T037 [P] Compare implemented screen against Figma design (node-id=297-7556) for title styling
+- [x] T038 [P] Compare implemented cards against Figma design for layout and colors
+- [x] T039 [P] Compare implemented button against Figma design for shape and positioning
 
 ### Manual Testing
-- [ ] T040 [P] Verify "PetSpot" title displays correctly
-- [ ] T041 [P] Verify card layout: photo, location row, species row, status badge, date
-- [ ] T042 [P] Verify card styling: border radius, border color, no shadow
-- [ ] T043 [P] Verify button: floating, pill-shaped, blue, icon
-- [ ] T044 [P] Verify all screen states (loading, populated, empty, error)
-- [ ] T045 [P] Verify scrolling behavior with many items
-- [ ] T046 [P] Verify navigation to animal details still works
-- [ ] T047 [P] Verify navigation to report missing still works
-- [ ] T048 [P] Verify iOS and Web remain unaffected
+- [x] T040 [P] Verify "PetSpot" title displays correctly
+- [x] T041 [P] Verify card layout: photo, location row, species row, status badge, date
+- [x] T042 [P] Verify card styling: border radius, border color, no shadow
+- [x] T043 [P] Verify button: floating, pill-shaped, blue, icon
+- [x] T044 [P] Verify all screen states (loading, populated, empty, error)
+- [x] T045 [P] Verify scrolling behavior with many items
+- [x] T046 [P] Verify navigation to animal details still works
+- [x] T047 [P] Verify navigation to report missing still works
+- [x] T048 [P] Verify iOS and Web remain unaffected
 
 ### Documentation
-- [ ] T049 [P] Update KDoc comments in `AnimalCard.kt` to reflect new design specifications
-- [ ] T050 [P] Update KDoc comments in `AnimalListContent.kt` if needed
+- [x] T049 [P] Update KDoc comments in `AnimalCard.kt` to reflect new design specifications
+- [x] T050 [P] Update KDoc comments in `AnimalListContent.kt` if needed
 
 ---
 

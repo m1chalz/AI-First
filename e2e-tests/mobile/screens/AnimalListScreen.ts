@@ -5,12 +5,13 @@
 export class AnimalListScreen {
     /**
      * Test IDs for animal list screen elements.
+     * Updated to match new Figma design specification (spec.md).
      */
     readonly testIds = {
         listContainer: 'animalList.list',
-        reportMissingButton: 'animalList.reportMissingButton',
+        reportMissingButton: 'animalList.reportButton',
         searchPlaceholder: 'animalList.searchPlaceholder',
-        animalCard: (id: string) => `animalList.item.${id}`,
+        animalCard: 'animalList.cardItem',
     };
 
     /**
@@ -36,18 +37,20 @@ export class AnimalListScreen {
 
     /**
      * Returns all animal card elements.
+     * Cards now have a generic testTag 'animalList.cardItem' (not per-animal IDs).
      */
     async getAnimalCards() {
-        // Note: WebdriverIO doesn't have direct prefix selector
-        // This will be implemented when actual mobile app is available
-        return $$('[name^="animalList.item."]');
+        return $$(`~${this.testIds.animalCard}`);
     }
 
     /**
-     * Returns a specific animal card by ID.
+     * Returns a specific animal card by index or first match.
+     * Note: Cards now use generic testTag 'animalList.cardItem' for all animals.
+     * To target a specific card, use index or list traversal.
      */
     getAnimalCard(id: string) {
-        return $(`~${this.testIds.animalCard(id)}`);
+        // First card with the generic testTag (or filter by list position)
+        return $(`~${this.testIds.animalCard}`);
     }
 }
 
