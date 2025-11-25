@@ -1,7 +1,7 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
-/// Unit tests for LabelValueRowModel
+/// Unit tests for LabelValueRow.Model
 /// Tests model initialization and equality
 final class LabelValueRowTests: XCTestCase {
     
@@ -9,7 +9,7 @@ final class LabelValueRowTests: XCTestCase {
     
     func testInit_withLabelAndValue_shouldSetProperties() {
         // Given + When
-        let model = LabelValueRowModel(
+        let model = LabelValueRow.Model(
             label: "Species",
             value: "Dog"
         )
@@ -17,7 +17,6 @@ final class LabelValueRowTests: XCTestCase {
         // Then
         XCTAssertEqual(model.label, "Species")
         XCTAssertEqual(model.value, "Dog")
-        XCTAssertNil(model.valueProcessor)
         XCTAssertNil(model.onTap)
     }
     
@@ -28,7 +27,7 @@ final class LabelValueRowTests: XCTestCase {
         }
         
         // When
-        let model = LabelValueRowModel(
+        let model = LabelValueRow.Model(
             label: "Name",
             value: "fluffy",
             valueProcessor: processor
@@ -36,12 +35,7 @@ final class LabelValueRowTests: XCTestCase {
         
         // Then
         XCTAssertEqual(model.label, "Name")
-        XCTAssertEqual(model.value, "fluffy")
-        XCTAssertNotNil(model.valueProcessor)
-        
-        // Test processor functionality
-        let processed = model.valueProcessor?("test")
-        XCTAssertEqual(processed, "TEST")
+        XCTAssertEqual(model.value, "FLUFFY")
     }
     
     func testInit_withOnTap_shouldSetTapHandler() {
@@ -52,7 +46,7 @@ final class LabelValueRowTests: XCTestCase {
         }
         
         // When
-        let model = LabelValueRowModel(
+        let model = LabelValueRow.Model(
             label: "Phone",
             value: "+48 123 456 789",
             onTap: tapHandler
@@ -70,8 +64,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenLabelAndValueMatch_shouldBeEqual() {
         // Given
-        let model1 = LabelValueRowModel(label: "Species", value: "Dog")
-        let model2 = LabelValueRowModel(label: "Species", value: "Dog")
+        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRow.Model(label: "Species", value: "Dog")
         
         // When + Then
         XCTAssertEqual(model1, model2)
@@ -79,8 +73,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenLabelDiffers_shouldNotBeEqual() {
         // Given
-        let model1 = LabelValueRowModel(label: "Species", value: "Dog")
-        let model2 = LabelValueRowModel(label: "Breed", value: "Dog")
+        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRow.Model(label: "Breed", value: "Dog")
         
         // When + Then
         XCTAssertNotEqual(model1, model2)
@@ -88,8 +82,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenValueDiffers_shouldNotBeEqual() {
         // Given
-        let model1 = LabelValueRowModel(label: "Species", value: "Dog")
-        let model2 = LabelValueRowModel(label: "Species", value: "Cat")
+        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRow.Model(label: "Species", value: "Cat")
         
         // When + Then
         XCTAssertNotEqual(model1, model2)
@@ -97,13 +91,13 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_shouldIgnoreClosures() {
         // Given
-        let model1 = LabelValueRowModel(
+        let model1 = LabelValueRow.Model(
             label: "Phone",
             value: "+48 123 456 789",
             valueProcessor: { $0.uppercased() },
             onTap: { print("tap1") }
         )
-        let model2 = LabelValueRowModel(
+        let model2 = LabelValueRow.Model(
             label: "Phone",
             value: "+48 123 456 789",
             valueProcessor: { $0.lowercased() }, // Different processor
@@ -117,12 +111,12 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_withNilValueProcessor_shouldBeEqual() {
         // Given
-        let model1 = LabelValueRowModel(
+        let model1 = LabelValueRow.Model(
             label: "Location",
             value: "Warsaw",
             valueProcessor: nil
         )
-        let model2 = LabelValueRowModel(
+        let model2 = LabelValueRow.Model(
             label: "Location",
             value: "Warsaw",
             valueProcessor: nil

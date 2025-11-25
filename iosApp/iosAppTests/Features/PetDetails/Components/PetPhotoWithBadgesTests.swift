@@ -1,7 +1,7 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
-/// Unit tests for PetPhotoWithBadgesModel
+/// Unit tests for PetPhotoWithBadges.Model
 /// Tests status mapping and model initialization
 final class PetPhotoWithBadgesTests: XCTestCase {
     
@@ -43,7 +43,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(status: "ACTIVE")
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertEqual(model.status, "MISSING")
@@ -54,7 +54,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(status: "FOUND")
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertEqual(model.status, "FOUND")
@@ -65,7 +65,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(status: "CLOSED")
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertEqual(model.status, "CLOSED")
@@ -77,7 +77,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(photoUrl: photoUrl)
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertEqual(model.imageUrl, photoUrl)
@@ -88,7 +88,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(photoUrl: nil)
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertNil(model.imageUrl)
@@ -100,7 +100,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(reward: reward)
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertEqual(model.rewardText, reward)
@@ -111,7 +111,7 @@ final class PetPhotoWithBadgesTests: XCTestCase {
         let petDetails = makeMockPetDetails(reward: nil)
         
         // When
-        let model = PetPhotoWithBadgesModel(from: petDetails)
+        let model = PetPhotoWithBadges.Model(from: petDetails)
         
         // Then
         XCTAssertNil(model.rewardText)
@@ -119,12 +119,12 @@ final class PetPhotoWithBadgesTests: XCTestCase {
     
     func testEquality_whenAllFieldsMatch_shouldBeEqual() {
         // Given
-        let model1 = PetPhotoWithBadgesModel(
+        let model1 = PetPhotoWithBadges.Model(
             imageUrl: "https://example.com/photo.jpg",
             status: "MISSING",
             rewardText: "$500"
         )
-        let model2 = PetPhotoWithBadgesModel(
+        let model2 = PetPhotoWithBadges.Model(
             imageUrl: "https://example.com/photo.jpg",
             status: "MISSING",
             rewardText: "$500"
@@ -136,12 +136,12 @@ final class PetPhotoWithBadgesTests: XCTestCase {
     
     func testEquality_whenStatusDiffers_shouldNotBeEqual() {
         // Given
-        let model1 = PetPhotoWithBadgesModel(
+        let model1 = PetPhotoWithBadges.Model(
             imageUrl: "https://example.com/photo.jpg",
             status: "MISSING",
             rewardText: nil
         )
-        let model2 = PetPhotoWithBadgesModel(
+        let model2 = PetPhotoWithBadges.Model(
             imageUrl: "https://example.com/photo.jpg",
             status: "FOUND",
             rewardText: nil

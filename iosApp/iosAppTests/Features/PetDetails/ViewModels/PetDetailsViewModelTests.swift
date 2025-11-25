@@ -1,8 +1,9 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for PetDetailsViewModel
 /// Tests cover loading states, error handling, and retry functionality
+@MainActor
 final class PetDetailsViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
@@ -84,7 +85,10 @@ final class PetDetailsViewModelTests: XCTestCase {
         let (sut, _) = makeSUT()
         
         // Then
-        XCTAssertEqual(sut.state, .loading)
+        guard case .loading = sut.state else {
+            XCTFail("Expected loading state, got \(sut.state)")
+            return
+        }
     }
     
     func testLoadPetDetails_whenRepositorySucceeds_shouldUpdateStateToLoaded() async {
