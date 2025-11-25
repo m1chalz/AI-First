@@ -73,14 +73,7 @@ class PetDetailsViewModel: ObservableObject {
     /// Returns gender symbol (Unicode character)
     var genderSymbol: String {
         guard case .loaded(let petDetails) = state else { return "?" }
-        switch petDetails.gender {
-        case .male:
-            return "♂"
-        case .female:
-            return "♀"
-        case .unknown:
-            return "?"
-        }
+        return formatGenderSymbol(petDetails.gender)
     }
     
     /// Returns formatted date string (MMM dd, yyyy format)
@@ -89,10 +82,11 @@ class PetDetailsViewModel: ObservableObject {
         return formatDate(petDetails.lastSeenDate)
     }
     
-    /// Returns formatted coordinates string (latitude, longitude)
+    /// Returns formatted coordinates string (latitude, longitude) with cardinal directions
+    /// Format: "52.2297° N, 21.0122° E"
     var formattedCoordinates: String {
         guard case .loaded(let petDetails) = state else { return "—" }
-        return String(format: "%.4f, %.4f", petDetails.latitude, petDetails.longitude)
+        return formatCoordinates(latitude: petDetails.latitude, longitude: petDetails.longitude)
     }
     
     /// Creates PetPhotoWithBadgesView.Model with pet details
@@ -165,6 +159,34 @@ private extension PetDetailsViewModel {
         outputFormatter.dateFormat = "MMM dd, yyyy"
         
         return outputFormatter.string(from: date)
+    }
+    
+    /// Formats coordinates with cardinal directions
+    /// Format: "52.2297° N, 21.0122° E"
+    /// - Parameters:
+    ///   - latitude: Latitude coordinate
+    ///   - longitude: Longitude coordinate
+    /// - Returns: Formatted string with degrees and cardinal directions
+    func formatCoordinates(latitude: Double, longitude: Double) -> String {
+        let latDirection = latitude >= 0 ? "N" : "S"
+        let lonDirection = longitude >= 0 ? "E" : "W"
+        let lat = abs(latitude)
+        let lon = abs(longitude)
+        return String(format: "%.4f° %@, %.4f° %@", lat, latDirection, lon, lonDirection)
+    }
+    
+    /// Returns gender symbol (Unicode character) for given gender
+    /// - Parameter gender: Animal gender
+    /// - Returns: Unicode symbol (♂ for male, ♀ for female, ? for unknown)
+    func formatGenderSymbol(_ gender: AnimalGender) -> String {
+        switch gender {
+        case .male:
+            return "♂"
+        case .female:
+            return "♀"
+        case .unknown:
+            return "?"
+        }
     }
 }
 

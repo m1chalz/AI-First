@@ -639,7 +639,58 @@ final class PetDetailsViewModelTests: XCTestCase {
         let result = sut.formattedCoordinates
         
         // Then
-        XCTAssertEqual(result, "52.2297, 21.0122")
+        XCTAssertEqual(result, "52.2297° N, 21.0122° E")
+    }
+    
+    func testFormattedCoordinates_whenLatitudeIsNegative_shouldShowSouth() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(
+            latitude: -33.8688,
+            longitude: 151.2093
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedCoordinates
+        
+        // Then
+        XCTAssertEqual(result, "33.8688° S, 151.2093° E")
+    }
+    
+    func testFormattedCoordinates_whenLongitudeIsNegative_shouldShowWest() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(
+            latitude: 40.7128,
+            longitude: -74.0060
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedCoordinates
+        
+        // Then
+        XCTAssertEqual(result, "40.7128° N, 74.0060° W")
+    }
+    
+    func testFormattedCoordinates_whenBothAreNegative_shouldShowSouthAndWest() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(
+            latitude: -34.6037,
+            longitude: -58.3816
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedCoordinates
+        
+        // Then
+        XCTAssertEqual(result, "34.6037° S, 58.3816° W")
     }
     
 }
