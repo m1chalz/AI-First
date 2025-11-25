@@ -1,7 +1,7 @@
 package com.intive.aifirst.petspot.di
 
+import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
 import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
-import com.intive.aifirst.petspot.domain.repositories.AnimalRepository
 import org.koin.dsl.module
 
 /**
@@ -14,8 +14,8 @@ import org.koin.dsl.module
  *
  * @see org.koin.dsl.module
  */
-val dataModule = module {
-    // Repository implementations
-    single<AnimalRepository> { AnimalRepositoryImpl() }
-}
-
+val dataModule =
+    module {
+        // Repository implementations
+        single<AnimalRepository> { AnimalRepositoryImpl() }
+    }

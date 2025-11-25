@@ -1,5 +1,4 @@
 import SwiftUI
-import Shared
 
 /**
  * Main SwiftUI view for displaying list of animals.

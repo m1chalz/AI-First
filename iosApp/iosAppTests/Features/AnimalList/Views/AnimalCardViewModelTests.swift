@@ -1,5 +1,4 @@
 import XCTest
-import Shared
 @testable import PetSpot
 
 /**
@@ -20,7 +19,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         name: String = "Buddy",
         breed: String = "Golden Retriever",
         city: String = "Warsaw",
-        radiusKm: Int32 = 5,
+        radiusKm: Int = 5,
         species: AnimalSpecies = .dog,
         status: AnimalStatus = .active,
         lastSeenDate: String = "20/11/2024"

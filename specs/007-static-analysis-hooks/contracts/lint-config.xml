@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Android Lint Configuration for PetSpot /composeApp Module
+     Version: 1.0.0
+     Date: 2025-11-19
+     
+     This configuration defines Android-specific static analysis rules for:
+     - /composeApp module (Android Compose UI)
+     
+     Usage:
+     - Copy this file to composeApp/lint.xml
+     - Run analysis: ./gradlew :composeApp:lintDebug
+     - Generate baseline: ./gradlew :composeApp:lintBaseline
+     - View report: open composeApp/build/reports/lint/lint.html
+     
+     Android Lint documentation: https://developer.android.com/studio/write/lint
+-->
+<lint>
+    <!-- ========================================= -->
+    <!-- ERROR-LEVEL RULES (Block Commits)         -->
+    <!-- ========================================= -->
+    
+    <!-- API Usage Errors -->
+    <issue id="NewApi" severity="error">
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+    </issue>
+    
+    <issue id="InlinedApi" severity="error">
+        <!-- Detects constants from newer Android versions inlined into older compilations -->
+    </issue>
+    
+    <issue id="Override" severity="error">
+        <ignore regexp=".*Test\.kt" />
+    </issue>
+    
+    <issue id="RequiresApi" severity="error">
+        <!-- Ensure @RequiresApi annotations are respected -->
+    </issue>
+    
+    <!-- Security & Privacy Errors -->
+    <issue id="HardcodedDebugMode" severity="error">
+        <!-- android:debuggable="true" in production -->
+    </issue>
+    
+    <issue id="SetJavaScriptEnabled" severity="error">
+        <!-- WebView with JavaScript enabled without proper validation -->
+    </issue>
+    
+    <issue id="AllowBackup" severity="error">
+        <!-- Missing or incorrect allowBackup configuration -->
+    </issue>
+    
+    <issue id="ExportedContentProvider" severity="error">
+        <!-- ContentProvider exported without proper permissions -->
+    </issue>
+    
+    <issue id="ExportedReceiver" severity="error">
+        <!-- BroadcastReceiver exported without permissions -->
+    </issue>
+    
+    <issue id="ExportedService" severity="error">
+        <!-- Service exported without permissions -->
+    </issue>
+    
+    <issue id="PackageManagerGetSignatures" severity="error">
+        <!-- Insecure signature verification -->
+    </issue>
+    
+    <issue id="TrustAllX509TrustManager" severity="error">
+        <!-- Insecure X509TrustManager implementation -->
+    </issue>
+    
+    <issue id="WorldReadableFiles" severity="error">
+        <!-- Files with world-readable permissions -->
+    </issue>
+    
+    <issue id="WorldWriteableFiles" severity="error">
+        <!-- Files with world-writable permissions -->
+    </issue>
+    
+    <!-- Critical Bugs -->
+    <issue id="StopShip" severity="error">
+        <!-- STOPSHIP comments in code (should never be committed) -->
+    </issue>
+    
+    <issue id="CommitTransaction" severity="error">
+        <!-- Fragment transaction not committed -->
+    </issue>
+    
+    <issue id="Recycle" severity="error">
+        <!-- Resources (TypedArray, VelocityTracker, etc.) not recycled -->
+    </issue>
+    
+    <issue id="WrongThread" severity="error">
+        <!-- Wrong thread annotation violations (e.g., UI work on background thread) -->
+    </issue>
+    
+    <issue id="MainThread" severity="error">
+        <!-- Non-UI work performed on main thread -->
+    </issue>
+    
+    <issue id="ResourceType" severity="error">
+        <!-- Wrong resource type passed to method -->
+    </issue>
+    
+    <issue id="WrongConstant" severity="error">
+        <!-- Wrong constant passed to method -->
+    </issue>
+    
+    <issue id="MissingPermission" severity="error">
+        <!-- Missing required permission -->
+    </issue>
+    
+    <issue id="ProtectedPermissions" severity="error">
+        <!-- Using protected system permissions -->
+    </issue>
+    
+    <!-- Jetpack Compose Errors -->
+    <issue id="ComposableNaming" severity="error">
+        <!-- Composable functions must be PascalCase -->
+    </issue>
+    
+    <issue id="ComposableLambdaParameterNaming" severity="error">
+        <!-- Composable lambda parameters should be named 'content' or similar -->
+    </issue>
+    
+    <issue id="ComposableModifierParameter" severity="error">
+        <!-- Composables should have a Modifier parameter -->
+    </issue>
+    
+    <issue id="ModifierParameter" severity="error">
+        <!-- Modifier parameter should be first optional parameter -->
+    </issue>
+    
+    <issue id="UnrememberedMutableState" severity="error">
+        <!-- mutableStateOf() without remember {} will reset on recomposition -->
+    </issue>
+    
+    <issue id="UnusedMaterial3ScaffoldPaddingParameter" severity="error">
+        <!-- Scaffold paddingValues parameter not used -->
+    </issue>
+    
+    <!-- Manifest Errors -->
+    <issue id="ManifestOrder" severity="error">
+        <!-- Incorrect AndroidManifest.xml element ordering -->
+    </issue>
+    
+    <issue id="MissingVersion" severity="error">
+        <!-- Missing versionCode or versionName -->
+    </issue>
+    
+    <issue id="UsesMinSdkAttributes" severity="error">
+        <!-- Using minSdk/targetSdk in manifest instead of build.gradle -->
+    </issue>
+    
+    <issue id="WrongManifestParent" severity="error">
+        <!-- Incorrect parent element in manifest -->
+    </issue>
+    
+    <issue id="DevModeObsolete" severity="error">
+        <!-- <application android:debuggable> should not be in manifest -->
+    </issue>
+    
+    <!-- ========================================= -->
+    <!-- WARNING-LEVEL RULES (Display, Don't Block) -->
+    <!-- ========================================= -->
+    
+    <!-- Performance Warnings -->
+    <issue id="DrawAllocation" severity="warning">
+        <!-- Memory allocation in draw/layout operations -->
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+    </issue>
+    
+    <issue id="Wakelock" severity="warning">
+        <!-- WakeLock not released -->
+    </issue>
+    
+    <issue id="UnusedResources" severity="warning">
+        <!-- Unused resources should be removed -->
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+    </issue>
+    
+    <issue id="ViewHolder" severity="warning">
+        <!-- ListView/RecyclerView should use ViewHolder pattern -->
+    </issue>
+    
+    <issue id="HandlerLeak" severity="warning">
+        <!-- Handler class should be static or leaks might occur -->
+    </issue>
+    
+    <!-- Code Quality Warnings -->
+    <issue id="DefaultLocale" severity="warning">
+        <!-- Implicit default locale in String operations -->
+    </issue>
+    
+    <issue id="SimpleDateFormat" severity="warning">
+        <!-- SimpleDateFormat without explicit locale -->
+    </issue>
+    
+    <issue id="ObsoleteSdkInt" severity="warning">
+        <!-- Unnecessary SDK version checks (minSdk already higher) -->
+    </issue>
+    
+    <issue id="UnusedAttribute" severity="warning">
+        <!-- Attribute only used in higher API levels -->
+    </issue>
+    
+    <issue id="OldTargetApi" severity="warning">
+        <!-- Target API should be updated to latest -->
+    </issue>
+    
+    <issue id="RtlHardcoded" severity="warning">
+        <!-- Using left/right instead of start/end for RTL support -->
+    </issue>
+    
+    <issue id="RtlEnabled" severity="warning">
+        <!-- RTL support not enabled -->
+    </issue>
+    
+    <!-- Resource Warnings -->
+    <issue id="IconDensities" severity="warning">
+        <!-- Missing density folders for icons -->
+    </issue>
+    
+    <issue id="IconMissingDensityFolder" severity="warning">
+        <!-- Icon exists in some density folders but not others -->
+    </issue>
+    
+    <issue id="IconDuplicates" severity="warning">
+        <!-- Duplicate icons in different density folders -->
+    </issue>
+    
+    <issue id="IconLocation" severity="warning">
+        <!-- Icon in wrong location (e.g., drawable instead of mipmap) -->
+    </issue>
+    
+    <issue id="MissingTranslation" severity="warning">
+        <!-- Missing translations for some languages -->
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+        <ignore regexp=".*Test\.kt" />
+    </issue>
+    
+    <issue id="ExtraTranslation" severity="warning">
+        <!-- Translations exist for keys not in default locale -->
+    </issue>
+    
+    <!-- Jetpack Compose Warnings -->
+    <issue id="ComposeModifierWithoutDefault" severity="warning">
+        <!-- Composable Modifier parameter without default value -->
+    </issue>
+    
+    <issue id="ComposableModifierFactory" severity="warning">
+        <!-- Creating Modifier in Composable body -->
+    </issue>
+    
+    <issue id="ComposableCompositionLocalUsage" severity="warning">
+        <!-- CompositionLocal usage that could be avoided -->
+    </issue>
+    
+    <issue id="ComposeViewModelInjection" severity="warning">
+        <!-- ViewModel created in wrong scope -->
+    </issue>
+    
+    <!-- Layout Warnings -->
+    <issue id="UselessParent" severity="warning">
+        <!-- Unnecessary intermediate layout -->
+    </issue>
+    
+    <issue id="UselessLeaf" severity="warning">
+        <!-- Useless leaf layout -->
+    </issue>
+    
+    <issue id="TooManyViews" severity="warning">
+        <!-- Layout has too many views (>80) -->
+    </issue>
+    
+    <issue id="TooDeepLayout" severity="warning">
+        <!-- Layout hierarchy too deep (>10) -->
+    </issue>
+    
+    <issue id="NestedWeights" severity="warning">
+        <!-- Nested layout weights (performance issue) -->
+    </issue>
+    
+    <!-- ========================================= -->
+    <!-- INFO-LEVEL RULES (Informational)          -->
+    <!-- ========================================= -->
+    
+    <issue id="GoogleAppIndexingWarning" severity="informational">
+        <!-- App Indexing recommendations -->
+    </issue>
+    
+    <issue id="UnusedIds" severity="informational">
+        <!-- IDs defined but not used -->
+    </issue>
+    
+    <issue id="ContentDescription" severity="informational">
+        <!-- Missing content description for accessibility -->
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+    </issue>
+    
+    <!-- ========================================= -->
+    <!-- DISABLED RULES (Too Noisy / Not Applicable) -->
+    <!-- ========================================= -->
+    
+    <issue id="GradleDependency" severity="ignore">
+        <!-- We manage dependencies ourselves, don't need Lint suggestions -->
+    </issue>
+    
+    <issue id="NewerVersionAvailable" severity="ignore">
+        <!-- We update dependencies on our own schedule -->
+    </issue>
+    
+    <issue id="ObsoleteLintCustomCheck" severity="ignore">
+        <!-- Custom lint checks are managed separately -->
+    </issue>
+    
+    <issue id="LintBaseline" severity="ignore">
+        <!-- Don't warn about using lint baseline (we use it intentionally) -->
+    </issue>
+    
+    <issue id="SyntheticAccessor" severity="ignore">
+        <!-- Kotlin properties don't suffer from synthetic accessor issues -->
+    </issue>
+    
+    <issue id="Typos" severity="ignore">
+        <!-- Too many false positives with technical terms -->
+    </issue>
+    
+    <issue id="TypographyDashes" severity="ignore">
+        <!-- Allow regular dashes in strings -->
+    </issue>
+    
+    <issue id="TypographyQuotes" severity="ignore">
+        <!-- Allow straight quotes in strings -->
+    </issue>
+    
+    <issue id="Registered" severity="ignore">
+        <!-- Manifest registration issues handled by AGP -->
+    </issue>
+    
+    <issue id="NotificationPermission" severity="ignore">
+        <!-- We handle notification permissions explicitly -->
+    </issue>
+    
+    <issue id="QueryPermissionsNeeded" severity="ignore">
+        <!-- We handle query permissions explicitly -->
+    </issue>
+    
+    <!-- ========================================= -->
+    <!-- PATH-SPECIFIC RULES                       -->
+    <!-- ========================================= -->
+    
+    <!-- Ignore test code for certain rules -->
+    <issue id="SetTextI18n">
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+        <ignore regexp=".*Test\.kt" />
+    </issue>
+    
+    <issue id="HardcodedText">
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+        <ignore regexp=".*Test\.kt" />
+    </issue>
+    
+    <issue id="RtlHardcoded">
+        <ignore path="src/test" />
+        <ignore path="src/androidTest" />
+    </issue>
+    
+    <!-- Ignore all rules for generated code -->
+    <issue id="all">
+        <ignore path="build/" />
+        <ignore path="**/build/" />
+        <ignore regexp=".*generated.*" />
+        <ignore regexp=".*\.g\.kt" />
+    </issue>
+    
+    <!-- ========================================= -->
+    <!-- BASELINE CONFIGURATION                    -->
+    <!-- ========================================= -->
+    
+    <!-- Baseline file for managing existing violations during migration -->
+    <!-- Generate with: ./gradlew :composeApp:lintBaseline -->
+    <!-- The baseline file will be created at: composeApp/lint-baseline.xml -->
+    <!-- Remove the baseline file once all violations are fixed -->
+    
+</lint>
+
