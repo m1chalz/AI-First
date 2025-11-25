@@ -115,6 +115,12 @@ class PetDetailsViewModel: ObservableObject {
         return outputFormatter.string(from: date)
     }
     
+    /// Returns formatted coordinates string (latitude, longitude)
+    var formattedCoordinates: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        return String(format: "%.4f, %.4f", petDetails.latitude, petDetails.longitude)
+    }
+    
     /// Returns formatted radius string or nil if not available
     var formattedRadius: String? {
         guard case .loaded(let petDetails) = state else { return nil }

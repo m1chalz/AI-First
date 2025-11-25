@@ -144,7 +144,7 @@ struct PetDetailsView: View {
                         .accessibilityIdentifier("petDetails.age.field")
                     }
                     
-                    // Place of Disappearance / City
+                    // Place of Disappearance / Coordinates
                     VStack(alignment: .leading, spacing: 4) {
                         Text(L10n.PetDetails.Label.placeOfDisappearance)
                             .font(.system(size: 16))
@@ -155,7 +155,7 @@ struct PetDetailsView: View {
                                 .font(.system(size: 20))
                                 .foregroundColor(Color(hex: "#101828"))
                             
-                            Text(petDetails.location)
+                            Text(viewModel.formattedCoordinates)
                                 .font(.system(size: 16))
                                 .foregroundColor(Color(hex: "#101828"))
                             
@@ -186,13 +186,6 @@ struct PetDetailsView: View {
                             )
                     }
                     .accessibilityIdentifier("petDetails.showMap.button")
-                    
-                    // Vaccination ID
-                    LabelValueRowView(model: .init(
-                        label: L10n.PetDetails.Label.vaccinationId,
-                        value: petDetails.vaccinationId ?? "—"
-                    ))
-                    .accessibilityIdentifier("petDetails.vaccination.field")
                     
                     // Animal Additional Description
                     VStack(alignment: .leading, spacing: 4) {
@@ -251,15 +244,15 @@ struct PetDetailsView_Previews: PreviewProvider {
                     species: "DOG",
                     gender: "MALE",
                     description: "Friendly and energetic golden retriever looking for a loving home. Great with kids and other pets.",
-                    location: "Warsaw",
                     phone: "+48 123 456 789",
                     email: "test@example.com",
                     breed: "Doberman",
+                    latitude: 52.2297,
+                    longitude: 21.0122,
                     locationRadius: 15,
                     microchipNumber: "000-000-000-000",
                     approximateAge: "3 years",
                     reward: "500 PLN",
-                    vaccinationId: "VAC-2023-001234",
                     createdAt: "2025-11-20T10:00:00Z",
                     updatedAt: "2025-11-20T10:00:00Z"
                 )

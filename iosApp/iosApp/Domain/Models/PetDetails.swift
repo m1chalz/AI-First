@@ -29,9 +29,6 @@ struct PetDetails: Identifiable, Codable {
     /// Additional description text (required in backend, multi-line)
     let description: String
     
-    /// City where pet was last seen (required in backend)
-    let location: String
-    
     /// Owner's phone number (required in backend)
     let phone: String
     
@@ -42,6 +39,12 @@ struct PetDetails: Identifiable, Codable {
     
     /// Breed of the pet (optional)
     let breed: String?
+    
+    /// Latitude coordinate where pet was last seen
+    let latitude: Double
+    
+    /// Longitude coordinate where pet was last seen
+    let longitude: Double
     
     /// Search radius around location in kilometers (optional, number from backend)
     /// Note: ViewModel formats to "±X km" for display
@@ -55,9 +58,6 @@ struct PetDetails: Identifiable, Codable {
     
     /// Reward amount text (optional, will be mocked until backend adds this field)
     let reward: String?
-    
-    /// Vaccination ID (optional, will be mocked until backend adds this field)
-    let vaccinationId: String?
     
     // MARK: - Metadata (not displayed in UI)
     

@@ -118,8 +118,6 @@ public enum L10n {
       public static let microchipNumber = L10n.tr("Localizable", "petDetails.label.microchipNumber", fallback: "Microchip number")
       /// Place of Disappearance / City
       public static let placeOfDisappearance = L10n.tr("Localizable", "petDetails.label.placeOfDisappearance", fallback: "Place of Disappearance / City")
-      /// Vaccination ID
-      public static let vaccinationId = L10n.tr("Localizable", "petDetails.label.vaccinationId", fallback: "Vaccination ID")
     }
     public enum Loading {
       /// MARK: - Pet Details Screen

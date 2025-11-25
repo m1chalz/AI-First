@@ -54,7 +54,11 @@ final class PetDetailsViewModelTests: XCTestCase {
         return (viewModel, fakeRepo)
     }
     
-    private func makeMockPetDetails(id: String = "test-id") -> PetDetails {
+    private func makeMockPetDetails(
+        id: String = "test-id",
+        latitude: Double = 52.2297,
+        longitude: Double = 21.0122
+    ) -> PetDetails {
         return PetDetails(
             id: id,
             petName: "Test Pet",
@@ -64,15 +68,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: "DOG",
             gender: "MALE",
             description: "Test description",
-            location: "Test City",
             phone: "+48 123 456 789",
             email: "test@example.com",
             breed: "Test Breed",
+            latitude: latitude,
+            longitude: longitude,
             locationRadius: 5,
             microchipNumber: "123-456-789",
             approximateAge: "2 years",
             reward: "100 PLN",
-            vaccinationId: "VAC-2023-TEST",
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
         )
@@ -244,15 +248,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: nil,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -279,15 +283,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: "123456789012",
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -314,15 +318,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: "123-456",
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -360,15 +364,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: "DOG",
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -406,15 +410,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: "MALE",
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -441,15 +445,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: "FEMALE",
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -476,15 +480,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: "UNKNOWN",
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -522,15 +526,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -557,15 +561,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -603,15 +607,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: nil,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -638,15 +642,15 @@ final class PetDetailsViewModelTests: XCTestCase {
             species: petDetails.species,
             gender: petDetails.gender,
             description: petDetails.description,
-            location: petDetails.location,
             phone: petDetails.phone,
             email: petDetails.email,
             breed: petDetails.breed,
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude,
             locationRadius: 5,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
-            vaccinationId: petDetails.vaccinationId,
             createdAt: petDetails.createdAt,
             updatedAt: petDetails.updatedAt
         )
@@ -698,6 +702,36 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.active)
             XCTAssertEqual(model.rewardText, "$500")
         }
+    }
+    
+    // MARK: - Formatted Coordinates Tests
+    
+    func testFormattedCoordinates_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedCoordinates
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedCoordinates_whenStateIsLoaded_shouldFormatCorrectly() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(
+            latitude: 52.2297,
+            longitude: 21.0122
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedCoordinates
+        
+        // Then
+        XCTAssertEqual(result, "52.2297, 21.0122")
     }
     
     // MARK: - Static Formatter Tests
