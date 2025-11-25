@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Reusable component displaying pet photo with status and optional reward badges
-struct PetPhotoWithBadges: View {
+struct PetPhotoWithBadgesView: View {
     let model: Model
     
     var body: some View {
@@ -126,25 +126,25 @@ struct PetPhotoWithBadges: View {
 // MARK: - Previews
 
 #if DEBUG
-struct PetPhotoWithBadges_Previews: PreviewProvider {
+struct PetPhotoWithBadgesView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {
             // Missing pet with reward
-            PetPhotoWithBadges(model: .init(
+            PetPhotoWithBadgesView(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
                 status: "MISSING",
                 rewardText: "$500 reward"
             ))
             
             // Found pet without reward
-            PetPhotoWithBadges(model: .init(
+            PetPhotoWithBadgesView(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/shepherd-german/n02106662_10908.jpg",
                 status: "FOUND",
                 rewardText: nil
             ))
             
             // No photo available
-            PetPhotoWithBadges(model: .init(
+            PetPhotoWithBadgesView(model: .init(
                 imageUrl: nil,
                 status: "MISSING",
                 rewardText: "$200"

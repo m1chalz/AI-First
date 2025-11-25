@@ -1,15 +1,15 @@
 import XCTest
 @testable import PetSpot
 
-/// Unit tests for LabelValueRow.Model
+/// Unit tests for LabelValueRowView.Model
 /// Tests model initialization and equality
-final class LabelValueRowTests: XCTestCase {
+final class LabelValueRowViewTests: XCTestCase {
     
     // MARK: - Tests
     
     func testInit_withLabelAndValue_shouldSetProperties() {
         // Given + When
-        let model = LabelValueRow.Model(
+        let model = LabelValueRowView.Model(
             label: "Species",
             value: "Dog"
         )
@@ -27,7 +27,7 @@ final class LabelValueRowTests: XCTestCase {
         }
         
         // When
-        let model = LabelValueRow.Model(
+        let model = LabelValueRowView.Model(
             label: "Name",
             value: "fluffy",
             valueProcessor: processor
@@ -46,7 +46,7 @@ final class LabelValueRowTests: XCTestCase {
         }
         
         // When
-        let model = LabelValueRow.Model(
+        let model = LabelValueRowView.Model(
             label: "Phone",
             value: "+48 123 456 789",
             onTap: tapHandler
@@ -64,8 +64,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenLabelAndValueMatch_shouldBeEqual() {
         // Given
-        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
-        let model2 = LabelValueRow.Model(label: "Species", value: "Dog")
+        let model1 = LabelValueRowView.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRowView.Model(label: "Species", value: "Dog")
         
         // When + Then
         XCTAssertEqual(model1, model2)
@@ -73,8 +73,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenLabelDiffers_shouldNotBeEqual() {
         // Given
-        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
-        let model2 = LabelValueRow.Model(label: "Breed", value: "Dog")
+        let model1 = LabelValueRowView.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRowView.Model(label: "Breed", value: "Dog")
         
         // When + Then
         XCTAssertNotEqual(model1, model2)
@@ -82,8 +82,8 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_whenValueDiffers_shouldNotBeEqual() {
         // Given
-        let model1 = LabelValueRow.Model(label: "Species", value: "Dog")
-        let model2 = LabelValueRow.Model(label: "Species", value: "Cat")
+        let model1 = LabelValueRowView.Model(label: "Species", value: "Dog")
+        let model2 = LabelValueRowView.Model(label: "Species", value: "Cat")
         
         // When + Then
         XCTAssertNotEqual(model1, model2)
@@ -91,13 +91,13 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_shouldIgnoreClosures() {
         // Given
-        let model1 = LabelValueRow.Model(
+        let model1 = LabelValueRowView.Model(
             label: "Phone",
             value: "+48 123 456 789",
             valueProcessor: { $0.uppercased() },
             onTap: { print("tap1") }
         )
-        let model2 = LabelValueRow.Model(
+        let model2 = LabelValueRowView.Model(
             label: "Phone",
             value: "+48 123 456 789",
             valueProcessor: { $0.lowercased() }, // Different processor
@@ -111,12 +111,12 @@ final class LabelValueRowTests: XCTestCase {
     
     func testEquality_withNilValueProcessor_shouldBeEqual() {
         // Given
-        let model1 = LabelValueRow.Model(
+        let model1 = LabelValueRowView.Model(
             label: "Location",
             value: "Warsaw",
             valueProcessor: nil
         )
-        let model2 = LabelValueRow.Model(
+        let model2 = LabelValueRowView.Model(
             label: "Location",
             value: "Warsaw",
             valueProcessor: nil

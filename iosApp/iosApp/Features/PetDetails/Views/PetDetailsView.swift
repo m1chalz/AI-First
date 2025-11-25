@@ -48,12 +48,12 @@ struct PetDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Pet Photo with Badges
-                PetPhotoWithBadges(model: .init(from: petDetails))
+                PetPhotoWithBadgesView(model: .init(from: petDetails))
                 
                 // Content Container with padding
                 VStack(alignment: .leading, spacing: 20) {
                     // Date of Disappearance (full width)
-                    LabelValueRow(model: .init(
+                    LabelValueRowView(model: .init(
                         label: L10n.PetDetails.Label.dateOfDisappearance,
                         value: viewModel.formattedDate
                     ))
@@ -65,14 +65,14 @@ struct PetDetailsView: View {
                     )
                     
                     // Contact Owner - Phone
-                    LabelValueRow(model: .init(
+                    LabelValueRowView(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.phone
                     ))
                     .accessibilityIdentifier("petDetails.phone.tap")
                     
                     // Contact Owner - Email
-                    LabelValueRow(model: .init(
+                    LabelValueRowView(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.email ?? "—"
                     ))
@@ -85,13 +85,13 @@ struct PetDetailsView: View {
                     
                     // Animal Name & Microchip (2 columns)
                     HStack(spacing: 12) {
-                        LabelValueRow(model: .init(
+                        LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalName,
                             value: petDetails.petName
                         ))
                         .accessibilityIdentifier("petDetails.name.field")
                         
-                        LabelValueRow(model: .init(
+                        LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.microchipNumber,
                             value: viewModel.formattedMicrochip
                         ))
@@ -100,13 +100,13 @@ struct PetDetailsView: View {
                     
                     // Species & Breed (2 columns)
                     HStack(spacing: 12) {
-                        LabelValueRow(model: .init(
+                        LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalSpecies,
                             value: viewModel.formattedSpecies
                         ))
                         .accessibilityIdentifier("petDetails.species.field")
                         
-                        LabelValueRow(model: .init(
+                        LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalRace,
                             value: petDetails.breed ?? "—"
                         ))
@@ -133,7 +133,7 @@ struct PetDetailsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("petDetails.sex.field")
                         
-                        LabelValueRow(model: .init(
+                        LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalAge,
                             value: petDetails.approximateAge ?? "—"
                         ))
@@ -184,7 +184,7 @@ struct PetDetailsView: View {
                     .accessibilityIdentifier("petDetails.showMap.button")
                     
                     // Vaccination ID
-                    LabelValueRow(model: .init(
+                    LabelValueRowView(model: .init(
                         label: L10n.PetDetails.Label.vaccinationId,
                         value: petDetails.vaccinationId ?? "—"
                     ))

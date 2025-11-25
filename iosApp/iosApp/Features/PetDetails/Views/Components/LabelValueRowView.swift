@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Reusable component displaying a label-value pair in a vertical layout (label on top, value below)
-struct LabelValueRow: View {
+struct LabelValueRowView: View {
     let model: Model
     
     var body: some View {
@@ -35,11 +35,11 @@ struct LabelValueRow: View {
 // MARK: - Previews
 
 #if DEBUG
-struct LabelValueRow_Previews: PreviewProvider {
+struct LabelValueRowView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 0) {
             // Simple row
-            LabelValueRow(model: .init(
+            LabelValueRowView(model: .init(
                 label: "Species",
                 value: "Dog"
             ))
@@ -47,7 +47,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Row with value processor
-            LabelValueRow(model: .init(
+            LabelValueRowView(model: .init(
                 label: "Sex",
                 value: "MALE",
                 valueProcessor: { gender in
@@ -62,7 +62,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Interactive row (tappable)
-            LabelValueRow(model: .init(
+            LabelValueRowView(model: .init(
                 label: "Phone",
                 value: "+48 123 456 789",
                 onTap: {
@@ -73,7 +73,7 @@ struct LabelValueRow_Previews: PreviewProvider {
             Divider()
             
             // Row with fallback value
-            LabelValueRow(model: .init(
+            LabelValueRowView(model: .init(
                 label: "Email",
                 value: "—"
             ))

@@ -302,7 +302,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
             return PetDetails(
                 id: id,
                 petName: "Fredi Kamionka Gmina Burzenin",
-                photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
+                photoUrl: "https://www.animalisland.eu/cdn/shop/articles/yorkshire_a5d402ee-006e-4fe0-8a5f-6aa178c69133.jpg",
                 status: "ACTIVE",
                 lastSeenDate: "2025-11-18",
                 species: "DOG",

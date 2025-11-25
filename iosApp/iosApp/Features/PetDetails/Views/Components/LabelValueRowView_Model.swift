@@ -1,6 +1,6 @@
 import Foundation
 
-extension LabelValueRow {
+extension LabelValueRowView {
     /// Model for configuring a label-value row component
     struct Model: Equatable {
         /// Label text (e.g., "Date of Disappearance")

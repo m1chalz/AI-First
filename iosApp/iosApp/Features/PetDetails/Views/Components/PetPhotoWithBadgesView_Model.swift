@@ -1,6 +1,6 @@
 import Foundation
 
-extension PetPhotoWithBadges {
+extension PetPhotoWithBadgesView {
     /// Model for configuring the pet photo with overlaid badges
     struct Model: Equatable {
         /// URL string for the pet photo (nullable)
