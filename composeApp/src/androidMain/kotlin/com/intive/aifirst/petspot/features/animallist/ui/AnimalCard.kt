@@ -3,13 +3,16 @@
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -35,14 +38,15 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
 /**
  * Composable for displaying a single animal card in the list.
- * Shows animal photo placeholder, species, breed, location, status badge, and date.
+ * Shows animal photo placeholder (left), info details (middle), and status/date (right).
  *
- * Design matches Figma specifications:
- * - Card border radius: 4dp
- * - Card shadow: elevation 2dp
- * - Padding: 16dp horizontal
- * - Image placeholder: 63dp circular
- * - Status badge radius: 10dp
+ * Design matches Figma specifications ("Missing animals list app" node-id=297-7556):
+ * - Card border radius: 14dp
+ * - Card border: 1px solid #E5E9EC (no shadow)
+ * - Card height: 100dp
+ * - Layout: Three-column (photo | info | status/date)
+ * - Image placeholder: 64dp circular
+ * - Status badge: pill-shaped, color-coded (MISSING=#FF0000, FOUND=#155DFC)
  *
  * @param animal Animal entity to display
  * @param onClick Callback when card is tapped
@@ -63,83 +67,127 @@ fun AnimalCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .testTag("animalList.item.${animal.id}"),
+                .height(100.dp)
+                .border(1.dp, Color(0xFFE5E9EC), RoundedCornerShape(14.dp))
+                .testTag("animalList.cardItem"),
         onClick = onClick,
-        shape = RoundedCornerShape(4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Photo placeholder (63dp circular)
+            // LEFT: Photo placeholder (64dp circular)
             Box(
                 modifier =
                     Modifier
-                        .size(63.dp)
+                        .size(64.dp)
                         .clip(CircleShape)
                         .background(Color(0xFFEEEEEE)),
-                // Light gray placeholder
                 contentAlignment = Alignment.Center,
             ) {
-                // TODO: Replace with actual image when assets available
                 Text(
                     text = placeholderInitial,
                     fontSize = 24.sp,
-                    // Tertiary text color
                     color = Color(0xFF93A2B4),
                 )
             }
 
-            // Animal info column
+            // MIDDLE: Info column (location, species, breed)
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                // Species | Breed
-                Text(
-                    text = "${animal.species.displayName} | ${animal.breed}",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    // Primary text color
-                    color = Color(0xFF2D2D2D),
-                )
+                // Location row: icon + name + "•" + distance
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "📍",
+                        fontSize = 13.sp,
+                    )
+                    Text(
+                        text = animal.location.city,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF4A5565),
+                    )
+                    Text(
+                        text = "•",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF4A5565),
+                    )
+                    Text(
+                        text = "+${animal.location.radiusKm}km",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF4A5565),
+                    )
+                }
 
-                // Location
-                Text(
-                    text = "${animal.location.city}, +${animal.location.radiusKm}km",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    // Secondary text color
-                    color = Color(0xFF545F71),
-                )
+                // Species/breed row: Species + "•" + Breed
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = animal.species.displayName,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF101828),
+                    )
+                    Text(
+                        text = "•",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF101828),
+                    )
+                    Text(
+                        text = animal.breed,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF101828),
+                    )
+                }
+            }
 
-                // Status badge
+            // RIGHT: Status badge and date (vertically stacked)
+            Column(
+                modifier = Modifier
+                    .width(78.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                // Status badge: pill-shaped
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
+                    shape = RoundedCornerShape(13.dp),
                     color = Color(android.graphics.Color.parseColor(animal.status.badgeColor)),
                 ) {
                     Text(
                         text = animal.status.displayName,
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     )
                 }
 
-                // Last seen date
+                // Date (below badge)
                 Text(
-                    text = "Last seen: ${animal.lastSeenDate}",
-                    fontSize = 13.sp,
+                    text = animal.lastSeenDate,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
-                    // Tertiary text color
-                    color = Color(0xFF93A2B4),
+                    color = Color(0xFF6A7282),
                 )
             }
         }
@@ -164,12 +212,27 @@ private object AnimalCardPreviewData {
         )
 }
 
-@Preview(name = "Animal card")
+@Preview(name = "Animal card - Missing status")
 @Composable
 private fun AnimalCardPreview() {
     MaterialTheme {
         Surface {
             AnimalCard(animal = AnimalCardPreviewData.animal)
+        }
+    }
+}
+
+@Preview(name = "Animal card - Found status")
+@Composable
+private fun AnimalCardFoundPreview() {
+    MaterialTheme {
+        Surface {
+            AnimalCard(
+                animal = AnimalCardPreviewData.animal.copy(
+                    status = AnimalStatus.FOUND,
+                    name = "Milo",
+                ),
+            )
         }
     }
 }

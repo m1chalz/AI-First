@@ -28,32 +28,32 @@
 ### Implementation for User Story 1
 
 **Resources & Fonts**:
-- [ ] T001 [P] [US1] Download Hind Regular font from Google Fonts and add to `/composeApp/src/androidMain/res/font/hind_regular.ttf`
-- [ ] T002 [P] [US1] Create `HindFontFamily` constant in a new file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/ui/theme/Typography.kt` or existing theme file
+- [x] T001 [P] [US1] Download Hind Regular font from Google Fonts and add to `/composeApp/src/androidMain/res/font/hind_regular.ttf`
+- [x] T002 [P] [US1] Create `HindFontFamily` constant in a new file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/ui/theme/Typography.kt` or existing theme file
 
 **AnimalCard Restructure**:
-- [ ] T003 [US1] Update `AnimalCard` border: change from `RoundedCornerShape(4.dp)` to `RoundedCornerShape(14.dp)` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T004 [US1] Update `AnimalCard` border: add `border = BorderStroke(1.dp, Color(0xFFE5E9EC))` and remove `elevation` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T005 [US1] Update `AnimalCard` height: set fixed height of 100.dp via `Modifier.height(100.dp)` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T006 [US1] Update photo size from 63.dp to 64.dp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T007 [US1] Restructure `AnimalCard` layout to three-column Row: photo (left), info (middle), status/date (right) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T008 [US1] Create location row: add `Icon(Icons.Default.LocationOn)` + location + "•" + distance with color #4A5565, 13sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T009 [US1] Create species/breed row: Species + "•" + Breed with color #101828, 14sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T010 [US1] Move status badge to right column with updated colors: MISSING=#FF0000, FOUND=#155DFC, pill shape, white text 13sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T011 [US1] Move date below status badge, right-aligned, color #6A7282, 14sp, format "DD/MM/YYYY" in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T012 [US1] Update test tag from `animalList.item.${animal.id}` to `animalList.cardItem` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T003 [US1] Update `AnimalCard` border: change from `RoundedCornerShape(4.dp)` to `RoundedCornerShape(14.dp)` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T004 [US1] Update `AnimalCard` border: add `border = BorderStroke(1.dp, Color(0xFFE5E9EC))` and remove `elevation` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T005 [US1] Update `AnimalCard` height: set fixed height of 100.dp via `Modifier.height(100.dp)` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T006 [US1] Update photo size from 63.dp to 64.dp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T007 [US1] Restructure `AnimalCard` layout to three-column Row: photo (left), info (middle), status/date (right) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T008 [US1] Create location row: add `Icon(Icons.Default.LocationOn)` + location + "•" + distance with color #4A5565, 13sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T009 [US1] Create species/breed row: Species + "•" + Breed with color #101828, 14sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T010 [US1] Move status badge to right column with updated colors: MISSING=#FF0000, FOUND=#155DFC, pill shape, white text 13sp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T011 [US1] Move date below status badge, right-aligned, color #6A7282, 14sp, format "DD/MM/YYYY" in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T012 [US1] Update test tag from `animalList.item.${animal.id}` to `animalList.cardItem` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
 
 **AnimalListContent Updates**:
-- [ ] T013 [US1] Remove `CenterAlignedTopAppBar` composable and `AnimalListTopBar` function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T014 [US1] Replace Scaffold topBar with Box layout containing Column for title and list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T015 [US1] Add "PetSpot" title: left-aligned, Hind font 32sp, color rgba(0,0,0,0.8) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T016 [US1] Update list horizontal padding from 16.dp to 23.dp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T017 [US1] Add 24.dp spacer between title and list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T018 [US1] Update list item spacing from 8.dp (keep as is - matches design) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T013 [US1] Remove `CenterAlignedTopAppBar` composable and `AnimalListTopBar` function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T014 [US1] Replace Scaffold topBar with Box layout containing Column for title and list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T015 [US1] Add "PetSpot" title: left-aligned, Hind font 32sp, color rgba(0,0,0,0.8) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T016 [US1] Update list horizontal padding from 16.dp to 23.dp in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T017 [US1] Add 24.dp spacer between title and list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T018 [US1] Update list item spacing from 8.dp (keep as is - matches design) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
 
 **Previews**:
-- [ ] T019 [P] [US1] Update `AnimalCardPreview` to show new card layout in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
-- [ ] T020 [P] [US1] Update `AnimalListContentPreview` to reflect new title and layout in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T019 [P] [US1] Update `AnimalCardPreview` to show new card layout in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt`
+- [x] T020 [P] [US1] Update `AnimalListContentPreview` to reflect new title and layout in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
 
 **Checkpoint**: User Story 1 complete - Screen shows "PetSpot" title and restructured cards
 
@@ -72,13 +72,13 @@
 ### Implementation for User Story 2
 
 **Button Redesign**:
-- [ ] T021 [US2] Remove `ReportMissingBottomBar` composable and Scaffold bottomBar in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T022 [US2] Create `FloatingReportButton` composable with pill shape (22.dp radius), blue background (#155DFC), shadow in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T023 [US2] Add button text "Report a Missing Animal" with Hind font 14sp, white color in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T024 [US2] Add trailing icon to button (custom drawable exported from Figma design) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T025 [US2] Position button at bottom-center using `Box` with `Alignment.BottomCenter` and bottom padding in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T026 [US2] Update test tag from `animalList.reportMissingButton` to `animalList.reportButton` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T027 [US2] Verify button onClick still calls `onReportMissing` callback without changes in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T021 [US2] Remove `ReportMissingBottomBar` composable and Scaffold bottomBar in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T022 [US2] Create `FloatingReportButton` composable with pill shape (22.dp radius), blue background (#155DFC), shadow in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T023 [US2] Add button text "Report a Missing Animal" with Hind font 14sp, white color in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T024 [US2] Add trailing icon to button (custom drawable exported from Figma design) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T025 [US2] Position button at bottom-center using `Box` with `Alignment.BottomCenter` and bottom padding in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T026 [US2] Update test tag from `animalList.reportMissingButton` to `animalList.reportButton` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T027 [US2] Verify button onClick still calls `onReportMissing` callback without changes in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
 
 **Checkpoint**: User Story 2 complete - Floating button works correctly
 
@@ -97,11 +97,11 @@
 ### Implementation for User Story 3
 
 **State Verification**:
-- [ ] T028 [US3] Update loading indicator positioning to work with new Box-based layout (centered in content area) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T029 [US3] Update empty state styling to align with new padding (23.dp horizontal) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T030 [US3] Update error state styling to align with new padding in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T031 [US3] Verify floating button remains visible/accessible during loading, empty, and error states in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
-- [ ] T032 [P] [US3] Update `PreviewParameterProvider` to include all states with new visual styling in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T028 [US3] Update loading indicator positioning to work with new Box-based layout (centered in content area) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T029 [US3] Update empty state styling to align with new padding (23.dp horizontal) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T030 [US3] Update error state styling to align with new padding in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T031 [US3] Verify floating button remains visible/accessible during loading, empty, and error states in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
+- [x] T032 [P] [US3] Update `PreviewParameterProvider` to include all states with new visual styling in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListContent.kt`
 
 **Checkpoint**: User Story 3 complete - All states work with updated visuals
 
