@@ -70,19 +70,11 @@ public enum L10n {
   }
   public enum AnimalStatus {
     /// MARK: - Animal Status
-    public static let active = L10n.tr("Localizable", "animalStatus.active", fallback: "Active")
-    /// Closed
-    public static let closed = L10n.tr("Localizable", "animalStatus.closed", fallback: "Closed")
-    /// Found
-    public static let found = L10n.tr("Localizable", "animalStatus.found", fallback: "Found")
-    public enum Badge {
-      /// CLOSED
-      public static let closed = L10n.tr("Localizable", "animalStatus.badge.closed", fallback: "CLOSED")
-      /// FOUND
-      public static let found = L10n.tr("Localizable", "animalStatus.badge.found", fallback: "FOUND")
-      /// MISSING
-      public static let missing = L10n.tr("Localizable", "animalStatus.badge.missing", fallback: "MISSING")
-    }
+    public static let active = L10n.tr("Localizable", "animalStatus.active", fallback: "MISSING")
+    /// CLOSED
+    public static let closed = L10n.tr("Localizable", "animalStatus.closed", fallback: "CLOSED")
+    /// FOUND
+    public static let found = L10n.tr("Localizable", "animalStatus.found", fallback: "FOUND")
   }
   public enum Common {
     /// Cancel

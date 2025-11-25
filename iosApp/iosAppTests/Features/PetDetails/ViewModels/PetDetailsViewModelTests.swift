@@ -695,7 +695,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertNotNil(result)
         if let model = result {
             XCTAssertEqual(model.imageUrl, "https://example.com/photo.jpg")
-            XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.Badge.missing)
+            XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.active)
             XCTAssertEqual(model.rewardText, "$500")
         }
     }

@@ -65,14 +65,9 @@
 
 /* MARK: - Animal Status */
 
-"animalStatus.active" = "Active";
-"animalStatus.found" = "Found";
-"animalStatus.closed" = "Closed";
-
-// Status badge display text (for PetDetails screen)
-"animalStatus.badge.missing" = "MISSING";
-"animalStatus.badge.found" = "FOUND";
-"animalStatus.badge.closed" = "CLOSED";
+"animalStatus.active" = "MISSING";
+"animalStatus.found" = "FOUND";
+"animalStatus.closed" = "CLOSED";
 
 /* MARK: - Animal Species */
 

@@ -23,15 +23,15 @@ extension PetPhotoWithBadgesView {
             self.rewardText = rewardText
         }
         
-        /// Converts AnimalStatus to display text (maps ACTIVE → "MISSING")
+        /// Converts AnimalStatus to display text
         private static func statusDisplayText(from status: AnimalStatus) -> String {
             switch status {
             case .active:
-                return L10n.AnimalStatus.Badge.missing
+                return L10n.AnimalStatus.active
             case .found:
-                return L10n.AnimalStatus.Badge.found
+                return L10n.AnimalStatus.found
             case .closed:
-                return L10n.AnimalStatus.Badge.closed
+                return L10n.AnimalStatus.closed
             }
         }
         
