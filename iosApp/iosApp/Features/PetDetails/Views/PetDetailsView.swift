@@ -55,7 +55,7 @@ struct PetDetailsView: View {
                     // Date of Disappearance (full width)
                     LabelValueRow(model: .init(
                         label: L10n.PetDetails.Label.dateOfDisappearance,
-                        value: viewModel.formatDate(petDetails.lastSeenDate)
+                        value: viewModel.formattedDate
                     ))
                     .accessibilityIdentifier("petDetails.date.field")
                     .padding(.bottom, 10.667)
@@ -93,7 +93,7 @@ struct PetDetailsView: View {
                         
                         LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.microchipNumber,
-                            value: viewModel.formatMicrochip(petDetails.microchipNumber)
+                            value: viewModel.formattedMicrochip
                         ))
                         .accessibilityIdentifier("petDetails.microchip.field")
                     }
@@ -102,7 +102,7 @@ struct PetDetailsView: View {
                     HStack(spacing: 12) {
                         LabelValueRow(model: .init(
                             label: L10n.PetDetails.Label.animalSpecies,
-                            value: viewModel.formatSpecies(petDetails.species)
+                            value: viewModel.formattedSpecies
                         ))
                         .accessibilityIdentifier("petDetails.species.field")
                         
@@ -121,7 +121,7 @@ struct PetDetailsView: View {
                                 .foregroundColor(Color(hex: "#6a7282"))
                             
                             HStack(spacing: 8) {
-                                Image(systemName: viewModel.genderIcon(petDetails.gender))
+                                Image(systemName: viewModel.genderIconName)
                                     .font(.system(size: 20))
                                     .foregroundColor(Color(hex: "#155dfc"))
                                 
@@ -155,7 +155,7 @@ struct PetDetailsView: View {
                                 .font(.system(size: 16))
                                 .foregroundColor(Color(hex: "#101828"))
                             
-                            if let radiusText = viewModel.formatRadius(petDetails.locationRadius) {
+                            if let radiusText = viewModel.formattedRadius {
                                 Text("•")
                                     .font(.system(size: 16))
                                     .foregroundColor(Color(hex: "#6a7282"))

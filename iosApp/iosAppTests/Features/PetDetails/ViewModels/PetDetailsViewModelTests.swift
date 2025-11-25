@@ -217,5 +217,520 @@ final class PetDetailsViewModelTests: XCTestCase {
             return
         }
     }
+    
+    // MARK: - Formatter Computed Properties Tests
+    
+    func testFormattedMicrochip_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedMicrochip
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedMicrochip_whenMicrochipIsNil_shouldReturnDash() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: nil,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedMicrochip
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedMicrochip_whenMicrochipHas12Digits_shouldFormatWithDashes() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: "123456789012",
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedMicrochip
+        
+        // Then
+        XCTAssertEqual(result, "123-456-789-012")
+    }
+    
+    func testFormattedMicrochip_whenMicrochipHasLessThan12Digits_shouldReturnAsIs() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: "123-456",
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedMicrochip
+        
+        // Then
+        XCTAssertEqual(result, "123-456")
+    }
+    
+    func testFormattedSpecies_whenStateIsLoading_shouldReturnEmptyString() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedSpecies
+        
+        // Then
+        XCTAssertEqual(result, "")
+    }
+    
+    func testFormattedSpecies_whenSpeciesIsUppercase_shouldReturnCapitalized() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: "DOG",
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedSpecies
+        
+        // Then
+        XCTAssertEqual(result, "Dog")
+    }
+    
+    func testGenderIconName_whenStateIsLoading_shouldReturnQuestionmark() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.genderIconName
+        
+        // Then
+        XCTAssertEqual(result, "questionmark")
+    }
+    
+    func testGenderIconName_whenGenderIsMale_shouldReturnArrowUpRight() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: "MALE",
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.genderIconName
+        
+        // Then
+        XCTAssertEqual(result, "arrow.up.right")
+    }
+    
+    func testGenderIconName_whenGenderIsFemale_shouldReturnArrowDownRight() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: "FEMALE",
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.genderIconName
+        
+        // Then
+        XCTAssertEqual(result, "arrow.down.right")
+    }
+    
+    func testGenderIconName_whenGenderIsUnknown_shouldReturnQuestionmark() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: "UNKNOWN",
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.genderIconName
+        
+        // Then
+        XCTAssertEqual(result, "questionmark")
+    }
+    
+    func testFormattedDate_whenStateIsLoading_shouldReturnEmptyString() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedDate
+        
+        // Then
+        XCTAssertEqual(result, "")
+    }
+    
+    func testFormattedDate_whenDateIsValid_shouldFormatCorrectly() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: "2025-11-20",
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDate
+        
+        // Then
+        XCTAssertEqual(result, "Nov 20, 2025")
+    }
+    
+    func testFormattedDate_whenDateIsInvalid_shouldReturnOriginalString() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: "invalid-date",
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: petDetails.locationRadius,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDate
+        
+        // Then
+        XCTAssertEqual(result, "invalid-date")
+    }
+    
+    func testFormattedRadius_whenStateIsLoading_shouldReturnNil() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedRadius
+        
+        // Then
+        XCTAssertNil(result)
+    }
+    
+    func testFormattedRadius_whenRadiusIsNil_shouldReturnNil() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: nil,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedRadius
+        
+        // Then
+        XCTAssertNil(result)
+    }
+    
+    func testFormattedRadius_whenRadiusIsValid_shouldReturnFormattedString() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        var petDetails = makeMockPetDetails()
+        petDetails = PetDetails(
+            id: petDetails.id,
+            petName: petDetails.petName,
+            photoUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            lastSeenDate: petDetails.lastSeenDate,
+            species: petDetails.species,
+            gender: petDetails.gender,
+            description: petDetails.description,
+            location: petDetails.location,
+            phone: petDetails.phone,
+            email: petDetails.email,
+            breed: petDetails.breed,
+            locationRadius: 5,
+            microchipNumber: petDetails.microchipNumber,
+            approximateAge: petDetails.approximateAge,
+            reward: petDetails.reward,
+            vaccinationId: petDetails.vaccinationId,
+            createdAt: petDetails.createdAt,
+            updatedAt: petDetails.updatedAt
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedRadius
+        
+        // Then
+        XCTAssertNotNil(result)
+        // The exact format depends on L10n, but it should not be nil
+        if let radiusText = result {
+            XCTAssertFalse(radiusText.isEmpty)
+        }
+    }
+    
+    // MARK: - Static Formatter Tests
+    
+    func testStaticFormatMicrochip_whenMicrochipIsNil_shouldReturnDash() {
+        // Given + When
+        let result = PetDetailsViewModel.formatMicrochip(nil)
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testStaticFormatMicrochip_whenMicrochipHas12Digits_shouldFormatWithDashes() {
+        // Given + When
+        let result = PetDetailsViewModel.formatMicrochip("123456789012")
+        
+        // Then
+        XCTAssertEqual(result, "123-456-789-012")
+    }
+    
+    func testStaticFormatSpecies_whenSpeciesIsUppercase_shouldReturnCapitalized() {
+        // Given + When
+        let result = PetDetailsViewModel.formatSpecies("DOG")
+        
+        // Then
+        XCTAssertEqual(result, "Dog")
+    }
+    
+    func testStaticGenderIcon_whenGenderIsMale_shouldReturnArrowUpRight() {
+        // Given + When
+        let result = PetDetailsViewModel.genderIcon("MALE")
+        
+        // Then
+        XCTAssertEqual(result, "arrow.up.right")
+    }
+    
+    func testStaticGenderIcon_whenGenderIsFemale_shouldReturnArrowDownRight() {
+        // Given + When
+        let result = PetDetailsViewModel.genderIcon("FEMALE")
+        
+        // Then
+        XCTAssertEqual(result, "arrow.down.right")
+    }
+    
+    func testStaticFormatDate_whenDateIsValid_shouldFormatCorrectly() {
+        // Given + When
+        let result = PetDetailsViewModel.formatDate("2025-11-20")
+        
+        // Then
+        XCTAssertEqual(result, "Nov 20, 2025")
+    }
+    
+    func testStaticFormatRadius_whenRadiusIsNil_shouldReturnNil() {
+        // Given + When
+        let result = PetDetailsViewModel.formatRadius(nil)
+        
+        // Then
+        XCTAssertNil(result)
+    }
+    
+    func testStaticFormatRadius_whenRadiusIsValid_shouldReturnFormattedString() {
+        // Given + When
+        let result = PetDetailsViewModel.formatRadius(5)
+        
+        // Then
+        XCTAssertNotNil(result)
+        if let radiusText = result {
+            XCTAssertFalse(radiusText.isEmpty)
+        }
+    }
 }
 
