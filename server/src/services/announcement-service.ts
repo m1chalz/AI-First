@@ -1,6 +1,6 @@
 import type { Announcement, AnnouncementDto, CreateAnnouncementDto } from '../types/announcement.ts';
 import type { IAnnouncementRepository } from '../database/repositories/announcement-repository.ts';
-import { ConflictError } from '../lib/errors.ts';
+import { ConflictError, NotFoundError } from '../lib/errors.ts';
 import { generateManagementPassword } from '../lib/password-management.ts';
 
 export class AnnouncementService {
@@ -14,8 +14,14 @@ export class AnnouncementService {
     return this.repository.findAll();
   }
 
-  async getAnnouncementById(id: string): Promise<Announcement | null> {
-    return this.repository.findById(id);
+  async getAnnouncementById(id: string): Promise<Announcement> {
+    const announcement = await this.repository.findById(id);
+    
+    if (!announcement) {
+      throw new NotFoundError();
+    }
+    
+    return announcement;
   }
 
   async createAnnouncement(data: CreateAnnouncementDto): Promise<AnnouncementDto> {

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement, CreateAnnouncementDto } from '../../types/announcement.ts';
 import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
-import { ConflictError } from '../../lib/errors.ts';
+import { ConflictError, NotFoundError } from '../../lib/errors.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -93,17 +93,15 @@ describe('AnnouncementService', () => {
       expect(result).toEqual(MOCK_ANNOUNCEMENT);
     });
 
-    it('should return null when ID does not exist', async () => {
+    it('should throw NotFoundError when ID does not exist', async () => {
       // Given: Repository with empty data
       const fakeRepository = defaultMockRepository;
       
       const service = createService(fakeRepository);
       
       // When: Service is called with non-existent ID
-      const result = await service.getAnnouncementById('non-existent-id');
-      
-      // Then: Null is returned
-      expect(result).toBeNull();
+      // Then: NotFoundError is thrown
+      await expect(service.getAnnouncementById('non-existent-id')).rejects.toThrow(NotFoundError);
     });
 
     it('should return announcement with null optional fields', async () => {
@@ -127,9 +125,9 @@ describe('AnnouncementService', () => {
       
       // Then: Announcement with nulls is returned
       expect(result).toEqual(announcementWithNulls);
-      expect(result?.breed).toBeNull();
-      expect(result?.email).toBeNull();
-      expect(result?.locationRadius).toBeNull();
+      expect(result.breed).toBeNull();
+      expect(result.email).toBeNull();
+      expect(result.locationRadius).toBeNull();
     });
   });
 

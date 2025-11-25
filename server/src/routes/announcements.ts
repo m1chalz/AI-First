@@ -5,7 +5,6 @@ import { AnnouncementService } from '../services/announcement-service.ts';
 import validateCreateAnnouncement from '../lib/announcement-validation.ts';
 import sanitizeText from '../lib/text-sanitization.ts';
 import { db } from '../database/db-utils.ts';
-import { NotFoundError } from '../lib/errors.ts';
 
 const router = Router();
 const announcementRepository = new AnnouncementRepository(db);
@@ -18,11 +17,6 @@ router.get('/', async (_req, res) => {
 
 router.get('/:id', async (req, res) => {
   const announcement = await announcementService.getAnnouncementById(req.params.id);
-  
-  if (!announcement) {
-    throw new NotFoundError();
-  }
-  
   return res.status(200).json(announcement);
 });
 
