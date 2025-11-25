@@ -19,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -66,7 +65,8 @@ fun AnimalListContent(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 23.dp, vertical = 44.dp),
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 44.dp),
         ) {
             // Title: "PetSpot" left-aligned
             Text(
@@ -81,7 +81,10 @@ fun AnimalListContent(
 
             // Content area with loading/error/empty/list states
             Box(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
             ) {
                 when {
                     state.isLoading -> LoadingIndicator()
@@ -90,6 +93,7 @@ fun AnimalListContent(
                             message = state.error,
                             onRetry = onRetry,
                         )
+
                     state.isEmpty -> EmptyState()
                     else ->
                         AnimalList(
@@ -100,13 +104,13 @@ fun AnimalListContent(
             }
         }
 
-        // Floating button at bottom center
+        // Floating button at bottom right
         FloatingReportButton(
             onClick = onReportMissing,
             modifier =
                 Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 32.dp, end = 23.dp)
                     .testTag("animalList.reportButton"),
         )
     }
@@ -188,6 +192,7 @@ private fun AnimalList(
             modifier
                 .fillMaxSize()
                 .testTag("animalList.list"),
+        contentPadding = PaddingValues(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(

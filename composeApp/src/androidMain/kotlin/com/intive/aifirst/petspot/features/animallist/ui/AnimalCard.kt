@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
@@ -163,15 +164,14 @@ fun AnimalCard(
 
             // RIGHT: Status badge and date (vertically stacked)
             Column(
-                modifier = Modifier
-                    .width(78.dp),
+                modifier = Modifier.wrapContentWidth(),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 // Status badge: pill-shaped
                 Surface(
                     shape = RoundedCornerShape(13.dp),
-                    color = Color(android.graphics.Color.parseColor(animal.status.badgeColor)),
+                    color = Color(animal.status.badgeColor.toColorInt()),
                 ) {
                     Text(
                         text = animal.status.displayName,
@@ -182,7 +182,7 @@ fun AnimalCard(
                     )
                 }
 
-                // Date (below badge)
+                // Date (wraps to content width)
                 Text(
                     text = animal.lastSeenDate,
                     fontSize = 14.sp,
@@ -228,10 +228,11 @@ private fun AnimalCardFoundPreview() {
     MaterialTheme {
         Surface {
             AnimalCard(
-                animal = AnimalCardPreviewData.animal.copy(
-                    status = AnimalStatus.FOUND,
-                    name = "Milo",
-                ),
+                animal =
+                    AnimalCardPreviewData.animal.copy(
+                        status = AnimalStatus.FOUND,
+                        name = "Milo",
+                    ),
             )
         }
     }
