@@ -9,6 +9,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - SQLite (initial phase), designed for easy migration to PostgreSQL using Knex migrations (006-pets-api)
 - Kotlin 1.9.x (Multiplatform), Bash/Shell scripting for hooks + Detekt (Kotlin static analysis), ktlint (Kotlin code formatter/linter), Gradle plugins for analysis tools (007-static-analysis-hooks)
 - N/A (no persistent storage required, reports generated on-demand) (007-static-analysis-hooks)
+- TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes (014-remove-location-fields)
+- SQLite (development), PostgreSQL-ready (production) (014-remove-location-fields)
 
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
 
@@ -28,12 +30,9 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
 - 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 - 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
-- 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
-- 007-static-analysis-hooks: Added Kotlin 1.9.x (Multiplatform), Bash/Shell scripting for hooks + Detekt (Kotlin static analysis), ktlint (Kotlin code formatter/linter), Gradle plugins for analysis tools
-- 008-pet-details-api: Added TypeScript with Node.js v24 (LTS) + Express.js (REST framework), Knex (query builder), SQLite3 (database driver), Vitest (testing), SuperTest (API integration tests)
-- 009-create-announcement: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 
 <!-- MANUAL ADDITIONS START -->
