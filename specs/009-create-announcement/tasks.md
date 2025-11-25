@@ -78,29 +78,29 @@ Each phase delivers a complete, independently testable increment.
 
 #### Text Sanitization Utility
 
-- [ ] T008 [P] Write failing tests for text sanitization in server/src/lib/__test__/text-sanitization.test.ts
-- [ ] T009 [P] Implement sanitizeText() function in server/src/lib/text-sanitization.ts using xss library
-- [ ] T010 [P] Verify text sanitization tests pass with `npm test -- text-sanitization.test.ts`
+- [X] T008 [P] Write failing tests for text sanitization in server/src/lib/__test__/text-sanitization.test.ts
+- [X] T009 [P] Implement sanitizeText() function in server/src/lib/text-sanitization.ts using xss library
+- [X] T010 [P] Verify text sanitization tests pass with `npm test -- text-sanitization.test.ts`
 
 #### Password Management Utility
 
-- [ ] T011 [P] Write failing tests for password management in server/src/lib/__test__/password-management.test.ts
-- [ ] T012 [P] Implement generateManagementPassword() in server/src/lib/password-management.ts (6-digit numeric)
-- [ ] T013 [P] Implement hashPassword() using Node.js scrypt in server/src/lib/password-management.ts (salt:hash format)
-- [ ] T014 [P] Implement verifyPassword() with timingSafeEqual in server/src/lib/password-management.ts
-- [ ] T015 [P] Verify password management tests pass with `npm test -- password-management.test.ts`
+- [X] T011 [P] Write failing tests for password management in server/src/lib/__test__/password-management.test.ts
+- [X] T012 [P] Implement generateManagementPassword() in server/src/lib/password-management.ts (6-digit numeric)
+- [X] T013 [P] Implement hashPassword() using Node.js scrypt in server/src/lib/password-management.ts (salt:hash format)
+- [X] T014 [P] Implement verifyPassword() with timingSafeEqual in server/src/lib/password-management.ts
+- [X] T015 [P] Verify password management tests pass with `npm test -- password-management.test.ts`
 
 #### PII Redaction Utility
 
-- [ ] T016 [P] Write failing tests for PII redaction in server/src/lib/__test__/pii-redaction.test.ts
-- [ ] T017 [P] Implement redactPhone() function in server/src/lib/pii-redaction.ts (show last 3 digits)
-- [ ] T018 [P] Implement redactEmail() function in server/src/lib/pii-redaction.ts (show first letter + @domain)
-- [ ] T019 [P] Verify PII redaction tests pass with `npm test -- pii-redaction.test.ts`
+- [X] T016 [P] Write failing tests for PII redaction in server/src/lib/__test__/pii-redaction.test.ts
+- [X] T017 [P] Implement redactPhone() function in server/src/lib/pii-redaction.ts (show last 3 digits)
+- [X] T018 [P] Implement redactEmail() function in server/src/lib/pii-redaction.ts (show first letter + @domain)
+- [X] T019 [P] Verify PII redaction tests pass with `npm test -- pii-redaction.test.ts`
 
 #### Error Classes
 
-- [ ] T020 [P] Create ValidationError class in server/src/lib/errors.ts (code, message, field properties)
-- [ ] T021 [P] Create ConflictError class in server/src/lib/errors.ts (message, field properties)
+- [X] T020 [P] Create ValidationError class in server/src/lib/errors.ts (code, message, field properties)
+- [X] T021 [P] Create ConflictError class in server/src/lib/errors.ts (message, field properties)
 
 ---
 
@@ -440,7 +440,7 @@ All implementation tasks follow Test-Driven Development (Red-Green-Refactor):
 ### Phase Completion Checklist
 
 - [X] **Phase 1**: Dependencies installed, database schema created
-- [ ] **Phase 2**: All utility functions implemented with ≥80% test coverage
+- [X] **Phase 2**: All utility functions implemented with ≥80% test coverage
 - [ ] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
 - [ ] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
 - [ ] **Phase 5**: Duplicate prevention functional, User Story 3 acceptance scenarios pass
