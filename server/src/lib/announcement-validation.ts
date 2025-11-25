@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ValidationError } from './errors.ts';
-import { CreateAnnouncementDto } from '../types/announcement.js';
+import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import { isValidEmail, isValidPhone } from './validators.ts';
 
 function isValidHttpUrl(urlString: string): boolean {

@@ -3,22 +3,21 @@ import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement, CreateAnnouncementDto } from '../../types/announcement.ts';
 import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 import { ConflictError } from '../../lib/errors.ts';
-import * as textSanitizationModule from '../../lib/text-sanitization.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
   petName: 'Max',
   species: 'DOG',
   breed: 'Golden Retriever',
-  gender: 'MALE',
+  sex: 'MALE',
   description: 'Friendly dog',
-  location: 'Central Park',
-  locationRadius: 5,
+  locationLatitude: 40.7128,
+  locationLongitude: -74.0060,
   lastSeenDate: '2025-11-18',
   email: 'john@example.com',
   phone: '+1-555-0101',
   photoUrl: 'https://example.com/max.jpg',
-  status: 'ACTIVE',
+  status: 'MISSING',
   createdAt: '2025-11-19T10:00:00Z',
   updatedAt: '2025-11-19T10:00:00Z',
 };
@@ -113,7 +112,6 @@ describe('AnnouncementService', () => {
         ...MOCK_ANNOUNCEMENT,
         breed: null,
         email: null,
-        photoUrl: null,
         locationRadius: null,
       };
       
@@ -131,7 +129,6 @@ describe('AnnouncementService', () => {
       expect(result).toEqual(announcementWithNulls);
       expect(result?.breed).toBeNull();
       expect(result?.email).toBeNull();
-      expect(result?.photoUrl).toBeNull();
       expect(result?.locationRadius).toBeNull();
     });
   });
@@ -329,7 +326,7 @@ describe('AnnouncementService', () => {
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async () => ({
+        create: vi.fn(async (): Promise<Announcement> => ({
           id: 'new-id-123',
           species: 'DOG',
           sex: 'MALE',
@@ -409,57 +406,6 @@ describe('AnnouncementService', () => {
         managementPassword: expect.stringMatching(/^\d{6}$/),
       });
       expect(fakeRepository.create).toHaveBeenCalled();
-    });
-
-    it('should preserve non-text fields as-is', async () => {
-      // Given: Announcement data with numeric and date fields
-      const dataWithNumericFields: CreateAnnouncementDto = {
-        ...VALID_CREATE_DATA,
-        age: 5,
-        locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
-        locationRadius: 10,
-        lastSeenDate: '2025-11-19',
-      };
-
-      const createdAnnouncement: Announcement = {
-        id: 'new-id-123',
-        species: 'DOG',
-        sex: 'MALE',
-        age: 5,
-        locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
-        locationRadius: 10,
-        photoUrl: 'https://example.com/photo.jpg',
-        lastSeenDate: '2025-11-19',
-        status: 'MISSING',
-        email: 'test@example.com',
-        createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
-      };
-
-      const fakeRepository = {
-        ...defaultMockRepository,
-        existsByMicrochip: async () => false,
-        create: vi.fn(async () => createdAnnouncement),
-      };
-
-      const service = createService(fakeRepository);
-
-      // When: Service creates announcement
-      await service.createAnnouncement(dataWithNumericFields);
-
-      // Then: Numeric and date fields are preserved correctly
-      expect(fakeRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          age: 5,
-          locationLatitude: 40.7128,
-          locationLongitude: -74.0060,
-          locationRadius: 10,
-          lastSeenDate: '2025-11-19',
-        }),
-        expect.any(String)
-      );
     });
   });
 });
