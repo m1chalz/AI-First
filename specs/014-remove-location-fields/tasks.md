@@ -64,24 +64,24 @@
 > **NOTE: Update existing tests to verify location fields are rejected**
 
 **Backend Unit Tests**:
-- [ ] T008 [P] [US1] Update existing test to verify validation rejects `locationCity` in `/server/src/lib/__test__/announcement-validation.test.ts`
-- [ ] T009 [P] [US1] Update existing test to verify validation rejects `locationRadius` in `/server/src/lib/__test__/announcement-validation.test.ts`
-- [ ] T010 [P] [US1] Update existing test to verify validation rejects `location` field in `/server/src/lib/__test__/announcement-validation.test.ts`
+- [X] T008 [P] [US1] Update existing test to verify validation rejects `locationCity` in `/server/src/lib/__test__/announcement-validation.test.ts`
+- [X] T009 [P] [US1] Update existing test to verify validation rejects `locationRadius` in `/server/src/lib/__test__/announcement-validation.test.ts`
+- [X] T010 [P] [US1] Update existing test to verify validation rejects `location` field in `/server/src/lib/__test__/announcement-validation.test.ts`
 
 **Backend Integration Tests**:
-- [ ] T011 [P] [US1] Update existing test to verify POST `/announcements` rejects `locationCity` in `/server/src/__test__/announcements.test.ts`
-- [ ] T012 [P] [US1] Update existing test to verify POST `/announcements` rejects `locationRadius` in `/server/src/__test__/announcements.test.ts`
-- [ ] T013 [P] [US1] Update existing test to verify POST `/announcements` rejects `location` field in `/server/src/__test__/announcements.test.ts`
+- [X] T011 [P] [US1] Update existing test to verify POST `/announcements` rejects `locationCity` in `/server/src/__test__/announcements.test.ts`
+- [X] T012 [P] [US1] Update existing test to verify POST `/announcements` rejects `locationRadius` in `/server/src/__test__/announcements.test.ts`
+- [X] T013 [P] [US1] Update existing test to verify POST `/announcements` rejects `location` field in `/server/src/__test__/announcements.test.ts`
 
 ### Implementation for User Story 1
 
 **Backend**:
-- [ ] T014 [US1] Remove `locationCity` from Zod schema in `/server/src/lib/announcement-validation.ts`
-- [ ] T015 [US1] Remove `locationRadius` from Zod schema in `/server/src/lib/announcement-validation.ts`
-- [ ] T016 [US1] Verify strict mode automatically rejects unknown fields (no code changes needed)
-- [ ] T017 [US1] Remove location field test cases from `/server/src/lib/__test__/announcement-validation.test.ts`
-- [ ] T018 [US1] Run `npm test -- --coverage` and verify 80% coverage maintained
-- [ ] T019 [P] [US1] Run `npm run lint` and fix ESLint violations
+- [X] T014 [US1] Remove `locationCity` from Zod schema in `/server/src/lib/announcement-validation.ts`
+- [X] T015 [US1] Remove `locationRadius` from Zod schema in `/server/src/lib/announcement-validation.ts`
+- [X] T016 [US1] Verify strict mode automatically rejects unknown fields (no code changes needed)
+- [X] T017 [US1] Remove location field test cases from `/server/src/lib/__test__/announcement-validation.test.ts`
+- [X] T018 [US1] Run `npm test -- --coverage` and verify 80% coverage maintained
+- [X] T019 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - API rejects location fields with `INVALID_FIELD` error
 
@@ -96,32 +96,32 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Backend Unit Tests**:
-- [ ] T020 [P] [US2] Update existing test to verify repository mapping excludes `locationCity` in `/server/src/services/__test__/announcement-service.test.ts`
-- [ ] T021 [P] [US2] Update existing test to verify repository mapping excludes `locationRadius` in `/server/src/services/__test__/announcement-service.test.ts`
-- [ ] T022 [P] [US2] Update existing test to verify service excludes `locationCity` from response in `/server/src/services/__test__/announcement-service.test.ts`
-- [ ] T023 [P] [US2] Update existing test to verify service excludes `locationRadius` from response in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T020 [P] [US2] Update existing test to verify repository mapping excludes `locationCity` in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T021 [P] [US2] Update existing test to verify repository mapping excludes `locationRadius` in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T022 [P] [US2] Update existing test to verify service excludes `locationCity` from response in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T023 [P] [US2] Update existing test to verify service excludes `locationRadius` from response in `/server/src/services/__test__/announcement-service.test.ts`
 
 **Backend Integration Tests**:
-- [ ] T024 [P] [US2] Update existing test to verify GET `/announcements/:id` excludes location fields in `/server/src/__test__/announcements.test.ts`
-- [ ] T025 [P] [US2] Update existing test to verify GET `/announcements` excludes location fields from all items in `/server/src/__test__/announcements.test.ts`
+- [X] T024 [P] [US2] Update existing test to verify GET `/announcements/:id` excludes location fields in `/server/src/__test__/announcements.test.ts`
+- [X] T025 [P] [US2] Update existing test to verify GET `/announcements` excludes location fields from all items in `/server/src/__test__/announcements.test.ts`
 
 ### Implementation for User Story 2
 
 **Backend**:
-- [ ] T026 [US2] Remove `locationCity` from `CreateAnnouncementDto` in `/server/src/types/announcement.d.ts`
-- [ ] T027 [US2] Remove `locationRadius` from `CreateAnnouncementDto` in `/server/src/types/announcement.d.ts`
-- [ ] T028 [US2] Remove `locationCity` from `AnnouncementDto` in `/server/src/types/announcement.d.ts`
-- [ ] T029 [US2] Remove `locationRadius` from `AnnouncementDto` in `/server/src/types/announcement.d.ts`
-- [ ] T030 [US2] Remove `locationCity` from `Announcement` interface in `/server/src/types/announcement.d.ts`
-- [ ] T031 [US2] Remove `locationRadius` from `Announcement` interface in `/server/src/types/announcement.d.ts`
-- [ ] T032 [US2] Remove `location_city` from `AnnouncementRow` interface in `/server/src/types/announcement.d.ts`
-- [ ] T033 [US2] Remove `location_radius` from `AnnouncementRow` interface in `/server/src/types/announcement.d.ts`
-- [ ] T034 [US2] Remove `locationCity` mapping in `mapRowToAnnouncement()` in `/server/src/database/repositories/announcement-repository.ts`
-- [ ] T035 [US2] Remove `locationRadius` mapping in `mapRowToAnnouncement()` in `/server/src/database/repositories/announcement-repository.ts`
-- [ ] T036 [US2] Remove `locationCity` sanitization in `createAnnouncement()` in `/server/src/services/announcement-service.ts`
-- [ ] T037 [US2] Remove location field references from test code in `/server/src/services/__test__/announcement-service.test.ts`
-- [ ] T038 [US2] Run `npm test -- --coverage` and verify 80% coverage maintained
-- [ ] T039 [P] [US2] Run `npm run lint` and fix ESLint violations
+- [X] T026 [US2] Remove `locationCity` from `CreateAnnouncementDto` in `/server/src/types/announcement.d.ts`
+- [X] T027 [US2] Remove `locationRadius` from `CreateAnnouncementDto` in `/server/src/types/announcement.d.ts`
+- [X] T028 [US2] Remove `locationCity` from `AnnouncementDto` in `/server/src/types/announcement.d.ts`
+- [X] T029 [US2] Remove `locationRadius` from `AnnouncementDto` in `/server/src/types/announcement.d.ts`
+- [X] T030 [US2] Remove `locationCity` from `Announcement` interface in `/server/src/types/announcement.d.ts`
+- [X] T031 [US2] Remove `locationRadius` from `Announcement` interface in `/server/src/types/announcement.d.ts`
+- [X] T032 [US2] Remove `location_city` from `AnnouncementRow` interface in `/server/src/types/announcement.d.ts`
+- [X] T033 [US2] Remove `location_radius` from `AnnouncementRow` interface in `/server/src/types/announcement.d.ts`
+- [X] T034 [US2] Remove `locationCity` mapping in `mapRowToAnnouncement()` in `/server/src/database/repositories/announcement-repository.ts`
+- [X] T035 [US2] Remove `locationRadius` mapping in `mapRowToAnnouncement()` in `/server/src/database/repositories/announcement-repository.ts`
+- [X] T036 [US2] Remove `locationCity` sanitization in `createAnnouncement()` in `/server/src/services/announcement-service.ts`
+- [X] T037 [US2] Remove location field references from test code in `/server/src/services/__test__/announcement-service.test.ts`
+- [X] T038 [US2] Run `npm test -- --coverage` and verify 80% coverage maintained
+- [X] T039 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - API rejects location fields in requests and excludes them from responses
 
@@ -136,27 +136,27 @@
 ### Tests for User Story 3 (MANDATORY) ✅
 
 **Backend Integration Tests**:
-- [ ] T040 [P] [US3] Update existing test to verify migration removes `location_city` column in `/server/src/__test__/announcements.test.ts`
-- [ ] T041 [P] [US3] Update existing test to verify migration removes `location_radius` column in `/server/src/__test__/announcements.test.ts`
-- [ ] T042 [P] [US3] Update existing test to verify repository `create()` doesn't persist location fields in `/server/src/__test__/announcements.test.ts`
+- [X] T040 [P] [US3] Update existing test to verify migration removes `location_city` column in `/server/src/__test__/announcements.test.ts`
+- [X] T041 [P] [US3] Update existing test to verify migration removes `location_radius` column in `/server/src/__test__/announcements.test.ts`
+- [X] T042 [P] [US3] Update existing test to verify repository `create()` doesn't persist location fields in `/server/src/__test__/announcements.test.ts`
 
 ### Implementation for User Story 3
 
 **Backend**:
-- [ ] T043 [US3] Create migration file `[timestamp]_remove_location_fields.ts` in `/server/src/database/migrations/`
-- [ ] T044 [US3] Implement `up()` function to drop `location_city` column in migration file
-- [ ] T045 [US3] Implement `up()` function to drop `location_radius` column in migration file
-- [ ] T046 [US3] Implement `down()` function to recreate columns for rollback in migration file
-- [ ] T047 [US3] Remove `location_city` mapping in `create()` method in `/server/src/database/repositories/announcement-repository.ts`
-- [ ] T048 [US3] Remove `location_radius` mapping in `create()` method in `/server/src/database/repositories/announcement-repository.ts`
-- [ ] T049 [US3] Remove `location_city` from seed data in `/server/src/database/seeds/001_announcements.ts`
-- [ ] T050 [US3] Remove `location_radius` from seed data in `/server/src/database/seeds/001_announcements.ts`
-- [ ] T051 [US3] Run migration: `npm run knex:migrate:latest` (from server/)
-- [ ] T052 [US3] Test migration rollback: `npm run knex:migrate:rollback` (from server/)
-- [ ] T053 [US3] Re-apply migration: `npm run knex:migrate:latest` (from server/)
-- [ ] T054 [US3] Remove location field references from test code in `/server/src/__test__/announcements.test.ts`
-- [ ] T055 [US3] Run `npm test -- --coverage` and verify 80% coverage maintained
-- [ ] T056 [P] [US3] Run `npm run lint` and fix ESLint violations
+- [X] T043 [US3] Create migration file `[timestamp]_remove_location_fields.ts` in `/server/src/database/migrations/`
+- [X] T044 [US3] Implement `up()` function to drop `location_city` column in migration file
+- [X] T045 [US3] Implement `up()` function to drop `location_radius` column in migration file
+- [X] T046 [US3] Implement `down()` function to recreate columns for rollback in migration file
+- [X] T047 [US3] Remove `location_city` mapping in `create()` method in `/server/src/database/repositories/announcement-repository.ts`
+- [X] T048 [US3] Remove `location_radius` mapping in `create()` method in `/server/src/database/repositories/announcement-repository.ts`
+- [X] T049 [US3] Remove `location_city` from seed data in `/server/src/database/seeds/001_announcements.ts`
+- [X] T050 [US3] Remove `location_radius` from seed data in `/server/src/database/seeds/001_announcements.ts`
+- [X] T051 [US3] Run migration: `npm run knex:migrate:latest` (from server/)
+- [X] T052 [US3] Test migration rollback: `npm run knex:migrate:rollback` (from server/)
+- [X] T053 [US3] Re-apply migration: `npm run knex:migrate:latest` (from server/)
+- [X] T054 [US3] Remove location field references from test code in `/server/src/__test__/announcements.test.ts`
+- [X] T055 [US3] Run `npm test -- --coverage` and verify 80% coverage maintained
+- [X] T056 [P] [US3] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: All user stories should now be independently functional - Database schema updated, location fields removed from all layers
 
@@ -166,15 +166,15 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T057 [P] Update API documentation in `/server/README.md` - Remove location field descriptions
-- [ ] T058 [P] Update API documentation in `/server/README.md` - Remove location field examples from request body
-- [ ] T059 [P] Update API documentation in `/server/README.md` - Remove location field examples from response body
-- [ ] T060 [P] Update API documentation in `/server/README.md` - Update error response examples
-- [ ] T061 [P] Verify all tests pass: `npm test` (from server/)
-- [ ] T062 [P] Verify test coverage: `npm test -- --coverage` (from server/) - ensure 80%+ maintained
-- [ ] T063 [P] Verify linting: `npm run lint` (from server/)
-- [ ] T064 [P] Verify TypeScript compilation: `npm run build` (if available) or `tsc --noEmit` (from server/)
-- [ ] T065 Run quickstart.md validation - verify all manual testing steps work
+- [X] T057 [P] Update API documentation in `/server/README.md` - Remove location field descriptions
+- [X] T058 [P] Update API documentation in `/server/README.md` - Remove location field examples from request body
+- [X] T059 [P] Update API documentation in `/server/README.md` - Remove location field examples from response body
+- [X] T060 [P] Update API documentation in `/server/README.md` - Update error response examples
+- [X] T061 [P] Verify all tests pass: `npm test` (from server/)
+- [X] T062 [P] Verify test coverage: `npm test -- --coverage` (from server/) - ensure 80%+ maintained
+- [X] T063 [P] Verify linting: `npm run lint` (from server/)
+- [X] T064 [P] Verify TypeScript compilation: `npm run build` (if available) or `tsc --noEmit` (from server/)
+- [X] T065 Run quickstart.md validation - verify all manual testing steps work
 
 ---
 

@@ -41,7 +41,6 @@ export class AnnouncementService {
       breed: data.breed ? this.sanitizer(data.breed) : undefined,
       sex: this.sanitizer(data.sex),
       description: data.description ? this.sanitizer(data.description) : undefined,
-      locationCity: data.locationCity ? this.sanitizer(data.locationCity) : undefined,
       reward: data.reward ? this.sanitizer(data.reward) : undefined,
     } as CreateAnnouncementDto;
 
