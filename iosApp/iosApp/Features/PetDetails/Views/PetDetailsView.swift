@@ -125,7 +125,7 @@ struct PetDetailsView: View {
                                 .foregroundColor(Color(hex: "#6a7282"))
                             
                             HStack(spacing: 8) {
-                                Image(systemName: viewModel.genderIconName)
+                                Text(viewModel.genderSymbol)
                                     .font(.system(size: 20))
                                     .foregroundColor(Color(hex: "#155dfc"))
                                 

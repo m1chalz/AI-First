@@ -389,18 +389,18 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(result, "Dog")
     }
     
-    func testGenderIconName_whenStateIsLoading_shouldReturnQuestionmark() {
+    func testGenderSymbol_whenStateIsLoading_shouldReturnQuestionMark() {
         // Given
         let (sut, _) = makeSUT()
         
         // When
-        let result = sut.genderIconName
+        let result = sut.genderSymbol
         
         // Then
-        XCTAssertEqual(result, "questionmark")
+        XCTAssertEqual(result, "?")
     }
     
-    func testGenderIconName_whenGenderIsMale_shouldReturnArrowUpRight() async {
+    func testGenderSymbol_whenGenderIsMale_shouldReturnMarsSymbol() async {
         // Given
         let (sut, repository) = makeSUT()
         var petDetails = makeMockPetDetails()
@@ -429,13 +429,13 @@ final class PetDetailsViewModelTests: XCTestCase {
         await sut.loadPetDetails()
         
         // When
-        let result = sut.genderIconName
+        let result = sut.genderSymbol
         
         // Then
-        XCTAssertEqual(result, "arrow.up.right")
+        XCTAssertEqual(result, "♂")
     }
     
-    func testGenderIconName_whenGenderIsFemale_shouldReturnArrowDownRight() async {
+    func testGenderSymbol_whenGenderIsFemale_shouldReturnVenusSymbol() async {
         // Given
         let (sut, repository) = makeSUT()
         var petDetails = makeMockPetDetails()
@@ -464,13 +464,13 @@ final class PetDetailsViewModelTests: XCTestCase {
         await sut.loadPetDetails()
         
         // When
-        let result = sut.genderIconName
+        let result = sut.genderSymbol
         
         // Then
-        XCTAssertEqual(result, "arrow.down.right")
+        XCTAssertEqual(result, "♀")
     }
     
-    func testGenderIconName_whenGenderIsUnknown_shouldReturnQuestionmark() async {
+    func testGenderSymbol_whenGenderIsUnknown_shouldReturnQuestionMark() async {
         // Given
         let (sut, repository) = makeSUT()
         var petDetails = makeMockPetDetails()
@@ -499,10 +499,10 @@ final class PetDetailsViewModelTests: XCTestCase {
         await sut.loadPetDetails()
         
         // When
-        let result = sut.genderIconName
+        let result = sut.genderSymbol
         
         // Then
-        XCTAssertEqual(result, "questionmark")
+        XCTAssertEqual(result, "?")
     }
     
     func testFormattedDate_whenStateIsLoading_shouldReturnEmptyString() {
@@ -763,20 +763,20 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(result, "Dog")
     }
     
-    func testStaticGenderIcon_whenGenderIsMale_shouldReturnArrowUpRight() {
+    func testStaticGenderSymbol_whenGenderIsMale_shouldReturnMarsSymbol() {
         // Given + When
-        let result = PetDetailsViewModel.genderIcon("MALE")
+        let result = PetDetailsViewModel.genderSymbol("MALE")
         
         // Then
-        XCTAssertEqual(result, "arrow.up.right")
+        XCTAssertEqual(result, "♂")
     }
     
-    func testStaticGenderIcon_whenGenderIsFemale_shouldReturnArrowDownRight() {
+    func testStaticGenderSymbol_whenGenderIsFemale_shouldReturnVenusSymbol() {
         // Given + When
-        let result = PetDetailsViewModel.genderIcon("FEMALE")
+        let result = PetDetailsViewModel.genderSymbol("FEMALE")
         
         // Then
-        XCTAssertEqual(result, "arrow.down.right")
+        XCTAssertEqual(result, "♀")
     }
     
     func testStaticFormatDate_whenDateIsValid_shouldFormatCorrectly() {

@@ -83,16 +83,16 @@ class PetDetailsViewModel: ObservableObject {
         return petDetails.species.capitalized
     }
     
-    /// Returns SF Symbol name for gender icon
-    var genderIconName: String {
-        guard case .loaded(let petDetails) = state else { return "questionmark" }
+    /// Returns gender symbol (Unicode character)
+    var genderSymbol: String {
+        guard case .loaded(let petDetails) = state else { return "?" }
         switch petDetails.gender.uppercased() {
         case "MALE":
-            return "arrow.up.right"
+            return "♂"
         case "FEMALE":
-            return "arrow.down.right"
+            return "♀"
         default:
-            return "questionmark"
+            return "?"
         }
     }
     
@@ -162,15 +162,15 @@ class PetDetailsViewModel: ObservableObject {
         return species.capitalized
     }
     
-    /// Static helper to get gender icon name
-    static func genderIcon(_ gender: String) -> String {
+    /// Static helper to get gender symbol (Unicode character)
+    static func genderSymbol(_ gender: String) -> String {
         switch gender.uppercased() {
         case "MALE":
-            return "arrow.up.right"
+            return "♂"
         case "FEMALE":
-            return "arrow.down.right"
+            return "♀"
         default:
-            return "questionmark"
+            return "?"
         }
     }
     
