@@ -31,6 +31,8 @@ struct PetPhotoWithBadgesView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
     }
     
     // MARK: - Photo View
@@ -38,23 +40,26 @@ struct PetPhotoWithBadgesView: View {
     @ViewBuilder
     private var photoView: some View {
         if let imageUrl = model.imageUrl, let url = URL(string: imageUrl) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .clipped()
-                case .failure:
-                    imagePlaceholder
-                @unknown default:
-                    imagePlaceholder
-                }
-            }
-            .accessibilityIdentifier("petDetails.photo.image")
+            Rectangle()
+                .fill(Color.clear)
+                .overlay(
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        case .failure:
+                            imagePlaceholder
+                        @unknown default:
+                            imagePlaceholder
+                        }
+                    }
+                )
+                .clipped()
+                .accessibilityIdentifier("petDetails.photo.image")
         } else {
             imagePlaceholder
         }
