@@ -409,5 +409,48 @@ describe('POST /api/v1/announcements', () => {
     });
   });
 
-
+  it('should return 409 when duplicate microchip number', async () => {
+    // given: First announcement with microchip number
+    const firstAnnouncement = {
+      species: 'Golden Retriever',
+      sex: 'MALE',
+      lastSeenDate: '2025-11-20',
+      photoUrl: 'https://example.com/photo1.jpg',
+      status: 'MISSING' as const,
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'john@example.com',
+      microchipNumber: '123456789012345'
+    };
+    
+    await request(server)
+      .post('/api/v1/announcements')
+      .send(firstAnnouncement)
+      .expect(201);
+    
+    // when: Attempt to create second announcement with same microchip number
+    const duplicateAnnouncement = {
+      species: 'Labrador',
+      sex: 'FEMALE',
+      lastSeenDate: '2025-11-21',
+      photoUrl: 'https://example.com/photo2.jpg',
+      status: 'FOUND' as const,
+      locationLatitude: 40.785091,
+      locationLongitude: -73.968285,
+      email: 'jane@example.com',
+      microchipNumber: '123456789012345' // Same microchip number
+    };
+    
+    const response = await request(server)
+      .post('/api/v1/announcements')
+      .send(duplicateAnnouncement)
+      .expect(409);
+    
+    // then: Returns HTTP 409 with CONFLICT error
+    expect(response.body.error).toMatchObject({
+      code: 'CONFLICT',
+      message: 'An entity with this value already exists',
+      field: 'microchipNumber'
+    });
+  });
 });

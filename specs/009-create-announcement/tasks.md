@@ -236,15 +236,15 @@ Each phase delivers a complete, independently testable increment.
 
 #### Database Query for Duplicates
 
-- [ ] T064 [US3] Implement duplicate microchip check in server/src/services/announcement-service.ts (query database, throw ConflictError if exists)
-- [ ] T065 [US3] Update error handler middleware to handle ConflictError in server/src/middlewares/error-handler.ts (HTTP 409)
+- [X] T064 [US3] Implement duplicate microchip check in server/src/services/announcement-service.ts (query database, throw ConflictError if exists)
+- [X] T065 [US3] Update error handler middleware to handle ConflictError in server/src/middlewares/error-handler.ts (HTTP 409)
 
 #### Integration Tests for Duplicates (TDD)
 
-- [ ] T066 [US3] Write integration test for duplicate microchip in server/src/__test__/announcements.test.ts (HTTP 409 with CONFLICT error)
-- [ ] T067 [US3] Write integration test for unique microchip in server/src/__test__/announcements.test.ts (successful creation)
-- [ ] T068 [US3] Write integration test for missing microchip in server/src/__test__/announcements.test.ts (skip duplicate check)
-- [ ] T069 [US3] Verify all User Story 3 integration tests pass with `npm test -- announcements.test.ts`
+- [X] T066 [US3] Write integration test for duplicate microchip in server/src/__test__/announcements.test.ts (HTTP 409 with CONFLICT error)
+- [X] T067 [US3] Write integration test for unique microchip in server/src/__test__/announcements.test.ts (successful creation)
+- [X] T068 [US3] Write integration test for missing microchip in server/src/__test__/announcements.test.ts (skip duplicate check)
+- [X] T069 [US3] Verify all User Story 3 integration tests pass with `npm test -- announcements.test.ts`
 
 ---
 
@@ -443,7 +443,7 @@ All implementation tasks follow Test-Driven Development (Red-Green-Refactor):
 - [X] **Phase 2**: All utility functions implemented with ≥80% test coverage
 - [X] **Phase 3**: POST endpoint functional, User Story 1 acceptance scenarios pass
 - [X] **Phase 4**: Comprehensive validation implemented, User Story 2 acceptance scenarios pass
-- [ ] **Phase 5**: Duplicate prevention functional, User Story 3 acceptance scenarios pass
+- [X] **Phase 5**: Duplicate prevention functional, User Story 3 acceptance scenarios pass
 - [ ] **Phase 6**: Code quality verified, manual testing completed, documentation updated
 
 ### Overall Success Criteria (from spec.md)
