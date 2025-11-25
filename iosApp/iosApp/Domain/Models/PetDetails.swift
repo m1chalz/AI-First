@@ -20,8 +20,8 @@ struct PetDetails: Identifiable, Codable {
     /// Date when the pet was last seen (YYYY-MM-DD format from API)
     let lastSeenDate: String
     
-    /// Species of the pet (e.g., "DOG", "CAT")
-    let species: String
+    /// Species of the pet (DOG, CAT, BIRD, RABBIT, or OTHER)
+    let species: AnimalSpecies
     
     /// Sex of the pet (MALE, FEMALE, or UNKNOWN)
     let gender: AnimalGender
@@ -45,10 +45,6 @@ struct PetDetails: Identifiable, Codable {
     
     /// Longitude coordinate where pet was last seen
     let longitude: Double
-    
-    /// Search radius around location in kilometers (optional, number from backend)
-    /// Note: ViewModel formats to "±X km" for display
-    let locationRadius: Int?
     
     /// Microchip number (optional, will be mocked until backend adds this field)
     let microchipNumber: String?

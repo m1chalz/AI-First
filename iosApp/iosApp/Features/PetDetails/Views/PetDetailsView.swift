@@ -158,16 +158,6 @@ struct PetDetailsView: View {
                             Text(viewModel.formattedCoordinates)
                                 .font(.system(size: 16))
                                 .foregroundColor(Color(hex: "#101828"))
-                            
-                            if let radiusText = viewModel.formattedRadius {
-                                Text("•")
-                                    .font(.system(size: 16))
-                                    .foregroundColor(Color(hex: "#6a7282"))
-                                
-                                Text(radiusText)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(Color(hex: "#4a5565"))
-                            }
                         }
                     }
                     .accessibilityIdentifier("petDetails.location.field")
@@ -241,7 +231,7 @@ struct PetDetailsView_Previews: PreviewProvider {
                     photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
                     status: .active,
                     lastSeenDate: "2025-11-20",
-                    species: "DOG",
+                    species: .dog,
                     gender: .male,
                     description: "Friendly and energetic golden retriever looking for a loving home. Great with kids and other pets.",
                     phone: "+48 123 456 789",
@@ -249,7 +239,6 @@ struct PetDetailsView_Previews: PreviewProvider {
                     breed: "Doberman",
                     latitude: 52.2297,
                     longitude: 21.0122,
-                    locationRadius: 15,
                     microchipNumber: "000-000-000-000",
                     approximateAge: "3 years",
                     reward: "500 PLN",

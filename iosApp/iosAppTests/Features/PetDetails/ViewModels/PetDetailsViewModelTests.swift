@@ -76,7 +76,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: "Test Breed",
             latitude: latitude,
             longitude: longitude,
-            locationRadius: 5,
             microchipNumber: "123-456-789",
             approximateAge: "2 years",
             reward: reward,
@@ -256,7 +255,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: nil,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -291,7 +289,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: "123456789012",
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -326,7 +323,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: "123-456",
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -372,7 +368,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -418,7 +413,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -453,7 +447,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -488,7 +481,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -534,7 +526,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -569,7 +560,6 @@ final class PetDetailsViewModelTests: XCTestCase {
             breed: petDetails.breed,
             latitude: petDetails.latitude,
             longitude: petDetails.longitude,
-            locationRadius: petDetails.locationRadius,
             microchipNumber: petDetails.microchipNumber,
             approximateAge: petDetails.approximateAge,
             reward: petDetails.reward,
@@ -584,91 +574,6 @@ final class PetDetailsViewModelTests: XCTestCase {
         
         // Then
         XCTAssertEqual(result, "invalid-date")
-    }
-    
-    func testFormattedRadius_whenStateIsLoading_shouldReturnNil() {
-        // Given
-        let (sut, _) = makeSUT()
-        
-        // When
-        let result = sut.formattedRadius
-        
-        // Then
-        XCTAssertNil(result)
-    }
-    
-    func testFormattedRadius_whenRadiusIsNil_shouldReturnNil() async {
-        // Given
-        let (sut, repository) = makeSUT()
-        var petDetails = makeMockPetDetails()
-        petDetails = PetDetails(
-            id: petDetails.id,
-            petName: petDetails.petName,
-            photoUrl: petDetails.photoUrl,
-            status: petDetails.status,
-            lastSeenDate: petDetails.lastSeenDate,
-            species: petDetails.species,
-            gender: petDetails.gender,
-            description: petDetails.description,
-            phone: petDetails.phone,
-            email: petDetails.email,
-            breed: petDetails.breed,
-            latitude: petDetails.latitude,
-            longitude: petDetails.longitude,
-            locationRadius: nil,
-            microchipNumber: petDetails.microchipNumber,
-            approximateAge: petDetails.approximateAge,
-            reward: petDetails.reward,
-            createdAt: petDetails.createdAt,
-            updatedAt: petDetails.updatedAt
-        )
-        repository.mockPetDetails = petDetails
-        await sut.loadPetDetails()
-        
-        // When
-        let result = sut.formattedRadius
-        
-        // Then
-        XCTAssertNil(result)
-    }
-    
-    func testFormattedRadius_whenRadiusIsValid_shouldReturnFormattedString() async {
-        // Given
-        let (sut, repository) = makeSUT()
-        var petDetails = makeMockPetDetails()
-        petDetails = PetDetails(
-            id: petDetails.id,
-            petName: petDetails.petName,
-            photoUrl: petDetails.photoUrl,
-            status: petDetails.status,
-            lastSeenDate: petDetails.lastSeenDate,
-            species: petDetails.species,
-            gender: petDetails.gender,
-            description: petDetails.description,
-            phone: petDetails.phone,
-            email: petDetails.email,
-            breed: petDetails.breed,
-            latitude: petDetails.latitude,
-            longitude: petDetails.longitude,
-            locationRadius: 5,
-            microchipNumber: petDetails.microchipNumber,
-            approximateAge: petDetails.approximateAge,
-            reward: petDetails.reward,
-            createdAt: petDetails.createdAt,
-            updatedAt: petDetails.updatedAt
-        )
-        repository.mockPetDetails = petDetails
-        await sut.loadPetDetails()
-        
-        // When
-        let result = sut.formattedRadius
-        
-        // Then
-        XCTAssertNotNil(result)
-        // The exact format depends on L10n, but it should not be nil
-        if let radiusText = result {
-            XCTAssertFalse(radiusText.isEmpty)
-        }
     }
     
     // MARK: - Photo With Badges Model Tests
