@@ -13,7 +13,7 @@ export async function prepareServer(): Promise<express.Express> {
   await runDbMigrations();
 
   const server = express();
-  server.use(express.json())
+  server.use(express.json({ limit: '10mb' }))
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage
   // MUST be registered BEFORE logger middleware to ensure ID is available

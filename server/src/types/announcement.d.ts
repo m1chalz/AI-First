@@ -1,41 +1,76 @@
-export type Species = 'DOG' | 'CAT' | 'BIRD' | 'RABBIT' | 'OTHER';
+export type AnnouncementStatus = 'MISSING' | 'FOUND';
 
-export type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN';
+export interface CreateAnnouncementDto {
+  petName?: string;
+  species: string;
+  breed?: string;
+  sex: string;
+  age?: number;
+  description?: string;
+  microchipNumber?: string;
+  locationLatitude: number;
+  locationLongitude: number;
+  email?: string;
+  phone?: string;
+  photoUrl: string;
+  lastSeenDate: string;
+  status: AnnouncementStatus;
+  reward?: string;
+}
 
-export type AnnouncementStatus = 'ACTIVE' | 'FOUND' | 'CLOSED';
+export interface AnnouncementDto extends Omit<CreateAnnouncementDto, 'petName' | 'breed' | 'age' | 'description' | 'microchipNumber' | 'email' | 'phone' | 'reward'> {
+  id: string;
+  createdAt: string;
+  managementPassword?: string;
+  petName?: string | null;
+  breed?: string | null;
+  age?: number | null;
+  description?: string | null;
+  microchipNumber?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  reward?: string | null;
+}
 
 export interface Announcement {
   id: string;
-  petName: string;
-  species: Species;
-  breed: string | null;
-  gender: Gender;
-  description: string;
-  location: string;
-  locationRadius: number | null;
+  petName?: string | null;
+  species: string;
+  breed?: string | null;
+  sex: string;
+  age?: number | null;
+  description?: string | null;
+  microchipNumber?: string | null;
+  locationLatitude: number;
+  locationLongitude: number;
+  email?: string | null;
+  phone?: string | null;
+  photoUrl: string;
   lastSeenDate: string;
-  email: string | null;
-  phone: string;
-  photoUrl: string | null;
   status: AnnouncementStatus;
+  reward?: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AnnouncementRow {
   id: string;
-  pet_name: string;
-  species: Species;
+  pet_name: string | null;
+  species: string;
   breed: string | null;
-  gender: Gender;
-  description: string;
-  location: string;
-  location_radius: number | null;
-  last_seen_date: string;
+  sex: string;
+  age: number | null;
+  description: string | null;
+  microchip_number: string | null;
+  location_latitude: number;
+  location_longitude: number;
   email: string | null;
-  phone: string;
-  photo_url: string | null;
+  phone: string | null;
+  photo_url: string;
+  last_seen_date: string;
   status: AnnouncementStatus;
+  reward: string | null;
+  management_password_hash: string;
   created_at: string;
   updated_at: string;
 }
