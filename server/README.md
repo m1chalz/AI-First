@@ -35,10 +35,8 @@ Retrieves all pet announcements.
       "age": 5,
       "description": "Friendly dog with brown fur",
       "microchipNumber": "123456789012345",
-      "locationCity": "New York",
       "locationLatitude": 40.785091,
       "locationLongitude": -73.968285,
-      "locationRadius": 5,
       "lastSeenDate": "2025-11-20",
       "email": "john@example.com",
       "phone": "+1 555 123 4567",
@@ -86,10 +84,8 @@ Retrieves a single pet announcement by its ID.
   "age": 5,
   "description": "Friendly dog with brown fur",
   "microchipNumber": "123456789012345",
-  "locationCity": "New York",
   "locationLatitude": 40.785091,
   "locationLongitude": -73.968285,
-  "locationRadius": 5,
   "lastSeenDate": "2025-11-20",
   "email": "john@example.com",
   "phone": "+1 555 123 4567",
@@ -163,8 +159,6 @@ Creates a new pet announcement (lost or found pet listing).
 - `age` (number): Positive integer
 - `description` (string)
 - `microchipNumber` (string): Numeric only, must be unique
-- `locationCity` (string)
-- `locationRadius` (number): Positive integer (kilometers)
 - `reward` (string)
 
 **Response (201 Created):**

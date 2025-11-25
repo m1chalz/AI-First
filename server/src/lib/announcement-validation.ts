@@ -32,7 +32,6 @@ const CreateAnnouncementSchema = z
       .trim()
       .regex(/^\d+$/, { message: 'must contain only digits' })
       .optional(),
-    locationCity: z.string().trim().optional(),
     locationLatitude: z
       .number()
       .min(-90, { message: 'latitude must be between -90 and 90' })
@@ -41,7 +40,6 @@ const CreateAnnouncementSchema = z
       .number()
       .min(-180, { message: 'longitude must be between -180 and 180' })
       .max(180, { message: 'longitude must be between -180 and 180' }),
-    locationRadius: z.number().int().positive().optional(),
     email: z
       .string()
       .trim()

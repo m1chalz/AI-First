@@ -46,8 +46,6 @@ describe('validateCreateAnnouncement', () => {
           age: 3,
           description: 'Friendly dog',
           microchipNumber: '123456789',
-          locationCity: 'New York',
-          locationRadius: 5,
           phone: '+1-555-0101',
           reward: '$100',
         },
@@ -220,7 +218,6 @@ describe('validateCreateAnnouncement', () => {
       { description: 'locationLatitude is less than -90', fieldName: 'locationLatitude', fieldValue: -91, expectedCode: 'INVALID_FORMAT' },
       { description: 'locationLongitude is greater than 180', fieldName: 'locationLongitude', fieldValue: 181, expectedCode: 'INVALID_FORMAT' },
       { description: 'locationLongitude is less than -180', fieldName: 'locationLongitude', fieldValue: -181, expectedCode: 'INVALID_FORMAT' },
-      { description: 'locationRadius is not a positive integer', fieldName: 'locationRadius', fieldValue: -1, expectedCode: 'INVALID_FORMAT' },
       // Type mismatches
       { description: 'species is not a string', fieldName: 'species', fieldValue: 123, expectedCode: 'INVALID_FORMAT' },
       { description: 'age is not a number', fieldName: 'age', fieldValue: 'three', expectedCode: 'INVALID_FORMAT' },
