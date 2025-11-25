@@ -2,11 +2,12 @@ interface ErrorResponse {
   error: {
     code: string;
     message: string;
+    field?: string | undefined;
   };
 }
 
 export abstract class CustomError extends Error {
-  constructor(public statusCode: number, public code: string, public override message: string) {
+  constructor(public statusCode: number, public code: string, public override message: string, public field?: string) {
     super(message);
   }
 
@@ -14,14 +15,27 @@ export abstract class CustomError extends Error {
     return {
       error: {
         code: this.code,
-        message: this.message
+        message: this.message,
+        field: this.field
       }
     };
   }
 }
 
+export class ValidationError extends CustomError {
+  constructor(code: string, message: string, field?: string) {
+    super(400, code, message, field);
+  }
+}
+
 export class NotFoundError extends CustomError {
-  constructor() {
-    super(404, 'NOT_FOUND', 'Resource not found');
+  constructor(message = 'Resource not found') {
+    super(404, 'NOT_FOUND', message);
+  }
+}
+
+export class ConflictError extends CustomError {
+  constructor(message = 'An entity with this value already exists', field?: string) {
+    super(409, 'CONFLICT', message, field);
   }
 }
