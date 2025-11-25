@@ -69,6 +69,11 @@
 "animalStatus.found" = "Znalezione";
 "animalStatus.closed" = "Zamknięte";
 
+// Status badge display text (for PetDetails screen)
+"animalStatus.badge.missing" = "ZAGINIONE";
+"animalStatus.badge.found" = "ZNALEZIONE";
+"animalStatus.badge.closed" = "ZAMKNIĘTE";
+
 /* MARK: - Animal Species */
 
 "animalSpecies.dog" = "Pies";

@@ -43,7 +43,7 @@ final class PetPhotoWithBadgesViewTests: XCTestCase {
         )
         
         // Then
-        XCTAssertEqual(model.statusDisplayText, "MISSING")
+        XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.Badge.missing)
     }
     
     func testStatusDisplayText_whenStatusIsFound_shouldReturnFound() {
@@ -55,7 +55,7 @@ final class PetPhotoWithBadgesViewTests: XCTestCase {
         )
         
         // Then
-        XCTAssertEqual(model.statusDisplayText, "FOUND")
+        XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.Badge.found)
     }
     
     func testStatusDisplayText_whenStatusIsClosed_shouldReturnClosed() {
@@ -67,7 +67,7 @@ final class PetPhotoWithBadgesViewTests: XCTestCase {
         )
         
         // Then
-        XCTAssertEqual(model.statusDisplayText, "CLOSED")
+        XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.Badge.closed)
     }
     
     func testStatusBadgeColorHex_whenStatusIsActive_shouldReturnRedHex() {

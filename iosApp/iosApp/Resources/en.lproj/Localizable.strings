@@ -69,6 +69,11 @@
 "animalStatus.found" = "Found";
 "animalStatus.closed" = "Closed";
 
+// Status badge display text (for PetDetails screen)
+"animalStatus.badge.missing" = "MISSING";
+"animalStatus.badge.found" = "FOUND";
+"animalStatus.badge.closed" = "CLOSED";
+
 /* MARK: - Animal Species */
 
 "animalSpecies.dog" = "Dog";

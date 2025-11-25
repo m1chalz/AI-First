@@ -27,11 +27,11 @@ extension PetPhotoWithBadgesView {
         private static func statusDisplayText(from status: AnimalStatus) -> String {
             switch status {
             case .active:
-                return "MISSING"
+                return L10n.AnimalStatus.Badge.missing
             case .found:
-                return "FOUND"
+                return L10n.AnimalStatus.Badge.found
             case .closed:
-                return "CLOSED"
+                return L10n.AnimalStatus.Badge.closed
             }
         }
         
