@@ -29,13 +29,13 @@ export class ValidationError extends CustomError {
 }
 
 export class NotFoundError extends CustomError {
-  constructor(message: string = 'Resource not found') {
+  constructor(message = 'Resource not found') {
     super(404, 'NOT_FOUND', message);
   }
 }
 
 export class ConflictError extends CustomError {
-  constructor(message: string = 'An entity with this value already exists', field?: string) {
+  constructor(message = 'An entity with this value already exists', field?: string) {
     super(409, 'CONFLICT', message, field);
   }
 }

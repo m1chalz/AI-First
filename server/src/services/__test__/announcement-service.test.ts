@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement, CreateAnnouncementDto } from '../../types/announcement.ts';
 import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
-import { ValidationError } from '../../lib/errors.ts';
 import { ConflictError } from '../../lib/errors.ts';
 import * as textSanitizationModule from '../../lib/text-sanitization.ts';
 
@@ -43,7 +42,6 @@ const VALID_CREATE_DATA: CreateAnnouncementDto = {
 };
 
 describe('AnnouncementService', () => {
-  const mockSanitizeText = vi.spyOn(textSanitizationModule, 'default');
   const mockValidator = vi.fn();
   const mockSanitizer = vi.fn((input: string) => input);
 
@@ -53,10 +51,10 @@ describe('AnnouncementService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSanitizeText.mockImplementation((input: string) => input);
     mockValidator.mockClear();
     mockSanitizer.mockImplementation((input: string) => input);
   });
+
   describe('getAllAnnouncements', () => {
     it.each([
       { announcements: [MOCK_ANNOUNCEMENT], expectedLength: 1 },

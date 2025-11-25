@@ -11,9 +11,11 @@ function expectValidationError(data: unknown, expectedCode: string, expectedFiel
   }
   expect(error).toBeDefined();
   expect(error).toBeInstanceOf(ValidationError);
-  expect(error!.code).toBe(expectedCode);
-  if (expectedField !== undefined) {
-    expect(error!.field).toBe(expectedField);
+  if (error) {
+    expect(error.code).toBe(expectedCode);
+    if (expectedField !== undefined) {
+      expect(error.field).toBe(expectedField);
+    }
   }
 }
 
@@ -97,7 +99,7 @@ describe('validateCreateAnnouncement', () => {
         { longitude: 0, description: 'prime meridian' },
       ];
 
-      testCases.forEach(({ longitude, description }) => {
+      testCases.forEach(({ longitude }) => {
         const data = {
           ...VALID_ANNOUNCEMENT_DATA,
           locationLongitude: longitude,
@@ -222,7 +224,7 @@ describe('validateCreateAnnouncement', () => {
       // Type mismatches
       { description: 'species is not a string', fieldName: 'species', fieldValue: 123, expectedCode: 'INVALID_FORMAT' },
       { description: 'age is not a number', fieldName: 'age', fieldValue: 'three', expectedCode: 'INVALID_FORMAT' },
-    ])('should throw ValidationError with $expectedCode code when $description', ({ description, fieldName, fieldValue, expectedCode }) => {
+    ])('should throw ValidationError with $expectedCode code when $description', ({ fieldName, fieldValue, expectedCode }) => {
       // Given: Data with invalid field
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
