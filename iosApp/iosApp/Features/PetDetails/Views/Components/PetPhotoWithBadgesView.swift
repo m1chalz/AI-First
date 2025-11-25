@@ -74,7 +74,7 @@ struct PetPhotoWithBadgesView: View {
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.red)
+        .background(Color.gray.opacity(0.1))
         .accessibilityIdentifier("petDetails.photo.image")
     }
     

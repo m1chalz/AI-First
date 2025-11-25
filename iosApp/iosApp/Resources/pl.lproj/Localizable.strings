@@ -63,6 +63,26 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
+/* MARK: - Animal Status */
+
+"animalStatus.active" = "Aktywne";
+"animalStatus.found" = "Znalezione";
+"animalStatus.closed" = "Zamknięte";
+
+/* MARK: - Animal Species */
+
+"animalSpecies.dog" = "Pies";
+"animalSpecies.cat" = "Kot";
+"animalSpecies.bird" = "Ptak";
+"animalSpecies.rabbit" = "Królik";
+"animalSpecies.other" = "Inne";
+
+/* MARK: - Animal Gender */
+
+"animalGender.male" = "Samiec";
+"animalGender.female" = "Samica";
+"animalGender.unknown" = "Nieznana";
+
 /* MARK: - Common */
 
 "common.loading" = "Ładowanie...";

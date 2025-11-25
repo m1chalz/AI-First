@@ -49,7 +49,7 @@ struct PetDetailsView: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Pet Photo with Badges
                 PetPhotoWithBadgesView(model: .init(from: petDetails))
-                    .frame(height: 49)
+                    .frame(height: 229)
                     .frame(maxWidth: .infinity)
                 
                 // Content Container with padding

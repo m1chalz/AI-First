@@ -114,7 +114,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         let colorHex = viewModel.statusColorHex
         
         // Then - should return hex color string
-        XCTAssertEqual(colorHex, AnimalStatus.active.badgeColor, "statusColorHex should return badge color hex")
+        XCTAssertEqual(colorHex, AnimalStatus.active.badgeColorHex, "statusColorHex should return badge color hex")
         XCTAssertTrue(colorHex.hasPrefix("#"), "statusColorHex should be hex format starting with #")
     }
     
