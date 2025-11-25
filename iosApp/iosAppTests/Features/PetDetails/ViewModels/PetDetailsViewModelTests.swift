@@ -56,14 +56,17 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     private func makeMockPetDetails(
         id: String = "test-id",
+        photoUrl: String? = "https://example.com/photo.jpg",
+        status: AnimalStatus = .active,
         latitude: Double = 52.2297,
-        longitude: Double = 21.0122
+        longitude: Double = 21.0122,
+        reward: String? = "100 PLN"
     ) -> PetDetails {
         return PetDetails(
             id: id,
             petName: "Test Pet",
-            photoUrl: "https://example.com/photo.jpg",
-            status: .active,
+            photoUrl: photoUrl,
+            status: status,
             lastSeenDate: "2025-11-20",
             species: "DOG",
             gender: "MALE",
@@ -76,7 +79,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             locationRadius: 5,
             microchipNumber: "123-456-789",
             approximateAge: "2 years",
-            reward: "100 PLN",
+            reward: reward,
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
         )

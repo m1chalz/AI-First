@@ -46,7 +46,7 @@
 "petDetails.label.animalRace" = "Animal Race";
 "petDetails.label.animalSex" = "Animal Sex";
 "petDetails.label.animalAge" = "Animal Approx. Age";
-"petDetails.label.placeOfDisappearance" = "Place of Disappearance / City";
+"petDetails.label.placeOfDisappearance" = "Lat / Lon";
 "petDetails.label.additionalDescription" = "Animal Additional Description";
 
 // Buttons

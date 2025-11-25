@@ -46,7 +46,7 @@
 "petDetails.label.animalRace" = "Rasa zwierzęcia";
 "petDetails.label.animalSex" = "Płeć zwierzęcia";
 "petDetails.label.animalAge" = "Przybliżony wiek zwierzęcia";
-"petDetails.label.placeOfDisappearance" = "Miejsce zaginięcia / Miasto";
+"petDetails.label.placeOfDisappearance" = "Szer. / Dł.";
 "petDetails.label.additionalDescription" = "Dodatkowy opis zwierzęcia";
 
 // Buttons
