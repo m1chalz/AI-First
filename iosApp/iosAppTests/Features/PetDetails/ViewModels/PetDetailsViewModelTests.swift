@@ -59,7 +59,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             id: id,
             petName: "Test Pet",
             photoUrl: "https://example.com/photo.jpg",
-            status: "ACTIVE",
+            status: .active,
             lastSeenDate: "2025-11-20",
             species: "DOG",
             gender: "MALE",
@@ -661,6 +661,42 @@ final class PetDetailsViewModelTests: XCTestCase {
         // The exact format depends on L10n, but it should not be nil
         if let radiusText = result {
             XCTAssertFalse(radiusText.isEmpty)
+        }
+    }
+    
+    // MARK: - Photo With Badges Model Tests
+    
+    func testPhotoWithBadgesModel_whenStateIsLoading_shouldReturnNil() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.photoWithBadgesModel
+        
+        // Then
+        XCTAssertNil(result)
+    }
+    
+    func testPhotoWithBadgesModel_whenStateIsLoaded_shouldReturnModelWithCorrectData() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(
+            photoUrl: "https://example.com/photo.jpg",
+            status: .active,
+            reward: "$500"
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.photoWithBadgesModel
+        
+        // Then
+        XCTAssertNotNil(result)
+        if let model = result {
+            XCTAssertEqual(model.imageUrl, "https://example.com/photo.jpg")
+            XCTAssertEqual(model.statusDisplayText, "MISSING")
+            XCTAssertEqual(model.rewardText, "$500")
         }
     }
     

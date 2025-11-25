@@ -15,7 +15,7 @@ struct PetDetails: Identifiable, Codable {
     
     /// Status of the pet report (ACTIVE, FOUND, or CLOSED from API)
     /// Note: ViewModel maps ACTIVE → "MISSING" for display
-    let status: String
+    let status: AnimalStatus
     
     /// Date when the pet was last seen (YYYY-MM-DD format from API)
     let lastSeenDate: String

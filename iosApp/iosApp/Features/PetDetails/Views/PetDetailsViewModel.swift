@@ -122,6 +122,16 @@ class PetDetailsViewModel: ObservableObject {
         return L10n.PetDetails.Location.radiusFormat(radius)
     }
     
+    /// Creates PetPhotoWithBadgesView.Model with pet details
+    var photoWithBadgesModel: PetPhotoWithBadgesView.Model? {
+        guard case .loaded(let petDetails) = state else { return nil }
+        return PetPhotoWithBadgesView.Model(
+            imageUrl: petDetails.photoUrl,
+            status: petDetails.status,
+            rewardText: petDetails.reward
+        )
+    }
+    
     // MARK: - Static Formatting Helpers (for testing and reuse)
     
     /// Static helper to format microchip number

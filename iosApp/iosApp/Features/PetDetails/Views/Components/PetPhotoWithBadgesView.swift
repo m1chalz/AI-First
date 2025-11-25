@@ -81,27 +81,14 @@ struct PetPhotoWithBadgesView: View {
     // MARK: - Status Badge
     
     private var statusBadge: some View {
-        Text(model.status)
+        Text(model.statusDisplayText)
             .font(.system(size: 16))
             .foregroundColor(.white)
             .padding(.horizontal, 12)
             .padding(.vertical, 2)
-            .background(statusBadgeColor)
+            .background(Color(hex: model.statusBadgeColorHex))
             .cornerRadius(22369600)
             .accessibilityIdentifier("petDetails.status.badge")
-    }
-    
-    private var statusBadgeColor: Color {
-        switch model.status {
-        case "MISSING":
-            return Color.red
-        case "FOUND":
-            return Color.green
-        case "CLOSED":
-            return Color.gray
-        default:
-            return Color.blue
-        }
     }
     
     // MARK: - Reward Badge
@@ -134,7 +121,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
             // Missing pet with reward
             PetPhotoWithBadgesView(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
-                status: "MISSING",
+                status: .active,
                 rewardText: "$500 reward"
             ))
             .frame(height: 229)
@@ -142,7 +129,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
             // Found pet without reward
             PetPhotoWithBadgesView(model: .init(
                 imageUrl: "https://images.dog.ceo/breeds/shepherd-german/n02106662_10908.jpg",
-                status: "FOUND",
+                status: .found,
                 rewardText: nil
             ))
             .frame(height: 229)
@@ -150,7 +137,7 @@ struct PetPhotoWithBadgesView_Previews: PreviewProvider {
             // No photo available
             PetPhotoWithBadgesView(model: .init(
                 imageUrl: nil,
-                status: "MISSING",
+                status: .active,
                 rewardText: "$200"
             ))
             .frame(height: 229)

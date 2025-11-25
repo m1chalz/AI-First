@@ -2,116 +2,132 @@ import XCTest
 @testable import PetSpot
 
 /// Unit tests for PetPhotoWithBadgesView.Model
-/// Tests status mapping and model initialization
+/// Tests model initialization, status display text conversion, and equality
 final class PetPhotoWithBadgesViewTests: XCTestCase {
     
-    // MARK: - Helper Methods
-    
-    private func makeMockPetDetails(
-        id: String = "test-id",
-        photoUrl: String? = "https://example.com/photo.jpg",
-        status: String = "ACTIVE",
-        reward: String? = nil
-    ) -> PetDetails {
-        return PetDetails(
-            id: id,
-            petName: "Test Pet",
-            photoUrl: photoUrl,
-            status: status,
-            lastSeenDate: "2025-11-20",
-            species: "DOG",
-            gender: "MALE",
-            description: "Test description",
-            location: "Test City",
-            phone: "+48 123 456 789",
-            email: "test@example.com",
-            breed: "Test Breed",
-            locationRadius: 5,
-            microchipNumber: "123-456-789",
-            approximateAge: "2 years",
-            reward: reward,
-            vaccinationId: "VAC-2023-TEST",
-            createdAt: "2025-11-20T10:00:00.000Z",
-            updatedAt: "2025-11-20T10:00:00.000Z"
-        )
-    }
-    
     // MARK: - Tests
-    
-    func testInit_whenStatusIsActive_shouldMapToMissing() {
-        // Given
-        let petDetails = makeMockPetDetails(status: "ACTIVE")
-        
-        // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
-        
-        // Then
-        XCTAssertEqual(model.status, "MISSING")
-    }
-    
-    func testInit_whenStatusIsFound_shouldKeepFound() {
-        // Given
-        let petDetails = makeMockPetDetails(status: "FOUND")
-        
-        // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
-        
-        // Then
-        XCTAssertEqual(model.status, "FOUND")
-    }
-    
-    func testInit_whenStatusIsClosed_shouldKeepClosed() {
-        // Given
-        let petDetails = makeMockPetDetails(status: "CLOSED")
-        
-        // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
-        
-        // Then
-        XCTAssertEqual(model.status, "CLOSED")
-    }
     
     func testInit_whenPhotoUrlIsPresent_shouldSetImageUrl() {
         // Given
         let photoUrl = "https://example.com/test-photo.jpg"
-        let petDetails = makeMockPetDetails(photoUrl: photoUrl)
         
         // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: photoUrl,
+            status: .active,
+            rewardText: nil
+        )
         
         // Then
         XCTAssertEqual(model.imageUrl, photoUrl)
     }
     
     func testInit_whenPhotoUrlIsNil_shouldSetImageUrlToNil() {
-        // Given
-        let petDetails = makeMockPetDetails(photoUrl: nil)
-        
-        // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .active,
+            rewardText: nil
+        )
         
         // Then
         XCTAssertNil(model.imageUrl)
     }
     
+    func testStatusDisplayText_whenStatusIsActive_shouldReturnMissing() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .active,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusDisplayText, "MISSING")
+    }
+    
+    func testStatusDisplayText_whenStatusIsFound_shouldReturnFound() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .found,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusDisplayText, "FOUND")
+    }
+    
+    func testStatusDisplayText_whenStatusIsClosed_shouldReturnClosed() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .closed,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusDisplayText, "CLOSED")
+    }
+    
+    func testStatusBadgeColorHex_whenStatusIsActive_shouldReturnRedHex() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .active,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusBadgeColorHex, "#FF0000")
+    }
+    
+    func testStatusBadgeColorHex_whenStatusIsFound_shouldReturnGreenHex() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .found,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusBadgeColorHex, "#00FF00")
+    }
+    
+    func testStatusBadgeColorHex_whenStatusIsClosed_shouldReturnGrayHex() {
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .closed,
+            rewardText: nil
+        )
+        
+        // Then
+        XCTAssertEqual(model.statusBadgeColorHex, "#808080")
+    }
+    
     func testInit_whenRewardIsPresent_shouldSetRewardText() {
         // Given
         let reward = "$500 reward"
-        let petDetails = makeMockPetDetails(reward: reward)
         
         // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .active,
+            rewardText: reward
+        )
         
         // Then
         XCTAssertEqual(model.rewardText, reward)
     }
     
     func testInit_whenRewardIsNil_shouldSetRewardTextToNil() {
-        // Given
-        let petDetails = makeMockPetDetails(reward: nil)
-        
-        // When
-        let model = PetPhotoWithBadgesView.Model(from: petDetails)
+        // Given + When
+        let model = PetPhotoWithBadgesView.Model(
+            imageUrl: nil,
+            status: .active,
+            rewardText: nil
+        )
         
         // Then
         XCTAssertNil(model.rewardText)
@@ -121,12 +137,12 @@ final class PetPhotoWithBadgesViewTests: XCTestCase {
         // Given
         let model1 = PetPhotoWithBadgesView.Model(
             imageUrl: "https://example.com/photo.jpg",
-            status: "MISSING",
+            status: .active,
             rewardText: "$500"
         )
         let model2 = PetPhotoWithBadgesView.Model(
             imageUrl: "https://example.com/photo.jpg",
-            status: "MISSING",
+            status: .active,
             rewardText: "$500"
         )
         
@@ -138,12 +154,12 @@ final class PetPhotoWithBadgesViewTests: XCTestCase {
         // Given
         let model1 = PetPhotoWithBadgesView.Model(
             imageUrl: "https://example.com/photo.jpg",
-            status: "MISSING",
+            status: .active,
             rewardText: nil
         )
         let model2 = PetPhotoWithBadgesView.Model(
             imageUrl: "https://example.com/photo.jpg",
-            status: "FOUND",
+            status: .found,
             rewardText: nil
         )
         

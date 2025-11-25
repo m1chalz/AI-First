@@ -6,25 +6,45 @@ extension PetPhotoWithBadgesView {
         /// URL string for the pet photo (nullable)
         let imageUrl: String?
         
-        /// Status text for the badge ("MISSING", "FOUND", or "CLOSED")
-        let status: String
+        /// Status display text for the badge ("MISSING", "FOUND", or "CLOSED")
+        let statusDisplayText: String
+        
+        /// Hex color string for status badge (e.g., "#FF0000")
+        let statusBadgeColorHex: String
         
         /// Optional reward text (nil if no reward)
         let rewardText: String?
         
-        /// Convenience initializer mapping from PetDetails
-        init(from petDetails: PetDetails) {
-            self.imageUrl = petDetails.photoUrl
-            // Map ACTIVE → MISSING for display
-            self.status = petDetails.status == "ACTIVE" ? "MISSING" : petDetails.status
-            self.rewardText = petDetails.reward
+        /// Initializer that converts AnimalStatus to display text and color hex
+        init(imageUrl: String?, status: AnimalStatus, rewardText: String?) {
+            self.imageUrl = imageUrl
+            self.statusDisplayText = Self.statusDisplayText(from: status)
+            self.statusBadgeColorHex = Self.statusBadgeColorHex(from: status)
+            self.rewardText = rewardText
         }
         
-        /// Direct initializer for testing and custom usage
-        init(imageUrl: String?, status: String, rewardText: String?) {
-            self.imageUrl = imageUrl
-            self.status = status
-            self.rewardText = rewardText
+        /// Converts AnimalStatus to display text (maps ACTIVE → "MISSING")
+        private static func statusDisplayText(from status: AnimalStatus) -> String {
+            switch status {
+            case .active:
+                return "MISSING"
+            case .found:
+                return "FOUND"
+            case .closed:
+                return "CLOSED"
+            }
+        }
+        
+        /// Converts AnimalStatus to badge color hex
+        private static func statusBadgeColorHex(from status: AnimalStatus) -> String {
+            switch status {
+            case .active:
+                return "#FF0000"  // Red badge - actively missing/searching
+            case .found:
+                return "#00FF00"   // Green badge - animal has been found
+            case .closed:
+                return "#808080"   // Gray badge - case closed/resolved
+            }
         }
     }
 }

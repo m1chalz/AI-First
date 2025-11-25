@@ -48,9 +48,11 @@ struct PetDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Pet Photo with Badges
-                PetPhotoWithBadgesView(model: .init(from: petDetails))
-                    .frame(height: 229)
-                    .frame(maxWidth: .infinity)
+                if let model = viewModel.photoWithBadgesModel {
+                    PetPhotoWithBadgesView(model: model)
+                        .frame(height: 229)
+                        .frame(maxWidth: .infinity)
+                }
                 
                 // Content Container with padding
                 VStack(alignment: .leading, spacing: 20) {
@@ -244,7 +246,7 @@ struct PetDetailsView_Previews: PreviewProvider {
                     id: "preview-id",
                     petName: "Max",
                     photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
-                    status: "ACTIVE",
+                    status: .active,
                     lastSeenDate: "2025-11-20",
                     species: "DOG",
                     gender: "MALE",
