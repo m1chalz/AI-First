@@ -52,8 +52,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// Uses background color #FAFAFA and text color #2D2D2D.
     private func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(hex: "#FAFAFA")
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = UIColor(hex: "#FAFAFA").withAlphaComponent(0.1)
+        appearance.backgroundEffect = UIBlurEffect(style: .systemThinMaterialLight)
         appearance.titleTextAttributes = [
             .foregroundColor: UIColor(hex: "#2D2D2D")
         ]

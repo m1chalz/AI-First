@@ -26,3 +26,4 @@ export default function errorHandlerMiddleware(err: Error, _req: Request, res: R
   
   return res.status(500).json(INTERNAL_SERVER_ERROR_RESPONSE);
 }
+

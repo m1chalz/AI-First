@@ -12,7 +12,7 @@ enum class AnimalStatus(
     // Hex color
     val badgeColor: String,
 ) {
-    ACTIVE("Active", "#FF0000"), // Red badge - actively missing/searching
-    FOUND("Found", "#0074FF"), // Blue badge - animal has been found
-    CLOSED("Closed", "#93A2B4"), // Gray badge - case closed/resolved
+    MISSING("MISSING", "#FF0000"), // Red badge - actively missing/searching
+    FOUND("FOUND", "#0074FF"), // Blue badge - animal has been found
+    CLOSED("CLOSED", "#93A2B4"), // Gray badge - case closed/resolved
 }
