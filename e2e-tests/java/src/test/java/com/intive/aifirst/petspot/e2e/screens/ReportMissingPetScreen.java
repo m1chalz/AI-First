@@ -60,8 +60,18 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
+     * Custom dismiss button (X icon) on first screen.
+     * Dismisses the modal flow and returns to animal list.
+     * Only present on chip number screen (step 1/4).
+     */
+    @AndroidFindBy(accessibility = "reportMissingPet.dismissButton")
+    @iOSXCUITFindBy(id = "reportMissingPet.dismissButton")
+    private WebElement dismissButton;
+    
+    /**
      * Custom back button (chevron-left icon).
-     * Present on all 5 screens of the report flow.
+     * Present on screens 2-5 of the report flow (photo, description, contact details, summary).
+     * Not present on step 1 (uses dismissButton instead).
      */
     @AndroidFindBy(accessibility = "reportMissingPet.backButton")
     @iOSXCUITFindBy(id = "reportMissingPet.backButton")
@@ -214,9 +224,29 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Tap the back button.
-     * On step 1: exits flow and returns to animal list
+     * Tap the dismiss button (X icon) on first screen.
+     * Dismisses modal and returns to animal list.
+     */
+    public void tapDismissButton() {
+        waitForElement(dismissButton);
+        dismissButton.click();
+    }
+    
+    /**
+     * Verify dismiss button is displayed and tappable.
+     */
+    public boolean isDismissButtonDisplayed() {
+        try {
+            return dismissButton.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Tap the back button (chevron-left icon).
      * On steps 2-5: navigates to previous screen
+     * Not available on step 1 (uses dismiss button instead)
      */
     public void tapBackButton() {
         waitForElement(backButton);

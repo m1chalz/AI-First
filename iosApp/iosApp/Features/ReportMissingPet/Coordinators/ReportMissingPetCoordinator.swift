@@ -73,7 +73,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Configure navigation bar
         hostingController.title = L10n.ReportMissingPet.ChipNumber.title
         configureProgressIndicator(hostingController: hostingController, step: 1, total: 4)
-        configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
+        configureCustomDismissButton(hostingController: hostingController, action: { [weak viewModel] in
             viewModel?.handleBack()
         })
         
@@ -278,6 +278,32 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Accessibility
         backButton.accessibilityIdentifier = "reportMissingPet.backButton"
         backButton.accessibilityLabel = L10n.Common.back
+    }
+    
+    /// Configures custom dismiss button (X icon) in navigation bar.
+    /// Used on first screen to indicate modal dismissal instead of backward navigation.
+    /// - Parameters:
+    ///   - hostingController: Hosting controller to configure
+    ///   - action: Action to execute when dismiss button tapped
+    private func configureCustomDismissButton(
+        hostingController: UIHostingController<some View>,
+        action: @escaping () -> Void
+    ) {
+        // Create X (xmark) button
+        let dismissButton = UIButton(type: .system)
+        dismissButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        dismissButton.tintColor = UIColor(hex: "#2D2D2D") // Dark gray
+        dismissButton.addAction(UIAction { _ in
+            action()
+        }, for: .touchUpInside)
+        
+        // Wrap in bar button item
+        let dismissBarButtonItem = UIBarButtonItem(customView: dismissButton)
+        hostingController.navigationItem.leftBarButtonItem = dismissBarButtonItem
+        
+        // Accessibility
+        dismissButton.accessibilityIdentifier = "reportMissingPet.dismissButton"
+        dismissButton.accessibilityLabel = L10n.Common.cancel
     }
     
     // MARK: - Deinitialization

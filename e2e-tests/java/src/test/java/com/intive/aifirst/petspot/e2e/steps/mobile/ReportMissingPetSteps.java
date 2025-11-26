@@ -121,10 +121,17 @@ public class ReportMissingPetSteps {
     /**
      * Step: User taps back button.
      * Navigates to previous screen or exits flow.
+     * On first screen (chip number), uses dismiss button (X icon).
+     * On other screens, uses back button (chevron-left icon).
      */
     @When("I tap the back button")
     public void tapBackButton() {
-        reportMissingPetScreen.tapBackButton();
+        // Use dismiss button on first screen, back button on others
+        if (currentScreen.equals("chip number")) {
+            reportMissingPetScreen.tapDismissButton();
+        } else {
+            reportMissingPetScreen.tapBackButton();
+        }
         
         // Update currentScreen based on navigation
         switch (currentScreen) {
