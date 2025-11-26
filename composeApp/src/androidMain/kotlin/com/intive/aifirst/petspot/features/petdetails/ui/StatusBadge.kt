@@ -18,22 +18,23 @@ import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 @Composable
 fun StatusBadge(
     status: AnimalStatus,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = Color(android.graphics.Color.parseColor(status.badgeColor))
-    
+
     Text(
         text = status.displayName,
-        modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(50) // Pill shape per Figma
-            )
-            .padding(horizontal = 12.dp, vertical = 2.dp)
-            .testTag("petDetails.statusBadge"),
+        modifier =
+            modifier
+                .background(
+                    color = backgroundColor,
+                    // Pill shape per Figma
+                    shape = RoundedCornerShape(50),
+                )
+                .padding(horizontal = 12.dp, vertical = 2.dp)
+                .testTag("petDetails.statusBadge"),
         color = Color.White,
         fontSize = 16.sp,
-        lineHeight = 24.sp
+        lineHeight = 24.sp,
     )
 }
-

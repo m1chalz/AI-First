@@ -23,37 +23,37 @@ fun PetDetailsContent(
     pet: Animal,
     onBackClick: () -> Unit,
     onShowMapClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    
+
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(scrollState)
-            .testTag("petDetails.content")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .verticalScroll(scrollState)
+                .testTag("petDetails.content"),
     ) {
         // Photo section with close button, status badge, and reward badge
         PetPhotoSection(
             pet = pet,
-            onCloseClick = onBackClick
+            onCloseClick = onBackClick,
         )
-        
+
         // Info section (Date, Contact, Name/Microchip, Species/Race, Sex/Age)
         PetInfoSection(pet = pet)
-        
+
         // Location section with "Show on map" button
         PetLocationSection(
             pet = pet,
-            onShowMapClick = onShowMapClick
+            onShowMapClick = onShowMapClick,
         )
-        
+
         // Description section
         PetDescriptionSection(pet = pet)
-        
+
         // Bottom padding
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
-

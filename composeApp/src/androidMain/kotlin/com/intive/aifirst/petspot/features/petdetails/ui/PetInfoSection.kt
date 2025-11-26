@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.Female
+import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,97 +40,98 @@ private val DividerColor = Color(0xFFE8E8E8)
 @Composable
 fun PetInfoSection(
     pet: Animal,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 23.dp, vertical = 16.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 23.dp, vertical = 16.dp),
     ) {
         // Date of Disappearance (first per Figma)
         InfoItem(
             label = "Date of Disappearance",
             value = DateFormatter.formatPetDate(pet.lastSeenDate),
-            testTag = "petDetails.disappearanceDate"
+            testTag = "petDetails.disappearanceDate",
         )
-        
+
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider(color = DividerColor, thickness = 0.667.dp)
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Contact owner (phone) - displayed in full per spec (no masking)
         InfoItem(
             label = "Contact owner",
             value = pet.phone ?: "—",
-            testTag = "petDetails.phone"
+            testTag = "petDetails.phone",
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Contact owner (email)
         InfoItem(
             label = "Contact owner",
             value = pet.email ?: "—",
-            testTag = "petDetails.email"
+            testTag = "petDetails.email",
         )
-        
+
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider(color = DividerColor, thickness = 0.667.dp)
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Two-column: Animal Name / Microchip number
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(1f)) {
                 InfoItem(
                     label = "Animal Name",
                     value = pet.name,
-                    testTag = "petDetails.name"
+                    testTag = "petDetails.name",
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 InfoItem(
                     label = "Microchip number",
                     value = MicrochipFormatter.formatMicrochip(pet.microchipNumber),
-                    testTag = "petDetails.microchip"
+                    testTag = "petDetails.microchip",
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Two-column: Animal Species / Animal Race (breed)
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(1f)) {
                 InfoItem(
                     label = "Animal Species",
                     value = pet.species.name.lowercase().replaceFirstChar { it.uppercase() },
-                    testTag = "petDetails.species"
+                    testTag = "petDetails.species",
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 InfoItem(
                     label = "Animal Race",
                     value = pet.breed.ifBlank { "—" },
-                    testTag = "petDetails.breed"
+                    testTag = "petDetails.breed",
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Two-column: Animal Sex / Animal Approx. Age
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(1f)) {
                 SexInfoItem(
                     gender = pet.gender,
-                    testTag = "petDetails.sex"
+                    testTag = "petDetails.sex",
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 InfoItem(
                     label = "Animal Approx. Age",
                     value = pet.approximateAge ?: "—",
-                    testTag = "petDetails.age"
+                    testTag = "petDetails.age",
                 )
             }
         }
@@ -143,14 +144,14 @@ private fun InfoItem(
     value: String,
     testTag: String,
     modifier: Modifier = Modifier,
-    maxLines: Int = 2
+    maxLines: Int = 2,
 ) {
     Column(modifier = modifier.testTag(testTag)) {
         Text(
             text = label,
             color = LabelColor,
             fontSize = 16.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
         Text(
             text = value,
@@ -158,7 +159,7 @@ private fun InfoItem(
             fontSize = 16.sp,
             lineHeight = 24.sp,
             maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -167,25 +168,26 @@ private fun InfoItem(
 private fun SexInfoItem(
     gender: AnimalGender,
     testTag: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.testTag(testTag)) {
         Text(
             text = "Animal Sex",
             color = LabelColor,
             fontSize = 16.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = when (gender) {
-                    AnimalGender.MALE -> Icons.Default.Male
-                    AnimalGender.FEMALE -> Icons.Default.Female
-                    AnimalGender.UNKNOWN -> Icons.Default.QuestionMark
-                },
+                imageVector =
+                    when (gender) {
+                        AnimalGender.MALE -> Icons.Default.Male
+                        AnimalGender.FEMALE -> Icons.Default.Female
+                        AnimalGender.UNKNOWN -> Icons.Default.QuestionMark
+                    },
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = ValueColor
+                tint = ValueColor,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -194,9 +196,8 @@ private fun SexInfoItem(
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
 }
-

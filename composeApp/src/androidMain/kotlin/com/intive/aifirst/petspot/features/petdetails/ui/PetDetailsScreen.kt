@@ -32,11 +32,11 @@ import org.koin.androidx.compose.koinViewModel
 fun PetDetailsScreen(
     animalId: String,
     navController: NavController,
-    viewModel: PetDetailsViewModel = koinViewModel()
+    viewModel: PetDetailsViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
+
     // Handle effects
     LaunchedEffect(viewModel) {
         viewModel.effects.collectLatest { effect ->
@@ -56,7 +56,7 @@ fun PetDetailsScreen(
                             Toast.makeText(
                                 context,
                                 "No map app available",
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_SHORT,
                             ).show()
                         }
                     }
@@ -65,18 +65,18 @@ fun PetDetailsScreen(
                     Toast.makeText(
                         context,
                         "Location not available",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
             }
         }
     }
-    
+
     // Load pet on screen creation
     LaunchedEffect(animalId) {
         viewModel.dispatchIntent(PetDetailsIntent.LoadPet(animalId))
     }
-    
+
     // Render UI based on state
     when {
         state.isLoading -> {
@@ -85,16 +85,15 @@ fun PetDetailsScreen(
         state.error != null -> {
             ErrorState(
                 error = state.error,
-                onRetryClick = { viewModel.dispatchIntent(PetDetailsIntent.RetryLoad) }
+                onRetryClick = { viewModel.dispatchIntent(PetDetailsIntent.RetryLoad) },
             )
         }
         state.pet != null -> {
             PetDetailsContent(
                 pet = state.pet!!,
                 onBackClick = { viewModel.dispatchIntent(PetDetailsIntent.NavigateBack) },
-                onShowMapClick = { viewModel.dispatchIntent(PetDetailsIntent.ShowOnMap) }
+                onShowMapClick = { viewModel.dispatchIntent(PetDetailsIntent.ShowOnMap) },
             )
         }
     }
 }
-

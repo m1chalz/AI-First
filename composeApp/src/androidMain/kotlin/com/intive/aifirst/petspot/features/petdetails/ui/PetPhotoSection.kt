@@ -30,30 +30,34 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 fun PetPhotoSection(
     pet: Animal,
     onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    
+
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 10f) // Matches Figma design proportions
+        modifier =
+            modifier
+                .fillMaxWidth()
+                // Matches Figma design proportions
+                .aspectRatio(16f / 10f),
     ) {
         // Pet Photo with error fallback per FR-001
         if (pet.photoUrl.startsWith("placeholder") || pet.photoUrl.isBlank()) {
             // Show "Image not available" placeholder per spec
             ImageNotAvailablePlaceholder(
-                modifier = Modifier
-                    .matchParentSize()
-                    .testTag("petDetails.photo")
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .testTag("petDetails.photo"),
             )
         } else {
             SubcomposeAsyncImage(
                 model = pet.photoUrl,
                 contentDescription = "Photo of ${pet.name}",
-                modifier = Modifier
-                    .matchParentSize()
-                    .testTag("petDetails.photo"),
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .testTag("petDetails.photo"),
                 contentScale = ContentScale.Crop,
                 loading = {
                     ImageNotAvailablePlaceholder()
@@ -63,34 +67,37 @@ fun PetPhotoSection(
                 },
                 success = {
                     SubcomposeAsyncImageContent()
-                }
+                },
             )
         }
-        
+
         // Close Button (top left) - Per Figma design, respects status bar
         Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 20.dp, top = statusBarPadding + 18.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 20.dp, top = statusBarPadding + 18.dp),
         ) {
             PetDetailsCloseButton(onCloseClick = onCloseClick)
         }
-        
+
         // Status Badge (top right) - Per Figma design, respects status bar
         Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 20.dp, top = statusBarPadding + 18.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 20.dp, top = statusBarPadding + 18.dp),
         ) {
             StatusBadge(status = pet.status)
         }
-        
+
         // Reward Badge (bottom left) - Per Figma design
         pet.rewardAmount?.let { reward ->
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 20.dp, bottom = 18.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 20.dp, bottom = 18.dp),
             ) {
                 RewardBadge(reward = reward)
             }
@@ -102,18 +109,15 @@ fun PetPhotoSection(
  * Gray placeholder with "Image not available" text per FR-001 spec.
  */
 @Composable
-private fun ImageNotAvailablePlaceholder(
-    modifier: Modifier = Modifier
-) {
+private fun ImageNotAvailablePlaceholder(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.background(Color(0xFFE5E5E5)),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "Image not available",
             color = Color(0xFF6A7282),
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
     }
 }
-
