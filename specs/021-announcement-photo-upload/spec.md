@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Na backendzie potrzebujemy endpointu do uploadu zdjęć POST /api/v1/announcements/:id/photos. Ma przyjmować header Authorization o wartości Basic <management password jako base64>. Jeśli management password nie pasuje do hasła ogłoszenia o podanym ID, zwracamy 403 z kodem UNAUTHORIZED. Jeśli upload się powiedzie, zwracamy 201. Zdjęcia mają być zapisywane w katalogu public. Nazwa ma być zmieniona na ID ogłoszenia (z zachowaniem rozszerzenia). Ogłoszenie o podanym ID ma być zaktualizowane o photoUrl. Musimy też zmienić endpoint do dodawania nowego ogłoszenia tak żeby nie przyjmował photoUrl - usuwamy to z modelu wejściowego."
 
+## Clarifications
+
+### Session 2025-11-26
+
+- Q: How should Basic Authorization credentials be encoded for photo uploads? → A: Encode `announcementId:managementPassword`
+- Q: What should the photoUrl value format be when a photo is uploaded? → A: Relative path format `images/{announcementId}.{extension}` (e.g., `images/abc123.jpg`)
+- Q: When replacing a photo, should the old file be deleted or kept? → A: Delete the old photo file immediately when a new photo is uploaded
+- Q: How should the photo file be submitted in the POST request? → A: Use multipart/form-data with a form field named `photo` containing the image
+- Q: How should error responses be formatted? → A: JSON object with nested `error` object: `{"error": {"code": "ERROR_CODE", "message": "Error message"}}`
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Upload Photo to Existing Announcement (Priority: P1)
@@ -17,7 +27,7 @@ A user who created a lost/found pet announcement needs to add a photo of the ani
 
 **Acceptance Scenarios**:
 
-1. **Given** an announcement exists with ID "abc123" and management password "secret123", **When** user sends POST request to /api/v1/announcements/abc123/photos with Basic auth header containing base64-encoded "secret123" and a valid image file, **Then** system returns 201 status, saves the photo with filename "abc123.jpg" (or appropriate extension), and updates the announcement's photoUrl field
+1. **Given** an announcement exists with ID "abc123" and management password "secret123", **When** user sends POST request to /api/v1/announcements/abc123/photos with Basic auth header containing base64-encoded "abc123:secret123" and multipart/form-data containing `photo` field with a valid image file, **Then** system returns 201 status, saves the photo with filename "abc123.jpg" (or appropriate extension), and updates the announcement's photoUrl field to `images/abc123.jpg`
 2. **Given** an announcement exists with a photo already uploaded, **When** user uploads a new photo with correct management password, **Then** system replaces the existing photo file and updates the photoUrl field
 3. **Given** an announcement exists with ID "xyz789", **When** user uploads a photo with valid image format (JPEG, PNG, GIF, WebP), **Then** system preserves the original file extension in the saved filename (e.g., "xyz789.png")
 
@@ -33,8 +43,8 @@ A user attempts to upload a photo to someone else's announcement without proper 
 
 **Acceptance Scenarios**:
 
-1. **Given** an announcement exists with ID "abc123" and management password "secret123", **When** user sends upload request with incorrect password "wrongpass", **Then** system returns 403 status with error code "UNAUTHORIZED"
-2. **Given** an announcement exists with ID "abc123", **When** user sends upload request without Authorization header, **Then** system returns 403 status with error code "UNAUTHORIZED"
+1. **Given** an announcement exists with ID "abc123" and management password "secret123", **When** user sends upload request with incorrect password "wrongpass", **Then** system returns 403 status with response body `{"error": {"code": "UNAUTHORIZED", "message": "Invalid credentials"}}`
+2. **Given** an announcement exists with ID "abc123", **When** user sends upload request without Authorization header, **Then** system returns 403 status with response body `{"error": {"code": "UNAUTHORIZED", "message": "Authorization header is required"}}`
 3. **Given** an announcement with ID "nonexistent" does not exist, **When** user attempts to upload photo to that ID, **Then** system returns 404 status indicating announcement not found
 
 ---
@@ -69,26 +79,27 @@ A user creates a new announcement for a lost or found pet but doesn't have a pho
 
 ### Functional Requirements
 
-- **FR-001**: System MUST provide a POST endpoint at /api/v1/announcements/:id/photos for uploading photos to existing announcements
-- **FR-002**: System MUST authenticate photo upload requests using Basic authentication with the announcement's management password
+- **FR-001**: System MUST provide a POST endpoint at /api/v1/announcements/:id/photos for uploading photos to existing announcements (accepts multipart/form-data with `photo` field)
+- **FR-002**: System MUST authenticate photo upload requests using Basic authentication, encoding credentials as `announcementId:managementPassword`
 - **FR-003**: System MUST return 403 status with error code "UNAUTHORIZED" when the provided management password does not match the announcement's management password
 - **FR-004**: System MUST return 403 status with error code "UNAUTHORIZED" when no Authorization header is provided
 - **FR-005**: System MUST return 201 status when photo upload succeeds
 - **FR-006**: System MUST return 404 status when attempting to upload photo to a non-existent announcement
-- **FR-007**: System MUST save uploaded photos to the public directory with filename format: {announcementId}.{extension}
+- **FR-007**: System MUST save uploaded photos to the public/images directory with filename format: {announcementId}.{extension}
 - **FR-008**: System MUST preserve the original file extension when saving photos
-- **FR-009**: System MUST update the announcement's photoUrl field with the URL path to the uploaded photo
-- **FR-010**: System MUST replace existing photo files when a new photo is uploaded to the same announcement
+- **FR-009**: System MUST update the announcement's photoUrl field with relative path format: `images/{announcementId}.{extension}` (e.g., `images/abc123.jpg`)
+- **FR-010**: System MUST replace existing photo files when a new photo is uploaded to the same announcement (delete old file, keep only current photo)
 - **FR-011**: System MUST remove photoUrl field from the POST /api/v1/announcements endpoint's input validation/model
 - **FR-012**: System MUST accept photoUrl field in announcement creation requests but ignore it (for backward compatibility)
 - **FR-013**: System MUST validate that uploaded files are valid image formats (JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF)
 - **FR-014**: System MUST enforce maximum file size limit of 20 MB for uploaded photos
 - **FR-015**: System MUST return 400 status when uploaded file format is invalid and 413 status when file size exceeds the limit
+- **FR-016**: System MUST return error responses in JSON format: `{"error": {"code": "ERROR_CODE", "message": "descriptive error message"}}` for all error statuses (400, 403, 404, 413, 500)
 
 ### Key Entities
 
 - **Announcement**: Represents a lost or found pet announcement with fields including id (unique identifier), managementPassword (for authorization), photoUrl (URL path to uploaded photo, nullable)
-- **Photo File**: Physical image file stored in public directory with filename based on announcement ID and original file extension
+- **Photo File**: Physical image file stored in public/images directory with filename based on announcement ID and original file extension
 
 ## Success Criteria *(mandatory)*
 
