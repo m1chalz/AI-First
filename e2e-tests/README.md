@@ -1,614 +1,258 @@
-# PetSpot E2E Testing
+# PetSpot E2E Tests - Dual Test Stack
 
-End-to-end testing infrastructure for PetSpot multiplatform application covering web (Playwright) and mobile (Appium) platforms.
+**Status**: DUAL STACK COEXISTENCE - Both TypeScript and Java test stacks are fully operational
 
-## Overview
+This directory contains **two independent E2E testing infrastructures** for PetSpot:
 
-This directory contains E2E tests that validate complete user flows across all platforms:
-- **Web**: React TypeScript application (Playwright)
-- **Mobile**: Android (Compose) and iOS (SwiftUI) applications (Appium + WebdriverIO)
+1. **TypeScript Stack** (existing): Playwright (web) + Appium+WebdriverIO (mobile)
+2. **Java Stack** (new): Selenium (web) + Appium+Cucumber (mobile)
 
-All tests follow Constitution Principle VI (End-to-End Testing) and Principle XII (Given-When-Then convention).
+**Migration Strategy**: Gradual, organic migration as developers work on feature branches. **No forced timeline** - both stacks will coexist indefinitely until all active branches migrate to Java.
+
+---
 
 ## Directory Structure
 
 ```
-e2e-tests/
-├── web/                    # Playwright tests for web platform
-│   ├── specs/              # Test specifications
-│   ├── pages/              # Page Object Model
-│   ├── steps/              # Reusable step definitions
-│   └── fixtures/           # Test data fixtures
-├── mobile/                 # Appium tests for mobile platforms
-│   ├── specs/              # Test specifications
-│   ├── screens/            # Screen Object Model
-│   ├── steps/              # Reusable step definitions
-│   └── utils/              # Shared mobile utilities
-└── README.md               # This file
+/e2e-tests/
+├── java/                           # NEW: Java/Maven/Selenium/Appium/Cucumber stack
+│   ├── pom.xml                     # Maven project configuration
+│   └── src/test/
+│       ├── java/                   # Java test code (Page/Screen Objects, Steps, Runners)
+│       └── resources/              # Gherkin feature files (.feature)
+│
+├── web/                            # EXISTING: TypeScript Playwright tests (web)
+│   ├── specs/                      # Playwright test specifications
+│   ├── pages/                      # Page Object Model
+│   ├── steps/                      # Reusable step definitions
+│   └── playwright.config.ts        # Playwright configuration
+│
+├── mobile/                         # EXISTING: TypeScript Appium tests (mobile)
+│   ├── specs/                      # Mobile test specifications
+│   ├── screens/                    # Screen Object Model
+│   ├── steps/                      # Reusable step definitions
+│   └── wdio.conf.ts                # WebdriverIO configuration
+│
+├── package.json                    # npm dependencies for TypeScript tests
+└── README.md                       # This file
 ```
-
-## Quick Start
-
-### TL;DR - Run Android E2E Tests
-
-**Prerequisites:**
-- Android emulator running (or physical device connected)
-- Android APK built: `./gradlew :composeApp:assembleDebug`
-- Dependencies installed: `cd e2e-tests && npm install`
-
-**Run tests:**
-```bash
-# Terminal 1: Start Appium (leave running)
-cd e2e-tests
-npm run appium:start
-
-# Terminal 2: Run Android tests
-cd e2e-tests
-npm run test:mobile:android
-```
-
-That's it!
 
 ---
 
-### Setup
-
-**1. Build shared Kotlin/JS module (required for webApp):**
-```bash
-# From project root
-./gradlew :shared:jsBrowserDevelopmentLibraryDistribution
-```
-
-**2. Install webApp dependencies:**
-```bash
-cd webApp
-npm install
-cd ..
-```
-
-**3. Install e2e-tests dependencies:**
-```bash
-cd e2e-tests
-npm install
-
-# Install Playwright browsers
-npx playwright install
-```
-
-**4. Install Appium drivers (for mobile tests only):**
-```bash
-# Appium 3.x is already installed locally via node_modules (package.json)
-# Install drivers for the local Appium instance
-
-cd e2e-tests
-npx appium driver install uiautomator2  # For Android
-npx appium driver install xcuitest      # For iOS (macOS only)
-
-# Verify drivers are installed
-npx appium driver list --installed
-```
-
-**Note**: Appium 3.x ships with this repo via `devDependencies`. Start the server manually with `npm run appium:start` before running mobile specs (`@wdio/appium-service` is disabled in `wdio.conf.ts`).
-
-**5. Build mobile applications (for mobile tests only):**
-```bash
-# Android
-./gradlew :composeApp:assembleDebug
-
-# iOS (requires Xcode on macOS)
-# Open iosApp/iosApp.xcodeproj in Xcode
-# Build for simulator: Product > Build (Cmd+B)
-```
+## TypeScript Test Stack (Existing - PRESERVED)
 
 ### Prerequisites
 
-**For Web Testing:**
-- Node.js v20+ installed
-- Java 17+ (for building Kotlin/JS shared module)
-- Playwright browsers installed (via `npx playwright install`)
-- **webApp must be running** before tests (see Running Tests section)
+- Node.js 18+ installed
+- npm dependencies installed: `npm install` (from `/e2e-tests/`)
+- For mobile tests: Android SDK and/or Xcode configured
 
-**For Mobile Testing:**
-- Node.js v20+ installed
-- Java 17+ (for building Android app)
-- Appium 3.x available (bundled locally via `npx appium`; install globally only if you need to)
-- Appium drivers: uiautomator2 (Android) and/or xcuitest (iOS)
-- Android SDK and emulator/device (for Android tests)
-- Xcode and iOS Simulator/device (macOS only, for iOS tests)
+### Run Commands
 
-### Running Tests
-
-**Web E2E Tests:**
-
-⚠️ **IMPORTANT**: You must start webApp server manually before running tests:
-
+**Web Tests** (Playwright):
 ```bash
-# Terminal 1: Start web server (from webApp directory)
-cd webApp
-npm run start  # Runs on http://localhost:8080
-
-# Terminal 2: Run Playwright tests (from e2e-tests directory)
-cd e2e-tests
+# Run all web E2E tests
 npm run test:web
+
+# Run with UI mode (interactive)
 npm run test:web:ui
-
-# Or from project root
-npm run test:e2e:web
-npm run test:e2e:web:ui
-
-# Run specific test file
-npx playwright test web/specs/animal-list.spec.ts
-
-# Run in headed mode (visible browser)
-npx playwright test --headed
-
-# Dry run (validate without executing)
-npx playwright test --dry-run
 ```
 
-Auto-start from Playwright is disabled (see comment in `playwright.config.ts`), so always keep `webApp` running on `http://localhost:8080` while tests execute.
-
-**Mobile E2E Tests:**
-
-⚠️ **IMPORTANT**: You must start Appium server manually before running mobile tests.
-
+**Mobile Tests** (Appium + WebdriverIO):
 ```bash
-# Terminal 1: Start Appium server (from e2e-tests directory)
-cd e2e-tests
-npm run appium:start  # Runs on http://localhost:4723
+# Start Appium server (prerequisite for mobile tests)
+npm run appium:start
 
-# Terminal 2: Run mobile tests (from e2e-tests directory)
-cd e2e-tests
-npm run test:mobile:android  # Runs ONLY Android tests
-npm run test:mobile:ios       # Runs ONLY iOS tests
-
-# Or from project root
+# Run Android tests
 npm run test:mobile:android
+
+# Run iOS tests
 npm run test:mobile:ios
 
-# Dry run (validate configuration)
-npm run test:mobile:android -- --dry-run
-
-# To stop Appium and free port 4723
+# Stop Appium server
 npm run clean:appium
 ```
 
-**Note on platform selection:**
-- Tests are filtered by platform using `PLATFORM` environment variable (see `wdio.conf.ts`)
-- `test:mobile:android` runs **ONLY** Android platform capabilities
-- `test:mobile:ios` runs **ONLY** iOS platform capabilities
-- This prevents running all platforms when you only want to test one
+### Test Locations
 
-**Note on Appium startup:**
-Appium 3.x must be started manually (`npm run appium:start` from `e2e-tests`). Auto-start via `@wdio/appium-service` is disabled in `wdio.conf.ts` due to initialization timing issues.
+- **Web**: `/e2e-tests/web/specs/*.spec.ts`
+- **Mobile**: `/e2e-tests/mobile/specs/*.spec.ts`
 
-### Verify Setup
+### Reports
 
-Before running tests, verify your environment is configured correctly:
-
-**Check installed tools:**
-```bash
-# Node.js version (should be v20+)
-node --version
-
-# Java version (should be 17+)
-java -version
-
-# Playwright version
-npx playwright --version
-
-# Local Appium version (should be 3.x)
-cd e2e-tests && npx appium --version
-
-# Appium drivers (for mobile tests)
-cd e2e-tests && npx appium driver list --installed
-# Should show: uiautomator2@6.x (Android) and/or xcuitest (iOS)
-
-# Android SDK location (for Android tests)
-echo $ANDROID_HOME
-# Should show something like: /Users/yourname/Library/Android/sdk (macOS)
-# If empty, set it: export ANDROID_HOME=$HOME/Library/Android/sdk
-```
-
-**Check devices (for mobile tests):**
-```bash
-# Android: List connected devices/emulators
-$ANDROID_HOME/platform-tools/adb devices
-# Should show at least one device in 'device' state
-# Example output:
-#   List of devices attached
-#   emulator-5554	device
-
-# If no devices, start an emulator:
-$ANDROID_HOME/emulator/emulator -list-avds
-$ANDROID_HOME/emulator/emulator -avd <avd-name> &
-
-# iOS: List available simulators (macOS only)
-xcrun simctl list devices | grep Booted
-# Should show at least one booted simulator
-```
-
-**Check built applications (for mobile tests):**
-```bash
-# Verify Android APK exists
-ls -lh composeApp/build/outputs/apk/debug/composeApp-debug.apk
-
-# Verify iOS app exists (macOS only)
-ls -lh iosApp/build/Build/Products/Debug-iphonesimulator/iosApp.app
-```
-
-**Quick smoke test:**
-```bash
-# Web: Validate Playwright configuration
-cd e2e-tests
-npx playwright test --list
-
-# Mobile: Validate WebdriverIO configuration
-# First, ensure Appium is running (Terminal 1):
-cd e2e-tests
-npm run appium:start
-
-# Then in Terminal 2:
-cd e2e-tests
-npm run test:mobile:android -- --dry-run
-```
-
-## Architecture
-
-### Separation of Concerns
-
-**Pages/Screens** → Store only test IDs and locator getters (Single Responsibility)  
-**Steps** → Contain reusable actions (fillInput, clickElement, navigate)  
-**Tests** → Combine pages and steps into Given-When-Then scenarios
-
-### Web Testing (Playwright)
-
-- **Framework**: Playwright with TypeScript
-- **Pattern**: Page Object Model (POM) + Step Definitions
-- **Test IDs**: `data-testid` attributes with pattern `{screen}.{element}.{action}`
-- **Step Definitions**: Reusable actions in `/web/steps/`
-
-**Example:**
-```typescript
-import { AnimalListPage } from '../pages/AnimalListPage';
-import { givenUserIsOnAnimalListPage, whenUserClicksReportMissing } from '../steps/animalListSteps';
-import { waitForElement } from '../steps/elementSteps';
-
-test('should display Report Missing button', async ({ page }) => {
-  // Given
-  const animalListPage = await givenUserIsOnAnimalListPage(page);
-  
-  // When
-  await waitForElement(page, animalListPage.testIds.listContainer);
-  
-  // Then
-  await expect(animalListPage.reportMissingButton).toBeVisible();
-});
-```
-
-### Mobile Testing (Appium + WebdriverIO)
-
-- **Framework**: Appium 3.x + WebdriverIO + TypeScript
-- **Pattern**: Screen Object Model (SOM) + Step Definitions
-- **Test IDs**: `testTag` (Android) / `accessibilityIdentifier` (iOS) with pattern `{screen}.{element}.{action}`
-- **Step Definitions**: Reusable actions in `/mobile/steps/`
-
-**Example:**
-```typescript
-import { givenUserIsOnAnimalListScreen, thenReportMissingButtonIsVisible } from '../steps/animalListSteps';
-import { waitForElementDisplayed } from '../steps/elementSteps';
-
-describe('Animal List Screen', () => {
-  it('should display Report Missing button', async () => {
-    // Given
-    const screen = await givenUserIsOnAnimalListScreen(driver);
-    
-    // When
-    await waitForElementDisplayed(driver, screen.testIds.listContainer);
-    
-    // Then
-    await thenReportMissingButtonIsVisible(screen);
-  });
-});
-```
-
-## Test Writing Guidelines
-
-### 1. Given-When-Then Structure (MANDATORY)
-
-All tests MUST follow Given-When-Then (Arrange-Act-Assert) pattern:
-
-```typescript
-test('should display animal cards', async ({ page }) => {
-  // Given - Setup initial state
-  const animalListPage = await givenUserIsOnAnimalListPage(page);
-  
-  // When - Page loads
-  await waitForElement(page, animalListPage.testIds.listContainer);
-  
-  // Then - Verify outcome
-  await thenAnimalCardsAreVisible(animalListPage, 16);
-});
-```
-
-### 2. Test Identifiers (MANDATORY)
-
-All interactive elements MUST have stable test identifiers:
-
-**Web (data-testid):**
-```tsx
-<button data-testid="petList.addButton.click">Add Pet</button>
-```
-
-**Android (testTag):**
-```kotlin
-Button(
-  modifier = Modifier.testTag("petList.addButton.click")
-) { Text("Add Pet") }
-```
-
-**iOS (accessibilityIdentifier):**
-```swift
-Button("Add Pet")
-  .accessibilityIdentifier("petList.addButton.click")
-```
-
-**Naming pattern:** `{screen}.{element}.{action}`
-
-### 3. Page/Screen Object Model (MANDATORY)
-
-Pages/Screens contain ONLY test IDs and locators (no actions):
-
-**Web Page Object:**
-```typescript
-export class PetListPage {
-  readonly page: Page;
-  
-  // Test IDs
-  readonly testIds = {
-    addButton: 'petList.addButton.click',
-    petItem: (id: string) => `petList.item.${id}`,
-  };
-  
-  // Locators (optional, for convenience)
-  readonly addButtonLocator: Locator;
-  
-  constructor(page: Page) {
-    this.page = page;
-    this.addButtonLocator = page.getByTestId(this.testIds.addButton);
-  }
-  
-  async navigate(): Promise<void> {
-    await navigateTo(this.page, '/pets');
-  }
-}
-```
-
-**Mobile Screen Object:**
-```typescript
-export class PetListScreen {
-  private driver: WebdriverIO.Browser;
-  
-  // Test IDs only
-  readonly testIds = {
-    addButton: 'petList.addButton.click',
-    petItem: (id: string) => `petList.item.${id}`,
-  };
-  
-  constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
-  }
-}
-```
-
-### 4. Reusable Step Definitions (MANDATORY)
-
-All actions are extracted to step definitions:
-
-```typescript
-// web/steps/urlSteps.ts
-export async function navigateTo(page: Page, url: string) {
-  await page.goto(url);
-}
-
-export async function waitForElement(page: Page, testId: string) {
-  await page.getByTestId(testId).waitFor({ state: 'visible' });
-}
-
-// web/steps/elementSteps.ts  
-export async function getElementText(page: Page, testId: string) {
-  return await page.getByTestId(testId).textContent() || '';
-}
-
-export async function fillInput(page: Page, testId: string, text: string) {
-  await page.getByTestId(testId).fill(text);
-}
-
-// web/steps/mouseSteps.ts
-export async function clickElement(locator: Locator) {
-  await locator.click();
-}
-
-// Usage in tests (NOT in Page Objects)
-await clickElement(petListPage.addButton);
-```
-
-## Configuration
-
-### Playwright Configuration
-
-File: `e2e-tests/playwright.config.ts`
-
-Key settings:
-- Test directory: `./web/specs`
-- Base URL: `http://localhost:8080`
-- Browsers: Chromium, Firefox, WebKit
-- Reporters: HTML, List
-- Retries: 2 on CI, 0 locally
-- Web server: Manual start required (`npm run start` in `webApp`; auto-start block commented out)
-
-### WebdriverIO Configuration
-
-File: `e2e-tests/wdio.conf.ts`
-
-Key settings:
-- Specs: `./mobile/specs/**/*.spec.ts`
-- Appium service: Disabled; start server manually on port 4723 (`npm run appium:start`)
-- Capabilities: Android (UiAutomator2), iOS (XCUITest)
-- Framework: Mocha
-- Reporters: Spec, JUnit
-
-## Debugging
-
-### Web Tests (Playwright)
-
-```bash
-# Run with UI mode (best for debugging)
-npx playwright test --ui
-
-# Run in headed mode
-npx playwright test --headed
-
-# Debug specific test
-npx playwright test --debug animal-list.spec.ts
-
-# Trace viewer (after test run)
-npx playwright show-trace trace.zip
-```
-
-### Mobile Tests (Appium)
-
-```bash
-# Verbose logging
-npm run test:mobile:android -- --logLevel trace
-
-# Appium inspector
-# 1. Start Appium server: appium
-# 2. Open Appium Inspector
-# 3. Configure capabilities from wdio.conf.ts
-```
-
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: E2E Tests
-
-on: [push, pull_request]
-
-jobs:
-  web-e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm install
-      - run: npx playwright install --with-deps
-      - run: npm run test:e2e:web
-      
-  mobile-e2e:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm install
-      - run: npm run test:mobile:ios
-```
-
-## Troubleshooting
-
-### Web (Playwright)
-
-**Problem: Tests timing out**
-```bash
-# Increase timeout in playwright.config.ts
-use: {
-  actionTimeout: 30000,  // 30 seconds
-}
-```
-
-**Problem: Browser not found**
-```bash
-npx playwright install chromium firefox webkit
-```
-
-**Problem: Base URL not responding**
-```bash
-# Ensure web app is running
-npm run start  # In separate terminal
-```
-
-### Mobile (Appium)
-
-**Problem: Connection refused / Appium not responding**
-```bash
-# Make sure Appium server is running
-lsof -i :4723 | grep LISTEN
-
-# Start Appium server (Terminal 1)
-cd e2e-tests
-npm run appium:start
-```
-
-**Problem: Port already in use**
-```bash
-# Use cleanup script to kill process on port 4723
-cd e2e-tests
-npm run clean:appium
-```
-
-**Problem: "Neither ANDROID_HOME nor ANDROID_SDK_ROOT" error**
-```bash
-# Set ANDROID_HOME environment variable
-export ANDROID_HOME=$HOME/Library/Android/sdk  # macOS
-# Or on Linux: export ANDROID_HOME=$HOME/Android/Sdk
-
-# Make permanent by adding to ~/.zshrc or ~/.bash_profile
-echo 'export ANDROID_HOME=$HOME/Library/Android/sdk' >> ~/.zshrc
-```
-
-**Problem: Cannot find device or emulator**
-```bash
-# Check connected devices
-$ANDROID_HOME/platform-tools/adb devices
-
-# Start emulator if needed
-$ANDROID_HOME/emulator/emulator -avd <avd-name> &
-```
-
-
-## Best Practices
-
-1. ✅ **Write tests for user flows, not implementation**
-2. ✅ **Use stable test identifiers, not text or XPath**
-3. ✅ **Follow Given-When-Then structure**
-4. ✅ **Keep tests independent and isolated**
-5. ✅ **Use Page/Screen Object Model**
-6. ✅ **Extract reusable steps**
-7. ✅ **Add meaningful assertions**
-8. ✅ **Clean up test data after tests**
-9. ✅ **Run tests in parallel when possible**
-10. ✅ **Keep tests fast (< 30s per test)**
-
-## Resources
-
-- [Playwright Documentation](https://playwright.dev/)
-- [WebdriverIO Documentation](https://webdriver.io/)
-- [Appium Documentation](https://appium.io/)
-- [Constitution Principle VI](../.specify/memory/constitution.md#vi-end-to-end-testing)
-- [Constitution Principle XII](../.specify/memory/constitution.md#xii-given-when-then-test-convention)
-
-## Support
-
-For issues or questions:
-1. Check this documentation
-2. Review actual tests in `web/specs/` and `mobile/specs/`
-3. Review Constitution principles
+- **Playwright**: `playwright-report/index.html` (auto-generated)
+- **WebdriverIO**: Console output + `test-results/` directory
 
 ---
 
-**Last Updated**: 2024-11-18  
-**Version**: 1.0.0  
-**Maintained by**: PetSpot Team
+## Java Test Stack (New - INFRASTRUCTURE ENABLED)
 
+### Prerequisites
+
+- Java JDK 21 installed
+- Maven 3.6+ installed
+- For mobile tests: Android SDK and/or Xcode configured + Appium server running
+
+### Run Commands
+
+**Build Project**:
+```bash
+cd e2e-tests/java
+mvn clean install
+```
+
+**Web Tests** (Selenium):
+```bash
+# Run all web E2E tests (tag: @web)
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@web"
+
+# View HTML report
+open e2e-tests/java/target/cucumber-reports/web/index.html
+```
+
+**Mobile Tests** (Appium):
+```bash
+# Prerequisite: Start Appium server (use npm script from root)
+cd e2e-tests && npm run appium:start
+# Server starts on http://127.0.0.1:4723 - keep this terminal running
+
+# Terminal 2: Start Android Emulator (for Android tests)
+emulator -avd Android_14_Emulator
+
+# Terminal 3: Run Android tests
+cd e2e-tests/java
+mvn test -Dtest=AndroidTestRunner
+# OR: mvn test -Dcucumber.filter.tags="@android"
+
+# Run Android smoke tests only
+mvn test -Dcucumber.filter.tags="@android and @smoke"
+
+# Terminal 2: Start iOS Simulator (for iOS tests, macOS only)
+open -a Simulator
+xcrun simctl boot "iPhone 15"
+
+# Terminal 3: Run iOS tests
+cd e2e-tests/java
+mvn test -Dtest=IosTestRunner
+# OR: mvn test -Dcucumber.filter.tags="@ios"
+
+# View HTML reports
+open target/cucumber-reports/android/cucumber.html
+open target/cucumber-reports/ios/cucumber.html
+
+# View failure screenshots (platform-specific filenames)
+ls -lh target/screenshots/
+# Example: Android_search_for_specific_species_2025-11-26_09-00-15.png
+```
+
+### Test Locations
+
+- **Feature files** (Gherkin): `/e2e-tests/java/src/test/resources/features/{web|mobile}/*.feature`
+- **Java code**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/`
+
+### Reports
+
+- **Web**: `/e2e-tests/java/target/cucumber-reports/web/index.html`
+- **Android**: `/e2e-tests/java/target/cucumber-reports/android/index.html`
+- **iOS**: `/e2e-tests/java/target/cucumber-reports/ios/index.html`
+
+---
+
+## TypeScript Test Preservation Checklist
+
+**Status**: ✅ VERIFIED - TypeScript tests remain functional after Java infrastructure setup
+
+### Required Commands (MUST continue to work)
+
+- [x] `npm install` - Install TypeScript test dependencies
+- [x] `npm run test:web` - Run Playwright web tests
+- [x] `npm run test:web:ui` - Run Playwright UI mode
+- [x] `npm run appium:start` - Start Appium server for mobile tests
+- [x] `npm run test:mobile:android` - Run Android tests
+- [x] `npm run test:mobile:ios` - Run iOS tests
+- [x] `npm run clean:appium` - Stop Appium server
+
+### Directory Conflicts Check
+
+- [x] No conflicts between `/e2e-tests/java/` and `/e2e-tests/web/` or `/e2e-tests/mobile/`
+- [x] TypeScript configuration files (tsconfig.json, wdio.conf.ts, playwright.config.ts) remain unchanged
+- [x] npm scripts in package.json remain unchanged
+- [x] Existing test files (.spec.ts) remain accessible
+
+### Coexistence Strategy
+
+**Approach**: Subdirectory-based separation
+- **Java tests**: `/e2e-tests/java/` (Maven-managed)
+- **TypeScript tests**: `/e2e-tests/web/` and `/e2e-tests/mobile/` (npm-managed)
+- **Package files**: `/e2e-tests/package.json` (root level for TypeScript)
+- **No interference**: Both stacks operate independently
+
+### Validation Notes
+
+**Last Verified**: 2025-11-26 (during feature 016 implementation)
+
+**TypeScript Test Status**: ✅ FULLY FUNCTIONAL
+- Web tests (Playwright) location: `/e2e-tests/web/`
+- Mobile tests (Appium+WebdriverIO) location: `/e2e-tests/mobile/`
+- npm scripts operational: All test commands working
+- No directory conflicts detected
+
+**Java Test Status**: ✅ INFRASTRUCTURE ESTABLISHED
+- Maven project builds successfully (`mvn clean install`)
+- Directory structure complete
+- Dependencies resolved (Selenium, Appium, Cucumber)
+- No test implementations yet (Phase 1 complete, Phase 2+ pending)
+
+---
+
+## Which Test Stack Should I Use?
+
+Choose based on your feature branch context:
+
+| Situation | Recommended Stack | Why |
+|-----------|------------------|-----|
+| **New E2E test for new feature** | Java/Cucumber | Learn new stack with fresh context, no migration burden |
+| **Updating existing E2E test** | TypeScript (current) OR Java (migrate) | Your choice - maintain consistency or take opportunity to migrate |
+| **Bug fix in E2E test** | TypeScript (current stack) | Quick fix in familiar stack, optionally migrate afterwards |
+| **Large E2E test refactor** | Java/Cucumber | Good opportunity to migrate while restructuring anyway |
+| **Working on feature branch with TypeScript tests** | TypeScript | No pressure to migrate - focus on feature development |
+
+**No forced timeline**: TypeScript tests will be removed only when all active feature branches have migrated organically.
+
+---
+
+## CI/CD Integration
+
+**Current Status**: TypeScript tests run in CI/CD  
+**Planned**: Both TypeScript and Java tests will run in parallel during transition period
+
+**TypeScript Commands** (existing):
+```bash
+# Web
+npm run test:web
+
+# Mobile
+npm run test:mobile:android
+npm run test:mobile:ios
+```
+
+**Java Commands** (new):
+```bash
+# Web
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@web"
+
+# Mobile
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@android"
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios"
+```
+
+---
+
+## Support & Documentation
+
+- **Feature Specification**: `/specs/016-e2e-java-migration/spec.md`
+- **Implementation Plan**: `/specs/016-e2e-java-migration/plan.md`
+- **Quickstart Guide**: `/specs/016-e2e-java-migration/quickstart.md`
+- **Migration Guide**: `/specs/016-e2e-java-migration/MIGRATION_GUIDE.md` (to be created)
+
+**Questions?** Check the quickstart guide or reach out to the QA team.
