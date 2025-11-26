@@ -30,3 +30,12 @@ e2e-tests/mobile/logs/
 playwright-report/
 test-results/
 *.trace.zip
+
+# Java/Maven (for e2e-tests Java project)
+target/
+*.class
+.settings/
+.classpath
+.project
+*.iws
+*.ipr

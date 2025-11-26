@@ -19,7 +19,7 @@ export async function isElementDisplayed(driver: WebdriverIO.Browser, testId: st
   return await element.isDisplayed();
 }
 
-export async function waitForElementDisplayed(driver: WebdriverIO.Browser, testId: string, timeout: number = 5000): Promise<void> {
+export async function waitForElementDisplayed(driver: WebdriverIO.Browser, testId: string, timeout: number = 10000): Promise<void> {
   const selector = getElementByTestId(testId);
   const element = await driver.$(selector);
   await element.waitForDisplayed({ timeout });

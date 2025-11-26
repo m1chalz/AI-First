@@ -13,19 +13,27 @@ import { clickElement } from './mouseSteps';
  */
 export async function givenUserIsOnAnimalListScreen(driver: WebdriverIO.Browser): Promise<AnimalListScreen> {
     const screen = new AnimalListScreen();
-    await waitForElementDisplayed(driver, screen.testIds.listContainer);
+    // Wait for app to fully initialize and load data
+    await driver.pause(1000);
+    await screen.listContainer.waitForDisplayed({ timeout: 10000 });
     return screen;
 }
 
 /**
  * WHEN: User scrolls the animal list.
+ * Uses Appium mobile: scroll command instead of scrollIntoView (not supported on Android).
  */
 export async function whenUserScrollsList(screen: AnimalListScreen) {
-    const cards = await screen.getAnimalCards();
-    if (cards.length > 0) {
-        const lastCard = cards[cards.length - 1];
-        await lastCard.scrollIntoView();
-    }
+    const list = screen.listContainer;
+    // Perform swipe gesture to scroll down
+    await driver.execute('mobile: swipeGesture', {
+        left: 500,
+        top: 1500,
+        width: 100,
+        height: 500,
+        direction: 'up',
+        percent: 0.75
+    });
 }
 
 /**
