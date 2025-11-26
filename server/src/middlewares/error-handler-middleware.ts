@@ -1,29 +1,39 @@
 import type { NextFunction, Request, Response } from 'express';
 import { CustomError } from '../lib/errors.ts';
-
-const INTERNAL_SERVER_ERROR_RESPONSE = {
-  error: {
-    code: 'INTERNAL_SERVER_ERROR',
-    message: 'Internal server error'
-  }
-}
-
-const PAYLOAD_TOO_LARGE_RESPONSE = {
-  error: {
-    code: 'PAYLOAD_TOO_LARGE',
-    message: 'Request payload exceeds maximum size limit'
-  }
-}
+import { getRequestId } from '../lib/request-context.ts';
+import type { ErrorResponse } from '../lib/errors.ts';
 
 export default function errorHandlerMiddleware(err: Error, _req: Request, res: Response, _next: NextFunction) {
+  const requestId = getRequestId() ?? 'unknown';
+
   if (err instanceof Error && err.message.includes('request entity too large')) {
-    return res.status(413).json(PAYLOAD_TOO_LARGE_RESPONSE);
+    return res.status(413).json(payloadTooLargeErrorResponse(requestId));
   }
   
   if (err instanceof CustomError) {
-    return res.status(err.statusCode).json(err.toErrorResponse());
+    return res.status(err.statusCode).json(err.toErrorResponse(requestId));
   }
   
-  return res.status(500).json(INTERNAL_SERVER_ERROR_RESPONSE);
+  return res.status(500).json(internalServerErrorResponse(requestId));
+}
+
+function internalServerErrorResponse(requestId: string): ErrorResponse {
+  return {
+    error: {
+      requestId: requestId,
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Internal server error'
+    }
+  }
+}
+
+function payloadTooLargeErrorResponse(requestId: string): ErrorResponse {
+  return {
+    error: {
+      requestId: requestId,
+      code: 'PAYLOAD_TOO_LARGE',
+      message: 'Request payload exceeds maximum size limit'
+    }
+  }
 }
 

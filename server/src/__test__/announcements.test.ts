@@ -158,6 +158,7 @@ describe('GET /api/v1/announcements/:id', () => {
     // Then: Error response returned
     expect(response.body).toEqual({
       error: {
+        requestId: expect.any(String),
         code: 'NOT_FOUND',
         message: 'Resource not found'
       }
@@ -310,6 +311,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_VALUE',
       field: 'species'
     });
@@ -335,6 +337,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_CONTACT',
       field: 'contact'
     });
@@ -391,6 +394,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'INVALID_FIELD',
       field: 'unknownField'
     });
@@ -435,6 +439,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then: Returns HTTP 409 with CONFLICT error
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'CONFLICT',
       message: 'An entity with this value already exists',
       field: 'microchipNumber'

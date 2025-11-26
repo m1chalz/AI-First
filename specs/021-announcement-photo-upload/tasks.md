@@ -55,12 +55,12 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### Tasks
 
-- [ ] T005 [P] Create UnauthenticatedError class (401) in /Users/pawelkedra/code/AI-First/server/src/lib/errors.ts
-- [ ] T006 [P] Write unit tests for basic-auth middleware in /Users/pawelkedra/code/AI-First/server/src/middlewares/__test__/basic-auth.test.ts
-- [ ] T007 Implement basic-auth middleware with Authorization header parsing in /Users/pawelkedra/code/AI-First/server/src/middlewares/basic-auth.ts
-- [ ] T008 Run basic-auth middleware tests and verify all pass
-- [ ] T009 [P] Create migration to make `announcement.photo_url` column nullable in /Users/pawelkedra/code/AI-First/server/src/database/migrations/20251126184000_make_photo_url_nullable.ts
-- [ ] T010 Run database migrations (knex migrate:latest) and verify schema reflects nullable `photo_url`
+- [x] T005 [P] Create UnauthenticatedError class (401) in /Users/pawelkedra/code/AI-First/server/src/lib/errors.ts
+- [x] T006 [P] Write unit tests for basic-auth middleware in /Users/pawelkedra/code/AI-First/server/src/middlewares/__test__/basic-auth.test.ts
+- [x] T007 Implement basic-auth middleware with Authorization header parsing in /Users/pawelkedra/code/AI-First/server/src/middlewares/basic-auth.ts
+- [x] T008 Run basic-auth middleware tests and verify all pass
+- [x] T009 [P] Create migration to make `announcement.photo_url` column nullable in /Users/pawelkedra/code/AI-First/server/src/database/migrations/20251126184000_make_photo_url_nullable.ts
+- [x] T010 Run database migrations (knex migrate:latest) and verify schema reflects nullable `photo_url`
 
 **Validation**: UnauthenticatedError class created, basic-auth middleware implemented and tested, returns 401 when Authorization header missing
 
