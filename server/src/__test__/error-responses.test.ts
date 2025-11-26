@@ -40,7 +40,7 @@ describe('Error responses', () => {
       error: {
         requestId: expect.any(String),
         code: 'PAYLOAD_TOO_LARGE',
-        message: 'Request payload exceeds maximum size limit'
+        message: 'Request payload exceeds maximum size limit (100KB)'
       }
     });
   });

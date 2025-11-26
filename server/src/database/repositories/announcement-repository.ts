@@ -8,6 +8,7 @@ export interface IAnnouncementRepository {
   findById(id: string): Promise<Announcement | null>;
   existsByMicrochip(microchipNumber: string): Promise<boolean>;
   create(data: CreateAnnouncementDto, managementPassword: string): Promise<Announcement>;
+  updatePhotoUrl(trx: Knex.Transaction, id: string, photoUrl: string): Promise<void>;
 }
 
 export class AnnouncementRepository implements IAnnouncementRepository {
@@ -64,6 +65,15 @@ export class AnnouncementRepository implements IAnnouncementRepository {
 
     await this.db('announcement').insert(row);
     return this.findById(id) as Promise<Announcement>;
+  }
+
+  async updatePhotoUrl(trx: Knex.Transaction, id: string, photoUrl: string): Promise<void> {
+    await trx('announcement')
+      .where('id', id)
+      .update({
+        photo_url: photoUrl,
+        updated_at: new Date().toISOString(),
+      });
   }
 
   private mapRowToAnnouncement(row: AnnouncementRow): Announcement {

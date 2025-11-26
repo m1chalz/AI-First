@@ -32,7 +32,7 @@ function payloadTooLargeErrorResponse(requestId: string): ErrorResponse {
     error: {
       requestId: requestId,
       code: 'PAYLOAD_TOO_LARGE',
-      message: 'Request payload exceeds maximum size limit'
+      message: 'Request payload exceeds maximum size limit (100KB)'
     }
   }
 }

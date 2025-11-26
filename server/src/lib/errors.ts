@@ -53,3 +53,9 @@ export class ConflictError extends CustomError {
     super(409, 'CONFLICT', message, field);
   }
 }
+
+export class PayloadTooLargeError extends CustomError {
+  constructor(message = 'Request payload exceeds maximum size limit', field?: string) {
+    super(413, 'PAYLOAD_TOO_LARGE', message, field);
+  }
+}
