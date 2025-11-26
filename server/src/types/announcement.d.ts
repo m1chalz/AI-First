@@ -12,7 +12,6 @@ export interface CreateAnnouncementDto {
   locationLongitude: number;
   email?: string;
   phone?: string;
-  photoUrl: string | null;
   lastSeenDate: string;
   status: AnnouncementStatus;
   reward?: string;

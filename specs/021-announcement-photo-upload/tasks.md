@@ -85,34 +85,34 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### File Validation Utilities
 
-- [ ] T011 [P] [US1] Write unit tests for validateImageFormat function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T012 [P] [US1] Write unit tests for sanitizeFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T013 [P] [US1] Write unit tests for generatePhotoFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T014 [US1] Implement validateImageFormat using file-type library in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T015 [US1] Implement sanitizeFilename to prevent path traversal in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T016 [US1] Implement generatePhotoFilename for deterministic filenames in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T017 [US1] Run file-validation unit tests and verify 80%+ coverage
+- [x] T011 [P] [US1] Write unit tests for validateImageFormat function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [x] T012 [P] [US1] Write unit tests for sanitizeFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [x] T013 [P] [US1] Write unit tests for generatePhotoFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [x] T014 [US1] Implement validateImageFormat using file-type library in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [x] T015 [US1] Implement sanitizeFilename to prevent path traversal in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [x] T016 [US1] Implement generatePhotoFilename for deterministic filenames in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [x] T017 [US1] Run file-validation unit tests and verify 80%+ coverage
 
 ### Photo Upload Service
 
-- [ ] T018 [P] [US1] Write unit tests for uploadAnnouncementPhoto service in /Users/pawelkedra/code/AI-First/server/src/services/__test__/photo-upload-service.test.ts
-- [ ] T019 [US1] Implement uploadAnnouncementPhoto service with photo replacement logic in /Users/pawelkedra/code/AI-First/server/src/services/photo-upload-service.ts
-- [ ] T020 [US1] Run photo-upload-service unit tests and verify 80%+ coverage
+- [x] T018 [P] [US1] Write unit tests for uploadAnnouncementPhoto service in /Users/pawelkedra/code/AI-First/server/src/services/__test__/photo-upload-service.test.ts
+- [x] T019 [US1] Implement uploadAnnouncementPhoto service with photo replacement logic in /Users/pawelkedra/code/AI-First/server/src/services/photo-upload-service.ts
+- [x] T020 [US1] Run photo-upload-service unit tests and verify 80%+ coverage
 
 ### Repository Updates
 
-- [ ] T021 [P] [US1] Add updatePhotoUrl method to announcement repository in /Users/pawelkedra/code/AI-First/server/src/database/repositories/announcement-repository.ts
+- [x] T021 [P] [US1] Add updatePhotoUrl method to announcement repository in /Users/pawelkedra/code/AI-First/server/src/database/repositories/announcement-repository.ts
 
 ### Multer Middleware
 
-- [ ] T022 [P] [US1] Create multer upload middleware with disk storage configuration and 20 MB `limits.fileSize` + preliminary MIME filter in /Users/pawelkedra/code/AI-First/server/src/middlewares/upload.ts
+- [x] T022 [P] [US1] Create multer upload middleware with disk storage configuration and 20 MB `limits.fileSize` + preliminary MIME filter in /Users/pawelkedra/code/AI-First/server/src/middlewares/upload.ts
 
 ### API Endpoint Integration
 
-- [ ] T023 [P] [US1] Write integration tests for POST /api/v1/announcements/:id/photos endpoint (including 413 PAYLOAD_TOO_LARGE scenario) in /Users/pawelkedra/code/AI-First/server/src/__test__/photo-upload.test.ts
-- [ ] T024 [US1] Add POST /:id/photos route with basic-auth and upload middlewares in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T025 [US1] Implement route handler with validation and service call in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T026 [US1] Run photo-upload integration tests and verify all scenarios pass
+- [x] T023 [P] [US1] Write integration tests for POST /api/v1/announcements/:id/photos endpoint (including 413 PAYLOAD_TOO_LARGE scenario) in /Users/pawelkedra/code/AI-First/server/src/__test__/photo-upload.test.ts
+- [x] T024 [US1] Add POST /:id/photos route with basic-auth and upload middlewares in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [x] T025 [US1] Implement route handler with validation and service call in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [x] T026 [US1] Run photo-upload integration tests and verify all scenarios pass
 
 **Story Complete**: Photo upload endpoint functional, secure, and independently tested
 
@@ -131,9 +131,9 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### Tasks
 
-- [ ] T027 [P] [US3] Write integration test for rejecting photoUrl field in /Users/pawelkedra/code/AI-First/server/src/__test__/announcements.test.ts
-- [ ] T028 [US3] Update POST /api/v1/announcements validation to reject photoUrl field in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T029 [US3] Run announcement creation tests and verify photoUrl rejection
+- [x] T027 [P] [US3] Write integration test for rejecting photoUrl field in /Users/pawelkedra/code/AI-First/server/src/__test__/announcements.test.ts
+- [x] T028 [US3] Update POST /api/v1/announcements validation to reject photoUrl field in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [x] T029 [US3] Run announcement creation tests and verify photoUrl rejection
 
 **Story Complete**: Announcement creation rejects photoUrl field with proper validation error
 
