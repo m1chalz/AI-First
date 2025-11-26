@@ -136,7 +136,7 @@ private func configureProgressIndicator(
     hostingController.navigationItem.rightBarButtonItem = barButtonItem
     
     // Accessibility
-    badgeView.accessibilityIdentifier = "reportMissingPet.progressBadge"
+    badgeView.accessibilityIdentifier = "\(screenName).progressIndicator"  // e.g., "chipNumber.progressIndicator"
     badgeView.accessibilityLabel = L10n.ReportMissingPet.progressLabel(step, total)
 }
 ```
@@ -150,9 +150,11 @@ private func configureProgressIndicator(
 
 ### Animation
 
-**Decision**: No animation on progress change (instant update).
+**Decision**: No animation on progress change - instant update only.
 
-**Rationale**: Progress updates only when user navigates between screens. Instant update is clear and performant. Animation would add complexity without significant UX benefit.
+**Clarification**: FR-012 states "Progress indicator MUST update automatically" - this means the update happens automatically (without user action) when transitioning between screens, NOT that animation is applied. Update should be instant/immediate when screen changes.
+
+**Rationale**: Progress updates only when user navigates between screens (modal push/pop). Instant update is clear and performant. Animation would add complexity without significant UX benefit.
 
 ### Alternatives Considered
 
@@ -402,6 +404,22 @@ Photo picker will be implemented in future iteration. For now:
 | Back Button | Custom chevron-left with NavigationBackHiding wrapper | Exit on step 1, pop on steps 2-5 |
 | Photo Picker | OUT OF SCOPE - empty placeholder screen | Will be implemented in future iteration |
 | Screen Content | Empty placeholders with Continue button only | Form fields added in future iterations |
+
+---
+
+## Open Questions & Edge Cases
+
+### Q1: Background App Behavior During Flow
+
+**Question**: What happens when user backgrounds the app during the flow?
+
+**Decision**: State preservation (ReportMissingPetFlowState properties retained while modal is presented).
+- If user backgrounds app with modal open: flowState persists in memory
+- When app returns to foreground: flow resumes on same screen with same state
+- If app is terminated: flowState lost (no persistence to disk)
+- Behavior: User expects to resume where they left off during same session
+
+**Rationale**: Users expect transient session state to survive backgrounding. No persistence to disk is appropriate for MVP (no backend integration yet).
 
 ---
 

@@ -66,20 +66,19 @@ A user realizes they made a mistake or want to change information on a previous 
 - **FR-004**: System MUST provide a description input screen as the third step of the flow (step 3 of 4)
 - **FR-005**: System MUST provide a contact details input screen as the fourth step of the flow (step 4 of 4)
 - **FR-006**: System MUST provide a summary screen displayed after completing the 4-step flow
-- **FR-007**: System MUST display a progress indicator on the 4 data collection screens showing current step (1 of 4, 2 of 4, 3 of 4, 4 of 4)
+- **FR-007**: System MUST display a progress indicator on the 4 data collection screens (see SC-002 for detailed requirements)
 - **FR-008**: System MUST NOT display a progress indicator on the summary screen
 - **FR-009**: System MUST provide a "next" button or equivalent navigation control on each screen to proceed to the next step
 - **FR-010**: System MUST support backward navigation from any screen to the previous screen (including from summary back to step 4, and from step 1 back to animal list screen)
 - **FR-011**: System MUST connect navigation from "report missing animal" button on animal list screen to the first screen of the flow (chip number input, step 1 of 4)
 - **FR-012**: Progress indicator MUST update automatically as user navigates between the 4 data collection screens
-- **FR-013**: Each screen MUST display appropriate input controls for its designated purpose (text field for chip number, image picker for photo, text area for description, contact form fields for contact details, read-only summary for final screen)
+- **FR-013**: Each screen MUST be wrapped in `NavigationBackHiding` component to hide default system back button and use custom chevron-left button instead (per iOS MVVM-C architecture)
 
 ### Key Entities
 
 **Note**: This feature is UI-only. No data persistence or backend integration is in scope. Data entities will be defined in future backend integration features.
 
-- **MissingPetReport**: Represents the information collected through the flow (chip number, photo, description, contact details) - structure to be defined when backend integration is added
-- **ProgressState**: Represents current position in the flow (current step number, total steps)
+- **ReportMissingPetFlowState**: Represents the information collected through the flow during active session (chip number, photo, description, contact details, contact email/phone) - defined in data-model.md with validation properties - cleared when user exits flow
 
 ## Success Criteria
 
@@ -98,7 +97,8 @@ A user realizes they made a mistake or want to change information on a previous 
 - Standard iOS navigation patterns (navigation bar, back button) are acceptable
 - Photo selection will use SwiftUI native `.photoPicker()` modifier (iOS 16+) - standard SwiftUI photo picker component
   - Note: Photo picker integration deferred to future feature; current scope is empty placeholder screen only
-- All text labels and UI copy will be in English (localization in future feature if needed)
+- All text labels and UI copy MUST use SwiftGen localization (L10n.ReportMissingPet.*) for future multi-language support
+  - Currently English strings only, but infrastructure must support localization from day 1
 - No offline mode required for this MVP - app assumes network connectivity
 - No autosave functionality - user must complete flow in one session
 
@@ -116,18 +116,19 @@ A user realizes they made a mistake or want to change information on a previous 
 
 ### Out of Scope
 
-- Data validation logic (beyond basic UI state)
-- Backend API integration
-- Data persistence/storage
-- Form submission functionality
-- Android or Web platform implementations
-- Error handling for network/API failures
-- User authentication
-- Photo editing capabilities
-- Map integration for location selection
-- Push notifications
-- Email/SMS confirmation
-- Search for existing missing pet reports
+- **Actual input controls** (text fields, photo picker, text areas) - screens are placeholder UI only with "Continue" button
+- **Form validation logic** (beyond basic UI state)
+- **Backend API integration**
+- **Data persistence/storage**
+- **Form submission functionality**
+- **Android or Web platform implementations**
+- **Error handling for network/API failures**
+- **User authentication**
+- **Photo editing capabilities**
+- **Map integration for location selection**
+- **Push notifications**
+- **Email/SMS confirmation**
+- **Search for existing missing pet reports**
 
 ## Dependencies
 

@@ -168,7 +168,14 @@
 - [ ] T044 [US2] Update configureCustomBackButton() in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` to ensure back button action correctly calls ViewModel handleBack() method (already wired in US1, verify logic is correct)
 - [ ] T045 [US2] Update exitFlow() in ReportMissingPetCoordinator to add flowState.clear() call before dismissing modal (ensures state is cleared when exiting from step 1)
 - [ ] T046 [US2] Update all screen navigation methods (navigateToPhoto, navigateToDescription, navigateToContactDetails, navigateToSummary) to verify onBack closure correctly calls navigationController?.popViewController(animated: true) (already implemented in US1, verify correctness)
-- [ ] T047 [US2] Add manual test verification: navigate to step 3, tap back, verify step 2 displays; tap back again, verify step 1 displays; tap back, verify flow exits and animal list displays
+- [ ] T047 [US2] Add manual test verification on iPhone 15 simulator:
+  - Navigate to step 3 (Description), tap back button
+  - Verify: Step 2 (Photo) displays with progress indicator "2/4"
+  - Tap back button again
+  - Verify: Step 1 (Chip Number) displays with progress indicator "1/4"
+  - Tap back button one more time
+  - Verify: Flow exits (modal dismisses) and Animal List screen displays
+  - Verify: No data persists when reopening report flow - fresh start with empty screens
 - [ ] T048 [US2] Run iOS unit tests with new US2 test cases and verify 80% coverage maintained: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - [ ] T049 [US2] Run E2E tests for US2 backward navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us2"`
 - [ ] T050 [US2] Manual test on iPhone 15 simulator: verify backward navigation from all screens, verify progress indicator updates correctly, verify flow exits cleanly from step 1
