@@ -145,6 +145,9 @@ ktlint_standard_modifier-order = enabled
 # Enforce wrapping of multiline expressions
 ktlint_standard_wrapping = enabled
 
+# Allow consecutive comments
+ktlint_standard_no-consecutive-comments = disabled
+
 # Disable ktlint for generated code and build outputs
 [{**/build/**,**/generated/**,**/.gradle/**,**/kotlin-js-store/**}]
 ktlint = disabled
