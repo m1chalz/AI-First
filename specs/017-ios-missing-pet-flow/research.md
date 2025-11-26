@@ -402,6 +402,10 @@ Photo picker will be implemented in future iteration. For now:
 ## References
 
 - Existing pattern: `/iosApp/iosApp/Features/PetDetails/Coordinators/PetDetailsCoordinator.swift`
-- Constitution v2.3.0: iOS MVVM-C Architecture section
+- Constitution v2.3.0: 
+  - Principle XI: iOS MVVM-C Architecture section
+  - **Principle XII: End-to-End Testing (Java/Maven/Cucumber)** ⚠️ Updated Nov 2025
 - Apple documentation: PHPickerViewController, UINavigationController modal presentation
+
+**NOTE - E2E Testing Framework Migration**: E2E tests for this feature MUST be implemented in Java/Maven/Cucumber format per Constitution v2.3.0 Principle XII, NOT TypeScript. See tasks.md for updated E2E task structure.
 

@@ -100,12 +100,13 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
     - Coordinator may be integration-tested or have minimal unit tests (primarily orchestration)
   - Android/Web/Backend: N/A
 
-- [x] **End-to-End Tests**: E2E tests for iOS flow planned
-  - ✅ Appium tests in `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts`
-  - ✅ TypeScript + WebdriverIO
-  - ✅ Screen Object Model pattern
-  - ✅ User Story 1: Complete flow navigation (all 5 screens)
-  - ✅ User Story 2: Backward navigation, exit from step 1
+- [x] **End-to-End Tests**: E2E tests for iOS flow planned (per Constitution v2.3.0 - Java/Maven/Cucumber)
+  - ✅ Feature file in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Gherkin)
+  - ✅ Java + Maven + Cucumber (per Constitution v2.3.0)
+  - ✅ Screen Object Model in Java with dual annotations (@AndroidFindBy, @iOSXCUITFindBy)
+  - ✅ User Story 1: Complete flow navigation (all 5 screens) - @us1 tag
+  - ✅ User Story 2: Backward navigation, exit from step 1 - @us2 tag
+  - ✅ Run: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios"`
 
 - [x] **Asynchronous Programming Standards**: Swift Concurrency used
   - ✅ Swift `async`/`await` with `@MainActor` for ViewModels
@@ -175,13 +176,15 @@ iosApp/iosAppTests/Features/ReportMissingPet/
     ├── ContactDetailsViewModelTests.swift
     └── SummaryViewModelTests.swift
 
-e2e-tests/mobile/
-├── screens/
-│   └── ReportMissingPetScreens.ts  (Page Object Model)
-├── specs/
-│   └── 017-ios-missing-pet-flow.spec.ts
-└── steps/
-    └── reportMissingPetSteps.ts  (reusable Given/When/Then)
+e2e-tests/java/src/
+├── test/
+│   ├── java/com/intive/aifirst/petspot/e2e/
+│   │   ├── screens/
+│   │   │   └── ReportMissingPetScreen.java  (Screen Object Model with dual annotations)
+│   │   └── steps/mobile/
+│   │       └── ReportMissingPetSteps.java  (Given/When/Then step definitions)
+│   └── resources/features/mobile/
+│       └── 017-ios-missing-pet-flow.feature  (Gherkin scenarios)
 ```
 
 **Structure Decision**: iOS feature-based structure with coordinator + models + flat views directory. Views are organized in a flat structure (all View + ViewModel files in `/Views/` without subdirectories) for simplicity. ReportMissingPetFlowState is shared model owned by coordinator as property.

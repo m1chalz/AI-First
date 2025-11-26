@@ -302,62 +302,80 @@ xcodebuild test \
 
 ---
 
-## How to Run E2E Tests
+## How to Run E2E Tests (Java/Maven/Cucumber per Constitution v2.3.0)
 
 ### Prerequisites
 
-- Appium server running
-- iOS simulator or device
-- Node.js installed
+- Appium server running (on port 4723 by default)
+- iOS simulator or device with app installed
+- Java 21+ installed
+- Maven 3.9+ installed
 
 ### Setup
 
 ```bash
-cd e2e-tests
-npm install
+cd e2e-tests/java
+mvn clean install
 ```
 
 ### Run E2E Tests (iOS)
 
 ```bash
-# From repo root
-npm run test:mobile:ios
+# Run iOS tests only (tagged with @ios)
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios"
 
-# Or from e2e-tests directory
-npx wdio run wdio.conf.ts --spec ./mobile/specs/017-ios-missing-pet-flow.spec.ts
+# Run specific user story (US1 - complete flow)
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us1"
+
+# Run specific user story (US2 - backward navigation)
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us2"
+
+# Run smoke tests only
+mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @smoke"
+```
+
+### View Test Reports
+
+After running tests, view the Cucumber HTML report:
+
+```bash
+# Open in browser (macOS)
+open e2e-tests/java/target/cucumber-reports/ios/index.html
+
+# Or Linux/Windows
+# Navigate to: e2e-tests/java/target/cucumber-reports/ios/index.html
 ```
 
 ### E2E Test Structure
 
-**File**: `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts`
+**Feature File**: `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Gherkin)
 
-```typescript
-import { expect } from '@wdio/globals';
-import { animalListScreen, chipNumberScreen, photoScreen } from '../screens/ReportMissingPetScreens';
+```gherkin
+@mobile @ios
+Feature: Missing Pet Report Flow (iOS)
+  As a pet owner
+  I want to report my missing pet through a structured multi-step flow
 
-describe('Missing Pet Report Flow', () => {
-    it('should navigate through all 5 screens', async () => {
-        // Given: User is on animal list
-        await animalListScreen.waitForDisplayed();
-        
-        // When: User taps "report missing animal"
-        await animalListScreen.tapReportMissingButton();
-        
-        // Then: Chip number screen displays with progress 1/4
-        await chipNumberScreen.waitForDisplayed();
-        expect(await chipNumberScreen.getProgressText()).toBe('1/4');
-        
-        // When: User taps Next
-        await chipNumberScreen.tapNext();
-        
-        // Then: Photo screen displays with progress 2/4
-        await photoScreen.waitForDisplayed();
-        expect(await photoScreen.getProgressText()).toBe('2/4');
-        
-        // ... continue for all screens
-    });
-});
+  Background:
+    Given I have launched the iOS app
+    And I am on the animal list screen
+
+  @ios @us1 @smoke
+  Scenario: Complete Missing Pet Report Flow - Navigate Through All 5 Screens
+    When I tap the "report missing animal" button on animal list
+    Then the "chip number" screen should be displayed
+    And the progress indicator should show "1/4"
+    
+    When I tap the "continue" button
+    Then the "photo" screen should be displayed
+    And the progress indicator should show "2/4"
+    
+    # ... continue for all screens
 ```
+
+**Screen Object Model**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/ReportMissingPetScreen.java` (Java with dual annotations)
+
+**Step Definitions**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` (Java)
 
 ---
 
@@ -501,8 +519,11 @@ func childDidFinish(_ child: CoordinatorInterface) {
 - **Plan**: [plan.md](./plan.md)
 - **Research**: [research.md](./research.md)
 - **Data Model**: [data-model.md](./data-model.md)
-- **Constitution**: `/.specify/memory/constitution.md` (v2.3.0, iOS MVVM-C section)
-- **Example Feature**: `/iosApp/iosApp/Features/PetDetails/` (branch 012)
+- **Constitution**: `/.specify/memory/constitution.md` (v2.3.0)
+  - Principle XI: iOS MVVM-C Architecture
+  - Principle XII: End-to-End Testing (Java/Maven/Cucumber)
+- **Example E2E Feature**: `/e2e-tests/java/src/test/resources/features/mobile/pet-list.feature`
+- **Example iOS Feature**: `/iosApp/iosApp/Features/PetDetails/` (branch 012)
 
 ---
 

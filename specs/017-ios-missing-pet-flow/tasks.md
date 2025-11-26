@@ -11,11 +11,13 @@
   - Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
   - Convention: MUST follow Given-When-Then structure with descriptive names
 
-**MANDATORY - End-to-End Tests**:
-- Mobile: `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts` (Appium + TypeScript)
+**MANDATORY - End-to-End Tests** (Java + Maven + Cucumber per Constitution v2.3.0):
+- Mobile: `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Gherkin with @ios tag)
 - All user stories MUST have E2E test coverage
-- Use Screen Object Model pattern
-- Convention: MUST structure scenarios with Given-When-Then phases
+- Use Screen Object Model pattern (Java with dual annotations: @AndroidFindBy + @iOSXCUITFindBy)
+- Convention: MUST structure scenarios with Given-When-Then phases (Gherkin format)
+- Run command: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios"`
+- Report location: `/e2e-tests/java/target/cucumber-reports/ios/index.html`
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -51,8 +53,8 @@
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 - [ ] T005 Create `ReportMissingPetFlowState` (ObservableObject) in `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` with @Published properties (chipNumber, photo, description, contactEmail, contactPhone), clear() method, and computed validation properties (hasChipNumber, hasPhoto, hasDescription, hasContactInfo, formattedChipNumber)
-- [ ] T006 Create E2E Screen Object Model in `/e2e-tests/mobile/screens/ReportMissingPetScreens.ts` with selectors and actions for all 5 screens (AnimalListScreen, ChipNumberScreen, PhotoScreen, DescriptionScreen, ContactDetailsScreen, SummaryScreen)
-- [ ] T007 [P] Create E2E reusable steps in `/e2e-tests/mobile/steps/reportMissingPetSteps.ts` with Given/When/Then helpers for navigation, progress verification, back button actions
+- [ ] T006 Create E2E Screen Object Model in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/ReportMissingPetScreen.java` with dual annotations (@AndroidFindBy, @iOSXCUITFindBy) for all 5 screens (AnimalListScreen selectors, ChipNumberScreen, PhotoScreen, DescriptionScreen, ContactDetailsScreen, SummaryScreen with progress indicator and back button locators)
+- [ ] T007 [P] Create E2E feature file in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` with Gherkin scenarios for User Story 1 (complete flow) and User Story 2 (backward navigation), tagged with @ios and @mobile
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -79,7 +81,7 @@
 
 **End-to-End Tests**:
 
-- [ ] T014 [P] [US1] E2E test for complete flow navigation in `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts` (Given user on animal list, When tap "report missing animal", Then chip number screen displays with progress 1/4; When tap Continue, Then photo screen displays with progress 2/4; When tap Continue, Then description screen displays with progress 3/4; When tap Continue, Then contact details screen displays with progress 4/4; When tap Continue, Then summary screen displays without progress indicator)
+- [ ] T014 [P] [US1] Create Gherkin scenario "Complete Missing Pet Report Flow" in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Given user on animal list, When tap "report missing animal", Then chip number screen displays with progress 1/4; When tap Continue, Then photo screen displays with progress 2/4; When tap Continue, Then description screen displays with progress 3/4; When tap Continue, Then contact details screen displays with progress 4/4; When tap Continue, Then summary screen displays without progress indicator) tagged @ios @mobile @us1
 
 ### Implementation for User Story 1
 
@@ -124,9 +126,10 @@
 **Step 7: Integration & Testing**
 
 - [ ] T033 [US1] Run iOS unit tests and verify 80% coverage: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
-- [ ] T034 [US1] Run E2E test for US1 complete flow navigation: `npm run test:mobile:ios -- --spec ./mobile/specs/017-ios-missing-pet-flow.spec.ts`
-- [ ] T035 [P] [US1] Add SwiftDoc documentation to complex APIs in ReportMissingPetCoordinator (helper methods), ReportMissingPetFlowState (computed properties), skip self-explanatory methods
-- [ ] T036 [US1] Manual test on iPhone 15 simulator: verify flow navigation, progress indicator visibility, Continue button functionality
+- [ ] T034 [US1] Create Java step definitions in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` with Given/When/Then methods for complete flow (app launch, navigate to report missing, tap continue buttons, verify progress indicator)
+- [ ] T035 [US1] Run E2E test for US1 complete flow navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us1"`
+- [ ] T036 [P] [US1] Add SwiftDoc documentation to complex APIs in ReportMissingPetCoordinator (helper methods), ReportMissingPetFlowState (computed properties), skip self-explanatory methods
+- [ ] T037 [US1] Manual test on iPhone 15 simulator: verify flow navigation, progress indicator visibility, Continue button functionality
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can navigate through all 5 screens with progress indicator on steps 1-4
 
@@ -148,8 +151,8 @@
 
 **End-to-End Tests**:
 
-- [ ] T040 [P] [US2] E2E test for backward navigation in `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts` (Given user on contact details screen (step 4/4), When tap back button, Then description screen displays with progress 3/4; Given user on chip number screen (step 1/4), When tap back button, Then animal list screen displays and flow is exited)
-- [ ] T041 [P] [US2] E2E test for backward navigation from summary in `/e2e-tests/mobile/specs/017-ios-missing-pet-flow.spec.ts` (Given user on summary screen, When tap back button, Then contact details screen displays with progress 4/4)
+- [ ] T040 [P] [US2] Create Gherkin scenario "Navigate Backwards from Middle Steps" in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Given user on contact details screen (step 4/4), When tap back button, Then description screen displays with progress 3/4) tagged @ios @mobile @us2
+- [ ] T041 [P] [US2] Create Gherkin scenario "Exit Flow from Step 1" and "Navigate Back from Summary" in same feature file (Given user on chip number screen (step 1/4), When tap back button, Then animal list screen displays and flow is exited; Given user on summary screen, When tap back button, Then contact details screen displays with progress 4/4) tagged @ios @mobile @us2
 
 ### Implementation for User Story 2
 
@@ -159,9 +162,9 @@
 - [ ] T043 [US2] Update exitFlow() in ReportMissingPetCoordinator to add flowState.clear() call before dismissing modal (ensures state is cleared when exiting from step 1)
 - [ ] T044 [US2] Update all screen navigation methods (navigateToPhoto, navigateToDescription, navigateToContactDetails, navigateToSummary) to verify onBack closure correctly calls navigationController?.popViewController(animated: true) (already implemented in US1, verify correctness)
 - [ ] T045 [US2] Add manual test verification: navigate to step 3, tap back, verify step 2 displays; tap back again, verify step 1 displays; tap back, verify flow exits and animal list displays
-- [ ] T046 [US2] Run iOS unit tests with new US2 test cases and verify 80% coverage maintained: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
-- [ ] T047 [US2] Run E2E tests for US2 backward navigation: `npm run test:mobile:ios -- --spec ./mobile/specs/017-ios-missing-pet-flow.spec.ts`
-- [ ] T048 [US2] Manual test on iPhone 15 simulator: verify backward navigation from all screens, verify progress indicator updates correctly, verify flow exits cleanly from step 1
+- [ ] T048 [US2] Run iOS unit tests with new US2 test cases and verify 80% coverage maintained: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
+- [ ] T049 [US2] Run E2E tests for US2 backward navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us2"`
+- [ ] T050 [US2] Manual test on iPhone 15 simulator: verify backward navigation from all screens, verify progress indicator updates correctly, verify flow exits cleanly from step 1
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work - users can navigate forward through all screens and backward to any previous screen or exit the flow
 
@@ -171,13 +174,13 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T049 [P] Update `/specs/017-ios-missing-pet-flow/IMPLEMENTATION-SUMMARY.md` with completion status, architecture decisions, testing results, known limitations (no form fields yet, placeholder screens only)
-- [ ] T050 Code cleanup: verify all ViewModels follow consistent pattern (minimal skeleton with only onNext/onBack), verify all views have accessibility identifiers
-- [ ] T051 [P] Verify all localized strings are used correctly via SwiftGen (L10n.* references), no hardcoded strings in views
-- [ ] T052 Run quickstart.md validation: manually test all scenarios described in quickstart guide, verify documentation is accurate
-- [ ] T053 [P] Test on multiple device sizes (iPhone SE 3rd gen, iPhone 15, iPhone 15 Pro Max) to verify layout adapts correctly, progress indicator remains visible
-- [ ] T054 Test device rotation: verify flow works correctly in portrait and landscape orientations, navigation bar elements remain accessible
-- [ ] T055 [P] Add inline code comments for complex coordinator logic (modal presentation, navigation stack management, flow state lifecycle)
+- [ ] T051 [P] Update `/specs/017-ios-missing-pet-flow/IMPLEMENTATION-SUMMARY.md` with completion status, architecture decisions, testing results, known limitations (no form fields yet, placeholder screens only)
+- [ ] T052 Code cleanup: verify all ViewModels follow consistent pattern (minimal skeleton with only onNext/onBack), verify all views have accessibility identifiers
+- [ ] T053 [P] Verify all localized strings are used correctly via SwiftGen (L10n.* references), no hardcoded strings in views
+- [ ] T054 Run quickstart.md validation: manually test all scenarios described in quickstart guide, verify documentation is accurate
+- [ ] T055 [P] Test on multiple device sizes (iPhone SE 3rd gen, iPhone 15, iPhone 15 Pro Max) to verify layout adapts correctly, progress indicator remains visible
+- [ ] T056 Test device rotation: verify flow works correctly in portrait and landscape orientations, navigation bar elements remain accessible
+- [ ] T057 [P] Add inline code comments for complex coordinator logic (modal presentation, navigation stack management, flow state lifecycle)
 
 ---
 
@@ -220,13 +223,14 @@
 ### Parallel Opportunities
 
 - All Setup tasks (T001-T004) can run in parallel
-- Foundational tasks: T006 and T007 can run in parallel (both E2E setup)
+- Foundational tasks: T006 and T007 can run in parallel (both E2E setup: Screen Object Model + Feature file)
 - User Story 1 Tests: T008-T013 (unit tests) can all run in parallel
 - User Story 1 ViewModels: T018, T021, T024, T027, T030 can be created in parallel (different files)
 - User Story 1 Views: T019, T022, T025, T028, T031 can be created in parallel (different files)
-- User Story 2 Tests: T037-T041 can all run in parallel
+- User Story 2 Tests: T038-T041 can all run in parallel
 - User Story 2 Verification: T042-T044 can be done in parallel (reviewing existing code)
-- Polish tasks: T049, T051, T053, T055 can run in parallel (different concerns)
+- E2E Step Definitions: T034 can be done in parallel with iOS feature file implementation (different files)
+- Polish tasks: T051, T053, T055, T057 can run in parallel (different concerns)
 
 ---
 
