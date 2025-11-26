@@ -218,8 +218,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     
     // MARK: - Helper Methods
     
-    /// Configures circular progress indicator badge in navigation bar.
-    /// Displays current step fraction (e.g., "1/4", "2/4") in blue circular badge on right side.
+    /// Configures progress indicator as plain text in navigation bar.
+    /// Displays current step fraction (e.g., "1/4", "2/4") as text on right side.
     /// - Parameters:
     ///   - hostingController: Hosting controller to configure
     ///   - step: Current step number (1-4)
@@ -229,29 +229,20 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         step: Int,
         total: Int
     ) {
-        // Create circular badge view
-        let badgeSize: CGFloat = 40
-        let badgeView = UIView(frame: CGRect(x: 0, y: 0, width: badgeSize, height: badgeSize))
-        badgeView.backgroundColor = UIColor(hex: "#155DFC") // Primary blue
-        badgeView.layer.cornerRadius = badgeSize / 2
-        badgeView.clipsToBounds = true
-        
-        // Add label with step text
+        // Create label with progress text
         let label = UILabel()
         label.text = "\(step)/\(total)"
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.frame = badgeView.bounds
-        badgeView.addSubview(label)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.textColor = UIColor(hex: "#2D2D2D") // Dark gray
+        label.sizeToFit()
         
         // Wrap in bar button item
-        let barButtonItem = UIBarButtonItem(customView: badgeView)
+        let barButtonItem = UIBarButtonItem(customView: label)
         hostingController.navigationItem.rightBarButtonItem = barButtonItem
         
         // Accessibility
-        badgeView.accessibilityIdentifier = "reportMissingPet.progressIndicator"
-        badgeView.accessibilityLabel = L10n.ReportMissingPet.Progress.accessibilityLabel(step, total)
+        label.accessibilityIdentifier = "reportMissingPet.progressIndicator"
+        label.accessibilityLabel = L10n.ReportMissingPet.Progress.accessibilityLabel(step, total)
     }
     
     /// Configures custom back button (chevron-left) in navigation bar.
