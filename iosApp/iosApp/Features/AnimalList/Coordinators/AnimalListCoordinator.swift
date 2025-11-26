@@ -80,6 +80,22 @@ class AnimalListCoordinator: CoordinatorInterface {
         print("Navigate to animal details: \(animalId)")
         // Future: let detailCoordinator = AnimalDetailCoordinator(...)
         // Future: detailCoordinator.start()
+        
+        // Create repository (should use DI container in future)
+        let repository = AnimalRepository()
+
+        let coordinator = PetDetailsCoordinator(
+            navigationController: navigationController,
+            petId: animalId,
+            repository: repository
+        )
+
+        childCoordinators.append(coordinator)
+
+        Task { @MainActor in
+            await coordinator.start(animated: true)
+        }
+
     }
     
     /**

@@ -66,12 +66,12 @@ export const config: Options.Testrunner = {
     
     const iosConfig = {
       platformName: 'iOS' as const,
-      'appium:deviceName': 'iPhone 15',
-      'appium:platformVersion': '17.0',
+      'appium:deviceName': 'iPhone 16',
+      'appium:platformVersion': '18.1',
       'appium:automationName': 'XCUITest',
       // Path to your app (update this when you have the app)
       // 'appium:app': path.join(process.cwd(), '../iosApp/build/Release-iphonesimulator/iosApp.app'),
-      'appium:bundleId': 'com.intive.aifirst.petspot',
+      'appium:bundleId': 'com.intive.aifirst.petspot.PetSpot',
       'appium:noReset': false,
       'appium:fullReset': false,
       'appium:newCommandTimeout': 240,
@@ -90,7 +90,7 @@ export const config: Options.Testrunner = {
   logLevel: 'info',
   bail: 0,
   baseUrl: 'http://localhost',
-  waitforTimeout: 10000,
+  waitforTimeout: 3000,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
   
@@ -180,6 +180,23 @@ export const config: Options.Testrunner = {
   before: function (capabilities, specs) {
     // Set implicit wait
     // driver.setImplicitTimeout(5000);
+  },
+  
+  /**
+   * Gets executed before each test (in Mocha/Jasmine).
+   */
+  beforeTest: async function (test, context) {
+    // Reset app state between tests to ensure test isolation
+    // Terminate and relaunch app to start fresh on home screen
+    const bundleId = 'com.intive.aifirst.petspot.PetSpot';
+    try {
+      await driver.execute('mobile: terminateApp', { bundleId });
+      await driver.pause(500); // Brief pause for clean termination
+      await driver.execute('mobile: launchApp', { bundleId });
+      await driver.pause(1500); // Wait for app to fully launch and load animal list
+    } catch (error) {
+      console.warn('Failed to reset app between tests:', error);
+    }
   },
   
   /**

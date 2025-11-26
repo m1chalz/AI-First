@@ -13,9 +13,13 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - File-based test artifacts (015-e2e-java-migration)
 - TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes (014-remove-location-fields)
 - SQLite (development), PostgreSQL-ready (production) (014-remove-location-fields)
+- TypeScript with Node.js v24 (LTS) + Express.js (REST framework), Knex (query builder), SQLite3 (database driver), Vitest (testing), SuperTest (API integration tests) (008-pet-details-api)
+- SQLite database (designed for PostgreSQL migration) using existing `announcement` table (008-pet-details-api)
+- N/A (infrastructure migration, no data storage changes) (011-migrate-from-kmp)
+- Swift 5.9+ + SwiftUI (UI layer), UIKit (coordinator navigation), URLSession or Alamofire (HTTP client) (012-ios-pet-details-screen)
+- N/A (data fetched from repository, no local persistence for this feature) (012-ios-pet-details-screen)
 - Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E (013-animal-list-screen)
 - N/A for this feature (no new persistence or data access changes) (013-animal-list-screen)
-
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
 
 ## Project Structure
@@ -40,6 +44,8 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 - 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
 - 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E
 - 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
+- 011-migrate-from-kmp: Added N/A (infrastructure migration, no data storage changes)
+- 012-ios-pet-details-screen: Added Swift 5.9+ + SwiftUI (UI layer), UIKit (coordinator navigation), URLSession or Alamofire (HTTP client)
 - 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
 - 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
 

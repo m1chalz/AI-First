@@ -15,7 +15,11 @@
 // Empty state
 "animalList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
 
+// Loading state
+"animalList.loading.message" = "Loading animals...";
+
 // Error messages
+"animalList.error.title" = "Error";
 "animalList.error.prefix" = "Error: %@";
 "animalList.error.generic" = "Something went wrong. Please try again.";
 "animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
@@ -24,6 +28,59 @@
 
 // Location format
 "animalCard.location.format" = "%@, +%dkm";
+
+/* MARK: - Pet Details Screen */
+
+// Loading state
+"petDetails.loading.message" = "Loading pet details...";
+
+// Error state
+"petDetails.error.title" = "Failed to load pet details";
+
+// Labels
+"petDetails.label.dateOfDisappearance" = "Date of Disappearance";
+"petDetails.label.contactOwner" = "Contact owner";
+"petDetails.label.animalName" = "Animal Name";
+"petDetails.label.microchipNumber" = "Microchip number";
+"petDetails.label.animalSpecies" = "Animal Species";
+"petDetails.label.animalRace" = "Animal Race";
+"petDetails.label.animalSex" = "Animal Sex";
+"petDetails.label.animalAge" = "Animal Approx. Age";
+"petDetails.label.placeOfDisappearance" = "Lat / Long";
+"petDetails.label.additionalDescription" = "Animal Additional Description";
+
+// Buttons
+"petDetails.button.showOnMap" = "Show on the map";
+"petDetails.button.removeReport" = "Remove Report";
+
+// Photo
+"petDetails.photo.notAvailable" = "Image not available";
+
+// Reward badge
+"petDetails.reward.label" = "Reward";
+
+// Formats
+"petDetails.location.radiusFormat" = "±%d km";
+
+/* MARK: - Animal Status */
+
+"animalStatus.active" = "MISSING";
+"animalStatus.found" = "FOUND";
+"animalStatus.closed" = "CLOSED";
+
+/* MARK: - Animal Species */
+
+"animalSpecies.dog" = "Dog";
+"animalSpecies.cat" = "Cat";
+"animalSpecies.bird" = "Bird";
+"animalSpecies.rabbit" = "Rabbit";
+"animalSpecies.other" = "Other";
+
+/* MARK: - Animal Gender */
+
+"animalGender.male" = "Male";
+"animalGender.female" = "Female";
+"animalGender.unknown" = "Unknown";
 
 /* MARK: - Common */
 
