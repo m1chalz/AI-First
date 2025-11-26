@@ -13,10 +13,8 @@ const TEST_ANNOUNCEMENT_1 = {
   age: 5,
   description: 'Duży owczarek niemiecki, bardzo przyjazny. Nosi czerwoną obrożę.',
   microchip_number: null,
-  location_city: 'Gdynia',
   location_latitude: 54.48,
   location_longitude: 18.53,
-  location_radius: 10,
   last_seen_date: '2025-11-19',
   email: 'test@example.pl',
   phone: '+48 600 700 800',
@@ -37,10 +35,8 @@ const TEST_ANNOUNCEMENT_2 = {
   age: 3,
   description: 'Rudy kot, bardzo nieśmiały.',
   microchip_number: null,
-  location_city: 'Sopot',
   location_latitude: 54.43,
   location_longitude: 18.57,
-  location_radius: null,
   last_seen_date: '2025-11-18',
   email: null,
   phone: '555-123-456',
@@ -84,10 +80,8 @@ describe('GET /api/v1/announcements', () => {
       age: TEST_ANNOUNCEMENT_1.age,
       description: TEST_ANNOUNCEMENT_1.description,
       microchipNumber: TEST_ANNOUNCEMENT_1.microchip_number,
-      locationCity: TEST_ANNOUNCEMENT_1.location_city,
       locationLatitude: TEST_ANNOUNCEMENT_1.location_latitude,
       locationLongitude: TEST_ANNOUNCEMENT_1.location_longitude,
-      locationRadius: TEST_ANNOUNCEMENT_1.location_radius,
       lastSeenDate: TEST_ANNOUNCEMENT_1.last_seen_date,
       email: TEST_ANNOUNCEMENT_1.email,
       phone: TEST_ANNOUNCEMENT_1.phone,
@@ -136,10 +130,8 @@ describe('GET /api/v1/announcements/:id', () => {
       age: TEST_ANNOUNCEMENT_1.age,
       description: TEST_ANNOUNCEMENT_1.description,
       microchipNumber: TEST_ANNOUNCEMENT_1.microchip_number,
-      locationCity: TEST_ANNOUNCEMENT_1.location_city,
       locationLatitude: TEST_ANNOUNCEMENT_1.location_latitude,
       locationLongitude: TEST_ANNOUNCEMENT_1.location_longitude,
-      locationRadius: TEST_ANNOUNCEMENT_1.location_radius,
       lastSeenDate: TEST_ANNOUNCEMENT_1.last_seen_date,
       email: TEST_ANNOUNCEMENT_1.email,
       phone: TEST_ANNOUNCEMENT_1.phone,
@@ -184,7 +176,6 @@ describe('GET /api/v1/announcements/:id', () => {
     // Then: Response includes null optional fields
     expect(response.body.breed).toBeNull();
     expect(response.body.email).toBeNull();
-    expect(response.body.locationRadius).toBeNull();
     expect(response.body.microchipNumber).toBeNull();
   });
 });
@@ -233,10 +224,8 @@ describe('POST /api/v1/announcements', () => {
       age: 5,
       description: 'Friendly dog with brown fur',
       microchipNumber: '123456789012345',
-      locationCity: 'New York',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
-      locationRadius: 5,
       lastSeenDate: '2025-11-20',
       photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
@@ -263,10 +252,8 @@ describe('POST /api/v1/announcements', () => {
     expect(response.body.age).toBe(data.age);
     expect(response.body.description).toBe(data.description);
     expect(response.body.microchipNumber).toBe(data.microchipNumber);
-    expect(response.body.locationCity).toBe(data.locationCity);
     expect(response.body.locationLatitude).toBe(data.locationLatitude);
     expect(response.body.locationLongitude).toBe(data.locationLongitude);
-    expect(response.body.locationRadius).toBe(data.locationRadius);
     expect(response.body.lastSeenDate).toBe(data.lastSeenDate);
     expect(response.body.photoUrl).toBe(data.photoUrl);
     expect(response.body.status).toBe(data.status);

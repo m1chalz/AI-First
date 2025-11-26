@@ -8,10 +8,8 @@ export interface CreateAnnouncementDto {
   age?: number;
   description?: string;
   microchipNumber?: string;
-  locationCity?: string;
   locationLatitude: number;
   locationLongitude: number;
-  locationRadius?: number;
   email?: string;
   phone?: string;
   photoUrl: string;
@@ -20,7 +18,7 @@ export interface CreateAnnouncementDto {
   reward?: string;
 }
 
-export interface AnnouncementDto extends Omit<CreateAnnouncementDto, 'petName' | 'breed' | 'age' | 'description' | 'microchipNumber' | 'locationCity' | 'locationRadius' | 'email' | 'phone' | 'reward'> {
+export interface AnnouncementDto extends Omit<CreateAnnouncementDto, 'petName' | 'breed' | 'age' | 'description' | 'microchipNumber' | 'email' | 'phone' | 'reward'> {
   id: string;
   createdAt: string;
   managementPassword?: string;
@@ -29,8 +27,6 @@ export interface AnnouncementDto extends Omit<CreateAnnouncementDto, 'petName' |
   age?: number | null;
   description?: string | null;
   microchipNumber?: string | null;
-  locationCity?: string | null;
-  locationRadius?: number | null;
   email?: string | null;
   phone?: string | null;
   reward?: string | null;
@@ -45,10 +41,8 @@ export interface Announcement {
   age?: number | null;
   description?: string | null;
   microchipNumber?: string | null;
-  locationCity?: string | null;
   locationLatitude: number;
   locationLongitude: number;
-  locationRadius?: number | null;
   email?: string | null;
   phone?: string | null;
   photoUrl: string;
@@ -68,10 +62,8 @@ export interface AnnouncementRow {
   age: number | null;
   description: string | null;
   microchip_number: string | null;
-  location_city: string | null;
   location_latitude: number;
   location_longitude: number;
-  location_radius: number | null;
   email: string | null;
   phone: string | null;
   photo_url: string;

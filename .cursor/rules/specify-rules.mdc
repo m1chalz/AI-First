@@ -11,6 +11,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - N/A (no persistent storage required, reports generated on-demand) (007-static-analysis-hooks)
 - Java 21 (LTS) (015-e2e-java-migration)
 - File-based test artifacts (015-e2e-java-migration)
+- TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes (014-remove-location-fields)
+- SQLite (development), PostgreSQL-ready (production) (014-remove-location-fields)
 
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
 
@@ -33,6 +35,9 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 - 016-e2e-java-migration: Added Java 21 (LTS)
 - 015-e2e-java-migration: Added Java 21 (LTS)
 - 015-e2e-java-migration: Added Java 21 (LTS)
+- 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
+- 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
+- 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
 
 
 <!-- MANUAL ADDITIONS START -->

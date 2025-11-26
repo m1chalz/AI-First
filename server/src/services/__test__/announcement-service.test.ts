@@ -110,7 +110,6 @@ describe('AnnouncementService', () => {
         ...MOCK_ANNOUNCEMENT,
         breed: null,
         email: null,
-        locationRadius: null,
       };
       
       const fakeRepository = {
@@ -127,7 +126,6 @@ describe('AnnouncementService', () => {
       expect(result).toEqual(announcementWithNulls);
       expect(result.breed).toBeNull();
       expect(result.email).toBeNull();
-      expect(result.locationRadius).toBeNull();
     });
   });
 
@@ -182,7 +180,6 @@ describe('AnnouncementService', () => {
         breed: '<img src=x onerror=alert(1)>',
         sex: 'MALE',
         description: '<script>malicious</script>',
-        locationCity: '<div>City</div>',
         reward: '<p>Reward</p>',
       };
 
@@ -218,9 +215,8 @@ describe('AnnouncementService', () => {
       expect(testSanitizer).toHaveBeenCalledWith(dataWithUnsafeText.breed);
       expect(testSanitizer).toHaveBeenCalledWith(dataWithUnsafeText.sex);
       expect(testSanitizer).toHaveBeenCalledWith(dataWithUnsafeText.description);
-      expect(testSanitizer).toHaveBeenCalledWith(dataWithUnsafeText.locationCity);
       expect(testSanitizer).toHaveBeenCalledWith(dataWithUnsafeText.reward);
-      expect(testSanitizer).toHaveBeenCalledTimes(7);
+      expect(testSanitizer).toHaveBeenCalledTimes(6);
     });
 
     it('should generate unique management password for each announcement', async () => {
@@ -358,8 +354,6 @@ describe('AnnouncementService', () => {
         age: 3,
         description: 'Friendly dog',
         microchipNumber: '123456789',
-        locationCity: 'New York',
-        locationRadius: 5,
         phone: '+1-555-0101',
         reward: '$100',
       };
@@ -373,10 +367,8 @@ describe('AnnouncementService', () => {
         age: 3,
         description: 'Friendly dog',
         microchipNumber: '123456789',
-        locationCity: 'New York',
         locationLatitude: 40.7128,
         locationLongitude: -74.0060,
-        locationRadius: 5,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
