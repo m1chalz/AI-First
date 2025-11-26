@@ -334,9 +334,15 @@ Photo picker will be implemented in future iteration. For now:
 - FlowState.photo property defined but unused
 
 **Planned approach** (when implemented):
-- Use `PHPickerViewController` (iOS 14+)
-- Coordinator presents picker
-- Result saved to `flowState.photo`
+- Use SwiftUI native `PhotosPicker` component (iOS 16+)
+- Implementation example:
+  ```swift
+  PhotosPicker(selection: $viewModel.selectedPhotoItem, matching: .images) {
+      Text("Select Photo")
+  }
+  ```
+- Selection result saved to `flowState.photo` via ViewModel callback
+- Handle `Transferable` protocol for photo data conversion
 
 ---
 

@@ -72,7 +72,13 @@
 
 **iOS Unit Tests**:
 
-- [ ] T008 [P] [US1] Unit test for ReportMissingPetFlowState in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/ReportMissingPetFlowStateTests.swift` (test clear() method, computed properties: hasChipNumber, hasPhoto, hasDescription, hasContactInfo, formattedChipNumber)
+- [ ] T008 [P] [US1] Unit test for ReportMissingPetFlowState in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/ReportMissingPetFlowStateTests.swift` (MANDATORY - 80% coverage target):
+  - Test `clear()` method: verify all @Published properties reset to nil
+  - Test `hasChipNumber` computed property: returns true only when chipNumber is non-empty string
+  - Test `hasPhoto` computed property: returns true only when photo UIImage is not nil
+  - Test `hasDescription` computed property: returns true only when description is non-empty string
+  - Test `hasContactInfo` computed property: returns true when email OR phone is provided (not nil/empty)
+  - Test `formattedChipNumber` computed property: formats 15 digits into XX-XXXXX-XXXXX pattern, returns nil if empty
 - [ ] T009 [P] [US1] Unit test for ChipNumberViewModel in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift` (test handleNext triggers onNext callback, handleBack triggers onBack callback, init stores flowState reference)
 - [ ] T010 [P] [US1] Unit test for PhotoViewModel in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` (test handleNext triggers onNext callback, handleBack triggers onBack callback)
 - [ ] T011 [P] [US1] Unit test for DescriptionViewModel in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/DescriptionViewModelTests.swift` (test handleNext triggers onNext callback, handleBack triggers onBack callback)

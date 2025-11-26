@@ -10,11 +10,11 @@
 
 ### User Story 1 - Complete Missing Pet Report (Priority: P1)
 
-A pet owner discovers their pet is missing and wants to report it through the app. They navigate through a structured 4-step flow that collects all necessary information (chip number, photo, description, contact details) and then view a summary screen before submission.
+A pet owner discovers their pet is missing and wants to report it through the app. They navigate through a structured 5-screen flow that collects all necessary information (chip number, photo, description, contact details) on 4 data collection screens, then view a summary screen before submission.
 
 **Why this priority**: This is the core functionality - without this flow, users cannot report missing pets at all. It's the MVP that delivers immediate value.
 
-**Independent Test**: Can be fully tested by tapping "report missing animal" button, navigating through all 4 data collection screens with progress indicator, then viewing the summary screen without progress indicator.
+**Independent Test**: Can be fully tested by tapping "report missing animal" button, navigating through all 5 screens (4 data collection screens + summary) with progress indicator on data collection screens only, then viewing the summary screen without progress indicator.
 
 **Acceptance Scenarios**:
 
@@ -30,11 +30,11 @@ A pet owner discovers their pet is missing and wants to report it through the ap
 
 ### User Story 2 - Navigate Backwards Through Flow (Priority: P2)
 
-A user realizes they made a mistake or want to change information on a previous screen. They need to navigate back through the flow to edit previous entries. The standard back button/gesture provides this functionality - from each screen it returns to the previous screen, and from the first screen (1/4) it exits to the animal list screen.
+A user realizes they made a mistake or want to change information on a previous screen. They need to navigate back through the 5-screen flow to edit previous entries. The standard back button/gesture provides this functionality - from each screen it returns to the previous screen, and from the first screen (step 1 of 4) it exits to the animal list screen.
 
 **Why this priority**: While not essential for MVP, this significantly improves user experience by allowing corrections without restarting the entire flow. This also provides the exit mechanism from the flow.
 
-**Independent Test**: Can be tested by navigating to any screen (e.g., step 3), tapping back button, and verifying that previous screen displays with any previously entered data preserved. Can also test exiting by going back from step 1 to animal list.
+**Independent Test**: Can be tested by navigating to any screen (e.g., step 3 of 5), tapping back button, and verifying that previous screen displays with any previously entered data preserved. Can also test exiting by going back from step 1 to animal list.
 
 **Acceptance Scenarios**:
 
@@ -96,7 +96,8 @@ A user realizes they made a mistake or want to change information on a previous 
 - Backend API integration will be implemented in a separate feature
 - User authentication/authorization is handled separately and assumed to be complete before accessing this flow
 - Standard iOS navigation patterns (navigation bar, back button) are acceptable
-- Photo capture/selection uses standard iOS photo picker component
+- Photo selection will use SwiftUI native `.photoPicker()` modifier (iOS 16+) - standard SwiftUI photo picker component
+  - Note: Photo picker integration deferred to future feature; current scope is empty placeholder screen only
 - All text labels and UI copy will be in English (localization in future feature if needed)
 - No offline mode required for this MVP - app assumes network connectivity
 - No autosave functionality - user must complete flow in one session
@@ -106,11 +107,11 @@ A user realizes they made a mistake or want to change information on a previous 
 ### In Scope
 
 - iOS platform only
-- UI screens for 4 data collection steps (chip number, photo, description, contact details)
-- Summary screen (displayed after completing 4 steps, without progress indicator)
-- Progress indicator component (displayed only on 4 data collection screens, showing 1/4 through 4/4)
-- Navigation controls (next/back buttons)
-- Connection of "report missing animal" button to flow entry point
+- UI screens for complete 5-screen flow: 4 data collection screens (chip number, photo, description, contact details) + 1 summary screen
+- Summary screen (displayed after completing 4 data collection steps, without progress indicator)
+- Progress indicator component (displayed only on 4 data collection screens, showing 1/4, 2/4, 3/4, 4/4)
+- Navigation controls (next/back buttons on all 5 screens)
+- Connection of "report missing animal" button to flow entry point (chip number screen, step 1/4)
 - Basic input controls for each screen (text fields, photo picker, text areas)
 
 ### Out of Scope
