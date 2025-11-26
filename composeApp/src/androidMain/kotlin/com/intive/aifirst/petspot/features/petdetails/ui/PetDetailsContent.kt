@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.intive.aifirst.petspot.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 
 /**
  * Main content composable for Pet Details screen per Figma design.

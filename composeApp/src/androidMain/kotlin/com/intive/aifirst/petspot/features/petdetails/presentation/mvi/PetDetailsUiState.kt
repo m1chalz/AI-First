@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.petdetails.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 
 /**
  * Immutable UI state for Pet Details screen.

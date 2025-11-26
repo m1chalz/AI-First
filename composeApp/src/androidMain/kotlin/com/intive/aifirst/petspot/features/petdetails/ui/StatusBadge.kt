@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.intive.aifirst.petspot.domain.models.AnimalStatus
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 
 /**
  * Status badge per Figma design: pill-shaped badge with status text.
@@ -20,14 +20,10 @@ fun StatusBadge(
     status: AnimalStatus,
     modifier: Modifier = Modifier
 ) {
-    val (text, backgroundColor) = when (status) {
-        AnimalStatus.ACTIVE -> "MISSING" to Color(0xFFFF0000) // Red
-        AnimalStatus.FOUND -> "FOUND" to Color(0xFF0074FF)    // Blue
-        AnimalStatus.CLOSED -> "CLOSED" to Color(0xFF93A2B4)  // Gray
-    }
+    val backgroundColor = Color(android.graphics.Color.parseColor(status.badgeColor))
     
     Text(
-        text = text,
+        text = status.displayName,
         modifier = modifier
             .background(
                 color = backgroundColor,

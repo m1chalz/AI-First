@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.petdetails.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 
 /**
  * Pure reducer functions for Pet Details screen state transitions.

@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.petdetails.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -71,7 +71,7 @@ class PetDetailsReducerTest {
             isLoading = true
         )
         val errorMessage = "Network error"
-        val result = Result.failure<com.intive.aifirst.petspot.domain.models.Animal>(
+        val result = Result.failure<com.intive.aifirst.petspot.composeapp.domain.models.Animal>(
             RuntimeException(errorMessage)
         )
         
@@ -88,7 +88,7 @@ class PetDetailsReducerTest {
     fun `reduce should handle exception without message`() {
         // Given
         val initialState = PetDetailsUiState(isLoading = true)
-        val result = Result.failure<com.intive.aifirst.petspot.domain.models.Animal>(
+        val result = Result.failure<com.intive.aifirst.petspot.composeapp.domain.models.Animal>(
             RuntimeException()
         )
         

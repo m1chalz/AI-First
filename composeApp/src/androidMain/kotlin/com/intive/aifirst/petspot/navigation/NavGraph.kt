@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
+
 package com.intive.aifirst.petspot.navigation
 
 import androidx.compose.runtime.Composable
@@ -13,9 +15,9 @@ import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
 /**
  * Main navigation graph for the application.
  * Defines all available routes and their associated composables.
- * 
+ *
  * Uses type-safe navigation with kotlinx-serialization.
- * 
+ *
  * @param modifier Modifier for the NavHost
  * @param navController Navigation controller (defaults to rememberNavController)
  * @param startDestination Starting route (defaults to AnimalList per FR-010)
@@ -24,38 +26,37 @@ import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
 fun PetSpotNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: NavRoute = NavRoute.AnimalList
+    startDestination: NavRoute = NavRoute.AnimalList,
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
     ) {
         // Animal List Screen (Primary entry point per FR-010)
         composable<NavRoute.AnimalList> {
             AnimalListScreen(
-                navController = navController
+                navController = navController,
             )
         }
-        
+
         // Pet Details Screen
         composable<NavRoute.AnimalDetail> { backStackEntry ->
             val route = backStackEntry.toRoute<NavRoute.AnimalDetail>()
             PetDetailsScreen(
                 animalId = route.animalId,
-                navController = navController
+                navController = navController,
             )
         }
-        
+
         // TODO: Add ReportMissing screen when implemented
         // composable<NavRoute.ReportMissing> {
         //     ReportMissingScreen(navController = navController)
         // }
-        
+
         // TODO: Add ReportFound screen when implemented
         // composable<NavRoute.ReportFound> {
         //     ReportFoundScreen(navController = navController)
         // }
     }
 }
-

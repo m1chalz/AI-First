@@ -1,9 +1,9 @@
 package com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.intive.aifirst.petspot.domain.fixtures.MockAnimalData
-import com.intive.aifirst.petspot.domain.models.Animal
-import com.intive.aifirst.petspot.domain.usecases.GetAnimalByIdUseCase
+import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalByIdUseCase
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsEffect
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsIntent
 import kotlinx.coroutines.Dispatchers
@@ -165,7 +165,7 @@ class PetDetailsViewModelTest {
     /**
      * Fake repository for testing.
      */
-    private class FakeAnimalRepository : com.intive.aifirst.petspot.domain.repositories.AnimalRepository {
+    private class FakeAnimalRepository : com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository {
         var result: Animal? = null
         var error: Throwable? = null
         

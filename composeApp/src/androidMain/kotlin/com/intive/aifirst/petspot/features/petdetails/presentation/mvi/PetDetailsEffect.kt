@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.petdetails.presentation.mvi
 
-import com.intive.aifirst.petspot.domain.models.Location
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
 /**
  * Sealed interface for one-off side effects on Pet Details screen.

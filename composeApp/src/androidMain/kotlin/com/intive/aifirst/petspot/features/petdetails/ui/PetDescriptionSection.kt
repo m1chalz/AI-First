@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.intive.aifirst.petspot.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 
 // Design colors from Figma
 private val LabelColor = Color(0xFF6A7282)

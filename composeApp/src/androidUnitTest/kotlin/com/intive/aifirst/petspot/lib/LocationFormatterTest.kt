@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.lib
 
-import com.intive.aifirst.petspot.domain.models.Location
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

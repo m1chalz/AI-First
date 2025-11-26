@@ -1,0 +1,499 @@
+openapi: 3.0.3
+info:
+  title: PetSpot API - Create Announcement
+  description: |
+    API endpoint for creating new pet announcements (lost/found pets).
+    
+    ## Security
+    - No authentication required (public endpoint)
+    - XSS prevention via HTML tag stripping on all text fields
+    - Management password returned once (never exposed in GET endpoints)
+    
+    ## Validation
+    - Fail-fast validation (returns first error only)
+    - Strict field validation (unknown fields rejected)
+    - Payload size limit: 10 MB
+  version: 1.0.0
+  contact:
+    name: PetSpot API Support
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://api.petspot.com/api/v1
+    description: Production server
+
+paths:
+  /announcements:
+    post:
+      summary: Create new pet announcement
+      description: |
+        Creates a new pet announcement (lost or found pet listing).
+        
+        **Validation Order** (fail-fast):
+        1. Payload size (10 MB limit)
+        2. Unknown fields check
+        3. Required fields presence
+        4. Contact method presence (email OR phone)
+        5. Format validation
+        6. Range validation
+        7. Duplicate microchip check
+        
+        **Returns**: HTTP 201 with announcement data including one-time management password
+      operationId: createAnnouncement
+      tags:
+        - announcements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnnouncementRequest'
+            examples:
+              minimalWithEmail:
+                summary: Minimal announcement with email contact
+                value:
+                  species: "Golden Retriever"
+                  sex: "MALE"
+                  lastSeenDate: "2025-11-20"
+                  photoUrl: "https://example.com/photos/pet.jpg"
+                  status: "MISSING"
+                  locationLatitude: 40.785091
+                  locationLongitude: -73.968285
+                  email: "john@example.com"
+              
+              minimalWithPhone:
+                summary: Minimal announcement with phone contact
+                value:
+                  species: "Persian Cat"
+                  sex: "FEMALE"
+                  lastSeenDate: "2025-11-21"
+                  photoUrl: "https://example.com/photos/cat.jpg"
+                  status: "FOUND"
+                  locationLatitude: 51.5074
+                  locationLongitude: -0.1278
+                  phone: "+1-555-0101"
+              
+              fullAnnouncement:
+                summary: Complete announcement with all optional fields
+                value:
+                  petName: "Max"
+                  species: "Golden Retriever"
+                  breed: "Golden Retriever"
+                  sex: "MALE"
+                  age: 3
+                  description: "Friendly golden retriever with red collar"
+                  microchipNumber: "123456789012345"
+                  locationCity: "New York"
+                  locationLatitude: 40.785091
+                  locationLongitude: -73.968285
+                  locationRadius: 5
+                  lastSeenDate: "2025-11-21"
+                  email: "john@example.com"
+                  phone: "+1-555-0101"
+                  photoUrl: "https://example.com/photos/max.jpg"
+                  status: "MISSING"
+                  reward: "500 USD reward for safe return"
+      
+      responses:
+        '201':
+          description: Announcement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementResponse'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                petName: "Max"
+                species: "Golden Retriever"
+                breed: "Golden Retriever"
+                sex: "MALE"
+                age: 3
+                description: "Friendly golden retriever with red collar"
+                microchipNumber: "123456789012345"
+                locationCity: "New York"
+                locationLatitude: 40.785091
+                locationLongitude: -73.968285
+                locationRadius: 5
+                lastSeenDate: "2025-11-21"
+                email: "john@example.com"
+                phone: "+1-555-0101"
+                photoUrl: "https://example.com/photos/max.jpg"
+                status: "MISSING"
+                reward: "500 USD reward for safe return"
+                managementPassword: "847362"
+                createdAt: "2025-11-24T12:34:56.789Z"
+        
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                notEmpty:
+                  summary: Required field is empty
+                  value:
+                    error:
+                      code: "MISSING_VALUE"
+                      message: "cannot be empty"
+                      field: "species"
+                
+                invalidFormat:
+                  summary: Invalid field format
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "invalid email format"
+                      field: "email"
+                
+                missingContact:
+                  summary: No contact method provided
+                  value:
+                    error:
+                      code: "MISSING_CONTACT"
+                      message: "at least one contact method (email or phone) is required"
+                      field: "contact"
+                
+                invalidField:
+                  summary: Unknown field in request
+                  value:
+                    error:
+                      code: "INVALID_FIELD"
+                      message: "unknownField is not a valid field"
+                      field: "unknownField"
+                
+                invalidMicrochip:
+                  summary: Non-numeric microchip number
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "must contain only digits"
+                      field: "microchipNumber"
+                
+                invalidAge:
+                  summary: Negative or zero age
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "age must be a positive integer"
+                      field: "age"
+                
+                invalidStatus:
+                  summary: Invalid status value
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "status must be either MISSING or FOUND"
+                      field: "status"
+                
+                invalidCoordinates:
+                  summary: Out-of-range coordinates
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "latitude must be between -90 and 90"
+                      field: "locationLatitude"
+                
+                invalidUrl:
+                  summary: Invalid photo URL format
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "must be a valid URL with http or https protocol"
+                      field: "photoUrl"
+                
+                futureDate:
+                  summary: Last seen date in future
+                  value:
+                    error:
+                      code: "INVALID_FORMAT"
+                      message: "lastSeenDate cannot be in the future"
+                      field: "lastSeenDate"
+        
+        '409':
+          description: Conflict - duplicate microchip number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              example:
+                error:
+                  code: "CONFLICT"
+                  message: "An entity with this value already exists"
+                  field: "microchipNumber"
+        
+        '413':
+          description: Payload too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayloadTooLargeError'
+              example:
+                error:
+                  code: "PAYLOAD_TOO_LARGE"
+                  message: "Request payload exceeds maximum size limit"
+        
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              example:
+                error:
+                  code: "INTERNAL_SERVER_ERROR"
+                  message: "Internal server error"
+
+components:
+  schemas:
+    CreateAnnouncementRequest:
+      type: object
+      required:
+        - species
+        - sex
+        - lastSeenDate
+        - photoUrl
+        - status
+        - locationLatitude
+        - locationLongitude
+      properties:
+        petName:
+          type: string
+          description: Pet's name (optional)
+          example: "Max"
+        
+        species:
+          type: string
+          description: Pet species (required, no length limit)
+          example: "Golden Retriever"
+        
+        breed:
+          type: string
+          description: Pet breed (optional)
+          example: "Golden Retriever"
+        
+        sex:
+          type: string
+          description: Pet sex (required, no length limit)
+          example: "MALE"
+        
+        age:
+          type: integer
+          minimum: 1
+          description: Pet age in years (optional, must be positive integer if provided)
+          example: 3
+        
+        description:
+          type: string
+          description: Free-text pet description (optional, no length limit)
+          example: "Friendly golden retriever with red collar"
+        
+        microchipNumber:
+          type: string
+          pattern: '^\d+$'
+          description: Microchip identifier (optional, numeric only, must be unique)
+          example: "123456789012345"
+        
+        locationCity:
+          type: string
+          description: City name (optional)
+          example: "New York"
+        
+        locationLatitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          description: Latitude coordinate (required, decimal between -90 and 90)
+          example: 40.785091
+        
+        locationLongitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          description: Longitude coordinate (required, decimal between -180 and 180)
+          example: -73.968285
+        
+        locationRadius:
+          type: integer
+          minimum: 1
+          description: Search radius in kilometers (optional)
+          example: 5
+        
+        lastSeenDate:
+          type: string
+          format: date
+          description: Last seen date in ISO 8601 format (required, must be today or past)
+          example: "2025-11-21"
+        
+        email:
+          type: string
+          format: email
+          description: Contact email (optional, but email OR phone required)
+          example: "john@example.com"
+        
+        phone:
+          type: string
+          description: Contact phone in E.164 format (optional, but email OR phone required)
+          example: "+1-555-0101"
+        
+        photoUrl:
+          type: string
+          format: uri
+          description: URL to pet photo (required, must use http or https protocol)
+          example: "https://example.com/photos/max.jpg"
+        
+        status:
+          type: string
+          enum:
+            - MISSING
+            - FOUND
+          description: Announcement status (required, must be MISSING or FOUND)
+          example: "MISSING"
+        
+        reward:
+          type: string
+          description: Reward information (optional, no length limit)
+          example: "500 USD reward for safe return"
+      
+      additionalProperties: false
+    
+    AnnouncementResponse:
+      allOf:
+        - $ref: '#/components/schemas/CreateAnnouncementRequest'
+        - type: object
+          required:
+            - id
+            - createdAt
+            - managementPassword
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Announcement UUID (system-generated)
+              example: "550e8400-e29b-41d4-a716-446655440000"
+            
+            managementPassword:
+              type: string
+              pattern: '^\d{6}$'
+              description: 6-digit management password (returned ONLY in POST response, never in GET)
+              example: "847362"
+            
+            createdAt:
+              type: string
+              format: date-time
+              description: Announcement creation timestamp in ISO 8601 format
+              example: "2025-11-24T12:34:56.789Z"
+    
+    ValidationError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+            - field
+          properties:
+            code:
+              type: string
+              enum:
+                - MISSING_VALUE
+                - INVALID_FORMAT
+                - MISSING_CONTACT
+                - INVALID_FIELD
+              description: Validation error code
+              example: "INVALID_FORMAT"
+            
+            message:
+              type: string
+              description: Human-readable error message
+              example: "invalid email format"
+            
+            field:
+              type: string
+              description: Name of the field that failed validation
+              example: "email"
+    
+    ConflictError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+            - field
+          properties:
+            code:
+              type: string
+              enum:
+                - CONFLICT
+              description: Conflict error code
+              example: "CONFLICT"
+            
+            message:
+              type: string
+              description: Human-readable error message
+              example: "An entity with this value already exists"
+            
+            field:
+              type: string
+              description: Name of the field causing the conflict
+              example: "microchipNumber"
+    
+    PayloadTooLargeError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              enum:
+                - PAYLOAD_TOO_LARGE
+              description: Payload size error code
+              example: "PAYLOAD_TOO_LARGE"
+            
+            message:
+              type: string
+              description: Human-readable error message
+              example: "Request payload exceeds maximum size limit"
+    
+    InternalServerError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              enum:
+                - INTERNAL_SERVER_ERROR
+              description: Internal error code
+              example: "INTERNAL_SERVER_ERROR"
+            
+            message:
+              type: string
+              description: Generic error message (no internal details exposed)
+              example: "Internal server error"
+
+tags:
+  - name: announcements
+    description: Pet announcement management operations
+

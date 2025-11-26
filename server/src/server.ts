@@ -5,6 +5,7 @@ import requestIdMiddleware from './middlewares/request-id-middleware.ts';
 import loggerMiddleware from './middlewares/logger-middleware.ts';
 import notFoundMiddleware from './middlewares/not-found-middleware.ts';
 import log from './lib/logger.ts';
+import errorHandlerMiddleware from './middlewares/error-handler-middleware.ts';
 
 export async function prepareServer(): Promise<express.Express> {
   log.info('App starting...')
@@ -12,7 +13,7 @@ export async function prepareServer(): Promise<express.Express> {
   await runDbMigrations();
 
   const server = express();
-  server.use(express.json())
+  server.use(express.json({ limit: '10mb' }))
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage
   // MUST be registered BEFORE logger middleware to ensure ID is available
@@ -24,6 +25,8 @@ export async function prepareServer(): Promise<express.Express> {
   server.use(routes);
 
   server.use(notFoundMiddleware);
+
+  server.use(errorHandlerMiddleware);
 
   return server;
 }
