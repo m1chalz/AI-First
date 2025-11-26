@@ -73,7 +73,7 @@ private func showReportMissing() {
 ## Project Structure
 
 ```text
-iosApp/iosApp/Features/ReportMissing/
+iosApp/iosApp/Features/ReportMissingPet/
 ├── Coordinators/
 │   └── ReportMissingPetCoordinator.swift      # Flow navigation logic
 ├── Models/
@@ -200,7 +200,7 @@ private func navigateToNewStep() {
         rootView: NavigationBackHiding { view }
     )
     
-    hostingController.title = L10n.ReportMissing.NewStep.navigationTitle
+    hostingController.title = L10n.ReportMissingPet.NewStep.navigationTitle
     configureProgressIndicator(hostingController: hostingController, step: 3, total: 5)  // Update step number
     configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
         viewModel?.handleBack()
@@ -235,7 +235,7 @@ class ReportMissingPetFlowState: ObservableObject {
 
 ### Unit Test Example
 
-**File**: `/iosAppTests/Features/ReportMissing/Views/ChipNumberViewModelTests.swift`
+**File**: `/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift`
 
 ```swift
 import XCTest
@@ -397,7 +397,7 @@ swiftgen
 
 **Usage**:
 ```swift
-Text(L10n.ReportMissing.ChipNumber.title)
+Text(L10n.ReportMissingPet.ChipNumber.title)
 ```
 
 ### Change Flow Order

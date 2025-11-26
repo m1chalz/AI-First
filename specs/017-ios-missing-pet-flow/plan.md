@@ -40,7 +40,7 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
 **Testing**: XCTest with Swift Concurrency, 80% coverage target  
 **Target Platform**: iOS 15+  
 **Project Type**: Mobile (iOS-only)  
-**Performance Goals**: < 300ms screen transitions, 60fps animations  
+**Performance Goals**: N/A (navigation skeleton only - no performance-critical features)  
 **Constraints**: 
 - Modal presentation with dedicated UINavigationController
 - Navigation infrastructure only - screen content to be implemented later
@@ -57,7 +57,7 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
 ### Platform Architecture Compliance
 
 - [x] **Platform Independence**: iOS implements full stack independently
-  - ✅ All code in `/iosApp/iosApp/Features/ReportMissing/`
+  - ✅ All code in `/iosApp/iosApp/Features/ReportMissingPet/`
   - ✅ NO shared compiled code with other platforms
   - Android/Web/Backend: N/A for this feature
 
@@ -91,7 +91,7 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
   - ✅ No ServiceContainer needed (coordinator manages simple dependencies)
 
 - [x] **80% Test Coverage - Platform-Specific**: iOS unit tests planned
-  - ✅ Tests in `/iosApp/iosAppTests/Features/ReportMissing/`
+  - ✅ Tests in `/iosApp/iosAppTests/Features/ReportMissingPet/`
   - ✅ Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
   - ✅ Coverage target: 80% line + branch
   - ✅ Test scope:
@@ -148,7 +148,7 @@ specs/017-ios-missing-pet-flow/
 ### Source Code (iOS)
 
 ```text
-iosApp/iosApp/Features/ReportMissing/
+iosApp/iosApp/Features/ReportMissingPet/
 ├── Coordinators/
 │   └── ReportMissingPetCoordinator.swift
 ├── Models/
@@ -170,7 +170,7 @@ iosApp/iosApp/Features/ReportMissing/
 │       ├── SummaryView.swift
 │       └── SummaryViewModel.swift
 
-iosApp/iosAppTests/Features/ReportMissing/
+iosApp/iosAppTests/Features/ReportMissingPet/
 ├── Models/
 │   └── ReportMissingPetFlowStateTests.swift
 └── Views/

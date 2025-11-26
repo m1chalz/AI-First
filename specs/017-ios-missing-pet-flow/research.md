@@ -63,7 +63,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         )
         
         // Configure navigation bar
-        hostingController.title = L10n.ReportMissing.chipNumberTitle
+        hostingController.title = L10n.ReportMissingPet.chipNumberTitle
         configureProgressIndicator(hostingController: hostingController, step: 1, total: 4)
         configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
             viewModel?.handleBack()
@@ -137,7 +137,7 @@ private func configureProgressIndicator(
     
     // Accessibility
     badgeView.accessibilityIdentifier = "reportMissing.progress.view"
-    badgeView.accessibilityLabel = L10n.ReportMissing.progressLabel(step, total)
+    badgeView.accessibilityLabel = L10n.ReportMissingPet.progressLabel(step, total)
 }
 ```
 
