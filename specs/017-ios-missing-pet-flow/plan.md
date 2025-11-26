@@ -48,6 +48,11 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
 - Empty FlowState (properties defined but not used yet)  
 **Scale/Scope**: 5 empty placeholder screens, 1 coordinator, 5 minimal ViewModels, 1 skeleton FlowState
 
+**Performance Goals**: N/A
+- This phase implements navigation skeleton only (no form logic, validation, or network calls)
+- No performance optimization work required at this stage
+- Performance requirements (300ms transitions, etc.) deferred to future features with actual business logic
+
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*

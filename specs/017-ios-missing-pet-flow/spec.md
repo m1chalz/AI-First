@@ -87,10 +87,8 @@ A user realizes they made a mistake or want to change information on a previous 
 
 - **SC-001**: Users can navigate through all 5 screens of the missing pet report flow (4 data collection screens + summary) without errors
 - **SC-002**: Progress indicator accurately displays current step out of 4 total steps (1/4, 2/4, 3/4, 4/4) on data collection screens only, and is not displayed on summary screen
-- **SC-003**: Users can complete the entire flow navigation (from tapping "report missing animal" to reaching summary screen) in under 1 minute
-- **SC-004**: All screen transitions respond within 300ms of user interaction
-- **SC-005**: UI renders correctly on all supported iOS device sizes without layout issues
-- **SC-006**: Users can successfully navigate backwards to any previous screen without data loss, including from summary screen back to step 4
+- **SC-003**: UI renders correctly on all supported iOS device sizes without layout issues
+- **SC-004**: Users can successfully navigate backwards to any previous screen without data loss, including from summary screen back to step 4
 
 ## Assumptions
 
