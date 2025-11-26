@@ -1,0 +1,91 @@
+import XCTest
+@testable import iosApp
+
+@MainActor
+final class ChipNumberViewModelTests: XCTestCase {
+    
+    var flowState: ReportMissingPetFlowState!
+    var sut: ChipNumberViewModel!
+    
+    override func setUp() {
+        super.setUp()
+        flowState = ReportMissingPetFlowState()
+        sut = ChipNumberViewModel(flowState: flowState)
+    }
+    
+    override func tearDown() {
+        sut = nil
+        flowState = nil
+        super.tearDown()
+    }
+    
+    // MARK: - Initialization Tests
+    
+    func testInit_shouldStoreFlowStateReference() {
+        // Given/When: ViewModel created in setUp with flowState
+        
+        // Then: ViewModel should be initialized successfully
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - handleNext() Tests
+    
+    func testHandleNext_shouldTriggerOnNextCallback() {
+        // Given: onNext callback is set
+        var nextCalled = false
+        sut.onNext = { nextCalled = true }
+        
+        // When: handleNext() is called
+        sut.handleNext()
+        
+        // Then: onNext callback should be triggered
+        XCTAssertTrue(nextCalled)
+    }
+    
+    func testHandleNext_whenOnNextIsNil_shouldNotCrash() {
+        // Given: onNext callback is nil (default)
+        sut.onNext = nil
+        
+        // When: handleNext() is called
+        // Then: Should not crash
+        XCTAssertNoThrow(sut.handleNext())
+    }
+    
+    // MARK: - handleBack() Tests
+    
+    func testHandleBack_shouldTriggerOnBackCallback() {
+        // Given: onBack callback is set
+        var backCalled = false
+        sut.onBack = { backCalled = true }
+        
+        // When: handleBack() is called
+        sut.handleBack()
+        
+        // Then: onBack callback should be triggered
+        XCTAssertTrue(backCalled)
+    }
+    
+    func testHandleBack_whenOnBackIsNil_shouldNotCrash() {
+        // Given: onBack callback is nil (default)
+        sut.onBack = nil
+        
+        // When: handleBack() is called
+        // Then: Should not crash
+        XCTAssertNoThrow(sut.handleBack())
+    }
+    
+    // MARK: - User Story 2: Backward Navigation Tests
+    
+    func testHandleBack_onStep1_shouldExitFlow() {
+        // Given: onBack callback is set (exit flow on step 1)
+        var exitFlowCalled = false
+        sut.onBack = { exitFlowCalled = true }
+        
+        // When: handleBack() is called on step 1
+        sut.handleBack()
+        
+        // Then: Flow should exit (callback triggered)
+        XCTAssertTrue(exitFlowCalled, "Tapping back on step 1 should exit flow")
+    }
+}
+

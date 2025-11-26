@@ -82,10 +82,32 @@
 "animalGender.female" = "Samica";
 "animalGender.unknown" = "Nieznana";
 
+/* MARK: - Report Missing Pet Flow */
+
+// Navigation titles
+"reportMissingPet.chipNumber.title" = "Numer mikroczipu";
+"reportMissingPet.photo.title" = "Zdjęcie zwierzęcia";
+"reportMissingPet.description.title" = "Opis";
+"reportMissingPet.contactDetails.title" = "Dane kontaktowe";
+"reportMissingPet.summary.title" = "Podsumowanie";
+
+// Progress indicator
+"reportMissingPet.progress.format" = "%d/%d";
+"reportMissingPet.progress.accessibilityLabel" = "Krok %d z %d";
+
+// Buttons
+"reportMissingPet.button.continue" = "Dalej";
+"reportMissingPet.button.submit" = "Wyślij";
+
+// Placeholders (for future use)
+"reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
+
 /* MARK: - Common */
 
 "common.loading" = "Ładowanie...";
 "common.retry" = "Ponów";
 "common.cancel" = "Anuluj";
 "common.ok" = "OK";
+"common.continue" = "Dalej";
+"common.back" = "Wstecz";
 

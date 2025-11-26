@@ -77,8 +77,12 @@ public enum L10n {
     public static let found = L10n.tr("Localizable", "animalStatus.found", fallback: "FOUND")
   }
   public enum Common {
+    /// Back
+    public static let back = L10n.tr("Localizable", "common.back", fallback: "Back")
     /// Cancel
     public static let cancel = L10n.tr("Localizable", "common.cancel", fallback: "Cancel")
+    /// Continue
+    public static let `continue` = L10n.tr("Localizable", "common.continue", fallback: "Continue")
     /// MARK: - Common
     public static let loading = L10n.tr("Localizable", "common.loading", fallback: "Loading...")
     /// OK
@@ -116,8 +120,8 @@ public enum L10n {
       public static let dateOfDisappearance = L10n.tr("Localizable", "petDetails.label.dateOfDisappearance", fallback: "Date of Disappearance")
       /// Microchip number
       public static let microchipNumber = L10n.tr("Localizable", "petDetails.label.microchipNumber", fallback: "Microchip number")
-      /// Place of Disappearance / City
-      public static let placeOfDisappearance = L10n.tr("Localizable", "petDetails.label.placeOfDisappearance", fallback: "Place of Disappearance / City")
+      /// Lat / Long
+      public static let placeOfDisappearance = L10n.tr("Localizable", "petDetails.label.placeOfDisappearance", fallback: "Lat / Long")
     }
     public enum Loading {
       /// MARK: - Pet Details Screen
@@ -136,6 +140,46 @@ public enum L10n {
     public enum Reward {
       /// Reward
       public static let label = L10n.tr("Localizable", "petDetails.reward.label", fallback: "Reward")
+    }
+  }
+  public enum ReportMissingPet {
+    public enum Button {
+      /// Continue
+      public static let `continue` = L10n.tr("Localizable", "reportMissingPet.button.continue", fallback: "Continue")
+      /// Submit
+      public static let submit = L10n.tr("Localizable", "reportMissingPet.button.submit", fallback: "Submit")
+    }
+    public enum ChipNumber {
+      /// 00000-00000-00000
+      public static let placeholder = L10n.tr("Localizable", "reportMissingPet.chipNumber.placeholder", fallback: "00000-00000-00000")
+      /// MARK: - Report Missing Pet Flow
+      public static let title = L10n.tr("Localizable", "reportMissingPet.chipNumber.title", fallback: "Microchip Number")
+    }
+    public enum ContactDetails {
+      /// Contact Details
+      public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Contact Details")
+    }
+    public enum Description {
+      /// Description
+      public static let title = L10n.tr("Localizable", "reportMissingPet.description.title", fallback: "Description")
+    }
+    public enum Photo {
+      /// Pet Photo
+      public static let title = L10n.tr("Localizable", "reportMissingPet.photo.title", fallback: "Pet Photo")
+    }
+    public enum Progress {
+      /// Step %d of %d
+      public static func accessibilityLabel(_ p1: Int, _ p2: Int) -> String {
+        return L10n.tr("Localizable", "reportMissingPet.progress.accessibilityLabel", p1, p2, fallback: "Step %d of %d")
+      }
+      /// %d/%d
+      public static func format(_ p1: Int, _ p2: Int) -> String {
+        return L10n.tr("Localizable", "reportMissingPet.progress.format", p1, p2, fallback: "%d/%d")
+      }
+    }
+    public enum Summary {
+      /// Summary
+      public static let title = L10n.tr("Localizable", "reportMissingPet.summary.title", fallback: "Summary")
     }
   }
 }
