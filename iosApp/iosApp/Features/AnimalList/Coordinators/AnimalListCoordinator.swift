@@ -129,5 +129,11 @@ class AnimalListCoordinator: CoordinatorInterface {
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
     }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit AnimalListCoordinator")
+    }
 }
 

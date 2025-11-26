@@ -211,8 +211,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Dismiss modal UINavigationController
         navigationController?.dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            // Future: notify parent coordinator to remove child from childCoordinators array
-            // self.parentCoordinator?.childDidFinish(self)
+            // Notify parent coordinator to remove child from childCoordinators array
+            self.parentCoordinator?.childDidFinish(self)
         }
     }
     
