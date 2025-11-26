@@ -60,7 +60,7 @@ A user creates a new announcement for a lost or found pet but doesn't have a pho
 **Acceptance Scenarios**:
 
 1. **Given** user has all required announcement data except photo, **When** user sends POST request to /api/v1/announcements with all required fields but no photoUrl, **Then** system creates the announcement successfully and returns 201 status
-2. **Given** user attempts to create announcement, **When** user includes photoUrl field in the request body, **Then** system returns 400 status with error code "VALIDATION_ERROR" and message indicating photoUrl field is not allowed
+2. **Given** user attempts to create announcement, **When** user includes photoUrl field in the request body, **Then** system returns 400 status with error code "INVALID_FIELD" and message indicating photoUrl field is not allowed
 3. **Given** announcement is created without photo, **When** announcement is retrieved, **Then** photoUrl field is either null or empty string
 
 ---
@@ -90,7 +90,7 @@ A user creates a new announcement for a lost or found pet but doesn't have a pho
 - **FR-009**: System MUST update the announcement's photoUrl field with relative path format: `images/{announcementId}.{extension}` (e.g., `images/abc123.jpg`)
 - **FR-010**: System MUST replace existing photo files when a new photo is uploaded to the same announcement (delete old file, keep only current photo)
 - **FR-011**: System MUST reject photoUrl field in the POST /api/v1/announcements endpoint's input validation
-- **FR-012**: System MUST return 400 status with error code "VALIDATION_ERROR" when photoUrl field is provided in announcement creation requests
+- **FR-012**: System MUST return 400 status with error code "INVALID_FIELD" when photoUrl field is provided in announcement creation requests
 - **FR-013**: System MUST validate that uploaded files are valid image formats (JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF)
 - **FR-014**: System MUST enforce maximum file size limit of 20 MB for uploaded photos
 - **FR-015**: System MUST return 400 status when uploaded file format is invalid and 413 status when file size exceeds the limit

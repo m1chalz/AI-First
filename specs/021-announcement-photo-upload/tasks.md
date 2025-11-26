@@ -13,7 +13,7 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ## Task Summary
 
-- **Total Tasks**: 27
+- **Total Tasks**: 34
 - **Parallelizable**: 15 tasks marked with [P]
 - **User Stories**: 2 (US1 & US2 combined as P1, US3 as P2)
 - **Test Coverage Target**: 80% line + branch coverage
@@ -59,6 +59,8 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 - [ ] T006 [P] Write unit tests for basic-auth middleware in /Users/pawelkedra/code/AI-First/server/src/middlewares/__test__/basic-auth.test.ts
 - [ ] T007 Implement basic-auth middleware with Authorization header parsing in /Users/pawelkedra/code/AI-First/server/src/middlewares/basic-auth.ts
 - [ ] T008 Run basic-auth middleware tests and verify all pass
+- [ ] T009 [P] Create migration to make `announcement.photo_url` column nullable in /Users/pawelkedra/code/AI-First/server/src/database/migrations/20251126184000_make_photo_url_nullable.ts
+- [ ] T010 Run database migrations (knex migrate:latest) and verify schema reflects nullable `photo_url`
 
 **Validation**: UnauthenticatedError class created, basic-auth middleware implemented and tested, returns 401 when Authorization header missing
 
@@ -83,34 +85,34 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### File Validation Utilities
 
-- [ ] T009 [P] [US1] Write unit tests for validateImageFormat function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T010 [P] [US1] Write unit tests for sanitizeFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T011 [P] [US1] Write unit tests for generatePhotoFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
-- [ ] T012 [US1] Implement validateImageFormat using file-type library in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T013 [US1] Implement sanitizeFilename to prevent path traversal in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T014 [US1] Implement generatePhotoFilename for deterministic filenames in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
-- [ ] T015 [US1] Run file-validation unit tests and verify 80%+ coverage
+- [ ] T011 [P] [US1] Write unit tests for validateImageFormat function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [ ] T012 [P] [US1] Write unit tests for sanitizeFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [ ] T013 [P] [US1] Write unit tests for generatePhotoFilename function in /Users/pawelkedra/code/AI-First/server/src/lib/__test__/file-validation.test.ts
+- [ ] T014 [US1] Implement validateImageFormat using file-type library in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [ ] T015 [US1] Implement sanitizeFilename to prevent path traversal in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [ ] T016 [US1] Implement generatePhotoFilename for deterministic filenames in /Users/pawelkedra/code/AI-First/server/src/lib/file-validation.ts
+- [ ] T017 [US1] Run file-validation unit tests and verify 80%+ coverage
 
 ### Photo Upload Service
 
-- [ ] T016 [P] [US1] Write unit tests for uploadAnnouncementPhoto service in /Users/pawelkedra/code/AI-First/server/src/services/__test__/photo-upload-service.test.ts
-- [ ] T017 [US1] Implement uploadAnnouncementPhoto service with photo replacement logic in /Users/pawelkedra/code/AI-First/server/src/services/photo-upload-service.ts
-- [ ] T018 [US1] Run photo-upload-service unit tests and verify 80%+ coverage
+- [ ] T018 [P] [US1] Write unit tests for uploadAnnouncementPhoto service in /Users/pawelkedra/code/AI-First/server/src/services/__test__/photo-upload-service.test.ts
+- [ ] T019 [US1] Implement uploadAnnouncementPhoto service with photo replacement logic in /Users/pawelkedra/code/AI-First/server/src/services/photo-upload-service.ts
+- [ ] T020 [US1] Run photo-upload-service unit tests and verify 80%+ coverage
 
 ### Repository Updates
 
-- [ ] T019 [P] [US1] Add updatePhotoUrl method to announcement repository in /Users/pawelkedra/code/AI-First/server/src/database/repositories/announcement-repository.ts
+- [ ] T021 [P] [US1] Add updatePhotoUrl method to announcement repository in /Users/pawelkedra/code/AI-First/server/src/database/repositories/announcement-repository.ts
 
 ### Multer Middleware
 
-- [ ] T020 [P] [US1] Create multer upload middleware with disk storage configuration in /Users/pawelkedra/code/AI-First/server/src/middlewares/upload.ts
+- [ ] T022 [P] [US1] Create multer upload middleware with disk storage configuration and 20 MB `limits.fileSize` + preliminary MIME filter in /Users/pawelkedra/code/AI-First/server/src/middlewares/upload.ts
 
 ### API Endpoint Integration
 
-- [ ] T021 [P] [US1] Write integration tests for POST /api/v1/announcements/:id/photos endpoint in /Users/pawelkedra/code/AI-First/server/src/__test__/photo-upload.test.ts
-- [ ] T022 [US1] Add POST /:id/photos route with basic-auth and upload middlewares in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T023 [US1] Implement route handler with validation and service call in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T024 [US1] Run photo-upload integration tests and verify all scenarios pass
+- [ ] T023 [P] [US1] Write integration tests for POST /api/v1/announcements/:id/photos endpoint (including 413 PAYLOAD_TOO_LARGE scenario) in /Users/pawelkedra/code/AI-First/server/src/__test__/photo-upload.test.ts
+- [ ] T024 [US1] Add POST /:id/photos route with basic-auth and upload middlewares in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [ ] T025 [US1] Implement route handler with validation and service call in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [ ] T026 [US1] Run photo-upload integration tests and verify all scenarios pass
 
 **Story Complete**: Photo upload endpoint functional, secure, and independently tested
 
@@ -124,14 +126,14 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 **Independent Test Criteria**:
 - ✅ Create announcement without photoUrl → 201, photoUrl is null
-- ✅ Create announcement with photoUrl in body → 400 VALIDATION_ERROR
+- ✅ Create announcement with photoUrl in body → 400 INVALID_FIELD
 - ✅ Retrieve created announcement → photoUrl is null
 
 ### Tasks
 
-- [ ] T025 [P] [US3] Write integration test for rejecting photoUrl field in /Users/pawelkedra/code/AI-First/server/src/__test__/announcements.test.ts
-- [ ] T026 [US3] Update POST /api/v1/announcements validation to reject photoUrl field in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
-- [ ] T027 [US3] Run announcement creation tests and verify photoUrl rejection
+- [ ] T027 [P] [US3] Write integration test for rejecting photoUrl field in /Users/pawelkedra/code/AI-First/server/src/__test__/announcements.test.ts
+- [ ] T028 [US3] Update POST /api/v1/announcements validation to reject photoUrl field in /Users/pawelkedra/code/AI-First/server/src/routes/announcements.ts
+- [ ] T029 [US3] Run announcement creation tests and verify photoUrl rejection
 
 **Story Complete**: Announcement creation rejects photoUrl field with proper validation error
 
@@ -143,11 +145,11 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### Tasks
 
-- [ ] T028 Run full test suite with coverage in /Users/pawelkedra/code/AI-First/server/
-- [ ] T029 Verify 80%+ coverage for all new code (services, lib, integration)
-- [ ] T030 Run ESLint and fix any violations in /Users/pawelkedra/code/AI-First/server/src/
-- [ ] T031 Manual testing: Upload photos with curl/Postman to verify end-to-end flow
-- [ ] T032 Verify error responses match spec for all error scenarios
+- [ ] T030 Run full test suite with coverage in /Users/pawelkedra/code/AI-First/server/
+- [ ] T031 Verify 80%+ coverage for all new code (services, lib, integration)
+- [ ] T032 Run ESLint and fix any violations in /Users/pawelkedra/code/AI-First/server/src/
+- [ ] T033 Manual testing: Upload photos with curl/Postman to verify end-to-end flow
+- [ ] T034 Verify error responses match spec for all error scenarios
 
 **Validation**: 80%+ coverage achieved, no linter errors, manual tests pass, all error codes correct
 
@@ -175,14 +177,14 @@ Setup (Phase 1) → Foundational (Phase 2) → [US1 & US2] → [US3] → Polish
 - T006 (tests) → T007 (implementation) → T008 (verify)
 
 **Phase 3 (US1 & US2)**:
-- File Validation: T009-T011 (tests parallel) → T012-T014 (implementations) → T015 (verify)
-- Service: T016 (tests) → T017 (implementation) → T018 (verify)
-- Repository: T019 (independent, can run in parallel with validation)
-- Multer: T020 (independent, can run in parallel)
-- Integration: T021 (tests) → T022-T023 (implementation) → T024 (verify)
+- File Validation: T011-T013 (tests parallel) → T014-T016 (implementations) → T017 (verify)
+- Service: T018 (tests) → T019 (implementation) → T020 (verify)
+- Repository: T021 (independent, can run in parallel with validation)
+- Multer: T022 (independent, can run in parallel)
+- Integration: T023 (tests) → T024-T025 (implementation) → T026 (verify)
 
 **Phase 4 (US3)**:
-- T025 (tests) → T026 (implementation) → T027 (verify)
+- T027 (tests) → T028 (implementation) → T029 (verify)
 
 ---
 
@@ -196,16 +198,16 @@ Setup (Phase 1) → Foundational (Phase 2) → [US1 & US2] → [US3] → Polish
 - **Sequential**: T007 (auth implementation) → T008 (verify)
 
 ### Phase 3 (US1 & US2)
-- **Parallel Group 1**: T009, T010, T011 (all file-validation tests)
-- **Sequential**: T012, T013, T014 (implementations) → T015 (verify)
-- **Parallel Group 2**: T016 (service tests) + T019 (repository) + T020 (multer)
-- **Sequential**: T017 (service implementation) → T018 (verify)
-- **Parallel Group 3**: T021 (integration tests)
-- **Sequential**: T022-T023 (route implementation) → T024 (verify)
+- **Parallel Group 1**: T011, T012, T013 (all file-validation tests)
+- **Sequential**: T014, T015, T016 (implementations) → T017 (verify)
+- **Parallel Group 2**: T018 (service tests) + T021 (repository) + T022 (multer)
+- **Sequential**: T019 (service implementation) → T020 (verify)
+- **Parallel Group 3**: T023 (integration tests)
+- **Sequential**: T024-T025 (route implementation) → T026 (verify)
 
 ### Phase 4 (US3)
-- **Parallel**: T025 (tests, independent from Phase 3 if desired)
-- **Sequential**: T026 (implementation) → T027 (verify)
+- **Parallel**: T027 (tests, independent from Phase 3 if desired)
+- **Sequential**: T028 (implementation) → T029 (verify)
 
 ### Phase 5 (Polish)
 - All polish tasks run sequentially (verification phase)
@@ -249,7 +251,7 @@ Setup (Phase 1) → Foundational (Phase 2) → [US1 & US2] → [US3] → Polish
 
 **Announcement Creation** (`/server/src/__test__/announcements.test.ts`):
 - ✅ Create without photoUrl → 201, photoUrl is null
-- ✅ Create with photoUrl in body → 400 VALIDATION_ERROR
+- ✅ Create with photoUrl in body → 400 INVALID_FIELD
 
 ### Test Execution Commands
 

@@ -182,7 +182,7 @@
 // Response: 400 Bad Request
 {
   "error": {
-    "code": "VALIDATION_ERROR",
+    "code": "INVALID_FIELD",
     "message": "photoUrl field is not allowed",
     "field": "photoUrl"
   }
@@ -208,7 +208,7 @@
 1. Upload without Authorization header → **401 UNAUTHENTICATED** (was 403)
 2. Upload to non-existent announcement → **404 NOT_FOUND** (was ANNOUNCEMENT_NOT_FOUND)
 3. Upload file > 20 MB → **413 PAYLOAD_TOO_LARGE** (was FILE_TOO_LARGE)
-4. Create announcement with photoUrl → **400 VALIDATION_ERROR** (was accepted/ignored)
+4. Create announcement with photoUrl → **400 INVALID_FIELD** (was accepted/ignored)
 
 ---
 
@@ -300,4 +300,21 @@ All planning documents are now consistent with:
 - Strict validation (reject, not ignore)
 - Kebab-case file naming convention
 - Minimal response bodies (201 with no body)
+
+### 9. ✅ Photo URL Rejection Consistency (A1)
+
+- `data-model.md`: Validation rules now state `photoUrl` is rejected during creation (aligns with spec)
+- `spec.md` / `quickstart.md`: Acceptance criteria + implementation checklist highlight the 400 INVALID_FIELD response when `photoUrl` is provided
+- `tasks.md`: Phase 4 tasks ensure validation logic and tests cover the rejection path
+
+### 10. ✅ File Size Enforcement Tasks (A2)
+
+- `tasks.md`: Summary fixed to 34 tasks; T022 now explicitly sets 20 MB `limits.fileSize`; T023 requires 413 PAYLOAD_TOO_LARGE integration scenario
+
+### 11. ✅ Database Constraint Alignment
+
+- `plan.md`: Summary and backend/database notes call out the need for a nullable `announcement.photo_url` column
+- `data-model.md`: Database schema section explicitly requires `photo_url` to be nullable (migration required)
+- `quickstart.md`: Setup checklist + file structure include creating and running the nullable `photo_url` migration
+- `tasks.md`: Phase 2 now includes T009–T010 for creating and running the migration (total tasks updated)
 

@@ -21,8 +21,8 @@ Represents a lost or found pet announcement. This feature modifies the `photoUrl
 - Other fields: (name, species, description, etc. - not modified by this feature)
 
 **Validation Rules**:
-- `photoUrl` field MUST be ignored/removed from POST /api/v1/announcements input validation
-- `photoUrl` field MUST accept `null` or empty string
+- `photoUrl` field MUST be rejected when present in POST /api/v1/announcements input (return `400 INVALID_FIELD`)
+- `photoUrl` field MUST remain `null` or empty string until set via the photo upload endpoint
 - `photoUrl` field MUST be updated only via photo upload endpoint
 
 **State Transitions**:
@@ -100,7 +100,8 @@ CREATE TABLE announcement (
 - Schema remains the same
 - Only validation/business logic changes:
   - `photoUrl` field is now **write-only via photo upload endpoint**
-  - `photoUrl` field is **excluded from POST /api/v1/announcements input validation**
+  - `photoUrl` field is **explicitly rejected** when provided to POST /api/v1/announcements
+  - Database column `photo_url` MUST be nullable (migration required) so announcements can be created before photo upload
 
 **Migration**: No database migration needed (only application-level validation changes)
 
@@ -251,7 +252,7 @@ curl -X POST \
 ```json
 {
   "error": {
-    "code": "VALIDATION_ERROR",
+    "code": "INVALID_FIELD",
     "message": "photoUrl field is not allowed",
     "field": "photoUrl"
   }

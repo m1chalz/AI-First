@@ -8,6 +8,7 @@
 ## Summary
 
 Backend-only feature implementing photo upload endpoint for pet announcements. Users can upload photos to existing announcements using Basic authentication with management password. Photos are saved to `public/images/` directory with filename based on announcement ID and file extension. The announcement's `photoUrl` field is updated with the relative path. The feature also removes `photoUrl` from the announcement creation endpoint's input model to establish a clear workflow: create announcement first, then upload photo separately.
+Database schema must allow announcements to be persisted without photos, so the `announcement.photo_url` column needs to be nullable (migration required).
 
 ## Technical Context
 
@@ -127,6 +128,7 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
   - `/routes/` - New route: POST /api/v1/announcements/:id/photos
   - `/services/` - Photo upload service (business logic, photo replacement, photoUrl update)
   - `/database/` - Repository updates for announcement photoUrl field
+  - Add migration to make `photo_url` column nullable (supports create-first, upload-later flow)
   - `/lib/` - File validation utilities (format detection, size check, filename sanitization)
   - `/__test__/` - Integration tests for photo upload endpoint
   - `app.ts` - Register new route ✓

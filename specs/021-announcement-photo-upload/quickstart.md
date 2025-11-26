@@ -90,6 +90,8 @@ HTTP/1.1 201 Created
 - [ ] Create `server/public/images/` directory
 - [ ] Configure static file serving in `server/src/server.ts`
 - [ ] Add `.gitkeep` to `public/images/` to track empty directory
+- [ ] Create migration to make `announcement.photo_url` column nullable
+- [ ] Run `npm run knex:migrate` (or equivalent) and confirm schema allows null `photo_url`
 
 ### Phase 2: File Validation (TDD)
 - [ ] Write tests for file type validation (`lib/__test__/file-validation.test.ts`)
@@ -132,7 +134,7 @@ HTTP/1.1 201 Created
 
 ### Phase 7: Modify Announcement Creation
 - [ ] Update POST /api/v1/announcements validation to reject photoUrl field
-- [ ] Return 400 VALIDATION_ERROR if photoUrl is provided
+- [ ] Return 400 INVALID_FIELD if photoUrl is provided
 - [ ] Ensure photoUrl is not saved during announcement creation
 - [ ] Add integration test to verify photoUrl is rejected
 - [ ] Run tests: `npm test -- __test__/announcements.test.ts`
@@ -162,6 +164,8 @@ server/
 │   │   │   └── photo-upload-service.test.ts  # NEW
 │   │   └── photo-upload-service.ts           # NEW
 │   ├── database/
+│   │   ├── migrations/
+│   │   │   └── 20251126184000_make_photo_url_nullable.ts  # NEW: photo_url nullable
 │   │   └── repositories/
 │   │       └── announcement-repository.ts  # MODIFIED: Add updatePhotoUrl
 │   ├── lib/
@@ -300,7 +304,7 @@ router.post('/:id/photos', basicAuth, uploadSingle, async (req, res, next) => {
 5. ✅ Upload invalid file format → 400 INVALID_FILE_FORMAT
 6. ✅ Upload file exceeding 20 MB → 413 PAYLOAD_TOO_LARGE
 7. ✅ Replace existing photo → old file deleted, new file saved
-8. ✅ Create announcement with photoUrl in body → 400 VALIDATION_ERROR
+8. ✅ Create announcement with photoUrl in body → 400 INVALID_FIELD
 
 ## Common Pitfalls
 
