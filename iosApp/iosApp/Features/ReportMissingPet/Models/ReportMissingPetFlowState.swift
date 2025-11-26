@@ -45,51 +45,5 @@ class ReportMissingPetFlowState: ObservableObject {
         contactEmail = nil
         contactPhone = nil
     }
-    
-    // MARK: - Computed Properties (Validation)
-    
-    /// Returns true if chip number has been entered
-    var hasChipNumber: Bool {
-        guard let chip = chipNumber, !chip.isEmpty else { return false }
-        return true
-    }
-    
-    /// Returns true if photo has been selected
-    var hasPhoto: Bool {
-        photo != nil
-    }
-    
-    /// Returns true if description has been entered
-    var hasDescription: Bool {
-        guard let desc = description, !desc.isEmpty else { return false }
-        return true
-    }
-    
-    /// Returns true if at least one contact method provided
-    var hasContactInfo: Bool {
-        let hasEmail = contactEmail != nil && !(contactEmail?.isEmpty ?? true)
-        let hasPhone = contactPhone != nil && !(contactPhone?.isEmpty ?? true)
-        return hasEmail || hasPhone
-    }
-    
-    /// Returns formatted chip number with dashes (00000-00000-00000)
-    /// Returns nil if chipNumber is nil or empty
-    var formattedChipNumber: String? {
-        guard let chip = chipNumber, !chip.isEmpty else { return nil }
-        
-        // Insert dashes at positions 5 and 10
-        let digits = chip.filter { $0.isNumber }
-        guard digits.count >= 5 else { return digits }
-        
-        var formatted = ""
-        for (index, char) in digits.enumerated() {
-            if index == 5 || index == 10 {
-                formatted.append("-")
-            }
-            formatted.append(char)
-        }
-        
-        return formatted
-    }
 }
 
