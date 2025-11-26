@@ -4,6 +4,15 @@
 **Date**: 2025-11-26  
 **Purpose**: Resolve technical unknowns for modal coordinator-based multi-step flow
 
+**SCOPE NOTE**: This implementation creates navigation skeleton only:
+- Modal coordinator with UINavigationController
+- 5 empty placeholder screens
+- Navigation bar (progress indicator + back button)
+- "Continue" button on each screen
+- Flow state object (skeleton)
+
+Screen content (input fields, photo picker, validation) will be implemented in future iterations.
+
 ---
 
 ## 1. Modal UINavigationController Presentation Pattern
@@ -21,6 +30,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?  // Own nav controller
     
     private let parentNavigationController: UINavigationController
+    private var flowState: ReportMissingPetFlowState?  // Property, not local variable
     
     init(parentNavigationController: UINavigationController) {
         self.parentNavigationController = parentNavigationController
@@ -34,8 +44,9 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Configure modal presentation
         modalNavController.modalPresentationStyle = .fullScreen  // or .formSheet for card style
         
-        // Create FlowState
-        let flowState = FlowState()
+        // Create ReportMissingPetFlowState as property
+        let flowState = ReportMissingPetFlowState()
+        self.flowState = flowState
         
         // Create and push first screen
         let viewModel = ChipNumberViewModel(flowState: flowState)
@@ -152,16 +163,16 @@ private func configureProgressIndicator(
 
 ---
 
-## 3. FlowState Lifecycle Management
+## 3. ReportMissingPetFlowState Lifecycle Management
 
 ### Decision
 
-`FlowState` (ObservableObject class) created by coordinator on `start()`, injected into all ViewModels via initializer. State cleared when flow exits (modal dismissed).
+`ReportMissingPetFlowState` (ObservableObject class) created by coordinator as property on `start()`, injected into all ViewModels via initializer. State cleared when flow exits (modal dismissed).
 
 ### Implementation Pattern
 
 ```swift
-class FlowState: ObservableObject {
+class ReportMissingPetFlowState: ObservableObject {
     @Published var chipNumber: String?
     @Published var photo: UIImage?
     @Published var description: String?
@@ -192,10 +203,10 @@ class FlowState: ObservableObject {
 
 // Coordinator ownership
 class ReportMissingPetCoordinator {
-    private var flowState: FlowState?  // Strong reference
+    private var flowState: ReportMissingPetFlowState?  // Property (strong reference)
     
     func start(animated: Bool) async {
-        let flowState = FlowState()
+        let flowState = ReportMissingPetFlowState()
         self.flowState = flowState
         
         // Inject into ViewModels
@@ -312,86 +323,20 @@ let hostingController = UIHostingController(
 
 ### Decision
 
-Use `PHPickerViewController` (iOS 14+) for photo selection. Coordinator presents picker, ViewModel handles result.
+**OUT OF SCOPE** for this iteration. Photo screen will be empty placeholder with just "Continue" button.
 
-### Implementation Pattern
+### Future Implementation
 
-```swift
-import PhotosUI
+Photo picker will be implemented in future iteration. For now:
+- Photo screen is empty placeholder
+- Just "Continue" button
+- No PHPickerViewController integration
+- FlowState.photo property defined but unused
 
-class ReportMissingPetCoordinator {
-    func navigateToPhoto() {
-        let flowState = self.flowState!  // Unwrap safely
-        let viewModel = PhotoViewModel(flowState: flowState)
-        
-        viewModel.onNext = { [weak self] in
-            self?.navigateToDescription()
-        }
-        
-        viewModel.onBack = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
-        }
-        
-        viewModel.onSelectPhoto = { [weak self] in
-            self?.presentPhotoPicker(viewModel: viewModel)
-        }
-        
-        let view = PhotoView(viewModel: viewModel)
-        let hostingController = UIHostingController(
-            rootView: NavigationBackHiding { view }
-        )
-        
-        configureNavigationBar(hostingController, step: 2, total: 4)
-        navigationController?.pushViewController(hostingController, animated: true)
-    }
-    
-    private func presentPhotoPicker(viewModel: PhotoViewModel) {
-        var configuration = PHPickerConfiguration()
-        configuration.filter = .images
-        configuration.selectionLimit = 1
-        
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self  // Coordinator conforms to PHPickerViewControllerDelegate
-        
-        navigationController?.present(picker, animated: true)
-    }
-}
-
-extension ReportMissingPetCoordinator: PHPickerViewControllerDelegate {
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true)
-        
-        guard let result = results.first else { return }
-        
-        // Load image asynchronously
-        result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] object, error in
-            DispatchQueue.main.async {
-                if let image = object as? UIImage {
-                    self?.flowState?.photo = image
-                }
-            }
-        }
-    }
-}
-```
-
-### Permissions
-
-**Decision**: No explicit permission request needed for PHPickerViewController (iOS 14+). System handles permissions automatically.
-
-### Rationale
-
-- `PHPickerViewController` is modern API (iOS 14+)
-- No privacy prompts required (unlike `UIImagePickerController` with camera)
-- Simpler than `UIImagePickerController`, better user experience
-- Supports recent photos out of the box
-
-### Alternatives Considered
-
-- **Alternative 1**: `UIImagePickerController`
-  - Rejected: Older API, requires privacy permissions for library access
-- **Alternative 2**: Custom photo library browser
-  - Rejected: Over-engineering, poor UX, accessibility issues
+**Planned approach** (when implemented):
+- Use `PHPickerViewController` (iOS 14+)
+- Coordinator presents picker
+- Result saved to `flowState.photo`
 
 ---
 
@@ -447,9 +392,10 @@ extension ReportMissingPetCoordinator: PHPickerViewControllerDelegate {
 |-------|----------|------------|
 | Modal Presentation | Dedicated UINavigationController with `.fullScreen` style | Clear separation, own navigation stack |
 | Progress Indicator | Custom circular badge (40x40pt) on right bar button | Blue background, white text, no animation |
-| FlowState | ObservableObject owned by coordinator, injected to VMs | Cleared on exit, preserved during navigation |
-| Back Button | Custom chevron-left with NavigationBackHiding wrapper | Exit on step 1, pop on steps 2-4 |
-| Photo Picker | PHPickerViewController (iOS 14+) | No permissions needed, modern API |
+| ReportMissingPetFlowState | ObservableObject owned by coordinator as property, injected to VMs | Skeleton only (properties unused), cleared on exit |
+| Back Button | Custom chevron-left with NavigationBackHiding wrapper | Exit on step 1, pop on steps 2-5 |
+| Photo Picker | OUT OF SCOPE - empty placeholder screen | Will be implemented in future iteration |
+| Screen Content | Empty placeholders with Continue button only | Form fields added in future iterations |
 
 ---
 

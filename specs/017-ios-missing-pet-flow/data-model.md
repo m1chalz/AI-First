@@ -8,7 +8,7 @@
 
 ## Flow State
 
-### FlowState (ObservableObject)
+### ReportMissingPetFlowState (ObservableObject)
 
 Shared state object owned by `ReportMissingPetCoordinator`, passed to all ViewModels.
 
@@ -19,7 +19,7 @@ import UIKit
 /// Shared state for Missing Pet Report flow.
 /// Owned by ReportMissingPetCoordinator and injected into all ViewModels.
 /// Persists data during forward/backward navigation within active session.
-class FlowState: ObservableObject {
+class ReportMissingPetFlowState: ObservableObject {
     // MARK: - Step 1: Chip Number
     
     /// Microchip number (optional, formatted as 00000-00000-00000 for display)
@@ -122,33 +122,25 @@ class FlowState: ObservableObject {
 ### Validation Rules
 
 - All fields optional (per spec requirements)
-- No validation enforced in FlowState (UI may add visual feedback)
+- No validation enforced in ReportMissingPetFlowState (UI may add visual feedback)
 - Future features may add required field validation
 
 ---
 
 ## ViewModel State Patterns
 
-Each ViewModel manages local UI state and communicates with FlowState.
+**NOTE**: This implementation creates MINIMAL ViewModels for navigation skeleton only. Form fields and business logic will be added in future iterations.
 
-### Pattern 1: Simple State with @Published Properties
+### Pattern: Minimal ViewModel (Navigation Only)
 
-Used for most screens (chip number, description, contact details).
+All ViewModels follow this minimal pattern for now:
 
 ```swift
 @MainActor
 class ChipNumberViewModel: ObservableObject {
-    // MARK: - Published State
-    
-    /// Local input for chip number (formatted with dashes for display)
-    @Published var chipNumberInput: String = ""
-    
-    /// Focus state for text field
-    @Published var isTextFieldFocused: Bool = false
-    
     // MARK: - Dependencies
     
-    private let flowState: FlowState
+    private let flowState: ReportMissingPetFlowState
     
     // MARK: - Coordinator Communication
     
@@ -157,150 +149,91 @@ class ChipNumberViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init(flowState: FlowState) {
+    init(flowState: ReportMissingPetFlowState) {
         self.flowState = flowState
-        
-        // Restore state if returning to screen
-        if let savedChipNumber = flowState.chipNumber {
-            self.chipNumberInput = formatChipNumber(savedChipNumber)
-        }
     }
     
     // MARK: - Actions
     
     func handleNext() {
-        // Save to flow state (digits only, remove dashes)
-        let digits = chipNumberInput.filter { $0.isNumber }
-        flowState.chipNumber = digits.isEmpty ? nil : digits
-        
-        // Trigger navigation
+        // For now: just trigger navigation
+        // TODO: Save form data to flowState in future implementation
         onNext?()
     }
     
     func handleBack() {
         onBack?()
     }
+}
+```
+
+**Future additions (not in this scope):**
+- `@Published` properties for form inputs
+- Input validation logic
+- Formatting helpers
+- State restoration from FlowState
+
+---
+
+## View Examples (Minimal Placeholders)
+
+### Empty Screen with Continue Button
+
+All 5 screens follow this minimal pattern:
+
+```swift
+import SwiftUI
+
+struct ChipNumberView: View {
+    @ObservedObject var viewModel: ChipNumberViewModel
     
-    // MARK: - Formatting (in ViewModel, not View!)
-    
-    /// Formats chip number as 00000-00000-00000
-    private func formatChipNumber(_ input: String) -> String {
-        let digits = input.filter { $0.isNumber }
-        var formatted = ""
-        
-        for (index, char) in digits.enumerated() {
-            if index == 5 || index == 10 {
-                formatted.append("-")
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            // TODO: Add chip number input field in future iteration
+            Text("Chip Number Screen")
+                .font(.title)
+                .foregroundColor(.gray)
+            
+            Spacer()
+            
+            // Continue button at bottom
+            Button(action: viewModel.handleNext) {
+                Text(L10n.Common.continue)
+                    .font(.system(size: 16))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color(hex: "#155DFC"))
+                    .cornerRadius(10)
             }
-            formatted.append(char)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 30)
+            .accessibilityIdentifier("chipNumber.continue.tap")
         }
-        
-        return formatted
+        .background(Color.white)
     }
 }
 ```
 
-### Pattern 2: Photo Screen with Image Handling
+**Pattern applies to**:
+- `ChipNumberView` → "Chip Number Screen"
+- `PhotoView` → "Photo Screen"  
+- `DescriptionView` → "Description Screen"
+- `ContactDetailsView` → "Contact Details Screen"
+- `SummaryView` → "Summary Screen"
 
-```swift
-@MainActor
-class PhotoViewModel: ObservableObject {
-    // MARK: - Published State
-    
-    /// Preview of selected photo (from FlowState)
-    @Published var selectedPhoto: UIImage?
-    
-    // MARK: - Dependencies
-    
-    private let flowState: FlowState
-    
-    // MARK: - Coordinator Communication
-    
-    var onNext: (() -> Void)?
-    var onBack: (() -> Void)?
-    var onSelectPhoto: (() -> Void)?  // Triggers photo picker in coordinator
-    
-    // MARK: - Initialization
-    
-    init(flowState: FlowState) {
-        self.flowState = flowState
-        
-        // Observe flow state photo changes
-        self.selectedPhoto = flowState.photo
-    }
-    
-    // MARK: - Actions
-    
-    func handleSelectPhoto() {
-        onSelectPhoto?()
-    }
-    
-    func handleNext() {
-        // Flow state already updated by coordinator via PHPickerViewController delegate
-        onNext?()
-    }
-    
-    func handleBack() {
-        onBack?()
-    }
-}
-```
+Screen-specific content will be added in subsequent features.
 
-### Pattern 3: Summary Screen (Read-Only)
+**All other ViewModels** (Photo, Description, ContactDetails) follow the same minimal pattern:
+- Only `onNext` and `onBack` callbacks
+- No form logic
+- No @Published properties (yet)
 
-```swift
-@MainActor
-class SummaryViewModel: ObservableObject {
-    // MARK: - Dependencies
-    
-    private let flowState: FlowState
-    
-    // MARK: - Coordinator Communication
-    
-    var onSubmit: (() -> Void)?  // Placeholder for future backend submission
-    var onBack: (() -> Void)?
-    
-    // MARK: - Initialization
-    
-    init(flowState: FlowState) {
-        self.flowState = flowState
-    }
-    
-    // MARK: - Computed Properties (for display)
-    
-    var chipNumberText: String {
-        flowState.formattedChipNumber ?? L10n.ReportMissing.Summary.notProvided
-    }
-    
-    var photoImage: UIImage? {
-        flowState.photo
-    }
-    
-    var descriptionText: String {
-        flowState.description ?? L10n.ReportMissing.Summary.notProvided
-    }
-    
-    var contactEmailText: String {
-        flowState.contactEmail ?? L10n.ReportMissing.Summary.notProvided
-    }
-    
-    var contactPhoneText: String {
-        flowState.contactPhone ?? L10n.ReportMissing.Summary.notProvided
-    }
-    
-    // MARK: - Actions
-    
-    func handleSubmit() {
-        // Placeholder - no backend integration in this feature
-        print("Submit tapped (placeholder)")
-        onSubmit?()
-    }
-    
-    func handleBack() {
-        onBack?()
-    }
-}
-```
+Photo picker, input fields, and validation will be added in future iterations.
+
+Summary screen ViewModel follows same minimal pattern. Display of collected data will be implemented in future iteration.
 
 ---
 
@@ -403,10 +336,10 @@ configureProgressIndicator(hostingController, config: config)
 
 ## Testing Support
 
-### Mock FlowState for Unit Tests
+### Mock ReportMissingPetFlowState for Unit Tests
 
 ```swift
-class MockFlowState: FlowState {
+class MockReportMissingPetFlowState: ReportMissingPetFlowState {
     var clearCalled: Bool = false
     
     override func clear() {
@@ -416,14 +349,13 @@ class MockFlowState: FlowState {
 }
 ```
 
-### Example Unit Test
+### Example Unit Test (Minimal Scope)
 
 ```swift
-func testChipNumberViewModel_whenNextTapped_shouldSaveToFlowState() {
+func testChipNumberViewModel_whenNextTapped_shouldTriggerCallback() {
     // Given
-    let flowState = FlowState()
+    let flowState = ReportMissingPetFlowState()
     let viewModel = ChipNumberViewModel(flowState: flowState)
-    viewModel.chipNumberInput = "12345-67890-12345"
     
     var nextCalled = false
     viewModel.onNext = { nextCalled = true }
@@ -432,10 +364,26 @@ func testChipNumberViewModel_whenNextTapped_shouldSaveToFlowState() {
     viewModel.handleNext()
     
     // Then
-    XCTAssertEqual(flowState.chipNumber, "123456789012345")  // Digits only
     XCTAssertTrue(nextCalled)
 }
+
+func testChipNumberViewModel_whenBackTapped_shouldTriggerCallback() {
+    // Given
+    let flowState = ReportMissingPetFlowState()
+    let viewModel = ChipNumberViewModel(flowState: flowState)
+    
+    var backCalled = false
+    viewModel.onBack = { backCalled = true }
+    
+    // When
+    viewModel.handleBack()
+    
+    // Then
+    XCTAssertTrue(backCalled)
+}
 ```
+
+**Note**: Form validation and data persistence tests will be added when form logic is implemented.
 
 ---
 
@@ -443,20 +391,22 @@ func testChipNumberViewModel_whenNextTapped_shouldSaveToFlowState() {
 
 | Entity | Purpose | Lifecycle |
 |--------|---------|-----------|
-| `FlowState` | Shared state across all steps | Created by coordinator, cleared on exit |
-| `ChipNumberViewModel` | Step 1 state + actions | Created per screen, references FlowState |
-| `PhotoViewModel` | Step 2 state + actions | Created per screen, references FlowState |
-| `DescriptionViewModel` | Step 3 state + actions | Created per screen, references FlowState |
-| `ContactDetailsViewModel` | Step 4 state + actions | Created per screen, references FlowState |
-| `SummaryViewModel` | Step 5 read-only display | Created per screen, references FlowState |
+| `ReportMissingPetFlowState` | Shared state skeleton (properties defined, unused for now) | Created by coordinator as property, cleared on exit |
+| `ChipNumberViewModel` | Step 1 navigation callbacks (minimal) | Created per screen, references ReportMissingPetFlowState |
+| `PhotoViewModel` | Step 2 navigation callbacks (minimal) | Created per screen, references ReportMissingPetFlowState |
+| `DescriptionViewModel` | Step 3 navigation callbacks (minimal) | Created per screen, references ReportMissingPetFlowState |
+| `ContactDetailsViewModel` | Step 4 navigation callbacks (minimal) | Created per screen, references ReportMissingPetFlowState |
+| `SummaryViewModel` | Step 5 navigation callbacks (minimal) | Created per screen, references ReportMissingPetFlowState |
 | `ProgressIndicatorConfig` | Progress badge styling | Value type, created per screen |
+
+**Note**: This is navigation skeleton only. Form logic, validation, and data persistence will be added in future iterations.
 
 ---
 
 ## Open Questions (for future features)
 
-1. Should FlowState persist across app restarts (e.g., via UserDefaults)?
-2. Should we validate email/phone format in FlowState or leave to backend?
-3. Should photo be compressed before storing in FlowState?
+1. Should ReportMissingPetFlowState persist across app restarts (e.g., via UserDefaults)?
+2. Should we validate email/phone format in ReportMissingPetFlowState or leave to backend?
+3. Should photo be compressed before storing in ReportMissingPetFlowState?
 4. How to handle very long descriptions (character limit)?
 

@@ -8,14 +8,29 @@
 
 ## Overview
 
-The Missing Pet Report Flow is a modal, multi-step UI flow for iOS that collects information about a missing pet across 5 screens (4 data collection + 1 summary). It uses MVVM-C architecture with a dedicated coordinator managing flow navigation and state.
+The Missing Pet Report Flow is a modal, multi-step UI flow for iOS. **This implementation creates the navigation skeleton only** - 5 empty placeholder screens with navigation infrastructure.
+
+**Current Scope (Navigation Skeleton)**:
+- Modal coordinator with own UINavigationController
+- 5 placeholder screens (empty views with "Continue" button)
+- Navigation bar (progress indicator + custom back button)
+- Flow state object (properties defined but unused)
+- Navigation between screens
+
+**Future Scope (Separate Implementations)**:
+- Input fields (chip number, description, contact details)
+- Photo picker integration
+- Form validation
+- Data persistence
 
 **Key Concepts**:
 - **Modal Presentation**: Flow has own `UINavigationController`, presented modally
 - **Child Coordinator**: `ReportMissingPetCoordinator` managed by parent `AnimalListCoordinator`
-- **Shared State**: `FlowState` (ObservableObject) injected into all ViewModels
+- **Shared State**: `ReportMissingPetFlowState` (ObservableObject) injected into all ViewModels (empty for now)
 - **Progress Indicator**: Custom circular badge (1/4, 2/4, 3/4, 4/4) in navigation bar
 - **Custom Back Button**: Chevron-left button with conditional behavior (exit on step 1, pop on steps 2-5)
+- **Minimal ViewModels**: Only navigation callbacks, no form logic yet
+- **Empty Views**: Just "Continue" button, screen content added in future iterations
 
 ---
 
@@ -47,7 +62,7 @@ private func showReportMissing() {
 
 1. Parent creates `ReportMissingPetCoordinator`
 2. Coordinator creates modal `UINavigationController`
-3. Coordinator creates `FlowState`
+3. Coordinator creates `ReportMissingPetFlowState` as property
 4. Coordinator pushes first screen (chip number)
 5. User navigates through steps
 6. On exit, coordinator dismisses modal and cleans up
@@ -62,7 +77,7 @@ iosApp/iosApp/Features/ReportMissing/
 ├── Coordinators/
 │   └── ReportMissingPetCoordinator.swift      # Flow navigation logic
 ├── Models/
-│   └── FlowState.swift                        # Shared state object
+│   └── ReportMissingPetFlowState.swift           # Shared state object
 └── Views/
     ├── ChipNumber/
     │   ├── ChipNumberView.swift               # Step 1 UI
@@ -85,7 +100,7 @@ iosApp/iosApp/Features/ReportMissing/
 
 ## How to Add a New Step to the Flow
 
-### Step 1: Create ViewModel
+### Step 1: Create ViewModel (Minimal - Navigation Only)
 
 **File**: `/Views/NewStep/NewStepViewModel.swift`
 
@@ -94,13 +109,9 @@ import Foundation
 
 @MainActor
 class NewStepViewModel: ObservableObject {
-    // MARK: - Published State
-    
-    @Published var inputText: String = ""
-    
     // MARK: - Dependencies
     
-    private let flowState: FlowState
+    private let flowState: ReportMissingPetFlowState
     
     // MARK: - Coordinator Communication
     
@@ -109,20 +120,14 @@ class NewStepViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init(flowState: FlowState) {
+    init(flowState: ReportMissingPetFlowState) {
         self.flowState = flowState
-        
-        // Restore state if returning
-        if let saved = flowState.newStepData {
-            self.inputText = saved
-        }
     }
     
     // MARK: - Actions
     
     func handleNext() {
-        // Save to flow state
-        flowState.newStepData = inputText.isEmpty ? nil : inputText
+        // TODO: Save form data in future implementation
         onNext?()
     }
     
@@ -132,7 +137,9 @@ class NewStepViewModel: ObservableObject {
 }
 ```
 
-### Step 2: Create SwiftUI View
+**Note**: For now, ViewModels are minimal. Add `@Published` properties and form logic in future iterations.
+
+### Step 2: Create SwiftUI View (Empty Placeholder)
 
 **File**: `/Views/NewStep/NewStepView.swift`
 
@@ -143,23 +150,34 @@ struct NewStepView: View {
     @ObservedObject var viewModel: NewStepViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text(L10n.ReportMissing.NewStep.title)
-                .font(.largeTitle)
+        VStack {
+            Spacer()
             
-            TextField(L10n.ReportMissing.NewStep.placeholder, text: $viewModel.inputText)
-                .textFieldStyle(.roundedBorder)
-                .accessibilityIdentifier("newStep.input.field")
+            // TODO: Add screen content in future iteration
+            Text("Step Placeholder")
+                .font(.title)
+                .foregroundColor(.gray)
             
+            Spacer()
+            
+            // Continue button at bottom
             Button(action: viewModel.handleNext) {
-                Text(L10n.Common.next)
+                Text(L10n.Common.continue)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(hex: "#155DFC"))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
-            .accessibilityIdentifier("newStep.next.tap")
+            .padding()
+            .accessibilityIdentifier("newStep.continue.tap")
         }
-        .padding()
+        .background(Color.white)
     }
 }
 ```
+
+**Current Scope**: Empty placeholder + Continue button only. Form content added later.
 
 ### Step 3: Add Navigation in Coordinator
 
@@ -192,15 +210,15 @@ private func navigateToNewStep() {
 }
 ```
 
-### Step 4: Add Property to FlowState
+### Step 4: Add Property to ReportMissingPetFlowState (Future Implementation)
 
-**File**: `/Models/FlowState.swift`
+**File**: `/Models/ReportMissingPetFlowState.swift`
 
 ```swift
-class FlowState: ObservableObject {
+class ReportMissingPetFlowState: ObservableObject {
     // ... existing properties ...
     
-    @Published var newStepData: String?
+    @Published var newStepData: String?  // TODO: Use in future implementation
     
     func clear() {
         // ... existing clears ...
@@ -208,6 +226,8 @@ class FlowState: ObservableObject {
     }
 }
 ```
+
+**Note**: FlowState properties defined but not actively used yet. They will be populated when form logic is implemented.
 
 ---
 
@@ -223,12 +243,12 @@ import XCTest
 
 @MainActor
 final class ChipNumberViewModelTests: XCTestCase {
-    var flowState: FlowState!
+    var flowState: ReportMissingPetFlowState!
     var viewModel: ChipNumberViewModel!
     
     override func setUp() {
         super.setUp()
-        flowState = FlowState()
+        flowState = ReportMissingPetFlowState()
         viewModel = ChipNumberViewModel(flowState: flowState)
     }
     
@@ -238,9 +258,8 @@ final class ChipNumberViewModelTests: XCTestCase {
         super.tearDown()
     }
     
-    func testHandleNext_whenChipNumberEntered_shouldSaveToFlowState() {
+    func testHandleNext_shouldTriggerOnNextCallback() {
         // Given
-        viewModel.chipNumberInput = "12345-67890-12345"
         var nextCalled = false
         viewModel.onNext = { nextCalled = true }
         
@@ -248,33 +267,27 @@ final class ChipNumberViewModelTests: XCTestCase {
         viewModel.handleNext()
         
         // Then
-        XCTAssertEqual(flowState.chipNumber, "123456789012345")  // Digits only
         XCTAssertTrue(nextCalled)
     }
     
-    func testHandleNext_whenChipNumberEmpty_shouldSaveNilToFlowState() {
+    func testHandleBack_shouldTriggerOnBackCallback() {
         // Given
-        viewModel.chipNumberInput = ""
-        var nextCalled = false
-        viewModel.onNext = { nextCalled = true }
+        var backCalled = false
+        viewModel.onBack = { backCalled = true }
         
         // When
-        viewModel.handleNext()
+        viewModel.handleBack()
         
         // Then
-        XCTAssertNil(flowState.chipNumber)
-        XCTAssertTrue(nextCalled)
+        XCTAssertTrue(backCalled)
     }
     
-    func testInit_whenFlowStateHasChipNumber_shouldRestoreInput() {
-        // Given
-        flowState.chipNumber = "123456789012345"
-        
-        // When
+    func testInit_shouldStoreFlowStateReference() {
+        // Given/When
         let vm = ChipNumberViewModel(flowState: flowState)
         
         // Then
-        XCTAssertEqual(vm.chipNumberInput, "12345-67890-12345")  // Formatted
+        XCTAssertNotNil(vm)  // ViewModel initialized successfully
     }
 }
 ```
@@ -405,13 +418,13 @@ viewModel.onNext = { [weak self] in
 
 ## Debugging Tips
 
-### Check FlowState Values
+### Check ReportMissingPetFlowState Values
 
 Add breakpoint in ViewModel and inspect `flowState` object:
 
 ```swift
 func handleNext() {
-    print("FlowState: \(flowState)")  // Add breakpoint here
+    print("ReportMissingPetFlowState: \(flowState)")  // Add breakpoint here
     flowState.chipNumber = ...
 }
 ```
@@ -438,16 +451,16 @@ Run app in simulator and verify:
 
 ## Architecture Patterns
 
-### Pattern 1: ViewModel ↔ FlowState
+### Pattern 1: ViewModel ↔ ReportMissingPetFlowState
 
 ```swift
-// ViewModel reads from FlowState on init
-init(flowState: FlowState) {
+// ViewModel reads from ReportMissingPetFlowState on init
+init(flowState: ReportMissingPetFlowState) {
     self.flowState = flowState
     self.inputText = flowState.savedData ?? ""
 }
 
-// ViewModel writes to FlowState on next
+// ViewModel writes to ReportMissingPetFlowState on next
 func handleNext() {
     flowState.savedData = inputText
     onNext?()

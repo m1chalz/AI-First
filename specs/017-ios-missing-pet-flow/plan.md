@@ -7,16 +7,28 @@
 
 ## Summary
 
-Implement a modal, multi-step flow for reporting missing pets on iOS. User taps "report missing animal" button on the animal list, which presents a modal UINavigationController managed by a dedicated `ReportMissingPetCoordinator`. The flow consists of:
-- 4 data collection screens with progress indicators (1/4, 2/4, 3/4, 4/4)
-- 1 summary screen without progress indicator
+Implement a modal, multi-step flow SKELETON for reporting missing pets on iOS. User taps "report missing animal" button on the animal list, which presents a modal UINavigationController managed by a dedicated `ReportMissingPetCoordinator`. 
 
-Each screen has a "next" button to proceed and custom back button for navigation. Flow state is preserved during navigation within session. This is UI-only implementation with no backend integration or data persistence.
+**This implementation creates navigation infrastructure only:**
+- 5 empty placeholder screens (4 data collection + 1 summary)
+- Navigation bar with custom back button and progress indicator (1/4, 2/4, 3/4, 4/4)
+- "Continue" button at bottom of each screen
+- Navigation between screens (forward/backward)
+- Flow state object (empty properties for now)
+
+**Out of scope (future implementations):**
+- Input fields (chip number, description, contact details)
+- Photo picker integration
+- Form validation
+- Data persistence or backend integration
+
+Each screen will have only navigation bar + "Continue" button. Screen-specific content (text fields, photo picker, etc.) will be implemented in subsequent features.
 
 **Technical Approach**: 
 - New `ReportMissingPetCoordinator` (child coordinator) creates and presents modal `UINavigationController`
-- Shared `FlowState` (ObservableObject) passed to all ViewModels
-- Each screen follows MVVM-C with SwiftUI views wrapped in `NavigationBackHiding` + `UIHostingController`
+- Shared `ReportMissingPetFlowState` (ObservableObject) as coordinator property (empty for now)
+- 5 minimal ViewModels with only navigation callbacks (no form logic yet)
+- Each screen: empty SwiftUI view with just "Continue" button
 - Custom UIKit navigation bar with progress indicator and chevron-left back button
 - Parent coordinator (`AnimalListCoordinator`) manages child coordinator lifecycle
 
@@ -31,9 +43,10 @@ Each screen has a "next" button to proceed and custom back button for navigation
 **Performance Goals**: < 300ms screen transitions, 60fps animations  
 **Constraints**: 
 - Modal presentation with dedicated UINavigationController
-- State preserved during forward/backward navigation within active session only
-- State cleared when exiting flow (dismissing modal)  
-**Scale/Scope**: 5 screens (4 data + 1 summary), 1 coordinator, 5 ViewModels, 1 FlowState
+- Navigation infrastructure only - screen content to be implemented later
+- Empty ViewModels (no form logic)
+- Empty FlowState (properties defined but not used yet)  
+**Scale/Scope**: 5 empty placeholder screens, 1 coordinator, 5 minimal ViewModels, 1 skeleton FlowState
 
 ## Constitution Check
 
@@ -60,7 +73,7 @@ Each screen has a "next" button to proceed and custom back button for navigation
   - ✅ `NavigationBackHiding` wrapper used to hide default back button
   - ✅ Custom chevron-left back button in UIKit navigation bar
   - ✅ Progress indicator in UIKit navigation bar (custom view, right side)
-  - ✅ Shared `FlowState` (ObservableObject class) owned by coordinator, passed to all ViewModels
+  - ✅ Shared `ReportMissingPetFlowState` (ObservableObject class) owned by coordinator as property, passed to all ViewModels
   - ✅ Repository protocols use "Protocol" suffix (N/A - no repositories in UI-only feature)
   - ✅ ALL formatting logic in ViewModels/Models per v2.3.0 (no formatting in views)
   - ✅ Colors as hex strings in models, converted to `Color` in views per v2.3.0
@@ -73,7 +86,7 @@ Each screen has a "next" button to proceed and custom back button for navigation
 
 - [x] **Dependency Injection**: Manual DI for iOS
   - ✅ Parent coordinator creates `ReportMissingPetCoordinator` via initializer
-  - ✅ Coordinator creates `FlowState` object and injects into each ViewModel via initializer
+  - ✅ Coordinator creates `ReportMissingPetFlowState` as property and injects into each ViewModel via initializer
   - ✅ Constructor injection pattern throughout
   - ✅ No ServiceContainer needed (coordinator manages simple dependencies)
 
@@ -83,7 +96,7 @@ Each screen has a "next" button to proceed and custom back button for navigation
   - ✅ Coverage target: 80% line + branch
   - ✅ Test scope:
     - All 5 ViewModels (state management, coordinator callbacks, flow state interactions)
-    - FlowState object (state persistence, clearing, computed properties)
+    - ReportMissingPetFlowState object (state persistence, clearing, computed properties)
     - Coordinator may be integration-tested or have minimal unit tests (primarily orchestration)
   - Android/Web/Backend: N/A
 
@@ -139,7 +152,7 @@ iosApp/iosApp/Features/ReportMissing/
 ├── Coordinators/
 │   └── ReportMissingPetCoordinator.swift
 ├── Models/
-│   └── FlowState.swift
+│   └── ReportMissingPetFlowState.swift
 ├── Views/
 │   ├── ChipNumber/
 │   │   ├── ChipNumberView.swift
@@ -159,7 +172,7 @@ iosApp/iosApp/Features/ReportMissing/
 
 iosApp/iosAppTests/Features/ReportMissing/
 ├── Models/
-│   └── FlowStateTests.swift
+│   └── ReportMissingPetFlowStateTests.swift
 └── Views/
     ├── ChipNumberViewModelTests.swift
     ├── PhotoViewModelTests.swift
@@ -176,7 +189,7 @@ e2e-tests/mobile/
     └── reportMissingPetSteps.ts  (reusable Given/When/Then)
 ```
 
-**Structure Decision**: iOS feature-based structure with coordinator + models + views grouped by screen. This matches existing patterns from branch 012 (PetDetails feature). Each screen has dedicated directory with View + ViewModel pair. FlowState is shared model owned by coordinator.
+**Structure Decision**: iOS feature-based structure with coordinator + models + views grouped by screen. This matches existing patterns from branch 012 (PetDetails feature). Each screen has dedicated directory with View + ViewModel pair. ReportMissingPetFlowState is shared model owned by coordinator as property.
 
 ## Complexity Tracking
 
@@ -198,9 +211,9 @@ e2e-tests/mobile/
    - Decision needed: Custom UIView implementation for "1/4" style indicator
    - Investigation: UIBarButtonItem with custom view, positioning, styling
 
-3. **FlowState Lifecycle Management**
+3. **ReportMissingPetFlowState Lifecycle Management**
    - Decision needed: When to create/clear flow state
-   - Investigation: Coordinator ownership, state persistence during navigation, cleanup on dismiss
+   - Investigation: Coordinator ownership (as property), state persistence during navigation, cleanup on dismiss
 
 4. **Back Button Behavior**
    - Decision needed: Custom back button vs system back button
@@ -229,12 +242,13 @@ e2e-tests/mobile/
 ### Data Model Design
 
 Will define in `data-model.md`:
-- `FlowState` class (ObservableObject)
-  - Properties for chip number, photo, description, contact details
-  - Computed properties for validation state
-  - Methods: `clear()`, validation helpers
-- ViewModel state structures (if using enum-based state)
-- Navigation event enums (if needed)
+- `ReportMissingPetFlowState` class (ObservableObject as coordinator property)
+  - Properties defined but empty/unused (chip number, photo, description, contact details)
+  - Method: `clear()` (for future use)
+- Minimal ViewModels with only navigation callbacks (no form logic)
+  - `onNext`, `onBack` closures
+  - No @Published properties for form fields (added later)
+- No validation logic (future implementation)
 
 ### API Contracts
 
