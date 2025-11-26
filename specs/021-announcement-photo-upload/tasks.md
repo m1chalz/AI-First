@@ -40,10 +40,10 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### Tasks
 
-- [ ] T001 Install Multer and file-type dependencies in /Users/pawelkedra/code/AI-First/server/package.json
-- [ ] T002 Create public/images directory in /Users/pawelkedra/code/AI-First/server/public/images/
-- [ ] T003 Add .gitkeep file to track empty images directory in /Users/pawelkedra/code/AI-First/server/public/images/.gitkeep
-- [ ] T004 Configure static file serving for /images route in /Users/pawelkedra/code/AI-First/server/src/server.ts
+- [x] T001 Install Multer and file-type dependencies in /Users/pawelkedra/code/AI-First/server/package.json
+- [x] T002 Create public/images directory in /Users/pawelkedra/code/AI-First/server/public/images/
+- [x] T003 Add .gitkeep file to track empty images directory in /Users/pawelkedra/code/AI-First/server/public/images/.gitkeep
+- [x] T004 Configure static file serving for /images route in /Users/pawelkedra/code/AI-First/server/src/server.ts
 
 **Validation**: Dependencies installed, images directory created, static serving configured
 

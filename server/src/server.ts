@@ -1,4 +1,6 @@
 import express from 'express'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { runDbMigrations } from './database/db-utils.ts';
 import routes from './routes/routes.ts';
 import requestIdMiddleware from './middlewares/request-id-middleware.ts';
@@ -7,6 +9,8 @@ import notFoundMiddleware from './middlewares/not-found-middleware.ts';
 import log from './lib/logger.ts';
 import errorHandlerMiddleware from './middlewares/error-handler-middleware.ts';
 import cors from 'cors';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export async function prepareServer(): Promise<express.Express> {
   log.info('App starting...');
@@ -23,6 +27,9 @@ export async function prepareServer(): Promise<express.Express> {
 
   // Pino HTTP logger middleware - logs all requests and responses
   server.use(loggerMiddleware);
+
+  // Static file serving for uploaded images
+  server.use('/images', express.static(path.join(__dirname, '../public/images')));
 
   server.use(routes);
 
