@@ -25,14 +25,14 @@ export class PhotoUploadService {
     }
 
     if (photoBuffer.length > MAX_FILE_SIZE) {
-      throw new PayloadTooLargeError('File is not a valid image format (JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF)', 'file');
+      throw new PayloadTooLargeError(`File size exceeds maximum limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`, 'file');
     }
 
     const mimeType = await this.validateFormat(photoBuffer);
     if (!mimeType) {
       throw new ValidationError(
-        'PAYLOAD_TOO_LARGE',
-        `File size exceeds maximum limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+        'INVALID_FILE_FORMAT',
+        'File is not a valid image format (JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF)',
         'file'
       );
     }

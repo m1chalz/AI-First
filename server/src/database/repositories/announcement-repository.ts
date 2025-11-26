@@ -6,6 +6,7 @@ import { hashPassword } from '../../lib/password-management.ts';
 export interface IAnnouncementRepository {
   findAll(): Promise<Announcement[]>;
   findById(id: string): Promise<Announcement | null>;
+  findPasswordHashById(id: string): Promise<string | null>;
   existsByMicrochip(microchipNumber: string): Promise<boolean>;
   create(data: CreateAnnouncementDto, managementPassword: string): Promise<Announcement>;
   updatePhotoUrl(trx: Knex.Transaction, id: string, photoUrl: string): Promise<void>;
@@ -26,6 +27,15 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       .first();
     
     return row ? this.mapRowToAnnouncement(row) : null;
+  }
+
+  async findPasswordHashById(id: string): Promise<string | null> {
+    const hash: AnnouncementRow | undefined = await this.db('announcement')
+      .select('management_password_hash')
+      .where('id', id)
+      .first();
+    
+    return hash?.management_password_hash ?? null;
   }
 
   async existsByMicrochip(microchipNumber: string): Promise<boolean> {

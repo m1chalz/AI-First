@@ -6,7 +6,7 @@ import type { ErrorResponse } from '../lib/errors.ts';
 export default function errorHandlerMiddleware(err: Error, _req: Request, res: Response, _next: NextFunction) {
   const requestId = getRequestId() ?? 'unknown';
 
-  if (err instanceof Error && err.message.includes('request entity too large')) {
+  if (err instanceof Error && (err.message.includes('request entity too large') || err.message.includes('File too large'))) {
     return res.status(413).json(payloadTooLargeErrorResponse(requestId));
   }
   
