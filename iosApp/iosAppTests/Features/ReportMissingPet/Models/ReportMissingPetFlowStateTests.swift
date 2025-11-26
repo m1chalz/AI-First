@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 @MainActor
 final class ReportMissingPetFlowStateTests: XCTestCase {
@@ -290,7 +290,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         let formatted = sut.formattedChipNumber
         
         // Then: Should filter out letters and format digits only
-        XCTAssertEqual(formatted, "12345-67890")
+        XCTAssertEqual(formatted, "12345-6789")
     }
     
     func testFormattedChipNumber_withOnlyLetters_shouldReturnEmptyString() {

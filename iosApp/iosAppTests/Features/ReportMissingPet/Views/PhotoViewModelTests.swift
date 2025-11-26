@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 @MainActor
 final class PhotoViewModelTests: XCTestCase {
