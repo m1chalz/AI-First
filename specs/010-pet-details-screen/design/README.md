@@ -2,9 +2,9 @@
 
 ## Figma Design
 
-**URL**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev
+**URL**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-7437&m=dev
 
-**Node ID**: 179-8157
+**Node ID**: 297-7437
 
 ## Design Overview
 
@@ -29,8 +29,8 @@ All information is displayed in a card-like container with consistent spacing:
 
 2. **Contact Information**
    - Two "Contact owner" fields:
-     - Phone: + 48 ******** (masked)
-     - Email: mail@email.com
+     - Phone: + 48 123 456 789 (displayed in full, not masked - design shows asterisks as placeholder/mock data only)
+     - Email: mail@email.com (displayed in full, not masked)
 
 3. **Identification Information**
    - Microchip number: 000-000-000-000
@@ -38,7 +38,7 @@ All information is displayed in a card-like container with consistent spacing:
    - Animal Sex and Animal Approx. Age (side-by-side): Male (with icon) | 3 years
 
 4. **Location Information**
-   - Place of Disappearance / City: Warsaw • ±15 km (with location icon)
+   - Lat / Long: 52.2297° N, 21.0122° E (with location pin icon)
    - "Show on the map" button (blue outlined, secondary style)
 
 5. **Descriptive Information**
