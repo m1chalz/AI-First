@@ -1,0 +1,231 @@
+openapi: 3.0.3
+info:
+  title: PetSpot Photo Upload API
+  description: API endpoint for uploading photos to pet announcements
+  version: 1.0.0
+  contact:
+    name: PetSpot API Team
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://api.petspot.com/v1
+    description: Production server
+
+paths:
+  /announcements/{id}/photos:
+    post:
+      summary: Upload photo to announcement
+      description: |
+        Uploads a photo to an existing announcement. Requires Basic authentication with
+        credentials encoded as `announcementId:managementPassword`.
+        
+        - Maximum file size: 20 MB
+        - Supported formats: JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF
+        - Photo is saved to `public/images/{announcementId}.{extension}`
+        - Announcement's `photoUrl` field is updated with relative path
+        - If announcement already has photo, old photo file is deleted before saving new photo
+      operationId: uploadAnnouncementPhoto
+      tags:
+        - Announcements
+        - Photos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the announcement
+          schema:
+            type: string
+            example: abc123
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - photo
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                  description: Image file to upload (max 20 MB)
+            encoding:
+              photo:
+                contentType: image/jpeg, image/png, image/gif, image/webp, image/bmp, image/tiff, image/heic, image/heif
+      responses:
+        '201':
+          description: Photo uploaded successfully
+        '400':
+          description: Invalid file format or missing file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidFormat:
+                  summary: Invalid file format
+                  value:
+                    error:
+                      code: INVALID_FILE_FORMAT
+                      message: "Invalid image format. Supported formats: JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF"
+                missingFile:
+                  summary: Missing file
+                  value:
+                    error:
+                      code: MISSING_FILE
+                      message: "Photo file is required"
+        '401':
+          description: Unauthenticated - missing Authorization header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingAuth:
+                  summary: Missing Authorization header
+                  value:
+                    error:
+                      code: UNAUTHENTICATED
+                      message: "Authorization header is required"
+        '403':
+          description: Forbidden - invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidCredentials:
+                  summary: Invalid credentials
+                  value:
+                    error:
+                      code: UNAUTHORIZED
+                      message: "Invalid credentials"
+        '404':
+          description: Announcement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  summary: Announcement not found
+                  value:
+                    error:
+                      code: NOT_FOUND
+                      message: "Resource not found"
+        '413':
+          description: File size exceeds maximum limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                tooLarge:
+                  summary: File too large
+                  value:
+                    error:
+                      code: PAYLOAD_TOO_LARGE
+                      message: "Payload too large"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  summary: Internal error
+                  value:
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: "Internal server error"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: |
+        Basic authentication with credentials encoded as `announcementId:managementPassword`.
+        
+        Example:
+        - Announcement ID: `abc123`
+        - Management Password: `secret123`
+        - Credentials: `abc123:secret123`
+        - Base64 Encoded: `YWJjMTIzOnNlY3JldDEyMw==`
+        - Authorization Header: `Basic YWJjMTIzOnNlY3JldDEyMw==`
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              enum:
+                - UNAUTHENTICATED
+                - UNAUTHORIZED
+                - NOT_FOUND
+                - INVALID_FILE_FORMAT
+                - MISSING_FILE
+                - PAYLOAD_TOO_LARGE
+                - INTERNAL_SERVER_ERROR
+              example: UNAUTHENTICATED
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid credentials
+
+  examples:
+    UnauthenticatedError:
+      summary: Missing Authorization header
+      value:
+        error:
+          code: UNAUTHENTICATED
+          message: Authorization header is required
+
+    UnauthorizedError:
+      summary: Invalid credentials
+      value:
+        error:
+          code: UNAUTHORIZED
+          message: Invalid credentials
+
+    InvalidFormatError:
+      summary: Invalid file format
+      value:
+        error:
+          code: INVALID_FILE_FORMAT
+          message: "Invalid image format. Supported formats: JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC, HEIF"
+
+    NotFoundError:
+      summary: Resource not found
+      value:
+        error:
+          code: NOT_FOUND
+          message: Resource not found
+
+    PayloadTooLargeError:
+      summary: File size exceeds limit
+      value:
+        error:
+          code: PAYLOAD_TOO_LARGE
+          message: Payload too large
+
+tags:
+  - name: Announcements
+    description: Pet announcement management
+  - name: Photos
+    description: Photo upload and management
+

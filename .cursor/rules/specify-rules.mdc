@@ -17,6 +17,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - N/A for this feature (no new persistence or data access changes) (013-animal-list-screen)
 - Kotlin (JVM 17 target) (010-pet-details-screen)
 - N/A (UI-only feature, data fetched from repository) (010-pet-details-screen)
+- Node.js v24 (LTS), TypeScript (strict mode) (021-announcement-photo-upload)
+- SQLite (current), PostgreSQL (migration path) + filesystem (public/images/ directory for uploaded photos) (021-announcement-photo-upload)
 
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
@@ -55,6 +57,9 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 - 012-ios-pet-details-screen: Added Swift 5.9+ + SwiftUI (UI layer), UIKit (coordinator navigation), URLSession or Alamofire (HTTP client)
 - 011-migrate-from-kmp: Added N/A (infrastructure migration, no data storage changes)
 - 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
+- 021-announcement-photo-upload: Added Node.js v24 (LTS), TypeScript (strict mode)
+- 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
+- 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E
 
 
 <!-- MANUAL ADDITIONS START -->
