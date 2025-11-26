@@ -2,6 +2,7 @@
 
 package com.intive.aifirst.petspot.features.animallist.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
@@ -141,9 +144,9 @@ private fun FloatingReportButton(
             color = Color.White,
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "🐾",
-            fontSize = 14.sp,
+        Image(
+            painter = painterResource(R.drawable.ic_report_missing_animal),
+            contentDescription = ""
         )
     }
 }
@@ -222,7 +225,7 @@ private class AnimalListStatePreviewProvider :
                 species = AnimalSpecies.DOG,
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
-                status = AnimalStatus.ACTIVE,
+                status = AnimalStatus.MISSING,
                 lastSeenDate = "18/11/2025",
                 description = "Energetic dog wearing a red collar.",
                 email = "owner@example.com",
@@ -250,7 +253,7 @@ private class AnimalListStatePreviewProvider :
                 species = AnimalSpecies.DOG,
                 breed = "German Shepherd",
                 gender = AnimalGender.MALE,
-                status = AnimalStatus.ACTIVE,
+                status = AnimalStatus.MISSING,
                 lastSeenDate = "15/11/2025",
                 description = "Alert dog with brown and black markings.",
                 email = "max.owner@example.com",

@@ -2,6 +2,7 @@
 
 package com.intive.aifirst.petspot.features.animallist.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,11 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
@@ -93,10 +97,9 @@ fun AnimalCard(
                         .background(Color(0xFFEEEEEE)),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = placeholderInitial,
-                    fontSize = 24.sp,
-                    color = Color(0xFF93A2B4),
+                Image(
+                    painter = painterResource(R.drawable.ic_list_image_default),
+                    contentDescription = "",
                 )
             }
 
@@ -178,7 +181,7 @@ fun AnimalCard(
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        modifier = Modifier.padding(horizontal = 10.dp),
                     )
                 }
 
@@ -204,7 +207,7 @@ private object AnimalCardPreviewData {
             species = AnimalSpecies.DOG,
             breed = "Border Collie",
             gender = AnimalGender.FEMALE,
-            status = AnimalStatus.ACTIVE,
+            status = AnimalStatus.MISSING,
             lastSeenDate = "12/11/2025",
             description = "Energetic dog wearing a red collar.",
             email = "owner@example.com",
