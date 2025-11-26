@@ -146,7 +146,7 @@ private fun FloatingReportButton(
         Spacer(modifier = Modifier.width(8.dp))
         Image(
             painter = painterResource(R.drawable.ic_report_missing_animal),
-            contentDescription = ""
+            contentDescription = "",
         )
     }
 }

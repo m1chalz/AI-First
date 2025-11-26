@@ -16,19 +16,17 @@ import androidx.compose.ui.unit.dp
  * Shows centered circular progress indicator.
  */
 @Composable
-fun FullScreenLoading(
-    modifier: Modifier = Modifier
-) {
+fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("petDetails.loading"),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("petDetails.loading"),
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(48.dp),
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }
-

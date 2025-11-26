@@ -28,7 +28,7 @@ class AnimalRepositoryImpl : AnimalRepository {
         // Return mock data from shared test fixtures
         return MockAnimalData.generateMockAnimals()
     }
-    
+
     /**
      * Retrieves a single animal by ID from mock data.
      * Simulates network delay before returning result.

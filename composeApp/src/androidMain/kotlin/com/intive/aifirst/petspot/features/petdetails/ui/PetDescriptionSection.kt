@@ -24,31 +24,31 @@ private val ValueColor = Color(0xFF101828)
 @Composable
 fun PetDescriptionSection(
     pet: Animal,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val description = pet.description.ifBlank { "—" }
-    
+
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 23.dp, vertical = 8.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 23.dp, vertical = 8.dp),
     ) {
         Text(
             text = "Animal Additional Description",
             color = LabelColor,
             fontSize = 16.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         Text(
             text = description,
             color = ValueColor,
             fontSize = 16.sp,
             lineHeight = 24.sp,
-            modifier = Modifier.testTag("petDetails.description")
+            modifier = Modifier.testTag("petDetails.description"),
         )
     }
 }
-

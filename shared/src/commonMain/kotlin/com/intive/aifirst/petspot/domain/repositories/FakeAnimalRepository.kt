@@ -1,7 +1,7 @@
-package com.intive.aifirst.petspot.composeapp.domain.repositories
+package com.intive.aifirst.petspot.domain.repositories
 
-import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
-import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.domain.models.Animal
 
 /**
  * Fake repository implementation for unit testing.
@@ -16,31 +16,32 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 class FakeAnimalRepository(
     private val animalCount: Int = 16,
     private val shouldFail: Boolean = false,
-    private val exception: Throwable = Exception("Fake repository error"),
+    private val exception: Throwable = Exception("Fake repository error")
 ) : AnimalRepository {
+    
     var getAnimalsCallCount = 0
         private set
-
+    
     var getAnimalByIdCallCount = 0
         private set
-
+    
     override suspend fun getAnimals(): List<Animal> {
         getAnimalsCallCount++
-
+        
         return if (shouldFail) {
             throw exception
         } else {
             MockAnimalData.generateMockAnimals(animalCount)
         }
     }
-
+    
     override suspend fun getAnimalById(id: String): Animal {
         getAnimalByIdCallCount++
-
+        
         if (shouldFail) {
             throw exception
         }
-
+        
         return MockAnimalData.generateMockAnimals(animalCount).find { it.id == id }
             ?: throw NoSuchElementException("Animal not found: $id")
     }

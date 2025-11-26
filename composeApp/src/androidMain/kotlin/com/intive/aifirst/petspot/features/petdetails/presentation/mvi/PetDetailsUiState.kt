@@ -9,10 +9,9 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 data class PetDetailsUiState(
     val pet: Animal? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
 ) {
     companion object {
         val Initial = PetDetailsUiState()
     }
 }
-

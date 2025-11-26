@@ -25,24 +25,24 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PetDetailsCloseButton(
     onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(Color.White, CircleShape)
-            .border(0.667.dp, Color(0xFFE5E9EC), CircleShape)
-            .clickable(role = Role.Button, onClick = onCloseClick)
-            .testTag("petDetails.backButton"),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .background(Color.White, CircleShape)
+                .border(0.667.dp, Color(0xFFE5E9EC), CircleShape)
+                .clickable(role = Role.Button, onClick = onCloseClick)
+                .testTag("petDetails.backButton"),
+        contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "Close",
             modifier = Modifier.size(24.dp),
-            tint = Color(0xFF101828)
+            tint = Color(0xFF101828),
         )
     }
 }
-

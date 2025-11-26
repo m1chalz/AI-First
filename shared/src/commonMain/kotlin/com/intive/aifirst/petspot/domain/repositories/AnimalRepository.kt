@@ -1,6 +1,6 @@
-package com.intive.aifirst.petspot.composeapp.domain.repositories
+package com.intive.aifirst.petspot.domain.repositories
 
-import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.domain.models.Animal
 
 /**
  * Repository interface for animal data operations.
@@ -23,7 +23,7 @@ interface AnimalRepository {
      * @throws Exception if data fetch fails
      */
     suspend fun getAnimals(): List<Animal>
-
+    
     /**
      * Retrieves a single animal by its unique identifier.
      * Used for pet details screen to display comprehensive animal information.
@@ -34,3 +34,4 @@ interface AnimalRepository {
      */
     suspend fun getAnimalById(id: String): Animal
 }
+

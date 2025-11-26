@@ -25,17 +25,17 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun RewardBadge(
     reward: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.testTag("petDetails.rewardBadge"),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Default.Paid,
             contentDescription = "Reward",
             modifier = Modifier.size(24.dp),
-            tint = Color.White
+            tint = Color.White,
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column {
@@ -43,16 +43,15 @@ fun RewardBadge(
                 text = "Reward",
                 color = Color.White,
                 fontSize = 16.sp,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
             )
             Spacer(modifier = Modifier.height(0.dp))
             Text(
                 text = reward,
                 color = Color.White,
                 fontSize = 16.sp,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
             )
         }
     }
 }
-

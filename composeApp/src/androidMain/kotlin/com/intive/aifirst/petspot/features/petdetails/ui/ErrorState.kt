@@ -27,48 +27,48 @@ import androidx.compose.ui.unit.dp
 fun ErrorState(
     error: String?,
     onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .testTag("petDetails.error"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .testTag("petDetails.error"),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Warning,
             contentDescription = "Error",
             modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.error
+            tint = MaterialTheme.colorScheme.error,
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(
             text = "Something went wrong",
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = error ?: "Unknown error occurred",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         Button(
             onClick = onRetryClick,
-            modifier = Modifier.testTag("petDetails.retryButton")
+            modifier = Modifier.testTag("petDetails.retryButton"),
         ) {
             Text("Try Again")
         }
     }
 }
-

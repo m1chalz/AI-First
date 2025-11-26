@@ -9,11 +9,10 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Location
 sealed interface PetDetailsEffect {
     /** Navigate back to previous screen */
     data object NavigateBack : PetDetailsEffect
-    
+
     /** Show location on external map app */
     data class ShowMap(val location: Location) : PetDetailsEffect
-    
+
     /** Show error message when map app is not available */
     data object MapNotAvailable : PetDetailsEffect
 }
-

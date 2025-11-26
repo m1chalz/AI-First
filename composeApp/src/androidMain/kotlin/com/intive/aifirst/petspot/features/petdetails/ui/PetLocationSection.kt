@@ -38,36 +38,37 @@ private val ButtonBlue = Color(0xFF155DFC)
 fun PetLocationSection(
     pet: Animal,
     onShowMapClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hasCoordinates = pet.location.latitude != null && pet.location.longitude != null
     val coordinatesText = LocationFormatter.formatCoordinates(pet.location)
-    
+
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 23.dp, vertical = 8.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 23.dp, vertical = 8.dp),
     ) {
         // Label
         Text(
             text = "Place of Disappearance / City",
             color = LabelColor,
             fontSize = 16.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
         )
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         // Location with icon: "52.2297° N, 21.0122° E" or "—" if no coordinates
         Row(
             modifier = Modifier.testTag("petDetails.location"),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = "Location",
                 modifier = Modifier.size(20.dp),
-                tint = ValueColor
+                tint = ValueColor,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -76,27 +77,26 @@ fun PetLocationSection(
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Show on map button - outlined blue per Figma
         OutlinedButton(
             onClick = onShowMapClick,
             enabled = hasCoordinates,
             modifier = Modifier.testTag("petDetails.showMapButton"),
             shape = RoundedCornerShape(10.dp),
-            border = BorderStroke(2.dp, if (hasCoordinates) ButtonBlue else LabelColor)
+            border = BorderStroke(2.dp, if (hasCoordinates) ButtonBlue else LabelColor),
         ) {
             Text(
                 text = "Show on the map",
                 color = if (hasCoordinates) ButtonBlue else LabelColor,
                 fontSize = 16.sp,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
             )
         }
     }
 }
-

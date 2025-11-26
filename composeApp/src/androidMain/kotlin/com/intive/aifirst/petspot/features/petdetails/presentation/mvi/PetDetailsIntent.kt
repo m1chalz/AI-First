@@ -7,14 +7,13 @@ package com.intive.aifirst.petspot.features.petdetails.presentation.mvi
 sealed interface PetDetailsIntent {
     /** Load pet details by ID */
     data class LoadPet(val id: String) : PetDetailsIntent
-    
+
     /** Navigate back to previous screen */
     data object NavigateBack : PetDetailsIntent
-    
+
     /** Show pet location on external map app */
     data object ShowOnMap : PetDetailsIntent
-    
+
     /** Retry loading pet details after error */
     data object RetryLoad : PetDetailsIntent
 }
-

@@ -23,20 +23,19 @@ import kotlinx.coroutines.launch
  * Intent → ViewModel → UseCase → Reducer → State → UI
  */
 class PetDetailsViewModel(
-    private val getAnimalByIdUseCase: GetAnimalByIdUseCase
+    private val getAnimalByIdUseCase: GetAnimalByIdUseCase,
 ) : ViewModel() {
-    
     // State
     private val _state = MutableStateFlow(PetDetailsUiState.Initial)
     val state: StateFlow<PetDetailsUiState> = _state.asStateFlow()
-    
+
     // Effects (one-off events)
     private val _effects = MutableSharedFlow<PetDetailsEffect>()
     val effects: SharedFlow<PetDetailsEffect> = _effects.asSharedFlow()
-    
+
     // Store current pet ID for retry functionality
     private var currentPetId: String? = null
-    
+
     /**
      * Processes user intents and updates state accordingly.
      * Entry point for all user actions.
@@ -49,7 +48,7 @@ class PetDetailsViewModel(
             is PetDetailsIntent.RetryLoad -> handleRetryLoad()
         }
     }
-    
+
     /**
      * Handles LoadPet intent: loads animal details from repository.
      */
@@ -58,15 +57,15 @@ class PetDetailsViewModel(
         viewModelScope.launch {
             // Set loading state
             _state.value = PetDetailsReducer.loading(_state.value)
-            
+
             // Call use case
             val result = runCatching { getAnimalByIdUseCase(id) }
-            
+
             // Reduce result to new state
             _state.value = PetDetailsReducer.reduce(_state.value, result)
         }
     }
-    
+
     /**
      * Handles NavigateBack intent: emits navigation effect.
      */
@@ -75,7 +74,7 @@ class PetDetailsViewModel(
             _effects.emit(PetDetailsEffect.NavigateBack)
         }
     }
-    
+
     /**
      * Handles ShowOnMap intent: emits map effect with location if available.
      */
@@ -89,7 +88,7 @@ class PetDetailsViewModel(
             }
         }
     }
-    
+
     /**
      * Handles RetryLoad intent: reloads pet data using stored ID.
      */
@@ -99,4 +98,3 @@ class PetDetailsViewModel(
         }
     }
 }
-
