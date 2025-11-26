@@ -229,9 +229,9 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         step: Int,
         total: Int
     ) {
-        // Create label with progress text
+        // Create label with localized progress text
         let label = UILabel()
-        label.text = "\(step)/\(total)"
+        label.text = String(format: L10n.ReportMissingPet.Progress.format, step, total)
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(hex: "#2D2D2D") // Dark gray
         label.sizeToFit()
@@ -240,7 +240,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let barButtonItem = UIBarButtonItem(customView: label)
         hostingController.navigationItem.rightBarButtonItem = barButtonItem
         
-        // Accessibility
+        // Accessibility for VoiceOver (reads "Step 1 of 4" instead of "1 slash 4")
         label.accessibilityIdentifier = "reportMissingPet.progressIndicator"
         label.accessibilityLabel = L10n.ReportMissingPet.Progress.accessibilityLabel(step, total)
     }
