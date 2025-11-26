@@ -2,7 +2,29 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.1.0 → 2.2.0
+Version change: 2.2.0 → 2.3.0
+MINOR: Enhanced iOS architecture patterns and module structure
+
+Changes (v2.3.0):
+- UPDATED: Module Structure for iOS - removed ViewModels/ directory, ViewModels now in Views/
+- UPDATED: Module Structure for iOS - added NavigationBackHiding wrapper requirement for SwiftUI screens
+- UPDATED: Architecture Patterns - iOS protocols use "Protocol" suffix, implementations without suffix
+- UPDATED: Principle XI "iOS MVVM-C Architecture" - added view model/model patterns, swiftgen requirement, presentation model guidelines
+- Added: iOS presentation layer guidelines (hex colors in models, Color conversion in views)
+- Added: iOS localization requirement (swiftgen for all displayed texts)
+- Added: Data formatting and presentation logic rules (ALL formatting in ViewModels/Models, views only display)
+
+Modified principles:
+- XI. iOS Model-View-ViewModel-Coordinator Architecture (UPDATED - added model patterns, swiftgen, presentation guidelines)
+
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md (no changes needed - architecture-specific)
+- ✅ .specify/templates/tasks-template.md (no changes needed - architecture-specific)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Follow-up TODOs: None
+
+Previous changes (v2.2.0):
 MINOR: Added Android Composable screen separation pattern for previews and testing
 
 Changes (v2.2.0):
@@ -215,16 +237,18 @@ class PetRepositoryImpl(private val api: PetApi) : PetRepository {
 }
 ```
 
-**iOS Example** (`/iosApp/iosApp/Repositories/`):
+**iOS Example** (`/iosApp/iosApp/Domain/Repositories/` and `/iosApp/iosApp/Data/Repositories/`):
 ```swift
-// Protocol definition
-protocol PetRepository {
+// Protocol definition in Domain/Repositories/
+// MUST use "Protocol" suffix
+protocol PetRepositoryProtocol {
     func getPets() async throws -> [Pet]
     func getPetById(id: String) async throws -> Pet
 }
 
-// Implementation
-class PetRepositoryImpl: PetRepository {
+// Implementation in Data/Repositories/
+// WITHOUT suffix - concrete class
+class PetRepository: PetRepositoryProtocol {
     func getPets() async throws -> [Pet] { /* implementation */ }
     func getPetById(id: String) async throws -> Pet { /* implementation */ }
 }
@@ -1147,14 +1171,150 @@ maintain clear separation of concerns and enable testable, coordinator-driven na
    - Direct method calls (e.g., `coordinator.showDetails(petId:)`)
    - Closure/callback properties set by coordinator during ViewModel initialization
 
-4. **UIHostingController wrapping**: Coordinators create SwiftUI views and wrap them in
-   `UIHostingController` for UIKit integration.
+4. **UIHostingController wrapping**: Coordinators create SwiftUI views and wrap them:
+   - First in `NavigationBackHiding` wrapper (hides back button when needed)
+   - Then in `UIHostingController` for UIKit integration
+   - Example: `UIHostingController(rootView: NavigationBackHiding { PetListView(viewModel: viewModel) })`
 
 5. **SwiftUI views remain pure**: Views MUST NOT contain business logic, navigation logic, or
    direct use case calls. Views only render UI based on ViewModel state and trigger ViewModel methods.
 
 6. **Coordinator hierarchy**: Parent coordinators manage child coordinators for nested flows.
    Child coordinators notify parents via delegation or closures when flow completes.
+
+**View model vs model pattern**:
+
+iOS views MUST follow one of two patterns:
+
+1. **ViewModel pattern** (for full-screen views with dynamic data):
+   - Use for screens with network calls, complex state, or business logic
+   - ViewModel is `ObservableObject` with `@Published` properties
+   - View observes ViewModel via `@StateObject` or `@ObservedObject`
+   - Example: List screens, detail screens with editing, forms with validation
+
+2. **Model pattern** (for simple views with static data):
+   - Use for reusable components, list items, cards without own state management
+   - Define `struct Model` in extension to view struct
+   - Model passed via initializer parameter (no `@Published` properties)
+   - Example: `PetCardView(model: PetCardView.Model(name: "Max", species: "Dog"))`
+
+Example with Model pattern:
+```swift
+struct PetCardView: View {
+    let model: Model
+    
+    var body: some View {
+        VStack {
+            Text(model.name)
+            Text(model.species)
+        }
+    }
+}
+
+extension PetCardView {
+    struct Model {
+        let name: String
+        let species: String
+    }
+}
+```
+
+**Localization requirement (MANDATORY)**:
+- Project MUST use SwiftGen for all displayed text
+- ALL user-facing strings MUST be localized (no hardcoded strings in views)
+- Access localized strings via SwiftGen-generated code: `L10n.petListTitle`
+- String keys defined in `Localizable.strings` files
+
+**Presentation model extensions (MANDATORY)**:
+- Domain models for presentation MUST have extensions in `/iosApp/iosApp/Features/Shared/`
+- Extensions provide formatting, colors, derived properties - NOT in domain model definition
+- Example: `extension Pet { var displayName: String { ... } }`
+- MUST NOT include localization or color logic directly in domain model definition
+
+**Presentation layer independence (MANDATORY)**:
+- ViewModels and Models MUST be independent of SwiftUI presentation layer
+- Colors stored as hex strings in models (e.g., `statusColor: "#FF5733"`)
+- Presentation layer converts hex to `Color` or `UIColor` when rendering
+- Example: `Color(hex: model.statusColor)`
+- Rationale: Enables easy testing, platform portability, and theme changes without modifying business logic
+
+**Data formatting and presentation logic (MANDATORY)**:
+- ALL data formatting logic MUST reside in ViewModels or Models, NOT in SwiftUI views
+- Views MUST only display already-formatted data from ViewModel/Model properties
+- Examples of formatting logic that belongs in ViewModel/Model:
+  - Date formatting: `var formattedDate: String { dateFormatter.string(from: date) }`
+  - Phone number formatting: `var formattedPhone: String { formatPhoneNumber(phone) }`
+  - Currency formatting: `var priceText: String { currencyFormatter.string(from: price) }`
+  - Number formatting: `var distanceText: String { "\(distance) km" }`
+  - Pluralization: `var itemCountText: String { "\(count) \(count == 1 ? "item" : "items")" }`
+- Views MUST NOT contain formatters, calculations, or conditional text logic
+- Rationale: Keeps views "dumb" (pure rendering), enables easy testing of formatting logic,
+  centralizes formatting rules in testable ViewModels/Models
+
+Example - GOOD (formatting in ViewModel):
+```swift
+@MainActor
+class PetDetailViewModel: ObservableObject {
+    @Published var pet: Pet?
+    
+    // Formatted properties for view consumption
+    var birthDateText: String {
+        guard let birthDate = pet?.birthDate else { return L10n.unknown }
+        return DateFormatter.shortDate.string(from: birthDate)
+    }
+    
+    var ownerPhoneText: String {
+        guard let phone = pet?.ownerPhone else { return L10n.noPhone }
+        return formatPhoneNumber(phone)  // +48 123 456 789
+    }
+    
+    private func formatPhoneNumber(_ phone: String) -> String {
+        // Formatting logic here
+    }
+}
+
+struct PetDetailView: View {
+    @ObservedObject var viewModel: PetDetailViewModel
+    
+    var body: some View {
+        VStack {
+            Text(viewModel.birthDateText)  // Just display
+            Text(viewModel.ownerPhoneText)  // Just display
+        }
+    }
+}
+```
+
+Example - BAD (formatting in View):
+```swift
+struct PetDetailView: View {
+    @ObservedObject var viewModel: PetDetailViewModel
+    
+    var body: some View {
+        VStack {
+            // ❌ BAD - formatting in view
+            if let birthDate = viewModel.pet?.birthDate {
+                Text(DateFormatter.shortDate.string(from: birthDate))
+            } else {
+                Text("Unknown")
+            }
+            
+            // ❌ BAD - phone formatting in view
+            if let phone = viewModel.pet?.ownerPhone {
+                Text(formatPhoneNumber(phone))
+            }
+        }
+    }
+    
+    private func formatPhoneNumber(_ phone: String) -> String {
+        // ❌ BAD - logic in view
+    }
+}
+```
+
+**Repository protocol naming (MANDATORY)**:
+- Domain repository protocols MUST use "Protocol" suffix: `PetRepositoryProtocol`
+- Data layer implementations WITHOUT suffix: `PetRepository: PetRepositoryProtocol`
 
 Example MVVM-C (iOS ViewModels call repositories directly - NO use cases):
 ```swift
@@ -1167,9 +1327,9 @@ class PetListViewModel: ObservableObject {
     // Coordinator callback for navigation
     var onPetSelected: ((String) -> Void)?
     
-    private let petRepository: PetRepository
+    private let petRepository: PetRepositoryProtocol
     
-    init(petRepository: PetRepository) {
+    init(petRepository: PetRepositoryProtocol) {
         self.petRepository = petRepository
     }
     
@@ -1194,29 +1354,32 @@ class PetListViewModel: ObservableObject {
 // Coordinator with manual DI
 class PetListCoordinator {
     private let navigationController: UINavigationController
-    private let petRepository: PetRepository
+    private let petRepository: PetRepositoryProtocol
     
-    init(navigationController: UINavigationController, petRepository: PetRepository) {
+    init(navigationController: UINavigationController, petRepository: PetRepositoryProtocol) {
         self.navigationController = navigationController
         self.petRepository = petRepository
     }
     
     func start() {
-        // Manual DI - inject repository directly into ViewModel
+        // Manual DI - inject repository protocol into ViewModel
         let viewModel = PetListViewModel(petRepository: petRepository)
         viewModel.onPetSelected = { [weak self] petId in
             self?.showPetDetails(petId: petId)
         }
         
         let view = PetListView(viewModel: viewModel)
-        let hostingController = UIHostingController(rootView: view)
+        // Wrap in NavigationBackHiding, then UIHostingController
+        let hostingController = UIHostingController(
+            rootView: NavigationBackHiding { view }
+        )
         navigationController.pushViewController(hostingController, animated: true)
     }
     
     private func showPetDetails(petId: String) {
         let detailCoordinator = PetDetailCoordinator(
             navigationController: navigationController,
-            petRepository: petRepository  // Pass repository down
+            petRepository: petRepository  // Pass repository protocol down
         )
         detailCoordinator.start()
     }
@@ -1224,13 +1387,17 @@ class PetListCoordinator {
 ```
 
 **Testing requirements**:
-- ViewModels MUST have unit tests in `/iosApp/iosAppTests/ViewModels/`
+- ViewModels MUST have unit tests in `/iosApp/iosAppTests/Features/`
 - ViewModel tests MUST verify `@Published` property updates
 - ViewModel tests MUST verify coordinator callback invocations
+- Model structs (simple data) MAY skip tests if purely data containers
 
 **Rationale**: MVVM-C separates navigation responsibility from presentation logic, making both
 independently testable. Coordinators provide a centralized place for flow management and enable
 complex navigation patterns. ViewModels remain portable and can be tested without UIKit dependencies.
+ViewModel/Model pattern distinction reduces boilerplate for simple components while maintaining
+consistency for complex screens. SwiftGen ensures type-safe localization. Hex color strings in
+models enable theme changes and testability without SwiftUI dependencies.
 
 ### XII. End-to-End Testing (NON-NEGOTIABLE)
 
@@ -1326,11 +1493,11 @@ test utilities across web and mobile test suites.
 
 **`/iosApp/iosApp/`** (iOS - Full Stack):
 - `Domain/Models/` - Swift structs/classes for domain entities
-- `Domain/Repositories/` - Repository protocols
-- `Data/Repositories/` - Repository implementations
+- `Domain/Repositories/` - Repository protocols (MUST use "Protocol" suffix, e.g., `PetRepositoryProtocol`)
+- `Data/Repositories/` - Repository implementations (WITHOUT suffix, e.g., `PetRepository` implements `PetRepositoryProtocol`)
 - `Coordinators/` - UIKit-based coordinators managing navigation
-- `Views/` - SwiftUI views (wrapped in UIHostingController)
-- `ViewModels/` - Swift ObservableObject classes with @Published properties (call repositories directly)
+- `Views/` - SwiftUI views + ViewModels (views presented by UIKit navigation wrapped in NavigationBackHiding, then UIHostingController)
+- `Features/Shared/` - Presentation model extensions (colors, formatting - NO localization in domain models)
 - `DI/` - Manual dependency injection setup (ServiceContainer or similar)
 
 **`/webApp/src/`** (Web - Full Stack):
@@ -1384,13 +1551,15 @@ class PetRepositoryImpl(
 **iOS Example**:
 ```swift
 // Protocol in /iosApp/iosApp/Domain/Repositories/
-protocol PetRepository {
+// MUST use "Protocol" suffix
+protocol PetRepositoryProtocol {
     func getPets() async throws -> [Pet]
     func getPetById(id: String) async throws -> Pet
 }
 
 // Implementation in /iosApp/iosApp/Data/Repositories/
-class PetRepositoryImpl: PetRepository {
+// WITHOUT suffix - implements protocol
+class PetRepository: PetRepositoryProtocol {
     private let httpClient: HTTPClient
     
     init(httpClient: HTTPClient) {
@@ -1479,12 +1648,12 @@ class GetPetsUseCase(private val repository: PetRepository) {
 - Rationale: iOS architecture prioritizes simplicity; use cases add unnecessary indirection for typical CRUD operations
 - Example:
 ```swift
-// iOS ViewModel calls repository directly
+// iOS ViewModel calls repository directly (using Protocol suffix)
 @MainActor
 class PetListViewModel: ObservableObject {
-    private let repository: PetRepository
+    private let repository: PetRepositoryProtocol
     
-    init(repository: PetRepository) {
+    init(repository: PetRepositoryProtocol) {
         self.repository = repository
     }
     
@@ -1637,4 +1806,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.2.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21
+**Version**: 2.3.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-26
