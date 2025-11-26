@@ -216,15 +216,23 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         }
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Deinitialization
     
+    deinit {
+        print("deinit ReportMissingPetCoordinator")
+    }
+}
+
+// MARK: - Private Helpers
+
+private extension ReportMissingPetCoordinator {
     /// Configures progress indicator as plain text in navigation bar.
     /// Displays current step fraction (e.g., "1/4", "2/4") as text on right side.
     /// - Parameters:
     ///   - hostingController: Hosting controller to configure
     ///   - step: Current step number (1-4)
     ///   - total: Total steps (always 4)
-    private func configureProgressIndicator(
+    func configureProgressIndicator(
         hostingController: UIHostingController<some View>,
         step: Int,
         total: Int
@@ -249,7 +257,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     /// - Parameters:
     ///   - hostingController: Hosting controller to configure
     ///   - action: Action to execute when back button tapped
-    private func configureCustomBackButton(
+    func configureCustomBackButton(
         hostingController: UIHostingController<some View>,
         action: @escaping () -> Void
     ) {
@@ -274,7 +282,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     /// - Parameters:
     ///   - hostingController: Hosting controller to configure
     ///   - action: Action to execute when dismiss button tapped
-    private func configureCustomDismissButton(
+    func configureCustomDismissButton(
         hostingController: UIHostingController<some View>,
         action: @escaping () -> Void
     ) {
@@ -292,12 +300,6 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Test identifier for E2E tests
         dismissButton.accessibilityIdentifier = "reportMissingPet.dismissButton"
-    }
-    
-    // MARK: - Deinitialization
-    
-    deinit {
-        print("deinit ReportMissingPetCoordinator")
     }
 }
 
