@@ -45,7 +45,7 @@
 
 ✅ **No clarification markers**: Spec contains no [NEEDS CLARIFICATION] markers. All requirements are concrete and specific.
 
-✅ **Testable requirements**: All functional requirements (FR-001 through FR-019) are specific and verifiable (e.g., "Screen MUST display date of disappearance in the format 'MMM DD, YYYY'").
+✅ **Testable requirements**: All functional requirements (FR-001 through FR-020) are specific and verifiable (e.g., "Screen MUST display date of disappearance in the format 'MMM DD, YYYY'").
 
 ✅ **Measurable success criteria**: All success criteria include specific metrics (e.g., "320dp to 600dp+ width," "pixel-perfect accuracy").
 
@@ -53,7 +53,7 @@
 
 ✅ **Comprehensive acceptance scenarios**: Each user story includes multiple Given-When-Then scenarios covering normal and alternative flows.
 
-✅ **Edge cases identified**: Nine edge cases covering missing data, network issues, invalid states, error conditions, and map integration.
+✅ **Edge cases identified**: Seven edge cases covering missing data, network issues, invalid states, and error conditions.
 
 ✅ **Clear scope**: Scope is explicitly bounded to Android UI only, with navigation from list to details screen. No backend integration included.
 
@@ -61,9 +61,9 @@
 
 ### Feature Readiness Review
 
-✅ **Requirements with acceptance criteria**: All 19 functional requirements are specific and can be verified through the acceptance scenarios defined in the user stories.
+✅ **Requirements with acceptance criteria**: All 20 functional requirements are specific and can be verified through the acceptance scenarios defined in the user stories.
 
-✅ **User scenarios coverage**: Six user stories cover the full user journey from navigation to viewing details to taking actions (map view).
+✅ **User scenarios coverage**: Seven user stories cover the full user journey from navigation to viewing details to taking actions (map view, remove report).
 
 ✅ **Measurable outcomes**: Four success criteria define specific, quantifiable quality metrics.
 
@@ -76,7 +76,8 @@ The specification is complete and ready for planning phase. All checklist items 
 **Assumptions Made**:
 - Pet data structure exists or will be defined during implementation planning
 - Navigation mechanism exists from pet list to details screen
-- External map app (Google Maps or device default) is available for "Show on the map" functionality via Android Intent
+- Map view feature exists or will be created for "Show on the map" functionality
+- Permission model exists for "Remove Report" action
 
 **Design References**:
 - Figma design: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev

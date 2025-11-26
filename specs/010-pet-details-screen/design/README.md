@@ -2,9 +2,11 @@
 
 ## Figma Design
 
-**URL**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-7437&m=dev
+**Android URL**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-7437&m=dev  
+**Android Node ID**: 297-7437
 
-**Node ID**: 297-7437
+**iOS URL**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev  
+**iOS Node ID**: 179-8157
 
 ## Design Overview
 
@@ -29,8 +31,8 @@ All information is displayed in a card-like container with consistent spacing:
 
 2. **Contact Information**
    - Two "Contact owner" fields:
-     - Phone: + 48 123 456 789 (displayed in full, not masked - design shows asterisks as placeholder/mock data only)
-     - Email: mail@email.com (displayed in full, not masked)
+     - Phone: + 48 123 456 789 (Android: displayed in full, not masked; iOS: masked display)
+     - Email: mail@email.com
 
 3. **Identification Information**
    - Microchip number: 000-000-000-000
@@ -38,11 +40,15 @@ All information is displayed in a card-like container with consistent spacing:
    - Animal Sex and Animal Approx. Age (side-by-side): Male (with icon) | 3 years
 
 4. **Location Information**
-   - Lat / Long: 52.2297° N, 21.0122° E (with location pin icon)
+   - Android: Lat / Long: 52.2297° N, 21.0122° E (with location pin icon)
+   - iOS: Place of Disappearance / City: Warsaw • ±15 km (with location icon)
    - "Show on the map" button (blue outlined, secondary style)
 
 5. **Descriptive Information**
    - Animal Additional Description: Multi-line text paragraph
+
+6. **Action Button** (iOS only)
+   - "Remove Report" button (red, primary style, full width)
 
 ## Design System Notes
 

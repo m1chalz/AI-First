@@ -1,19 +1,21 @@
-# Feature Specification: Pet Details Screen (Android UI)
+# Feature Specification: Pet Details Screen
 
 **Feature Branch**: `010-pet-details-screen`  
 **Created**: November 21, 2025  
 **Status**: Draft  
-**Input**: User description: "I want to have an animal details screen to which user can navigate by interacting with list item. In scope there is only UI part. Use this design: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev focusing on Android platform. This spec is only for Android."
+**Scope**: Multi-platform specification covering Android UI implementation (primary) and iOS implementation notes
+
+> **Note**: This specification documents the Pet Details Screen feature across both Android and iOS platforms. Android implementation is the primary focus (branch 010-pet-details-screen). iOS implementation details are documented separately with platform-specific differences noted throughout.
 
 ## Clarifications
 
-### Session 2025-11-26
+### Session 2025-11-26 (Android)
 
 - Q: What should the error state UI look like when pet data fails to load? → A: Full-screen error view with message and "Try Again" button
 - Q: What should happen when the user taps "Show on the map"? → A: Launch Google Maps (or other map app) via Android Intent with coordinates
-- Q: Is the "Remove Report" button included in scope? → A: No, the Remove Report button has been removed from the design and is not in scope
+- Q: Is the "Remove Report" button included in scope? → A: No, the Remove Report button has been removed from the design and is not in scope for Android
 
-### Session 2025-11-21
+### Session 2025-11-21 (Shared)
 
 - Q: What are all possible pet status values that need to be displayed? → A: MISSING, FOUND, CLOSED
 - Q: What colors should be used for each status badge? → A: Red for MISSING, Blue for FOUND, Gray for CLOSED
@@ -181,3 +183,53 @@ Users can immediately identify the pet's status (MISSING, FOUND, or CLOSED) thro
 - **SC-002**: Screen is fully scrollable and all content is accessible without truncation or overlap
 - **SC-003**: Screen layout matches the provided Figma design with pixel-perfect accuracy for spacing, typography, and component sizing
 - **SC-004**: All interactive elements have proper test identifiers enabling automated UI testing
+
+---
+
+## Platform-Specific Implementation Notes
+
+### Android Implementation (Primary - Branch 010)
+
+**Scope Decisions**:
+- ✅ Remove Report button: NOT IN SCOPE (removed from Android design)
+- ✅ Contact phone: Display in FULL (unmasked)
+- ✅ Location display: Latitude/Longitude coordinates format
+- ✅ Map launch: Via Android Intent to Google Maps
+
+**Technical Requirements**:
+- Use Jetpack Compose for UI
+- Implement MVI architecture with ViewModels
+- Use Koin for dependency injection
+- Coroutines + Flow for async operations
+- JUnit + Kotlin Test + Turbine for unit tests
+
+**Design Reference**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-7437&m=dev
+
+### iOS Implementation (Branch 012)
+
+**Scope Differences**:
+- ✅ Remove Report button: IN SCOPE (included in iOS design)
+- ✅ Contact phone: Display with MASKING for privacy
+- ✅ Location display: Place name with radius (e.g., "Warsaw • ±15 km")
+- ✅ Map launch: Via MapKit or system maps app
+
+**Technical Requirements**:
+- Use SwiftUI for UI
+- Implement MVVM-C architecture with UIKit Coordinators
+- Manual dependency injection with ServiceContainer
+- Swift Concurrency (async/await)
+- XCTest for unit tests
+
+**Design Reference**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev
+
+### Shared Requirements (Both Platforms)
+
+- Pet photo display with "Image not available" fallback
+- Status badge (Red/MISSING, Blue/FOUND, Gray/CLOSED)
+- Reward badge display (if present)
+- All identification fields (species, breed, sex, age, microchip)
+- Date of disappearance in format "MMM DD, YYYY"
+- Loading state during data fetch
+- Error state with retry capability
+- Scrollable content layout for longer descriptions
+- Test identifiers on all interactive elements
