@@ -91,45 +91,46 @@
 
 - [ ] T015 [US1] Create ReportMissingPetCoordinator in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` with CoordinatorInterface conformance, parentNavigationController property, flowState property, init(parentNavigationController:), start(animated:) method (creates modal UINavigationController with .fullScreen style, creates ReportMissingPetFlowState, navigates to chip number screen), exitFlow() method (dismisses modal, clears flowState, notifies parent)
 - [ ] T016 [US1] Add private helper methods to ReportMissingPetCoordinator: configureProgressIndicator(hostingController:step:total:) for text-only UIBarButtonItem displaying "1/4", "2/4", "3/4", or "4/4" on right side of navigation bar, configureCustomBackButton(hostingController:action:) for chevron-left UIBarButtonItem
-- [ ] T017 [US1] Update AnimalListCoordinator in `/iosApp/iosApp/Features/AnimalList/Coordinators/AnimalListCoordinator.swift` to add showReportMissing() method (creates ReportMissingPetCoordinator as child, starts flow) and wire to "report missing animal" button action
+- [ ] T017 [US1] Implement AnimalListCoordinator.showReportMissing() method in `/iosApp/iosApp/Features/AnimalList/Coordinators/AnimalListCoordinator.swift` - CURRENTLY PLACEHOLDER. Implementation: creates ReportMissingPetCoordinator(parentNavigationController: navigationController!), sets parentCoordinator, appends to childCoordinators, awaits coordinator.start(animated: true). Replace placeholder print statement with full implementation.
+- [ ] T018 [US1] Verify AnimalListView "Report a Missing Animal" button triggers viewModel.reportMissing() action (button already exists at line 100-107, just verify it's wired correctly to ViewModel closure)
 
 **Step 2: Chip Number Screen (Step 1/4)**
 
-- [ ] T018 [P] [US1] Create ChipNumberViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
-- [ ] T019 [US1] Create ChipNumberView in `/iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Chip Number Screen"), Continue button at bottom (calls viewModel.handleNext), .accessibilityIdentifier("chipNumber.continueButton")
-- [ ] T020 [US1] Add navigateToChipNumber() method to ReportMissingPetCoordinator (called from start(), creates ChipNumberViewModel with flowState injection, sets onNext to navigateToPhoto, sets onBack to exitFlow, wraps view in NavigationBackHiding, configures progress indicator 1/4, configures custom back button, pushes to modal nav controller)
+- [ ] T019 [P] [US1] Create ChipNumberViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
+- [ ] T020 [US1] Create ChipNumberView in `/iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Chip Number Screen"), Continue button at bottom (calls viewModel.handleNext), .accessibilityIdentifier("chipNumber.continueButton")
+- [ ] T021 [US1] Add navigateToChipNumber() method to ReportMissingPetCoordinator (called from start(), creates ChipNumberViewModel with flowState injection, sets onNext to navigateToPhoto, sets onBack to exitFlow, wraps view in NavigationBackHiding, configures progress indicator 1/4, configures custom back button, pushes to modal nav controller)
 
 **Step 3: Photo Screen (Step 2/4)**
 
-- [ ] T021 [P] [US1] Create PhotoViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
-- [ ] T022 [US1] Create PhotoView in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Photo Screen"), Continue button at bottom, .accessibilityIdentifier("photo.continueButton")
-- [ ] T023 [US1] Add navigateToPhoto() method to ReportMissingPetCoordinator (creates PhotoViewModel with flowState injection, sets onNext to navigateToDescription, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 2/4, configures custom back button, pushes to nav controller)
+- [ ] T022 [P] [US1] Create PhotoViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
+- [ ] T023 [US1] Create PhotoView in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Photo Screen"), Continue button at bottom, .accessibilityIdentifier("photo.continueButton")
+- [ ] T024 [US1] Add navigateToPhoto() method to ReportMissingPetCoordinator (creates PhotoViewModel with flowState injection, sets onNext to navigateToDescription, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 2/4, configures custom back button, pushes to nav controller)
 
 **Step 4: Description Screen (Step 3/4)**
 
-- [ ] T024 [P] [US1] Create DescriptionViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/DescriptionViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
-- [ ] T025 [US1] Create DescriptionView in `/iosApp/iosApp/Features/ReportMissingPet/Views/DescriptionView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Description Screen"), Continue button at bottom, .accessibilityIdentifier("description.continueButton")
-- [ ] T026 [US1] Add navigateToDescription() method to ReportMissingPetCoordinator (creates DescriptionViewModel with flowState injection, sets onNext to navigateToContactDetails, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 3/4, configures custom back button, pushes to nav controller)
+- [ ] T025 [P] [US1] Create DescriptionViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/DescriptionViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
+- [ ] T026 [US1] Create DescriptionView in `/iosApp/iosApp/Features/ReportMissingPet/Views/DescriptionView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Description Screen"), Continue button at bottom, .accessibilityIdentifier("description.continueButton")
+- [ ] T027 [US1] Add navigateToDescription() method to ReportMissingPetCoordinator (creates DescriptionViewModel with flowState injection, sets onNext to navigateToContactDetails, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 3/4, configures custom back button, pushes to nav controller)
 
 **Step 5: Contact Details Screen (Step 4/4)**
 
-- [ ] T027 [P] [US1] Create ContactDetailsViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/ContactDetailsViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
-- [ ] T028 [US1] Create ContactDetailsView in `/iosApp/iosApp/Features/ReportMissingPet/Views/ContactDetailsView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Contact Details Screen"), Continue button at bottom, .accessibilityIdentifier("contactDetails.continueButton")
-- [ ] T029 [US1] Add navigateToContactDetails() method to ReportMissingPetCoordinator (creates ContactDetailsViewModel with flowState injection, sets onNext to navigateToSummary, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 4/4, configures custom back button, pushes to nav controller)
+- [ ] T028 [P] [US1] Create ContactDetailsViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/ContactDetailsViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onNext/onBack closures, handleNext()/handleBack() methods, init(flowState:)
+- [ ] T029 [US1] Create ContactDetailsView in `/iosApp/iosApp/Features/ReportMissingPet/Views/ContactDetailsView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Contact Details Screen"), Continue button at bottom, .accessibilityIdentifier("contactDetails.continueButton")
+- [ ] T030 [US1] Add navigateToContactDetails() method to ReportMissingPetCoordinator (creates ContactDetailsViewModel with flowState injection, sets onNext to navigateToSummary, sets onBack to pop, wraps view in NavigationBackHiding, configures progress indicator 4/4, configures custom back button, pushes to nav controller)
 
 **Step 6: Summary Screen (Step 5 - No Progress Indicator)**
 
-- [ ] T030 [P] [US1] Create SummaryViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/SummaryViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onSubmit/onBack closures, handleSubmit()/handleBack() methods, init(flowState:)
-- [ ] T031 [US1] Create SummaryView in `/iosApp/iosApp/Features/ReportMissingPet/Views/SummaryView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Summary Screen"), Submit button at bottom (calls viewModel.handleSubmit), .accessibilityIdentifier("summary.submitButton")
-- [ ] T032 [US1] Add navigateToSummary() method to ReportMissingPetCoordinator (creates SummaryViewModel with flowState injection, sets onSubmit to exitFlow, sets onBack to pop, wraps view in NavigationBackHiding, NO progress indicator configured, configures custom back button, pushes to nav controller)
+- [ ] T031 [P] [US1] Create SummaryViewModel in `/iosApp/iosApp/Features/ReportMissingPet/Views/SummaryViewModel.swift` with @MainActor, ObservableObject conformance, flowState dependency, onSubmit/onBack closures, handleSubmit()/handleBack() methods, init(flowState:)
+- [ ] T032 [US1] Create SummaryView in `/iosApp/iosApp/Features/ReportMissingPet/Views/SummaryView.swift` with SwiftUI View, @ObservedObject viewModel, VStack with placeholder Text("Summary Screen"), Submit button at bottom (calls viewModel.handleSubmit), .accessibilityIdentifier("summary.submitButton")
+- [ ] T033 [US1] Add navigateToSummary() method to ReportMissingPetCoordinator (creates SummaryViewModel with flowState injection, sets onSubmit to exitFlow, sets onBack to pop, wraps view in NavigationBackHiding, NO progress indicator configured, configures custom back button, pushes to nav controller)
 
 **Step 7: Integration & Testing**
 
-- [ ] T033 [US1] Run iOS unit tests and verify 80% coverage: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
-- [ ] T034 [US1] Create Java step definitions in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` with Given/When/Then methods for complete flow (app launch, navigate to report missing, tap continue buttons, verify progress indicator)
-- [ ] T035 [US1] Run E2E test for US1 complete flow navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us1"`
-- [ ] T036 [P] [US1] Add SwiftDoc documentation to complex APIs in ReportMissingPetCoordinator (helper methods), ReportMissingPetFlowState (computed properties), skip self-explanatory methods
-- [ ] T037 [US1] Manual test on iPhone 15 simulator: verify flow navigation, progress indicator visibility, Continue button functionality
+- [ ] T034 [US1] Run iOS unit tests and verify 80% coverage: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
+- [ ] T035 [US1] Create Java step definitions in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` with Given/When/Then methods for complete flow (app launch, navigate to report missing, tap continue buttons, verify progress indicator)
+- [ ] T036 [US1] Run E2E test for US1 complete flow navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us1"`
+- [ ] T037 [P] [US1] Add SwiftDoc documentation to complex APIs in ReportMissingPetCoordinator (helper methods), ReportMissingPetFlowState (computed properties), skip self-explanatory methods
+- [ ] T038 [US1] Manual test on iPhone 15 simulator: verify flow navigation, progress indicator visibility, Continue button functionality
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can navigate through all 5 screens with progress indicator on steps 1-4
 
@@ -145,23 +146,23 @@
 
 **iOS Unit Tests** (Additional test cases):
 
-- [ ] T037 [P] [US2] Add unit test to ChipNumberViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift` (test handleBack on step 1 triggers onBack callback which should exit flow)
-- [ ] T038 [P] [US2] Add unit test to PhotoViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` (test handleBack triggers onBack callback which should navigate to previous screen)
-- [ ] T039 [P] [US2] Add unit test to SummaryViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (test handleBack from summary navigates back to contact details screen)
+- [ ] T039 [P] [US2] Add unit test to ChipNumberViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift` (test handleBack on step 1 triggers onBack callback which should exit flow)
+- [ ] T040 [P] [US2] Add unit test to PhotoViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` (test handleBack triggers onBack callback which should navigate to previous screen)
+- [ ] T041 [P] [US2] Add unit test to SummaryViewModelTests in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (test handleBack from summary navigates back to contact details screen)
 
 **End-to-End Tests**:
 
-- [ ] T040 [P] [US2] Create Gherkin scenario "Navigate Backwards from Middle Steps" in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Given user on contact details screen (step 4/4), When tap back button, Then description screen displays with progress 3/4) tagged @ios @mobile @us2
-- [ ] T041 [P] [US2] Create Gherkin scenario "Exit Flow from Step 1" and "Navigate Back from Summary" in same feature file (Given user on chip number screen (step 1/4), When tap back button, Then animal list screen displays and flow is exited; Given user on summary screen, When tap back button, Then contact details screen displays with progress 4/4) tagged @ios @mobile @us2
+- [ ] T042 [P] [US2] Create Gherkin scenario "Navigate Backwards from Middle Steps" in `/e2e-tests/java/src/test/resources/features/mobile/017-ios-missing-pet-flow.feature` (Given user on contact details screen (step 4/4), When tap back button, Then description screen displays with progress 3/4) tagged @ios @mobile @us2
+- [ ] T043 [P] [US2] Create Gherkin scenario "Exit Flow from Step 1" and "Navigate Back from Summary" in same feature file (Given user on chip number screen (step 1/4), When tap back button, Then animal list screen displays and flow is exited; Given user on summary screen, When tap back button, Then contact details screen displays with progress 4/4) tagged @ios @mobile @us2
 
 ### Implementation for User Story 2
 
 **iOS** (Additional functionality):
 
-- [ ] T042 [US2] Update configureCustomBackButton() in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` to ensure back button action correctly calls ViewModel handleBack() method (already wired in US1, verify logic is correct)
-- [ ] T043 [US2] Update exitFlow() in ReportMissingPetCoordinator to add flowState.clear() call before dismissing modal (ensures state is cleared when exiting from step 1)
-- [ ] T044 [US2] Update all screen navigation methods (navigateToPhoto, navigateToDescription, navigateToContactDetails, navigateToSummary) to verify onBack closure correctly calls navigationController?.popViewController(animated: true) (already implemented in US1, verify correctness)
-- [ ] T045 [US2] Add manual test verification: navigate to step 3, tap back, verify step 2 displays; tap back again, verify step 1 displays; tap back, verify flow exits and animal list displays
+- [ ] T044 [US2] Update configureCustomBackButton() in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` to ensure back button action correctly calls ViewModel handleBack() method (already wired in US1, verify logic is correct)
+- [ ] T045 [US2] Update exitFlow() in ReportMissingPetCoordinator to add flowState.clear() call before dismissing modal (ensures state is cleared when exiting from step 1)
+- [ ] T046 [US2] Update all screen navigation methods (navigateToPhoto, navigateToDescription, navigateToContactDetails, navigateToSummary) to verify onBack closure correctly calls navigationController?.popViewController(animated: true) (already implemented in US1, verify correctness)
+- [ ] T047 [US2] Add manual test verification: navigate to step 3, tap back, verify step 2 displays; tap back again, verify step 1 displays; tap back, verify flow exits and animal list displays
 - [ ] T048 [US2] Run iOS unit tests with new US2 test cases and verify 80% coverage maintained: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - [ ] T049 [US2] Run E2E tests for US2 backward navigation: `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios AND @us2"`
 - [ ] T050 [US2] Manual test on iPhone 15 simulator: verify backward navigation from all screens, verify progress indicator updates correctly, verify flow exits cleanly from step 1
@@ -181,6 +182,7 @@
 - [ ] T055 [P] Test on multiple device sizes (iPhone SE 3rd gen, iPhone 15, iPhone 15 Pro Max) to verify layout adapts correctly, progress indicator remains visible
 - [ ] T056 Test device rotation: verify flow works correctly in portrait and landscape orientations, navigation bar elements remain accessible
 - [ ] T057 [P] Add inline code comments for complex coordinator logic (modal presentation, navigation stack management, flow state lifecycle)
+- [ ] T058 Verify AnimalListCoordinator.showReportMissing() placeholder is fully implemented (T017) - should create and start ReportMissingPetCoordinator as child flow
 
 ---
 
@@ -223,14 +225,17 @@
 ### Parallel Opportunities
 
 - All Setup tasks (T001-T004) can run in parallel
-- Foundational tasks: T006 and T007 can run in parallel (both E2E setup: Screen Object Model + Feature file)
+- Foundational tasks: T005, T006, T007 can run in parallel (FlowState model + E2E Screen Object + Feature file)
 - User Story 1 Tests: T008-T013 (unit tests) can all run in parallel
-- User Story 1 ViewModels: T018, T021, T024, T027, T030 can be created in parallel (different files)
-- User Story 1 Views: T019, T022, T025, T028, T031 can be created in parallel (different files)
-- User Story 2 Tests: T038-T041 can all run in parallel
-- User Story 2 Verification: T042-T044 can be done in parallel (reviewing existing code)
-- E2E Step Definitions: T034 can be done in parallel with iOS feature file implementation (different files)
-- Polish tasks: T051, T053, T055, T057 can run in parallel (different concerns)
+- User Story 1 Coordinator Setup: T015, T016, T017 should be sequential (T015 → T016 → T017)
+- User Story 1 ViewModels: T019, T022, T025, T028, T031 can be created in parallel (different files)
+- User Story 1 Views: T020, T023, T026, T029, T032 can be created in parallel (different files)
+- User Story 1 Navigation Methods: T021, T024, T027, T030, T033 sequential (build on coordinator)
+- User Story 2 Tests: T039-T041 can all run in parallel
+- User Story 2 Verification: T044-T046 can be done in parallel (reviewing existing code)
+- E2E Scenario Creation: T042-T043 parallel with T035 (step definitions)
+- E2E Tests Run: T036, T049 can be done after implementation is complete
+- Polish tasks: T051, T053, T055, T057, T058 can run in parallel (different concerns)
 
 ---
 
