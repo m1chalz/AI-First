@@ -231,7 +231,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     ) {
         // Create label with localized progress text
         let label = UILabel()
-        label.text = String(format: L10n.ReportMissingPet.Progress.format, step, total)
+        label.text = L10n.ReportMissingPet.Progress.format(step, total)
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(hex: "#2D2D2D") // Dark gray
         label.sizeToFit()
@@ -240,9 +240,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let barButtonItem = UIBarButtonItem(customView: label)
         hostingController.navigationItem.rightBarButtonItem = barButtonItem
         
-        // Accessibility for VoiceOver (reads "Step 1 of 4" instead of "1 slash 4")
+        // Test identifier for E2E tests
         label.accessibilityIdentifier = "reportMissingPet.progressIndicator"
-        label.accessibilityLabel = L10n.ReportMissingPet.Progress.accessibilityLabel(step, total)
     }
     
     /// Configures custom back button (chevron-left) in navigation bar.
@@ -266,9 +265,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let backBarButtonItem = UIBarButtonItem(customView: backButton)
         hostingController.navigationItem.leftBarButtonItem = backBarButtonItem
         
-        // Accessibility
+        // Test identifier for E2E tests
         backButton.accessibilityIdentifier = "reportMissingPet.backButton"
-        backButton.accessibilityLabel = L10n.Common.back
     }
     
     /// Configures custom dismiss button (X icon) in navigation bar.
@@ -292,9 +290,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let dismissBarButtonItem = UIBarButtonItem(customView: dismissButton)
         hostingController.navigationItem.leftBarButtonItem = dismissBarButtonItem
         
-        // Accessibility
+        // Test identifier for E2E tests
         dismissButton.accessibilityIdentifier = "reportMissingPet.dismissButton"
-        dismissButton.accessibilityLabel = L10n.Common.cancel
     }
     
     // MARK: - Deinitialization

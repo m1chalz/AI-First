@@ -168,10 +168,6 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "reportMissingPet.photo.title", fallback: "Pet Photo")
     }
     public enum Progress {
-      /// Step %d of %d
-      public static func accessibilityLabel(_ p1: Int, _ p2: Int) -> String {
-        return L10n.tr("Localizable", "reportMissingPet.progress.accessibilityLabel", p1, p2, fallback: "Step %d of %d")
-      }
       /// %d/%d
       public static func format(_ p1: Int, _ p2: Int) -> String {
         return L10n.tr("Localizable", "reportMissingPet.progress.format", p1, p2, fallback: "%d/%d")

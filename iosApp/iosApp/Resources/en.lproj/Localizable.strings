@@ -93,7 +93,6 @@
 
 // Progress indicator
 "reportMissingPet.progress.format" = "%d/%d";
-"reportMissingPet.progress.accessibilityLabel" = "Step %d of %d";
 
 // Buttons
 "reportMissingPet.button.continue" = "Continue";
