@@ -1,9 +1,9 @@
 # Feature Specification: Animal Description Screen
 
-**Feature Branch**: `021-animal-description-screen`  
+**Feature Branch**: `022-animal-description-screen`  
 **Created**: 2025-11-26  
 **Status**: Draft  
-**Input**: User description: "create specification 021 for Animal description screen"
+**Input**: User description: "create specification 022 for Animal description screen"
 
 This feature delivers Step 3/4 of the Missing Pet flow defined in specification 017 (iOS). UI must match Figma node `297-8209` from https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-8209.
 
