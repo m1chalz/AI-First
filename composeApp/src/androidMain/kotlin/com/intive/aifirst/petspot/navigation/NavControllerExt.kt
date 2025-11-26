@@ -26,9 +26,6 @@ fun NavController.navigateToAnimalList(
 /**
  * Navigate to Animal Detail screen.
  * 
- * Note: This will log a warning until AnimalDetailScreen is implemented.
- * The navigation will be added to NavGraph when the screen is ready.
- * 
  * @param animalId ID of the animal to display
  * @param builder Optional navigation options
  */
@@ -36,9 +33,7 @@ fun NavController.navigateToAnimalDetail(
     animalId: String,
     builder: NavOptionsBuilder.() -> Unit = {}
 ) {
-    Log.w("Navigation", "navigateToAnimalDetail($animalId) called but AnimalDetailScreen not yet implemented")
-    // TODO: Uncomment when AnimalDetailScreen is added to NavGraph
-    // navigate(NavRoute.AnimalDetail(animalId), builder)
+    navigate(NavRoute.AnimalDetail(animalId), builder)
 }
 
 /**

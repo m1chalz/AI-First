@@ -29,5 +29,19 @@ class AnimalRepositoryImpl : AnimalRepository {
         // Return mock data from shared test fixtures
         return MockAnimalData.generateMockAnimals()
     }
+    
+    /**
+     * Retrieves a single animal by ID from mock data.
+     * Simulates network delay before returning result.
+     *
+     * @param id Unique identifier of the animal
+     * @return Animal entity
+     * @throws NoSuchElementException if animal not found
+     */
+    override suspend fun getAnimalById(id: String): Animal {
+        delay(networkDelayMs)
+        return MockAnimalData.generateMockAnimals().find { it.id == id }
+            ?: throw NoSuchElementException("Animal not found: $id")
+    }
 }
 

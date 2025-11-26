@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.di
 
+import com.intive.aifirst.petspot.domain.usecases.GetAnimalByIdUseCase
 import com.intive.aifirst.petspot.domain.usecases.GetAnimalsUseCase
 import org.koin.dsl.module
 
@@ -16,5 +17,6 @@ import org.koin.dsl.module
 val domainModule = module {
     // Use cases
     factory { GetAnimalsUseCase(get()) }
+    factory { GetAnimalByIdUseCase(get()) }
 }
 
