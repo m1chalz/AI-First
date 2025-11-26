@@ -44,9 +44,6 @@ All information is displayed in a card-like container with consistent spacing:
 5. **Descriptive Information**
    - Animal Additional Description: Multi-line text paragraph
 
-6. **Action Button**
-   - "Remove Report" button (red, primary style, full width)
-
 ## Design System Notes
 
 ### Typography
@@ -56,7 +53,7 @@ All information is displayed in a card-like container with consistent spacing:
 - Button text: 16px, white or brand color
 
 ### Colors
-- Primary Red: #FB2C36 (status badge, remove button)
+- Primary Red: #FB2C36 (status badge)
 - Primary Blue: #155DFC (outlined button border and text)
 - Gray shades: #6A7282 (labels), #101828 (values), #E8ECF0 (container border)
 - Background: White

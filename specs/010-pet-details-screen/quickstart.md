@@ -93,7 +93,7 @@ sealed interface PetDetailsIntent {
     data class LoadPet(val id: String) : PetDetailsIntent
     data object NavigateBack : PetDetailsIntent
     data object ShowOnMap : PetDetailsIntent
-    data object RemoveReport : PetDetailsIntent
+    data object RetryLoad : PetDetailsIntent
 }
 ```
 
@@ -104,7 +104,6 @@ sealed interface PetDetailsIntent {
 sealed interface PetDetailsEffect {
     data object NavigateBack : PetDetailsEffect
     data class ShowMap(val location: Location) : PetDetailsEffect
-    data object ShowRemoveConfirmation : PetDetailsEffect
 }
 ```
 
@@ -142,7 +141,7 @@ class PetDetailsViewModel(
             is PetDetailsIntent.LoadPet -> loadPet(intent.id)
             is PetDetailsIntent.NavigateBack -> emitEffect(PetDetailsEffect.NavigateBack)
             is PetDetailsIntent.ShowOnMap -> showOnMap()
-            is PetDetailsIntent.RemoveReport -> emitEffect(PetDetailsEffect.ShowRemoveConfirmation)
+            is PetDetailsIntent.RetryLoad -> _state.value.pet?.id?.let { loadPet(it) }
         }
     }
     
@@ -190,8 +189,7 @@ fun PetDetailsScreen(
         effects.collect { effect ->
             when (effect) {
                 is PetDetailsEffect.NavigateBack -> navController.popBackStack()
-                is PetDetailsEffect.ShowMap -> { /* Navigate to map */ }
-                is PetDetailsEffect.ShowRemoveConfirmation -> { /* Show dialog */ }
+                is PetDetailsEffect.ShowMap -> { /* Launch external map app via Intent */ }
             }
         }
     }
@@ -204,12 +202,14 @@ fun PetDetailsScreen(
     // Render UI based on state
     when {
         state.isLoading -> FullScreenLoading()
-        state.error != null -> ErrorState(error = state.error)
+        state.error != null -> ErrorState(
+            error = state.error,
+            onRetryClick = { viewModel.dispatchIntent(PetDetailsIntent.RetryLoad) }
+        )
         state.pet != null -> PetDetailsContent(
             pet = state.pet,
             onBackClick = { viewModel.dispatchIntent(PetDetailsIntent.NavigateBack) },
-            onShowMapClick = { viewModel.dispatchIntent(PetDetailsIntent.ShowOnMap) },
-            onRemoveReportClick = { viewModel.dispatchIntent(PetDetailsIntent.RemoveReport) }
+            onShowMapClick = { viewModel.dispatchIntent(PetDetailsIntent.ShowOnMap) }
         )
     }
 }
@@ -275,11 +275,11 @@ Create date and microchip formatters in `lib/` directory.
 - [ ] Unit tests for `PetDetailsViewModel` (intent handling, state updates, effects)
 - [ ] Unit tests for `GetAnimalByIdUseCase` (success and error cases)
 - [ ] UI tests for `PetDetailsScreen` (loading, success, error states)
-- [ ] E2E tests for all 7 user stories from spec
+- [ ] E2E tests for all 6 user stories from spec
 
 ## Next Steps
 
-1. Implement UI composables for each section (header, photo, info, location, contact, description, actions)
+1. Implement UI composables for each section (header, photo, info, location, contact, description)
 2. Add test identifiers to all interactive elements
 3. Implement date and microchip formatting utilities
 4. Add image loading with Coil

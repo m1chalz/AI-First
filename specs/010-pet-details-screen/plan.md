@@ -87,7 +87,7 @@ Implement a Pet Details Screen for Android that displays comprehensive informati
 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
   - Web: N/A (Android-only feature)
-  - Mobile: Appium tests in `/e2e-tests/mobile/specs/pet-details-screen.spec.ts` ✓ (will add E2E tests for all 7 user stories)
+  - Mobile: Appium tests in `/e2e-tests/mobile/specs/pet-details-screen.spec.ts` ✓ (will add E2E tests for all 6 user stories)
   - All tests written in TypeScript ✓
   - Screen Object Model used ✓
   - Each user story has at least one E2E test ✓
@@ -105,7 +105,7 @@ Implement a Pet Details Screen for Android that displays comprehensive informati
   - Android: `testTag` modifier on all interactive composables ✓ (will use format `petDetails.{element}.{action}`)
   - iOS: N/A (Android-only feature)
   - Web: N/A (Android-only feature)
-  - Naming convention: `{screen}.{element}.{action}` (e.g., `petDetails.backButton.click`, `petDetails.removeReportButton.click`) ✓
+  - Naming convention: `{screen}.{element}.{action}` (e.g., `petDetails.backButton.click`, `petDetails.showMapButton.click`) ✓
   - List items use stable IDs: N/A (no lists in details screen)
   - Violation justification: _N/A_
 
@@ -188,8 +188,7 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │           ├── PetInfoSection.kt             # Identification fields (species, breed, etc.)
 │           ├── PetLocationSection.kt         # Location info with map button
 │           ├── PetContactSection.kt          # Contact information
-│           ├── PetDescriptionSection.kt      # Additional description
-│           └── PetActionsSection.kt          # Remove Report button
+│           └── PetDescriptionSection.kt      # Additional description
 │
 ├── domain/
 │   └── usecases/
@@ -223,7 +222,7 @@ e2e-tests/mobile/
     └── pet-details-screen.spec.ts             # NEW: E2E tests for all user stories
 ```
 
-**Structure Decision**: This feature follows the existing Android feature module pattern established by `animallist`. All MVI components (UiState, Intent, Effect, Reducer) are co-located in the `presentation/mvi/` directory. UI composables are organized by section (header, photo, info, location, contact, description, actions) for maintainability. The feature integrates with existing navigation infrastructure and DI setup.
+**Structure Decision**: This feature follows the existing Android feature module pattern established by `animallist`. All MVI components (UiState, Intent, Effect, Reducer) are co-located in the `presentation/mvi/` directory. UI composables are organized by section (header, photo, info, location, contact, description) for maintainability. The feature integrates with existing navigation infrastructure and DI setup.
 
 ## Complexity Tracking
 
@@ -283,7 +282,7 @@ No violations. All constitution checks passed.
 2. **Phase 3**: Run `/speckit.checklist` command to create implementation checklist
 3. **Implementation**: Follow tasks.md and quickstart.md to implement feature
 4. **Testing**: Achieve 80% test coverage for ViewModel, reducer, and use case
-5. **E2E Testing**: Create mobile E2E tests for all 7 user stories
+5. **E2E Testing**: Create mobile E2E tests for all 6 user stories
 
 ---
 
