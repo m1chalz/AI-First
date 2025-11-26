@@ -2,7 +2,45 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.1.0 → 2.2.0
+Version change: 2.2.0 → 2.3.0
+MINOR: Migrated E2E testing stack from TypeScript/Playwright to Java/Maven/Selenium/Cucumber
+
+Changes (v2.3.0):
+- UPDATED: Principle XII "End-to-End Testing" - replaced Playwright/TypeScript with Selenium/Cucumber/Java
+- UPDATED: Principle VI "Test Identifiers for UI Controls" - updated E2E usage examples to Java
+- UPDATED: Testing Standards section - unified E2E project structure with single Maven pom.xml
+- UPDATED: Compliance checklist - changed E2E test commands to Maven with Cucumber tags
+- REPLACED: Web E2E framework from Playwright to Selenium WebDriver (Java)
+- REPLACED: Mobile E2E framework from Appium+WebdriverIO+TypeScript to Appium+Cucumber+Java
+- ADDED: Unified `/e2e-tests/` project structure with shared pom.xml
+- ADDED: Cucumber tags for platform execution control (@web, @android, @ios)
+- ADDED: Page Object Model with XPath locators for web (using @FindBy annotations)
+- ADDED: Screen Object Model with dual annotations (@iOSXCUITFindBy, @AndroidFindBy) for mobile
+- ADDED: Separate Cucumber HTML reports for web/android/ios platforms
+
+Modified principles:
+- VI. Test Identifiers for UI Controls (UPDATED - Java examples for E2E usage)
+- XII. End-to-End Testing (UPDATED - complete rewrite for Java/Maven/Cucumber stack)
+
+Modified sections:
+- Testing Standards → End-to-End Tests (UPDATED - unified project structure)
+- Compliance (UPDATED - Maven commands with Cucumber tags)
+
+Templates requiring updates:
+- ⚠ .specify/templates/plan-template.md - Update E2E testing technology stack references
+- ⚠ .specify/templates/tasks-template.md - Update E2E test creation tasks (Gherkin scenarios, Java steps)
+- ⚠ .specify/templates/spec-template.md - Update E2E test requirements section
+
+Follow-up TODOs:
+- Migrate existing Playwright web tests to Selenium+Cucumber (if any exist)
+- Migrate existing Appium+WebdriverIO mobile tests to Appium+Cucumber (if any exist)
+- Create Maven pom.xml with Selenium, Appium, and Cucumber dependencies
+- Set up Cucumber reporting plugins in Maven configuration
+- Update CI/CD pipeline to use Maven commands with Cucumber tags
+- Create example .feature files for web and mobile in respective directories
+- Document Page Object and Screen Object patterns with annotation examples
+
+Previous changes (v2.2.0):
 MINOR: Added Android Composable screen separation pattern for previews and testing
 
 Changes (v2.2.0):
@@ -572,16 +610,24 @@ All interactive UI elements MUST have stable test identifiers for E2E testing:
 - Lists/collections MUST use stable IDs (e.g., database ID, not array index)
 
 **E2E Test Usage**:
-```typescript
-// Playwright (Web)
-await page.locator('[data-testid="petList.addButton.click"]').click();
-await expect(page.locator('[data-testid="petList.list"]')).toBeVisible();
+```java
+// Selenium (Web)
+@FindBy(xpath = ("//*[@data-testid='petList.addButton.click']")
+private WebElement addPetButton;
+public boolean isAddPetButtonDisplayed() {
+    return createPinTitle.isDisplayed();
+}
 
-// Appium (Mobile)
-const addButton = await driver.$('~petList.addButton.click');
-await addButton.click();
-const petList = await driver.$('~petList.list');
-await expect(petList).toBeDisplayed();
+
+// Appium (Mobile - Unified iOS/Android)
+// Screen Object with annotations
+@AndroidFindBy(uiAutomator = "resourceId(\"petList.addButton.click\")")
+@iOSXCUITFindBy(id = "petList.addButton.click")
+private WebElement addPetButton;
+
+public boolean isTitleDisplayed() {
+    return createPinTitle.isDisplayed();
+}
 ```
 
 **Rationale**: Stable test identifiers prevent brittle E2E tests that break due to text changes,
@@ -1236,34 +1282,46 @@ complex navigation patterns. ViewModels remain portable and can be tested withou
 
 Every feature specification MUST include end-to-end tests covering all user scenarios:
 
-**Web Platform** (`/e2e-tests/web/`):
-- Framework: Playwright with TypeScript
-- Config: `playwright.config.ts` at repo root
-- Test location: `/e2e-tests/web/specs/[feature-name].spec.ts`
-- Step definitions: `/e2e-tests/web/steps/` (reusable test steps)
-- Run command: `npx playwright test`
-- Coverage: All user stories from spec.md
+**Unified Project Structure** (`/e2e-tests/`):
+- Single Maven project with shared `pom.xml` at root (`/e2e-tests/pom.xml`)
+- Single Java codebase for Web, Android, and iOS
+- Execution controlled via Cucumber tags: `@web`, `@android`, `@ios`
+- Generates 3 separate Cucumber HTML reports (web/android/ios)
 
-**Mobile Platforms** (`/e2e-tests/mobile/`):
-- Framework: Appium with TypeScript + WebdriverIO
-- Config: `wdio.conf.ts` for Android/iOS
-- Test location: `/e2e-tests/mobile/specs/[feature-name].spec.ts`
-- Step definitions: `/e2e-tests/mobile/steps/` (reusable test steps)
-- Run command: `npm run test:mobile:android` or `npm run test:mobile:ios`
-- Coverage: All user stories from spec.md for both Android and iOS
+**Web E2E Tests**:
+- Framework: Selenium WebDriver (Java + Cucumber)
+- Test Scenarios: `/e2e-tests/src/test/resources/features/web/*.feature` (Gherkin with `@web` tag)
+- Page Object Model: `/e2e-tests/src/test/java/.../pages/` (XPath locators)
+  - Uses `@FindBy(xpath = "...")` annotations
+- Step Definitions: `/e2e-tests/src/test/java/.../steps-web/`
+- Run command: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web"`
+- Report: `/e2e-tests/target/cucumber-reports/web/index.html`
+
+**Mobile E2E Tests**:
+- Framework: Appium (Java + Cucumber)
+- Test Scenarios: `/e2e-tests/src/test/resources/features/mobile/*.feature` (Gherkin with `@android`/`@ios` tags)
+- Screen Object Model: `/e2e-tests/src/test/java/.../screens/` (Unified for iOS/Android)
+  - Uses `@iOSXCUITFindBy(id = "...")` and `@AndroidFindBy(uiAutomator = "...")` annotations
+- Step Definitions: `/e2e-tests/src/test/java/.../steps-mobile/`
+  - Handles platform differences (Android vs iOS) dynamically within steps
+- Run command (Android): `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"`
+- Run command (iOS): `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@ios"`
+- Report (Android): `/e2e-tests/target/cucumber-reports/android/index.html`
+- Report (iOS): `/e2e-tests/target/cucumber-reports/ios/index.html`
 
 **Requirements**:
-- Tests MUST be written in TypeScript for consistency across platforms
-- Each user story MUST have at least one E2E test
-- Tests MUST run against real application builds (not mocked)
-- Tests MUST be executable in CI/CD pipeline
-- Page Object Model pattern REQUIRED for web maintainability
-- Screen Object Model pattern REQUIRED for mobile maintainability
-- Step definitions MUST be used for reusable test steps (Given/When/Then actions)
+- Tests MUST be written in Java (Maven) using Cucumber (Gherkin) for scenarios
+- Shared `pom.xml` for dependency management
+- Test scenarios defined in `.feature` files with platform-specific tags
+- Platform-specific execution controlled by tags (`@web`, `@android`, `@ios`)
+- Page Object Model pattern REQUIRED for web (XPath locators)
+- Screen Object Model pattern REQUIRED for mobile (supporting both iOS/Android via annotations)
+- Step definitions MUST be split by platform type (`steps-web/` vs `steps-mobile/`)
 
-**Rationale**: E2E tests validate complete user flows across platforms, catching integration
-issues that unit tests cannot detect. TypeScript provides type safety and enables sharing
-test utilities across web and mobile test suites.
+**Rationale**: Unified Java + Cucumber stack reduces context switching and enables code sharing
+where appropriate. Cucumber tags allow flexible execution of platform-specific suites from a
+single codebase. Mobile screen objects with dual annotations reduce duplication between Android
+and iOS test code.
 
 ## Platform Architecture Rules
 
@@ -1545,29 +1603,30 @@ Each platform MUST maintain 80% unit test coverage for domain logic and ViewMode
 
 ### End-to-End Tests (MANDATORY)
 
+**Unified E2E Project**:
+- Config: `/e2e-tests/pom.xml` (shared Maven project for web and mobile)
+- Platform execution controlled by Cucumber tags: `@web`, `@android`, `@ios`
+
 **Web E2E Tests**:
-- Location: `/e2e-tests/web/specs/`
-- Framework: Playwright + TypeScript
-- Config: `playwright.config.ts` (repo root)
-- Run command: `npx playwright test`
-- Report: `playwright-report/index.html`
-- Requirements:
-  - Page Object Model in `/e2e-tests/web/pages/`
-  - Step definitions in `/e2e-tests/web/steps/`
-  - One spec file per feature
-  - All user stories covered
+- Framework: Selenium WebDriver (Java + Cucumber)
+- Page Object Model: `/e2e-tests/src/test/java/.../pages/`
+  - MUST use `@FindBy(xpath = "...")` for element location (consistent with mobile)
+- Step Definitions: `/e2e-tests/src/test/java/.../steps-web/`
+- Features: `/e2e-tests/src/test/resources/features/web/*.feature`
+- Run command: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web"`
+- Report: `/e2e-tests/target/cucumber-reports/web/index.html`
 
 **Mobile E2E Tests**:
-- Location: `/e2e-tests/mobile/specs/`
-- Framework: Appium + WebdriverIO + TypeScript
-- Config: `wdio.conf.ts` (repo root)
-- Run commands: `npm run test:mobile:android`, `npm run test:mobile:ios`
-- Report: `e2e-tests/mobile/reports/`
-- Requirements:
-  - Screen Object Model in `/e2e-tests/mobile/screens/`
-  - Step definitions in `/e2e-tests/mobile/steps/`
-  - One spec file per feature (covers both platforms)
-  - All user stories covered
+- Framework: Appium (Java + Cucumber)
+- Screen Object Model: `/e2e-tests/src/test/java/.../screens/` (Unified for iOS/Android)
+  - Uses `@iOSXCUITFindBy(id = "...")` and `@AndroidFindBy(uiAutomator = "...")` annotations
+- Step Definitions: `/e2e-tests/src/test/java/.../steps-mobile/`
+  - Handles platform differences (Android vs iOS) dynamically within steps
+- Features: `/e2e-tests/src/test/resources/features/mobile/*.feature`
+- Run command (Android): `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"`
+- Run command (iOS): `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@ios"`
+- Report (Android): `/e2e-tests/target/cucumber-reports/android/index.html`
+- Report (iOS): `/e2e-tests/target/cucumber-reports/ios/index.html`
 
 ## Governance
 
@@ -1597,8 +1656,9 @@ All pull requests MUST:
   - Web: `npm test -- --coverage` (from webApp/)
   - Backend: `npm test -- --coverage` (from server/)
 - Run E2E tests for affected features:
-  - Web: `npx playwright test`
-  - Mobile: `npm run test:mobile:android`, `npm run test:mobile:ios`
+  - Web: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web"`
+  - Mobile: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"` or `@ios`
+  - Reports: Verify Cucumber HTML reports in `target/cucumber-reports/`
 - Verify all new interactive UI elements have test identifiers:
   - Android: `testTag` modifier
   - iOS: `accessibilityIdentifier` modifier
@@ -1637,4 +1697,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.2.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-21
+**Version**: 2.3.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-25
