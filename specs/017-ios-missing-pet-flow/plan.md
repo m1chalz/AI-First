@@ -153,22 +153,17 @@ iosApp/iosApp/Features/ReportMissingPet/
 │   └── ReportMissingPetCoordinator.swift
 ├── Models/
 │   └── ReportMissingPetFlowState.swift
-├── Views/
-│   ├── ChipNumber/
-│   │   ├── ChipNumberView.swift
-│   │   └── ChipNumberViewModel.swift
-│   ├── Photo/
-│   │   ├── PhotoView.swift
-│   │   └── PhotoViewModel.swift
-│   ├── Description/
-│   │   ├── DescriptionView.swift
-│   │   └── DescriptionViewModel.swift
-│   ├── ContactDetails/
-│   │   ├── ContactDetailsView.swift
-│   │   └── ContactDetailsViewModel.swift
-│   └── Summary/
-│       ├── SummaryView.swift
-│       └── SummaryViewModel.swift
+└── Views/                                      # All views in flat structure
+    ├── ChipNumberView.swift                    # Step 1 UI
+    ├── ChipNumberViewModel.swift               # Step 1 state + actions
+    ├── PhotoView.swift                         # Step 2 UI
+    ├── PhotoViewModel.swift                    # Step 2 state + actions
+    ├── DescriptionView.swift                   # Step 3 UI
+    ├── DescriptionViewModel.swift              # Step 3 state + actions
+    ├── ContactDetailsView.swift                # Step 4 UI
+    ├── ContactDetailsViewModel.swift           # Step 4 state + actions
+    ├── SummaryView.swift                       # Step 5 UI
+    └── SummaryViewModel.swift                  # Step 5 state + actions
 
 iosApp/iosAppTests/Features/ReportMissingPet/
 ├── Models/
@@ -189,7 +184,7 @@ e2e-tests/mobile/
     └── reportMissingPetSteps.ts  (reusable Given/When/Then)
 ```
 
-**Structure Decision**: iOS feature-based structure with coordinator + models + views grouped by screen. This matches existing patterns from branch 012 (PetDetails feature). Each screen has dedicated directory with View + ViewModel pair. ReportMissingPetFlowState is shared model owned by coordinator as property.
+**Structure Decision**: iOS feature-based structure with coordinator + models + flat views directory. Views are organized in a flat structure (all View + ViewModel files in `/Views/` without subdirectories) for simplicity. ReportMissingPetFlowState is shared model owned by coordinator as property.
 
 ## Complexity Tracking
 

@@ -78,22 +78,17 @@ iosApp/iosApp/Features/ReportMissingPet/
 │   └── ReportMissingPetCoordinator.swift      # Flow navigation logic
 ├── Models/
 │   └── ReportMissingPetFlowState.swift           # Shared state object
-└── Views/
-    ├── ChipNumber/
-    │   ├── ChipNumberView.swift               # Step 1 UI
-    │   └── ChipNumberViewModel.swift          # Step 1 state + actions
-    ├── Photo/
-    │   ├── PhotoView.swift                    # Step 2 UI
-    │   └── PhotoViewModel.swift               # Step 2 state + actions
-    ├── Description/
-    │   ├── DescriptionView.swift              # Step 3 UI
-    │   └── DescriptionViewModel.swift         # Step 3 state + actions
-    ├── ContactDetails/
-    │   ├── ContactDetailsView.swift           # Step 4 UI
-    │   └── ContactDetailsViewModel.swift      # Step 4 state + actions
-    └── Summary/
-        ├── SummaryView.swift                  # Step 5 UI
-        └── SummaryViewModel.swift             # Step 5 state + actions
+└── Views/                                      # All views in flat structure
+    ├── ChipNumberView.swift                    # Step 1 UI
+    ├── ChipNumberViewModel.swift               # Step 1 state + actions
+    ├── PhotoView.swift                         # Step 2 UI
+    ├── PhotoViewModel.swift                    # Step 2 state + actions
+    ├── DescriptionView.swift                   # Step 3 UI
+    ├── DescriptionViewModel.swift              # Step 3 state + actions
+    ├── ContactDetailsView.swift                # Step 4 UI
+    ├── ContactDetailsViewModel.swift           # Step 4 state + actions
+    ├── SummaryView.swift                       # Step 5 UI
+    └── SummaryViewModel.swift                  # Step 5 state + actions
 ```
 
 ---
@@ -102,7 +97,7 @@ iosApp/iosApp/Features/ReportMissingPet/
 
 ### Step 1: Create ViewModel (Minimal - Navigation Only)
 
-**File**: `/Views/NewStep/NewStepViewModel.swift`
+**File**: `/Views/NewStepViewModel.swift`
 
 ```swift
 import Foundation
@@ -141,7 +136,7 @@ class NewStepViewModel: ObservableObject {
 
 ### Step 2: Create SwiftUI View (Empty Placeholder)
 
-**File**: `/Views/NewStep/NewStepView.swift`
+**File**: `/Views/NewStepView.swift`
 
 ```swift
 import SwiftUI
