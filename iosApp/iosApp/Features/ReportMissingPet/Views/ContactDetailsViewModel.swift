@@ -31,5 +31,11 @@ class ContactDetailsViewModel: ObservableObject {
     func handleBack() {
         onBack?()
     }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit ContactDetailsViewModel")
+    }
 }
 

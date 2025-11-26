@@ -251,7 +251,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Accessibility
         badgeView.accessibilityIdentifier = "reportMissingPet.progressIndicator"
-        badgeView.accessibilityLabel = String(format: L10n.ReportMissingPet.Progress.accessibilityLabel, step, total)
+        badgeView.accessibilityLabel = L10n.ReportMissingPet.Progress.accessibilityLabel(step, total)
     }
     
     /// Configures custom back button (chevron-left) in navigation bar.
@@ -278,6 +278,12 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Accessibility
         backButton.accessibilityIdentifier = "reportMissingPet.backButton"
         backButton.accessibilityLabel = L10n.Common.back
+    }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit ReportMissingPetCoordinator")
     }
 }
 

@@ -31,5 +31,11 @@ class SummaryViewModel: ObservableObject {
     func handleBack() {
         onBack?()
     }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit SummaryViewModel")
+    }
 }
 

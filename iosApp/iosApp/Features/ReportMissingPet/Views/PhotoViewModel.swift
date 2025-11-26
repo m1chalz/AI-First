@@ -31,5 +31,11 @@ class PhotoViewModel: ObservableObject {
     func handleBack() {
         onBack?()
     }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit PhotoViewModel")
+    }
 }
 

@@ -31,5 +31,11 @@ class DescriptionViewModel: ObservableObject {
     func handleBack() {
         onBack?()
     }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit DescriptionViewModel")
+    }
 }
 
