@@ -170,7 +170,7 @@ struct NewStepView: View {
                     .cornerRadius(10)
             }
             .padding()
-            .accessibilityIdentifier("newStep.continue.tap")
+            .accessibilityIdentifier("newStep.continueButton")
         }
         .background(Color.white)
     }

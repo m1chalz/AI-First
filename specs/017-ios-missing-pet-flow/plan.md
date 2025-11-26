@@ -114,7 +114,7 @@ Each screen will have only navigation bar + "Continue" button. Screen-specific c
 
 - [x] **Test Identifiers for UI Controls**: Accessibility identifiers planned
   - ✅ iOS: `.accessibilityIdentifier()` modifier on all interactive views
-  - ✅ Naming: `{screen}.{element}.{action}` (e.g., `chipNumber.next.tap`, `chipNumber.back.tap`)
+  - ✅ Naming: `{screen}.{element}` (e.g., `chipNumber.continueButton`, `chipNumber.backButton`)
   - ✅ Progress indicator: `{screen}.progress.view` (e.g., `chipNumber.progress.view`)
 
 - [x] **Public API Documentation**: SwiftDoc for non-obvious APIs

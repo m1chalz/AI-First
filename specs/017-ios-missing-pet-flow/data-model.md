@@ -210,7 +210,7 @@ struct ChipNumberView: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 30)
-            .accessibilityIdentifier("chipNumber.continue.tap")
+            .accessibilityIdentifier("chipNumber.continueButton")
         }
         .background(Color.white)
     }

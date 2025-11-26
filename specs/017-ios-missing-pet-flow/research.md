@@ -136,7 +136,7 @@ private func configureProgressIndicator(
     hostingController.navigationItem.rightBarButtonItem = barButtonItem
     
     // Accessibility
-    badgeView.accessibilityIdentifier = "reportMissing.progress.view"
+    badgeView.accessibilityIdentifier = "reportMissingPet.progressBadge"
     badgeView.accessibilityLabel = L10n.ReportMissingPet.progressLabel(step, total)
 }
 ```
@@ -273,7 +273,7 @@ private func configureCustomBackButton(
     hostingController.navigationItem.leftBarButtonItem = backBarButtonItem
     
     // Accessibility
-    backButton.accessibilityIdentifier = "reportMissing.back.tap"
+    backButton.accessibilityIdentifier = "reportMissingPet.backButton"
     backButton.accessibilityLabel = L10n.Common.back
 }
 
