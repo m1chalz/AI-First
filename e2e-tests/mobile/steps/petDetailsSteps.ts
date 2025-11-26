@@ -1,5 +1,7 @@
 import { expect } from '@wdio/globals';
 import { PetDetailsScreen } from '../screens/PetDetailsScreen';
+import { givenUserIsOnAnimalListScreen, whenUserClicksAnimalCard } from './animalListSteps';
+import { waitForElementDisplayed } from './elementSteps';
 
 /**
  * Step definitions for Pet Details Screen E2E tests.
@@ -8,7 +10,7 @@ import { PetDetailsScreen } from '../screens/PetDetailsScreen';
 
 /**
  * Given: User is on the pet details screen for a specific pet.
- * Simulates navigation from list to details screen.
+ * Navigates from animal list to details screen by tapping a card.
  * 
  * @param driver - WebdriverIO driver instance
  * @param petId - ID of the pet to view
@@ -18,13 +20,18 @@ export async function givenUserIsOnPetDetailsScreen(
     driver: WebdriverIO.Browser,
     petId: string
 ): Promise<PetDetailsScreen> {
-    // Note: In actual implementation, this would:
     // 1. Start from animal list screen
-    // 2. Find and tap animal card with given ID
-    // 3. Wait for navigation to complete
-    // For now, we assume the app navigates directly to details
+    const animalListScreen = await givenUserIsOnAnimalListScreen(driver);
     
-    return new PetDetailsScreen();
+    // 2. Find and tap animal card with given ID
+    await whenUserClicksAnimalCard(animalListScreen, petId);
+    
+    // 3. Wait for Pet Details screen to appear
+    const petDetailsScreen = new PetDetailsScreen();
+    await driver.pause(1000); // Small pause for navigation animation
+    await waitForElementDisplayed(driver, petDetailsScreen.testIds.detailsView);
+    
+    return petDetailsScreen;
 }
 
 /**
@@ -41,13 +48,13 @@ export async function whenUserWaitsForDetails(screen: PetDetailsScreen): Promise
             return !loadingExists;
         },
         {
-            timeout: 10000,
-            timeoutMsg: 'Loading spinner did not disappear within 10 seconds'
+            timeout: 3000,
+            timeoutMsg: 'Loading spinner did not disappear within 3 seconds'
         }
     );
     
     // Wait for details view to be displayed
-    await screen.detailsView.waitForDisplayed({ timeout: 5000 });
+    await screen.detailsView.waitForDisplayed({ timeout: 2000 });
 }
 
 /**
@@ -105,7 +112,7 @@ export async function thenErrorIsVisible(screen: PetDetailsScreen): Promise<void
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsRetry(screen: PetDetailsScreen): Promise<void> {
-    await screen.retryButton.waitForDisplayed({ timeout: 3000 });
+    await screen.retryButton.waitForDisplayed({ timeout: 2000 });
     await screen.retryButton.click();
 }
 
@@ -116,7 +123,7 @@ export async function whenUserTapsRetry(screen: PetDetailsScreen): Promise<void>
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsPhone(screen: PetDetailsScreen): Promise<void> {
-    await screen.phoneField.waitForDisplayed({ timeout: 3000 });
+    await screen.phoneField.waitForDisplayed({ timeout: 2000 });
     await screen.phoneField.click();
 }
 
@@ -127,7 +134,7 @@ export async function whenUserTapsPhone(screen: PetDetailsScreen): Promise<void>
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsEmail(screen: PetDetailsScreen): Promise<void> {
-    await screen.emailField.waitForDisplayed({ timeout: 3000 });
+    await screen.emailField.waitForDisplayed({ timeout: 2000 });
     await screen.emailField.click();
 }
 
@@ -138,7 +145,7 @@ export async function whenUserTapsEmail(screen: PetDetailsScreen): Promise<void>
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsShowMap(screen: PetDetailsScreen): Promise<void> {
-    await screen.showMapButton.waitForDisplayed({ timeout: 3000 });
+    await screen.showMapButton.waitForDisplayed({ timeout: 2000 });
     await screen.showMapButton.click();
 }
 
@@ -149,7 +156,7 @@ export async function whenUserTapsShowMap(screen: PetDetailsScreen): Promise<voi
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsRemoveReport(screen: PetDetailsScreen): Promise<void> {
-    await screen.removeReportButton.waitForDisplayed({ timeout: 3000 });
+    await screen.removeReportButton.waitForDisplayed({ timeout: 2000 });
     await screen.removeReportButton.click();
 }
 

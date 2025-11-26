@@ -22,8 +22,8 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
     
     it('should navigate to pet details screen from list', async () => {
         // Given - user has the app open on animal list screen
-        // When - user taps on a pet card
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        // When - user taps on a pet card (using simple ID "1" which iOS mock data uses)
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // Then - pet details screen should be displayed
         await waitForElementDisplayed(driver, screen.testIds.detailsView);
@@ -32,7 +32,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
     
     it('should display loading state while fetching pet data', async () => {
         // Given - user navigates to pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // When - data is being loaded (immediately after navigation)
         // Then - loading spinner should be visible
@@ -41,7 +41,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
     
     it('should display pet photo after successful load', async () => {
         // Given - user navigates to pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // When - data finishes loading
         await whenUserWaitsForDetails(screen);
@@ -52,7 +52,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
     
     it('should display pet details after successful load', async () => {
         // Given - user navigates to pet details for Fredi (DOG)
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // When - data finishes loading
         await whenUserWaitsForDetails(screen);
@@ -98,7 +98,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
     
     it('should display fallback when pet has no photo', async () => {
         // Given - user navigates to pet without photo (Piorun - bird)
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '33333333-3333-3333-3333-333333333333');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '3');
         
         // When - data finishes loading
         await whenUserWaitsForDetails(screen);
@@ -113,7 +113,7 @@ describe('Pet Details Screen - User Story 6: Status Badge', () => {
     
     it('should display MISSING badge for ACTIVE status pets', async () => {
         // Given - user navigates to pet with ACTIVE status
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // When - data finishes loading
         await whenUserWaitsForDetails(screen);
@@ -126,7 +126,7 @@ describe('Pet Details Screen - User Story 6: Status Badge', () => {
     
     it('should display FOUND badge for found status pets', async () => {
         // Given - user navigates to pet with FOUND status (Burek)
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '44444444-4444-4444-4444-444444444444');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '4');
         
         // When - data finishes loading
         await whenUserWaitsForDetails(screen);
@@ -142,7 +142,7 @@ describe('Pet Details Screen - User Story 3: Contact Information', () => {
     
     it('should allow tapping phone number to open dialer', async () => {
         // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
         // When - user taps phone number
@@ -154,7 +154,7 @@ describe('Pet Details Screen - User Story 3: Contact Information', () => {
     
     it('should allow tapping email to open mail composer', async () => {
         // Given - user is viewing pet details with email
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
         // When - user taps email
@@ -166,7 +166,7 @@ describe('Pet Details Screen - User Story 3: Contact Information', () => {
     
     it('should display Show on the map button', async () => {
         // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
         // When - checking for map button
@@ -176,7 +176,7 @@ describe('Pet Details Screen - User Story 3: Contact Information', () => {
     
     it('should handle Show on the map button tap', async () => {
         // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
         // When - user taps Show on the map button
@@ -191,20 +191,27 @@ describe('Pet Details Screen - User Story 7: Remove Report', () => {
     
     it('should display Remove Report button', async () => {
         // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
-        // When - checking for remove button
+        // When - scrolling to bottom of screen where button is located
+        // iOS native scroll: swipe up to reveal bottom content
+        await driver.execute('mobile: scroll', { direction: 'down' });
+        await driver.pause(500); // Wait for scroll animation
+        
         // Then - Remove Report button should be visible
         await expect(screen.removeReportButton).toBeDisplayed();
     });
     
     it('should handle Remove Report button tap', async () => {
         // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '11111111-1111-1111-1111-111111111111');
+        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         await whenUserWaitsForDetails(screen);
         
-        // When - user taps Remove Report button
+        // When - scrolling to button and tapping it
+        // iOS native scroll: swipe up to reveal bottom content
+        await driver.execute('mobile: scroll', { direction: 'down' });
+        await driver.pause(500); // Wait for scroll animation
         await whenUserTapsRemoveReport(screen);
         
         // Then - action is logged to console (placeholder)
