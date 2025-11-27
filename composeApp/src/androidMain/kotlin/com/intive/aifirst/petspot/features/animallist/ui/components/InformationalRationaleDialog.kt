@@ -111,7 +111,10 @@ fun InformationalRationaleDialog(
                                 .weight(1f)
                                 .testTag("animalList.rationaleDialog.cancelButton"),
                     ) {
-                        Text(text = "Cancel")
+                        Text(
+                            text = "Cancel",
+                            textAlign = TextAlign.Center,
+                        )
                     }
 
                     // Go to Settings button (primary action)
@@ -126,7 +129,10 @@ fun InformationalRationaleDialog(
                                 containerColor = Color(0xFF155DFC),
                             ),
                     ) {
-                        Text(text = "Go to Settings")
+                        Text(
+                            text = "Go to Settings",
+                            textAlign = TextAlign.Center,
+                        )
                     }
                 }
             }
