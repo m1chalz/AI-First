@@ -71,9 +71,11 @@ struct PhotoView: View {
         .background(Color.white.ignoresSafeArea())
         .animation(.easeInOut(duration: 0.2), value: viewModel.showsMandatoryToast)
         .animation(.easeInOut(duration: 0.2), value: confirmedMetadata?.id)
-        .task(id: pickerSelection?.itemIdentifier) {
-            guard let item = pickerSelection else { return }
-            await processPickerItem(item)
+        .onChange(of: pickerSelection) { _, newSelection in
+            Task {
+                guard let item = newSelection else { return }
+                await processPickerItem(item)
+            }
         }
     }
     
@@ -142,8 +144,7 @@ struct PhotoView: View {
             
             await viewModel.handlePhotoSelection(selection)
         } catch {
-            if let loadError = error as? PhotosPickerItem.LoadTransferableError,
-               loadError == .userCancelled {
+            if error is CancellationError {
                 viewModel.handlePickerCancellation()
             } else {
                 viewModel.handleSelectionFailure()
@@ -212,29 +213,49 @@ private struct AnimalPhotoTransferable: Transferable {
     
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(importedContentType: .image) { received in
-            let data = try Data(contentsOf: received.file)
-            let dimensions = AnimalPhotoTransferable.imageDimensions(from: data)
+            let fileURL = received.file
+            let pathExtension = fileURL.pathExtension
+            let data = try Data(contentsOf: fileURL)
+            let metadata = AnimalPhotoTransferable.imageMetadata(
+                from: data,
+                pathExtension: pathExtension
+            )
             return AnimalPhotoTransferable(
                 data: data,
-                contentType: received.contentType,
-                fileName: received.file.lastPathComponent,
-                pixelWidth: dimensions.width,
-                pixelHeight: dimensions.height
+                contentType: metadata.type,
+                fileName: fileURL.lastPathComponent,
+                pixelWidth: metadata.width,
+                pixelHeight: metadata.height
             )
         }
     }
     
-    private static func imageDimensions(from data: Data) -> (width: Int, height: Int) {
-        guard
-            let source = CGImageSourceCreateWithData(data as CFData, nil),
-            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
-            let width = properties[kCGImagePropertyPixelWidth] as? Int,
-            let height = properties[kCGImagePropertyPixelHeight] as? Int
-        else {
-            return (0, 0)
+    private static func imageMetadata(from data: Data, pathExtension: String) -> (width: Int, height: Int, type: UTType) {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
+            return (0, 0, fallbackType(for: pathExtension))
         }
         
-        return (width, height)
+        let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
+        let width = properties?[kCGImagePropertyPixelWidth] as? Int ?? 0
+        let height = properties?[kCGImagePropertyPixelHeight] as? Int ?? 0
+        let inferredType = AnimalPhotoTransferable.extractedType(from: source)
+            ?? fallbackType(for: pathExtension)
+        
+        return (width, height, inferredType)
+    }
+    
+    private static func extractedType(from source: CGImageSource) -> UTType? {
+        guard let cfType = CGImageSourceGetType(source) else {
+            return nil
+        }
+        return UTType(cfType as String)
+    }
+    
+    private static func fallbackType(for pathExtension: String) -> UTType {
+        if let inferred = UTType(filenameExtension: pathExtension.lowercased()) {
+            return inferred
+        }
+        return .data
     }
 }
 

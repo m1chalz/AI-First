@@ -29,7 +29,7 @@ struct AnimalPhotoEmptyStateView: View {
             
             PhotosPicker(
                 selection: $pickerSelection,
-                matching: .any(of: .jpeg, .png, .heic, .gif, .webP)
+                matching: .images
             ) {
                 Text(L10n.AnimalPhoto.Button.browse)
                     .font(.system(size: 14, weight: .semibold))
