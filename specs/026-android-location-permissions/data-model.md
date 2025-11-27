@@ -178,20 +178,36 @@ suspend fun getAnimals(): List<Animal>
 
 ---
 
-### GetLastKnownLocationUseCase
+### GetCurrentLocationUseCase
 
 **Input**: `Context` (for LocationManager)  
-**Output**: `Result<LocationCoordinates?>` - Success with coordinates (or null if no cached location) or failure
+**Output**: `Result<LocationCoordinates?>` - Success with coordinates (or null if location unavailable) or failure
 
-**Behavior**:
+**Behavior** (Two-Stage Approach):
+
+**Stage 1 - Cached Last Known Location (Instant)**:
 - Uses LocationManager (native Android API) to get last known location
-- Synchronous operation (returns immediately, no timeout needed)
+- Synchronous operation (returns immediately)
 - Tries GPS provider first (most accurate), falls back to Network provider if GPS unavailable
-- Returns `Result.success(LocationCoordinates)` if cached location available
-- Returns `Result.success(null)` if no cached location available (not an error - fallback to no-location mode)
+- If valid cached location found → return immediately
+
+**Stage 2 - Fresh Location Update (10s timeout)**:
+- Only executed if Stage 1 returns null or location is too old
+- Uses `requestSingleUpdate()` with LocationListener
+- Applies 10-second timeout (using coroutine `withTimeout`)
+- Tries GPS provider first, Network provider as fallback
+- Cancels request on timeout
+
+**Return Values**:
+- Returns `Result.success(LocationCoordinates)` if location obtained (from either stage)
+- Returns `Result.success(null)` if both stages fail to provide location (not an error - fallback to no-location mode)
 - Returns `Result.failure(SecurityException)` if permission not granted
 - Returns `Result.failure(Exception)` on other errors
+
+**Notes**:
 - Handles both fine and coarse location permissions
+- Stage 1 is synchronous, Stage 2 is asynchronous
+- Total timeout for fresh location is 10 seconds
 
 ---
 

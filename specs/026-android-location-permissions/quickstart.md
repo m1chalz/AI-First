@@ -25,14 +25,21 @@ App Launch → Check Permission Status
   ├─ Not Requested → Show System Dialog
   ├─ Denied (with rationale) → Show Educational Rationale → System Dialog
   ├─ Denied (no rationale) → Show Informational Rationale → Settings or Cancel
-  └─ Granted → Get Last Known Location (immediate, cached) → Query Server with/without Coordinates
+  └─ Granted → Two-Stage Location Fetch:
+       Stage 1: Try Cached Last Known Location (instant)
+         ├─ Found → Query Server with Coordinates
+         └─ Not Found → Stage 2
+       Stage 2: Request Fresh Location (10s timeout)
+         ├─ Success → Query Server with Coordinates
+         └─ Timeout/Failure → Query Server without Coordinates (fallback)
 ```
 
 ### Fallback Behavior
 
 - **Permission Denied**: Query server without coordinates → Show all animals
-- **No Cached Location**: Query server without coordinates → Show all animals (immediate fallback, no timeout)
-- **Location Unavailable**: Query server without coordinates → Show all animals
+- **Cached Location Available**: Use immediately (no timeout needed)
+- **No Cached Location**: Try fresh location request with 10s timeout → If fails, query without coordinates
+- **Both Stages Fail**: Query server without coordinates → Show all animals
 
 ## Architecture
 
@@ -49,8 +56,7 @@ Follows Android MVI architecture:
 
 1. **Use Cases**:
    - `CheckLocationPermissionUseCase` - Checks current permission status
-   - `RequestLocationPermissionUseCase` - Triggers permission request
-   - `GetLastKnownLocationUseCase` - Gets cached last known location (immediate, no timeout)
+   - `GetCurrentLocationUseCase` - Two-stage location fetch: (1) Try cached location, (2) Request fresh with 10s timeout
 
 2. **Repository**:
    - `LocationRepository` - Interface for location operations
@@ -150,13 +156,12 @@ interface AnimalRepository {
 
 ### 8. Add Koin DI
 
-**locationModule.kt**:
+**LocationModule.kt**:
 ```kotlin
 val locationModule = module {
     single<LocationRepository> { LocationRepositoryImpl(get()) }
     factory { CheckLocationPermissionUseCase(get()) }
-    factory { RequestLocationPermissionUseCase() }
-    factory { GetLastKnownLocationUseCase(get()) }
+    factory { GetCurrentLocationUseCase(get()) }
 }
 ```
 
@@ -165,15 +170,18 @@ val locationModule = module {
 ### Unit Tests
 
 **LocationRepositoryImplTest.kt**:
-- Test last known location retrieval (GPS provider)
-- Test fallback to Network provider when GPS returns null
-- Test null location handling (no cached location)
+- Test Stage 1: cached location retrieval (GPS provider)
+- Test Stage 1: fallback to Network provider when GPS returns null
+- Test Stage 2: fresh location request success
+- Test Stage 2: 10-second timeout handling
+- Test both stages fail → null location returned
 - Test permission denied case
 
-**GetLastKnownLocationUseCaseTest.kt**:
-- Test success case with GPS location
-- Test fallback to Network location
-- Test null location (no cached location available)
+**GetCurrentLocationUseCaseTest.kt**:
+- Test Stage 1 hit: cached location available → return immediately
+- Test Stage 1 miss → Stage 2 success: fresh location obtained
+- Test Stage 1 miss → Stage 2 timeout: fallback to null
+- Test both stages fail → return null (not error)
 - Test permission denied case
 
 **AnimalListViewModelTest.kt**:
@@ -203,7 +211,7 @@ val locationModule = module {
 - `domain/models/PermissionStatus.kt` - Permission state sealed class
 - `domain/repositories/LocationRepository.kt` - Location operations interface
 - `domain/usecases/CheckLocationPermissionUseCase.kt`
-- `domain/usecases/GetLastKnownLocationUseCase.kt`
+- `domain/usecases/GetCurrentLocationUseCase.kt` - Two-stage location fetch
 
 ### Data Layer
 - `data/repositories/LocationRepositoryImpl.kt` - LocationManager implementation
@@ -275,31 +283,68 @@ when (intent) {
 }
 ```
 
-### Get Last Known Location
+### Get Current Location (Two-Stage)
 
 ```kotlin
-fun getLastKnownLocation(context: Context): Result<LocationCoordinates?> {
+suspend fun getCurrentLocation(context: Context): Result<LocationCoordinates?> {
     return try {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         
-        // Try GPS provider first (most accurate)
-        var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        
-        // Fallback to Network provider if GPS unavailable
-        if (location == null) {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        // Stage 1: Try cached last known location (instant)
+        val cachedLocation = getCachedLocation(locationManager)
+        if (cachedLocation != null) {
+            return Result.success(cachedLocation)
         }
         
-        if (location != null) {
-            Result.success(LocationCoordinates(location.latitude, location.longitude))
-        } else {
-            // No cached location available - return null (not an error)
-            Result.success(null)
-        }
+        // Stage 2: Request fresh location with 10s timeout
+        val freshLocation = requestFreshLocation(locationManager, timeout = 10_000L)
+        Result.success(freshLocation) // null if timeout/failure
+        
     } catch (e: SecurityException) {
         Result.failure(e) // Permission not granted
     } catch (e: Exception) {
         Result.failure(e)
+    }
+}
+
+private fun getCachedLocation(locationManager: LocationManager): LocationCoordinates? {
+    // Try GPS provider first (most accurate)
+    var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+    
+    // Fallback to Network provider if GPS unavailable
+    if (location == null) {
+        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+    }
+    
+    return location?.let { LocationCoordinates(it.latitude, it.longitude) }
+}
+
+private suspend fun requestFreshLocation(
+    locationManager: LocationManager, 
+    timeout: Long
+): LocationCoordinates? = withTimeoutOrNull(timeout) {
+    suspendCancellableCoroutine { continuation ->
+        val listener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                locationManager.removeUpdates(this)
+                continuation.resume(LocationCoordinates(location.latitude, location.longitude))
+            }
+            override fun onProviderDisabled(provider: String) {}
+            override fun onProviderEnabled(provider: String) {}
+        }
+        
+        // Try GPS first, then Network
+        val provider = if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            LocationManager.GPS_PROVIDER
+        } else {
+            LocationManager.NETWORK_PROVIDER
+        }
+        
+        locationManager.requestSingleUpdate(provider, listener, Looper.getMainLooper())
+        
+        continuation.invokeOnCancellation {
+            locationManager.removeUpdates(listener)
+        }
     }
 }
 ```

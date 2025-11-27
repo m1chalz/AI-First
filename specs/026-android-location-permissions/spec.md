@@ -12,7 +12,8 @@
 - Q: When user has granted permissions but location fetch fails (timeout, GPS unavailable, error), how should app behave? → A: App queries server without coordinates and displays animal listings (fallback mode)
 - Q: When permission status changes during an active server query, how should app behave? → A: Complete current query and ignore permission change (very unlikely scenario)
 - Q: When user backgrounds app while custom permission rationale is displayed, how should app behave? → A: Follow Android system default behavior (no special handling required)
-- Q: What timeout duration should be used before falling back to no-location mode? → A: 10 seconds
+- Q: What timeout duration should be used before falling back to no-location mode? → A: 10 seconds (applies only when requesting fresh location update; cached location returns immediately)
+- Q: How should location fetching work? → A: Two-stage approach: (1) Try cached last known location first (instant), (2) If unavailable or too old, request single fresh location update with 10s timeout, (3) If both fail, fallback to no-location mode
 - Q: What should the user see while location is being fetched? → A: Loading indicator while fetching location, then show animal listings
 - Q: What messaging approach should the rationale dialogs use? → A: Benefit-focused ("See pets available near you for easier adoption")
 - Q: Should permission events be tracked for analytics? → A: No tracking - privacy-first approach
@@ -108,7 +109,7 @@ Users who change location permissions while the app is open (e.g., returning fro
 ### Edge Cases
 
 - What happens when location services are disabled system-wide (airplane mode, Location in Settings off)? → App queries server without coordinates and displays animal listings (fallback mode)
-- How does system handle location fetch timeout or failure after permission is granted? → App queries server without coordinates and displays animal listings (fallback mode)
+- How does system handle location fetch timeout or failure after permission is granted? → Two-stage approach: (1) Try cached last known location first, (2) If unavailable, request fresh location with 10s timeout. If both fail, query server without coordinates (fallback mode)
 - How does app behave when permission changes occur during an active server query? → Complete current query and ignore permission change (very unlikely scenario)
 - What happens if user backgrounds app while custom permission rationale is displayed? → Follow Android system default behavior (no special handling required)
 - How does system handle location fetch when GPS signal is weak or unavailable? → App queries server without coordinates and displays animal listings (fallback mode)
@@ -135,7 +136,7 @@ Users who change location permissions while the app is open (e.g., returning fro
 - **FR-008**: System MUST query server for animal listings regardless of location permission status
 - **FR-009**: System MUST include location coordinates in server query when location is successfully obtained
 - **FR-010**: System MUST query server without location coordinates when location is unavailable or unauthorized
-- **FR-011**: System MUST query server without location coordinates and display animal listings when location fetch fails after permission is granted (timeout after 10 seconds, GPS unavailable, or error)
+- **FR-011**: System MUST use two-stage location fetching: (1) First attempt cached last known location (instant return), (2) If unavailable or too old, request single fresh location update with 10-second timeout. If both stages fail (GPS unavailable, timeout, or error), query server without location coordinates and display animal listings
 - **FR-012**: System MUST handle permission result callback after user responds to system permission dialog
 - **FR-013**: System MUST automatically fetch location and refresh animal listings when permission is granted via Settings while app is in foreground
 - **FR-014**: System MUST display animal listings on startup screen after server query completes

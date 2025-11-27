@@ -8,35 +8,52 @@
 
 ### 1. Android Location Services API Selection
 
-**Task**: Determine best location API for getting last known location in Android Compose app.
+**Task**: Determine best location API for getting location in Android Compose app.
 
-**Decision**: Use **LocationManager** (native Android API)
+**Decision**: Use **LocationManager** (native Android API) with two-stage fetching approach
 
 **Rationale**:
 - LocationManager is part of Android framework (no external dependencies)
-- `getLastKnownLocation()` is synchronous and immediate (no async complexity)
-- Perfect for "last known location" use case (cached location, no active tracking needed)
-- Simpler implementation for one-time location fetch on startup
+- `getLastKnownLocation()` is synchronous and immediate (no async complexity for cached location)
+- `requestSingleUpdate()` provides fresh location when cached is unavailable
 - Works on all Android devices (no Google Play Services requirement)
 - Supports both fine and coarse location permissions
-- For last known location, "fused" optimization provides minimal benefit (location is already cached)
 - Aligns with dependency minimization principle (no Google Play Services dependency)
 
 **Alternatives Considered**:
 - **FusedLocationProviderClient**: Google Play Services API with automatic provider optimization
 - **Rejected because**: 
   - Adds Google Play Services dependency (not available on all devices)
-  - Overkill for last known location use case (fused optimization benefits active tracking, not cached location)
-  - Async Task-based API adds complexity for simple cached location retrieval
-  - Last known location doesn't benefit from fused provider selection (it's already cached)
+  - LocationManager provides all needed functionality for two-stage approach
+  - FusedLocationProvider adds complexity without significant benefit for single location fetch
+
+**Two-Stage Location Fetching Implementation**:
+
+**Stage 1: Cached Last Known Location (Instant)**
+- Use `Context.getSystemService(Context.LOCATION_SERVICE)` to obtain LocationManager
+- Try `getLastKnownLocation(LocationManager.GPS_PROVIDER)` first (most accurate)
+- Fallback to `getLastKnownLocation(LocationManager.NETWORK_PROVIDER)` if GPS returns null
+- Check if cached location is not too old (optional: configurable staleness threshold)
+- If valid cached location found → use immediately, skip Stage 2
+
+**Stage 2: Fresh Location Update (10s timeout)**
+- If Stage 1 returns null or location is too old
+- Use `requestSingleUpdate()` with LocationListener callback
+- Apply 10-second timeout using coroutine `withTimeout` or Handler
+- Try GPS provider first, Network provider as fallback
+- Cancel request after receiving location or on timeout
+
+**Fallback**
+- If both stages fail → proceed without location coordinates
+- Query server with no location filtering (all animals returned)
 
 **Implementation Notes**:
-- Use `Context.getSystemService(Context.LOCATION_SERVICE)` to obtain LocationManager
-- Use `getLastKnownLocation(LocationManager.GPS_PROVIDER)` first (most accurate)
-- Fallback to `getLastKnownLocation(LocationManager.NETWORK_PROVIDER)` if GPS returns null
-- Handle null case (no cached location) → fallback to no-location mode immediately
-- No timeout needed for cached location (returns immediately or null)
-- Check location permissions before calling `getLastKnownLocation()`
+- Check location permissions before any location API calls
+- Use Kotlin Coroutines for async handling of Stage 2
+- Stage 1 is synchronous (instant return)
+- Stage 2 is asynchronous with timeout
+- LocationListener receives location updates in Stage 2
+- Cancel pending location request on timeout to free resources
 
 ---
 

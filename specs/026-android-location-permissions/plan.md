@@ -102,7 +102,7 @@ Implement Android location permissions handling on the startup screen to enable 
 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
   - Web: N/A (Android-only feature)
-  - Mobile: Appium tests in `/e2e-tests/mobile/specs/android-location-permissions.feature` (Java + Cucumber) ✓
+  - Mobile: Appium tests in `/e2e-tests/java/src/test/resources/features/mobile/android-location-permissions.feature` (Java + Cucumber) ✓
   - Tests written in Java (Cucumber Gherkin scenarios) ✓
   - Screen Object Model used ✓
   - Each user story has at least one E2E test ✓
@@ -120,8 +120,8 @@ Implement Android location permissions handling on the startup screen to enable 
   - Android: `testTag` modifier on all interactive composables ✓
   - iOS: N/A (Android-only feature)
   - Web: N/A (Android-only feature)
-  - Naming convention: `{screen}.{element}.{action}` (e.g., `startup.permissionDialog.continueButton.click`) ✓
-  - List items use stable IDs (e.g., `startup.animalList.item.${id}`) ✓
+  - Naming convention: `{screen}.{element}.{action}` (e.g., `animalList.rationaleDialog.continueButton.click`) ✓
+  - List items use stable IDs (e.g., `animalList.item.${id}`) ✓
   - Violation justification: _N/A - compliant_
 
 - [x] **Public API Documentation**: Plan ensures public APIs have documentation when needed
@@ -185,66 +185,72 @@ specs/026-android-location-permissions/
 composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 ├── domain/
 │   ├── models/
-│   │   └── Location.kt                    # Location data class (latitude, longitude)
+│   │   ├── LocationCoordinates.kt        # Device location (latitude, longitude)
+│   │   ├── PermissionStatus.kt           # Sealed class for permission states
+│   │   └── RationaleDialogType.kt        # Sealed class for rationale dialog types
 │   ├── repositories/
 │   │   └── LocationRepository.kt         # Interface for location operations
 │   └── usecases/
 │       ├── CheckLocationPermissionUseCase.kt
-│       ├── RequestLocationPermissionUseCase.kt
-│       └── GetLastKnownLocationUseCase.kt
+│       └── GetCurrentLocationUseCase.kt  # Two-stage: cached + fresh with 10s timeout
 ├── data/
 │   └── repositories/
 │       └── LocationRepositoryImpl.kt      # Implementation using LocationManager
 ├── features/
-│   └── startup/
+│   └── animallist/
 │       ├── ui/
-│       │   ├── StartupScreen.kt          # State host composable
-│       │   └── StartupContent.kt          # Stateless composable with previews
+│       │   ├── AnimalListScreen.kt       # State host composable
+│       │   ├── AnimalListContent.kt      # Stateless composable with previews
+│       │   └── components/
+│       │       ├── InformationalRationaleDialog.kt
+│       │       └── EducationalRationaleDialog.kt
 │       └── presentation/
 │           ├── mvi/
-│           │   ├── StartupUiState.kt     # Immutable data class with default companion
-│           │   ├── StartupIntent.kt      # Sealed class for user intents
-│           │   ├── StartupEffect.kt       # Sealed class for one-off events (navigation, dialogs)
-│           │   └── StartupReducer.kt      # Pure reducer function
+│           │   ├── AnimalListUiState.kt  # Immutable data class with default companion
+│           │   ├── AnimalListIntent.kt   # Sealed class for user intents
+│           │   ├── AnimalListEffect.kt   # Sealed class for one-off events (navigation, dialogs)
+│           │   └── AnimalListReducer.kt  # Pure reducer function
 │           └── viewmodels/
-│               └── StartupViewModel.kt    # MVI ViewModel with StateFlow and SharedFlow
+│               └── AnimalListViewModel.kt # MVI ViewModel with StateFlow and SharedFlow
 ├── di/
-│   └── locationModule.kt                  # Koin module for location dependencies
+│   └── LocationModule.kt                  # Koin module for location dependencies
 └── navigation/
-    └── StartupNavigation.kt               # Navigation effects handler
+    └── AnimalListNavigation.kt            # Navigation effects handler
 
 composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/
 ├── domain/
 │   └── usecases/
 │       ├── CheckLocationPermissionUseCaseTest.kt
-│       ├── RequestLocationPermissionUseCaseTest.kt
-│       └── GetLastKnownLocationUseCaseTest.kt
+│       └── GetCurrentLocationUseCaseTest.kt
 ├── data/
 │   └── repositories/
 │       └── LocationRepositoryImplTest.kt
+├── fakes/
+│   └── FakeLocationRepository.kt          # Test double for LocationRepository
 └── features/
-    └── startup/
+    └── animallist/
         └── presentation/
             ├── mvi/
-            │   └── StartupReducerTest.kt  # Pure function tests
+            │   └── AnimalListReducerTest.kt  # Pure function tests
             └── viewmodels/
-                └── StartupViewModelTest.kt # ViewModel tests with Turbine
+                └── AnimalListViewModelTest.kt # ViewModel tests with Turbine
 
-e2e-tests/
+e2e-tests/java/
 ├── src/
-│   ├── test/
-│   │   ├── java/.../screens/
-│   │   │   └── StartupScreen.java         # Screen Object Model with @AndroidFindBy
-│   │   ├── java/.../steps-mobile/
-│   │   │   └── LocationPermissionSteps.java
-│   │   └── resources/
-│   │       └── features/
-│   │           └── mobile/
-│   │               └── android-location-permissions.feature  # Cucumber Gherkin scenarios
+│   └── test/
+│       ├── java/com/intive/aifirst/petspot/e2e/
+│       │   ├── screens/
+│       │   │   └── AnimalListScreen.java      # Screen Object Model with @AndroidFindBy
+│       │   └── steps/mobile/
+│       │       └── LocationPermissionSteps.java
+│       └── resources/
+│           └── features/
+│               └── mobile/
+│                   └── android-location-permissions.feature  # Cucumber Gherkin scenarios
 └── pom.xml
 ```
 
-**Structure Decision**: This is an Android-only feature implemented in the `/composeApp` module following the MVI architecture pattern. The feature adds location permission handling to the existing startup screen. Domain models, use cases, and repository interfaces are added to support location operations. The startup screen ViewModel is extended to handle permission states and location fetching. All code follows Android MVI architecture with StateFlow, sealed intents, and pure reducers. E2E tests are added to the unified `/e2e-tests` project using Java + Cucumber for mobile testing.
+**Structure Decision**: This is an Android-only feature implemented in the `/composeApp` module following the MVI architecture pattern. The feature adds location permission handling to the existing AnimalList screen (the app's startup screen). Domain models, use cases, and repository interfaces are added to support location operations. The AnimalList ViewModel is extended to handle permission states and location fetching. All code follows Android MVI architecture with StateFlow, sealed intents, and pure reducers. E2E tests are added to the unified `/e2e-tests` project using Java + Cucumber for mobile testing.
 
 ## Complexity Tracking
 
