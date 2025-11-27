@@ -81,14 +81,14 @@ Implement location permission handling on iOS startup screen. App detects curren
 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
   - Web: N/A (iOS-only feature)
-  - Mobile: Appium tests in `/e2e-tests/src/test/resources/features/mobile/ios-location-permissions.feature`
-    - Screen Object Model in `/e2e-tests/src/test/java/.../screens/StartupScreen.java`
+  - Mobile: Appium + Cucumber (Java) tests in `/e2e-tests/src/test/resources/features/mobile/ios-location-permissions.feature`
+    - Screen Object Model in `/e2e-tests/src/test/java/.../screens/StartupScreen.java` (dual annotations for iOS/Android compatibility)
     - Step definitions in `/e2e-tests/src/test/java/.../steps-mobile/LocationPermissionSteps.java`
     - Scenarios cover: first-time request, granted permissions, denied permissions, Settings navigation
-    - Run: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@ios"`
+    - Run command: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@ios"` (from repo root)
     - Report: `/e2e-tests/target/cucumber-reports/ios/index.html`
-  - Each user story (P1-P4) has corresponding E2E test scenario
-  - Violation justification: _Compliant - E2E tests cover all permission flows and user scenarios_
+  - Each user story (P1-P4) has corresponding E2E test scenario (Gherkin format with @ios tag)
+  - Violation justification: _Compliant - E2E tests cover all permission flows and user scenarios using Java/Maven/Cucumber per constitution v2.3.0_
 
 - [x] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
   - Android: N/A (iOS-only feature)
