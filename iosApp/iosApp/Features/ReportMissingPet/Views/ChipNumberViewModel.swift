@@ -1,9 +1,12 @@
 import Foundation
 
-/// ViewModel for Chip Number screen (Step 1/4).
-/// Minimal implementation - only navigation callbacks (no form logic yet).
+/// ViewModel for Chip Number screen (Step 1/4) handling formatting and persistence.
 @MainActor
 class ChipNumberViewModel: ObservableObject {
+    // MARK: - Published State
+    
+    @Published var chipNumber: String = ""
+    
     // MARK: - Dependencies
     
     private let flowState: ReportMissingPetFlowState
@@ -17,13 +20,27 @@ class ChipNumberViewModel: ObservableObject {
     
     init(flowState: ReportMissingPetFlowState) {
         self.flowState = flowState
+        
+        if let savedDigits = flowState.chipNumber {
+            chipNumber = MicrochipNumberFormatter.format(savedDigits)
+        }
+    }
+    
+    // MARK: - Formatting
+    
+    /// Formats provided input and updates the published chip number.
+    func formatChipNumber(_ input: String) {
+        let formatted = MicrochipNumberFormatter.format(input)
+        guard formatted != chipNumber else { return }
+        chipNumber = formatted
     }
     
     // MARK: - Actions
     
-    /// Navigate to next screen (Photo).
-    /// TODO: Save chip number to flowState in future implementation.
+    /// Navigate to next screen (Photo) and persist digits to flow state.
     func handleNext() {
+        let digits = MicrochipNumberFormatter.extractDigits(chipNumber)
+        flowState.chipNumber = digits.isEmpty ? nil : digits
         onNext?()
     }
     

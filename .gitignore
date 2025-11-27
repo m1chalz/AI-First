@@ -20,6 +20,10 @@ node_modules/
 dist/
 *.log
 .env*
+.build/
+DerivedData/
+*.swiftpm/
+Packages/
 *.db
 coverage/
 

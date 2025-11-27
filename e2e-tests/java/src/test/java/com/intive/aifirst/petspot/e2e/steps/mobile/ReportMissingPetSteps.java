@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.e2e.steps.mobile;
 
+import com.intive.aifirst.petspot.e2e.screens.MicrochipNumberScreen;
 import com.intive.aifirst.petspot.e2e.screens.ReportMissingPetScreen;
 import com.intive.aifirst.petspot.e2e.utils.AppiumDriverManager;
 import io.appium.java_client.AppiumDriver;
@@ -39,6 +40,7 @@ public class ReportMissingPetSteps {
     
     private AppiumDriver driver;
     private ReportMissingPetScreen reportMissingPetScreen;
+    private MicrochipNumberScreen microchipNumberScreen;
     private String currentScreen = "animal list"; // Track current screen for assertions
     
     // ========================================
@@ -57,6 +59,7 @@ public class ReportMissingPetSteps {
     public void initializeDriver(AppiumDriver driver) {
         this.driver = driver;
         this.reportMissingPetScreen = new ReportMissingPetScreen(driver);
+        this.microchipNumberScreen = new MicrochipNumberScreen(driver);
     }
     
     // ========================================
@@ -87,6 +90,7 @@ public class ReportMissingPetSteps {
     public void tapReportMissingButton() {
         reportMissingPetScreen.tapReportMissingButton();
         currentScreen = "chip number"; // Flow opens to step 1
+        assertTrue(microchipNumberScreen.isDisplayed(), "Microchip number screen should be visible after opening flow");
     }
     
     /**
@@ -98,7 +102,7 @@ public class ReportMissingPetSteps {
         // Tap appropriate continue button based on current screen
         switch (currentScreen) {
             case "chip number":
-                reportMissingPetScreen.tapContinueOnChipNumberScreen();
+                microchipNumberScreen.tapContinueButton();
                 currentScreen = "photo";
                 break;
             case "photo":
@@ -128,7 +132,7 @@ public class ReportMissingPetSteps {
     public void tapBackButton() {
         // Use dismiss button on first screen, back button on others
         if (currentScreen.equals("chip number")) {
-            reportMissingPetScreen.tapDismissButton();
+            microchipNumberScreen.tapBackButton();
         } else {
             reportMissingPetScreen.tapBackButton();
         }
@@ -172,6 +176,18 @@ public class ReportMissingPetSteps {
     public void navigateToSummary(int times) {
         navigateToStep("summary", times);
     }
+
+    @When("I type \"{}\" into the microchip number field")
+    public void typeIntoMicrochipField(String digits) {
+        assertEquals("chip number", currentScreen, "Microchip field is only available on chip number screen");
+        microchipNumberScreen.typeMicrochipNumber(digits);
+    }
+
+    @When("I clear the microchip number field")
+    public void clearMicrochipField() {
+        assertEquals("chip number", currentScreen, "Microchip field is only available on chip number screen");
+        microchipNumberScreen.clearMicrochipNumber();
+    }
     
     /**
      * Step: Verify progress indicator displays expected value.
@@ -193,10 +209,10 @@ public class ReportMissingPetSteps {
      */
     @Then("the \"{}\" screen should be displayed")
     public void screenShouldBeDisplayed(String screenName) {
-        currentScreen = screenName.toLowerCase().replace(" ", "_");
+        currentScreen = screenName.toLowerCase();
         
         boolean isDisplayed = switch (screenName.toLowerCase()) {
-            case "chip number" -> reportMissingPetScreen.isChipNumberScreenDisplayed();
+            case "chip number" -> microchipNumberScreen.isDisplayed();
             case "photo" -> reportMissingPetScreen.isPhotoScreenDisplayed();
             case "description" -> reportMissingPetScreen.isDescriptionScreenDisplayed();
             case "contact details" -> reportMissingPetScreen.isContactDetailsScreenDisplayed();
@@ -262,10 +278,7 @@ public class ReportMissingPetSteps {
     public void continueShouldBeDisplayedAndTappable() {
         // Based on current screen, verify appropriate continue button is visible
         boolean isDisplayed = switch (currentScreen.toLowerCase()) {
-            case "chip number" -> {
-                // Would verify chipNumberContinueButton is displayed
-                yield true; // Placeholder for actual implementation
-            }
+            case "chip number" -> microchipNumberScreen.isContinueButtonDisplayed();
             case "photo" -> {
                 // Would verify photoContinueButton is displayed
                 yield true;
@@ -291,6 +304,11 @@ public class ReportMissingPetSteps {
      */
     @Then("the back button should be displayed and tappable")
     public void backButtonShouldBeDisplayedAndTappable() {
+        if (currentScreen.equals("chip number")) {
+            assertTrue(microchipNumberScreen.isBackButtonDisplayed(),
+                    "Back button should be displayed on microchip number screen");
+            return;
+        }
         assertTrue(reportMissingPetScreen.isBackButtonDisplayed(),
                 "Back button should be displayed and tappable on " + currentScreen + " screen");
     }
@@ -304,6 +322,18 @@ public class ReportMissingPetSteps {
         assertTrue(reportMissingPetScreen.isReportMissingButtonDisplayed(),
                 "Flow should be exited and we should be back on animal list screen");
         currentScreen = "animal list";
+    }
+
+    @Then("the microchip number field should display \"{}\"")
+    public void microchipFieldShouldDisplay(String expectedValue) {
+        assertEquals(expectedValue, microchipNumberScreen.getMicrochipValue(),
+                "Microchip field should display formatted value");
+    }
+
+    @Then("the microchip number field should be empty")
+    public void microchipFieldShouldBeEmpty() {
+        assertEquals("", microchipNumberScreen.getMicrochipValue(),
+                "Microchip field should be empty");
     }
 }
 

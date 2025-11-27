@@ -17,6 +17,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - N/A for this feature (no new persistence or data access changes) (013-animal-list-screen)
 - Kotlin (JVM 17 target) (010-pet-details-screen)
 - N/A (UI-only feature, data fetched from repository) (010-pet-details-screen)
+- Swift 5.9+ (iOS 15+ deployment target) + SwiftUI (UI layer), UIKit (coordinators, navigation), Foundation (data types), SwiftGen (localization - mandatory) (019-ios-chip-number-screen)
+- In-memory flow state (ReportMissingPetFlowState class) - owned by coordinator, lifetime = flow duration (019-ios-chip-number-screen)
 
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
@@ -43,6 +45,7 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 
 ## Recent Changes
 - 027-web-pet-details-screen: Added TypeScript 5.0+ (ES2020 target), React 18.2.0 + React, React DOM, React Portal (built-in), CSS Modules
+- 019-ios-chip-number-screen: Added Swift 5.9+ (iOS 15+ deployment target) + SwiftUI (UI layer), UIKit (coordinators, navigation), Foundation (data types), SwiftGen (localization - mandatory)
 - 017-ios-missing-pet-flow: Added Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation
 - 015-ios-location-permissions: Added Swift 5.9+ (Xcode 15+) + CoreLocation (iOS native framework for location services), SwiftUI, Combine
 - 016-e2e-java-migration: Added Java 21 (LTS)

@@ -299,7 +299,7 @@ private extension ReportMissingPetCoordinator {
         hostingController.navigationItem.leftBarButtonItem = dismissBarButtonItem
         
         // Test identifier for E2E tests
-        dismissButton.accessibilityIdentifier = "reportMissingPet.dismissButton"
+        dismissButton.accessibilityIdentifier = "missingPet.microchip.backButton"
     }
 }
 

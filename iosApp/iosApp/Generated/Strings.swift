@@ -108,6 +108,22 @@ public enum L10n {
       }
     }
   }
+  public enum MicrochipNumber {
+    /// Continue
+    public static let continueButton = L10n.tr("Localizable", "microchipNumber.continueButton", fallback: "Continue")
+    /// Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.
+    public static let description = L10n.tr("Localizable", "microchipNumber.description", fallback: "Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.")
+    /// Microchip number (optional)
+    public static let fieldLabel = L10n.tr("Localizable", "microchipNumber.fieldLabel", fallback: "Microchip number (optional)")
+    /// 00000-00000-00000
+    public static let fieldPlaceholder = L10n.tr("Localizable", "microchipNumber.fieldPlaceholder", fallback: "00000-00000-00000")
+    /// Microchip number
+    public static let heading = L10n.tr("Localizable", "microchipNumber.heading", fallback: "Microchip number")
+    /// 1/4
+    public static let progress = L10n.tr("Localizable", "microchipNumber.progress", fallback: "1/4")
+    /// MARK: - Microchip Number Screen
+    public static let title = L10n.tr("Localizable", "microchipNumber.title", fallback: "Microchip number")
+  }
   public enum PetDetails {
     public enum Button {
       /// Remove Report

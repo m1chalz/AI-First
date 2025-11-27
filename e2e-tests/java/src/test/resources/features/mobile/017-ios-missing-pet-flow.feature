@@ -2,7 +2,7 @@
 # This feature tests the complete missing pet report flow on iOS platform
 # Uses Appium with UIKit/SwiftUI navigation and accessibility identifiers
 
-@mobile @ios
+@mobile @ios @missing-pet
 Feature: Missing Pet Report Flow (iOS)
   As a pet owner
   I want to report my missing pet through a structured multi-step flow
@@ -47,6 +47,31 @@ Feature: Missing Pet Report Flow (iOS)
     And the progress indicator should not be visible
 
   @ios @us1
+  Scenario: Microchip input formats digits automatically
+    When I tap the "report missing animal" button on animal list
+    And I type "123456789012345" into the microchip number field
+    Then the microchip number field should display "12345-67890-12345"
+
+  @ios @us2
+  Scenario: Continue with empty microchip number
+    When I tap the "report missing animal" button on animal list
+    And I clear the microchip number field
+    Then the microchip number field should be empty
+    And I tap the "continue" button
+    Then the "photo" screen should be displayed
+    And the progress indicator should show "2/4"
+
+  @ios @us4
+  Scenario: Microchip number persists when returning from photo screen
+    When I tap the "report missing animal" button on animal list
+    And I type "123456" into the microchip number field
+    And I tap the "continue" button
+    Then the "photo" screen should be displayed
+    When I tap the back button
+    Then the "chip number" screen should be displayed
+    And the microchip number field should display "12345-6"
+
+  @ios @us1
   Scenario: Progress Indicator Updates Correctly During Forward Navigation
     When I tap the "report missing animal" button on animal list
     And I verify progress indicator displays "1/4" on chip number screen
@@ -61,7 +86,7 @@ Feature: Missing Pet Report Flow (iOS)
   @ios @us1
   Scenario: All Interactive Elements Have Correct Accessibility Identifiers
     When I tap the "report missing animal" button on animal list
-    Then the screen should have accessibility identifier "chipNumber.continueButton" for continue button
+    Then the screen should have accessibility identifier "missingPet.microchip.continueButton" for continue button
     When I tap the "continue" button
     Then the screen should have accessibility identifier "photo.continueButton" for continue button
     When I tap the "continue" button

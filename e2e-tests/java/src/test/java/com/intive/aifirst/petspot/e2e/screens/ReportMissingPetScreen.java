@@ -60,15 +60,6 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Custom dismiss button (X icon) on first screen.
-     * Dismisses the modal flow and returns to animal list.
-     * Only present on chip number screen (step 1/4).
-     */
-    @AndroidFindBy(accessibility = "reportMissingPet.dismissButton")
-    @iOSXCUITFindBy(id = "reportMissingPet.dismissButton")
-    private WebElement dismissButton;
-    
-    /**
      * Custom back button (chevron-left icon).
      * Present on screens 2-5 of the report flow (photo, description, contact details, summary).
      * Not present on step 1 (uses dismissButton instead).
@@ -89,22 +80,6 @@ public class ReportMissingPetScreen {
     // ========================================
     // STEP 1: CHIP NUMBER SCREEN (1/4)
     // ========================================
-    
-    /**
-     * Continue button on chip number screen.
-     * Navigates to photo screen (step 2/4).
-     */
-    @AndroidFindBy(accessibility = "chipNumber.continueButton")
-    @iOSXCUITFindBy(id = "chipNumber.continueButton")
-    private WebElement chipNumberContinueButton;
-    
-    /**
-     * Placeholder text for chip number screen.
-     * Currently "Chip Number Screen" - form fields added in future implementation.
-     */
-    @AndroidFindBy(xpath = "//XCUIElementTypeStaticText[@label='Chip Number Screen']")
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@label='Chip Number Screen']")
-    private WebElement chipNumberScreenTitle;
     
     // ========================================
     // STEP 2: PHOTO SCREEN (2/4)
@@ -224,26 +199,6 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Tap the dismiss button (X icon) on first screen.
-     * Dismisses modal and returns to animal list.
-     */
-    public void tapDismissButton() {
-        waitForElement(dismissButton);
-        dismissButton.click();
-    }
-    
-    /**
-     * Verify dismiss button is displayed and tappable.
-     */
-    public boolean isDismissButtonDisplayed() {
-        try {
-            return dismissButton.isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
-    /**
      * Tap the back button (chevron-left icon).
      * On steps 2-5: navigates to previous screen
      * Not available on step 1 (uses dismiss button instead)
@@ -293,15 +248,6 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Tap continue button on chip number screen (step 1).
-     * Navigates to photo screen (step 2/4).
-     */
-    public void tapContinueOnChipNumberScreen() {
-        waitForElement(chipNumberContinueButton);
-        chipNumberContinueButton.click();
-    }
-    
-    /**
      * Tap continue button on photo screen (step 2).
      * Navigates to description screen (step 3/4).
      */
@@ -340,17 +286,6 @@ public class ReportMissingPetScreen {
     // ========================================
     // SCREEN VERIFICATION METHODS
     // ========================================
-    
-    /**
-     * Verify chip number screen is displayed.
-     */
-    public boolean isChipNumberScreenDisplayed() {
-        try {
-            return chipNumberScreenTitle.isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
     
     /**
      * Verify photo screen is displayed.
