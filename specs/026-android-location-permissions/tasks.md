@@ -50,19 +50,19 @@
 
 ### Domain Models
 
-- [ ] T004 [P] Create `LocationCoordinates` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/LocationCoordinates.kt`
-- [ ] T005 [P] Create `PermissionStatus` sealed class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/PermissionStatus.kt` (NotRequested, Requesting, Granted, Denied states)
-- [ ] T006 [P] Create `RationaleDialogType` sealed class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/RationaleDialogType.kt` (Educational, Informational types)
+- [X] T004 [P] Create `LocationCoordinates` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/LocationCoordinates.kt`
+- [X] T005 [P] Create `PermissionStatus` sealed class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/PermissionStatus.kt` (NotRequested, Requesting, Granted, Denied states)
+- [X] T006 [P] Create `RationaleDialogType` sealed class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/models/RationaleDialogType.kt` (Educational, Informational types)
 
 ### Repository Interfaces
 
-- [ ] T007 Create `LocationRepository` interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/repositories/LocationRepository.kt`
+- [X] T007 Create `LocationRepository` interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/repositories/LocationRepository.kt`
 
 ### E2E Test Infrastructure
 
-- [ ] T008 Create AnimalListScreen Screen Object in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/AnimalListScreen.java` (with @AndroidFindBy for permission dialog elements)
-- [ ] T009 [P] Create LocationPermissionSteps step definitions file in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LocationPermissionSteps.java`
-- [ ] T010 [P] Create E2E feature file skeleton in `/e2e-tests/java/src/test/resources/features/mobile/android-location-permissions.feature`
+- [X] T008 Create AnimalListScreen Screen Object in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/AnimalListScreen.java` (with @AndroidFindBy for permission dialog elements)
+- [X] T009 [P] Create LocationPermissionSteps step definitions file in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LocationPermissionSteps.java`
+- [X] T010 [P] Create E2E feature file skeleton in `/e2e-tests/java/src/test/resources/features/mobile/android-location-permissions.feature`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
