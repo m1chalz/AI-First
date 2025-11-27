@@ -1,5 +1,5 @@
 import Foundation
-@testable import iosApp
+@testable import PetSpot
 
 /**
  * Fake implementation of LocationServiceProtocol for unit testing.

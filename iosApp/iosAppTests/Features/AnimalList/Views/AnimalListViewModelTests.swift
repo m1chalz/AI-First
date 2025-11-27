@@ -20,7 +20,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 16,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
 
         // When - loadAnimals is called
         await viewModel.loadAnimals()
@@ -41,7 +42,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 20,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
 
         // When - loadAnimals is called
         await viewModel.loadAnimals()
@@ -89,7 +91,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 0,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
         
         // Manually set state to empty (before loadAnimals runs)
         viewModel.cardViewModels = []
@@ -112,7 +115,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 16,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
         
         // When - card ViewModels are loaded
         await viewModel.loadAnimals()
@@ -132,7 +136,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 0,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
         
         var capturedAnimalId: String?
         viewModel.onAnimalSelected = { animalId in
@@ -157,7 +162,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 0,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
         
         var callbackInvoked = false
         viewModel.onReportMissing = {
@@ -183,7 +189,8 @@ final class AnimalListViewModelTests: XCTestCase {
             animalCount: 0,
             shouldFail: false
         )
-        let viewModel = AnimalListViewModel(repository: fakeRepository)
+        let fakeLocationService = FakeLocationService()
+        let viewModel = AnimalListViewModel(repository: fakeRepository, locationService: fakeLocationService)
         
         var callbackInvoked = false
         viewModel.onReportFound = {

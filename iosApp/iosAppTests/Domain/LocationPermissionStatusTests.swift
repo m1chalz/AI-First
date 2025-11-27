@@ -1,6 +1,6 @@
 import XCTest
 import CoreLocation
-@testable import iosApp
+@testable import PetSpot
 
 /**
  * Unit tests for LocationPermissionStatus domain model.

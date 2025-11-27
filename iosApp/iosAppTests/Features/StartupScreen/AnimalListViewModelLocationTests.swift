@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /**
  * Unit tests for AnimalListViewModel location permission and fetching logic.
@@ -38,7 +38,20 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnimals = [Animal(
+            id: "test",
+            name: "Test",
+            photoUrl: "test",
+            location: Location(city: "Test", radiusKm: 1),
+            species: .dog,
+            breed: "Test",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "2025-11-20",
+            description: "Test",
+            email: "test@example.com",
+            phone: nil
+        )]
         
         viewModel = AnimalListViewModel(
             repository: fakeRepository,
@@ -60,7 +73,20 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(expectedLocation)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnimals = [Animal(
+            id: "test",
+            name: "Test",
+            photoUrl: "test",
+            location: Location(city: "Test", radiusKm: 1),
+            species: .dog,
+            breed: "Test",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "2025-11-20",
+            description: "Test",
+            email: "test@example.com",
+            phone: nil
+        )]
         
         viewModel = AnimalListViewModel(
             repository: fakeRepository,
@@ -73,8 +99,12 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Then
         let passedLocation = fakeRepository.lastLocationParameter
         XCTAssertNotNil(passedLocation, "Should pass location to repository")
-        XCTAssertEqual(passedLocation?.latitude, expectedLocation.latitude, accuracy: 0.0001)
-        XCTAssertEqual(passedLocation?.longitude, expectedLocation.longitude, accuracy: 0.0001)
+        guard let location = passedLocation else {
+            XCTFail("Location should not be nil")
+            return
+        }
+        XCTAssertEqual(location.latitude, expectedLocation.latitude, accuracy: 0.0001)
+        XCTAssertEqual(location.longitude, expectedLocation.longitude, accuracy: 0.0001)
     }
     
     // MARK: - T021: loadAnimals queries without coordinates when location fetch fails
@@ -83,7 +113,20 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(nil) // Simulate location fetch failure
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnimals = [Animal(
+            id: "test",
+            name: "Test",
+            photoUrl: "test",
+            location: Location(city: "Test", radiusKm: 1),
+            species: .dog,
+            breed: "Test",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "2025-11-20",
+            description: "Test",
+            email: "test@example.com",
+            phone: nil
+        )]
         
         viewModel = AnimalListViewModel(
             repository: fakeRepository,
@@ -102,7 +145,20 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnimals = [Animal(
+            id: "test",
+            name: "Test",
+            photoUrl: "test",
+            location: Location(city: "Test", radiusKm: 1),
+            species: .dog,
+            breed: "Test",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "2025-11-20",
+            description: "Test",
+            email: "test@example.com",
+            phone: nil
+        )]
         
         viewModel = AnimalListViewModel(
             repository: fakeRepository,
@@ -122,7 +178,20 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await setLocationServiceLocation(nil)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnimals = [Animal(
+            id: "test",
+            name: "Test",
+            photoUrl: "test",
+            location: Location(city: "Test", radiusKm: 1),
+            species: .dog,
+            breed: "Test",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "2025-11-20",
+            description: "Test",
+            email: "test@example.com",
+            phone: nil
+        )]
         
         viewModel = AnimalListViewModel(
             repository: fakeRepository,
@@ -144,32 +213,6 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     private func setLocationServiceLocation(_ location: UserLocation?) async {
         await fakeLocationService.setLocation(location)
-    }
-}
-
-// MARK: - Fake Animal Repository
-
-/**
- * Fake repository for testing AnimalListViewModel location logic.
- * Tracks location parameter passed to getAnimals().
- */
-class FakeAnimalRepository: AnimalRepositoryProtocol {
-    var stubbedAnimals: [Animal] = []
-    var lastLocationParameter: UserLocation?
-    var shouldThrowError = false
-    
-    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
-        lastLocationParameter = location
-        
-        if shouldThrowError {
-            throw NSError(domain: "FakeRepository", code: -1, userInfo: nil)
-        }
-        
-        return stubbedAnimals
-    }
-    
-    func getPetDetails(id: String) async throws -> PetDetails {
-        throw NSError(domain: "FakeRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Not implemented"])
     }
 }
 

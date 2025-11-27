@@ -8,48 +8,14 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
-    /// Fake repository for testing
-    private class FakeAnimalRepository: AnimalRepositoryProtocol {
-        var shouldThrowError = false
-        var mockPetDetails: PetDetails?
-        var getAnimalsCallCount = 0
-        var getPetDetailsCallCount = 0
-        
-        func getAnimals() async throws -> [Animal] {
-            getAnimalsCallCount += 1
-            return []
-        }
-        
-        func getPetDetails(id: String) async throws -> PetDetails {
-            getPetDetailsCallCount += 1
-            
-            if shouldThrowError {
-                throw NSError(
-                    domain: "FakeRepository",
-                    code: 500,
-                    userInfo: [NSLocalizedDescriptionKey: "Mock error"]
-                )
-            }
-            
-            guard let petDetails = mockPetDetails else {
-                throw NSError(
-                    domain: "FakeRepository",
-                    code: 404,
-                    userInfo: [NSLocalizedDescriptionKey: "Pet not found"]
-                )
-            }
-            
-            return petDetails
-        }
-    }
+    // Uses FakeAnimalRepository from main app for testing
     
     // MARK: - Helper Methods
     
     private func makeSUT(
-        repository: AnimalRepositoryProtocol? = nil,
         petId: String = "test-id"
     ) -> (viewModel: PetDetailsViewModel, repository: FakeAnimalRepository) {
-        let fakeRepo = (repository as? FakeAnimalRepository) ?? FakeAnimalRepository()
+        let fakeRepo = FakeAnimalRepository()
         let viewModel = PetDetailsViewModel(repository: fakeRepo, petId: petId)
         return (viewModel, fakeRepo)
     }
@@ -119,7 +85,7 @@ final class PetDetailsViewModelTests: XCTestCase {
     func testLoadPetDetails_whenRepositoryFails_shouldUpdateStateToError() async {
         // Given
         let (sut, repository) = makeSUT()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         
         // When
         await sut.loadPetDetails()
@@ -152,7 +118,7 @@ final class PetDetailsViewModelTests: XCTestCase {
     func testRetry_whenInErrorState_shouldTransitionToLoading() async {
         // Given
         let (sut, repository) = makeSUT()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         await sut.loadPetDetails()
         
         guard case .error = sut.state else {
@@ -161,7 +127,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         }
         
         // When
-        repository.shouldThrowError = false
+        repository.shouldFail = false
         repository.mockPetDetails = makeMockPetDetails()
         sut.retry()
         
@@ -198,7 +164,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         
         // Set initial state to error
         await sut.loadPetDetails()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         await sut.loadPetDetails()
         
         guard case .error = sut.state else {
@@ -207,7 +173,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         }
         
         // When
-        repository.shouldThrowError = false
+        repository.shouldFail = false
         let loadTask = Task {
             await sut.loadPetDetails()
         }
