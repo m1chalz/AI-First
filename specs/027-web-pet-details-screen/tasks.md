@@ -44,15 +44,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Update `Location` interface in `/webApp/src/types/animal.ts` from `{city: string, radiusKm: number}` to `{latitude?: number, longitude?: number}`
-- [ ] T006 [P] Create `PetDetails` type definition in `/webApp/src/types/pet-details.ts` with `PetStatus` and `PetSex` enums
-- [ ] T007 [P] Update `AnimalRepository.getAnimals()` in `/webApp/src/services/animal-repository.ts` to call `GET /api/v1/announcements` instead of mock data
-- [ ] T008 [P] Map backend response format to `Animal` type in `/webApp/src/services/animal-repository.ts` (status: MISSING→ACTIVE, FOUND→FOUND, CLOSED→CLOSED; map locationLatitude/locationLongitude to location object)
-- [ ] T009 Add `getPetById(id: string): Promise<PetDetails>` method in `/webApp/src/services/animal-repository.ts` calling `GET /api/v1/announcements/:id`
-- [ ] T010 [P] Create date formatter utility in `/webApp/src/utils/date-formatter.ts` (format ISO date to "MMM DD, YYYY")
-- [ ] T011 [P] Create coordinate formatter utility in `/webApp/src/utils/coordinate-formatter.ts` (format lat/lng to "XX.XXXX° N/S, XX.XXXX° E/W")
-- [ ] T012 [P] Create microchip formatter utility in `/webApp/src/utils/microchip-formatter.ts` (format to "000-000-000-000")
-- [ ] T013 [P] Create map URL builder utility in `/webApp/src/utils/map-url-builder.ts` (build Google Maps/OpenStreetMap URLs)
+- [X] T005 Update `Location` interface in `/webApp/src/types/animal.ts` from `{city: string, radiusKm: number}` to `{latitude?: number, longitude?: number}`
+- [X] T006 [P] Create `PetDetails` type definition in `/webApp/src/types/pet-details.ts` with `PetStatus` and `PetSex` enums
+- [X] T007 [P] Update `AnimalRepository.getAnimals()` in `/webApp/src/services/animal-repository.ts` to call `GET /api/v1/announcements` instead of mock data
+- [X] T008 [P] Map backend response format to `Animal` type in `/webApp/src/services/animal-repository.ts` (status: MISSING→ACTIVE, FOUND→FOUND, CLOSED→CLOSED; map locationLatitude/locationLongitude to location object)
+- [X] T009 Add `getPetById(id: string): Promise<PetDetails>` method in `/webApp/src/services/animal-repository.ts` calling `GET /api/v1/announcements/:id`
+- [X] T010 [P] Create date formatter utility in `/webApp/src/utils/date-formatter.ts` (format ISO date to "MMM DD, YYYY")
+- [X] T011 [P] Create coordinate formatter utility in `/webApp/src/utils/coordinate-formatter.ts` (format lat/lng to "XX.XXXX° N/S, XX.XXXX° E/W")
+- [X] T012 [P] Create microchip formatter utility in `/webApp/src/utils/microchip-formatter.ts` (format to "000-000-000-000")
+- [X] T013 [P] Create map URL builder utility in `/webApp/src/utils/map-url-builder.ts` (build Google Maps/OpenStreetMap URLs)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

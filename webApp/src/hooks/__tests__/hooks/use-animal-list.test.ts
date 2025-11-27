@@ -33,9 +33,9 @@ describe('useAnimalList', () => {
     it('should update animals state when loadAnimals succeeds', async () => {
         // Given
         const mockAnimals = [
-            { id: '1', name: 'Fluffy', species: 'CAT' as any, breed: 'Maine Coon', location: { city: 'Pruszkow', radiusKm: 5 }, gender: 'MALE' as any, status: 'ACTIVE' as any, lastSeenDate: '18/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' },
-            { id: '2', name: 'Rex', species: 'DOG' as any, breed: 'German Shepherd', location: { city: 'Warsaw', radiusKm: 10 }, gender: 'FEMALE' as any, status: 'ACTIVE' as any, lastSeenDate: '17/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' },
-            { id: '3', name: 'Bella', species: 'CAT' as any, breed: 'Siamese', location: { city: 'Krakow', radiusKm: 3 }, gender: 'FEMALE' as any, status: 'FOUND' as any, lastSeenDate: '19/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' }
+            { id: '1', petName: 'Fluffy', species: 'CAT', breed: 'Maine Coon', locationLatitude: 52.0, locationLongitude: 21.0, sex: 'MALE', status: 'MISSING', lastSeenDate: '2025-11-18', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
+            { id: '2', petName: 'Rex', species: 'DOG', breed: 'German Shepherd', locationLatitude: 52.2, locationLongitude: 21.0, sex: 'FEMALE', status: 'MISSING', lastSeenDate: '2025-11-17', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
+            { id: '3', petName: 'Bella', species: 'CAT', breed: 'Siamese', locationLatitude: 50.0, locationLongitude: 19.9, sex: 'FEMALE', status: 'FOUND', lastSeenDate: '2025-11-19', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null }
         ];
         
         const mockGetAnimals = vi.fn().mockResolvedValue(mockAnimals);
@@ -50,7 +50,7 @@ describe('useAnimalList', () => {
         });
         
         expect(result.current.animals).toHaveLength(3);
-        expect(result.current.animals[0].name).toBe('Fluffy');
+        expect(result.current.animals[0].petName).toBe('Fluffy');
         expect(result.current.error).toBeNull();
         expect(result.current.isEmpty).toBe(false);
     });
