@@ -11,6 +11,24 @@ final class PhotoViewModel: ObservableObject {
     @Published private(set) var helperMessage: String = L10n.AnimalPhoto.Helper.required
     @Published private(set) var isProcessingSelection: Bool = false
     
+    // MARK: - Computed State
+    
+    /// Returns confirmed attachment metadata if available.
+    var confirmedMetadata: PhotoAttachmentMetadata? {
+        if case .confirmed(let metadata) = attachmentStatus {
+            return metadata
+        }
+        return nil
+    }
+    
+    /// Returns true when attachment is being loaded/processed.
+    var isAttachmentLoading: Bool {
+        if case .loading = attachmentStatus {
+            return true
+        }
+        return false
+    }
+    
     // MARK: - Dependencies
     
     private let flowState: ReportMissingPetFlowState

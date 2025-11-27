@@ -2,7 +2,7 @@ import SwiftUI
 import PhotosUI
 
 /// Upload tile rendered in both empty and confirmed states.
-struct AnimalPhotoEmptyStateView: View {
+struct AnimalPhotoBrowseView: View {
     @Binding var pickerSelection: PhotosPickerItem?
     let isLoading: Bool
     
@@ -56,12 +56,12 @@ struct AnimalPhotoEmptyStateView: View {
 }
 
 #if DEBUG
-struct AnimalPhotoEmptyStateView_Previews: PreviewProvider {
+struct AnimalPhotoBrowseView_Previews: PreviewProvider {
     struct PreviewWrapper: View {
         @State private var selection: PhotosPickerItem?
         
         var body: some View {
-            AnimalPhotoEmptyStateView(
+            AnimalPhotoBrowseView(
                 pickerSelection: $selection,
                 isLoading: false
             )

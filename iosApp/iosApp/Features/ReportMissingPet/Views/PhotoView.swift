@@ -13,14 +13,14 @@ struct PhotoView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     titleSection
-                    AnimalPhotoEmptyStateView(
+                    AnimalPhotoBrowseView(
                         pickerSelection: $pickerSelection,
-                        isLoading: viewModel.isProcessingSelection || isAttachmentLoading
+                        isLoading: viewModel.isProcessingSelection || viewModel.isAttachmentLoading
                     )
-                    if isAttachmentLoading {
+                    if viewModel.isAttachmentLoading {
                         loadingIndicator
                     }
-                    if let metadata = confirmedMetadata {
+                    if let metadata = viewModel.confirmedMetadata {
                     AnimalPhotoItemView(model: .init(metadata: metadata)) {
                             viewModel.removeAttachment()
                         }
@@ -67,7 +67,7 @@ struct PhotoView: View {
         }
         .background(Color.white.ignoresSafeArea())
         .animation(.easeInOut(duration: 0.2), value: viewModel.showsMandatoryToast)
-        .animation(.easeInOut(duration: 0.2), value: confirmedMetadata?.id)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.confirmedMetadata?.id)
         .onChange(of: pickerSelection) { _, newSelection in
             guard let item = newSelection else { return }
             Task {
@@ -102,21 +102,6 @@ struct PhotoView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 4)
     }
-    
-    private var confirmedMetadata: PhotoAttachmentMetadata? {
-        if case .confirmed(let metadata) = viewModel.attachmentStatus {
-            return metadata
-        }
-        return nil
-    }
-    
-    private var isAttachmentLoading: Bool {
-        if case .loading = viewModel.attachmentStatus {
-            return true
-        }
-        return false
-    }
-    
 }
 
 #if DEBUG
