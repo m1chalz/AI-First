@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pet Details Response",
+  "description": "API response structure for GET /api/v1/announcements/:id (already implemented in backend). Used by iOS AnimalRepository (via getPetDetails) to fetch pet details.",
+  "type": "object",
+  "required": [
+    "id",
+    "petName",
+    "species",
+    "gender",
+    "description",
+    "location",
+    "lastSeenDate",
+    "phone",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the pet (UUID format)",
+      "example": "11111111-1111-1111-1111-111111111111"
+    },
+    "petName": {
+      "type": "string",
+      "description": "Name of the pet (not displayed in current UI design)",
+      "example": "Fredi Kamionka Gmina Burzenin"
+    },
+    "photoUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to the pet's photo (nullable, show 'Image not available' fallback if null)",
+      "example": "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "FOUND", "CLOSED"],
+      "description": "Status of the pet report (ACTIVE will be displayed as MISSING in UI)",
+      "example": "ACTIVE"
+    },
+    "lastSeenDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the pet was last seen (YYYY-MM-DD format, e.g., '2025-11-18')",
+      "example": "2025-11-18"
+    },
+    "species": {
+      "type": "string",
+      "enum": ["DOG", "CAT", "BIRD", "RABBIT", "OTHER"],
+      "description": "Species of the pet (uppercase)",
+      "example": "DOG"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["MALE", "FEMALE", "UNKNOWN"],
+      "description": "Sex of the pet (uppercase, displayed as ♂/♀/? symbols in UI)",
+      "example": "MALE"
+    },
+    "description": {
+      "type": "string",
+      "description": "Additional description about the pet (required, multi-line text allowed)",
+      "example": "Zaginął piesek York wabi się Fredi Kamionka gmina burzenin"
+    },
+    "location": {
+      "type": "string",
+      "description": "City where the pet was last seen (required)",
+      "example": "Kamionka"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Owner's phone number (required). Displayed as tappable link opening dialer.",
+      "example": "+48 123 456 789"
+    },
+    "email": {
+      "type": ["string", "null"],
+      "format": "email",
+      "description": "Owner's email address (optional). Displayed as tappable link opening mail composer.",
+      "example": "spotterka@example.pl"
+    },
+    "breed": {
+      "type": ["string", "null"],
+      "description": "Breed of the pet (optional)",
+      "example": "York"
+    },
+    "locationRadius": {
+      "type": ["integer", "null"],
+      "description": "Search radius around location in kilometers (optional, number). ViewModel formats to '±X km' for display.",
+      "example": 5
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when announcement was created (ISO 8601)",
+      "example": "2025-11-19T15:47:14.000Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when announcement was last updated (ISO 8601)",
+      "example": "2025-11-19T15:47:14.000Z"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "petName": "Fredi Kamionka Gmina Burzenin",
+      "photoUrl": "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
+      "status": "ACTIVE",
+      "lastSeenDate": "2025-11-18",
+      "species": "DOG",
+      "breed": "York",
+      "gender": "MALE",
+      "description": "Zaginął piesek York wabi się Fredi Kamionka gmina burzenin",
+      "location": "Kamionka",
+      "locationRadius": 5,
+      "phone": "+48 123 456 789",
+      "email": "spotterka@example.pl",
+      "createdAt": "2025-11-19T15:47:14.000Z",
+      "updatedAt": "2025-11-19T15:47:14.000Z"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "petName": "Luna",
+      "photoUrl": "https://koty.pl/wp-content/uploads/2025/08/tuxedo_cat_7b7e699fc0.jpg",
+      "status": "ACTIVE",
+      "lastSeenDate": "2025-11-15",
+      "species": "CAT",
+      "breed": null,
+      "gender": "FEMALE",
+      "description": "Zaginęła czarna kotka Luna z charakterystycznymi białymi łapkami i małą białą plamką na piersi. Ma około 3 lata, waży ok. 4 kg, bardzo nieśmiała i może się chować przed obcymi ludźmi.",
+      "location": "Kraków",
+      "locationRadius": null,
+      "phone": "555-0102",
+      "email": null,
+      "createdAt": "2025-11-19T15:47:14.000Z",
+      "updatedAt": "2025-11-19T15:47:14.000Z"
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "petName": "Burek",
+      "photoUrl": "https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg",
+      "status": "FOUND",
+      "lastSeenDate": "2025-11-10",
+      "species": "DOG",
+      "breed": "Mieszaniec labradora",
+      "gender": "MALE",
+      "description": "Brązowy kundelek, średniej wielkości. Nosi niebieską obrożę z identyfikatorem.",
+      "location": "Gdańsk",
+      "locationRadius": 10,
+      "phone": "5551234",
+      "email": "michal.wisniewski@example.pl",
+      "createdAt": "2025-11-19T15:47:14.000Z",
+      "updatedAt": "2025-11-19T15:47:14.000Z"
+    }
+  ],
+  "x-notes": {
+    "missingFields": [
+      "microchipNumber - Not yet implemented in backend (will be mocked in iOS)",
+      "approximateAge - Not yet implemented in backend (will be mocked in iOS)",
+      "reward - Not yet implemented in backend (will be mocked in iOS)"
+    ],
+    "endpointStatus": "Already implemented on main branch",
+    "errorResponses": {
+      "404": {
+        "description": "Pet not found",
+        "example": {
+          "error": {
+            "code": "NOT_FOUND",
+            "message": "Resource not found"
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "example": {
+          "error": {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

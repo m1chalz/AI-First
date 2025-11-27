@@ -2,7 +2,7 @@ import Foundation
 
 /**
  * Repository implementation with mocked data for iOS UI development.
- * Conforms to local AnimalRepositoryPrococol protocol.
+ * Conforms to AnimalRepositoryProtocol from Domain layer.
  * Simulates network delay for testing loading states.
  * Implementation will be replaced when backend is ready.
  */
@@ -24,6 +24,31 @@ class AnimalRepository: AnimalRepositoryProtocol {
         
         // Return mock animals
         return getMockAnimals()
+    }
+    
+    /**
+     * Fetches mock pet details by ID.
+     * Returns detailed information for specific pet after simulated delay.
+     * Mock data includes fields not yet available in backend API.
+     *
+     * - Parameter id: Unique pet identifier
+     * - Returns: PetDetails entity
+     * - Throws: Error if pet not found
+     */
+    func getPetDetails(id: String) async throws -> PetDetails {
+        // Simulate network delay
+        try await Task.sleep(nanoseconds: UInt64(networkDelaySeconds * 1_000_000_000))
+        
+        // Return mock pet details based on ID
+        guard let petDetails = getMockPetDetails(id: id) else {
+            throw NSError(
+                domain: "AnimalRepository",
+                code: 404,
+                userInfo: [NSLocalizedDescriptionKey: "Pet not found"]
+            )
+        }
+        
+        return petDetails
     }
     
     /**
@@ -261,6 +286,109 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 phone: nil
             )
         ]
+    }
+    
+    /**
+     * Generates mock pet details for specific IDs.
+     * Data includes fields not yet available in backend API (microchipNumber, approximateAge, reward).
+     * Matches contract structure from /specs/012-ios-pet-details-screen/contracts/
+     *
+     * - Parameter id: Pet identifier
+     * - Returns: PetDetails entity or nil if ID not found
+     */
+    private func getMockPetDetails(id: String) -> PetDetails? {
+        switch id {
+        case "11111111-1111-1111-1111-111111111111", "1":
+            return PetDetails(
+                id: id,
+                petName: "Fredi Kamionka Gmina Burzenin",
+                photoUrl: "https://www.animalisland.eu/cdn/shop/articles/yorkshire_a5d402ee-006e-4fe0-8a5f-6aa178c69133.jpg",
+                status: .active,
+                lastSeenDate: "2025-11-18",
+                species: .dog,
+                gender: .male,
+                description: "Zaginął piesek York wabi się Fredi Kamionka gmina burzenin",
+                phone: "+48 123 456 789",
+                email: "spotterka@example.pl",
+                breed: "York",
+                latitude: 51.5000,
+                longitude: 18.5000,
+                microchipNumber: "616-093-400-123",
+                approximateAge: "3 years",
+                reward: "500 PLN",
+                createdAt: "2025-11-19T15:47:14.000Z",
+                updatedAt: "2025-11-19T15:47:14.000Z"
+            )
+            
+        case "22222222-2222-2222-2222-222222222222", "2":
+            return PetDetails(
+                id: id,
+                petName: "Luna",
+                photoUrl: "https://images.dog.ceo/breeds/saluki/n02091831_6640.jpg",
+                status: .active,
+                lastSeenDate: "2025-11-20",
+                species: .cat,
+                gender: .female,
+                description: "Beautiful black cat with white paws, very friendly.",
+                phone: "+48 987 654 321",
+                email: nil,
+                breed: "Mixed",
+                latitude: 52.2297,
+                longitude: 21.0122,
+                microchipNumber: "616-093-400-456",
+                approximateAge: "2 years",
+                reward: nil,
+                createdAt: "2025-11-20T10:30:00.000Z",
+                updatedAt: "2025-11-20T10:30:00.000Z"
+            )
+            
+        case "33333333-3333-3333-3333-333333333333", "3":
+            return PetDetails(
+                id: id,
+                petName: "Piorun",
+                photoUrl: nil,
+                status: .active,
+                lastSeenDate: "2025-11-21",
+                species: .bird,
+                gender: .unknown,
+                description: "Green parrot, escaped from cage, can say 'Hello' and 'Goodbye'.",
+                phone: "+48 555 123 456",
+                email: nil,
+                breed: nil,
+                latitude: 50.0647,
+                longitude: 19.9450,
+                microchipNumber: nil,
+                approximateAge: nil,
+                reward: nil,
+                createdAt: "2025-11-21T14:15:00.000Z",
+                updatedAt: "2025-11-21T14:15:00.000Z"
+            )
+            
+        case "44444444-4444-4444-4444-444444444444", "4":
+            return PetDetails(
+                id: id,
+                petName: "Burek",
+                photoUrl: "https://images.dog.ceo/breeds/shepherd-german/n02106662_10908.jpg",
+                status: .found,
+                lastSeenDate: "2025-11-15",
+                species: .dog,
+                gender: .male,
+                description: "Large German Shepherd found near the park, very friendly.",
+                phone: "+48 111 222 333",
+                email: "finder@example.com",
+                breed: "German Shepherd",
+                latitude: 52.4064,
+                longitude: 16.9252,
+                microchipNumber: "616-093-400-789",
+                approximateAge: "5 years",
+                reward: "200 PLN",
+                createdAt: "2025-11-15T08:00:00.000Z",
+                updatedAt: "2025-11-15T08:00:00.000Z"
+            )
+            
+        default:
+            return nil
+        }
     }
 }
 

@@ -57,7 +57,7 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Status badge color as hex string (e.g., "#FF6B6B")
     var statusColorHex: String {
-        animal.status.badgeColor
+        animal.status.badgeColorHex
     }
     
     /// Formatted date text
