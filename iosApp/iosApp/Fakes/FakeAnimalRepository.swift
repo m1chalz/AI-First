@@ -1,7 +1,6 @@
 import Foundation
-@testable import PetSpot
 
-/// Fake repository implementation for unit testing.
+/// Fake repository implementation for unit testing and previews.
 /// Implements AnimalRepositoryProtocol protocol for controlled test scenarios.
 ///
 /// Allows controlling success/failure scenarios for testing:
@@ -10,15 +9,24 @@ import Foundation
 /// - Empty: Returns empty list when animalCount = 0
 class FakeAnimalRepository: AnimalRepositoryProtocol {
     
-    private let animalCount: Int
-    private let shouldFail: Bool
-    private let error: Error
+    let animalCount: Int
+    var shouldFail: Bool
+    let error: Error
     
     /// Tracks how many times getAnimals was called (for test assertions)
     private(set) var getAnimalsCallCount = 0
     
     /// Tracks how many times getPetDetails was called (for test assertions)
     private(set) var getPetDetailsCallCount = 0
+    
+    /// For location testing - tracks location parameter passed
+    var lastLocationParameter: UserLocation?
+    
+    /// For PetDetails testing - mock pet details to return
+    var mockPetDetails: PetDetails?
+    
+    /// For location testing - stubbed animals to return
+    var stubbedAnimals: [Animal] = []
     
     /// Creates a fake repository with configurable behavior.
     ///
@@ -36,11 +44,16 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         self.error = error
     }
     
-    func getAnimals() async throws -> [Animal] {
+    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
         getAnimalsCallCount += 1
+        lastLocationParameter = location
         
         if shouldFail {
             throw error
+        }
+        
+        if !stubbedAnimals.isEmpty {
+            return stubbedAnimals
         }
         
         return generateMockAnimals(count: animalCount)
@@ -51,6 +64,10 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         
         if shouldFail {
             throw error
+        }
+        
+        if let mockPetDetails = mockPetDetails {
+            return mockPetDetails
         }
         
         guard let petDetails = generateMockPetDetails(id: id) else {
@@ -301,7 +318,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     
     private func generateMockPetDetails(id: String) -> PetDetails? {
         switch id {
-        case "11111111-1111-1111-1111-111111111111", "1":
+        case "11111111-1111-1111-1111-111111111111", "1", "preview-id":
             return PetDetails(
                 id: id,
                 petName: "Fredi Kamionka Gmina Burzenin",
@@ -394,3 +411,4 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         }
     }
 }
+

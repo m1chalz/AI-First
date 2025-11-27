@@ -33,11 +33,16 @@ class AnimalListCoordinator: CoordinatorInterface {
     func start(animated: Bool) async {
         guard let navigationController = navigationController else { return }
         
-        // Create repository (mock implementation for now)
-        let repository = AnimalRepository()
+        // Get dependencies from DI container
+        let container = ServiceContainer.shared
+        let repository = container.animalRepository
+        let locationService = container.locationService
         
-        // Create ViewModel with repository (iOS MVVM-C: ViewModels call repositories directly)
-        let viewModel = AnimalListViewModel(repository: repository)
+        // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
+        let viewModel = AnimalListViewModel(
+            repository: repository,
+            locationService: locationService
+        )
         
         // Set up coordinator closures for navigation
         viewModel.onAnimalSelected = { [weak self] animalId in
@@ -50,6 +55,11 @@ class AnimalListCoordinator: CoordinatorInterface {
         
         viewModel.onReportFound = { [weak self] in
             self?.showReportFound()
+        }
+        
+        // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
+        viewModel.onOpenAppSettings = { [weak self] in
+            self?.openAppSettings()
         }
         
         // Create SwiftUI view with ViewModel
@@ -128,6 +138,21 @@ class AnimalListCoordinator: CoordinatorInterface {
         print("Navigate to report found form")
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
+    }
+    
+    // MARK: - User Story 3: Settings Navigation
+    
+    /**
+     * Opens iOS Settings app to this app's permission screen.
+     * Handles system navigation (MVVM-C pattern: Coordinator manages navigation).
+     *
+     * User Story 3: Recovery path for denied permissions.
+     */
+    private func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        UIApplication.shared.open(settingsUrl)
     }
     
     // MARK: - Deinitialization

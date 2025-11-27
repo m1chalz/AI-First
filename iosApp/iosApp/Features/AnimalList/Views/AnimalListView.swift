@@ -70,6 +70,28 @@ struct AnimalListView: View {
             
             floatingButtonsSection
         }
+        // User Story 3: Custom permission denied popup (recovery path)
+        .alert(
+            L10n.Location.Permission.Popup.title,
+            isPresented: $viewModel.showPermissionDeniedAlert,
+            actions: {
+                Button(L10n.Location.Permission.Popup.Settings.button) {
+                    viewModel.openSettings()  // Delegates to ViewModel → Coordinator (MVVM-C pattern)
+                }
+                .accessibilityIdentifier("startup.permissionPopup.goToSettings")
+                
+                Button(L10n.Location.Permission.Popup.Cancel.button, role: .cancel) {
+                    Task {
+                        await viewModel.continueWithoutLocation()
+                    }
+                }
+                .accessibilityIdentifier("startup.permissionPopup.cancel")
+            },
+            message: {
+                Text(L10n.Location.Permission.Popup.message)
+                    .accessibilityIdentifier("startup.permissionPopup.message")
+            }
+        )
     }
     
     // MARK: - Floating Buttons Section
