@@ -5,11 +5,11 @@ import UniformTypeIdentifiers
 @MainActor
 final class PhotoViewModelTests: XCTestCase {
     
-    var flowState: ReportMissingPetFlowState!
-    var cache: PhotoAttachmentCacheFake!
-    var toastScheduler: ToastSchedulerFake!
-    var photoSelectionProcessor: PhotoSelectionProcessorStub!
-    var sut: PhotoViewModel!
+    private var flowState: ReportMissingPetFlowState!
+    private var cache: PhotoAttachmentCacheFake!
+    private var toastScheduler: ToastSchedulerFake!
+    private var photoSelectionProcessor: PhotoSelectionProcessorStub!
+    private var sut: PhotoViewModel!
     
     override func setUp() {
         super.setUp()
