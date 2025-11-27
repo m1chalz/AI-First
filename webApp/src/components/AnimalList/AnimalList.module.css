@@ -227,18 +227,19 @@
 /* Center section: Description */
 .animalDescription {
     flex: 1;
-    min-height: 48px;
     font-size: 13px;
     font-weight: 400;
     color: #545F71;
-    line-height: normal;
+    line-height: 1.4;
     font-family: 'Inter', sans-serif;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
     padding: 16px 16px;
+    max-height: 54px;
 }
 
 /* Right section: Status badge and date */
