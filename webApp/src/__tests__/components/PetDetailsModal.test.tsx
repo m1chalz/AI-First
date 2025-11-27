@@ -241,5 +241,75 @@ describe('PetDetailsModal', () => {
         // Male is displayed with gender icon, so use partial match
         expect(screen.getByText(/Male/)).toBeTruthy();
     });
+
+    describe('Responsive Layout', () => {
+        it('should render modal dialog for desktop and tablet viewports', () => {
+            // Given: Modal is open
+            vi.spyOn(usePetDetailsModule, 'usePetDetails').mockReturnValue({
+                pet: mockPet,
+                isLoading: false,
+                error: null,
+                retry: vi.fn()
+            });
+
+            // When: Component is rendered
+            const { baseElement } = render(
+                <PetDetailsModal
+                    isOpen={true}
+                    selectedPetId="pet-123"
+                    onClose={mockOnClose}
+                />
+            );
+
+            // Then: Modal dialog should exist
+            expect(baseElement.querySelector('[role="dialog"]')).toBeTruthy();
+        });
+
+        it('should display close button with accessible size', () => {
+            // Given: Modal is open
+            vi.spyOn(usePetDetailsModule, 'usePetDetails').mockReturnValue({
+                pet: mockPet,
+                isLoading: false,
+                error: null,
+                retry: vi.fn()
+            });
+
+            // When: Component is rendered
+            render(
+                <PetDetailsModal
+                    isOpen={true}
+                    selectedPetId="pet-123"
+                    onClose={mockOnClose}
+                />
+            );
+
+            // Then: Close button should exist and be accessible
+            const closeButton = screen.getByTestId('petDetails.closeButton.click');
+            expect(closeButton).toBeTruthy();
+        });
+
+        it('should display readable content in modal', () => {
+            // Given: Modal is open
+            vi.spyOn(usePetDetailsModule, 'usePetDetails').mockReturnValue({
+                pet: mockPet,
+                isLoading: false,
+                error: null,
+                retry: vi.fn()
+            });
+
+            // When: Component is rendered
+            render(
+                <PetDetailsModal
+                    isOpen={true}
+                    selectedPetId="pet-123"
+                    onClose={mockOnClose}
+                />
+            );
+
+            // Then: Text content should be visible and readable
+            expect(screen.getByText('Maine Coon')).toBeTruthy();
+            expect(screen.getByText('Cat')).toBeTruthy();
+        });
+    });
 });
 

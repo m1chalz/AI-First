@@ -203,6 +203,28 @@
 
 /* Responsive */
 @media (max-width: 767px) {
+    .heroSection {
+        max-height: 240px;
+    }
+
+    .heroImage {
+        max-height: 240px;
+    }
+
+    .statusBadge {
+        top: 12px;
+        right: 12px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .rewardBadge {
+        bottom: 12px;
+        left: 12px;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
     .contentSection {
         padding: 16px;
     }
@@ -224,17 +246,73 @@
     .mapButton {
         width: 100%;
         text-align: center;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .fieldLabel {
+        font-size: 14px;
+    }
+
+    .fieldValue {
+        font-size: 14px;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
+    .heroSection {
+        max-height: 280px;
+    }
+
+    .heroImage {
+        max-height: 280px;
+    }
+
+    .statusBadge {
+        top: 14px;
+        right: 14px;
+        padding: 6px 11px;
+        font-size: 13px;
+    }
+
+    .rewardBadge {
+        bottom: 14px;
+        left: 14px;
+        padding: 7px 11px;
+        font-size: 13px;
+    }
+
     .contentSection {
-        padding: 24px;
+        padding: 20px;
+    }
+
+    .fieldLabel {
+        font-size: 15px;
+    }
+
+    .fieldValue {
+        font-size: 15px;
     }
 }
 
 @media (min-width: 1024px) {
+    .heroSection {
+        max-height: 320px;
+    }
+
+    .heroImage {
+        max-height: 320px;
+    }
+
     .contentSection {
         padding: 24px;
+    }
+
+    .fieldLabel {
+        font-size: 16px;
+    }
+
+    .fieldValue {
+        font-size: 16px;
     }
 }

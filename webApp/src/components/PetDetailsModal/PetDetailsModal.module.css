@@ -173,3 +173,104 @@
     outline-offset: 2px;
 }
 
+/* ====== RESPONSIVE STYLES ====== */
+
+/* Mobile: 320px - 767px (full-screen) */
+@media (max-width: 767px) {
+    .backdrop {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal {
+        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        animation: scaleIn 0.3s ease-out;
+    }
+
+    .backdrop.closing .modal {
+        animation: scaleOut 0.3s ease-in;
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes scaleOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    }
+}
+
+/* Tablet: 768px - 1023px (centered dialog) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .backdrop {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal {
+        max-width: 640px;
+        width: 90vw;
+        height: 90vh;
+        border-radius: 16px;
+        animation: scaleIn 0.3s ease-out;
+    }
+
+    .backdrop.closing .modal {
+        animation: scaleOut 0.3s ease-in;
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes scaleOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    }
+}
+
+/* Desktop: 1024px+ (slide from right) */
+@media (min-width: 1024px) {
+    .backdrop {
+        justify-content: flex-end;
+    }
+
+    .modal {
+        max-width: 768px;
+        height: 100vh;
+        border-radius: 0;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+    }
+}
+
