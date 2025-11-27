@@ -52,9 +52,19 @@ Each card (1180px width, 136px height, 14px border-radius, 1px border #E5E9EC) d
 - Q: How should reward amount be formatted/displayed? → A: Display as-is (string field, no formatting needed)
 - Q: What browser compatibility is required? → A: Modern browsers (Chrome, Firefox, Safari, Edge - last 2 versions)
 - Q: Should the page be responsive? → A: Yes, support mobile (320px+), tablet (768px+), and desktop (1024px+) viewports
-- Q: How should navigation work? → A: Modal is opened from animal list page via "Details" button click, managed by React state or URL query parameter
+- Q: How should navigation work? → A: Modal is opened from animal list page via "Details" button click, managed by React state (useState)
 - Q: How is the modal opened from the animal list? → A: Each animal card has a "Details" button (outlined blue style) that opens the modal with that pet's information
 - Q: What happens when user clicks "Details" button? → A: Modal opens over the list page, displaying comprehensive pet details (this spec)
+- Q: How should the modal handle different API errors when fetching pet details? → A: Display one generic error message for all errors (e.g., "Failed to load pet details") with a "Retry" button
+- Q: How long should the modal wait for API response before showing timeout error? → A: 10 seconds timeout before showing error
+- Q: How should retry logic work after API error? → A: Unlimited retry attempts (user can retry multiple times, can always close modal)
+- Q: How should the "Show on the map" button work? → A: Opens external map (Google Maps/OpenStreetMap) in new tab with coordinates marked
+- Q: What should happen when pet photo fails to load (404, CORS, timeout)? → A: Display gray box with "Image not available" text (already specified in FR-001)
+- Q: Should modal state be managed via React state or URL query parameter? → A: React state (useState) - simpler implementation, no URL changes, better for modals
+- Q: How should phone number be displayed when not masked? → A: Display exactly as received from API (no additional formatting)
+- Q: How should geographic coordinates be formatted for display? → A: Format in component (API returns raw numbers: latitude/longitude, component formats to "XX.XXXX° N/S, XX.XXXX° E/W")
+- Q: How should microchip number be formatted for display? → A: Format in component (API returns raw number as string, component adds dashes to format "000-000-000-000")
+- Q: How should date be formatted for display? → A: Format in component (API returns ISO 8601 date, component formats to "MMM DD, YYYY")
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -87,7 +97,7 @@ Users can view critical identification information including microchip number, s
 
 **Acceptance Scenarios**:
 
-1. **Given** a pet has a microchip number, **When** viewing the details modal, **Then** the microchip number is displayed in the format "000-000-000-000"
+1. **Given** a pet has a microchip number, **When** viewing the details modal, **Then** the microchip number is formatted and displayed in the format "000-000-000-000" (component formats raw string from API by adding dashes)
 2. **Given** a pet has species and breed information, **When** viewing the details modal, **Then** both are displayed side-by-side in a two-column layout (labeled "Animal Species" and "Animal Race")
 3. **Given** a pet has sex information, **When** viewing the details modal, **Then** the sex is displayed with an appropriate icon (male/female symbol)
 
@@ -104,9 +114,9 @@ Users can view where the pet was last seen or found, including precise geographi
 **Acceptance Scenarios**:
 
 1. **Given** a pet has a disappearance location, **When** viewing the details modal, **Then** the latitude and longitude coordinates are displayed in the format "XX.XXXX° N/S, XX.XXXX° E/W" (e.g., "52.2297° N, 21.0122° E") with a location icon
-2. **Given** a pet listing includes contact information, **When** viewing the details modal, **Then** the phone number is displayed (may be masked, e.g., "+ 48 ********") in the header row with phone icon
+2. **Given** a pet listing includes contact information, **When** viewing the details modal, **Then** the phone number is displayed exactly as received from API (may be masked by backend, e.g., "+ 48 ********") in the header row with phone icon
 3. **Given** a pet listing includes an email, **When** viewing the details modal, **Then** the email is displayed in full (e.g., "mail@email.com") in the header row with email icon under "Contact owner"
-4. **Given** a user wants to see the location on a map, **When** they click the "Show on the map" button next to coordinates, **Then** they are navigated to a map view centered on the exact coordinates
+4. **Given** a user wants to see the location on a map, **When** they click the "Show on the map" button next to coordinates, **Then** an external map (Google Maps/OpenStreetMap) opens in a new browser tab with the exact coordinates marked
 5. **Given** a pet has no location coordinates available, **When** viewing the details modal, **Then** the location section is hidden or the "Show on the map" button is disabled
 
 ---
@@ -179,8 +189,9 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
 - What happens when the pet photo fails to load or is missing? (Display a gray box with "Image not available" text as placeholder in modal)
 - What happens when optional fields have no data? (Display a dash "—" for: special features. Hide reward badge when no reward. Display only the available contact method when one of phone/email is missing.)
 - What happens when text fields contain very long text? (Truncate short data fields with CSS ellipsis: species, race, age. Allow full multi-line display with modal scrolling for: Additional Description.)
-- What happens when the user has a slow network connection while loading the modal? (Show spinner/progress indicator within modal until data loads)
-- What happens if modal is triggered without a valid pet ID? (Show error message within modal and disable content)
+- What happens when the user has a slow network connection while loading the modal? (Show spinner/progress indicator within modal until data loads or 10-second timeout is reached, then show error message with "Retry" button)
+- What happens if modal is triggered without a valid pet ID? (Show generic error message "Failed to load pet details" with "Retry" button within modal)
+- What happens when API request fails (404, 500, network error)? (Show generic error message "Failed to load pet details" with "Retry" button that attempts to reload pet data)
 - What happens when contact information format is invalid? (Display as-is with formatting errors, as validation is backend concern)
 - What happens when location coordinates are unavailable? (Hide or disable the "Show on the map" button)
 - What happens when JavaScript is disabled? (Modal cannot open; fallback should direct users to enable JavaScript)
@@ -191,7 +202,7 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
 - What happens when modal content exceeds viewport height? (Modal content becomes scrollable while header remains fixed)
 - What happens when user rapidly clicks multiple "Details" buttons? (Prevent duplicate modal opens, handle gracefully - close current and open new, or prevent action)
 - What happens when modal is already open and user clicks another "Details" button? (Close current modal and open new one with new pet's details, or prevent action)
-- What happens when pet ID is invalid or pet not found? (Show error message within modal: "Pet not found" or similar, allow user to close modal)
+- What happens when pet ID is invalid or pet not found? (Show generic error message "Failed to load pet details" with "Retry" button)
 - What happens when user clicks "Details" button while modal is loading? (Prevent opening new modal until current one finishes loading or closes)
 
 ## Requirements *(mandatory)*
@@ -202,14 +213,14 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
 - **FR-002**: Modal MUST display a close button (X icon) in the top-left corner that closes the modal
 - **FR-003**: Modal MUST display a status badge (MISSING, FOUND, or CLOSED) overlaid on the pet photo with colors: red for MISSING, blue for FOUND, gray for CLOSED
 - **FR-004**: Modal MUST display a reward badge on the pet photo (left side overlay) when reward information is available, showing "Reward [amount]" text with money bag icon
-- **FR-005**: Modal MUST display date of disappearance in the format "MMM DD, YYYY" (e.g., "Nov 18, 2025") with calendar icon in header row
-- **FR-006**: Modal MUST display two contact fields in header row labeled "Contact owner": phone number (may be masked) with phone icon, and email with email icon
-- **FR-007**: Modal MUST display microchip number in the format "000-000-000-000" as full-width field
+- **FR-005**: Modal MUST display date of disappearance formatted from ISO 8601 date (API returns ISO 8601 date, component formats to "MMM DD, YYYY" format, e.g., "Nov 18, 2025") with calendar icon in header row
+- **FR-006**: Modal MUST display two contact fields in header row labeled "Contact owner": phone number (displayed exactly as received from API, may be masked by backend) with phone icon, and email with email icon
+- **FR-007**: Modal MUST display microchip number formatted from raw string (API returns raw microchip number as string, component formats to "000-000-000-000" by adding dashes) as full-width field
 - **FR-008**: Modal MUST display "Animal Species" and "Animal Race" in a two-column grid layout
 - **FR-009**: Modal MUST display "Animal Sex" and "Animal Approx. Age" in a two-column grid layout
 - **FR-010**: Modal MUST display sex with an appropriate icon (male or female symbol)
-- **FR-011**: Modal MUST display latitude/longitude coordinates (e.g., "52.2297° N, 21.0122° E") with location icon
-- **FR-012**: Modal MUST provide a "Show on the map" button next to location coordinates (blue outlined, secondary style)
+- **FR-011**: Modal MUST display latitude/longitude coordinates formatted from raw numbers (API returns latitude/longitude as numbers, component formats to "XX.XXXX° N/S, XX.XXXX° E/W" format, e.g., "52.2297° N, 21.0122° E") with location icon
+- **FR-012**: Modal MUST provide a "Show on the map" button next to location coordinates (blue outlined, secondary style) that opens external map (Google Maps/OpenStreetMap) in a new browser tab with coordinates marked
 - **FR-013**: Modal MUST display multi-line animal additional description text without truncation (full display with modal scrolling)
 - **FR-014**: Modal MUST display "Special Features" field with content or dash "—" if empty
 - **FR-015**: Modal MUST truncate short data fields (species, race, age) with CSS ellipsis if text exceeds available space
@@ -227,9 +238,13 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
 - **FR-027**: Modal MUST display semi-transparent backdrop on tablet/desktop; full-screen on mobile
 - **FR-028**: Modal MUST be opened from the animal list page when user clicks the "Details" button on any animal card
 - **FR-029**: Modal MUST receive pet ID from the list page to fetch and display the correct pet's details
-- **FR-030**: Modal MUST be controlled by state management (React state or URL query parameter) to handle open/close state
+- **FR-030**: Modal MUST be controlled by React state (useState) to handle open/close state and selected pet ID (no URL query parameter changes)
 - **FR-031**: When modal opens, focus MUST be moved to the modal content (first focusable element or modal container)
 - **FR-032**: When modal closes, focus MUST return to the "Details" button that triggered the modal opening
+- **FR-033**: When API request fails (404, 500, network error), modal MUST display a generic error message "Failed to load pet details" with a "Retry" button that attempts to reload pet data
+- **FR-034**: Error state MUST replace modal content (hide spinner and content, show error message and "Retry" button)
+- **FR-035**: API request MUST timeout after 10 seconds if no response is received, displaying the generic error message with "Retry" button
+- **FR-036**: "Retry" button MUST allow unlimited retry attempts (user can retry multiple times, can always close modal via close button or ESC key)
 
 ### Key Entities
 
@@ -245,7 +260,7 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
   - Microchip number (optional)
   - Breed (optional)
   - Approximate age (optional)
-  - Disappearance location (optional: latitude and longitude coordinates)
+  - Disappearance location (optional: latitude and longitude coordinates as numbers, formatted in component for display)
   - Additional description (optional)
 
 - **AnimalListPage**: The page that displays the list of animal announcements and contains the "Details" buttons that open this modal. Key structure includes:
