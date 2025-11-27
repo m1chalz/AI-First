@@ -18,6 +18,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - Kotlin (JVM 17 target) (010-pet-details-screen)
 - N/A (UI-only feature, data fetched from repository) (010-pet-details-screen)
 
+- Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
+- N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
 
 ## Project Structure
@@ -36,6 +38,7 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 017-ios-missing-pet-flow: Added Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation
 - 016-e2e-java-migration: Added Java 21 (LTS)
 - 015-e2e-java-migration: Added Java 21 (LTS)
 - 010-pet-details-screen: Added Kotlin (JVM 17 target)
@@ -43,7 +46,11 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 - 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E
 - 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 - 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
+- 012-ios-pet-details-screen: Added Swift 5.9+ + SwiftUI (UI layer), UIKit (coordinator navigation), URLSession or Alamofire (HTTP client)
+- 011-migrate-from-kmp: Added N/A (infrastructure migration, no data storage changes)
 - 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
+- 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
+- 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 
 
 <!-- MANUAL ADDITIONS START -->
