@@ -10,9 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
 // Design colors from Figma
 private val LabelColor = Color(0xFF6A7282)
@@ -51,4 +56,28 @@ fun PetDescriptionSection(
             modifier = Modifier.testTag("petDetails.description"),
         )
     }
+}
+
+@Preview(name = "Pet Description Section", showBackground = true)
+@Composable
+private fun PetDescriptionSectionPreview() {
+    PetDescriptionSection(
+        pet =
+            Animal(
+                id = "1",
+                name = "Luna",
+                photoUrl = "",
+                location = Location(city = "Central Park", radiusKm = 2),
+                species = AnimalSpecies.DOG,
+                breed = "Golden Retriever",
+                gender = AnimalGender.FEMALE,
+                status = AnimalStatus.MISSING,
+                lastSeenDate = "18/11/2025",
+                description =
+                    "Friendly golden retriever with a red collar. " +
+                        "Last seen near the fountain. Very energetic.",
+                email = "owner@example.com",
+                phone = "+48 111 222 333",
+            ),
+    )
 }

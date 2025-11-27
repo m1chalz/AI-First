@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
@@ -45,4 +46,10 @@ fun PetDetailsCloseButton(
             tint = Color(0xFF101828),
         )
     }
+}
+
+@Preview(name = "Close Button", showBackground = true)
+@Composable
+private fun PetDetailsCloseButtonPreview() {
+    PetDetailsCloseButton(onCloseClick = {})
 }

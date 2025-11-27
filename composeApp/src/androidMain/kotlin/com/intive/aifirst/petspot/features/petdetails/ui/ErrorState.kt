@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
@@ -70,5 +71,16 @@ fun ErrorState(
         ) {
             Text("Try Again")
         }
+    }
+}
+
+@Preview(name = "Error State", showBackground = true)
+@Composable
+private fun ErrorStatePreview() {
+    MaterialTheme {
+        ErrorState(
+            error = "Failed to load pet details. Please check your connection.",
+            onRetryClick = {},
+        )
     }
 }

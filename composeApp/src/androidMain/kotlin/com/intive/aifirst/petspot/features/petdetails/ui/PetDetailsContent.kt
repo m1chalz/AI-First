@@ -11,8 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
 /**
  * Main content composable for Pet Details screen per Figma design.
@@ -56,4 +61,31 @@ fun PetDetailsContent(
         // Bottom padding
         Spacer(modifier = Modifier.height(32.dp))
     }
+}
+
+@Preview(name = "Pet Details Content", showBackground = true)
+@Composable
+private fun PetDetailsContentPreview() {
+    PetDetailsContent(
+        pet =
+            Animal(
+                id = "1",
+                name = "Luna",
+                photoUrl = "",
+                location = Location(city = "Warsaw", radiusKm = 2, latitude = 52.2297, longitude = 21.0122),
+                species = AnimalSpecies.DOG,
+                breed = "Golden Retriever",
+                gender = AnimalGender.FEMALE,
+                status = AnimalStatus.MISSING,
+                lastSeenDate = "18/11/2025",
+                description = "Friendly golden retriever with a red collar. Very energetic and responds to her name.",
+                email = "owner@example.com",
+                phone = "+48 111 222 333",
+                microchipNumber = "123456789012345",
+                approximateAge = "3 years",
+                rewardAmount = "500 PLN",
+            ),
+        onBackClick = {},
+        onShowMapClick = {},
+    )
 }

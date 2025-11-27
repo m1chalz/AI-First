@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
@@ -37,4 +40,16 @@ fun StatusBadge(
         fontSize = 16.sp,
         lineHeight = 24.sp,
     )
+}
+
+private class StatusPreviewProvider : PreviewParameterProvider<AnimalStatus> {
+    override val values = sequenceOf(AnimalStatus.MISSING, AnimalStatus.FOUND)
+}
+
+@Preview(name = "Status Badge")
+@Composable
+private fun StatusBadgePreview(
+    @PreviewParameter(StatusPreviewProvider::class) status: AnimalStatus,
+) {
+    StatusBadge(status = status)
 }

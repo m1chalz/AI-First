@@ -15,11 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
+import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
 /**
  * Hero image section showing pet photo with close button, status badge, and reward badge.
@@ -120,4 +125,28 @@ private fun ImageNotAvailablePlaceholder(modifier: Modifier = Modifier) {
             fontSize = 16.sp,
         )
     }
+}
+
+@Preview(name = "Pet Photo Section")
+@Composable
+private fun PetPhotoSectionPreview() {
+    PetPhotoSection(
+        pet =
+            Animal(
+                id = "1",
+                name = "Luna",
+                photoUrl = "",
+                location = Location(city = "Warsaw", radiusKm = 2),
+                species = AnimalSpecies.DOG,
+                breed = "Golden Retriever",
+                gender = AnimalGender.FEMALE,
+                status = AnimalStatus.MISSING,
+                lastSeenDate = "18/11/2025",
+                description = "Friendly dog",
+                email = "owner@example.com",
+                phone = "+48 111 222 333",
+                rewardAmount = "500 PLN",
+            ),
+        onCloseClick = {},
+    )
 }
