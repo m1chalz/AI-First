@@ -36,9 +36,9 @@
 
 **Purpose**: Project initialization, dependencies, and Android manifest configuration
 
-- [ ] T001 Add Accompanist Permissions dependency to `/composeApp/build.gradle.kts` (com.google.accompanist:accompanist-permissions)
-- [ ] T002 [P] Add location permissions to `/composeApp/src/androidMain/AndroidManifest.xml` (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-- [ ] T003 [P] Create LocationModule Koin module file at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/LocationModule.kt`
+- [X] T001 Add Accompanist Permissions dependency to `/composeApp/build.gradle.kts` (com.google.accompanist:accompanist-permissions)
+- [X] T002 [P] Add location permissions to `/composeApp/src/androidMain/AndroidManifest.xml` (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+- [X] T003 [P] Create LocationModule Koin module file at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/LocationModule.kt`
 
 ---
 
