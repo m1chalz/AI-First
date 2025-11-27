@@ -50,14 +50,24 @@ struct FloatingActionButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(model.title)
-                .font(.system(size: 14))
-                .foregroundColor(model.style.foregroundColor)
-                .padding(.horizontal, model.style.horizontalPadding)
-                .padding(.vertical, model.style.verticalPadding)
-                .background(model.style.backgroundColor)
-                .cornerRadius(16)
-                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+            HStack(spacing: 8) {
+                Text(model.title)
+                    .font(.system(size: 14))
+                
+                if let icon = model.icon {
+                    Image(icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 14, height: 14)
+                }
+            }
+            .foregroundColor(model.style.foregroundColor)
+            .padding(.horizontal, model.style.horizontalPadding)
+            .padding(.vertical, model.style.verticalPadding)
+            .background(model.style.backgroundColor)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
         }
     }
 }
@@ -71,7 +81,7 @@ struct FloatingActionButton: View {
         
         VStack(spacing: 30) {
             FloatingActionButton(
-                model: FloatingActionButtonModel(title: "Report a Missing Animal", style: .primary),
+                model: FloatingActionButtonModel(title: "Report a Missing Animal", style: .primary, icon: "ic_report_missing_animal"),
                 action: { print("Primary tapped") }
             )
             
