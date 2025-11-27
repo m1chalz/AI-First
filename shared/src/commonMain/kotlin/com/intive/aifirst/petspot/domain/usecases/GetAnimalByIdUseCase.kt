@@ -21,3 +21,4 @@ class GetAnimalByIdUseCase(
         repository.getAnimalById(id)
 }
 
+
