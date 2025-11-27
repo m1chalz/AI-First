@@ -1,9 +1,11 @@
 package com.intive.aifirst.petspot.e2e.screens;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -86,20 +88,38 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Continue button on photo screen.
-     * Navigates to description screen (step 3/4).
+     * Browse button that opens SwiftUI PhotosPicker.
      */
-    @AndroidFindBy(accessibility = "photo.continueButton")
-    @iOSXCUITFindBy(id = "photo.continueButton")
-    private WebElement photoContinueButton;
+    @AndroidFindBy(accessibility = "animalPhoto.browse")
+    @iOSXCUITFindBy(id = "animalPhoto.browse")
+    private WebElement photoBrowseButton;
     
     /**
-     * Placeholder text for photo screen.
-     * Currently "Photo Screen" - photo picker added in future implementation.
+     * Continue button on photo screen (enabled once attachment confirmed).
      */
-    @AndroidFindBy(xpath = "//XCUIElementTypeStaticText[@label='Photo Screen']")
-    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@label='Photo Screen']")
-    private WebElement photoScreenTitle;
+    @AndroidFindBy(accessibility = "animalPhoto.continue")
+    @iOSXCUITFindBy(id = "animalPhoto.continue")
+    private WebElement photoContinueButton;
+    
+    @AndroidFindBy(accessibility = "animalPhoto.remove")
+    @iOSXCUITFindBy(id = "animalPhoto.remove")
+    private WebElement photoRemoveButton;
+    
+    @AndroidFindBy(accessibility = "animalPhoto.confirmationCard")
+    @iOSXCUITFindBy(id = "animalPhoto.confirmationCard")
+    private WebElement confirmationCard;
+    
+    @AndroidFindBy(accessibility = "animalPhoto.toast")
+    @iOSXCUITFindBy(id = "animalPhoto.toast")
+    private WebElement mandatoryToast;
+    
+    @AndroidFindBy(accessibility = "animalPhoto.debug.cancel")
+    @iOSXCUITFindBy(id = "animalPhoto.debug.cancel")
+    private WebElement debugCancelButton;
+    
+    @AndroidFindBy(accessibility = "animalPhoto.debug.fail")
+    @iOSXCUITFindBy(id = "animalPhoto.debug.fail")
+    private WebElement debugFailButton;
     
     // ========================================
     // STEP 3: DESCRIPTION SCREEN (3/4)
@@ -292,10 +312,68 @@ public class ReportMissingPetScreen {
      */
     public boolean isPhotoScreenDisplayed() {
         try {
-            return photoScreenTitle.isDisplayed();
+            waitForElement(photoBrowseButton);
+            return photoBrowseButton.isDisplayed();
         } catch (Exception e) {
             return false;
         }
+    }
+    
+    public void tapBrowseButton() {
+        waitForElement(photoBrowseButton);
+        photoBrowseButton.click();
+    }
+    
+    public void selectFirstPhotoFromPicker() {
+        if (!isIosPlatform()) {
+            return;
+        }
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_WAIT_TIMEOUT));
+        WebElement firstCell = wait.until(
+            ExpectedConditions.elementToBeClickable(MobileBy.iOSClassChain("**/XCUIElementTypeCell[1]"))
+        );
+        firstCell.click();
+        waitForElement(confirmationCard);
+    }
+    
+    public boolean isConfirmationCardDisplayed() {
+        try {
+            return confirmationCard.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public String getConfirmationCardText() {
+        try {
+            waitForElement(confirmationCard);
+            return confirmationCard.getText();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+    public void tapRemovePhotoButton() {
+        waitForElement(photoRemoveButton);
+        photoRemoveButton.click();
+    }
+    
+    public boolean isMandatoryToastVisible() {
+        try {
+            return mandatoryToast.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public void tapDebugCancelButton() {
+        waitForElement(debugCancelButton);
+        debugCancelButton.click();
+    }
+    
+    public void tapDebugFailButton() {
+        waitForElement(debugFailButton);
+        debugFailButton.click();
     }
     
     /**
@@ -349,6 +427,15 @@ public class ReportMissingPetScreen {
     private void waitForElement(WebElement element, int timeoutSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
         wait.until(ExpectedConditions.visibilityOf(element));
+    }
+    
+    private boolean isIosPlatform() {
+        try {
+            return driver.getPlatformName() != null
+                && driver.getPlatformName().equalsIgnoreCase("ios");
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
 

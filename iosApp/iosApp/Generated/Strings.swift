@@ -56,6 +56,50 @@ public enum L10n {
       public static let message = L10n.tr("Localizable", "animalList.loading.message", fallback: "Loading animals...")
     }
   }
+  public enum AnimalPhoto {
+    /// MARK: - Animal Photo Screen
+    public static let title = L10n.tr("Localizable", "animalPhoto.title", fallback: "Add a photo")
+    public enum Alert {
+      public enum Missing {
+        /// Attach a JPG, PNG, HEIC, GIF or WEBP file before continuing.
+        public static let message = L10n.tr("Localizable", "animalPhoto.alert.missing.message", fallback: "Attach a JPG, PNG, HEIC, GIF or WEBP file before continuing.")
+        /// Photo required
+        public static let title = L10n.tr("Localizable", "animalPhoto.alert.missing.title", fallback: "Photo required")
+      }
+    }
+    public enum Banner {
+      /// Try again
+      public static let retry = L10n.tr("Localizable", "animalPhoto.banner.retry", fallback: "Try again")
+      /// Open Settings
+      public static let settings = L10n.tr("Localizable", "animalPhoto.banner.settings", fallback: "Open Settings")
+    }
+    public enum Button {
+      /// Browse
+      public static let browse = L10n.tr("Localizable", "animalPhoto.button.browse", fallback: "Browse")
+      /// Continue
+      public static let `continue` = L10n.tr("Localizable", "animalPhoto.button.continue", fallback: "Continue")
+      /// Remove
+      public static let remove = L10n.tr("Localizable", "animalPhoto.button.remove", fallback: "Remove")
+    }
+    public enum Helper {
+      /// Downloading from iCloud…
+      public static let loading = L10n.tr("Localizable", "animalPhoto.helper.loading", fallback: "Downloading from iCloud…")
+      /// Select a photo to continue – you can browse again anytime.
+      public static let pickerCancelled = L10n.tr("Localizable", "animalPhoto.helper.pickerCancelled", fallback: "Select a photo to continue – you can browse again anytime.")
+      /// A recent photo is mandatory before you can continue.
+      public static let `required` = L10n.tr("Localizable", "animalPhoto.helper.required", fallback: "A recent photo is mandatory before you can continue.")
+    }
+    public enum Tile {
+      /// JPG, PNG, HEIC, GIF or WEBP • Max 10MB
+      public static let subtitle = L10n.tr("Localizable", "animalPhoto.tile.subtitle", fallback: "JPG, PNG, HEIC, GIF or WEBP • Max 10MB")
+      /// Upload animal photo
+      public static let title = L10n.tr("Localizable", "animalPhoto.tile.title", fallback: "Upload animal photo")
+    }
+    public enum Toast {
+      /// Photo is mandatory
+      public static let mandatory = L10n.tr("Localizable", "animalPhoto.toast.mandatory", fallback: "Photo is mandatory")
+    }
+  }
   public enum AnimalSpecies {
     /// Bird
     public static let bird = L10n.tr("Localizable", "animalSpecies.bird", fallback: "Bird")

@@ -69,22 +69,23 @@ Key responsibilities:
 ### 4. Integrate SwiftUI PhotosPicker (iOS 16+ only)
 
 1. **Control setup**:
-   - Create `AnimalPhotoPickerView` that exposes `PhotosPicker(selection:matching:photoLibrary:)`.
-   - Use `matching: .images` and `selectionBehavior: .default` to limit do JPG/PNG/HEIC/GIF/WEBP (validated via `UTType`).
-   - Call `PhotosPickerItem.loadTransferable(type: Data.self)` (or a custom `Transferable`) to obtain bytes and metadata (filename via `itemIdentifier`, file size via `Data.count`, type via `UTType`).
-   - Emit `PhotoAttachmentStatus.loading` → `confirmed` transitions while downloads (including iCloud) run; no explicit Photos permission request is necessary.
-2. **Error handling**:
-- Map `TransferError.userCancelled` to `PhotoAttachmentStatus.empty` (triggering the toast when Continue is tapped).
-- Map `.notAvailable` / `.decodingFailed` / any download failure to `PhotoAttachmentStatus.empty` – simply remove the confirmation card and behave as if no photo was ever selected.  
+   - `AnimalPhotoEmptyStateView` hosts `PhotosPicker(selection:matching:)` directly.
+   - Restrict formats with `.any(of: .jpeg, .png, .heic, .gif, .webP)` (validated again in `PhotoAttachmentMetadata.isSupported`).
+   - Convert `PhotosPickerItem` into the reusable `PhotoSelection` via `AnimalPhotoTransferable`.
+   - Emit `.loading` → `.confirmed` via `PhotoViewModel` to keep UI responsive while iCloud downloads complete.
+2. **Error handling & debug**:
+   - Map `PhotosPickerItem.LoadTransferableError.userCancelled` to `helperMessage = L10n.AnimalPhoto.Helper.pickerCancelled` so QA sees the dedicated copy.
+   - Map any transfer failure (`.notAvailable`, decoding issues, low disk) to `handleSelectionFailure()` which clears the confirmation card and replays the toast on Continue.
+   - E2E runs enable invisible debug controls through the `UITEST_SHOW_PHOTO_DEBUG=1` environment variable (set in `AppiumDriverManager`). Tapping `animalPhoto.debug.cancel` or `animalPhoto.debug.fail` simulates the two main edge cases deterministically.
 
 ### 5. Update PhotoViewModel & SwiftUI View
 
 **File**: `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift`
 
-- Inject `PhotoAttachmentCacheProtocol` + `PhotoPickerCoordinating`.
-- Publish raw state (`attachmentStatus: PhotoAttachmentStatus`, `showsMandatoryToast: Bool`).
-- Handle intents: `browseTapped()`, `continueTapped()`, `removeTapped()`, `bannerActionTapped()`.
-- Persist metadata inside FlowState and rehydrate on init (`photoAttachmentCache.loadCurrent()`).
+- Inject `PhotoAttachmentCacheProtocol` + `ToastSchedulerProtocol`.
+- Publish `attachmentStatus`, `helperMessage`, and `showsMandatoryToast`.
+- Handle intents: selection success/failure, picker cancellation, remove, Continue, and Back.
+- Persist metadata inside FlowState and rehydrate on init (`photoAttachmentCache.loadCurrent()` + file existence check).
 - Communicate with coordinator via `onNext`/`onBack`, ensuring Continue only fires when `attachmentStatus == .confirmed`.
 
 **File**: `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift`
@@ -108,11 +109,12 @@ Key responsibilities:
 3. **Localization snapshot**:
    - Run SwiftUI previews or `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15'`.
 4. **E2E**:
-   - Add `@ios @missingPetPhoto` scenario under `/e2e-tests/src/test/resources/features/mobile/missing_pet_photo.feature`.
-   - Reuse Screen Objects to click Browse/Continue/Remove using identifiers defined above.
+   - Scenario lives in `/e2e-tests/java/src/test/resources/features/mobile/missing_pet_photo.feature`.
+   - `IosSimulatorMediaManager` (hooked from `Hooks.java`) seeds the simulator photo library via `xcrun simctl addmedia booted ...` before any `@missingPetPhoto` scenario runs.
+   - `ReportMissingPetScreen` exposes helpers for Browse/Continue/Remove plus the debug identifiers (`animalPhoto.debug.cancel` / `animalPhoto.debug.fail`) so Appium can simulate cancellations and transfer failures without driving the native picker.
    - Execute:  
      ```bash
-     mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@ios and @missingPetPhoto"
+     mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios and @missingPetPhoto"
      ```
 
 Successful completion of the steps above unlocks Phase 2 task breakdown.

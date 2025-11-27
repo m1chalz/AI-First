@@ -14,19 +14,19 @@
 
 **Purpose**: Establish localization, automation scaffolding, and platform minimums required by every story.
 
-- [ ] T001 Add animal photo localization keys in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` and `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings`, then regenerate SwiftGen outputs by running `swiftgen` inside `/iosApp`.
-- [ ] T002 [P] Create the `@ios @missingPetPhoto` scenario shell in `/e2e-tests/java/src/test/resources/features/mobile/missing_pet_photo.feature` and wire simulator photo injection hooks in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/utils/Hooks.java`.
+- [X] T001 Add animal photo localization keys in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` and `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings`, then regenerate SwiftGen outputs by running `swiftgen` inside `/iosApp`.
+- [X] T002 [P] Create the `@ios @missingPetPhoto` scenario shell in `/e2e-tests/java/src/test/resources/features/mobile/missing_pet_photo.feature` and wire simulator photo injection hooks in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/utils/Hooks.java`.
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
 **Purpose**: Core models, cache services, and DI wiring that every user story depends on. All of these must land before feature work.
 
-- [ ] T003 Create `PhotoAttachmentState.swift` under `/iosApp/iosApp/Features/ReportMissingPet/Models/` with `PhotoAttachmentMetadata`, `PhotoAttachmentStatus`, and helpers for supported `UTType` + formatted sizes.
-- [ ] T004 [P] Extend `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` with `@Published var photoAttachment` and `photoStatus`, plus update `clear()` to delete cached blobs.
-- [ ] T005 [P] Implement `/iosApp/iosApp/Features/ReportMissingPet/Services/PhotoAttachmentCache.swift` with async `save/load/clear` APIs persisting files under `Library/Caches/PetSpot/ReportMissingPet/`.
-- [ ] T006 [P] Register the cache inside `/iosApp/iosApp/DI/ServiceContainer.swift`, ensuring `PhotoViewModel` receives it even though PhotosPicker is used directly in SwiftUI without an intermediate coordinator.
-- [ ] T007 [P] Add reusable fakes (cache + toast scheduler) under `/iosApp/iosAppTests/Features/ReportMissingPet/Support/` to unblock XCTest coverage for all upcoming stories.
+- [X] T003 Create `PhotoAttachmentState.swift` under `/iosApp/iosApp/Features/ReportMissingPet/Models/` with `PhotoAttachmentMetadata`, `PhotoAttachmentStatus`, and helpers for supported `UTType` + formatted sizes.
+- [X] T004 [P] Extend `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` with `@Published var photoAttachment` and `photoStatus`, plus update `clear()` to delete cached blobs.
+- [X] T005 [P] Implement `/iosApp/iosApp/Features/ReportMissingPet/Services/PhotoAttachmentCache.swift` with async `save/load/clear` APIs persisting files under `Library/Caches/PetSpot/ReportMissingPet/`.
+- [X] T006 [P] Register the cache inside `/iosApp/iosApp/DI/ServiceContainer.swift`, ensuring `PhotoViewModel` receives it even though PhotosPicker is used directly in SwiftUI without an intermediate coordinator.
+- [X] T007 [P] Add reusable fakes (cache + toast scheduler) under `/iosApp/iosAppTests/Features/ReportMissingPet/Support/` to unblock XCTest coverage for all upcoming stories.
 
 ---
 
@@ -38,18 +38,18 @@
 
 ### Tests for User Story 1 (MANDATORY)
 
-- [ ] T009 [P] [US1] Add `PhotoAttachmentStateTests.swift` in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/` covering empty→loading→confirmed transitions and size formatting.
-- [ ] T010 [P] [US1] Add `PhotoAttachmentCacheTests.swift` in `/iosApp/iosAppTests/Features/ReportMissingPet/Services/` validating save/load/clear logic and cache directory hygiene.
-- [ ] T011 [P] [US1] Extend `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with happy-path tests for browse success, cache persistence, and coordinator navigation.
+- [X] T009 [P] [US1] Add `PhotoAttachmentStateTests.swift` in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/` covering empty→loading→confirmed transitions and size formatting.
+- [X] T010 [P] [US1] Add `PhotoAttachmentCacheTests.swift` in `/iosApp/iosAppTests/Features/ReportMissingPet/Services/` validating save/load/clear logic and cache directory hygiene.
+- [X] T011 [P] [US1] Extend `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with happy-path tests for browse success, cache persistence, and coordinator navigation.
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Build `AnimalPhotoEmptyStateView.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/` to match Figma node `297:7991`, including helper copy and `animalPhoto.browse` identifier.
-- [ ] T013 [P] [US1] Implement `AnimalPhotoConfirmationCard.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/` with icon, filename, size, and `animalPhoto.remove` accessibility identifier.
-- [ ] T014 [US1] Complete `PhotoViewModel.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/` to map picker outputs into `PhotoAttachmentStatus`, persist metadata to FlowState, and expose `continueTapped` gating.
-- [ ] T015 [US1] Replace the placeholder UI in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with the PhotosPicker-driven layout, wiring `PhotosPicker` to the ViewModel intents and adding previews.
-- [ ] T016 [US1] Update `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` to instantiate the new ViewModel, handle `onNext`, and keep step 2/4 navigation consistent.
-- [ ] T017 [P] [US1] Flesh out the happy-path scenario inside `/e2e-tests/java/src/test/resources/features/mobile/missing_pet_photo.feature` plus matching steps in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` to validate browse→confirm→continue.
+- [X] T012 [P] [US1] Build `AnimalPhotoEmptyStateView.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/` to match Figma node `297:7991`, including helper copy and `animalPhoto.browse` identifier.
+- [X] T013 [P] [US1] Implement `AnimalPhotoConfirmationCard.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/` with icon, filename, size, and `animalPhoto.remove` accessibility identifier.
+- [X] T014 [US1] Complete `PhotoViewModel.swift` in `/iosApp/iosApp/Features/ReportMissingPet/Views/` to map picker outputs into `PhotoAttachmentStatus`, persist metadata to FlowState, and expose `continueTapped` gating.
+- [X] T015 [US1] Replace the placeholder UI in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with the PhotosPicker-driven layout, wiring `PhotosPicker` to the ViewModel intents and adding previews.
+- [X] T016 [US1] Update `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` to instantiate the new ViewModel, handle `onNext`, and keep step 2/4 navigation consistent.
+- [X] T017 [P] [US1] Flesh out the happy-path scenario inside `/e2e-tests/java/src/test/resources/features/mobile/missing_pet_photo.feature` plus matching steps in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` to validate browse→confirm→continue.
 
 ---
 
@@ -61,13 +61,13 @@
 
 ### Tests for User Story 2 (MANDATORY)
 
-- [ ] T018 [P] [US2] Expand `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with Given-When-Then cases for Continue without attachment, Remove resets, and toast timing.
+- [X] T018 [P] [US2] Expand `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with Given-When-Then cases for Continue without attachment, Remove resets, and toast timing.
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Add toast state (`showsMandatoryToast`, timer handling) inside `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` and render the toast in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with identifier `animalPhoto.toast`.
-- [ ] T020 [US2] Implement the Remove control logic plus helper copy fallback in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/AnimalPhotoConfirmationCard.swift` and ensure FlowState cleanup in `ReportMissingPetFlowState.swift`.
-- [ ] T021 [P] [US2] Update the Appium scenario + steps (`missing_pet_photo.feature` and `ReportMissingPetSteps.java`) to cover toast assertions and Remove-driven resets.
+- [X] T019 [US2] Add toast state (`showsMandatoryToast`, timer handling) inside `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` and render the toast in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` with identifier `animalPhoto.toast`.
+- [X] T020 [US2] Implement the Remove control logic plus helper copy fallback in `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/AnimalPhotoConfirmationCard.swift` and ensure FlowState cleanup in `ReportMissingPetFlowState.swift`.
+- [X] T021 [P] [US2] Update the Appium scenario + steps (`missing_pet_photo.feature` and `ReportMissingPetSteps.java`) to cover toast assertions and Remove-driven resets.
 
 ---
 
@@ -79,13 +79,13 @@
 
 ### Tests for User Story 3 (MANDATORY)
 
-- [ ] T022 [P] [US3] Extend `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with scenarios for picker cancellation, iCloud progress completion, and transfer failure recovery using the new fakes.
+- [X] T022 [P] [US3] Extend `/iosApp/iosAppTests/Features/ReportMissingPet/Views/PhotoViewModelTests.swift` with scenarios for picker cancellation, iCloud progress completion, and transfer failure recovery using the new fakes.
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Add progress tracking + cancellation handling in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` and render the loading indicator plus helper copy in `PhotoView.swift`.
-- [ ] T024 [US3] Ensure cached metadata reloads on init/background resume by enhancing `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` and lifecycle hooks inside `PhotoViewModel`.
-- [ ] T025 [P] [US3] Expand `missing_pet_photo.feature`, `ReportMissingPetSteps.java`, and `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/utils/Hooks.java` with steps that simulate picker cancellation and iCloud failures.
+- [X] T023 [US3] Add progress tracking + cancellation handling in `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoViewModel.swift` and render the loading indicator plus helper copy in `PhotoView.swift`.
+- [X] T024 [US3] Ensure cached metadata reloads on init/background resume by enhancing `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` and lifecycle hooks inside `PhotoViewModel`.
+- [X] T025 [P] [US3] Expand `missing_pet_photo.feature`, `ReportMissingPetSteps.java`, and `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/utils/Hooks.java` with steps that simulate picker cancellation and iCloud failures.
 
 ---
 
@@ -93,8 +93,8 @@
 
 **Purpose**: Documentation, accessibility, and verification tasks that span all stories.
 
-- [ ] T026 [P] Add SwiftDoc comments to `PhotoAttachmentCache.swift` and `PhotoViewModel.swift` plus update `/specs/028-ios-animal-photo-screen/quickstart.md` with any deviations.
-- [ ] T027 [P] Verify accessibility identifiers inside `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` and components follow the `animalPhoto.*` naming convention for UI automation.
+- [X] T026 [P] Add SwiftDoc comments to `PhotoAttachmentCache.swift` and `PhotoViewModel.swift` plus update `/specs/028-ios-animal-photo-screen/quickstart.md` with any deviations.
+- [X] T027 [P] Verify accessibility identifiers inside `/iosApp/iosApp/Features/ReportMissingPet/Views/PhotoView.swift` and components follow the `animalPhoto.*` naming convention for UI automation.
 - [ ] T028 Run the full regression suite (`xcodebuild test ...` + `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios and @missingPetPhoto"`) and capture coverage artefacts in `/iosApp/iosAppTests/Reports/` for sign-off.
 
 ---

@@ -111,6 +111,23 @@
 "microchipNumber.fieldPlaceholder" = "00000-00000-00000";
 "microchipNumber.continueButton" = "Continue";
 
+/* MARK: - Animal Photo Screen */
+
+"animalPhoto.title" = "Add a photo";
+"animalPhoto.helper.required" = "A recent photo is mandatory before you can continue.";
+"animalPhoto.helper.pickerCancelled" = "Select a photo to continue – you can browse again anytime.";
+"animalPhoto.helper.loading" = "Downloading from iCloud…";
+"animalPhoto.alert.missing.title" = "Photo required";
+"animalPhoto.alert.missing.message" = "Attach a JPG, PNG, HEIC, GIF or WEBP file before continuing.";
+"animalPhoto.button.browse" = "Browse";
+"animalPhoto.button.remove" = "Remove";
+"animalPhoto.button.continue" = "Continue";
+"animalPhoto.banner.settings" = "Open Settings";
+"animalPhoto.banner.retry" = "Try again";
+"animalPhoto.toast.mandatory" = "Photo is mandatory";
+"animalPhoto.tile.title" = "Upload animal photo";
+"animalPhoto.tile.subtitle" = "JPG, PNG, HEIC, GIF or WEBP • Max 10MB";
+
 /* MARK: - Common */
 
 "common.loading" = "Loading...";

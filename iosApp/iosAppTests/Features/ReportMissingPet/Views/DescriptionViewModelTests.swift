@@ -5,16 +5,19 @@ import XCTest
 final class DescriptionViewModelTests: XCTestCase {
     
     var flowState: ReportMissingPetFlowState!
+    var cache: PhotoAttachmentCacheFake!
     var sut: DescriptionViewModel!
     
     override func setUp() {
         super.setUp()
-        flowState = ReportMissingPetFlowState()
+        cache = PhotoAttachmentCacheFake()
+        flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
         sut = DescriptionViewModel(flowState: flowState)
     }
     
     override func tearDown() {
         sut = nil
+        cache = nil
         flowState = nil
         super.tearDown()
     }
