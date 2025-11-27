@@ -120,47 +120,6 @@ fun AnimalListContent(
             }
         }
 
-        // Location status indicator
-        when {
-            state.location != null -> {
-                Text(
-                    text = "📍 Location available",
-                    fontSize = 12.sp,
-                    color = Color(0xFF4CAF50),
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 48.dp, end = 24.dp)
-                            .testTag("animalList.locationStatus"),
-                )
-            }
-            state.permissionStatus is PermissionStatus.Denied -> {
-                Text(
-                    text = "🚫 Location denied",
-                    fontSize = 12.sp,
-                    color = Color(0xFFE57373),
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 48.dp, end = 24.dp)
-                            .testTag("animalList.locationStatus.denied"),
-                )
-            }
-            state.permissionStatus is PermissionStatus.Granted && !state.isLocationLoading -> {
-                // Permission granted but location fetch failed (timeout, GPS unavailable, etc.)
-                Text(
-                    text = "📍 Location unavailable",
-                    fontSize = 12.sp,
-                    color = Color(0xFF9E9E9E),
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 48.dp, end = 24.dp)
-                            .testTag("animalList.locationStatus.unavailable"),
-                )
-            }
-        }
-
         // Floating button at bottom right
         FloatingReportButton(
             onClick = onReportMissing,
