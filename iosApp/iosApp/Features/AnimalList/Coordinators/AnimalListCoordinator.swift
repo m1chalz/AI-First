@@ -57,6 +57,11 @@ class AnimalListCoordinator: CoordinatorInterface {
             self?.showReportFound()
         }
         
+        // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
+        viewModel.onOpenAppSettings = { [weak self] in
+            self?.openAppSettings()
+        }
+        
         // Create SwiftUI view with ViewModel
         let view = AnimalListView(viewModel: viewModel)
         
@@ -133,6 +138,21 @@ class AnimalListCoordinator: CoordinatorInterface {
         print("Navigate to report found form")
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
+    }
+    
+    // MARK: - User Story 3: Settings Navigation
+    
+    /**
+     * Opens iOS Settings app to this app's permission screen.
+     * Handles system navigation (MVVM-C pattern: Coordinator manages navigation).
+     *
+     * User Story 3: Recovery path for denied permissions.
+     */
+    private func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        UIApplication.shared.open(settingsUrl)
     }
     
     // MARK: - Deinitialization
