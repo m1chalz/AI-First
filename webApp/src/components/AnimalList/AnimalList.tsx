@@ -1,7 +1,9 @@
 import React from 'react';
 import { useAnimalList } from '../../hooks/use-animal-list';
+import { useModal } from '../../hooks/use-modal';
 import { AnimalCard } from './AnimalCard';
 import { EmptyState } from './EmptyState';
+import { PetDetailsModal } from '../PetDetailsModal/PetDetailsModal';
 import styles from './AnimalList.module.css';
 
 export const AnimalList: React.FC = () => {
@@ -10,10 +12,11 @@ export const AnimalList: React.FC = () => {
         isLoading,
         error,
         isEmpty,
-        selectAnimal,
         reportMissing,
         reportFound
     } = useAnimalList();
+    
+    const { isOpen, selectedPetId, openModal, closeModal } = useModal();
     
     return (
         <div className={styles.container}>
@@ -57,13 +60,19 @@ export const AnimalList: React.FC = () => {
                                 <AnimalCard
                                     key={animal.id}
                                     animal={animal}
-                                    onClick={() => selectAnimal(animal.id)}
+                                    onDetailsClick={() => openModal(animal.id)}
                                 />
                             ))}
                         </div>
                     )}
                 </div>
             </div>
+            
+            <PetDetailsModal
+                isOpen={isOpen}
+                selectedPetId={selectedPetId}
+                onClose={closeModal}
+            />
         </div>
     );
 };

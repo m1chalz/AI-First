@@ -5,10 +5,10 @@ import styles from './AnimalList.module.css';
 
 interface AnimalCardProps {
     animal: Animal;
-    onClick: () => void;
+    onDetailsClick: (animalId: string) => void;
 }
 
-export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onClick }) => {
+export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }) => {
     const statusColor = ANIMAL_STATUS_BADGE_COLORS[animal.status] || '#FF0000';
     
     const getGenderIcon = (sex: AnimalSex): string => {
@@ -21,7 +21,6 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onClick }) => {
         <div
             className={styles.animalCard}
             data-testid={`animalList.item.${animal.id}`}
-            onClick={onClick}
         >
             {/* Photo placeholder - circular with optional photo */}
             <div className={styles.photoPlaceholder}>
@@ -79,6 +78,14 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onClick }) => {
                 <div className={styles.animalDate}>
                     {animal.lastSeenDate}
                 </div>
+                
+                <button
+                    className={styles.detailsButton}
+                    onClick={() => onDetailsClick(animal.id)}
+                    data-testid="animalList.card.detailsButton.click"
+                >
+                    Details
+                </button>
             </div>
         </div>
     );

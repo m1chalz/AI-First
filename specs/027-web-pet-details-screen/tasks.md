@@ -69,10 +69,10 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Web Unit Tests**:
-- [ ] T014 [P] [US1] Unit test for `useModal` hook in `/webApp/src/__tests__/hooks/use-modal.test.ts` (test open/close state, selectedPetId)
-- [ ] T015 [P] [US1] Unit test for `usePetDetails` hook in `/webApp/src/__tests__/hooks/use-pet-details.test.ts` (test loading, success, error states, retry)
-- [ ] T016 [P] [US1] Unit test for `AnimalRepository.getPetById` in `/webApp/src/__tests__/services/animal-repository.test.ts` (test API call, error handling, timeout)
-- [ ] T017 [P] [US1] Unit test for `PetDetailsModal` component in `/webApp/src/__tests__/components/PetDetailsModal.test.tsx` (test modal opens/closes, displays content, handles ESC/backdrop click)
+- [X] T014 [P] [US1] Unit test for `useModal` hook in `/webApp/src/__tests__/hooks/use-modal.test.ts` (test open/close state, selectedPetId)
+- [X] T015 [P] [US1] Unit test for `usePetDetails` hook in `/webApp/src/__tests__/hooks/use-pet-details.test.ts` (test loading, success, error states, retry)
+- [X] T016 [P] [US1] Unit test for `AnimalRepository.getPetById` in `/webApp/src/__tests__/services/animal-repository.test.ts` (test API call, error handling, timeout)
+- [X] T017 [P] [US1] Unit test for `PetDetailsModal` component in `/webApp/src/__tests__/components/PetDetailsModal.test.tsx` (test modal opens/closes, displays content, handles ESC/backdrop click)
 
 **End-to-End Tests**:
 - [ ] T018 [P] [US1] Web E2E test in `/e2e-tests/web/specs/pet-details-modal.spec.ts` (test clicking "Details" button opens modal, modal displays pet info, modal closes via X/ESC/backdrop)
@@ -81,22 +81,22 @@
 ### Implementation for User Story 1
 
 **Web** (Full Stack Implementation):
-- [ ] T020 [P] [US1] Create `useModal` hook in `/webApp/src/hooks/use-modal.ts` (manages `isOpen` and `selectedPetId` state)
-- [ ] T021 [P] [US1] Create `usePetDetails` hook in `/webApp/src/hooks/use-pet-details.ts` (fetches pet details by ID, handles loading/error/retry states, 10-second timeout)
-- [ ] T022 [US1] Create `PetDetailsModal` component in `/webApp/src/components/PetDetailsModal/PetDetailsModal.tsx` (main modal component using React Portal, handles open/close, focus trap, body scroll lock)
-- [ ] T023 [US1] Create `PetDetailsModal.module.css` in `/webApp/src/components/PetDetailsModal/PetDetailsModal.module.css` (backdrop, modal container, close button styles)
-- [ ] T024 [US1] Create `PetDetailsContent` component in `/webApp/src/components/PetDetailsModal/PetDetailsContent.tsx` (stateless content component displaying pet details)
-- [ ] T025 [US1] Create `PetDetailsContent.module.css` in `/webApp/src/components/PetDetailsModal/PetDetailsContent.module.css` (content layout styles)
-- [ ] T026 [US1] Update `AnimalList` component in `/webApp/src/components/AnimalList/AnimalList.tsx` to manage modal state (use `useModal` hook, pass `selectedPetId` and `isOpen` to `PetDetailsModal`)
-- [ ] T027 [US1] Update `AnimalCard` component in `/webApp/src/components/AnimalList/AnimalCard.tsx` to add "Details" button with `data-testid="animalList.card.detailsButton.click"` that calls `onDetailsClick(animal.id)` callback
-- [ ] T028 [US1] Implement focus trap in `PetDetailsModal` (trap focus within modal when open, return focus to "Details" button on close)
-- [ ] T029 [US1] Implement body scroll lock in `PetDetailsModal` (prevent background scrolling when modal is open)
-- [ ] T030 [US1] Add ESC key handler in `PetDetailsModal` (close modal on ESC key press)
-- [ ] T031 [US1] Add backdrop click handler in `PetDetailsModal` (close modal on backdrop click)
-- [ ] T032 [US1] Add close button (X) in `PetDetailsModal` header with `data-testid="petDetails.closeButton.click"`
-- [ ] T033 [US1] Add loading spinner in `PetDetailsModal` (display while fetching pet details)
-- [ ] T034 [US1] Add error state in `PetDetailsModal` (display "Failed to load pet details" message with "Retry" button on API error/timeout)
-- [ ] T035 [P] [US1] Add JSDoc documentation to complex Web APIs in hooks and components (skip self-explanatory functions)
+- [X] T020 [P] [US1] Create `useModal` hook in `/webApp/src/hooks/use-modal.ts` (manages `isOpen` and `selectedPetId` state)
+- [X] T021 [P] [US1] Create `usePetDetails` hook in `/webApp/src/hooks/use-pet-details.ts` (fetches pet details by ID, handles loading/error/retry states, 10-second timeout)
+- [X] T022 [US1] Create `PetDetailsModal` component in `/webApp/src/components/PetDetailsModal/PetDetailsModal.tsx` (main modal component using React Portal, handles open/close, focus trap, body scroll lock)
+- [X] T023 [US1] Create `PetDetailsModal.module.css` in `/webApp/src/components/PetDetailsModal/PetDetailsModal.module.css` (backdrop, modal container, close button styles)
+- [X] T024 [US1] Create `PetDetailsContent` component in `/webApp/src/components/PetDetailsModal/PetDetailsContent.tsx` (stateless content component displaying pet details)
+- [X] T025 [US1] Create `PetDetailsContent.module.css` in `/webApp/src/components/PetDetailsModal/PetDetailsContent.module.css` (content layout styles)
+- [X] T026 [US1] Update `AnimalList` component in `/webApp/src/components/AnimalList/AnimalList.tsx` to manage modal state (use `useModal` hook, pass `selectedPetId` and `isOpen` to `PetDetailsModal`)
+- [X] T027 [US1] Update `AnimalCard` component in `/webApp/src/components/AnimalList/AnimalCard.tsx` to add "Details" button with `data-testid="animalList.card.detailsButton.click"` that calls `onDetailsClick(animal.id)` callback
+- [X] T028 [US1] Implement focus trap in `PetDetailsModal` (trap focus within modal when open, return focus to "Details" button on close)
+- [X] T029 [US1] Implement body scroll lock in `PetDetailsModal` (prevent background scrolling when modal is open)
+- [X] T030 [US1] Add ESC key handler in `PetDetailsModal` (close modal on ESC key press)
+- [X] T031 [US1] Add backdrop click handler in `PetDetailsModal` (close modal on backdrop click)
+- [X] T032 [US1] Add close button (X) in `PetDetailsModal` header with `data-testid="petDetails.closeButton.click"`
+- [X] T033 [US1] Add loading spinner in `PetDetailsModal` (display while fetching pet details)
+- [X] T034 [US1] Add error state in `PetDetailsModal` (display "Failed to load pet details" message with "Retry" button on API error/timeout)
+- [X] T035 [P] [US1] Add JSDoc documentation to complex Web APIs in hooks and components (skip self-explanatory functions)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
