@@ -41,7 +41,7 @@ export const AnimalList: React.FC = () => {
                 
                 <div className={styles.content}>
                     {isLoading ? (
-                        <div className={styles.loading}>
+                        <div className={styles.loading} data-testid="animalList.loading">
                             <div className={styles.spinner}></div>
                             <p>Loading animals...</p>
                         </div>
