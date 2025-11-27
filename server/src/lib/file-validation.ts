@@ -26,22 +26,3 @@ export async function validateImageFormat(buffer: Buffer): Promise<string | null
     return null;
   }
 }
-
-export function sanitizeFilename(filename: string): string {
-  return (
-    filename
-      // Remove null bytes and dangerous characters
-      // eslint-disable-next-line no-control-regex
-      .replace(/[\x00<>:"|?*]/g, '')
-      // Remove path traversal patterns
-      .replace(/\.\./g, '')
-      // Remove path separators
-      .replace(/[\\/]/g, '')
-      // Convert to lowercase
-      .toLowerCase()
-      // Replace multiple spaces with single hyphen
-      .replace(/\s+/g, '-')
-      // Remove leading/trailing hyphens
-      .replace(/^-+|-+$/g, '')
-  );
-}
