@@ -18,7 +18,7 @@ struct FloatingActionButton: View {
         
         var backgroundColor: Color {
             switch self {
-            case .primary: return Color(hex: "#2D2D2D")
+            case .primary: return Color(hex: "#155DFC")
             case .secondary: return Color(hex: "#EFF4F8")
             }
         }
