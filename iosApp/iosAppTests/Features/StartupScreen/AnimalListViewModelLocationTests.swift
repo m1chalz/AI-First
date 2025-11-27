@@ -551,10 +551,12 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertEqual(viewModel.locationPermissionStatus, .denied, "Should update status")
     }
     
-    // T074: Unit test checkPermissionStatusChange() updates locationPermissionStatus property
-    func test_checkPermissionStatusChange_whenStatusUnchanged_shouldStillUpdateProperty() async {
+    // T074: Unit test checkPermissionStatusChange() updates locationPermissionStatus property and refreshes when changing from notDetermined to authorized
+    func test_checkPermissionStatusChange_whenChangingFromNotDeterminedToAuthorized_shouldRefresh() async {
         // Given
         await setLocationServiceStatus(.authorizedWhenInUse)
+        let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        await setLocationServiceLocation(expectedLocation)
         fakeRepository.stubbedAnimals = []
         
         viewModel = AnimalListViewModel(
@@ -563,11 +565,15 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         )
         viewModel.locationPermissionStatus = .notDetermined
         
+        // Reset repository call tracking
+        fakeRepository.lastLocationParameter = nil
+        
         // When
         await viewModel.checkPermissionStatusChange()
         
         // Then
         XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update permission status property")
+        XCTAssertNotNil(fakeRepository.lastLocationParameter, "Should refresh when changing from notDetermined to authorized")
     }
     
     // MARK: - Helper Methods

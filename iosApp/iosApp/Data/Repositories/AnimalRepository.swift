@@ -12,20 +12,29 @@ class AnimalRepository: AnimalRepositoryProtocol {
     
     /**
      * Fetches mock animal data with optional location filtering.
-     * Returns list of 16 animals after simulated delay.
+     * Returns list of animals after simulated delay.
+     * - With location: returns 10 animals (simulating location-filtered results)
+     * - Without location: returns all 16 animals
      * Uses same mock data structure as Android for cross-platform consistency.
      *
-     * - Parameter location: Optional user location for proximity filtering (ignored in mock implementation)
-     * - Returns: Array of Animal entities
+     * - Parameter location: Optional user location for proximity filtering
+     * - Returns: Array of Animal entities (10 if location provided, 16 if nil)
      * - Throws: Error if operation fails
-     * - Note: Mock implementation ignores location parameter. Real implementation will call backend API with lat/lon query params.
+     * - Note: Mock implementation uses location to determine result count. Real implementation will call backend API with lat/lon query params.
      */
     func getAnimals(near location: UserLocation?) async throws -> [Animal] {
         // Simulate network delay
         try await Task.sleep(nanoseconds: UInt64(networkDelaySeconds * 1_000_000_000))
         
-        // Return mock animals (location parameter ignored in mock - real API will use it)
-        return getMockAnimals()
+        // Return mock animals - 10 if location provided, all 16 if nil
+        let allAnimals = getMockAnimals()
+        if location != nil {
+            // Return first 10 animals when location is provided
+            return Array(allAnimals.prefix(10))
+        } else {
+            // Return all 16 animals when no location
+            return allAnimals
+        }
     }
     
     /**

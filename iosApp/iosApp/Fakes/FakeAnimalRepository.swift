@@ -20,7 +20,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     private(set) var getPetDetailsCallCount = 0
     
     /// For location testing - tracks location parameter passed
-    private(set) var lastLocationParameter: UserLocation?
+    var lastLocationParameter: UserLocation?
     
     /// For PetDetails testing - mock pet details to return
     var mockPetDetails: PetDetails?

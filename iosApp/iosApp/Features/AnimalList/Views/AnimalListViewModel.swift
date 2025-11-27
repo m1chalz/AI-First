@@ -327,7 +327,7 @@ class AnimalListViewModel: ObservableObject {
         let newStatus = await locationService.authorizationStatus
         
         // If permission changed from unauthorized → authorized, refresh with location (FR-011)
-        if newStatus.isAuthorized && !locationPermissionStatus.isAuthorized {
+        if (newStatus.isAuthorized && !locationPermissionStatus.isAuthorized) || newStatus == .notDetermined {
             locationPermissionStatus = newStatus
             await loadAnimals() // Refresh with location
         } else {
