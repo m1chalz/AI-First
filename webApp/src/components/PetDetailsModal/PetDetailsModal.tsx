@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { usePetDetails } from '../../hooks/use-pet-details';
 import { PetDetailsContent } from './PetDetailsContent';
@@ -84,23 +84,41 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
     const { pet, isLoading, error, retry } = usePetDetails(selectedPetId);
     const modalRef = useRef<HTMLDivElement>(null);
     const previousActiveElementRef = useRef<HTMLElement | null>(null);
+    const [isClosing, setIsClosing] = useState(false);
     
-    useEffect(() => setupModalAccessibility(isOpen, previousActiveElementRef, onClose), [isOpen, onClose]);
-  
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            onClose();
+        }, 300); // Match animation duration
+    };
+    
+    useEffect(() => {
+        if (!isOpen) {
+            setIsClosing(false);
+        }
+    }, [isOpen]);
+    
+    useEffect(() => setupModalAccessibility(isOpen, previousActiveElementRef, handleClose), [isOpen]);
+   
     useEffect(() => setupFocusTrap(isOpen, modalRef), [isOpen]);
-    
-    if (!isOpen) {
-        return null;
-    }
     
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            onClose();
+            handleClose();
         }
     };
     
+    if (!isOpen && !isClosing) {
+        return null;
+    }
+    
     const modalContent = (
-        <div className={styles.backdrop} onClick={handleBackdropClick} aria-hidden="true">
+        <div 
+            className={`${styles.backdrop} ${isClosing ? styles.closing : ''}`} 
+            onClick={handleBackdropClick} 
+            aria-hidden="true"
+        >
             <div
                 ref={modalRef}
                 className={styles.modal}
@@ -111,7 +129,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
                 <div className={styles.modalHeader}>
                     <button
                         className={styles.closeButton}
-                        onClick={onClose}
+                        onClick={handleClose}
                         aria-label="Close modal"
                         data-testid="petDetails.closeButton.click"
                     >

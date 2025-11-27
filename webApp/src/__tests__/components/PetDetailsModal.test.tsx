@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PetDetailsModal } from '../../components/PetDetailsModal/PetDetailsModal';
 import * as usePetDetailsModule from '../../hooks/use-pet-details';
@@ -101,8 +101,10 @@ describe('PetDetailsModal', () => {
         const closeButton = screen.getByTestId('petDetails.closeButton.click');
         await user.click(closeButton);
         
-        // Then: onClose should be called
-        expect(mockOnClose).toHaveBeenCalledTimes(1);
+        // Then: onClose should be called after animation delay
+        await waitFor(() => {
+            expect(mockOnClose).toHaveBeenCalledTimes(1);
+        }, { timeout: 400 });
     });
     
     it('should call onClose when ESC key is pressed', async () => {
@@ -126,8 +128,10 @@ describe('PetDetailsModal', () => {
         // When: ESC key is pressed
         await user.keyboard('{Escape}');
         
-        // Then: onClose should be called
-        expect(mockOnClose).toHaveBeenCalledTimes(1);
+        // Then: onClose should be called after animation delay
+        await waitFor(() => {
+            expect(mockOnClose).toHaveBeenCalledTimes(1);
+        }, { timeout: 400 });
     });
     
     it('should call onClose when backdrop is clicked', async () => {
@@ -154,8 +158,10 @@ describe('PetDetailsModal', () => {
             await user.click(backdrop);
         }
         
-        // Then: onClose should be called
-        expect(mockOnClose).toHaveBeenCalledTimes(1);
+        // Then: onClose should be called after animation delay
+        await waitFor(() => {
+            expect(mockOnClose).toHaveBeenCalledTimes(1);
+        }, { timeout: 400 });
     });
     
     it('should display loading spinner while fetching pet details', () => {

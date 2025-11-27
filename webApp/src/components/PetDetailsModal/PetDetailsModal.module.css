@@ -6,23 +6,71 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: flex-end;
     z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal {
     background-color: white;
-    border-radius: 16px;
+    border-radius: 0;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
     max-width: 768px;
     width: 90vw;
-    max-height: 90vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
     outline: none;
     position: relative;
     overflow: hidden;
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.backdrop.closing {
+    animation: fadeOut 0.3s ease-in;
+}
+
+.backdrop.closing .modal {
+    animation: slideOutToRight 0.3s ease-in;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
 }
 
 .modalHeader {
