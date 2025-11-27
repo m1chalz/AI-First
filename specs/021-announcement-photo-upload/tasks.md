@@ -145,11 +145,11 @@ Backend-only feature implementing photo upload endpoint for pet announcements. U
 
 ### Tasks
 
-- [ ] T030 Run full test suite with coverage in /Users/pawelkedra/code/AI-First/server/
-- [ ] T031 Verify 80%+ coverage for all new code (services, lib, integration)
-- [ ] T032 Run ESLint and fix any violations in /Users/pawelkedra/code/AI-First/server/src/
-- [ ] T033 Manual testing: Upload photos with curl/Postman to verify end-to-end flow
-- [ ] T034 Verify error responses match spec for all error scenarios
+- [x] T030 Run full test suite with coverage in /Users/pawelkedra/code/AI-First/server/
+- [x] T031 Verify 80%+ coverage for all new code (services, lib, integration)
+- [x] T032 Run ESLint and fix any violations in /Users/pawelkedra/code/AI-First/server/src/
+- [x] T033 Manual testing: Upload photos with curl/Postman to verify end-to-end flow
+- [x] T034 Verify error responses match spec for all error scenarios
 
 **Validation**: 80%+ coverage achieved, no linter errors, manual tests pass, all error codes correct
 

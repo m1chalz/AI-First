@@ -55,7 +55,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       last_seen_date: data.lastSeenDate,
       email: data.email ?? null,
       phone: data.phone ?? null,
-      photo_url: data.photoUrl,
+      photo_url: null,
       status: data.status,
       reward: data.reward ?? null,
       management_password_hash: passwordHash,

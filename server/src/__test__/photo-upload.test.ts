@@ -104,7 +104,7 @@ describe('POST /api/v1/announcements/:id/photos', () => {
   it('should return 401 when Authorization header is missing', async () => {
     // Given / When
     const response = await request(server)
-      .post(`/api/v1/announcements/${TEST_ANNOUNCEMENT.id}}/photos`)
+      .post(`/api/v1/announcements/${TEST_ANNOUNCEMENT.id}/photos`)
       .attach('photo', JPEG_BUFFER, 'test.jpg');
 
     // Then
