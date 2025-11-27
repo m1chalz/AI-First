@@ -118,6 +118,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
             className={`${styles.backdrop} ${isClosing ? styles.closing : ''}`} 
             onClick={handleBackdropClick} 
             aria-hidden="true"
+            data-testid="petDetails.backdrop"
         >
             <div
                 ref={modalRef}
@@ -125,6 +126,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="pet-details-title"
+                data-testid="petDetails.modal"
             >
                 <div className={styles.modalHeader}>
                     <button

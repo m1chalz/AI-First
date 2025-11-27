@@ -111,21 +111,21 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Web Unit Tests**:
-- [ ] T036 [P] [US2] Unit test for microchip formatter in `/webApp/src/__tests__/utils/microchip-formatter.test.ts` (test formatting to "000-000-000-000")
-- [ ] T037 [P] [US2] Unit test for `PetDetailsContent` component displaying identification fields in `/webApp/src/__tests__/components/PetDetailsContent.test.tsx` (test microchip, species, breed, sex, age display)
+- [X] T036 [P] [US2] Unit test for microchip formatter in `/webApp/src/__tests__/utils/microchip-formatter.test.ts` (test formatting to "XXXXX-XXXXX-XXXXX")
+- [X] T037 [P] [US2] Unit test for `PetDetailsContent` component displaying identification fields in `/webApp/src/__tests__/components/PetDetailsContent.test.tsx` (test microchip, species, breed, sex, age display)
 
 **End-to-End Tests**:
-- [ ] T038 [P] [US2] Web E2E test in `/e2e-tests/web/specs/pet-details-modal.spec.ts` (test identification fields display correctly with formatting)
+- [X] T038 [P] [US2] Web E2E test in `/e2e-tests/web/specs/pet-details-modal.spec.ts` (test identification fields display correctly with formatting)
 
 ### Implementation for User Story 2
 
 **Web** (Full Stack):
-- [ ] T039 [P] [US2] Update `PetDetailsContent` component in `/webApp/src/components/PetDetailsModal/PetDetailsContent.tsx` to display microchip number (formatted using `formatMicrochip` utility, show "—" if null)
-- [ ] T040 [US2] Update `PetDetailsContent` component to display species and breed side-by-side in two-column layout (labeled "Animal Species" and "Animal Race")
-- [ ] T041 [US2] Update `PetDetailsContent` component to display sex with appropriate icon (male/female symbol)
-- [ ] T042 [US2] Update `PetDetailsContent` component to display age (show "—" if null)
-- [ ] T043 [US2] Update `PetDetailsContent.module.css` to add styles for identification fields section (two-column layout for species/breed)
-- [ ] T044 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
+- [X] T039 [P] [US2] Update `PetDetailsContent` component in `/webApp/src/components/PetDetailsModal/PetDetailsContent.tsx` to display microchip number (formatted using `formatMicrochip` utility, show "—" if null)
+- [X] T040 [US2] Update `PetDetailsContent` component to display species and breed side-by-side in two-column layout (labeled "Animal Species" and "Animal Race")
+- [X] T041 [US2] Update `PetDetailsContent` component to display sex with appropriate icon (male/female symbol)
+- [X] T042 [US2] Update `PetDetailsContent` component to display age (show "—" if null)
+- [X] T043 [US2] Update `PetDetailsContent.module.css` to add styles for identification fields section (two-column layout for species/breed)
+- [X] T044 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

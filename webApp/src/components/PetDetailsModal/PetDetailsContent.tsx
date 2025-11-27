@@ -86,7 +86,7 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
                 <div className={styles.section}>
                     <div className={styles.fieldRow}>
                         <span className={styles.fieldLabel}>Microchip number</span>
-                        <span className={styles.fieldValue}>
+                        <span className={styles.fieldValue} data-testid="petDetails.microchip.value">
                             {pet.microchipNumber ? formatMicrochip(pet.microchipNumber) : '—'}
                         </span>
                     </div>
@@ -97,23 +97,23 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
                     <div className={styles.gridRow}>
                         <div className={styles.gridItem}>
                             <span className={styles.fieldLabel}>Animal Species</span>
-                            <span className={styles.fieldValue}>{formatSpecies(pet.species)}</span>
+                            <span className={styles.fieldValue} data-testid="petDetails.species.value">{formatSpecies(pet.species)}</span>
                         </div>
                         <div className={styles.gridItem}>
                             <span className={styles.fieldLabel}>Animal Race</span>
-                            <span className={styles.fieldValue}>{pet.breed || '—'}</span>
+                            <span className={styles.fieldValue} data-testid="petDetails.breed.value">{pet.breed || '—'}</span>
                         </div>
                     </div>
                     <div className={styles.gridRow}>
                         <div className={styles.gridItem}>
                             <span className={styles.fieldLabel}>Animal Sex</span>
-                            <span className={styles.fieldValue}>
+                            <span className={styles.fieldValue} data-testid="petDetails.sex.value">
                                 {pet.sex !== 'UNKNOWN' ? `${formatSex(pet.sex)} ${getGenderIcon(pet.sex)}` : '—'}
                             </span>
                         </div>
                         <div className={styles.gridItem}>
                             <span className={styles.fieldLabel}>Animal Approx. Age</span>
-                            <span className={styles.fieldValue}>
+                            <span className={styles.fieldValue} data-testid="petDetails.age.value">
                                 {pet.age !== null ? `${pet.age} years` : '—'}
                             </span>
                         </div>
