@@ -1,38 +1,35 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { PetDetailsContent } from '../../components/PetDetailsModal/PetDetailsContent';
 import type { Animal } from '../../types/animal';
 
-describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
-    let mockPet: Animal;
+const MOCK_PET: Animal = {
+    id: '123',
+    petName: 'Bella',
+    species: 'DOG',
+    breed: 'Golden Retriever',
+    sex: 'FEMALE',
+    age: 3,
+    microchipNumber: '123456789012345',
+    photoUrl: 'https://example.com/photo.jpg',
+    status: 'MISSING',
+    lastSeenDate: '2024-11-25T10:00:00Z',
+    phone: '+1234567890',
+    email: 'owner@example.com',
+    description: 'Friendly and playful',
+    reward: null,
+    locationLatitude: null,
+    locationLongitude: null,
+    createdAt: '2024-11-25T10:00:00Z',
+    updatedAt: '2024-11-25T10:00:00Z',
+};
 
-    beforeEach(() => {
-        mockPet = {
-            id: '123',
-            petName: 'Bella',
-            species: 'DOG',
-            breed: 'Golden Retriever',
-            sex: 'FEMALE',
-            age: 3,
-            microchipNumber: '123456789012345',
-            photoUrl: 'https://example.com/photo.jpg',
-            status: 'MISSING',
-            lastSeenDate: '2024-11-25T10:00:00Z',
-            phone: '+1234567890',
-            email: 'owner@example.com',
-            description: 'Friendly and playful',
-            reward: null,
-            locationLatitude: null,
-            locationLongitude: null,
-            createdAt: '2024-11-25T10:00:00Z',
-            updatedAt: '2024-11-25T10:00:00Z',
-        };
-    });
+describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     describe('Microchip Field Display', () => {
         it('should display microchip number with proper formatting (XXXXX-XXXXX-XXXXX)', () => {
             // Given
-            const pet: Animal = { ...mockPet, microchipNumber: '882097601234567' };
+            const pet: Animal = { ...MOCK_PET, microchipNumber: '882097601234567' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -40,7 +37,6 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             // Then
             screen.getByText('Microchip number');
             screen.getByText('88209-76012-34567');
-            expect(true).toBe(true);
         });
 
         it.each([
@@ -48,7 +44,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             { microchipNumber: '', description: 'should display "—" when microchip is empty string' },
         ])('$description', ({ microchipNumber }) => {
             // Given
-            const pet: Animal = { ...mockPet, microchipNumber };
+            const pet: Animal = { ...MOCK_PET, microchipNumber };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -62,7 +58,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
     describe('Species and Breed Fields Display', () => {
         it('should display Animal Species label and formatted species', () => {
             // Given
-            const pet: Animal = { ...mockPet, species: 'DOG' };
+            const pet: Animal = { ...MOCK_PET, species: 'DOG' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -70,12 +66,11 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             // Then
             screen.getByText('Animal Species');
             screen.getByText('Dog');
-            expect(true).toBe(true);
         });
 
         it('should display Animal Race label and breed', () => {
             // Given
-            const pet: Animal = { ...mockPet, breed: 'Labrador' };
+            const pet: Animal = { ...MOCK_PET, breed: 'Labrador' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -83,12 +78,11 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             // Then
             screen.getByText('Animal Race');
             screen.getByText('Labrador');
-            expect(true).toBe(true);
         });
 
         it('should display "—" for breed when null', () => {
             // Given
-            const pet: Animal = { ...mockPet, breed: null };
+            const pet: Animal = { ...MOCK_PET, breed: null };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -100,7 +94,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
         it('should display species and breed in two-column layout', () => {
             // Given
-            const pet: Animal = { ...mockPet, species: 'CAT', breed: 'Persian' };
+            const pet: Animal = { ...MOCK_PET, species: 'CAT', breed: 'Persian' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -110,7 +104,6 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             screen.getByText('Cat');
             screen.getByText('Animal Race');
             screen.getByText('Persian');
-            expect(true).toBe(true);
         });
     });
 
@@ -120,7 +113,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             { sex: 'FEMALE' as const, expectedRegex: /Female ♀/, description: 'should display Animal Sex label with female icon for FEMALE' },
         ])('$description', ({ sex, expectedRegex }) => {
             // Given
-            const pet: Animal = { ...mockPet, sex };
+            const pet: Animal = { ...MOCK_PET, sex };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -128,12 +121,11 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             // Then
             screen.getByText('Animal Sex');
             screen.getByText(expectedRegex);
-            expect(true).toBe(true);
         });
 
         it('should display "—" for UNKNOWN sex', () => {
             // Given
-            const pet: Animal = { ...mockPet, sex: 'UNKNOWN' };
+            const pet: Animal = { ...MOCK_PET, sex: 'UNKNOWN' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -151,7 +143,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             { age: 1, expectedText: '1 years', description: 'should display age 1 correctly' },
         ])('$description', ({ age, expectedText }) => {
             // Given
-            const pet: Animal = { ...mockPet, age };
+            const pet: Animal = { ...MOCK_PET, age };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -159,12 +151,11 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             // Then
             screen.getByText('Animal Approx. Age');
             screen.getByText(expectedText);
-            expect(true).toBe(true);
         });
 
         it('should display "—" when age is null', () => {
             // Given
-            const pet: Animal = { ...mockPet, age: null };
+            const pet: Animal = { ...MOCK_PET, age: null };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -179,7 +170,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
         it('should display all identification fields with proper values', () => {
             // Given
             const pet: Animal = {
-                ...mockPet,
+                ...MOCK_PET,
                 microchipNumber: '123456789012345',
                 species: 'DOG',
                 breed: 'Golden Retriever',
@@ -201,7 +192,6 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             screen.getByText(/Female ♀/);
             screen.getByText('Animal Approx. Age');
             screen.getByText('3 years');
-            expect(true).toBe(true);
         });
 
         it('should display all fields with null/empty values as dashes', () => {
@@ -214,7 +204,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
                 sex: 'UNKNOWN',
                 age: null,
                 microchipNumber: null,
-                photoUrl: null,
+                photoUrl: 'https://example.com/photo.jpg',
                 status: 'FOUND',
                 lastSeenDate: '2024-11-25T10:00:00Z',
                 phone: null,
@@ -223,6 +213,8 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
                 reward: null,
                 locationLatitude: null,
                 locationLongitude: null,
+                createdAt: '2024-11-25T10:00:00Z',
+                updatedAt: '2024-11-25T10:00:00Z',
             };
 
             // When
@@ -237,7 +229,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
     describe('Identification Layout', () => {
         it('should render identification section with all fields', () => {
             // Given
-            const pet: Animal = mockPet;
+            const pet: Animal = MOCK_PET;
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -248,41 +240,15 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
             screen.getByText('Animal Race');
             screen.getByText('Animal Sex');
             screen.getByText('Animal Approx. Age');
-            expect(true).toBe(true);
         });
     });
 });
 
 describe('PetDetailsContent - Location & Contact Information (User Story 3)', () => {
-    let mockPet: Animal;
-
-    beforeEach(() => {
-        mockPet = {
-            id: '123',
-            petName: 'Bella',
-            species: 'DOG',
-            breed: 'Golden Retriever',
-            sex: 'FEMALE',
-            age: 3,
-            microchipNumber: '123456789012345',
-            photoUrl: 'https://example.com/photo.jpg',
-            status: 'MISSING',
-            lastSeenDate: '2024-11-25T10:00:00Z',
-            phone: '+1234567890',
-            email: 'owner@example.com',
-            description: 'Friendly and playful',
-            reward: null,
-            locationLatitude: 52.2297,
-            locationLongitude: 21.0122,
-            createdAt: '2024-11-25T10:00:00Z',
-            updatedAt: '2024-11-25T10:00:00Z',
-        };
-    });
-
     describe('Location Display', () => {
         it('should display location coordinates when available', () => {
             // Given
-            const pet: Animal = { ...mockPet, locationLatitude: 52.2297, locationLongitude: 21.0122 };
+            const pet: Animal = { ...MOCK_PET, locationLatitude: 52.2297, locationLongitude: 21.0122 };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -290,12 +256,11 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
             // Then
             screen.getByText('Lat / Long');
             screen.getByText(/52\.2297° N, 21\.0122° E/);
-            expect(true).toBe(true);
         });
 
         it('should hide location section when coordinates unavailable', () => {
             // Given
-            const pet: Animal = { ...mockPet, locationLatitude: null, locationLongitude: null };
+            const pet: Animal = { ...MOCK_PET, locationLatitude: null, locationLongitude: null };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -308,7 +273,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
         it('should display map button when coordinates available', () => {
             // Given
-            const pet: Animal = { ...mockPet, locationLatitude: 40.7128, locationLongitude: -74.006 };
+            const pet: Animal = { ...MOCK_PET, locationLatitude: 40.7128, locationLongitude: -74.006 };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -322,7 +287,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
         it('should not display map button when coordinates unavailable', () => {
             // Given
-            const pet: Animal = { ...mockPet, locationLatitude: null, locationLongitude: null };
+            const pet: Animal = { ...MOCK_PET, locationLatitude: null, locationLongitude: null };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -334,7 +299,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
         it('should handle partial coordinates (one null)', () => {
             // Given
-            const pet: Animal = { ...mockPet, locationLatitude: 52.2297, locationLongitude: null };
+            const pet: Animal = { ...MOCK_PET, locationLatitude: 52.2297, locationLongitude: null };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -352,14 +317,13 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
             { phone: '+1 (555) 123-4567', description: 'should display phone with formatting' },
         ])('$description', ({ phone }) => {
             // Given
-            const pet: Animal = { ...mockPet, phone };
+            const pet: Animal = { ...MOCK_PET, phone };
 
             // When
             render(<PetDetailsContent pet={pet} />);
 
             // Then
             screen.getByText(phone);
-            expect(true).toBe(true);
         });
 
         it.each([
@@ -367,14 +331,13 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
             { email: 'contact@petfinder.org', description: 'should display email with organization domain' },
         ])('$description', ({ email }) => {
             // Given
-            const pet: Animal = { ...mockPet, email };
+            const pet: Animal = { ...MOCK_PET, email };
 
             // When
             render(<PetDetailsContent pet={pet} />);
 
             // Then
             screen.getByText(email);
-            expect(true).toBe(true);
         });
 
         it.each([
@@ -383,7 +346,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
         ])('$description', ({ contact }) => {
             // Given
             const petUpdates = contact === 'phone' ? { phone: null } : { email: null };
-            const pet: Animal = { ...mockPet, ...petUpdates };
+            const pet: Animal = { ...MOCK_PET, ...petUpdates };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -395,7 +358,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
         it('should display both phone and email exactly as received', () => {
             // Given
-            const pet: Animal = { ...mockPet, phone: '+1 (555) 123-4567', email: 'contact@petfinder.org' };
+            const pet: Animal = { ...MOCK_PET, phone: '+1 (555) 123-4567', email: 'contact@petfinder.org' };
 
             // When
             render(<PetDetailsContent pet={pet} />);
@@ -403,7 +366,6 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
             // Then
             screen.getByText('+1 (555) 123-4567');
             screen.getByText('contact@petfinder.org');
-            expect(true).toBe(true);
         });
     });
 
@@ -411,7 +373,7 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
         it('should display all location and contact fields with proper values', () => {
             // Given
             const pet: Animal = {
-                ...mockPet,
+                ...MOCK_PET,
                 locationLatitude: 48.8566,
                 locationLongitude: 2.3522,
                 phone: '+33 1 2345 6789',
@@ -431,7 +393,100 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
             screen.getByText('+33 1 2345 6789');
             screen.getByText('owner@paris.fr');
             
-            expect(true).toBe(true);
+        });
+    });
+});
+
+describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
+
+    describe('Description Display', () => {
+        it('should display additional description with label', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, description: 'Friendly and playful dog with brown spots' };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('Animal Additional Description')).toBeTruthy();
+            expect(screen.getByText('Friendly and playful dog with brown spots')).toBeTruthy();
+        });
+
+        it('should display multi-line description text', () => {
+            // Given
+            const multiLineDescription = 'Friendly and playful dog\nWith brown spots\nAnswers to "Bella"';
+            const pet: Animal = { ...MOCK_PET, description: multiLineDescription };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText(/Friendly and playful dog/)).toBeTruthy();
+        });
+
+        it.each([
+            { description: null, testName: 'should display "—" when description is null' },
+            { description: '', testName: 'should display "—" when description is empty string' },
+        ])('$testName', ({ description }) => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, description };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            const descriptions = screen.getAllByText('—');
+            expect(descriptions.length).toBeGreaterThan(0);
+        });
+
+        it('should handle long descriptions', () => {
+            // Given
+            const longDescription = 'This is a very long description that contains detailed information about the pet including behavior, physical characteristics, and other identifying features. The description helps people identify if this is their pet.';
+            const pet: Animal = { ...MOCK_PET, description: longDescription };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText(/This is a very long description/)).toBeTruthy();
+        });
+
+        it('should handle descriptions with special characters', () => {
+            // Given
+            const descriptionWithSpecialChars = 'Dog with spots & marks (brown/white) - very friendly!';
+            const pet: Animal = { ...MOCK_PET, description: descriptionWithSpecialChars };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('Dog with spots & marks (brown/white) - very friendly!')).toBeTruthy();
+        });
+    });
+
+    describe('Description with Other Fields', () => {
+        it('should display description along with other identification fields', () => {
+            // Given
+            const pet: Animal = {
+                ...MOCK_PET,
+                description: 'Friendly dog',
+                microchipNumber: '123456789012345',
+                species: 'DOG',
+                breed: 'Retriever',
+            };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            // Identification fields
+            expect(screen.getByText('Microchip number')).toBeTruthy();
+            expect(screen.getByText('Animal Species')).toBeTruthy();
+            expect(screen.getByText('Animal Race')).toBeTruthy();
+            
+            // Description
+            expect(screen.getByText('Animal Additional Description')).toBeTruthy();
+            expect(screen.getByText('Friendly dog')).toBeTruthy();
         });
     });
 });
