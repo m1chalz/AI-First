@@ -66,17 +66,19 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }
                 {animal.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean luctus mattis nulla nec mollis.'}
             </div>
             
-            {/* Right section: Status and date */}
+            {/* Right section: Status and date (left column) + Details button (right column) */}
             <div className={styles.animalStatusSection}>
-                <div
-                    className={styles.statusBadge}
-                    style={{ backgroundColor: statusColor }}
-                >
-                    {animal.status}
-                </div>
-                
-                <div className={styles.animalDate}>
-                    {animal.lastSeenDate}
+                <div className={styles.statusDateGroup}>
+                    <div
+                        className={styles.statusBadge}
+                        style={{ backgroundColor: statusColor }}
+                    >
+                        {animal.status}
+                    </div>
+                    
+                    <div className={styles.animalDate}>
+                        {animal.lastSeenDate}
+                    </div>
                 </div>
                 
                 <button

@@ -242,14 +242,21 @@
     max-height: 54px;
 }
 
-/* Right section: Status badge and date */
+/* Right section: Status and date (left column) + Details button (right column) */
 .animalStatusSection {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-start;
-    padding: 16px 16px 16px 0;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    padding: 16px 16px;
     min-width: fit-content;
+}
+
+/* Status and date grouped in left column */
+.statusDateGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .statusBadge {
@@ -285,10 +292,10 @@
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
     font-family: Arial, sans-serif;
-    margin-top: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .detailsButton:hover {
