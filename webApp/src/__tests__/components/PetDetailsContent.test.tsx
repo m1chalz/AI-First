@@ -491,6 +491,64 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
     });
 });
 
+describe('PetDetailsContent - Status Badge (User Story 6)', () => {
+    describe('Status Badge Display', () => {
+        it.each([
+            { status: 'MISSING' as const, description: 'should display badge for MISSING status' },
+            { status: 'FOUND' as const, description: 'should display badge for FOUND status' },
+            { status: 'CLOSED' as const, description: 'should display badge for CLOSED status' },
+        ])('$description', ({ status }) => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText(status)).toBeTruthy();
+        });
+
+        it('should display status badge text exactly as status value', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status: 'MISSING' };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('MISSING')).toBeTruthy();
+        });
+    });
+
+    describe('Status Badge with Other Badges', () => {
+        it('should display both status badge and reward badge when both present', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status: 'MISSING', reward: '500 PLN' };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('MISSING')).toBeTruthy();
+            expect(screen.getByText('Reward 500 PLN')).toBeTruthy();
+        });
+
+        it('should display status badge but no reward badge when reward is null', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status: 'FOUND', reward: null };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('FOUND')).toBeTruthy();
+            const rewardElements = screen.queryAllByText(/^Reward/);
+            expect(rewardElements.length).toBe(0);
+        });
+
+    });
+});
+
 describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
     describe('Reward Badge Display', () => {
         it.each([

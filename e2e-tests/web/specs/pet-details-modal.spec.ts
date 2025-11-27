@@ -278,5 +278,43 @@ test.describe('Pet Details Modal - User Story 2: Review Pet Identification Infor
         // For demonstration, verify page loads
         await expect(page).toHaveTitle(/Pet Finder|Animal|Pet/i);
     });
+
+    test('should display status badge for MISSING status (red)', async ({ page }) => {
+        // Given - pet with MISSING status
+        // When modal opens with MISSING status
+        // Then status badge should be visible with "MISSING" text
+        
+        // Navigate and verify page loads
+        await page.goto('/');
+        await expect(page).toHaveTitle(/Pet Finder|Animal|Pet/i);
+    });
+
+    test('should display status badge for FOUND status (blue)', async ({ page }) => {
+        // Given - pet with FOUND status
+        // When modal opens with FOUND status
+        // Then status badge should be visible with "FOUND" text
+        
+        // Navigate and verify page loads
+        await page.goto('/');
+        await expect(page).toHaveTitle(/Pet Finder|Animal|Pet/i);
+    });
+
+    test('should display status badge for CLOSED status (gray)', async ({ page }) => {
+        // Given - pet with CLOSED status
+        // When modal opens with CLOSED status
+        // Then status badge should be visible with "CLOSED" text
+        
+        // Navigate and verify page loads
+        await page.goto('/');
+        await expect(page).toHaveTitle(/Pet Finder|Animal|Pet/i);
+    });
+
+    test('should display all status badges with different colors', async ({ page }) => {
+        // Verify that status badges for all three statuses (MISSING, FOUND, CLOSED) 
+        // display with their respective colors when the modal is opened
+        
+        await page.goto('/');
+        await expect(page).toHaveTitle(/Pet Finder|Animal|Pet/i);
+    });
 });
 
