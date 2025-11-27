@@ -120,34 +120,37 @@
 .animalList {
     display: flex;
     flex-direction: column;
-    gap: 3.25px; /* Gap per Figma web design (155.25px / 8 cards ≈ 3.25px between each) */
+    gap: 16px; /* 16px gap between cards for better spacing */
     padding: 0 32px 20px;
 }
 
-/* Animal card - Horizontal layout matching Figma */
+/* Animal card - Horizontal layout with image on left edge */
 .animalCard {
     display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 16px;
-    min-height: 95.25px;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-height: 140px;
     background-color: white;
-    border-radius: 4px;
+    border-radius: 8px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
     cursor: pointer;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, transform 0.2s;
+    overflow: hidden;
 }
 
 .animalCard:hover {
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
-/* Photo placeholder - Circular, 162px container per Figma */
+/* Photo placeholder - Square (1:1), stuck to left edge, full height */
 .photoPlaceholder {
-    width: 162px;
-    min-width: 162px;
-    height: 63px;
-    border-radius: 105px;
+    width: 140px;
+    min-width: 140px;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 0;
     background-color: #EEEEEE;
     display: flex;
     align-items: center;
@@ -157,25 +160,25 @@
 }
 
 .photoIcon {
-    font-size: 29.75px;
+    font-size: 40px;
     color: #93A2B4;
 }
 
 .photoImage {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 105px;
+    object-fit: cover;  /* Przycinanie aby wypełnić całą przestrzeń */
+    border-radius: 0;
 }
 
 /* Left section: Basic animal info (location + species/breed) */
 .animalBasicInfo {
-    width: 197px;
-    min-width: 197px;
+    width: 200px;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 16.625px 24px;
+    gap: 12px;
+    padding: 16px 16px 16px 24px;
 }
 
 .locationRow {
@@ -243,6 +246,7 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    padding: 16px 16px;
 }
 
 /* Right section: Status badge and date */
@@ -251,7 +255,7 @@
     flex-direction: column;
     gap: 4px;
     align-items: flex-start;
-    padding: 8px 0;
+    padding: 16px 16px 16px 0;
     min-width: fit-content;
 }
 
