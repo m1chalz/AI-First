@@ -121,29 +121,29 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Unit Tests**:
-- [ ] T025 [P] [US2] Unit test for `CheckLocationPermissionUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/domain/usecases/CheckLocationPermissionUseCaseTest.kt`
-- [ ] T026 [P] [US2] Extend `AnimalListReducerTest` with permission request state transitions in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/animallist/presentation/mvi/AnimalListReducerTest.kt`
+- [X] T025 [P] [US2] Unit test for `CheckLocationPermissionUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/domain/usecases/CheckLocationPermissionUseCaseTest.kt`
+- [X] T026 [P] [US2] Extend `AnimalListReducerTest` with permission request state transitions in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/animallist/presentation/mvi/AnimalListReducerTest.kt`
 
 **E2E Tests**:
-- [ ] T027 [US2] Add Cucumber scenarios for US2 to feature file (first-time permission request, user allows, user denies)
+- [X] T027 [US2] Add Cucumber scenarios for US2 to feature file (first-time permission request, user allows, user denies)
 
 ### Implementation for User Story 2
 
 **Domain Layer**:
-- [ ] T028 [US2] Create `CheckLocationPermissionUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/usecases/CheckLocationPermissionUseCase.kt` (checks ContextCompat.checkSelfPermission)
+- [X] T028 [US2] Create `CheckLocationPermissionUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/usecases/CheckLocationPermissionUseCase.kt` (checks ContextCompat.checkSelfPermission)
 
 **DI**:
-- [ ] T029 [US2] Register `CheckLocationPermissionUseCase` in LocationModule
+- [X] T029 [US2] Register `CheckLocationPermissionUseCase` in LocationModule
 
 **Presentation Layer**:
-- [ ] T030 [US2] Add permission request intents to `AnimalListIntent` (RequestPermission, PermissionDenied)
-- [ ] T031 [US2] Extend `AnimalListReducer` with NotRequested → Requesting → Granted/Denied transitions
-- [ ] T032 [US2] Add `RequestPermission` effect to `AnimalListEffect` sealed class for triggering system dialog
-- [ ] T033 [US2] Extend `AnimalListViewModel` to inject `CheckLocationPermissionUseCase` and emit RequestPermission effect
+- [X] T030 [US2] Add permission request intents to `AnimalListIntent` (RequestPermission, PermissionDenied)
+- [X] T031 [US2] Extend `AnimalListReducer` with NotRequested → Requesting → Granted/Denied transitions
+- [X] T032 [US2] Add `RequestPermission` effect to `AnimalListEffect` sealed class for triggering system dialog
+- [X] T033 [US2] Extend `AnimalListViewModel` to inject `CheckLocationPermissionUseCase` and emit RequestPermission effect
 
 **UI Layer**:
-- [ ] T034 [US2] Add `LaunchedEffect` in `AnimalListScreen` to observe permission state changes from Accompanist
-- [ ] T035 [US2] Wire permission result callback to dispatch `PermissionGranted` or `PermissionDenied` intent to ViewModel
+- [X] T034 [US2] Add `LaunchedEffect` in `AnimalListScreen` to observe permission state changes from Accompanist
+- [X] T035 [US2] Wire permission result callback to dispatch `PermissionGranted` or `PermissionDenied` intent to ViewModel
 
 **Checkpoint**: User Story 2 complete - first-time users see system permission dialog
 

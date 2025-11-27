@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import com.intive.aifirst.petspot.domain.models.PermissionStatus
+import com.intive.aifirst.petspot.domain.usecases.CheckLocationPermissionUseCase
 import com.intive.aifirst.petspot.domain.usecases.GetCurrentLocationUseCase
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 class AnimalListViewModel(
     private val getAnimalsUseCase: GetAnimalsUseCase,
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase? = null,
+    private val checkLocationPermissionUseCase: CheckLocationPermissionUseCase? = null,
 ) : ViewModel() {
     // State
     private val _state = MutableStateFlow(AnimalListUiState.Initial)
@@ -111,11 +113,56 @@ class AnimalListViewModel(
     // ========================================
 
     /**
-     * Handles CheckPermission intent: triggers permission check via effect.
+     * Handles CheckPermission intent: checks current permission status.
+     * If permission is already granted, fetches location.
+     * If not granted, emits effect to request permission.
      */
     private fun handleCheckPermission() {
+        val permissionUseCase = checkLocationPermissionUseCase
+        if (permissionUseCase == null) {
+            // No permission checker available, emit effect for UI to check
+            viewModelScope.launch {
+                _effects.emit(AnimalListEffect.CheckPermissionStatus)
+            }
+            return
+        }
+
         viewModelScope.launch {
-            _effects.emit(AnimalListEffect.CheckPermissionStatus)
+            val currentStatus = permissionUseCase()
+
+            when (currentStatus) {
+                is PermissionStatus.Granted -> {
+                    // Permission already granted, fetch location
+                    _state.value =
+                        AnimalListReducer.permissionGranted(
+                            _state.value,
+                            fineLocation = currentStatus.fineLocation,
+                            coarseLocation = currentStatus.coarseLocation,
+                        )
+                    fetchLocation()
+                }
+
+                is PermissionStatus.NotRequested -> {
+                    // First time - request permission
+                    _state.value = AnimalListReducer.requestingPermission(_state.value)
+                    _effects.emit(AnimalListEffect.RequestPermission)
+                }
+
+                is PermissionStatus.Denied -> {
+                    // Permission denied - update state
+                    _state.value =
+                        AnimalListReducer.permissionDenied(
+                            _state.value,
+                            shouldShowRationale = currentStatus.shouldShowRationale,
+                        )
+                    // Refresh animals without location
+                    handleRefresh()
+                }
+
+                is PermissionStatus.Requesting -> {
+                    // Already requesting, do nothing
+                }
+            }
         }
     }
 

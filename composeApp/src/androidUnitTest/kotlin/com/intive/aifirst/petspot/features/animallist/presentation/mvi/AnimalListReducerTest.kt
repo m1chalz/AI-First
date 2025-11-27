@@ -1,6 +1,7 @@
 package com.intive.aifirst.petspot.features.animallist.presentation.mvi
 
 import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
+import com.intive.aifirst.petspot.domain.models.PermissionStatus
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -9,7 +10,7 @@ import kotlin.test.assertTrue
 
 /**
  * Unit tests for AnimalListReducer.
- * Tests all reducer branches: success, failure, empty, loading.
+ * Tests all reducer branches: success, failure, empty, loading, and permission states.
  * Follows Given-When-Then structure per project constitution.
  */
 class AnimalListReducerTest {
@@ -75,5 +76,144 @@ class AnimalListReducerTest {
         // Then - state is loading with no error
         assertTrue(newState.isLoading, "Loading should be true")
         assertNull(newState.error, "Error should be null")
+    }
+
+    // ========================================
+    // Permission State Transition Tests (US2)
+    // ========================================
+
+    @Test
+    fun `requestingPermission should transition to Requesting status`() {
+        // Given - initial state with NotRequested permission
+        val currentState = AnimalListUiState.Initial
+        assertTrue(
+            currentState.permissionStatus is PermissionStatus.NotRequested,
+            "Initial permission should be NotRequested",
+        )
+
+        // When - requesting permission
+        val newState = AnimalListReducer.requestingPermission(currentState)
+
+        // Then - permission status should be Requesting
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Requesting,
+            "Permission status should be Requesting",
+        )
+    }
+
+    @Test
+    fun `permissionGranted should transition to Granted status with correct flags`() {
+        // Given - state with Requesting permission
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - permission is granted with both fine and coarse
+        val newState =
+            AnimalListReducer.permissionGranted(
+                currentState,
+                fineLocation = true,
+                coarseLocation = true,
+            )
+
+        // Then - permission status should be Granted with correct flags
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Granted,
+            "Permission status should be Granted",
+        )
+        val granted = newState.permissionStatus as PermissionStatus.Granted
+        assertTrue(granted.fineLocation, "Fine location should be true")
+        assertTrue(granted.coarseLocation, "Coarse location should be true")
+        assertTrue(newState.isLocationLoading, "Should start loading location")
+    }
+
+    @Test
+    fun `permissionGranted should work with coarse only (Android 12+)`() {
+        // Given - state with Requesting permission
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - only coarse permission is granted
+        val newState =
+            AnimalListReducer.permissionGranted(
+                currentState,
+                fineLocation = false,
+                coarseLocation = true,
+            )
+
+        // Then - permission status should be Granted with coarse only
+        val granted = newState.permissionStatus as PermissionStatus.Granted
+        assertFalse(granted.fineLocation, "Fine location should be false")
+        assertTrue(granted.coarseLocation, "Coarse location should be true")
+    }
+
+    @Test
+    fun `permissionDenied should transition to Denied status with shouldShowRationale true`() {
+        // Given - state with Requesting permission
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - permission is denied but rationale should be shown
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = true,
+            )
+
+        // Then - permission status should be Denied with shouldShowRationale = true
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Denied,
+            "Permission status should be Denied",
+        )
+        val denied = newState.permissionStatus as PermissionStatus.Denied
+        assertTrue(denied.shouldShowRationale, "shouldShowRationale should be true")
+        assertFalse(newState.isLocationLoading, "Should not be loading location")
+    }
+
+    @Test
+    fun `permissionDenied should transition to Denied status with shouldShowRationale false`() {
+        // Given - state with Requesting permission
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - permission is denied with "Don't ask again"
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = false,
+            )
+
+        // Then - permission status should be Denied with shouldShowRationale = false
+        val denied = newState.permissionStatus as PermissionStatus.Denied
+        assertFalse(denied.shouldShowRationale, "shouldShowRationale should be false")
+    }
+
+    @Test
+    fun `permission state transitions should preserve animal list`() {
+        // Given - state with animals loaded
+        val animals = MockAnimalData.generateMockAnimals(5)
+        val currentState =
+            AnimalListUiState(
+                animals = animals,
+                permissionStatus = PermissionStatus.NotRequested,
+            )
+
+        // When - permission granted
+        val newState =
+            AnimalListReducer.permissionGranted(
+                currentState,
+                fineLocation = true,
+                coarseLocation = true,
+            )
+
+        // Then - animals should be preserved
+        assertEquals(5, newState.animals.size, "Animals should be preserved during permission change")
     }
 }
