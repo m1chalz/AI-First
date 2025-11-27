@@ -6,7 +6,7 @@ import { formatDate } from '../../utils/date-formatter';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatMicrochip } from '../../utils/microchip-formatter';
 import { formatSpecies, formatSex } from '../../utils/species-formatter';
-import { buildGoogleMapsUrl } from '../../utils/map-url-builder';
+import { buildMapUrl } from '../../utils/map-url-builder';
 import styles from './PetDetailsContent.module.css';
 
 interface PetDetailsContentProps {
@@ -28,7 +28,7 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
     const formattedDate = formatDate(pet.lastSeenDate);
     const hasLocation = pet.locationLatitude !== null && pet.locationLongitude !== null;
     const mapUrl = hasLocation && pet.locationLatitude !== null && pet.locationLongitude !== null
-        ? buildGoogleMapsUrl(pet.locationLatitude, pet.locationLongitude)
+        ? buildMapUrl(pet.locationLatitude, pet.locationLongitude)
         : null;
 
     return (
