@@ -56,7 +56,7 @@ fun PetLocationSection(
     ) {
         // Label
         Text(
-            text = "Place of Disappearance / City",
+            text = "Lat / Long",
             color = LabelColor,
             fontSize = 16.sp,
             lineHeight = 24.sp,
