@@ -40,6 +40,8 @@ import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
+import com.intive.aifirst.petspot.domain.models.LocationCoordinates
+import com.intive.aifirst.petspot.domain.models.PermissionStatus
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListUiState
 import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 
@@ -118,18 +120,45 @@ fun AnimalListContent(
             }
         }
 
-        // Location status indicator (optional - shows when location is available)
-        if (state.location != null) {
-            Text(
-                text = "📍 Location available",
-                fontSize = 12.sp,
-                color = Color(0xFF4CAF50),
-                modifier =
-                    Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 48.dp, end = 24.dp)
-                        .testTag("animalList.locationStatus"),
-            )
+        // Location status indicator
+        when {
+            state.location != null -> {
+                Text(
+                    text = "📍 Location available",
+                    fontSize = 12.sp,
+                    color = Color(0xFF4CAF50),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 48.dp, end = 24.dp)
+                            .testTag("animalList.locationStatus"),
+                )
+            }
+            state.permissionStatus is PermissionStatus.Denied -> {
+                Text(
+                    text = "🚫 Location denied",
+                    fontSize = 12.sp,
+                    color = Color(0xFFE57373),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 48.dp, end = 24.dp)
+                            .testTag("animalList.locationStatus.denied"),
+                )
+            }
+            state.permissionStatus is PermissionStatus.Granted && !state.isLocationLoading -> {
+                // Permission granted but location fetch failed (timeout, GPS unavailable, etc.)
+                Text(
+                    text = "📍 Location unavailable",
+                    fontSize = 12.sp,
+                    color = Color(0xFF9E9E9E),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 48.dp, end = 24.dp)
+                            .testTag("animalList.locationStatus.unavailable"),
+                )
+            }
         }
 
         // Floating button at bottom right
@@ -280,10 +309,26 @@ private class AnimalListStatePreviewProvider :
 
     override val values: Sequence<AnimalListUiState> =
         sequenceOf(
+            // Basic states
             AnimalListUiState(isLoading = true),
             AnimalListUiState(animals = emptyList()),
             AnimalListUiState(error = "Failed to load animals"),
             AnimalListUiState(animals = animals),
+            // Location permission states
+            AnimalListUiState(
+                animals = animals,
+                isLocationLoading = true,
+                permissionStatus = PermissionStatus.Granted(fineLocation = true, coarseLocation = true),
+            ),
+            AnimalListUiState(
+                animals = animals,
+                location = LocationCoordinates(52.2297, 21.0122),
+                permissionStatus = PermissionStatus.Granted(fineLocation = true, coarseLocation = true),
+            ),
+            AnimalListUiState(
+                animals = animals,
+                permissionStatus = PermissionStatus.Denied(shouldShowRationale = false),
+            ),
         )
 }
 

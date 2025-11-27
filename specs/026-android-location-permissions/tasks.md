@@ -158,25 +158,25 @@
 ### Tests for User Story 3 (MANDATORY) ✅
 
 **Unit Tests**:
-- [ ] T036 [P] [US3] Extend `AnimalListViewModelTest` with rationale dialog effect tests in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/animallist/presentation/viewmodels/AnimalListViewModelTest.kt`
-- [ ] T037 [P] [US3] Extend `AnimalListReducerTest` with denied state transitions and rationale shown flag
+- [X] T036 [P] [US3] Extend `AnimalListViewModelTest` with rationale dialog effect tests in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/animallist/presentation/viewmodels/AnimalListViewModelTest.kt`
+- [X] T037 [P] [US3] Extend `AnimalListReducerTest` with denied state transitions and rationale shown flag
 
 **E2E Tests**:
-- [ ] T038 [US3] Add Cucumber scenarios for US3 to feature file (denied permission, rationale dialog, Go to Settings, Cancel)
+- [X] T038 [US3] Add Cucumber scenarios for US3 to feature file (denied permission, rationale dialog, Go to Settings, Cancel)
 
 ### Implementation for User Story 3
 
 **Presentation Layer**:
-- [ ] T039 [US3] Add `ShowRationaleDialog(type: RationaleDialogType.Informational)` effect to `AnimalListEffect`
-- [ ] T040 [US3] Add `OpenSettings` effect to `AnimalListEffect` for navigating to app settings
-- [ ] T041 [US3] Add `rationaleShownThisSession: Boolean` tracking to `AnimalListUiState` (per FR-015)
-- [ ] T042 [US3] Extend reducer and ViewModel to handle denied state with rationale display logic
+- [X] T039 [US3] Add `ShowRationaleDialog(type: RationaleDialogType.Informational)` effect to `AnimalListEffect`
+- [X] T040 [US3] Add `OpenSettings` effect to `AnimalListEffect` for navigating to app settings
+- [X] T041 [US3] Add `rationaleShownThisSession: Boolean` tracking to `AnimalListUiState` (per FR-015)
+- [X] T042 [US3] Extend reducer and ViewModel to handle denied state with rationale display logic
 
 **UI Layer**:
-- [ ] T043 [US3] Create `InformationalRationaleDialog` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/components/InformationalRationaleDialog.kt`
-- [ ] T044 [US3] Add dialog with "Go to Settings" and "Cancel" buttons with benefit-focused messaging
-- [ ] T045 [US3] Implement Settings navigation via `Intent.ACTION_APPLICATION_DETAILS_SETTINGS` in `AnimalListScreen`
-- [ ] T046 [US3] Add testTag modifiers to rationale dialog elements (`animalList.rationaleDialog.goToSettingsButton`, `animalList.rationaleDialog.cancelButton`)
+- [X] T043 [US3] Create `InformationalRationaleDialog` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/components/InformationalRationaleDialog.kt`
+- [X] T044 [US3] Add dialog with "Go to Settings" and "Cancel" buttons with benefit-focused messaging
+- [X] T045 [US3] Implement Settings navigation via `Intent.ACTION_APPLICATION_DETAILS_SETTINGS` in `AnimalListScreen`
+- [X] T046 [US3] Add testTag modifiers to rationale dialog elements (`animalList.rationaleDialog.goToSettingsButton`, `animalList.rationaleDialog.cancelButton`)
 
 **Checkpoint**: User Story 3 complete - users can recover denied permissions via Settings
 
@@ -191,24 +191,24 @@
 ### Tests for User Story 4 (MANDATORY) ✅
 
 **Unit Tests**:
-- [ ] T047 [P] [US4] Extend `CheckLocationPermissionUseCaseTest` with shouldShowRationale detection tests
-- [ ] T048 [P] [US4] Extend `AnimalListReducerTest` with educational rationale state transitions
+- [X] T047 [P] [US4] Extend `CheckLocationPermissionUseCaseTest` with shouldShowRationale detection tests
+- [X] T048 [P] [US4] Extend `AnimalListReducerTest` with educational rationale state transitions
 
 **E2E Tests**:
-- [ ] T049 [US4] Add Cucumber scenarios for US4 to feature file (shouldShowRationale, Continue button, Not Now button)
+- [X] T049 [US4] Add Cucumber scenarios for US4 to feature file (shouldShowRationale, Continue button, Not Now button)
 
 ### Implementation for User Story 4
 
 **Presentation Layer**:
-- [ ] T050 [US4] Add `ShowRationaleDialog(type: RationaleDialogType.Educational)` effect handling
-- [ ] T051 [US4] Add `RationaleContinue` and `RationaleNotNow` intents to `AnimalListIntent`
-- [ ] T052 [US4] Extend reducer to transition from Educational rationale to Requesting (system dialog)
+- [X] T050 [US4] Add `ShowRationaleDialog(type: RationaleDialogType.Educational)` effect handling
+- [X] T051 [US4] Add `RationaleContinue` and `RationaleNotNow` intents to `AnimalListIntent`
+- [X] T052 [US4] Extend reducer to transition from Educational rationale to Requesting (system dialog)
 
 **UI Layer**:
-- [ ] T053 [US4] Create `EducationalRationaleDialog` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/components/EducationalRationaleDialog.kt`
-- [ ] T054 [US4] Add dialog with "Continue" and "Not Now" buttons with benefit-focused messaging
-- [ ] T055 [US4] Wire Continue button to launch system permission request via Accompanist
-- [ ] T056 [US4] Add testTag modifiers to educational dialog elements (`animalList.educationalDialog.continueButton`, `animalList.educationalDialog.notNowButton`)
+- [X] T053 [US4] Create `EducationalRationaleDialog` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/components/EducationalRationaleDialog.kt`
+- [X] T054 [US4] Add dialog with "Continue" and "Not Now" buttons with benefit-focused messaging
+- [X] T055 [US4] Wire Continue button to launch system permission request via Accompanist
+- [X] T056 [US4] Add testTag modifiers to educational dialog elements (`animalList.educationalDialog.continueButton`, `animalList.educationalDialog.notNowButton`)
 
 **Checkpoint**: User Story 4 complete - educational rationale shown before system dialog when appropriate
 
@@ -223,21 +223,21 @@
 ### Tests for User Story 5 (MANDATORY) ✅
 
 **Unit Tests**:
-- [ ] T057 [P] [US5] Extend `AnimalListViewModelTest` with permission change observation tests
-- [ ] T058 [P] [US5] Extend `AnimalListReducerTest` with dynamic permission change transitions (denied→granted, granted→denied)
+- [X] T057 [P] [US5] Extend `AnimalListViewModelTest` with permission change observation tests
+- [X] T058 [P] [US5] Extend `AnimalListReducerTest` with dynamic permission change transitions (denied→granted, granted→denied)
 
 **E2E Tests**:
-- [ ] T059 [US5] Add Cucumber scenarios for US5 to feature file (permission change while app open, auto-refresh on grant)
+- [X] T059 [US5] Add Cucumber scenarios for US5 to feature file (permission change while app open, auto-refresh on grant)
 
 ### Implementation for User Story 5
 
 **Presentation Layer**:
-- [ ] T060 [US5] Add `PermissionStateChanged(granted: Boolean, shouldShowRationale: Boolean)` intent to `AnimalListIntent`
-- [ ] T061 [US5] Extend reducer to handle dynamic state transitions (Denied→Granted triggers location fetch, Granted→Denied continues without location)
+- [X] T060 [US5] Add `PermissionStateChanged(granted: Boolean, shouldShowRationale: Boolean)` intent to `AnimalListIntent`
+- [X] T061 [US5] Extend reducer to handle dynamic state transitions (Denied→Granted triggers location fetch, Granted→Denied continues without location)
 
 **UI Layer**:
-- [ ] T062 [US5] Add `LaunchedEffect` observing `permissionState.allPermissionsGranted` to detect Settings changes
-- [ ] T063 [US5] Dispatch `PermissionStateChanged` intent when Accompanist detects permission change on lifecycle resume
+- [X] T062 [US5] Add `LaunchedEffect` observing `permissionState.allPermissionsGranted` to detect Settings changes
+- [X] T063 [US5] Dispatch `PermissionStateChanged` intent when Accompanist detects permission change on lifecycle resume
 
 **Checkpoint**: User Story 5 complete - app responds dynamically to permission changes
 
@@ -247,15 +247,15 @@
 
 **Purpose**: Integration testing, documentation, and code quality improvements
 
-- [ ] T064 [P] Run full unit test suite with coverage: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
-- [ ] T065 [P] Verify 80% test coverage in Kover report at `/composeApp/build/reports/kover/html/index.html`
-- [ ] T066 [P] Add KDoc documentation to public APIs (use cases, repository interface) where purpose is not self-explanatory
-- [ ] T067 [P] Verify all MVI artifacts follow co-location pattern in `/features/animallist/presentation/mvi/`
-- [ ] T068 [P] Create `AnimalListUiStatePreviewProvider` implementing `PreviewParameterProvider<AnimalListUiState>` with sample states
-- [ ] T069 [P] Add `@Preview` function for `AnimalListContent` using `@PreviewParameter` (light mode only)
-- [ ] T070 [P] Run Android lint and fix any warnings: `./gradlew :composeApp:lint`
-- [ ] T071 [P] Run E2E tests for all 5 user stories and verify pass rate
-- [ ] T072 Perform final integration testing following quickstart.md validation scenarios
+- [X] T064 [P] Run full unit test suite with coverage: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
+- [X] T065 [P] Verify 80% test coverage in Kover report at `/composeApp/build/reports/kover/html/index.html`
+- [X] T066 [P] Add KDoc documentation to public APIs (use cases, repository interface) where purpose is not self-explanatory
+- [X] T067 [P] Verify all MVI artifacts follow co-location pattern in `/features/animallist/presentation/mvi/`
+- [X] T068 [P] Create `AnimalListUiStatePreviewProvider` implementing `PreviewParameterProvider<AnimalListUiState>` with sample states
+- [X] T069 [P] Add `@Preview` function for `AnimalListContent` using `@PreviewParameter` (light mode only)
+- [X] T070 [P] Run Android lint and fix any warnings: `./gradlew :composeApp:lint`
+- [X] T071 [P] Run E2E tests for all 5 user stories and verify pass rate
+- [X] T072 Perform final integration testing following quickstart.md validation scenarios
 
 ---
 

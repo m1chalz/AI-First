@@ -65,4 +65,24 @@ sealed interface AnimalListIntent {
         val granted: Boolean,
         val shouldShowRationale: Boolean,
     ) : AnimalListIntent
+
+    // ========================================
+    // Rationale Dialog Intents (US3, US4)
+    // ========================================
+
+    /**
+     * User dismissed the rationale dialog (tapped Cancel or Not Now).
+     */
+    data object RationaleDismissed : AnimalListIntent
+
+    /**
+     * User requested to open device Settings from informational rationale dialog.
+     */
+    data object OpenSettingsRequested : AnimalListIntent
+
+    /**
+     * User tapped Continue on educational rationale dialog.
+     * Should trigger system permission request.
+     */
+    data object RationaleContinue : AnimalListIntent
 }

@@ -70,15 +70,20 @@ object AnimalListReducer {
 
     /**
      * Reduces permission denied state.
+     * Clears location when transitioning from Granted state (permission revoked).
      */
     fun permissionDenied(
         currentState: AnimalListUiState,
         shouldShowRationale: Boolean,
-    ): AnimalListUiState =
-        currentState.copy(
+    ): AnimalListUiState {
+        // Clear location if permission was previously granted (revoked via Settings)
+        val wasGranted = currentState.permissionStatus is PermissionStatus.Granted
+        return currentState.copy(
             permissionStatus = PermissionStatus.Denied(shouldShowRationale = shouldShowRationale),
             isLocationLoading = false,
+            location = if (wasGranted) null else currentState.location,
         )
+    }
 
     /**
      * Reduces location fetched successfully state.
@@ -117,5 +122,18 @@ object AnimalListReducer {
     fun locationLoading(currentState: AnimalListUiState): AnimalListUiState =
         currentState.copy(
             isLocationLoading = true,
+        )
+
+    // ========================================
+    // Rationale Dialog Reducers (US3, US4)
+    // ========================================
+
+    /**
+     * Marks that rationale dialog has been shown this session.
+     * Per FR-015, rationale is shown once per session.
+     */
+    fun rationaleShown(currentState: AnimalListUiState): AnimalListUiState =
+        currentState.copy(
+            rationaleShownThisSession = true,
         )
 }

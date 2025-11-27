@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import com.intive.aifirst.petspot.domain.models.PermissionStatus
+import com.intive.aifirst.petspot.domain.models.RationaleDialogType
 import com.intive.aifirst.petspot.domain.usecases.CheckLocationPermissionUseCase
 import com.intive.aifirst.petspot.domain.usecases.GetCurrentLocationUseCase
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
@@ -42,8 +43,10 @@ class AnimalListViewModel(
     val effects: SharedFlow<AnimalListEffect> = _effects.asSharedFlow()
 
     init {
-        // Load animals on ViewModel creation
-        dispatchIntent(AnimalListIntent.Refresh)
+        // Permission check is handled by UI (Accompanist) on first composition
+        // Animals will load after permission flow completes via PermissionResult intent
+        // Set loading state to indicate waiting for permission check
+        _state.value = _state.value.copy(isLoading = true)
     }
 
     /**
@@ -62,6 +65,10 @@ class AnimalListViewModel(
             is AnimalListIntent.LocationFetched -> handleLocationFetched(intent)
             is AnimalListIntent.LocationFetchFailed -> handleLocationFetchFailed()
             is AnimalListIntent.PermissionStateChanged -> handlePermissionStateChanged(intent)
+            // Rationale dialog intents (US3, US4)
+            is AnimalListIntent.RationaleDismissed -> handleRationaleDismissed()
+            is AnimalListIntent.OpenSettingsRequested -> handleOpenSettingsRequested()
+            is AnimalListIntent.RationaleContinue -> handleRationaleContinue()
         }
     }
 
@@ -168,6 +175,7 @@ class AnimalListViewModel(
 
     /**
      * Handles PermissionResult intent: updates permission state and fetches location if granted.
+     * When denied, shows appropriate rationale dialog (once per session).
      */
     private fun handlePermissionResult(intent: AnimalListIntent.PermissionResult) {
         viewModelScope.launch {
@@ -188,6 +196,19 @@ class AnimalListViewModel(
                         _state.value,
                         shouldShowRationale = intent.shouldShowRationale,
                     )
+
+                // Show appropriate rationale dialog (once per session per FR-015)
+                if (!_state.value.rationaleShownThisSession) {
+                    val rationaleType =
+                        if (intent.shouldShowRationale) {
+                            RationaleDialogType.Educational
+                        } else {
+                            RationaleDialogType.Informational
+                        }
+                    _effects.emit(AnimalListEffect.ShowRationaleDialog(rationaleType))
+                    _state.value = AnimalListReducer.rationaleShown(_state.value)
+                }
+
                 // Refresh animals without location
                 handleRefresh()
             }
@@ -245,6 +266,40 @@ class AnimalListViewModel(
                         shouldShowRationale = intent.shouldShowRationale,
                     )
             }
+        }
+    }
+
+    // ========================================
+    // Rationale Dialog Handlers (US3, US4)
+    // ========================================
+
+    /**
+     * Handles RationaleDismissed intent: user dismissed rationale dialog.
+     * Continues without location (fallback mode).
+     */
+    private fun handleRationaleDismissed() {
+        // Already marked as shown, just continue with animal list
+        handleRefresh()
+    }
+
+    /**
+     * Handles OpenSettingsRequested intent: user wants to open device Settings.
+     * Emits OpenSettings effect for UI to navigate.
+     */
+    private fun handleOpenSettingsRequested() {
+        viewModelScope.launch {
+            _effects.emit(AnimalListEffect.OpenSettings)
+        }
+    }
+
+    /**
+     * Handles RationaleContinue intent: user tapped Continue on educational rationale.
+     * Emits RequestPermission effect to trigger system dialog.
+     */
+    private fun handleRationaleContinue() {
+        viewModelScope.launch {
+            _state.value = AnimalListReducer.requestingPermission(_state.value)
+            _effects.emit(AnimalListEffect.RequestPermission)
         }
     }
 

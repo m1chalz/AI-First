@@ -216,4 +216,173 @@ class AnimalListReducerTest {
         // Then - animals should be preserved
         assertEquals(5, newState.animals.size, "Animals should be preserved during permission change")
     }
+
+    // ========================================
+    // User Story 3: Denied State and Rationale (US3)
+    // ========================================
+
+    @Test
+    fun `rationaleShown should transition to rationale shown state`() {
+        // Given - state with denied permission and rationale not yet shown
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Denied(shouldShowRationale = false),
+                rationaleShownThisSession = false,
+            )
+
+        // When - rationale is shown
+        val newState = AnimalListReducer.rationaleShown(currentState)
+
+        // Then - rationaleShownThisSession should be true
+        assertTrue(
+            newState.rationaleShownThisSession,
+            "rationaleShownThisSession should be true after showing rationale",
+        )
+    }
+
+    @Test
+    fun `rationaleShown should preserve permission status`() {
+        // Given - denied permission state
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Denied(shouldShowRationale = true),
+            )
+
+        // When - rationale is shown
+        val newState = AnimalListReducer.rationaleShown(currentState)
+
+        // Then - permission status should be unchanged
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Denied,
+            "Permission status should remain Denied",
+        )
+    }
+
+    @Test
+    fun `permissionDenied should not change rationaleShownThisSession flag`() {
+        // Given - state with rationale already shown
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                rationaleShownThisSession = true,
+            )
+
+        // When - permission is denied
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = false,
+            )
+
+        // Then - rationaleShownThisSession should remain true
+        assertTrue(
+            newState.rationaleShownThisSession,
+            "rationaleShownThisSession should not be reset on denial",
+        )
+    }
+
+    // ========================================
+    // User Story 4: Educational Rationale (US4)
+    // ========================================
+
+    @Test
+    fun `permissionDenied with shouldShowRationale true indicates educational rationale needed`() {
+        // Given - state after first denial (user can be asked again)
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - permission denied but rationale can be shown
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = true,
+            )
+
+        // Then - state indicates educational rationale is appropriate
+        val denied = newState.permissionStatus as PermissionStatus.Denied
+        assertTrue(
+            denied.shouldShowRationale,
+            "shouldShowRationale should be true for educational rationale flow",
+        )
+    }
+
+    @Test
+    fun `permissionDenied with shouldShowRationale false indicates settings needed`() {
+        // Given - state after user selected "Don't ask again"
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Requesting,
+            )
+
+        // When - permission denied with "Don't ask again"
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = false,
+            )
+
+        // Then - state indicates Settings navigation is needed
+        val denied = newState.permissionStatus as PermissionStatus.Denied
+        assertFalse(
+            denied.shouldShowRationale,
+            "shouldShowRationale should be false when user selected Don't ask again",
+        )
+    }
+
+    // ========================================
+    // User Story 5: Dynamic Permission Changes (US5)
+    // ========================================
+
+    @Test
+    fun `permissionGranted from Denied state should trigger location loading`() {
+        // Given - previously denied permission state
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Denied(shouldShowRationale = false),
+                location = null,
+            )
+
+        // When - permission is granted (user enabled via Settings)
+        val newState =
+            AnimalListReducer.permissionGranted(
+                currentState,
+                fineLocation = true,
+                coarseLocation = true,
+            )
+
+        // Then - location loading should start
+        assertTrue(
+            newState.isLocationLoading,
+            "Location loading should start when permission granted after denial",
+        )
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Granted,
+            "Permission status should transition to Granted",
+        )
+    }
+
+    @Test
+    fun `permissionDenied from Granted state should clear location`() {
+        // Given - previously granted permission with location
+        val currentState =
+            AnimalListUiState.Initial.copy(
+                permissionStatus = PermissionStatus.Granted(fineLocation = true, coarseLocation = true),
+                location = com.intive.aifirst.petspot.domain.models.LocationCoordinates(52.0, 21.0),
+            )
+
+        // When - permission is revoked (user disabled via Settings)
+        val newState =
+            AnimalListReducer.permissionDenied(
+                currentState,
+                shouldShowRationale = false,
+            )
+
+        // Then - location should be cleared
+        assertNull(newState.location, "Location should be cleared when permission revoked")
+        assertTrue(
+            newState.permissionStatus is PermissionStatus.Denied,
+            "Permission status should transition to Denied",
+        )
+    }
 }
