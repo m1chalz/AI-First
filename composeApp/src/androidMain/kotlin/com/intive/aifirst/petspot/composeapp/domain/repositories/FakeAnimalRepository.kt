@@ -21,6 +21,9 @@ class FakeAnimalRepository(
     var getAnimalsCallCount = 0
         private set
 
+    var getAnimalByIdCallCount = 0
+        private set
+
     override suspend fun getAnimals(): List<Animal> {
         getAnimalsCallCount++
 
@@ -29,5 +32,16 @@ class FakeAnimalRepository(
         } else {
             MockAnimalData.generateMockAnimals(animalCount)
         }
+    }
+
+    override suspend fun getAnimalById(id: String): Animal {
+        getAnimalByIdCallCount++
+
+        if (shouldFail) {
+            throw exception
+        }
+
+        return MockAnimalData.generateMockAnimals(animalCount).find { it.id == id }
+            ?: throw NoSuchElementException("Animal not found: $id")
     }
 }

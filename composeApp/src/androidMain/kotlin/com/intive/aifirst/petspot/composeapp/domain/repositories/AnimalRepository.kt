@@ -23,4 +23,14 @@ interface AnimalRepository {
      * @throws Exception if data fetch fails
      */
     suspend fun getAnimals(): List<Animal>
+
+    /**
+     * Retrieves a single animal by its unique identifier.
+     * Used for pet details screen to display comprehensive animal information.
+     *
+     * @param id Unique identifier of the animal
+     * @return Animal entity with all details
+     * @throws NoSuchElementException if animal not found
+     */
+    suspend fun getAnimalById(id: String): Animal
 }
