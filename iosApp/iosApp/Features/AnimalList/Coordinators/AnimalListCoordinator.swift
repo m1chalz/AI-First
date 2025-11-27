@@ -100,13 +100,22 @@ class AnimalListCoordinator: CoordinatorInterface {
     
     /**
      * Shows Report Missing Animal form.
-     * Mocked for now - will create ReportMissingCoordinator in future.
+     * Creates and starts ReportMissingPetCoordinator as child coordinator.
      */
     private func showReportMissing() {
-        // Placeholder: print log (real implementation will create child coordinator)
-        print("Navigate to report missing form")
-        // Future: let reportCoordinator = ReportMissingCoordinator(...)
-        // Future: reportCoordinator.start()
+        guard let navigationController = navigationController else { return }
+        
+        // Create child coordinator
+        let reportCoordinator = ReportMissingPetCoordinator(
+            parentNavigationController: navigationController
+        )
+        reportCoordinator.parentCoordinator = self
+        childCoordinators.append(reportCoordinator)
+        
+        // Start modal flow
+        Task { @MainActor in
+            await reportCoordinator.start(animated: true)
+        }
     }
     
     /**
@@ -119,6 +128,12 @@ class AnimalListCoordinator: CoordinatorInterface {
         print("Navigate to report found form")
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
+    }
+    
+    // MARK: - Deinitialization
+    
+    deinit {
+        print("deinit AnimalListCoordinator")
     }
 }
 
