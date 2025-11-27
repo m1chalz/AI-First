@@ -150,20 +150,26 @@ final class PhotoViewModelTests: XCTestCase {
     func testRestorePersistedAttachment_shouldUseFlowStateMetadata() async {
         // Given
         let metadata = makeMetadata(fileName: "persisted.jpg")
-        flowState.photoAttachment = metadata
-        cache.fileExistsResult = true
+        let freshFlowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        freshFlowState.photoAttachment = metadata
+        
+        let freshCache = PhotoAttachmentCacheFake()
+        freshCache.fileExistsResult = true
         
         // When
-        sut = PhotoViewModel(
-            flowState: flowState,
-            photoAttachmentCache: cache,
+        let viewModel = PhotoViewModel(
+            flowState: freshFlowState,
+            photoAttachmentCache: freshCache,
             toastScheduler: toastScheduler
         )
-        await waitForAsyncOperations()
+        await viewModel.waitForRestoration()
         
         // Then
-        guard case .confirmed(let confirmed) = sut.attachmentStatus else {
-            return XCTFail("Expected confirmed attachment to be restored")
+        XCTAssertEqual(freshCache.fileExistsCallCount, 1, "fileExists should be called once")
+        XCTAssertEqual(freshCache.lastCheckedURL, metadata.cachedURL, "fileExists should check the metadata URL")
+        
+        guard case .confirmed(let confirmed) = viewModel.attachmentStatus else {
+            return XCTFail("Expected confirmed attachment to be restored. Status: \(viewModel.attachmentStatus)")
         }
         XCTAssertEqual(confirmed.fileName, "persisted.jpg")
     }

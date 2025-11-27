@@ -13,6 +13,8 @@ final class PhotoAttachmentCacheFake: PhotoAttachmentCacheProtocol {
     var clearError: Error?
     
     var fileExistsResult = true
+    var fileExistsCallCount = 0
+    var lastCheckedURL: URL?
     
     func save(data: Data, metadata: PhotoAttachmentMetadata) async throws -> PhotoAttachmentMetadata {
         if let saveError {
@@ -31,7 +33,9 @@ final class PhotoAttachmentCacheFake: PhotoAttachmentCacheProtocol {
     }
     
     func fileExists(at url: URL) async -> Bool {
-        fileExistsResult
+        fileExistsCallCount += 1
+        lastCheckedURL = url
+        return fileExistsResult
     }
     
     func clearCurrent() async throws {

@@ -47,7 +47,16 @@ actor PhotoAttachmentCache: PhotoAttachmentCacheProtocol {
     private let metadataFileName = "metadata.json"
     private let customBaseDirectory: URL?
     
-    init(fileManager: FileManager = .default, baseDirectory: URL? = nil) {
+    init(baseDirectory: URL? = nil) {
+        self.fileManager = .default
+        self.encoder = JSONEncoder()
+        self.encoder.outputFormatting = .prettyPrinted
+        self.decoder = JSONDecoder()
+        self.customBaseDirectory = baseDirectory
+    }
+    
+    /// Test-only initializer accepting custom FileManager
+    init(fileManager: FileManager, baseDirectory: URL?) {
         self.fileManager = fileManager
         self.encoder = JSONEncoder()
         self.encoder.outputFormatting = .prettyPrinted

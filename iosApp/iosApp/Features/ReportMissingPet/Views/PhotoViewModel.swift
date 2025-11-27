@@ -21,6 +21,10 @@ final class PhotoViewModel: ObservableObject {
     var onNext: (() -> Void)?
     var onBack: (() -> Void)?
     
+    // MARK: - Private State
+    
+    private var restorationTask: Task<Void, Never>?
+    
     // MARK: - Initialization
     
     init(
@@ -33,9 +37,14 @@ final class PhotoViewModel: ObservableObject {
         self.toastScheduler = toastScheduler
         self.attachmentStatus = flowState.photoStatus
         
-        Task {
+        restorationTask = Task {
             await restorePersistedAttachment()
         }
+    }
+    
+    /// Waits for restoration to complete. For testing only.
+    func waitForRestoration() async {
+        await restorationTask?.value
     }
     
     // MARK: - Intent Handling
