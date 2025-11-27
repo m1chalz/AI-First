@@ -1,6 +1,7 @@
 package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
+import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,4 +29,5 @@ val viewModelModule =
     module {
         // ViewModels
         viewModel { AnimalListViewModel(get()) }
+        viewModel { PetDetailsViewModel(get()) }
     }

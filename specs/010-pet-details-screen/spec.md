@@ -1,19 +1,26 @@
-# Feature Specification: Pet Details Screen (Android UI)
+# Feature Specification: Pet Details Screen
 
 **Feature Branch**: `010-pet-details-screen`  
 **Created**: November 21, 2025  
 **Status**: Draft  
-**Input**: User description: "I want to have an animal details screen to which user can navigate by interacting with list item. In scope there is only UI part. Use this design: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev focusing on Android platform. This spec is only for Android."
+**Scope**: Multi-platform specification covering Android UI implementation (primary) and iOS implementation notes
+
+> **Note**: This specification documents the Pet Details Screen feature across both Android and iOS platforms. Android implementation is the primary focus (branch 010-pet-details-screen). iOS implementation details are documented separately with platform-specific differences noted throughout.
 
 ## Clarifications
 
-### Session 2025-11-21
+### Session 2025-11-26 (Android)
+
+- Q: What should the error state UI look like when pet data fails to load? → A: Full-screen error view with message and "Try Again" button
+- Q: What should happen when the user taps "Show on the map"? → A: Launch Google Maps (or other map app) via Android Intent with coordinates
+- Q: Is the "Remove Report" button included in scope? → A: No, the Remove Report button has been removed from the design and is not in scope for Android
+
+### Session 2025-11-21 (Shared)
 
 - Q: What are all possible pet status values that need to be displayed? → A: MISSING, FOUND, CLOSED
 - Q: What colors should be used for each status badge? → A: Red for MISSING, Blue for FOUND, Gray for CLOSED
 - Q: Which fields are required vs optional? → A: Required: Photo, Status, Date of disappearance, Species, At least one of phone or email, Sex. All other fields are optional.
-- Q: Should phone and email be masked? → A: No, display phone and email in full without masking
-- Q: Should the "Remove Report" button be visible for all users or only for owners? → A: Show button always (permission handling will be done by backend)
+- Q: Should phone and email be masked? → A: No, display phone and email in full without masking (design shows masked phone as placeholder/mock data only)
 - Q: How should long text be handled in different fields? → A: Truncate short data fields (species, breed, age, location) with ellipsis after 1-2 lines; allow full multi-line display for description field (Additional Description) with screen scrolling
 - Q: What should be displayed as fallback when pet photo fails to load? → A: Gray box with "Image not available" text
 - Q: What should be shown during initial data loading? → A: Full-screen spinner/progress indicator only
@@ -55,18 +62,18 @@ Users can view critical identification information including microchip number, s
 
 ### User Story 3 - Access Location and Contact Information (Priority: P2)
 
-Users can view where the pet was last seen or found, including city and radius, along with contact information for reaching the pet owner.
+Users can view where the pet was last seen or found, including latitude and longitude coordinates, along with contact information for reaching the pet owner.
 
 **Why this priority**: Location context helps users determine proximity and relevance. Contact information enables users to report sightings or arrange pet returns.
 
-**Independent Test**: Can be tested by displaying location data with various city names and distances, and verifying contact information is properly displayed.
+**Independent Test**: Can be tested by displaying location data with various coordinate values and verifying contact information is properly displayed.
 
 **Acceptance Scenarios**:
 
-1. **Given** a pet has a disappearance location, **When** viewing the details screen, **Then** the city name and approximate radius are displayed (e.g., "Warsaw • ±15 km") with a location icon
+1. **Given** a pet has a disappearance location, **When** viewing the details screen, **Then** the latitude and longitude coordinates are displayed (e.g., "52.2297° N, 21.0122° E") with a location icon
 2. **Given** a pet listing includes contact information, **When** viewing the details screen, **Then** the phone number is displayed in full (e.g., "+48 123 456 789")
 3. **Given** a pet listing includes an email, **When** viewing the details screen, **Then** the email is displayed in full (e.g., "owner@email.com") under "Contact owner"
-4. **Given** a user wants to see the location on a map, **When** they tap the "Show on the map" button, **Then** they are navigated to a map view centered on the disappearance location
+4. **Given** a user wants to see the location on a map, **When** they tap the "Show on the map" button, **Then** an external map app (Google Maps or default) is launched via Android Intent with the disappearance coordinates
 
 ---
 
@@ -115,29 +122,17 @@ Users can immediately identify the pet's status (MISSING, FOUND, or CLOSED) thro
 
 ---
 
-### User Story 7 - Remove Pet Report (Priority: P3)
-
-Users can attempt to remove pet reports from the system when the pet is found or the report is no longer needed. The button is always visible, with permission validation handled by the backend.
-
-**Why this priority**: This is an administrative action that's important for data hygiene but not part of the core viewing experience. Lower priority for initial implementation.
-
-**Independent Test**: Can be tested by tapping the "Remove Report" button and verifying it triggers the removal flow with appropriate confirmation.
-
-**Acceptance Scenarios**:
-
-1. **Given** a user is viewing any pet report, **When** they tap the "Remove Report" button, **Then** they are prompted to confirm the removal action
-
----
-
 ### Edge Cases
 
 - What happens when the pet photo fails to load or is missing? (Display a gray box with "Image not available" text as placeholder)
 - What happens when optional fields have no data? (Display a dash "—" for: breed, approximate age, microchip number, location, additional description. Hide reward badge when no reward. Display only the available contact method when one of phone/email is missing.)
-- What happens when text fields contain very long text? (Truncate short data fields with ellipsis after 1-2 lines: species, breed, sex, age, microchip number, location city. Allow full multi-line display with screen scrolling for: Additional Description.)
+- What happens when text fields contain very long text? (Truncate short data fields with ellipsis after 1-2 lines: species, breed, sex, age, microchip number, location coordinates. Allow full multi-line display with screen scrolling for: Additional Description.)
 - What happens when the user has a slow network connection while loading the screen? (Show full-screen spinner/progress indicator until data loads)
-- What happens if the user navigates to the details screen without selecting a specific pet? (Show error state or redirect to list)
+- What happens if the user navigates to the details screen without selecting a specific pet? (Show full-screen error view with message and "Try Again" button)
+- What happens when the API call fails (network error, timeout, server error)? (Show full-screen error view with error message and "Try Again" button that retries the data load)
 - What happens when contact information format is invalid? (Display as-is with formatting errors, as validation is backend concern)
 - What happens when location data is unavailable? (Disable the "Show on the map" button)
+- What happens when user taps "Show on the map"? (Launch external map app via Android Intent with coordinates; if no map app is available, show a toast/snackbar message)
 
 ## Requirements *(mandatory)*
 
@@ -153,15 +148,15 @@ Users can attempt to remove pet reports from the system when the pet is found or
 - **FR-008**: Screen MUST display animal species and breed in a two-column grid layout
 - **FR-009**: Screen MUST display animal sex and approximate age in a two-column grid layout
 - **FR-010**: Screen MUST display sex with an appropriate icon (male or female symbol)
-- **FR-011**: Screen MUST display place of disappearance with city name, radius (e.g., "±15 km"), and location icon
-- **FR-012**: Screen MUST provide a "Show on the map" button below the location information
+- **FR-011**: Screen MUST display latitude and longitude coordinates (e.g., "52.2297° N, 21.0122° E") with a location icon
+- **FR-012**: Screen MUST provide a "Show on the map" button below the location information that launches an external map app (Google Maps or device default) via Android Intent with the pet's coordinates
 - **FR-013**: Screen MUST display multi-line animal additional description text without truncation (full display with screen scrolling)
-- **FR-014**: Screen MUST truncate short data fields (species, breed, age, microchip, location city) with ellipsis if text exceeds 1-2 lines
-- **FR-015**: Screen MUST display a "Remove Report" button at the bottom of the screen for all users (permission validation is handled by backend)
-- **FR-016**: All interactive elements MUST have test identifiers in the format "petDetails.element"
-- **FR-017**: Screen MUST handle scrolling when content exceeds screen height
-- **FR-018**: Screen MUST maintain proper spacing and layout according to the design specifications
-- **FR-019**: Screen MUST display a full-screen spinner/progress indicator while initial data is loading
+- **FR-014**: Screen MUST truncate short data fields (species, breed, age, microchip, location coordinates) with ellipsis if text exceeds 1-2 lines
+- **FR-015**: All interactive elements MUST have test identifiers in the format "petDetails.element"
+- **FR-016**: Screen MUST handle scrolling when content exceeds screen height
+- **FR-017**: Screen MUST maintain proper spacing and layout according to the design specifications
+- **FR-018**: Screen MUST display a full-screen spinner/progress indicator while initial data is loading
+- **FR-019**: Screen MUST display a full-screen error view with error message and "Try Again" button when data loading fails (network error, timeout, server error)
 
 ### Key Entities
 
@@ -177,7 +172,7 @@ Users can attempt to remove pet reports from the system when the pet is found or
   - Microchip number (optional)
   - Breed (optional)
   - Approximate age (optional)
-  - Disappearance location (optional: city, coordinates, radius)
+  - Disappearance location (optional: latitude, longitude coordinates)
   - Additional description (optional)
 
 ## Success Criteria *(mandatory)*
@@ -188,3 +183,53 @@ Users can attempt to remove pet reports from the system when the pet is found or
 - **SC-002**: Screen is fully scrollable and all content is accessible without truncation or overlap
 - **SC-003**: Screen layout matches the provided Figma design with pixel-perfect accuracy for spacing, typography, and component sizing
 - **SC-004**: All interactive elements have proper test identifiers enabling automated UI testing
+
+---
+
+## Platform-Specific Implementation Notes
+
+### Android Implementation (Primary - Branch 010)
+
+**Scope Decisions**:
+- ✅ Remove Report button: NOT IN SCOPE (removed from Android design)
+- ✅ Contact phone: Display in FULL (unmasked)
+- ✅ Location display: Latitude/Longitude coordinates format
+- ✅ Map launch: Via Android Intent to Google Maps
+
+**Technical Requirements**:
+- Use Jetpack Compose for UI
+- Implement MVI architecture with ViewModels
+- Use Koin for dependency injection
+- Coroutines + Flow for async operations
+- JUnit + Kotlin Test + Turbine for unit tests
+
+**Design Reference**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-7437&m=dev
+
+### iOS Implementation (Branch 012)
+
+**Scope Differences**:
+- ✅ Remove Report button: IN SCOPE (included in iOS design)
+- ✅ Contact phone: Display with MASKING for privacy
+- ✅ Location display: Place name with radius (e.g., "Warsaw • ±15 km")
+- ✅ Map launch: Via MapKit or system maps app
+
+**Technical Requirements**:
+- Use SwiftUI for UI
+- Implement MVVM-C architecture with UIKit Coordinators
+- Manual dependency injection with ServiceContainer
+- Swift Concurrency (async/await)
+- XCTest for unit tests
+
+**Design Reference**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=179-8157&m=dev
+
+### Shared Requirements (Both Platforms)
+
+- Pet photo display with "Image not available" fallback
+- Status badge (Red/MISSING, Blue/FOUND, Gray/CLOSED)
+- Reward badge display (if present)
+- All identification fields (species, breed, sex, age, microchip)
+- Date of disappearance in format "MMM DD, YYYY"
+- Loading state during data fetch
+- Error state with retry capability
+- Scrollable content layout for longer descriptions
+- Test identifiers on all interactive elements

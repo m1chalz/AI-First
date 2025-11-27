@@ -1,5 +1,5 @@
 /**
- * Screen Object Model for Pet Details screen (mobile iOS).
+ * Screen Object Model for Pet Details screen (mobile).
  * Contains ONLY test IDs and locator getters (no actions).
  */
 export class PetDetailsScreen {
@@ -7,179 +7,170 @@ export class PetDetailsScreen {
      * Test IDs for pet details screen elements.
      */
     readonly testIds = {
-        // Screen container
-        detailsView: 'petDetails.view',
+        // Main screen elements
+        content: 'petDetails.content',
+        loading: 'petDetails.loading',
+        error: 'petDetails.error',
+        retryButton: 'petDetails.retryButton',
+        backButton: 'petDetails.backButton',
         
-        // Loading and error states
-        loadingSpinner: 'petDetails.loading',
-        errorMessage: 'petDetails.error.message',
-        retryButton: 'petDetails.retry.button',
+        // Pet photo section
+        photo: 'petDetails.photo',
+        statusBadge: 'petDetails.statusBadge',
+        rewardBadge: 'petDetails.rewardBadge',
         
-        // Photo and badges
-        photoImage: 'petDetails.photo.image',
-        statusBadge: 'petDetails.status.badge',
-        rewardBadge: 'petDetails.reward.badge',
+        // Pet info section
+        species: 'petDetails.species',
+        breed: 'petDetails.breed',
+        sex: 'petDetails.sex',
+        age: 'petDetails.age',
+        microchip: 'petDetails.microchip',
+        disappearanceDate: 'petDetails.disappearanceDate',
         
-        // Identification fields
-        microchipField: 'petDetails.microchip.field',
-        speciesField: 'petDetails.species.field',
-        breedField: 'petDetails.breed.field',
-        sexField: 'petDetails.sex.field',
-        ageField: 'petDetails.age.field',
-        dateField: 'petDetails.date.field',
+        // Location section
+        location: 'petDetails.location',
+        showMapButton: 'petDetails.showMapButton',
         
-        // Location and contact
-        locationField: 'petDetails.location.field',
-        radiusField: 'petDetails.radius.field',
-        showMapButton: 'petDetails.showMap.button',
-        phoneField: 'petDetails.phone.tap',
-        emailField: 'petDetails.email.tap',
+        // Contact section
+        phone: 'petDetails.phone',
+        email: 'petDetails.email',
         
-        // Description
-        descriptionText: 'petDetails.description.text',
-        
-        // Actions
-        removeReportButton: 'petDetails.removeReport.button',
+        // Description section
+        description: 'petDetails.description',
     };
 
     /**
-     * Returns the main details view container.
+     * Returns the main content container element.
      */
-    get detailsView() {
-        return $(`~${this.testIds.detailsView}`);
+    get content() {
+        return $(`~${this.testIds.content}`);
     }
 
     /**
-     * Returns the loading spinner element.
+     * Returns the loading indicator element.
      */
-    get loadingSpinner() {
-        return $(`~${this.testIds.loadingSpinner}`);
+    get loading() {
+        return $(`~${this.testIds.loading}`);
     }
 
     /**
-     * Returns the error message text element.
+     * Returns the error state element.
      */
-    get errorMessage() {
-        return $(`~${this.testIds.errorMessage}`);
+    get error() {
+        return $(`~${this.testIds.error}`);
     }
 
     /**
-     * Returns the retry button (visible in error state).
+     * Returns the retry button element.
      */
     get retryButton() {
         return $(`~${this.testIds.retryButton}`);
     }
 
     /**
-     * Returns the pet photo image element.
+     * Returns the back button element.
      */
-    get photoImage() {
-        return $(`~${this.testIds.photoImage}`);
+    get backButton() {
+        return $(`~${this.testIds.backButton}`);
     }
 
     /**
-     * Returns the status badge (MISSING, FOUND, CLOSED).
+     * Returns the pet photo element.
+     */
+    get photo() {
+        return $(`~${this.testIds.photo}`);
+    }
+
+    /**
+     * Returns the status badge element.
      */
     get statusBadge() {
         return $(`~${this.testIds.statusBadge}`);
     }
 
     /**
-     * Returns the reward badge (if present).
+     * Returns the reward badge element.
      */
     get rewardBadge() {
         return $(`~${this.testIds.rewardBadge}`);
     }
 
     /**
-     * Returns the microchip number field.
+     * Returns the species element.
      */
-    get microchipField() {
-        return $(`~${this.testIds.microchipField}`);
+    get species() {
+        return $(`~${this.testIds.species}`);
     }
 
     /**
-     * Returns the species field.
+     * Returns the breed element.
      */
-    get speciesField() {
-        return $(`~${this.testIds.speciesField}`);
+    get breed() {
+        return $(`~${this.testIds.breed}`);
     }
 
     /**
-     * Returns the breed field.
+     * Returns the sex element.
      */
-    get breedField() {
-        return $(`~${this.testIds.breedField}`);
+    get sex() {
+        return $(`~${this.testIds.sex}`);
     }
 
     /**
-     * Returns the sex field.
+     * Returns the age element.
      */
-    get sexField() {
-        return $(`~${this.testIds.sexField}`);
+    get age() {
+        return $(`~${this.testIds.age}`);
     }
 
     /**
-     * Returns the age field.
+     * Returns the microchip element.
      */
-    get ageField() {
-        return $(`~${this.testIds.ageField}`);
+    get microchip() {
+        return $(`~${this.testIds.microchip}`);
     }
 
     /**
-     * Returns the date of disappearance field.
+     * Returns the disappearance date element.
      */
-    get dateField() {
-        return $(`~${this.testIds.dateField}`);
+    get disappearanceDate() {
+        return $(`~${this.testIds.disappearanceDate}`);
     }
 
     /**
-     * Returns the location field.
+     * Returns the location element.
      */
-    get locationField() {
-        return $(`~${this.testIds.locationField}`);
+    get location() {
+        return $(`~${this.testIds.location}`);
     }
 
     /**
-     * Returns the radius field.
-     */
-    get radiusField() {
-        return $(`~${this.testIds.radiusField}`);
-    }
-
-    /**
-     * Returns the "Show on the map" button.
+     * Returns the show map button element.
      */
     get showMapButton() {
         return $(`~${this.testIds.showMapButton}`);
     }
 
     /**
-     * Returns the phone field (tappable).
+     * Returns the phone element.
      */
-    get phoneField() {
-        return $(`~${this.testIds.phoneField}`);
+    get phone() {
+        return $(`~${this.testIds.phone}`);
     }
 
     /**
-     * Returns the email field (tappable).
+     * Returns the email element.
      */
-    get emailField() {
-        return $(`~${this.testIds.emailField}`);
+    get email() {
+        return $(`~${this.testIds.email}`);
     }
 
     /**
-     * Returns the description text element.
+     * Returns the description element.
      */
-    get descriptionText() {
-        return $(`~${this.testIds.descriptionText}`);
-    }
-
-    /**
-     * Returns the "Remove Report" button.
-     */
-    get removeReportButton() {
-        return $(`~${this.testIds.removeReportButton}`);
+    get description() {
+        return $(`~${this.testIds.description}`);
     }
 }
+
 

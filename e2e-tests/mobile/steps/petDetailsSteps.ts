@@ -160,3 +160,4 @@ export async function whenUserTapsRemoveReport(screen: PetDetailsScreen): Promis
     await screen.removeReportButton.click();
 }
 
+

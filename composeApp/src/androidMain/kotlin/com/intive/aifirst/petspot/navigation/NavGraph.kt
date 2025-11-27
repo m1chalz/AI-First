@@ -8,17 +8,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
+import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
 
 /**
  * Main navigation graph for the application.
  * Defines all available routes and their associated composables.
  *
  * Uses type-safe navigation with kotlinx-serialization.
- *
- * Note: Additional screens (AnimalDetail, ReportMissing, ReportFound) will be added
- * when those features are implemented. For now, navigation effects for those screens
- * will be logged but won't navigate anywhere.
  *
  * @param modifier Modifier for the NavHost
  * @param navController Navigation controller (defaults to rememberNavController)
@@ -42,14 +40,14 @@ fun PetSpotNavGraph(
             )
         }
 
-        // TODO: Add AnimalDetail screen when implemented
-        // composable<NavRoute.AnimalDetail> { backStackEntry ->
-        //     val route = backStackEntry.toRoute<NavRoute.AnimalDetail>()
-        //     AnimalDetailScreen(
-        //         animalId = route.animalId,
-        //         navController = navController
-        //     )
-        // }
+        // Pet Details Screen
+        composable<NavRoute.AnimalDetail> { backStackEntry ->
+            val route = backStackEntry.toRoute<NavRoute.AnimalDetail>()
+            PetDetailsScreen(
+                animalId = route.animalId,
+                navController = navController,
+            )
+        }
 
         // TODO: Add ReportMissing screen when implemented
         // composable<NavRoute.ReportMissing> {

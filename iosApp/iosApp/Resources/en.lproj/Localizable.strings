@@ -82,10 +82,31 @@
 "animalGender.female" = "Female";
 "animalGender.unknown" = "Unknown";
 
+/* MARK: - Report Missing Pet Flow */
+
+// Navigation titles
+"reportMissingPet.chipNumber.title" = "Microchip Number";
+"reportMissingPet.photo.title" = "Pet Photo";
+"reportMissingPet.description.title" = "Description";
+"reportMissingPet.contactDetails.title" = "Contact Details";
+"reportMissingPet.summary.title" = "Summary";
+
+// Progress indicator
+"reportMissingPet.progress.format" = "%d/%d";
+
+// Buttons
+"reportMissingPet.button.continue" = "Continue";
+"reportMissingPet.button.submit" = "Submit";
+
+// Placeholders (for future use)
+"reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
+
 /* MARK: - Common */
 
 "common.loading" = "Loading...";
 "common.retry" = "Retry";
 "common.cancel" = "Cancel";
 "common.ok" = "OK";
+"common.continue" = "Continue";
+"common.back" = "Back";
 
