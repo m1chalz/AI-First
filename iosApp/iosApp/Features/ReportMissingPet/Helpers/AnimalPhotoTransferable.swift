@@ -2,7 +2,13 @@ import SwiftUI
 import UniformTypeIdentifiers
 import ImageIO
 
-/// Transferable wrapper for PhotosPicker animal photo selections.
+/// Transferable wrapper for the iOS `PhotosPicker` that normalizes everything we
+/// need from a user-selected image (raw bytes, UTI, filename, pixel metadata).
+/// `PhotosPicker` exposes selections through `Transferable`; by providing this
+/// custom type we keep all parsing logic (reading `CGImageSource`, inferring
+/// content type, computing fallback names) away from the UI layer and guarantee
+/// the ViewModel receives a predictable payload no matter which image format the
+/// user picks.
 struct AnimalPhotoTransferable: Transferable {
     let data: Data
     let contentType: UTType

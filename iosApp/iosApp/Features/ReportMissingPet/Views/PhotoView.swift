@@ -1,7 +1,5 @@
 import SwiftUI
 import PhotosUI
-import UniformTypeIdentifiers
-import ImageIO
 import Foundation
 
 /// Full PhotosPicker-driven UI for the Animal Photo step (2/4).
@@ -9,7 +7,6 @@ struct PhotoView: View {
     @ObservedObject var viewModel: PhotoViewModel
     
     @State private var pickerSelection: PhotosPickerItem?
-    @State private var isProcessingSelection = false
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -18,7 +15,7 @@ struct PhotoView: View {
                     titleSection
                     AnimalPhotoEmptyStateView(
                         pickerSelection: $pickerSelection,
-                        isLoading: isProcessingSelection || isAttachmentLoading
+                        isLoading: viewModel.isProcessingSelection || isAttachmentLoading
                     )
                     if isAttachmentLoading {
                         loadingIndicator
@@ -72,10 +69,11 @@ struct PhotoView: View {
         .animation(.easeInOut(duration: 0.2), value: viewModel.showsMandatoryToast)
         .animation(.easeInOut(duration: 0.2), value: confirmedMetadata?.id)
         .onChange(of: pickerSelection) { _, newSelection in
+            guard let item = newSelection else { return }
             Task {
-                guard let item = newSelection else { return }
-                await processPickerItem(item)
+                await viewModel.processPickerItem(item)
             }
+            pickerSelection = nil
         }
     }
     
@@ -119,43 +117,6 @@ struct PhotoView: View {
         return false
     }
     
-    // MARK: - Picker Handling
-    
-    private func processPickerItem(_ item: PhotosPickerItem) async {
-        isProcessingSelection = true
-        defer {
-            isProcessingSelection = false
-            pickerSelection = nil
-        }
-        
-        do {
-            guard let transferable = try await item.loadTransferable(type: AnimalPhotoTransferable.self) else {
-                return
-            }
-            
-            let selection = PhotoSelection(
-                data: transferable.data,
-                fileName: transferable.fileName ?? fallbackFilename(for: transferable.contentType),
-                contentType: transferable.contentType,
-                pixelWidth: transferable.pixelWidth,
-                pixelHeight: transferable.pixelHeight,
-                assetIdentifier: item.itemIdentifier
-            )
-            
-            await viewModel.handlePhotoSelection(selection)
-        } catch {
-            if error is CancellationError {
-                viewModel.handlePickerCancellation()
-            } else {
-                viewModel.handleSelectionFailure()
-            }
-        }
-    }
-    
-    private func fallbackFilename(for type: UTType) -> String {
-        let `extension` = type.preferredFilenameExtension ?? "img"
-        return "animal-photo.\(`extension`)"
-    }
 }
 
 #if DEBUG

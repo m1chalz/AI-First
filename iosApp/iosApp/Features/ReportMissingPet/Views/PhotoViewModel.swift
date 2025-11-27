@@ -9,12 +9,14 @@ final class PhotoViewModel: ObservableObject {
     @Published private(set) var attachmentStatus: PhotoAttachmentStatus
     @Published private(set) var showsMandatoryToast: Bool = false
     @Published private(set) var helperMessage: String = L10n.AnimalPhoto.Helper.required
+    @Published private(set) var isProcessingSelection: Bool = false
     
     // MARK: - Dependencies
     
     private let flowState: ReportMissingPetFlowState
     private let photoAttachmentCache: PhotoAttachmentCacheProtocol
     private let toastScheduler: ToastSchedulerProtocol
+    private let photoSelectionProcessor: PhotoSelectionProcessing
     
     // MARK: - Coordinator Communication
     
@@ -30,11 +32,13 @@ final class PhotoViewModel: ObservableObject {
     init(
         flowState: ReportMissingPetFlowState,
         photoAttachmentCache: PhotoAttachmentCacheProtocol,
-        toastScheduler: ToastSchedulerProtocol
+        toastScheduler: ToastSchedulerProtocol,
+        photoSelectionProcessor: PhotoSelectionProcessing = PhotoSelectionProcessor()
     ) {
         self.flowState = flowState
         self.photoAttachmentCache = photoAttachmentCache
         self.toastScheduler = toastScheduler
+        self.photoSelectionProcessor = photoSelectionProcessor
         self.attachmentStatus = flowState.photoStatus
         
         restorationTask = Task {
@@ -109,6 +113,23 @@ final class PhotoViewModel: ObservableObject {
     /// Navigate back to the previous screen (Chip Number).
     func handleBack() {
         onBack?()
+    }
+    
+    /// Kicks off processing of a selected Photos picker item using the helper processor.
+    func processPickerItem(_ item: PhotoPickerItemProviding) async {
+        isProcessingSelection = true
+        defer { isProcessingSelection = false }
+        
+        do {
+            let selection = try await photoSelectionProcessor.process(item)
+            await handlePhotoSelection(selection)
+        } catch {
+            if error is CancellationError {
+                handlePickerCancellation()
+            } else {
+                handleSelectionFailure()
+            }
+        }
     }
     
     // MARK: - Private Helpers
