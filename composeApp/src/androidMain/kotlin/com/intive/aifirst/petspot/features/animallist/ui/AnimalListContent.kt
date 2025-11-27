@@ -46,6 +46,7 @@ import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 /**
  * Stateless UI for the animal list screen.
  * Receives all state and actions via parameters to enable previews and testing.
+ * Extended with location loading indicator and status display.
  *
  * Design matches Figma specifications ("Missing animals list app" node-id=297-7556):
  * - Title: "PetSpot" left-aligned, Hind 32sp, color rgba(0,0,0,0.8)
@@ -90,7 +91,17 @@ fun AnimalListContent(
                         .fillMaxWidth(),
             ) {
                 when {
-                    state.isLoading -> FullScreenLoading(testTag = "animalList.loading")
+                    // Show loading for either data loading or location loading
+                    state.isLoading || state.isLocationLoading ->
+                        FullScreenLoading(
+                            testTag =
+                                if (state.isLocationLoading) {
+                                    "animalList.loadingIndicator"
+                                } else {
+                                    "animalList.loading"
+                                },
+                        )
+
                     state.error != null ->
                         ErrorState(
                             message = state.error,
@@ -105,6 +116,20 @@ fun AnimalListContent(
                         )
                 }
             }
+        }
+
+        // Location status indicator (optional - shows when location is available)
+        if (state.location != null) {
+            Text(
+                text = "📍 Location available",
+                fontSize = 12.sp,
+                color = Color(0xFF4CAF50),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 48.dp, end = 24.dp)
+                        .testTag("animalList.locationStatus"),
+            )
         }
 
         // Floating button at bottom right

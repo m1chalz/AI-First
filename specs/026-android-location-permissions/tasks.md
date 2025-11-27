@@ -79,34 +79,34 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Unit Tests**:
-- [ ] T011 [P] [US1] Create `FakeLocationRepository` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/fakes/FakeLocationRepository.kt`
-- [ ] T012 [P] [US1] Unit test for `GetCurrentLocationUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/domain/usecases/GetCurrentLocationUseCaseTest.kt` (test both stages: cached hit, cached miss with fresh success, both fail)
-- [ ] T013 [P] [US1] Unit test for `LocationRepositoryImpl` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/repositories/LocationRepositoryImplTest.kt` (test cached location, fresh location, timeout)
+- [X] T011 [P] [US1] Create `FakeLocationRepository` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/fakes/FakeLocationRepository.kt`
+- [X] T012 [P] [US1] Unit test for `GetCurrentLocationUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/domain/usecases/GetCurrentLocationUseCaseTest.kt` (test both stages: cached hit, cached miss with fresh success, both fail)
+- [X] T013 [P] [US1] Unit test for `LocationRepositoryImpl` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/repositories/LocationRepositoryImplTest.kt` (test cached location, fresh location, timeout)
 
 **E2E Tests**:
-- [ ] T014 [US1] Add Cucumber scenarios for US1 to `/e2e-tests/java/src/test/resources/features/mobile/android-location-permissions.feature` (permission already granted, location fetch success, location fetch timeout/failure)
+- [X] T014 [US1] Add Cucumber scenarios for US1 to `/e2e-tests/java/src/test/resources/features/mobile/android-location-permissions.feature` (permission already granted, location fetch success, location fetch timeout/failure)
 
 ### Implementation for User Story 1
 
 **Domain Layer**:
-- [ ] T015 [US1] Create `GetCurrentLocationUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/usecases/GetCurrentLocationUseCase.kt` (two-stage: cached first, then fresh with 10s timeout)
+- [X] T015 [US1] Create `GetCurrentLocationUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/usecases/GetCurrentLocationUseCase.kt` (two-stage: cached first, then fresh with 10s timeout)
 
 **Data Layer**:
-- [ ] T016 [US1] Implement `LocationRepositoryImpl` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/repositories/LocationRepositoryImpl.kt` (two-stage: getLastKnownLocation + requestSingleUpdate with 10s timeout)
+- [X] T016 [US1] Implement `LocationRepositoryImpl` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/repositories/LocationRepositoryImpl.kt` (two-stage: getLastKnownLocation + requestSingleUpdate with 10s timeout)
 
 **DI**:
-- [ ] T017 [US1] Register `LocationRepository` and `GetCurrentLocationUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/LocationModule.kt`
+- [X] T017 [US1] Register `LocationRepository` and `GetCurrentLocationUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/LocationModule.kt`
 
 **Presentation Layer**:
-- [ ] T018 [US1] Extend `AnimalListUiState` with `permissionStatus: PermissionStatus` and `location: LocationCoordinates?` fields in existing MVI state file
-- [ ] T019 [US1] Add location-related intents to `AnimalListIntent` sealed class (CheckPermission, PermissionGranted, LocationFetched, LocationFetchFailed)
-- [ ] T020 [US1] Extend `AnimalListReducer` with permission state transitions for US1 (granted → fetching → fetched/failed)
-- [ ] T021 [US1] Extend `AnimalListViewModel` to inject `GetCurrentLocationUseCase` and handle two-stage location fetch flow
+- [X] T018 [US1] Extend `AnimalListUiState` with `permissionStatus: PermissionStatus` and `location: LocationCoordinates?` fields in existing MVI state file
+- [X] T019 [US1] Add location-related intents to `AnimalListIntent` sealed class (CheckPermission, PermissionGranted, LocationFetched, LocationFetchFailed)
+- [X] T020 [US1] Extend `AnimalListReducer` with permission state transitions for US1 (granted → fetching → fetched/failed)
+- [X] T021 [US1] Extend `AnimalListViewModel` to inject `GetCurrentLocationUseCase` and handle two-stage location fetch flow
 
 **UI Layer**:
-- [ ] T022 [US1] Extend `AnimalListScreen` state host composable with Accompanist `rememberMultiplePermissionsState` for location permissions
-- [ ] T023 [US1] Add loading indicator to `AnimalListContent` stateless composable while fetching location
-- [ ] T024 [US1] Add testTag modifiers to location-related UI elements (`animalList.loadingIndicator`, `animalList.locationStatus`)
+- [X] T022 [US1] Extend `AnimalListScreen` state host composable with Accompanist `rememberMultiplePermissionsState` for location permissions
+- [X] T023 [US1] Add loading indicator to `AnimalListContent` stateless composable while fetching location
+- [X] T024 [US1] Add testTag modifiers to location-related UI elements (`animalList.loadingIndicator`, `animalList.locationStatus`)
 
 **Checkpoint**: User Story 1 complete - users with granted permissions can see location-aware listings
 

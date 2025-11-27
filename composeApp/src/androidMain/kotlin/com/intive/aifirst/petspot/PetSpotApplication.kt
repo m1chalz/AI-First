@@ -3,6 +3,7 @@ package com.intive.aifirst.petspot
 import android.app.Application
 import com.intive.aifirst.petspot.di.dataModule
 import com.intive.aifirst.petspot.di.domainModule
+import com.intive.aifirst.petspot.di.locationModule
 import com.intive.aifirst.petspot.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -35,6 +36,8 @@ class PetSpotApplication : Application() {
                 domainModule,
                 // Android data layer (repositories, APIs, databases)
                 dataModule,
+                // Location services (repository, use cases)
+                locationModule,
                 // Android ViewModels for UI
                 viewModelModule,
             )

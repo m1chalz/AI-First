@@ -1,11 +1,14 @@
 package com.intive.aifirst.petspot.features.animallist.presentation.mvi
 
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
+import com.intive.aifirst.petspot.domain.models.LocationCoordinates
+import com.intive.aifirst.petspot.domain.models.PermissionStatus
 
 /**
  * Pure reducer for Animal List screen state transitions.
  * Takes current state and result, produces new state.
  * No side effects - testable in isolation.
+ * Extended with permission and location state transitions.
  */
 object AnimalListReducer {
     /**
@@ -19,30 +22,100 @@ object AnimalListReducer {
     fun reduce(
         currentState: AnimalListUiState,
         result: Result<List<Animal>>,
-    ): AnimalListUiState {
-        return result.fold(
+    ): AnimalListUiState =
+        result.fold(
             onSuccess = { animals ->
-                AnimalListUiState(
+                currentState.copy(
                     animals = animals,
                     isLoading = false,
                     error = null,
                 )
             },
             onFailure = { exception ->
-                AnimalListUiState(
+                currentState.copy(
                     // Preserve previous data on error
-                    animals = currentState.animals,
                     isLoading = false,
                     error = exception.message ?: "Unknown error",
                 )
             },
         )
-    }
 
     /**
      * Returns loading state.
      */
-    fun loading(currentState: AnimalListUiState): AnimalListUiState {
-        return currentState.copy(isLoading = true, error = null)
-    }
+    fun loading(currentState: AnimalListUiState): AnimalListUiState = currentState.copy(isLoading = true, error = null)
+
+    // ========================================
+    // Permission State Reducers (US1-US5)
+    // ========================================
+
+    /**
+     * Reduces permission granted state.
+     * Transitions to Granted status and clears any previous error.
+     */
+    fun permissionGranted(
+        currentState: AnimalListUiState,
+        fineLocation: Boolean,
+        coarseLocation: Boolean,
+    ): AnimalListUiState =
+        currentState.copy(
+            permissionStatus =
+                PermissionStatus.Granted(
+                    fineLocation = fineLocation,
+                    coarseLocation = coarseLocation,
+                ),
+            isLocationLoading = true,
+            error = null,
+        )
+
+    /**
+     * Reduces permission denied state.
+     */
+    fun permissionDenied(
+        currentState: AnimalListUiState,
+        shouldShowRationale: Boolean,
+    ): AnimalListUiState =
+        currentState.copy(
+            permissionStatus = PermissionStatus.Denied(shouldShowRationale = shouldShowRationale),
+            isLocationLoading = false,
+        )
+
+    /**
+     * Reduces location fetched successfully state.
+     */
+    fun locationFetched(
+        currentState: AnimalListUiState,
+        latitude: Double,
+        longitude: Double,
+    ): AnimalListUiState =
+        currentState.copy(
+            location = LocationCoordinates(latitude, longitude),
+            isLocationLoading = false,
+        )
+
+    /**
+     * Reduces location fetch failed/timeout state.
+     * Continues without location (fallback mode).
+     */
+    fun locationFetchFailed(currentState: AnimalListUiState): AnimalListUiState =
+        currentState.copy(
+            location = null,
+            isLocationLoading = false,
+        )
+
+    /**
+     * Reduces state to requesting permission.
+     */
+    fun requestingPermission(currentState: AnimalListUiState): AnimalListUiState =
+        currentState.copy(
+            permissionStatus = PermissionStatus.Requesting,
+        )
+
+    /**
+     * Sets location loading state.
+     */
+    fun locationLoading(currentState: AnimalListUiState): AnimalListUiState =
+        currentState.copy(
+            isLocationLoading = true,
+        )
 }

@@ -28,6 +28,7 @@ import org.koin.dsl.module
 val viewModelModule =
     module {
         // ViewModels
-        viewModel { AnimalListViewModel(get()) }
+        // AnimalListViewModel: GetAnimalsUseCase (required) + GetCurrentLocationUseCase (optional)
+        viewModel { AnimalListViewModel(get(), getOrNull()) }
         viewModel { PetDetailsViewModel(get()) }
     }
