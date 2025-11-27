@@ -10,13 +10,14 @@ import Foundation
 /// All operations are async functions using Swift Concurrency.
 /// Throws errors on failure for natural error handling.
 protocol AnimalRepositoryProtocol {
-    /// Retrieves all animals from the data source.
-    /// Mock implementation returns fixed list of animals.
-    /// Real implementation will support pagination and filtering.
+    /// Retrieves all animals from the data source with optional location-based filtering.
+    /// Mock implementation returns fixed list of animals (location parameter ignored).
+    /// Real implementation will support pagination and filtering by proximity when location provided.
     ///
-    /// - Returns: Array of animals
+    /// - Parameter location: Optional user location for proximity filtering (nil = no filtering)
+    /// - Returns: Array of animals (may be empty if no animals found)
     /// - Throws: Error if data fetch fails
-    func getAnimals() async throws -> [Animal]
+    func getAnimals(near location: UserLocation?) async throws -> [Animal]
     
     /// Retrieves detailed information for a specific pet by ID.
     /// Mock implementation returns hardcoded pet details.

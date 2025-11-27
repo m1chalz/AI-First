@@ -110,3 +110,10 @@
 "common.continue" = "Continue";
 "common.back" = "Back";
 
+/* MARK: - Location Permission Popup */
+
+"location.permission.popup.title" = "Location Access Needed";
+"location.permission.popup.message" = "Enable location access in Settings to see nearby pets.";
+"location.permission.popup.settings.button" = "Go to Settings";
+"location.permission.popup.cancel.button" = "Cancel";
+

@@ -90,6 +90,24 @@ public enum L10n {
     /// Retry
     public static let retry = L10n.tr("Localizable", "common.retry", fallback: "Retry")
   }
+  public enum Location {
+    public enum Permission {
+      public enum Popup {
+        /// Enable location access in Settings to see nearby pets.
+        public static let message = L10n.tr("Localizable", "location.permission.popup.message", fallback: "Enable location access in Settings to see nearby pets.")
+        /// MARK: - Location Permission Popup
+        public static let title = L10n.tr("Localizable", "location.permission.popup.title", fallback: "Location Access Needed")
+        public enum Cancel {
+          /// Cancel
+          public static let button = L10n.tr("Localizable", "location.permission.popup.cancel.button", fallback: "Cancel")
+        }
+        public enum Settings {
+          /// Go to Settings
+          public static let button = L10n.tr("Localizable", "location.permission.popup.settings.button", fallback: "Go to Settings")
+        }
+      }
+    }
+  }
   public enum PetDetails {
     public enum Button {
       /// Remove Report

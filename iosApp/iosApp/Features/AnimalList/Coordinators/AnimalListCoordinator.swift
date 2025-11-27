@@ -33,11 +33,16 @@ class AnimalListCoordinator: CoordinatorInterface {
     func start(animated: Bool) async {
         guard let navigationController = navigationController else { return }
         
-        // Create repository (mock implementation for now)
-        let repository = AnimalRepository()
+        // Get dependencies from DI container
+        let container = ServiceContainer.shared
+        let repository = container.animalRepository
+        let locationService = container.locationService
         
-        // Create ViewModel with repository (iOS MVVM-C: ViewModels call repositories directly)
-        let viewModel = AnimalListViewModel(repository: repository)
+        // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
+        let viewModel = AnimalListViewModel(
+            repository: repository,
+            locationService: locationService
+        )
         
         // Set up coordinator closures for navigation
         viewModel.onAnimalSelected = { [weak self] animalId in

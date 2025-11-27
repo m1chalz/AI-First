@@ -20,6 +20,14 @@ class AnimalListViewModel: ObservableObject {
     /// Error message (nil if no error)
     @Published var errorMessage: String?
     
+    // MARK: - Location Properties (User Story 1)
+    
+    /// Current location permission status
+    @Published var locationPermissionStatus: LocationPermissionStatus = .notDetermined
+    
+    /// Current user location (nil if unavailable)
+    @Published var currentLocation: UserLocation?
+    
     // MARK: - Computed Properties
     
     /// Computed: true when data loaded but list is empty
@@ -41,17 +49,23 @@ class AnimalListViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let repository: AnimalRepositoryProtocol
+    private let locationService: LocationServiceProtocol
 
     // MARK: - Initialization
     
     /**
-     * Initializes ViewModel with repository.
+     * Initializes ViewModel with repository and location service.
      * Immediately loads animals on creation.
      *
      * - Parameter repository: Repository for fetching animals (injected)
+     * - Parameter locationService: Service for location permissions and fetching (injected)
      */
-    init(repository: AnimalRepositoryProtocol) {
+    init(
+        repository: AnimalRepositoryProtocol,
+        locationService: LocationServiceProtocol
+    ) {
         self.repository = repository
+        self.locationService = locationService
         
         // Load animals on initialization
         Task {
@@ -62,9 +76,16 @@ class AnimalListViewModel: ObservableObject {
     // MARK: - Public Methods
     
     /**
-     * Loads animals from repository.
-     * Updates @Published properties (cardViewModels, isLoading, errorMessage).
+     * Loads animals from repository with location-aware filtering.
+     * Fetches user location if permission is granted, then queries animals.
+     * Updates @Published properties (cardViewModels, isLoading, errorMessage, currentLocation).
      * Called automatically on init and can be called manually to refresh.
+     *
+     * User Story 1 (P1): Location-Aware Content for Authorized Users
+     * - Checks permission status
+     * - Fetches location if authorized
+     * - Queries with coordinates when available
+     * - Falls back to query without coordinates on any failure
      *
      * Note: Calls repository directly per iOS MVVM-C architecture (no use case layer).
      */
@@ -73,7 +94,19 @@ class AnimalListViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            let animals = try await repository.getAnimals()
+            // Check current permission status (User Story 1)
+            let status = await locationService.authorizationStatus
+            locationPermissionStatus = status
+            
+            // Fetch location if authorized (User Story 1: authorized users get location-aware content)
+            if status.isAuthorized {
+                currentLocation = await locationService.requestLocation()
+            } else {
+                currentLocation = nil
+            }
+            
+            // Query animals with optional location (nil = no filtering, graceful fallback per FR-009)
+            let animals = try await repository.getAnimals(near: currentLocation)
             updateCardViewModels(with: animals)
         } catch {
             self.errorMessage = error.localizedDescription

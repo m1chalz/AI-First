@@ -11,18 +11,20 @@ class AnimalRepository: AnimalRepositoryProtocol {
     private let networkDelaySeconds: Double = 0.5
     
     /**
-     * Fetches mock animal data.
+     * Fetches mock animal data with optional location filtering.
      * Returns list of 16 animals after simulated delay.
      * Uses same mock data structure as Android for cross-platform consistency.
      *
+     * - Parameter location: Optional user location for proximity filtering (ignored in mock implementation)
      * - Returns: Array of Animal entities
      * - Throws: Error if operation fails
+     * - Note: Mock implementation ignores location parameter. Real implementation will call backend API with lat/lon query params.
      */
-    func getAnimals() async throws -> [Animal] {
+    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
         // Simulate network delay
         try await Task.sleep(nanoseconds: UInt64(networkDelaySeconds * 1_000_000_000))
         
-        // Return mock animals
+        // Return mock animals (location parameter ignored in mock - real API will use it)
         return getMockAnimals()
     }
     

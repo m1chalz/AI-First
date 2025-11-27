@@ -23,5 +23,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to show you nearby pets available for adoption.</string>
 </dict>
 </plist>
