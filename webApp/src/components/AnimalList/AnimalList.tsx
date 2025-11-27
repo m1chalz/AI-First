@@ -12,8 +12,7 @@ export const AnimalList: React.FC = () => {
         isLoading,
         error,
         isEmpty,
-        reportMissing,
-        reportFound
+        reportMissing
     } = useAnimalList();
     
     const { isOpen, selectedPetId, openModal, closeModal } = useModal();
@@ -22,7 +21,7 @@ export const AnimalList: React.FC = () => {
         <div className={styles.container}>
             <div className={styles.mainContent}>
                 <header className={styles.header}>
-                    <h1 className={styles.title}>Missing animals list</h1>
+                    <h1 className={styles.title}>PetSpot</h1>
                     
                     <div className={styles.headerButtons}>
                         <button
@@ -31,13 +30,6 @@ export const AnimalList: React.FC = () => {
                             data-testid="animalList.reportMissingButton"
                         >
                             Report a Missing Animal
-                        </button>
-                        <button
-                            className={styles.secondaryButton}
-                            onClick={reportFound}
-                            data-testid="animalList.reportFoundButton"
-                        >
-                            Report Found Animal
                         </button>
                     </div>
                 </header>

@@ -63,42 +63,34 @@
     gap: 16px;
 }
 
-/* Buttons - per Figma web design (327px x 48px) */
-.primaryButton,
-.secondaryButton {
+/* Primary Button - per Figma design (Blue) */
+.primaryButton {
     width: 327px;
     height: 48px;
     padding: 12px 16px;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 0;
+    font-weight: 600;
+    line-height: 24px;
     border: none;
-    border-radius: 2px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: opacity 0.2s, background-color 0.2s;
+    transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
     font-family: 'Inter', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.primaryButton {
     color: #FFFFFF;
-    background-color: #2D2D2D;
+    background-color: #155DFC;
 }
 
 .primaryButton:hover {
-    opacity: 0.9;
+    background-color: #0d47a1;
+    transform: translateY(-2px);
 }
 
-.secondaryButton {
-    color: #2D2D2D;
-    background-color: #E5E9EC;
-}
-
-.secondaryButton:hover {
-    background-color: #D5D9DC;
+.primaryButton:active {
+    transform: translateY(0);
 }
 
 /* Content area */
