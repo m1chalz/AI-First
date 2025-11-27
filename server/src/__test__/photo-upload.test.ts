@@ -82,7 +82,7 @@ describe('POST /api/v1/announcements/:id/photos', () => {
     // Clean up uploaded files
     const files = await fs.readdir(IMAGES_DIR);
     for (const file of files) {
-      if (file !== '.gitkeep') {
+      if (file !== '.gitkeep' && !file.startsWith('seed-')) {
         await fs.unlink(path.join(IMAGES_DIR, file));
       }
     }
