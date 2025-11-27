@@ -15,7 +15,7 @@ const ANNOUNCEMENTS = [
     last_seen_date: '2025-11-18',
     email: 'spotterka@example.pl',
     phone: '+48 123 456 789',
-    photo_url: '/images/seed-001.webp',
+    photo_url: '/images/seed-11111111-1111-1111-1111-111111111111.webp',
     status: 'MISSING',
     reward: null,
     management_password_hash: 'a1b2c3d4e5f6:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
