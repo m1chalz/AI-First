@@ -11,17 +11,14 @@ This modal is opened from the **Animal List Page** (design: node-id=168-4656). T
 
 ### Page Layout
 - **Sidebar**: Left sidebar (219px width, dark background #4F3C4C) for navigation
-- **Content Area**: Main content (1181px width) containing header, filters, and cards list
+- **Content Area**: Main content (1181px width) containing header and cards list
 - **Total Width**: 1440px
+
+**Note**: Filter and search functionality is out of scope for this specification and will be implemented in a separate specification.
 
 ### Header
 - **Left**: "PetSpot" title (Hind Regular, 24px, #2D2D2D)
 - **Right**: "Report a Missing Animal" button (Primary blue #155DFC, 44px height, white text, always visible)
-
-### Filters Section
-- **Input Fields** (grid layout, 283px width each): Microchip number, Date of disappearance, Animal species, Animal approx. age, Animal race, Place of disappearance
-- **Action Buttons**: "Clear" (outlined blue, 127px × 44px) and "Search" (primary blue, 138px × 44px)
-- **Filter Chips**: Active filters displayed as chips below filters (e.g., "Male" with checkmark icon)
 
 ### Animal Cards
 Each card (1180px width, 136px height, 14px border-radius, 1px border #E5E9EC) displays:
@@ -266,17 +263,9 @@ Users can access the pet details modal on any device (mobile, tablet, desktop) a
 - **AnimalListPage**: The page that displays the list of animal announcements and contains the "Details" buttons that open this modal. Key structure includes:
   - **Sidebar**: Left sidebar (219px width, dark background #4F3C4C) for navigation
   - **Header**: "PetSpot" title (Hind Regular, 24px, left) + "Report a Missing Animal" button (Primary blue #155DFC, 44px height, right, top-right area, always visible)
-  - **Filters Section**: Input fields arranged in grid (283px width each):
-    - Microchip number (optional) - Text input
-    - Date of disappearance - Date picker
-    - Animal species - Dropdown
-    - Animal approx. age (optional) - Dropdown
-    - Animal race - Dropdown (may be disabled)
-    - Place of disappearance - Text input
-    - "Clear" button (outlined blue, 127px × 44px)
-    - "Search" button (primary blue, 138px × 44px)
-  - **Filter Chips**: Active filters displayed as chips below filters (e.g., "Male" with checkmark icon, "Missing", "Found")
   - **Animal Cards**: Scrollable list of cards (1180px width, 136px height, 14px border-radius, 1px border #E5E9EC, 8px gap), each containing:
+  
+  **Note**: Filter and search functionality is out of scope for this specification and will be implemented in a separate specification.
     - **Left Section (192px)**: Pet photo (192px × 136px) with fallback placeholder
     - **Middle Section (~792px)**: 
       - Row 1: Location icon (16px) + coordinates (e.g., "52.2297° N, 21.0122° E") - Arial 16px, #4A5565
