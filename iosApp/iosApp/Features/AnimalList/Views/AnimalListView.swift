@@ -18,7 +18,6 @@ import SwiftUI
  */
 struct AnimalListView: View {
     @ObservedObject var viewModel: AnimalListViewModel
-    @Environment(\.scenePhase) private var scenePhase  // User Story 4: Detect app foreground
     
     var body: some View {
         ZStack {
@@ -70,15 +69,6 @@ struct AnimalListView: View {
             }
             
             floatingButtonsSection
-        }
-        // User Story 4: Observe app returning from Settings (dynamic permission change handling)
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            if oldPhase == .background && newPhase == .active {
-                // App returned from background (user may have changed permissions in Settings)
-                Task {
-                    await viewModel.checkPermissionStatusChange()
-                }
-            }
         }
         // User Story 3: Custom permission denied popup (recovery path)
         .alert(

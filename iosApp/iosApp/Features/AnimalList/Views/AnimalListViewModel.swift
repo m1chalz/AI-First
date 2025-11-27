@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 // MARK: - LocationPermissionStatus Presentation Extension (User Story 3)
 
@@ -77,6 +78,11 @@ class AnimalListViewModel: ObservableObject {
     
     /// Session-level flag preventing repeated permission popups (FR-013)
     private var hasShownPermissionAlert = false
+    
+    // MARK: - User Story 4: App Lifecycle Observation
+    
+    /// Notification observer token for app foreground notifications
+    private var foregroundObserver: NSObjectProtocol?
 
     // MARK: - Initialization
     
@@ -94,9 +100,28 @@ class AnimalListViewModel: ObservableObject {
         self.repository = repository
         self.locationService = locationService
         
+        // User Story 4: Observe app returning from background (dynamic permission change handling)
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            // App is about to enter foreground (user may have changed permissions in Settings)
+            Task { @MainActor [weak self] in
+                await self?.checkPermissionStatusChange()
+            }
+        }
+        
         // Load animals on initialization
         Task {
             await loadAnimals()
+        }
+    }
+    
+    deinit {
+        // Remove notification observer on deallocation
+        if let observer = foregroundObserver {
+            NotificationCenter.default.removeObserver(observer)
         }
     }
     
@@ -296,7 +321,7 @@ class AnimalListViewModel: ObservableObject {
      * - Auto-refreshes with location when permission granted
      * - Updates status without refresh when permission denied
      *
-     * Called by View when app returns to foreground (scenePhase observation).
+     * Called automatically when app returns to foreground (NotificationCenter observation in init).
      */
     func checkPermissionStatusChange() async {
         let newStatus = await locationService.authorizationStatus
