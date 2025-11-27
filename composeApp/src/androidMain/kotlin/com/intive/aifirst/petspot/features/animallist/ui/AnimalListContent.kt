@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +41,7 @@ import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListUiState
+import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 
 /**
  * Stateless UI for the animal list screen.
@@ -90,7 +90,7 @@ fun AnimalListContent(
                         .fillMaxWidth(),
             ) {
                 when {
-                    state.isLoading -> LoadingIndicator()
+                    state.isLoading -> FullScreenLoading(testTag = "animalList.loading")
                     state.error != null ->
                         ErrorState(
                             message = state.error,
@@ -149,14 +149,6 @@ private fun FloatingReportButton(
             contentDescription = "",
         )
     }
-}
-
-@Composable
-private fun BoxScope.LoadingIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier.align(Alignment.Center),
-        color = MaterialTheme.colorScheme.primary,
-    )
 }
 
 @Composable

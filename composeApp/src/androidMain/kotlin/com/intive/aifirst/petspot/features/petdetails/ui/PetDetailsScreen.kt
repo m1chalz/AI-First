@@ -1,17 +1,18 @@
 package com.intive.aifirst.petspot.features.petdetails.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsEffect
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsIntent
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
+import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,7 +49,7 @@ fun PetDetailsScreen(
                     val lat = effect.location.latitude
                     val lon = effect.location.longitude
                     if (lat != null && lon != null) {
-                        val uri = Uri.parse("geo:$lat,$lon?q=$lat,$lon")
+                        val uri = "geo:$lat,$lon?q=$lat,$lon".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         try {
                             context.startActivity(intent)
@@ -80,7 +81,7 @@ fun PetDetailsScreen(
     // Render UI based on state
     when {
         state.isLoading -> {
-            FullScreenLoading()
+            FullScreenLoading(testTag = "petDetails.loading")
         }
         state.error != null -> {
             ErrorState(
