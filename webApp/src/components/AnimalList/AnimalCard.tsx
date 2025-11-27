@@ -1,6 +1,8 @@
 import React from 'react';
+import { MdLocationOn } from 'react-icons/md';
 import { ANIMAL_STATUS_BADGE_COLORS, type Animal, type AnimalSex } from '../../types/animal';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
+import { formatSpecies } from '../../utils/species-formatter';
 import styles from './AnimalList.module.css';
 
 interface AnimalCardProps {
@@ -39,9 +41,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }
             {/* Left section: Location and species/breed info */}
             <div className={styles.animalBasicInfo}>
                 <div className={styles.locationRow}>
-                    <svg className={styles.locationIcon} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#616161"/>
-                    </svg>
+                    <MdLocationOn className={styles.locationIcon} />
                     <span className={styles.locationText}>
                         {animal.locationLatitude !== null && animal.locationLongitude !== null
                             ? formatCoordinates(animal.locationLatitude, animal.locationLongitude)
@@ -50,9 +50,9 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }
                 </div>
                 
                 <div className={styles.speciesRow}>
-                    <span className={styles.speciesText}>{animal.species}</span>
+                    <span className={styles.speciesText}>{formatSpecies(animal.species)}</span>
                     <span className={styles.separator}>|</span>
-                    <span className={styles.breedText}>{animal.breed || 'Unknown'}</span>
+                    {animal.breed && <span className={styles.breedText}>{animal.breed}</span>}
                     {animal.sex !== 'UNKNOWN' && (
                         <span className={styles.genderIcon}>
                             {getGenderIcon(animal.sex)}

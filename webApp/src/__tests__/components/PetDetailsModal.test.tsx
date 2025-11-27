@@ -230,8 +230,10 @@ describe('PetDetailsModal', () => {
         );
         
         // Then: Pet details should be displayed
-        expect(screen.getByText('Fluffy')).toBeTruthy();
         expect(screen.getByText('Maine Coon')).toBeTruthy();
+        expect(screen.getByText('Cat')).toBeTruthy();
+        // Male is displayed with gender icon, so use partial match
+        expect(screen.getByText(/Male/)).toBeTruthy();
     });
 });
 

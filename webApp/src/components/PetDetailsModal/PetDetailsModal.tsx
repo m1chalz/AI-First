@@ -119,7 +119,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
                     </button>
                 </div>
                 
-                <div className={styles.modalBody}>
+                <div className={styles.modalBody} id="pet-details-title">
                     {isLoading && (
                         <div className={styles.loading}>
                             <div className={styles.spinner}></div>

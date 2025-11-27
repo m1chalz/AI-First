@@ -188,6 +188,7 @@
     width: 24px;
     height: 24px;
     flex-shrink: 0;
+    color: #616161;
 }
 
 .locationText {
@@ -275,25 +276,31 @@
 }
 
 .detailsButton {
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #2D2D2D;
-    background-color: #E5E9EC;
-    border: none;
-    border-radius: 4px;
+    width: 127px;
+    height: 44px;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #155DFC;
+    background-color: transparent;
+    border: 1px solid #155DFC;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    font-family: 'Inter', sans-serif;
+    transition: background-color 0.2s, color 0.2s;
+    font-family: Arial, sans-serif;
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .detailsButton:hover {
-    background-color: #D5D9DC;
+    background-color: #155DFC;
+    color: white;
 }
 
 .detailsButton:focus {
-    outline: 2px solid #007bff;
+    outline: 2px solid #155DFC;
     outline-offset: 2px;
 }
 
