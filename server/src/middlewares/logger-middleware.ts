@@ -1,6 +1,6 @@
 import { pinoHttp, stdSerializers } from 'pino-http';
 import { serializeBody } from '../lib/log-serializers.ts';
-import log from '../lib/logger.ts';
+import log from '../conf/logger.ts';
 import { redactEmail, redactPhone } from '../lib/pii-redaction.ts';
 
 /**

@@ -1,5 +1,5 @@
 import type { Server } from 'node:http';
-import log from './lib/logger.ts';
+import log from './conf/logger.ts';
 import server from './server.ts';
 
 const port = Number(process.env.PORT ?? 3000);

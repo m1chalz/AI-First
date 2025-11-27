@@ -1,7 +1,7 @@
 import type { Knex } from 'knex';
 import knex from 'knex';
 import knexConfig from '../../knexfile.ts';
-import log from '../lib/logger.ts';
+import log from '../conf/logger.ts';
 
 export const db = knex(knexConfig);
 
