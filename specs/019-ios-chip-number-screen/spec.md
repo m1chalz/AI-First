@@ -123,11 +123,10 @@ User enters microchip data, proceeds to step 2/4, then navigates back to step 1/
 
 ## Success Criteria *(mandatory)*
 
-### Measurable Outcomes
+### Functional Outcomes
 
-- **SC-001**: Users can enter a 15-digit microchip number and see it automatically formatted with hyphens in under 2 seconds
-- **SC-002**: Users can proceed to the next step (2/4) in under 5 seconds whether or not they enter a microchip number
-- **SC-003**: Users can navigate back to pet list from this screen in under 2 seconds using the navigation bar back button
-- **SC-004**: Input formatting works smoothly without lag or cursor jumping even when user types rapidly (10+ characters per second)
-- **SC-005**: Data entered on this screen persists correctly when user navigates forward to step 2/4 and back to step 1/4 at least 95% of the time
-- **SC-006**: Screen layout adapts correctly to all iPhone screen sizes (iPhone SE to iPhone Pro Max) without content clipping or overlap
+- **SC-001**: Users can enter a 15-digit microchip number and see it automatically formatted as `00000-00000-00000`
+- **SC-002**: Users can proceed to the next step (2/4) whether or not they enter a microchip number
+- **SC-003**: Users can cancel the flow from this screen using the navigation bar back button and return to the pet list
+- **SC-004**: Data entered on this screen persists correctly when user navigates forward to step 2/4 and back to step 1/4 within the same flow session
+- **SC-005**: Screen layout adapts correctly to common iPhone screen sizes (e.g., iPhone SE, iPhone 15, iPhone 15 Pro Max) without content clipping or overlap

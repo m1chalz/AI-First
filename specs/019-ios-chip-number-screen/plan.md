@@ -95,13 +95,13 @@
   - Coverage target: 80% line + branch coverage per platform
   - Violation justification: N/A - iOS unit tests in iosAppTests, target 80%
 
-- [x] **End-to-End Tests**: Plan includes E2E tests for user stories (Appium mobile tests)
-  - Web: Playwright tests in `/e2e-tests/web/specs/[feature-name].spec.ts`
-  - Mobile: Appium tests in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
-  - All tests written in TypeScript
+- [x] **End-to-End Tests**: Plan includes E2E tests for user stories using the unified Java + Maven + Cucumber stack
+  - Web: Selenium WebDriver tests with Cucumber features under `/e2e-tests/java/src/test/resources/features/web/` (tagged `@web`)
+  - Mobile: Appium tests with Cucumber features under `/e2e-tests/java/src/test/resources/features/mobile/` (tagged `@ios` for this flow)
+  - All E2E tests written in Java with Cucumber (Gherkin scenarios)
   - Page Object Model / Screen Object Model used
   - Each user story has at least one E2E test
-  - Violation justification: N/A - E2E tests planned in tasks.md (Phase 2)
+  - Violation justification: N/A - E2E tests planned in tasks.md (E2E Phase)
 
 - [x] **Asynchronous Programming Standards**: iOS uses Swift Concurrency (async/await with @MainActor)
   - Android: Kotlin Coroutines (`viewModelScope`) + Flow for state
@@ -242,13 +242,18 @@ iosAppTests/
         │   └── ChipNumberViewModelTests.swift     # ✅ EXISTING - NEEDS EXPANSION (add formatting tests)
         └── Helpers/
             └── MicrochipNumberFormatterTests.swift # 🆕 NEW - Unit tests for formatter
-
-e2e-tests/
-├── mobile/
-│   ├── specs/
-│   │   └── report-missing-pet.spec.ts             # ✅ EXISTING - May need updates for chip number field
-│   └── screens/
-│       └── MicrochipNumberScreen.ts               # ✅ EXISTING - May need updates for new test IDs
+    
+e2e-tests/java/
+├── pom.xml                                        # ✅ EXISTING - Maven project for web + mobile E2E
+└── src/
+    └── test/
+        ├── java/
+        │   └── .../screens/
+        │       └── MicrochipNumberScreen.java     # ✅ EXISTING/PLANNED - Screen Object for microchip screen
+        └── resources/
+            └── features/
+                └── mobile/
+                    └── report-missing-pet.feature # ✅ EXISTING/PLANNED - Scenarios for report missing pet flow (tagged @ios)
 ```
 
 **Structure Decision**: iOS mobile app structure following MVVM-C architecture. 
