@@ -9,13 +9,13 @@ import errorHandlerMiddleware from './middlewares/error-handler-middleware.ts';
 import cors from 'cors';
 
 export async function prepareServer(): Promise<express.Express> {
-  log.info('App starting...')
+  log.info('App starting...');
 
   await runDbMigrations();
 
   const server = express();
   server.use(cors());
-  server.use(express.json({ limit: '10mb' }))
+  server.use(express.json({ limit: '10mb' }));
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage
   // MUST be registered BEFORE logger middleware to ensure ID is available

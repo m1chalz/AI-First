@@ -1,0 +1,207 @@
+{
+  "endpoint": "GET /api/v1/announcements/:id",
+  "description": "Retrieves comprehensive details for a single pet by ID. This endpoint is already implemented in the backend.",
+  "status": "✅ Backend Endpoint Already Implemented",
+  "request": {
+    "method": "GET",
+    "url": "/api/v1/announcements/:id",
+    "pathParameters": {
+      "id": {
+        "type": "string",
+        "required": true,
+        "description": "Unique pet identifier (UUID)"
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response": {
+    "200": {
+      "description": "Pet details retrieved successfully",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique pet identifier"
+          },
+          "petName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Pet's name"
+          },
+          "photoUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to pet photo"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["MISSING", "FOUND", "CLOSED"],
+            "description": "Pet status"
+          },
+          "lastSeenDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "ISO 8601 date (YYYY-MM-DD)"
+          },
+          "species": {
+            "type": "string",
+            "description": "Pet species"
+          },
+          "breed": {
+            "type": "string",
+            "nullable": true,
+            "description": "Pet breed"
+          },
+          "sex": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "UNKNOWN"],
+            "description": "Pet sex"
+          },
+          "age": {
+            "type": "number",
+            "nullable": true,
+            "description": "Approximate age"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional description"
+          },
+          "microchipNumber": {
+            "type": "string",
+            "nullable": true,
+            "description": "Raw microchip number (formatted in component)"
+          },
+          "locationLatitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude coordinate"
+          },
+          "locationLongitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude coordinate"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true,
+            "description": "Contact email (at least one of phone or email required)"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "description": "Contact phone (may be masked by backend, at least one of phone or email required)"
+          },
+          "reward": {
+            "type": "string",
+            "nullable": true,
+            "description": "Reward amount (displayed as-is)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "ISO 8601 timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "ISO 8601 timestamp"
+          }
+        },
+        "required": ["id", "photoUrl", "status", "lastSeenDate", "species", "sex"]
+      },
+      "example": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "petName": "Max",
+        "photoUrl": "https://example.com/photo.jpg",
+        "status": "MISSING",
+        "lastSeenDate": "2025-11-18",
+        "species": "DOG",
+        "breed": "Golden Retriever",
+        "sex": "MALE",
+        "age": 5,
+        "description": "Friendly dog with brown fur",
+        "microchipNumber": "123456789012345",
+        "locationLatitude": 52.2297,
+        "locationLongitude": 21.0122,
+        "email": "john@example.com",
+        "phone": "+48 123 456 789",
+        "reward": "500 PLN",
+        "createdAt": "2025-11-24T12:34:56.789Z",
+        "updatedAt": "2025-11-24T12:34:56.789Z"
+      }
+    },
+    "404": {
+      "description": "Pet with specified ID does not exist",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["NOT_FOUND"]
+              },
+              "message": {
+                "type": "string",
+                "example": "Resource not found"
+              }
+            },
+            "required": ["code", "message"]
+          }
+        },
+        "required": ["error"]
+      }
+    },
+    "500": {
+      "description": "Internal server error",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["INTERNAL_SERVER_ERROR"]
+              },
+              "message": {
+                "type": "string",
+                "example": "Internal server error"
+              }
+            },
+            "required": ["code", "message"]
+          }
+        },
+        "required": ["error"]
+      }
+    }
+  },
+  "timeout": {
+    "seconds": 10,
+    "description": "Request must timeout after 10 seconds if no response received"
+  },
+  "errorHandling": {
+    "strategy": "generic",
+    "message": "Failed to load pet details",
+    "retry": {
+      "enabled": true,
+      "unlimited": true,
+      "description": "User can retry unlimited times, can always close modal"
+    }
+  }
+}
+
