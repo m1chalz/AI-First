@@ -6,6 +6,7 @@ import loggerMiddleware from './middlewares/logger-middleware.ts';
 import notFoundMiddleware from './middlewares/not-found-middleware.ts';
 import log from './lib/logger.ts';
 import errorHandlerMiddleware from './middlewares/error-handler-middleware.ts';
+import cors from 'cors';
 
 export async function prepareServer(): Promise<express.Express> {
   log.info('App starting...')
@@ -13,6 +14,7 @@ export async function prepareServer(): Promise<express.Express> {
   await runDbMigrations();
 
   const server = express();
+  server.use(cors());
   server.use(express.json({ limit: '10mb' }))
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage

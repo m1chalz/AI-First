@@ -15,7 +15,7 @@ const ANNOUNCEMENTS = [
     last_seen_date: '2025-11-18',
     email: 'spotterka@example.pl',
     phone: '+48 123 456 789',
-    photo_url: 'https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg',
+    photo_url: 'https://www.shutterstock.com/image-photo/yorkshire-terrier-puppy-standing-garden-600nw-2651022165.jpg',
     status: 'MISSING',
     reward: null,
     management_password_hash: 'a1b2c3d4e5f6:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
