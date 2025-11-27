@@ -491,3 +491,64 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
     });
 });
 
+describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
+    describe('Reward Badge Display', () => {
+        it.each([
+            { reward: '500 PLN', description: 'should display reward badge when reward is present' },
+            { reward: '1000 EUR', description: 'should display reward with different currency' },
+            { reward: 'Contact for reward', description: 'should display reward with custom text' },
+        ])('$description', ({ reward }) => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, reward };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText(`Reward ${reward}`)).toBeTruthy();
+        });
+
+        it.each([
+            { reward: null, description: 'should not display reward badge when reward is null' },
+            { reward: '', description: 'should not display reward badge when reward is empty string' },
+        ])('$description', ({ reward }) => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, reward };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            const rewardElements = screen.queryAllByText(/^Reward/);
+            expect(rewardElements.length).toBe(0);
+        });
+    });
+
+    describe('Reward Badge with Status Badge', () => {
+        it('should display both status badge (top-right) and reward badge (bottom-left)', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status: 'MISSING', reward: '500 PLN' };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('MISSING')).toBeTruthy();
+            expect(screen.getByText('Reward 500 PLN')).toBeTruthy();
+        });
+
+        it('should display status badge but no reward badge when reward is null', () => {
+            // Given
+            const pet: Animal = { ...MOCK_PET, status: 'FOUND', reward: null };
+
+            // When
+            render(<PetDetailsContent pet={pet} />);
+
+            // Then
+            expect(screen.getByText('FOUND')).toBeTruthy();
+            const rewardElements = screen.queryAllByText(/^Reward/);
+            expect(rewardElements.length).toBe(0);
+        });
+    });
+});
+

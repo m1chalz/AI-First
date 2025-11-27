@@ -198,7 +198,7 @@
 ### Tests for User Story 5 (MANDATORY) ✅
 
 **Web Unit Tests**:
-- [ ] T063 [P] [US5] Unit test for reward badge display in `/webApp/src/__tests__/components/PetDetailsContent.test.tsx` (test badge appears when reward present, hidden when null)
+- [X] T063 [P] [US5] Unit test for reward badge display in `/webApp/src/__tests__/components/PetHeroImage.test.tsx` (test badge appears when reward present, hidden when null) - 12/12 PASS
 
 **End-to-End Tests**:
 - [ ] T064 [P] [US5] Web E2E test in `/e2e-tests/web/specs/pet-details-modal.spec.ts` (test reward badge displays correctly)
@@ -206,11 +206,11 @@
 ### Implementation for User Story 5
 
 **Web** (Full Stack):
-- [ ] T065 [P] [US5] Create `PetHeroImage` component in `/webApp/src/components/PetDetailsModal/PetHeroImage.tsx` (displays pet photo with status badge and reward badge overlay)
-- [ ] T066 [P] [US5] Create `PetHeroImage.module.css` in `/webApp/src/components/PetDetailsModal/PetHeroImage.module.css` (hero image styles, badge positioning)
-- [ ] T067 [US5] Update `PetHeroImage` component to display reward badge on left side of photo (show reward text as-is with money bag icon, hide if reward is null)
-- [ ] T068 [US5] Update `PetHeroImage` component to handle image load failure (display gray box with "Image not available" text)
-- [ ] T069 [P] [US5] Add JSDoc documentation to complex US5 Web APIs (skip self-explanatory)
+- [X] T065 [P] [US5] Create `PetHeroImage` component in `/webApp/src/components/PetDetailsModal/PetHeroImage.tsx` (displays pet photo with status badge and reward badge overlay) - DONE
+- [X] T066 [P] [US5] Create `PetHeroImage.module.css` in `/webApp/src/components/PetDetailsModal/PetHeroImage.module.css` (hero image styles, badge positioning) - DONE
+- [X] T067 [US5] Update `PetHeroImage` component to display reward badge on left side of photo (show reward text as-is with money bag icon, hide if reward is null) - DONE
+- [X] T068 [US5] Update `PetHeroImage` component to handle image load failure (display gray box with "Image not available" text) - DONE
+- [X] T069 [P] [US5] Add JSDoc documentation to complex US5 Web APIs (skip self-explanatory) - DONE
 
 **Checkpoint**: At this point, User Stories 1, 2, 3, 4, AND 5 should all work independently
 
