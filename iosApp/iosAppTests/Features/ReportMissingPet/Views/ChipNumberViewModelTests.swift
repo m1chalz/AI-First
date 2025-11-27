@@ -28,6 +28,61 @@ final class ChipNumberViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func testInit_shouldStartWithEmptyChipNumber() {
+        // Given/When: ViewModel created in setUp
+        
+        // Then
+        XCTAssertEqual(sut.chipNumber, "")
+    }
+    
+    // MARK: - Formatting Tests
+    
+    func testFormatChipNumber_whenInputProvided_shouldApplyFormatter() {
+        // Given
+        let input = "123456"
+        
+        // When
+        sut.formatChipNumber(input)
+        
+        // Then
+        XCTAssertEqual(sut.chipNumber, "12345-6")
+    }
+    
+    // MARK: - State Persistence
+    
+    func testInit_whenFlowStateHasDigits_shouldRestoreFormattedValue() {
+        // Given
+        flowState.chipNumber = "123456789012345"
+        
+        // When
+        sut = ChipNumberViewModel(flowState: flowState)
+        
+        // Then
+        XCTAssertEqual(sut.chipNumber, "12345-67890-12345")
+    }
+    
+    func testHandleNext_whenChipNumberFilled_shouldSaveDigitsToFlowState() {
+        // Given
+        sut.chipNumber = "12345-6"
+        
+        // When
+        sut.handleNext()
+        
+        // Then
+        XCTAssertEqual(flowState.chipNumber, "123456")
+    }
+    
+    func testHandleNext_whenChipNumberEmpty_shouldClearFlowState() {
+        // Given
+        sut.chipNumber = ""
+        
+        // When
+        sut.handleNext()
+        
+        // Then
+        XCTAssertNil(flowState.chipNumber)
+    }
+    
     // MARK: - handleNext() Tests
     
     func testHandleNext_shouldTriggerOnNextCallback() {

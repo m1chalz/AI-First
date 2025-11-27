@@ -8,35 +8,35 @@
 ## Phase 1: Setup
 *Goal: Prepare project structure for the new feature components.*
 
-- [ ] T001 Create `Helpers` directory in `iosApp/iosApp/Features/ReportMissingPet/`
-- [ ] T002 Create `Helpers` directory in `iosApp/iosAppTests/Features/ReportMissingPet/`
+- [X] T001 Create `Helpers` directory in `iosApp/iosApp/Features/ReportMissingPet/`
+- [X] T002 Create `Helpers` directory in `iosApp/iosAppTests/Features/ReportMissingPet/`
 
 ## Phase 2: Foundational
 *Goal: Implement the core business logic for microchip number formatting independently of UI.*
 *Independent Test Criteria: Formatter tests pass with 100% success rate.*
 
-- [ ] T003 [P] Implement `MicrochipNumberFormatter` in `iosApp/iosApp/Features/ReportMissingPet/Helpers/MicrochipNumberFormatter.swift`
-- [ ] T004 [P] Implement `MicrochipNumberFormatterTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Helpers/MicrochipNumberFormatterTests.swift`
+- [X] T003 [P] Implement `MicrochipNumberFormatter` in `iosApp/iosApp/Features/ReportMissingPet/Helpers/MicrochipNumberFormatter.swift`
+- [X] T004 [P] Implement `MicrochipNumberFormatterTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Helpers/MicrochipNumberFormatterTests.swift`
 - [ ] T005 Run unit tests for `MicrochipNumberFormatter` to verify formatting logic
 
 ## Phase 3: User Story 1 - Input & Formatting
 *Goal: Allow user to enter a microchip number with automatic formatting.*
 *Independent Test Criteria: User can type digits and see them formatted as 00000-00000-00000.*
 
-- [ ] T006 [US1] Add localization keys to `iosApp/iosApp/Resources/en.lproj/Localizable.strings` (title, placeholder, description, etc.)
-- [ ] T007 [US1] Expand `ChipNumberViewModel` in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` with `chipNumber` property and `formatChipNumber` method
-- [ ] T008 [US1] Expand `ChipNumberViewModelTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift` to test initial state and formatting calls
-- [ ] T009 [US1] Implement `ChipNumberView` UI in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberView.swift` using `TextField` with `.numberPad`, `onChange` handler, and `accessibilityIdentifier("missingPet.microchip.input")` on the input field
+- [X] T006 [US1] Add localization keys to `iosApp/iosApp/Resources/en.lproj/Localizable.strings` (title, placeholder, description, etc.)
+- [X] T007 [US1] Expand `ChipNumberViewModel` in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` with `chipNumber` property and `formatChipNumber` method
+- [X] T008 [US1] Expand `ChipNumberViewModelTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift` to test initial state and formatting calls
+- [X] T009 [US1] Implement `ChipNumberView` UI in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberView.swift` using `TextField` with `.numberPad`, `onChange` handler, and `accessibilityIdentifier("missingPet.microchip.input")` on the input field
 - [ ] T010 [US1] Verify formatting behavior in Simulator (manual test)
 
 ## Phase 4: User Story 2, 3 & 4 - State & Navigation
 *Goal: Persist data within flow and handle navigation correctly.*
 *Independent Test Criteria: Data persists when navigating forward/back; back button dismisses flow.*
 
-- [ ] T011 [US2] [US4] Update `ChipNumberViewModel` in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` to save digits to `flowState` on continue and restore on init
-- [ ] T012 [US2] [US4] Add state persistence tests to `ChipNumberViewModelTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift`
-- [ ] T013 [US3] Verify back button action in `ChipNumberView` calls `viewModel.handleBack()` correctly and that the UIKit back button created by `ReportMissingPetCoordinator` uses `accessibilityIdentifier("missingPet.microchip.backButton")`
-- [ ] T014 [US3] Verify continue button action in `ChipNumberView` calls `viewModel.handleNext()` correctly and that the Continue button in SwiftUI has `accessibilityIdentifier("missingPet.microchip.continueButton")`
+- [X] T011 [US2] [US4] Update `ChipNumberViewModel` in `iosApp/iosApp/Features/ReportMissingPet/Views/ChipNumberViewModel.swift` to save digits to `flowState` on continue and restore on init
+- [X] T012 [US2] [US4] Add state persistence tests to `ChipNumberViewModelTests` in `iosApp/iosAppTests/Features/ReportMissingPet/Views/ChipNumberViewModelTests.swift`
+- [X] T013 [US3] Verify back button action in `ChipNumberView` calls `viewModel.handleBack()` correctly and that the UIKit back button created by `ReportMissingPetCoordinator` uses `accessibilityIdentifier("missingPet.microchip.backButton")`
+- [X] T014 [US3] Verify continue button action in `ChipNumberView` calls `viewModel.handleNext()` correctly and that the Continue button in SwiftUI has `accessibilityIdentifier("missingPet.microchip.continueButton")`
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 *Goal: Ensure quality standards and final polish.*
@@ -49,9 +49,9 @@
 *Goal: Cover microchip number user stories with Java + Cucumber E2E tests (Appium).*
 *Independent Test Criteria: Cucumber scenarios for microchip screen pass when run with `@ios` tag.*
 
-- [ ] T018 [US1] [US2] [US4] Add or update Cucumber scenarios in `e2e-tests/java/src/test/resources/features/mobile/report-missing-pet.feature` to cover: entering a microchip number, leaving it empty, and resuming flow with previously entered data
-- [ ] T019 [US1] [US2] [US4] Implement or extend Java step definitions in `e2e-tests/java/src/test/java/.../steps/mobile/` for interacting with the microchip screen (typing, clearing, and verifying formatted value)
-- [ ] T020 [US1] [US2] [US3] Ensure the mobile Screen Object for the microchip screen in `e2e-tests/java/src/test/java/.../screens/MicrochipNumberScreen.java` exposes locators bound to iOS `accessibilityIdentifier`s for input, Continue button, and back button
+- [X] T018 [US1] [US2] [US4] Add or update Cucumber scenarios in `e2e-tests/java/src/test/resources/features/mobile/report-missing-pet.feature` to cover: entering a microchip number, leaving it empty, and resuming flow with previously entered data
+- [X] T019 [US1] [US2] [US4] Implement or extend Java step definitions in `e2e-tests/java/src/test/java/.../steps/mobile/` for interacting with the microchip screen (typing, clearing, and verifying formatted value)
+- [X] T020 [US1] [US2] [US3] Ensure the mobile Screen Object for the microchip screen in `e2e-tests/java/src/test/java/.../screens/MicrochipNumberScreen.java` exposes locators bound to iOS `accessibilityIdentifier`s for input, Continue button, and back button
 - [ ] T021 [US1] [US2] [US3] Run `mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios and @missing-pet"` and verify all microchip-related scenarios pass
 
 ## Dependencies

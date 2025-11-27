@@ -101,6 +101,16 @@
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
 
+/* MARK: - Microchip Number Screen */
+
+"microchipNumber.title" = "Microchip number";
+"microchipNumber.progress" = "1/4";
+"microchipNumber.heading" = "Microchip number";
+"microchipNumber.description" = "Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.";
+"microchipNumber.fieldLabel" = "Microchip number (optional)";
+"microchipNumber.fieldPlaceholder" = "00000-00000-00000";
+"microchipNumber.continueButton" = "Continue";
+
 /* MARK: - Common */
 
 "common.loading" = "Loading...";
