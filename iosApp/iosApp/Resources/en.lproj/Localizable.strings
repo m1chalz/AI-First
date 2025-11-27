@@ -85,7 +85,7 @@
 /* MARK: - Report Missing Pet Flow */
 
 // Navigation titles
-"reportMissingPet.chipNumber.title" = "Microchip Number";
+"reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
 "reportMissingPet.description.title" = "Description";
 "reportMissingPet.contactDetails.title" = "Contact Details";
