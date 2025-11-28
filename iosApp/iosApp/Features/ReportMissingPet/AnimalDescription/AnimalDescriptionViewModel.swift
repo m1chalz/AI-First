@@ -417,6 +417,10 @@ class AnimalDescriptionViewModel: ObservableObject {
         flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
         flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
     }
+
+    deinit {
+        print("deinit AnimalDescriptionViewModel")
+    }
 }
 
 // MARK: - AnimalSpecies CaseIterable Extension
