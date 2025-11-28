@@ -113,12 +113,11 @@ A user interacts with the app and sees appropriate loading indicators while data
 
 ### Measurable Outcomes
 
-- **SC-001**: Users see live data from the backend within 3 seconds of screen load under normal network conditions.
-- **SC-002**: All 16 mock animals are replaced with real server data - no hardcoded data remains in the production app flow.
-- **SC-003**: Error states display within 10 seconds of request initiation when network is unavailable.
-- **SC-004**: Retry functionality successfully reloads data when network connectivity is restored.
-- **SC-005**: All existing screen features (navigation, badges, map button, contact display) continue to work correctly with backend data.
-- **SC-006**: Unit test coverage for data fetching and mapping logic meets the project's 80% threshold.
+- **SC-001**: All mock animals are replaced with real server data - no hardcoded data remains in the production app flow.
+- **SC-002**: Error states display when network is unavailable.
+- **SC-003**: Retry functionality successfully reloads data when network connectivity is restored.
+- **SC-004**: All existing screen features (navigation, badges, map button, contact display) continue to work correctly with backend data.
+- **SC-005**: Unit test coverage for data fetching and mapping logic meets the project's 80% threshold.
 
 ## Assumptions
 
