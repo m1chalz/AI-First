@@ -5,6 +5,24 @@
 **Status**: Draft  
 **Input**: User description: "Deploy backend and frontend applications using Docker, docker-compose, and nginx on a VM with path-based routing"
 
+## Clarifications
+
+### Session 2025-11-28
+
+- Q: Uploaded images storage path in backend? → A: Store in `server/public/images/` directory
+- Q: Frontend deployment mode (static build vs dev server)? → A: Production build (static files served by nginx or simple HTTP server)
+- Q: SQLite database file location in backend? → A: Store in `server/pets.db` (root of server directory)
+- Q: Docker restart policy for container recovery? → A: `unless-stopped` - restart unless manually stopped
+- Q: Source code deployment method to VM? → A: Git clone/pull from repository
+- Q: Frontend static file server type? → A: nginx inside frontend container
+- Q: Deployment automation level? → A: Shell scripts for common operations (deploy.sh, update.sh, build.sh)
+- Q: Internal container ports? → A: Backend: 3000, Frontend: 8080
+- Q: Nginx deployment strategy? → A: Nginx as separate Docker container in docker-compose
+- Q: Docker volume type for persistence? → A: Bind mounts with explicit host paths
+- Q: Host paths for backend persistence bind mounts? → A: Use `/var/lib/petspot/db` for SQLite and `/var/lib/petspot/images` for uploads
+- Q: Preferred method for viewing container logs? → A: Use `docker compose logs <service>` documented with examples
+- Q: Strategy when host ports 80/443 are occupied? → A: Operators must free the ports before deployment proceeds
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Initial Deployment Setup (Priority: P1)
@@ -17,7 +35,7 @@ As a DevOps engineer, I need to perform the initial deployment of both backend a
 
 **Acceptance Scenarios**:
 
-1. **Given** a VM with SSH access and Docker installed, **When** deployment configuration is applied, **Then** both backend and frontend containers start successfully and are accessible
+1. **Given** a VM with SSH access and Docker installed, **When** deployment configuration is applied, **Then** nginx, backend, and frontend containers start successfully and are accessible
 2. **Given** deployed applications, **When** a request is made to `/api/pets`, **Then** the backend API responds with pet data
 3. **Given** deployed applications, **When** a request is made to `/images/some-photo.jpg`, **Then** the backend serves the image file
 4. **Given** deployed applications, **When** a request is made to `/` or any non-api/non-images path, **Then** the frontend application loads and displays correctly
@@ -47,11 +65,11 @@ As a DevOps engineer, I need to build Docker images directly on the VM from sour
 
 **Why this priority**: While essential for the deployment workflow, this is a supporting capability. The deployment can be manually tested once the container orchestration (P1) and data persistence (P2) are working.
 
-**Independent Test**: Can be tested by making a code change, building images on the VM using provided scripts or commands, and verifying that containers run the updated code. Success means complete build-to-deploy cycle works on the VM.
+**Independent Test**: Can be tested by making a code change, pushing to Git repository, pulling updates on VM, building images using provided scripts or commands, and verifying that containers run the updated code. Success means complete Git-pull-to-deploy cycle works on the VM.
 
 **Acceptance Scenarios**:
 
-1. **Given** source code on the VM, **When** Docker build command is executed, **Then** backend and frontend images are built successfully
+1. **Given** source code deployed via Git clone on the VM, **When** Docker build command is executed, **Then** backend and frontend images are built successfully
 2. **Given** newly built images, **When** containers are recreated with new images, **Then** updated application code is running
 3. **Given** a failed image build, **When** reviewing build logs, **Then** error messages clearly indicate what went wrong
 
@@ -60,7 +78,7 @@ As a DevOps engineer, I need to build Docker images directly on the VM from sour
 ### Edge Cases
 
 - What happens when the backend container fails or crashes while the frontend is running?
-- How does the system handle port conflicts if standard ports (80, 443) are already in use?
+- How does the system handle port conflicts if standard ports (80, 443) are already in use? → Deployment checklist requires verifying ports 80/443 are free and freeing them before running docker-compose
 - What happens when Docker daemon is not running or becomes unavailable?
 - What happens if nginx configuration is invalid and nginx fails to start?
 - How are container logs accessed when troubleshooting issues?
@@ -73,25 +91,26 @@ As a DevOps engineer, I need to build Docker images directly on the VM from sour
 ### Functional Requirements
 
 - **FR-001**: System MUST provide Docker configuration (Dockerfile) for backend application that includes all necessary dependencies and runs the Node.js server
-- **FR-002**: System MUST provide Docker configuration (Dockerfile) for frontend application that serves static files or runs the development server
-- **FR-003**: System MUST provide docker-compose configuration that orchestrates both backend and frontend containers with proper networking
-- **FR-004**: System MUST configure nginx as a reverse proxy that routes requests with `/api` and `/images` prefixes to backend container and all other requests to frontend container
+- **FR-002**: System MUST provide Docker configuration (Dockerfile) for frontend application that builds production static files and serves them using nginx
+- **FR-003**: System MUST provide docker-compose configuration that orchestrates nginx, backend, and frontend containers with proper networking and `unless-stopped` restart policy
+- **FR-004**: System MUST configure nginx as a reverse proxy that routes requests with `/api` and `/images` prefixes to backend container (port 3000) and all other requests to frontend container (port 8080)
 - **FR-005**: System MUST expose applications through standard HTTP port (80) or HTTPS port (443) on the VM
-- **FR-006**: System MUST persist SQLite database file (pets.db) across container restarts and updates using Docker volumes
-- **FR-007**: System MUST persist uploaded image files across container restarts and updates using Docker volumes
-- **FR-008**: Docker images MUST be buildable on the VM from source code without requiring external image registries
-- **FR-009**: Deployment process MUST include clear step-by-step instructions for initial setup on a fresh VM
-- **FR-010**: Deployment process MUST include clear step-by-step instructions for building images and updating applications
-- **FR-011**: System MUST provide mechanism to view application logs from running containers
+- **FR-006**: System MUST persist SQLite database file (server/pets.db) across container restarts and updates using bind mounts to explicit host path `/var/lib/petspot/db`
+- **FR-007**: System MUST persist uploaded image files stored in `server/public/images/` directory across container restarts and updates using bind mounts to explicit host path `/var/lib/petspot/images`
+- **FR-008**: Docker images MUST be buildable on the VM from source code (deployed via Git clone/pull) without requiring external image registries
+- **FR-009**: Deployment process MUST provide shell scripts and documentation for initial setup on a fresh VM (e.g., deploy.sh)
+- **FR-010**: Deployment process MUST provide shell scripts and documentation for building images and updating applications (e.g., build.sh, update.sh)
+- **FR-011**: System MUST provide documented instructions for viewing application logs using `docker compose logs <service>` (including examples for backend, frontend, and nginx)
+- **FR-013**: Deployment documentation MUST include a pre-flight check to ensure host ports 80/443 are free and steps to stop conflicting services before starting nginx
 - **FR-012**: System MUST handle backend API responses without CORS issues when frontend makes cross-origin requests
 
 ### Key Entities
 
-- **Backend Container**: Runs Node.js Express server on internal port, exposes REST API with `/api` prefix and serves uploaded images with `/images` prefix, uses SQLite database (pets.db)
-- **Frontend Container**: Serves React application static files or runs development server, makes HTTP requests to backend through nginx proxy
-- **Nginx Container**: Acts as reverse proxy and single entry point, routes traffic based on URL path, exposes port 80/443 to external network
+- **Backend Container**: Runs Node.js Express server on internal port 3000, exposes REST API with `/api` prefix and serves uploaded images with `/images` prefix, uses SQLite database (server/pets.db)
+- **Frontend Container**: Serves React application production build (static files) via nginx on internal port 8080, makes HTTP requests to backend through main nginx proxy
+- **Nginx Container**: Separate container managed by docker-compose, acts as reverse proxy and single entry point, routes traffic based on URL path, exposes port 80/443 to external network
 - **Docker Network**: Internal network connecting all containers, allows containers to communicate using service names
-- **Docker Volumes**: Persistent storage for SQLite database file (pets.db) and uploaded image files that must survive container recreation and updates
+- **Docker Volumes**: Bind mounts to explicit host paths providing persistent storage for SQLite database file (server/pets.db) and uploaded image files (server/public/images/) that must survive container recreation and updates
 
 ## Success Criteria *(mandatory)*
 
@@ -101,7 +120,7 @@ As a DevOps engineer, I need to build Docker images directly on the VM from sour
 - **SC-002**: Applications remain accessible through a single hostname with correct routing for 99.9% of requests (backend for `/api/*` and `/images/*`, frontend for others)
 - **SC-003**: DevOps engineer can build and update either application independently in under 15 minutes (including image build time)
 - **SC-004**: SQLite database and uploaded images persist across 100% of container updates and restarts with zero data loss
-- **SC-005**: System successfully recovers from individual container failures within 2 minutes using Docker restart policies
+- **SC-005**: System successfully recovers from individual container failures within 2 minutes using Docker restart policy (`unless-stopped`)
 - **SC-006**: Application logs are accessible within 5 seconds using standard Docker commands
 - **SC-007**: Frontend successfully communicates with backend API without CORS errors in 100% of legitimate requests
 
@@ -113,9 +132,11 @@ As a DevOps engineer, I need to build Docker images directly on the VM from sour
 - Domain name or IP address for accessing applications is already available and DNS is configured
 - HTTPS/SSL certificates will be addressed in a future enhancement (starting with HTTP is acceptable)
 - Manual deployment is acceptable for initial version (CI/CD pipeline is future work)
-- Standard Docker networking and volume configuration is sufficient for application needs
+- Standard Docker networking configuration is sufficient for application needs
+- Bind mounts will use explicit host paths relative to the deployment directory for data persistence
 - Backend API is designed to work behind a reverse proxy with path prefix
-- Backend uses SQLite database (pets.db) which is suitable for containerization
-- Docker images will be built locally on the VM from source code (no external image registry required)
+- Backend uses SQLite database (server/pets.db) which is suitable for containerization
+- Docker images will be built locally on the VM from source code deployed via Git clone/pull (no external image registry required)
+- Git repository access is available from the VM (for cloning and pulling updates)
 - Application downtime during updates is acceptable (no need for zero-downtime deployments)
 - No sensitive secrets need to be managed (environment variables use default/non-sensitive values)
