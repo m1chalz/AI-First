@@ -53,10 +53,10 @@ public enum L10n {
     public static let racePlaceholder = L10n.tr("Localizable", "animalDescription.racePlaceholder", fallback: "e.g., Golden Retriever")
     /// Request GPS position
     public static let requestGPSButton = L10n.tr("Localizable", "animalDescription.requestGPSButton", fallback: "Request GPS position")
-    /// Species
-    public static let speciesLabel = L10n.tr("Localizable", "animalDescription.speciesLabel", fallback: "Species")
-    /// Select species
-    public static let speciesPlaceholder = L10n.tr("Localizable", "animalDescription.speciesPlaceholder", fallback: "Select species")
+    /// Animal species
+    public static let speciesLabel = L10n.tr("Localizable", "animalDescription.speciesLabel", fallback: "Animal species")
+    /// Select an option
+    public static let speciesPlaceholder = L10n.tr("Localizable", "animalDescription.speciesPlaceholder", fallback: "Select an option")
     public enum DatePicker {
       /// Done
       public static let done = L10n.tr("Localizable", "animalDescription.datePicker.done", fallback: "Done")
