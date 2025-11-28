@@ -18,6 +18,68 @@ public enum L10n {
       }
     }
   }
+  public enum AnimalDescription {
+    /// Age (optional)
+    public static let ageLabel = L10n.tr("Localizable", "animalDescription.ageLabel", fallback: "Age (optional)")
+    /// e.g., 5
+    public static let agePlaceholder = L10n.tr("Localizable", "animalDescription.agePlaceholder", fallback: "e.g., 5")
+    /// %d/%d
+    public static func characterCount(_ p1: Int, _ p2: Int) -> String {
+      return L10n.tr("Localizable", "animalDescription.characterCount", p1, p2, fallback: "%d/%d")
+    }
+    /// Continue
+    public static let continueButton = L10n.tr("Localizable", "animalDescription.continueButton", fallback: "Continue")
+    /// MARK: - Animal Description Screen
+    public static let dateLabel = L10n.tr("Localizable", "animalDescription.dateLabel", fallback: "Date of disappearance")
+    /// Additional description (optional)
+    public static let descriptionLabel = L10n.tr("Localizable", "animalDescription.descriptionLabel", fallback: "Additional description (optional)")
+    /// Describe distinguishing features...
+    public static let descriptionPlaceholder = L10n.tr("Localizable", "animalDescription.descriptionPlaceholder", fallback: "Describe distinguishing features...")
+    /// Gender
+    public static let genderLabel = L10n.tr("Localizable", "animalDescription.genderLabel", fallback: "Gender")
+    /// Location captured successfully
+    public static let gpsHelperText = L10n.tr("Localizable", "animalDescription.gpsHelperText", fallback: "Location captured successfully")
+    /// Latitude (optional)
+    public static let latitudeLabel = L10n.tr("Localizable", "animalDescription.latitudeLabel", fallback: "Latitude (optional)")
+    /// e.g., 52.2297
+    public static let latitudePlaceholder = L10n.tr("Localizable", "animalDescription.latitudePlaceholder", fallback: "e.g., 52.2297")
+    /// Longitude (optional)
+    public static let longitudeLabel = L10n.tr("Localizable", "animalDescription.longitudeLabel", fallback: "Longitude (optional)")
+    /// e.g., 21.0122
+    public static let longitudePlaceholder = L10n.tr("Localizable", "animalDescription.longitudePlaceholder", fallback: "e.g., 21.0122")
+    /// Breed / Race
+    public static let raceLabel = L10n.tr("Localizable", "animalDescription.raceLabel", fallback: "Breed / Race")
+    /// e.g., Golden Retriever
+    public static let racePlaceholder = L10n.tr("Localizable", "animalDescription.racePlaceholder", fallback: "e.g., Golden Retriever")
+    /// Request GPS position
+    public static let requestGPSButton = L10n.tr("Localizable", "animalDescription.requestGPSButton", fallback: "Request GPS position")
+    /// Species
+    public static let speciesLabel = L10n.tr("Localizable", "animalDescription.speciesLabel", fallback: "Species")
+    /// Select species
+    public static let speciesPlaceholder = L10n.tr("Localizable", "animalDescription.speciesPlaceholder", fallback: "Select species")
+    public enum Error {
+      /// Age must be between 0 and 40
+      public static let invalidAge = L10n.tr("Localizable", "animalDescription.error.invalidAge", fallback: "Age must be between 0 and 40")
+      /// Invalid coordinate format
+      public static let invalidCoordinateFormat = L10n.tr("Localizable", "animalDescription.error.invalidCoordinateFormat", fallback: "Invalid coordinate format")
+      /// Latitude must be between -90 and 90
+      public static let invalidLatitude = L10n.tr("Localizable", "animalDescription.error.invalidLatitude", fallback: "Latitude must be between -90 and 90")
+      /// Longitude must be between -180 and 180
+      public static let invalidLongitude = L10n.tr("Localizable", "animalDescription.error.invalidLongitude", fallback: "Longitude must be between -180 and 180")
+      /// Please select a date
+      public static let missingDate = L10n.tr("Localizable", "animalDescription.error.missingDate", fallback: "Please select a date")
+      /// Please select a gender
+      public static let missingGender = L10n.tr("Localizable", "animalDescription.error.missingGender", fallback: "Please select a gender")
+      /// Please enter the breed or race
+      public static let missingRace = L10n.tr("Localizable", "animalDescription.error.missingRace", fallback: "Please enter the breed or race")
+      /// Please select a species
+      public static let missingSpecies = L10n.tr("Localizable", "animalDescription.error.missingSpecies", fallback: "Please select a species")
+    }
+    public enum Toast {
+      /// Please correct the highlighted fields
+      public static let validationErrors = L10n.tr("Localizable", "animalDescription.toast.validationErrors", fallback: "Please correct the highlighted fields")
+    }
+  }
   public enum AnimalGender {
     /// Female
     public static let female = L10n.tr("Localizable", "animalGender.female", fallback: "Female")
@@ -111,6 +173,10 @@ public enum L10n {
     public static let other = L10n.tr("Localizable", "animalSpecies.other", fallback: "Other")
     /// Rabbit
     public static let rabbit = L10n.tr("Localizable", "animalSpecies.rabbit", fallback: "Rabbit")
+    /// Reptile
+    public static let reptile = L10n.tr("Localizable", "animalSpecies.reptile", fallback: "Reptile")
+    /// Rodent
+    public static let rodent = L10n.tr("Localizable", "animalSpecies.rodent", fallback: "Rodent")
   }
   public enum AnimalStatus {
     /// MARK: - Animal Status
