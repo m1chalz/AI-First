@@ -1,6 +1,6 @@
 import type { Knex } from 'knex'
 
-const DB_FILENAME = process.env.NODE_ENV === 'test' ? './pets-its.db' : './pets.db';
+const DB_FILENAME = process.env.DATABASE_PATH || (process.env.NODE_ENV === 'test' ? './pets-its.db' : './pets.db');
 
 const config: Knex.Config = {
   client: 'better-sqlite3',

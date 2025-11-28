@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: petspot-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - petspot-network
+    depends_on:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    image: petspot-backend:${IMAGE_TAG:-latest}
+    container_name: petspot-backend
+    restart: unless-stopped
+    expose:
+      - "3000"
+    volumes:
+      - /var/lib/petspot/db:/app/server/db
+      - /var/lib/petspot/images:/app/server/public/images
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/server/db/pets.db
+    networks:
+      - petspot-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ../webApp
+      dockerfile: Dockerfile
+    image: petspot-frontend:${IMAGE_TAG:-latest}
+    container_name: petspot-frontend
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      - petspot-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  petspot-network:
+    driver: bridge
+    name: petspot-network
+
