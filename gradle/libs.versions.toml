@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.2"
+accompanist = "0.37.3"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
@@ -23,6 +24,7 @@ ktlint = "11.6.1"
 ktlint-engine = "1.0.1"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
