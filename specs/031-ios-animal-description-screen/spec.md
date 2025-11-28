@@ -6,7 +6,14 @@
 **Input**: User description: "na podstawie brancha origin/022-animal-description-screen stwórz specyfikację typowo na iOS, z pominięciem wszystkiego co dotyczy innych platform. Specyfikacja na branchu 031-ios-animal-description-screen i też ma numer 031"
 
 This feature defines the **iOS Animal Description screen** (Step 3/4 of the Missing Pet flow defined in specification 017 for iOS).  
-The iOS UI MUST match Figma node `297-8209` from the PetSpot wireframes design, focusing exclusively on the iOS application.
+The iOS UI MUST match Figma node `297-8209` from the [PetSpot wireframes design](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-8209), focusing exclusively on the iOS application.
+
+**Design Reference**: See `figma-design-context.md` for complete design tokens (colors, typography, spacing). Key visual specifications:
+- Primary blue: `#155dfc` (buttons, borders)
+- Typography: Inter Regular 32px (title), Hind Regular 16px (labels/inputs)
+- Input height: 41px (standard), 49px (date picker), 96px (description textarea)
+- Border radius: 10px, border width: 0.667px, border color: `#d1d5dc`
+- Vertical spacing: 24px between form fields, 8px between label and input
 
 ## Clarifications
 
@@ -78,7 +85,7 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 - **Future “Date of disappearance”**: the date picker defaults to today and proactively blocks selection of any future dates (user can only choose today or a past date), so no separate error state is shown for future dates.  
 - **Species list source**: species options always come from the fixed curated list bundled with the app; no external taxonomy service or runtime loading is attempted on this screen.  
 - **Race input before species selection**: the race input is a disabled text field until a species is selected; when the user changes species, any previously entered race text is cleared, and the field remains required once enabled.  
-- **Additional description exceeds 500 characters**: further input is blocked, a character counter communicates the limit, and other fields remain unchanged.
+- **Additional description exceeds 500 characters**: further input is blocked (keyboard input prevented at limit, pasted text truncated to 500 characters), a character counter communicates the limit, and other fields remain unchanged.
 
 ## Requirements *(mandatory)*
 
@@ -87,25 +94,25 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 - **FR-001**: On iOS, Step 3 MUST appear immediately after the Animal Photo screen (spec 020) and before contact details (spec 017), showing the header/back arrow, title “Animal description,” and progress chip “3/4” matching the referenced Figma design.  
 - **FR-002**: The top-left circular back button MUST always navigate to Step 2 with state persistence; the status text and progress indicator MUST update when re-entering Step 3.  
 - **FR-003**: The “Date of disappearance” field MUST default to today’s date (or the last saved value) and open the system date picker configured so users MAY pick any past date (including today) but future dates are disabled and cannot be selected.  
-- **FR-004**: Selecting a date MUST update the iOS Missing Pet session so the value persists across navigation, app backgrounding, and device rotation until the flow completes or is canceled.  
+- **FR-004**: Selecting a date MUST update the iOS Missing Pet flow state (`ReportMissingPetFlowState`) so the value persists across navigation, app backgrounding, and device rotation until the flow completes or is canceled.  
 - **FR-005**: The “Animal species” dropdown MUST use a fixed curated list of species bundled with the app (no runtime taxonomy service), display a clear placeholder (e.g., “Select an option”), and require a selection before Continue becomes available.  
 - **FR-006**: The “Animal race” field MUST be implemented as a text field that stays disabled until a species is chosen; when the user changes species, any previously entered race text MUST be cleared, and once enabled the race field is required for Continue.  
 - **FR-007**: The gender selector MUST present two cards (Female, Male) behaving as mutually exclusive options with accessibilityIdentifier attributes for testing; at least one option MUST be selected before Continue activates.  
 - **FR-008**: “Animal age (optional)” MUST accept numeric input from 0–40 with validation preventing negative values or decimals; empty state is valid.  
-- **FR-009**: Tapping “Request GPS position” MUST trigger the standard iOS location permission flow (if needed); upon success the Lat and Long fields auto-populate with decimal degrees to 5 decimal places and store the capture time in session state.  
+- **FR-009**: Tapping "Request GPS position" MUST trigger the standard iOS location permission flow (if needed); upon success the Lat and Long fields auto-populate with decimal degrees to 5 decimal places (capture time from LocationService is not persisted in flow state, only coordinates).  
 - **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors and block Continue, regardless of whether the values came from GPS or were entered manually.  
-- **FR-011**: “Animal additional description (optional)” MUST provide a multi-line text area supporting at least 500 characters plus a live counter; characters beyond the limit are ignored.  
-- **FR-012**: The Continue CTA MUST match the primary button style from the Figma design and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender), it MUST validate all fields on submit, show a toast message, and highlight the specific fields with inline helper text while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while recording that Step 3 was completed for analytics purposes.  
-- **FR-013**: All inputs MUST persist within the in-memory iOS Missing Pet flow session container (constructor-injected to ViewModel) so that navigating backward/forward, locking the device, or experiencing temporary offline states does not wipe Step 3 data; session data is retained until flow completion or explicit cancellation.  
+- **FR-011**: "Animal additional description (optional)" MUST provide a multi-line text area supporting exactly 500 characters with a live counter; the component MUST enforce a hard limit by preventing further input when 500 characters are reached and truncating pasted text that exceeds the limit.  
+- **FR-012**: The Continue CTA MUST match the primary button style from the Figma design and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender), it MUST validate all fields on submit, show a toast message, and highlight the specific fields with inline helper text while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while updating `ReportMissingPetFlowState` with all animal description data.  
+- **FR-013**: All inputs MUST persist within the in-memory iOS Missing Pet flow state container (`ReportMissingPetFlowState`, constructor-injected to ViewModel) so that navigating backward/forward, locking the device, or experiencing temporary offline states does not wipe Step 3 data; flow state is retained until flow completion or explicit cancellation.  
 - **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances without crashing; Continue remains disabled only when location-related validation rules require it (e.g., invalid coordinate ranges), and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
 - **FR-015**: When GPS capture fails or is skipped, only the latitude/longitude inputs serve as the manual fallback; helper text MUST clarify that no additional textual location details are collected in this step.
 - **FR-016**: All interactive UI elements MUST have accessibilityIdentifier attributes following the `{screen}.{element}.{action}` naming convention for automated testing; VoiceOver support and other end-user accessibility features are explicitly out of scope for this release.
 
 ### Key Entities *(include if feature involves data)*
 
-- **AnimalDescriptionDetails**: Session-bound structure containing disappearance date, species, race, gender, age, optional description, and metadata about when each value was last updated within the iOS Missing Pet flow.  
-- **UserLocation**: Geographic coordinates (latitude and longitude) used for this step, matching the existing UserLocation concept in the app; the screen only needs the coordinates and does not track permission status or whether values came from GPS or manual entry.  
-- **SpeciesTaxonomyOption**: Represents each selectable species from a fixed curated list bundled with the app; there is no runtime taxonomy service or online refresh in this step.
+- **ReportMissingPetFlowState** (existing): Flow state container (owned by `ReportMissingPetCoordinator`) that will be extended with animal description fields: disappearanceDate, animalSpecies, animalRace, animalGender, animalAge, latitude, longitude (as flat optional properties).  
+- **SpeciesTaxonomyOption**: Represents each selectable species from a fixed curated list bundled with the app; there is no runtime taxonomy service or online refresh in this step.  
+- **UserLocation** (reused): Existing domain model (`/iosApp/iosApp/Domain/UserLocation.swift`) containing latitude, longitude, and timestamp; used by LocationService for GPS capture but not stored directly in AnimalDescriptionDetails (coordinates are flattened).
 
 ## Success Criteria *(mandatory)*
 
@@ -125,7 +132,7 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 
 ## Dependencies
 
-- iOS navigation scaffolding and session container from specification 017 (Missing Pet flow).  
+- iOS navigation scaffolding and flow state container from specification 017 (Missing Pet flow): `ReportMissingPetCoordinator` and `ReportMissingPetFlowState`.  
 - Static configuration for the curated species list bundled with the iOS app.  
 - Device location capabilities for the Request GPS button.  
 - Analytics capabilities that can track completion of Step 3 in the Missing Pet flow.

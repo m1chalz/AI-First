@@ -8,138 +8,55 @@
 
 ## 1. Domain Models
 
-### AnimalDescriptionDetails
+**Note**: This feature extends existing `ReportMissingPetFlowState` rather than creating new domain models. See Section 5 for flow state extension details.
 
-**Purpose**: Session-bound structure containing all animal description data for Step 3 of Missing Pet flow.
+### AnimalSpecies (Existing - Reused)
 
-**Location**: `/iosApp/iosApp/Domain/Models/AnimalDescriptionDetails.swift`
+**Purpose**: Enum for animal species types (already exists in project).
 
-**Definition**:
+**Location**: `/iosApp/iosApp/Domain/Models/AnimalSpecies.swift` (already exists)
+
+**Current Definition**:
 
 ```swift
-import Foundation
-
-/// Animal description data collected in Step 3 of Missing Pet flow.
-/// Stored in MissingPetFlowSession and persists across navigation until flow completion.
-struct AnimalDescriptionDetails: Equatable {
-    let disappearanceDate: Date
-    let species: SpeciesTaxonomyOption
-    let race: String
-    let gender: Gender
-    let age: Int?                    // Optional: nil if not provided
-    let latitude: Double?            // Optional: nil if not provided
-    let longitude: Double?           // Optional: nil if not provided
-    let additionalDescription: String?  // Optional: nil or empty if not provided
-    let lastUpdated: Date            // Metadata: when this struct was last saved
-    
-    init(
-        disappearanceDate: Date,
-        species: SpeciesTaxonomyOption,
-        race: String,
-        gender: Gender,
-        age: Int? = nil,
-        latitude: Double? = nil,
-        longitude: Double? = nil,
-        additionalDescription: String? = nil,
-        lastUpdated: Date = Date()
-    ) {
-        self.disappearanceDate = disappearanceDate
-        self.species = species
-        self.race = race
-        self.gender = gender
-        self.age = age
-        self.latitude = latitude
-        self.longitude = longitude
-        self.additionalDescription = additionalDescription
-        self.lastUpdated = lastUpdated
-    }
+enum AnimalSpecies: Codable {
+    case dog
+    case cat
+    case bird
+    case rabbit
+    case other
 }
 ```
 
-**Field Validation Rules**:
+**Required Changes**: Add missing species to match spec requirements:
+- Add `.rodent` case
+- Add `.reptile` case
 
-| Field                  | Required | Validation                              | Error Message                          |
-|------------------------|----------|-----------------------------------------|----------------------------------------|
-| `disappearanceDate`    | ✅ Yes   | Must be today or past date              | _Proactive blocking by DatePicker_     |
-| `species`              | ✅ Yes   | Must be valid `SpeciesTaxonomyOption`   | "Please select a species"              |
-| `race`                 | ✅ Yes   | Non-empty string after trim             | "Please enter the animal's breed/race" |
-| `gender`               | ✅ Yes   | Must be `.male` or `.female`            | "Please select a gender"               |
-| `age`                  | ❌ No    | If provided: 0-40, whole number         | "Age must be between 0 and 40"         |
-| `latitude`             | ❌ No    | If provided: -90 to 90                  | "Latitude must be between -90 and 90"  |
-| `longitude`            | ❌ No    | If provided: -180 to 180                | "Longitude must be between -180 and 180"|
-| `additionalDescription`| ❌ No    | If provided: max 500 characters         | _Enforced by component, no error_      |
+**Presentation Extension**: `/iosApp/iosApp/Features/Shared/AnimalSpecies+Presentation.swift` (already exists) provides `displayName` using L10n.
 
 ---
 
-### SpeciesTaxonomyOption
+### AnimalGender (Existing - Reused)
 
-**Purpose**: Represents a selectable species from the curated list bundled with the app.
+**Purpose**: Enum for animal gender options (already exists in project).
 
-**Location**: `/iosApp/iosApp/Domain/Models/SpeciesTaxonomyOption.swift`
+**Location**: `/iosApp/iosApp/Domain/Models/AnimalGender.swift` (already exists)
 
-**Definition**:
+**Current Definition**:
 
 ```swift
-/// Species option from curated taxonomy list bundled with app.
-/// Used in species dropdown for Step 3 (Animal Description screen).
-struct SpeciesTaxonomyOption: Identifiable, Equatable, Hashable {
-    let id: String           // Unique identifier (e.g., "dog", "cat")
-    let displayName: String  // Localized display name (e.g., "Dog", "Cat")
+enum AnimalGender: Codable {
+    case male
+    case female
+    case unknown
 }
 ```
 
-**Static Data Source** (`/iosApp/iosApp/Data/SpeciesTaxonomy.swift`):
-
-```swift
-struct SpeciesTaxonomy {
-    /// Curated list of species options bundled with app.
-    /// Offline-capable (no network dependency).
-    static let options: [SpeciesTaxonomyOption] = [
-        SpeciesTaxonomyOption(id: "dog", displayName: L10n.speciesDog),
-        SpeciesTaxonomyOption(id: "cat", displayName: L10n.speciesCat),
-        SpeciesTaxonomyOption(id: "bird", displayName: L10n.speciesBird),
-        SpeciesTaxonomyOption(id: "rabbit", displayName: L10n.speciesRabbit),
-        SpeciesTaxonomyOption(id: "rodent", displayName: L10n.speciesRodent),
-        SpeciesTaxonomyOption(id: "reptile", displayName: L10n.speciesReptile),
-        SpeciesTaxonomyOption(id: "other", displayName: L10n.speciesOther)
-    ]
-}
-```
+**Presentation Extension**: `/iosApp/iosApp/Features/Shared/AnimalGender+Presentation.swift` (already exists) provides `displayName` using L10n.
 
 **Notes**:
-- Display names MUST use SwiftGen-generated localized strings (`L10n.*`)
-- Species IDs MUST be stable (used for serialization if session persists to disk in future)
-- List is bundled at compile time (no runtime loading or API dependency)
-
----
-
-### Gender
-
-**Purpose**: Enum for animal gender options (binary for this release).
-
-**Location**: `/iosApp/iosApp/Domain/Models/Gender.swift`
-
-**Definition**:
-
-```swift
-/// Gender options for animals (binary for initial release).
-/// Future releases may expand to include additional options.
-enum Gender: String, CaseIterable, Codable {
-    case male = "male"
-    case female = "female"
-    
-    var displayName: String {
-        switch self {
-        case .male: return L10n.genderMale
-        case .female: return L10n.genderFemale
-        }
-    }
-}
-```
-
-**Notes**:
-- Display names MUST use SwiftGen-generated localized strings
-- Spec assumption: "Gender options remain binary for this release, matching the provided iOS design"
+- Existing enum has `.unknown` case not used in this feature (only `.male` and `.female` used per Figma design)
+- Display names use SwiftGen-generated localized strings via presentation extension
 
 ---
 
@@ -426,41 +343,97 @@ extension TextAreaView {
 
 ---
 
-## 4. Session Integration
+## 4. Reused Domain Models
 
-### MissingPetFlowSession
+### UserLocation (Existing)
 
-**Purpose**: Session container for Missing Pet flow (already exists per spec 017).
+**Purpose**: Domain model for geographic coordinates (reused from existing codebase).
 
-**Location**: `/iosApp/iosApp/Features/ReportMissingPet/Session/MissingPetFlowSession.swift`
+**Location**: `/iosApp/iosApp/Domain/UserLocation.swift` (already exists)
 
-**Expected Structure** (Step 3 integration):
+**Definition**:
 
 ```swift
-class MissingPetFlowSession {
-    // Existing properties from spec 017
-    var chipNumber: String?
-    var animalPhoto: UIImage?
-    
-    // NEW: Step 3 data
-    var animalDescription: AnimalDescriptionDetails?
-    
-    // Existing: Step 4 data (contact details)
-    var contactDetails: ContactDetails?
-    
-    // Flow state tracking
-    var completedSteps: Set<Int> = []
+/// Domain model for user geographic location.
+struct UserLocation: Equatable {
+    let latitude: Double
+    let longitude: Double
+    let timestamp: Date  // Capture time (used for GPS metadata)
 }
 ```
 
-**Notes**:
-- Session is reference type (class) shared across all flow steps
-- Constructor-injected to ViewModel per constitution manual DI pattern
-- Coordinator manages session lifetime
+**Usage in this feature**:
+- LocationService returns `UserLocation` when GPS capture succeeds
+- AnimalDescriptionDetails stores latitude/longitude as flat Double fields (not nested UserLocation)
+- Timestamp from GPS capture is not persisted in session (only coordinates are stored)
 
 ---
 
-## 5. State Diagram
+## 5. Flow State Integration
+
+### ReportMissingPetFlowState (Existing - To Be Extended)
+
+**Purpose**: Flow state container for Missing Pet flow (already exists per spec 017).
+
+**Location**: `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift`
+
+**Current Structure**:
+
+```swift
+class ReportMissingPetFlowState: ObservableObject {
+    // Step 1: Chip Number
+    @Published var chipNumber: String?
+    
+    // Step 2: Photo
+    @Published var photo: UIImage?
+    
+    // Step 3: Description (current simple string - will be replaced)
+    @Published var description: String?
+    
+    // Step 4: Contact Details
+    @Published var contactEmail: String?
+    @Published var contactPhone: String?
+}
+```
+
+**Required Changes for Step 3 (Animal Description)**:
+
+Replace `@Published var description: String?` with structured animal description fields:
+
+```swift
+// Step 3: Animal Description (NEW structured fields)
+@Published var disappearanceDate: Date?
+@Published var animalSpecies: AnimalSpecies?
+@Published var animalRace: String?
+@Published var animalGender: AnimalGender?
+@Published var animalAge: Int?
+@Published var animalLatitude: Double?
+@Published var animalLongitude: Double?
+@Published var animalAdditionalDescription: String?  // Optional 500-char description
+```
+
+**Field Validation Rules**:
+
+| Field                          | Required | Validation                              | Error Message                          |
+|--------------------------------|----------|-----------------------------------------|----------------------------------------|
+| `disappearanceDate`            | ✅ Yes   | Must be today or past date              | _Proactive blocking by DatePicker_     |
+| `animalSpecies`                | ✅ Yes   | Must be valid `AnimalSpecies` enum      | "Please select a species"              |
+| `animalRace`                   | ✅ Yes   | Non-empty string after trim             | "Please enter the animal's breed/race" |
+| `animalGender`                 | ✅ Yes   | Must be `.male` or `.female`            | "Please select a gender"               |
+| `animalAge`                    | ❌ No    | If provided: 0-40, whole number         | "Age must be between 0 and 40"         |
+| `animalLatitude`               | ❌ No    | If provided: -90 to 90                  | "Latitude must be between -90 and 90"  |
+| `animalLongitude`              | ❌ No    | If provided: -180 to 180                | "Longitude must be between -180 and 180"|
+| `animalAdditionalDescription`  | ❌ No    | If provided: max 500 characters (hard limit: prevent input at 500, truncate paste) | _Enforced by component, no error_      |
+
+**Notes**:
+- Flow state is reference type (`class`) marked `ObservableObject` with `@Published` properties
+- Constructor-injected to ViewModel per constitution manual DI pattern
+- Coordinator (`ReportMissingPetCoordinator`) owns and manages flow state lifetime
+- Flow state persists across navigation within flow, cleared on flow exit
+
+---
+
+## 6. State Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -537,17 +510,17 @@ class MissingPetFlowSession {
 
 ---
 
-## 6. Data Flow Summary
+## 7. Data Flow Summary
 
 ### On Screen Load
-1. ViewModel initializes with session container + LocationService
-2. If session.animalDescription exists → populate fields (navigation back from Step 4)
+1. ViewModel initializes with flow state container (`ReportMissingPetFlowState`) + LocationService
+2. If flow state has existing animal description data → populate fields (navigation back from Step 4)
 3. Else → initialize with defaults (date: today, all fields empty)
 
 ### On User Input
 1. User edits fields → `@Published` properties update in ViewModel
-2. Species change → ViewModel clears race field (automatic behavior)
-3. Description text → ViewModel enforces 500-character limit
+2. Species change → ViewModel clears race field and race validation error (automatic behavior)
+3. Description text → TextAreaView enforces 500-character hard limit (prevents input at limit, truncates pasted text)
 
 ### On GPS Button Tap
 1. ViewModel checks permission status via LocationService
@@ -559,40 +532,41 @@ class MissingPetFlowSession {
 1. ViewModel validates all required fields (date, species, race, gender)
 2. ViewModel validates optional fields if provided (age 0-40, coordinates in range)
 3. If invalid → show toast, apply inline errors, stay on screen
-4. If valid → update session.animalDescription, call `onContinue()` closure (coordinator navigates to Step 4)
+4. If valid → update flow state with all animal description fields, call `onContinue()` closure (coordinator navigates to Step 4)
 
 ### On Back Button Tap
-1. ViewModel does NOT update session (preserves previous Step 3 data if any)
+1. ViewModel does NOT update flow state (preserves previous Step 3 data if any)
 2. Call `onBack()` closure (coordinator navigates to Step 2)
 
 ---
 
-## 7. Testing Considerations
+## 8. Testing Considerations
 
 ### Unit Tests (ViewModel)
 - Test validation logic for all required and optional fields
 - Test coordinate validation ranges (edge cases: -90, 90, -180, 180, invalid strings)
 - Test species change clears race field
 - Test GPS permission flow (mock LocationService responses)
-- Test session update on valid Continue tap
+- Test flow state update on valid Continue tap
 - Test coordinator callback invocations
+- Test flow state loading on ViewModel init (when returning from Step 4)
 
 ### E2E Tests
 - Test complete form submission flow (fill all required fields → Continue → navigate Step 4)
 - Test validation errors (empty required fields → Continue → toast + inline errors shown)
 - Test GPS capture flow (tap GPS button → grant permission → fields populated)
 - Test GPS denied flow (tap GPS button → deny → custom alert → Cancel/Go Settings)
-- Test navigation back (tap Back → return to Step 2 with session preserved)
+- Test navigation back (tap Back → return to Step 2 with flow state preserved)
 
 ---
 
 ## Summary
 
 This data model specification defines:
-- **Domain models**: AnimalDescriptionDetails (session data), SpeciesTaxonomyOption, Gender
-- **Validation models**: ValidationError, CoordinateValidationResult
+- **Domain models**: Reuse existing `AnimalSpecies` (extended with rodent/reptile) and `AnimalGender`
+- **Validation models**: ValidationError, CoordinateValidationResult, FormField
 - **Component models**: Model structs for all reusable form components
-- **Session integration**: MissingPetFlowSession with animalDescription property
+- **Flow state integration**: Extension of `ReportMissingPetFlowState` with structured animal description fields
 - **State diagram**: Visual flow from initial state → user input → validation → navigation
 - **Data flow**: Detailed sequences for user interactions (input, GPS capture, validation, navigation)
 
