@@ -33,7 +33,7 @@ public enum L10n {
     public static let coordinatePlaceholder = L10n.tr("Localizable", "animalDescription.coordinatePlaceholder", fallback: "00000")
     /// Lat / Long
     public static let coordinatesLabel = L10n.tr("Localizable", "animalDescription.coordinatesLabel", fallback: "Lat / Long")
-    /// MARK: - Animal Description Screen
+    /// Date of disappearance
     public static let dateLabel = L10n.tr("Localizable", "animalDescription.dateLabel", fallback: "Date of disappearance")
     /// Animal additional description (optional)
     public static let descriptionLabel = L10n.tr("Localizable", "animalDescription.descriptionLabel", fallback: "Animal additional description (optional)")
@@ -43,6 +43,8 @@ public enum L10n {
     public static let genderLabel = L10n.tr("Localizable", "animalDescription.genderLabel", fallback: "Gender")
     /// Location captured successfully
     public static let gpsHelperText = L10n.tr("Localizable", "animalDescription.gpsHelperText", fallback: "Location captured successfully")
+    /// MARK: - Animal Description Screen
+    public static let heading = L10n.tr("Localizable", "animalDescription.heading", fallback: "Your pet's details")
     /// e.g., 52.2297
     public static let latitudePlaceholder = L10n.tr("Localizable", "animalDescription.latitudePlaceholder", fallback: "e.g., 52.2297")
     /// e.g., 21.0122
@@ -57,6 +59,8 @@ public enum L10n {
     public static let speciesLabel = L10n.tr("Localizable", "animalDescription.speciesLabel", fallback: "Animal species")
     /// Select an option
     public static let speciesPlaceholder = L10n.tr("Localizable", "animalDescription.speciesPlaceholder", fallback: "Select an option")
+    /// Fill out the details about the missing animal.
+    public static let subheading = L10n.tr("Localizable", "animalDescription.subheading", fallback: "Fill out the details about the missing animal.")
     public enum DatePicker {
       /// Done
       public static let done = L10n.tr("Localizable", "animalDescription.datePicker.done", fallback: "Done")
