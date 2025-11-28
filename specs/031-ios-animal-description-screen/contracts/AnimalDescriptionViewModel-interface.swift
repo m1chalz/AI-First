@@ -127,8 +127,8 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Initializes ViewModel with dependencies.
     /// - Parameters:
     ///   - session: Missing Pet flow session container (reference type, constructor-injected).
-    ///   - locationService: Location service for GPS coordinate capture (constructor-injected).
-    init(session: MissingPetFlowSession, locationService: LocationServiceProtocol)
+    ///   - locationHandler: Location permission handler for GPS coordinate capture (constructor-injected).
+    init(session: MissingPetFlowSession, locationHandler: LocationPermissionHandler)
     
     // MARK: - User Actions
     
@@ -149,13 +149,18 @@ class AnimalDescriptionViewModel: ObservableObject {
     }
     
     /// Handles "Request GPS position" button tap.
-    /// Requests location permission if needed, fetches location, and populates Lat/Long fields.
-    /// Shows permission denied alert if permission is denied/restricted.
+    /// Uses LocationPermissionHandler to request location with permission handling.
+    /// Populates Lat/Long fields if successful.
+    /// Shows permission denied alert if permission is denied/restricted (per-action policy).
+    /// Note: Unlike AnimalListViewModel (session-level policy), this shows alert every time.
     func requestGPSPosition() async
     
     /// Handles "Go to Settings" button tap in permission alert.
-    /// Delegates to coordinator via onOpenAppSettings closure.
+    /// Delegates to coordinator via onOpenAppSettings closure (MVVM-C pattern).
     func openSettings()
+    
+    /// Dismisses permission denied alert without any action.
+    func dismissPermissionAlert()
     
     /// Handles "Continue" button tap.
     /// Validates all fields on submit, shows errors if invalid, or navigates to Step 4 if valid.
@@ -194,8 +199,5 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Example: .missingRace → sets validationErrors.race = "Please enter race"
     private func applyValidationErrors(_ errors: [ValidationError])
     
-    /// Fetches user location from LocationService.
-    /// Populates latitude and longitude fields with formatted values.
-    private func fetchLocation() async
 }
 
