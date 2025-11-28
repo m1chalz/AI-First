@@ -1,5 +1,0 @@
-IMAGE_TAG=latest
-HOST_DB_PATH=/var/lib/petspot/db
-HOST_IMAGES_PATH=/var/lib/petspot/images
-NODE_ENV=production
-DATABASE_PATH=/app/server/pets.db
