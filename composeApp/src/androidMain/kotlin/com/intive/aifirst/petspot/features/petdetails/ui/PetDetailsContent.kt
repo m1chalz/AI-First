@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
@@ -72,8 +71,8 @@ private fun PetDetailsContentPreview() {
                 id = "1",
                 name = "Luna",
                 photoUrl = "",
-                location = Location(city = "Warsaw", radiusKm = 2, latitude = 52.2297, longitude = 21.0122),
-                species = AnimalSpecies.DOG,
+                location = Location(latitude = 52.2297, longitude = 21.0122),
+                species = "Dog",
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
                 status = AnimalStatus.MISSING,
@@ -82,7 +81,7 @@ private fun PetDetailsContentPreview() {
                 email = "owner@example.com",
                 phone = "+48 111 222 333",
                 microchipNumber = "123456789012345",
-                approximateAge = "3 years",
+                age = 3,
                 rewardAmount = "500 PLN",
             ),
         onBackClick = {},

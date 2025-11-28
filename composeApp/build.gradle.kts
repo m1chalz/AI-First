@@ -31,6 +31,12 @@ kotlin {
             implementation(libs.coil.compose)
             // Permissions (declarative permission handling for Compose)
             implementation(libs.accompanist.permissions)
+            // Ktor HTTP Client
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -52,6 +58,8 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.kotlin.test)
             implementation(libs.androidx.navigation.testing)
+            // Ktor Mock Engine for HTTP testing
+            implementation(libs.ktor.client.mock)
         }
     }
 }
@@ -76,14 +84,23 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+    buildFeatures {
+        buildConfig = true
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
     buildTypes {
+        debug {
+            // Android emulator localhost alias
+            buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000\"")
+        }
         getByName("release") {
             isMinifyEnabled = false
+            // Production URL (placeholder - update when deployed)
+            buildConfigField("String", "API_BASE_URL", "\"https://api.petspot.com\"")
         }
     }
     compileOptions {
