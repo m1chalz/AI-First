@@ -129,23 +129,23 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 ### Implementation for User Story 2
 
 **Shell Scripts**:
-- [ ] T054 [P] [US2] Create `/deployment/scripts/update.sh` for application update workflow
-- [ ] T055 [US2] Add argument parsing to update.sh (`--backend`, `--frontend`, `--all`)
-- [ ] T056 [US2] Add usage/help flag to update.sh (`--help`)
-- [ ] T057 [US2] Add Git pull step to update.sh (`git pull origin main`)
-- [ ] T058 [US2] Add selective image building to update.sh (build only specified services)
-- [ ] T059 [US2] Add container recreation to update.sh (`docker compose up -d --force-recreate <service>`)
-- [ ] T060 [US2] Add update verification to update.sh (health checks, logs tail)
-- [ ] T061 [US2] Add color-coded output to update.sh
-- [ ] T062 [US2] Add error handling to update.sh (`set -euo pipefail`, exit codes)
-- [ ] T063 [P] [US2] Make update.sh executable (`chmod +x /deployment/scripts/update.sh`)
+- [x] T054 [P] [US2] Create `/deployment/scripts/update.sh` for application update workflow
+- [x] T055 [US2] Add argument parsing to update.sh (`--backend`, `--frontend`, `--all`)
+- [x] T056 [US2] Add usage/help flag to update.sh (`--help`)
+- [x] T057 [US2] Add Git pull step to update.sh (`git pull origin main`)
+- [x] T058 [US2] Add selective image building to update.sh (build only specified services)
+- [x] T059 [US2] Add container recreation to update.sh (`docker compose up -d --force-recreate <service>`)
+- [x] T060 [US2] Add update verification to update.sh (health checks, logs tail)
+- [x] T061 [US2] Add color-coded output to update.sh
+- [x] T062 [US2] Add error handling to update.sh (`set -euo pipefail`, exit codes)
+- [x] T063 [P] [US2] Make update.sh executable (`chmod +x /deployment/scripts/update.sh`)
 
 **Documentation**:
-- [ ] T064 [US2] Document update procedures in README.md (update backend, update frontend, update both)
-- [ ] T065 [US2] Document Git workflow in README.md (git pull, build, recreate)
-- [ ] T066 [US2] Document data persistence verification in README.md (check database, check images)
-- [ ] T067 [US2] Document acceptable downtime during updates in README.md
-- [ ] T068 [US2] Add examples to README.md showing update.sh usage with different flags
+- [x] T064 [US2] Document update procedures in README.md (update backend, update frontend, update both)
+- [x] T065 [US2] Document Git workflow in README.md (git pull, build, recreate)
+- [x] T066 [US2] Document data persistence verification in README.md (check database, check images)
+- [x] T067 [US2] Document acceptable downtime during updates in README.md
+- [x] T068 [US2] Add examples to README.md showing update.sh usage with different flags
 
 **Manual Testing (User Story 2)**:
 - [ ] T069 [US2] Test backend-only update (modify backend code, run update.sh --backend)
