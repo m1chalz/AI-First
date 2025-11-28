@@ -10,14 +10,8 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Date when animal disappeared (required, defaults to today)
     @Published var disappearanceDate: Date = Date()
     
-    /// Selected species index for dropdown
-    @Published var selectedSpeciesIndex: Int?
-    
-    /// Selected species option (mapped from index)
-    var selectedSpecies: AnimalSpecies? {
-        guard let index = selectedSpeciesIndex else { return nil }
-        return AnimalSpecies.allCases[index]
-    }
+    /// Selected species (nil if not selected)
+    @Published var selectedSpecies: AnimalSpecies?
     
     /// Breed/race text input (required, enabled only after species selected)
     @Published var race: String = ""
@@ -81,9 +75,8 @@ class AnimalDescriptionViewModel: ObservableObject {
             self.disappearanceDate = existingDate
         }
         
-        if let existingSpecies = flowState.animalSpecies,
-           let index = AnimalSpecies.allCases.firstIndex(of: existingSpecies) {
-            self.selectedSpeciesIndex = index
+        if let existingSpecies = flowState.animalSpecies {
+            self.selectedSpecies = existingSpecies
         }
         
         if let existingRace = flowState.animalRace {
@@ -128,11 +121,11 @@ class AnimalDescriptionViewModel: ObservableObject {
     }
     
     /// Model for species dropdown
-    var speciesDropdownModel: DropdownView.Model {
+    var speciesDropdownModel: DropdownView<AnimalSpecies>.Model {
         DropdownView.Model(
             label: L10n.AnimalDescription.speciesLabel,
             placeholder: L10n.AnimalDescription.speciesPlaceholder,
-            options: AnimalSpecies.allCases.map { $0.displayName },
+            options: AnimalSpecies.allCases.map { (value: $0, displayName: $0.displayName) },
             errorMessage: speciesErrorMessage,
             accessibilityID: "animalDescription.speciesDropdown.tap"
         )
@@ -227,14 +220,6 @@ class AnimalDescriptionViewModel: ObservableObject {
     }
     
     // MARK: - User Actions
-    
-    /// Called when user selects a species from dropdown
-    func selectSpecies(_ index: Int) {
-        selectedSpeciesIndex = index
-        // Clear race field when species changes (per spec)
-        race = ""
-        raceErrorMessage = nil
-    }
     
     /// Called when user selects a gender
     func selectGender(_ index: Int) {
