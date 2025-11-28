@@ -30,7 +30,7 @@ services:
     expose:
       - "3000"
     volumes:
-      - ${HOST_DB_PATH:-/var/lib/petspot/db}:/app/server/pets.db
+      - ${HOST_DB_PATH:-/var/lib/petspot/db}/pets.db:/app/server/pets.db
       - ${HOST_IMAGES_PATH:-/var/lib/petspot/images}:/app/server/public/images
     environment:
       - NODE_ENV=production
