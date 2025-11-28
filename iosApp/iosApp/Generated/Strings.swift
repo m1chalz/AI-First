@@ -58,7 +58,7 @@ public enum L10n {
   }
   public enum AnimalPhoto {
     /// MARK: - Animal Photo Screen
-    public static let title = L10n.tr("Localizable", "animalPhoto.title", fallback: "Add a photo")
+    public static let title = L10n.tr("Localizable", "animalPhoto.title", fallback: "Your pet's photo")
     public enum Alert {
       public enum Missing {
         /// Attach a JPG, PNG, HEIC, GIF or WEBP file before continuing.
@@ -86,12 +86,12 @@ public enum L10n {
       public static let loading = L10n.tr("Localizable", "animalPhoto.helper.loading", fallback: "Downloading from iCloud…")
       /// Select a photo to continue – you can browse again anytime.
       public static let pickerCancelled = L10n.tr("Localizable", "animalPhoto.helper.pickerCancelled", fallback: "Select a photo to continue – you can browse again anytime.")
-      /// A recent photo is mandatory before you can continue.
-      public static let `required` = L10n.tr("Localizable", "animalPhoto.helper.required", fallback: "A recent photo is mandatory before you can continue.")
+      /// Please upload a photo of the missing animal.
+      public static let `required` = L10n.tr("Localizable", "animalPhoto.helper.required", fallback: "Please upload a photo of the missing animal.")
     }
     public enum Tile {
-      /// JPG, PNG, HEIC, GIF or WEBP • Max 10MB
-      public static let subtitle = L10n.tr("Localizable", "animalPhoto.tile.subtitle", fallback: "JPG, PNG, HEIC, GIF or WEBP • Max 10MB")
+      /// JPEG, PNG, HEIC, GIF, WEBP • Max 10MB
+      public static let subtitle = L10n.tr("Localizable", "animalPhoto.tile.subtitle", fallback: "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB")
       /// Upload animal photo
       public static let title = L10n.tr("Localizable", "animalPhoto.tile.title", fallback: "Upload animal photo")
     }
@@ -231,7 +231,7 @@ public enum L10n {
       /// 00000-00000-00000
       public static let placeholder = L10n.tr("Localizable", "reportMissingPet.chipNumber.placeholder", fallback: "00000-00000-00000")
       /// MARK: - Report Missing Pet Flow
-      public static let title = L10n.tr("Localizable", "reportMissingPet.chipNumber.title", fallback: "Microchip Number")
+      public static let title = L10n.tr("Localizable", "reportMissingPet.chipNumber.title", fallback: "Microchip number")
     }
     public enum ContactDetails {
       /// Contact Details

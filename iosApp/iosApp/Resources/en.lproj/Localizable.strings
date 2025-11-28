@@ -113,8 +113,8 @@
 
 /* MARK: - Animal Photo Screen */
 
-"animalPhoto.title" = "Add a photo";
-"animalPhoto.helper.required" = "A recent photo is mandatory before you can continue.";
+"animalPhoto.title" = "Your pet's photo";
+"animalPhoto.helper.required" = "Please upload a photo of the missing animal.";
 "animalPhoto.helper.pickerCancelled" = "Select a photo to continue – you can browse again anytime.";
 "animalPhoto.helper.loading" = "Downloading from iCloud…";
 "animalPhoto.alert.missing.title" = "Photo required";
@@ -126,7 +126,7 @@
 "animalPhoto.banner.retry" = "Try again";
 "animalPhoto.toast.mandatory" = "Photo is mandatory";
 "animalPhoto.tile.title" = "Upload animal photo";
-"animalPhoto.tile.subtitle" = "JPG, PNG, HEIC, GIF or WEBP • Max 10MB";
+"animalPhoto.tile.subtitle" = "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB";
 
 /* MARK: - Common */
 
