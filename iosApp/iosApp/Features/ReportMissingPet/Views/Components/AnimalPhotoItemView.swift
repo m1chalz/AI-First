@@ -8,9 +8,9 @@ struct AnimalPhotoItemView: View {
     var body: some View {
         HStack(spacing: 16) {
             RoundedRectangle(cornerRadius: 6)
-                .fill(Color(hex: model.iconBackgroundHex))
+                .fill(model.thumbnailURL == nil ? Color(hex: model.iconBackgroundHex) : Color.clear)
                 .frame(width: 40, height: 40)
-                .overlay(
+                .overlay {
                     Group {
                         if model.showsLoadingIcon {
                             ProgressView()
@@ -20,13 +20,30 @@ struct AnimalPhotoItemView: View {
                                     )
                                 )
                                 .frame(width: 24, height: 24)
+                        } else if let thumbnailURL = model.thumbnailURL {
+                            AsyncImage(url: thumbnailURL) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                default:
+                                    Image(systemName: model.iconSymbolName)
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundColor(Color(hex: model.iconForegroundHex))
+                                }
+                            }
+                            .frame(width: 40, height: 40)
+                            .clipped()
                         } else {
                             Image(systemName: model.iconSymbolName)
                                 .font(.system(size: 18, weight: .semibold))
                                 .foregroundColor(Color(hex: model.iconForegroundHex))
                         }
                     }
-                )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(model.fileName)

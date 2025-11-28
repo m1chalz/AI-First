@@ -59,7 +59,7 @@ final class PhotoViewModel: ObservableObject {
         photoAttachmentCache: PhotoAttachmentCacheProtocol,
         toastScheduler: ToastSchedulerProtocol,
         photoSelectionProcessor: PhotoSelectionProcessing = PhotoSelectionProcessor(),
-        simulatedLoadingDelay: TimeInterval = .zero
+        simulatedLoadingDelay: TimeInterval = 3
     ) {
         self.flowState = flowState
         self.photoAttachmentCache = photoAttachmentCache

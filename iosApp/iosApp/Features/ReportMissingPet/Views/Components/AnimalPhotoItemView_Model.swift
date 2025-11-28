@@ -14,6 +14,7 @@ extension AnimalPhotoItemView {
         let cardBackgroundHex: String
         let cardBorderHex: String
         let showsLoadingIcon: Bool
+        let thumbnailURL: URL?
 
         init(
             fileName: String,
@@ -27,7 +28,8 @@ extension AnimalPhotoItemView {
             removeIconBackgroundHex: String,
             cardBackgroundHex: String,
             cardBorderHex: String,
-            showsLoadingIcon: Bool = false
+            showsLoadingIcon: Bool = false,
+            thumbnailURL: URL? = nil
         ) {
             self.fileName = fileName
             self.fileSizeText = fileSizeText
@@ -41,6 +43,7 @@ extension AnimalPhotoItemView {
             self.cardBackgroundHex = cardBackgroundHex
             self.cardBorderHex = cardBorderHex
             self.showsLoadingIcon = showsLoadingIcon
+            self.thumbnailURL = thumbnailURL
         }
 
         init(metadata: PhotoAttachmentMetadata, showsLoadingIcon: Bool = false) {
@@ -56,7 +59,8 @@ extension AnimalPhotoItemView {
                 removeIconBackgroundHex: "#FFFFFF",
                 cardBackgroundHex: "#FFFFFF",
                 cardBorderHex: "#14000000",
-                showsLoadingIcon: showsLoadingIcon
+                showsLoadingIcon: showsLoadingIcon,
+                thumbnailURL: metadata.cachedURL.isFileURL && metadata.cachedURL.path != "/dev/null" ? metadata.cachedURL : nil
             )
         }
     }
