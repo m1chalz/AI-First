@@ -17,12 +17,14 @@ struct AnimalDescriptionView: View {
                 // Species dropdown
                 DropdownView(
                     model: viewModel.speciesDropdownModel,
-                    selectedIndex: $viewModel.selectedSpeciesIndex
+                    selectedValue: $viewModel.selectedSpecies
                 )
-                .onChange(of: viewModel.selectedSpeciesIndex) { newIndex in
-                    if let index = newIndex {
-                        viewModel.selectSpecies(index)
-                    }
+                .onChange(of: viewModel.selectedSpecies) { _ in
+                    // Clear error when value selected
+                    viewModel.speciesErrorMessage = nil
+                    // Clear race field when species changes (per spec)
+                    viewModel.race = ""
+                    viewModel.raceErrorMessage = nil
                 }
                 
                 // Race text field (disabled until species selected)

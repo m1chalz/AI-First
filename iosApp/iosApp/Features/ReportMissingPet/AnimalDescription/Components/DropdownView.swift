@@ -1,10 +1,12 @@
 import SwiftUI
 
-/// Generic dropdown component accepting [String] options for maximum reusability.
+/// Generic dropdown component with typed values.
 /// Uses Model pattern for pure presentation without @Published properties.
-struct DropdownView: View {
+/// T can be any type (enum, struct, etc.) paired with display string.
+/// T must be Equatable to find selected option in list.
+struct DropdownView<T: Equatable>: View {
     let model: Model
-    @Binding var selectedIndex: Int?
+    @Binding var selectedValue: T?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -16,16 +18,16 @@ struct DropdownView: View {
             // Dropdown menu
             Menu {
                 ForEach(model.options.indices, id: \.self) { index in
-                    Button(model.options[index]) {
-                        selectedIndex = index
+                    Button(model.options[index].displayName) {
+                        selectedValue = model.options[index].value
                     }
                 }
             } label: {
                 HStack(spacing: 0) {
                     // Selected value or placeholder
-                    Text(selectedIndex.map { model.options[$0] } ?? model.placeholder)
+                    Text(selectedDisplayName ?? model.placeholder)
                         .font(.custom("Hind-Regular", size: 16))
-                        .foregroundColor(selectedIndex == nil ? Color(hex: "#0A0A0A").opacity(0.5) : Color(hex: "#364153"))
+                        .foregroundColor(selectedValue == nil ? Color(hex: "#0A0A0A").opacity(0.5) : Color(hex: "#364153"))
                     
                     Spacer()
                     
@@ -53,13 +55,19 @@ struct DropdownView: View {
             }
         }
     }
+    
+    /// Display name for currently selected value
+    private var selectedDisplayName: String? {
+        guard let value = selectedValue else { return nil }
+        return model.options.first { $0.value == value }?.displayName
+    }
 }
 
 extension DropdownView {
     struct Model {
         let label: String
         let placeholder: String
-        let options: [String]
+        let options: [(value: T, displayName: String)]
         let errorMessage: String?
         let accessibilityID: String
     }
