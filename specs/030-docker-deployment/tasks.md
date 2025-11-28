@@ -179,29 +179,29 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 ### Implementation for User Story 3
 
 **Shell Scripts**:
-- [ ] T079 [US3] Verify build.sh generates commit hash with `git rev-parse --short HEAD`
-- [ ] T080 [US3] Verify build.sh generates timestamp with `date +%Y%m%d-%H%M%S`
-- [ ] T081 [US3] Verify build.sh combines into IMAGE_TAG format: `${COMMIT_HASH}-${TIMESTAMP}`
-- [ ] T082 [US3] Add output showing generated IMAGE_TAG to build.sh
-- [ ] T083 [US3] Add Docker build context validation to build.sh (check directories exist)
-- [ ] T084 [US3] Add build failure detection to build.sh (exit on first failure)
-- [ ] T085 [US3] Add image listing to build.sh output (show built images with tags)
-- [ ] T086 [US3] Add usage instructions to build.sh output (how to use tagged images)
-- [ ] T087 [P] [US3] Create `/deployment/scripts/logs.sh` for viewing container logs
-- [ ] T088 [US3] Add service selection to logs.sh (`--service <name>`, `--all`)
-- [ ] T089 [US3] Add follow flag to logs.sh (`--follow` for real-time logs)
-- [ ] T090 [US3] Add tail option to logs.sh (`--tail <n>` for last n lines)
-- [ ] T091 [US3] Add usage examples to logs.sh
-- [ ] T092 [P] [US3] Make logs.sh executable (`chmod +x /deployment/scripts/logs.sh`)
+- [x] T079 [US3] Verify build.sh generates commit hash with `git rev-parse --short HEAD`
+- [x] T080 [US3] Verify build.sh generates timestamp with `date +%Y%m%d-%H%M%S`
+- [x] T081 [US3] Verify build.sh combines into IMAGE_TAG format: `${COMMIT_HASH}-${TIMESTAMP}`
+- [x] T082 [US3] Add output showing generated IMAGE_TAG to build.sh
+- [x] T083 [US3] Add Docker build context validation to build.sh (check directories exist)
+- [x] T084 [US3] Add build failure detection to build.sh (exit on first failure)
+- [x] T085 [US3] Add image listing to build.sh output (show built images with tags)
+- [x] T086 [US3] Add usage instructions to build.sh output (how to use tagged images)
+- [x] T087 [P] [US3] Create `/deployment/scripts/logs.sh` for viewing container logs
+- [x] T088 [US3] Add service selection to logs.sh (`--service <name>`, `--all`)
+- [x] T089 [US3] Add follow flag to logs.sh (`--follow` for real-time logs)
+- [x] T090 [US3] Add tail option to logs.sh (`--tail <n>` for last n lines)
+- [x] T091 [US3] Add usage examples to logs.sh
+- [x] T092 [P] [US3] Make logs.sh executable (`chmod +x /deployment/scripts/logs.sh`)
 
 **Documentation**:
-- [ ] T093 [US3] Document build process in README.md (build.sh usage, image tagging)
-- [ ] T094 [US3] Document image tagging strategy in README.md (commit-hash)-(timestamp) format, benefits)
-- [ ] T095 [US3] Document log viewing in README.md (logs.sh usage with examples)
-- [ ] T096 [US3] Document rollback procedure in README.md (using previous image tags)
-- [ ] T097 [US3] Document build troubleshooting in README.md (disk space, build errors, dependencies)
-- [ ] T098 [US3] Add image management section to README.md (listing images, cleaning old images)
-- [ ] T099 [US3] Add examples showing full Git-to-deploy workflow in README.md
+- [x] T093 [US3] Document build process in README.md (build.sh usage, image tagging)
+- [x] T094 [US3] Document image tagging strategy in README.md (commit-hash)-(timestamp) format, benefits)
+- [x] T095 [US3] Document log viewing in README.md (logs.sh usage with examples)
+- [x] T096 [US3] Document rollback procedure in README.md (using previous image tags)
+- [x] T097 [US3] Document build troubleshooting in README.md (disk space, build errors, dependencies)
+- [x] T098 [US3] Add image management section to README.md (listing images, cleaning old images)
+- [x] T099 [US3] Add examples showing full Git-to-deploy workflow in README.md
 
 **Manual Testing (User Story 3)**:
 - [ ] T100 [US3] Test building images from source (run build.sh)
