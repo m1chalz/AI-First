@@ -147,7 +147,7 @@
 "animalDescription.ageLabel" = "Wiek (opcjonalnie)";
 "animalDescription.coordinatesLabel" = "Szer. / Dł. geogr.";
 "animalDescription.coordinatePlaceholder" = "00000";
-"animalDescription.descriptionLabel" = "Dodatkowy opis (opcjonalnie)";
+"animalDescription.descriptionLabel" = "Dodatkowy opis zwierzęcia (opcjonalnie)";
 
 // Placeholders
 "animalDescription.speciesPlaceholder" = "Wybierz opcję";
