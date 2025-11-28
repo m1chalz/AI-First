@@ -23,7 +23,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - In-memory flow state (ReportMissingPetFlowState class) - owned by coordinator, lifetime = flow duration (019-ios-chip-number-screen)
 - Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag) (028-ios-animal-photo-screen)
 - FileManager-backed `PhotoAttachmentCache` that writes image data to `~/Library/Caches/PetSpot/ReportMissingPet/<uuid>.img` plus lightweight metadata inside `ReportMissingPetFlowState` so selection persists through navigation/backgrounding and can be purged on submit/cancel (FR-010). (028-ios-animal-photo-screen)
-
+- Kotlin 2.0+, JVM 17 + Ktor Client + OkHttp Engine (HTTP client), Kotlinx Serialization (JSON), Koin (DI - already configured) (029-android-api-integration)
+- N/A (read-only API consumption) (029-android-api-integration)
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
@@ -50,6 +51,7 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 029-android-api-integration: Added Kotlin 2.0+, JVM 17 + Ktor Client + OkHttp Engine (HTTP client), Kotlinx Serialization (JSON), Koin (DI - already configured)
 - 028-ios-animal-photo-screen: Added Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag)
 - 027-web-pet-details-screen: Added TypeScript 5.0+ (ES2020 target), React 18.2.0 + React, React DOM, React Portal (built-in), CSS Modules
 - 026-android-location-permissions: Added Kotlin (JVM 17 target)
@@ -66,8 +68,6 @@ Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standar
 - 011-migrate-from-kmp: Added N/A (infrastructure migration, no data storage changes)
 - 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
 - 021-announcement-photo-upload: Added Node.js v24 (LTS), TypeScript (strict mode)
-- 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
-- 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E
 
 
 <!-- MANUAL ADDITIONS START -->
