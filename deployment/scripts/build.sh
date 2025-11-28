@@ -30,7 +30,7 @@ echo -e "${GREEN}========================================${NC}"
 echo ""
 
 log_info "Git commit: $COMMIT_HASH"
-log_info "Timestamp: $TIMESTAMP"
+log_info "Date and time: $DATE at $TIME"
 log_info "Image tag: $IMAGE_TAG"
 echo ""
 
