@@ -134,6 +134,7 @@
 "common.retry" = "Ponów";
 "common.cancel" = "Anuluj";
 "common.ok" = "OK";
+"common.done" = "Gotowe";
 "common.continue" = "Dalej";
 "common.back" = "Wstecz";
 

@@ -203,6 +203,8 @@ public enum L10n {
     public static let cancel = L10n.tr("Localizable", "common.cancel", fallback: "Cancel")
     /// Continue
     public static let `continue` = L10n.tr("Localizable", "common.continue", fallback: "Continue")
+    /// Done
+    public static let done = L10n.tr("Localizable", "common.done", fallback: "Done")
     /// MARK: - Common
     public static let loading = L10n.tr("Localizable", "common.loading", fallback: "Loading...")
     /// OK
