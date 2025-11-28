@@ -136,7 +136,7 @@ import SwiftUI
 
 @MainActor
 class AnimalDescriptionViewModel: ObservableObject {
-    // MARK: - Published Properties
+    // MARK: - Published Properties (Field Values)
     @Published var disappearanceDate: Date = Date()
     @Published var selectedSpecies: SpeciesTaxonomyOption?
     @Published var race: String = ""
@@ -149,13 +149,40 @@ class AnimalDescriptionViewModel: ObservableObject {
     @Published var showToast = false
     @Published var toastMessage = ""
     
-    // Validation errors (per field)
+    // MARK: - Published Properties (Validation Errors)
     @Published var speciesErrorMessage: String?
     @Published var raceErrorMessage: String?
     @Published var genderErrorMessage: String?
     @Published var ageErrorMessage: String?
     @Published var latitudeErrorMessage: String?
     @Published var longitudeErrorMessage: String?
+    
+    // MARK: - Computed Properties (Component Models)
+    
+    /// Model for race text field (combines current validation state).
+    var raceTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.raceLabel,
+            placeholder: L10n.racePlaceholder,
+            errorMessage: raceErrorMessage,  // ← from @Published property
+            isDisabled: selectedSpecies == nil,  // disabled until species selected
+            keyboardType: .default,
+            accessibilityID: "animalDescription.raceTextField.input"
+        )
+    }
+    
+    /// Model for species dropdown (combines current validation state).
+    var speciesDropdownModel: DropdownView.Model {
+        DropdownView.Model(
+            label: L10n.speciesLabel,
+            placeholder: L10n.speciesPlaceholder,
+            options: SpeciesTaxonomy.options.map { $0.displayName },
+            errorMessage: speciesErrorMessage,  // ← from @Published property
+            accessibilityID: "animalDescription.speciesDropdown.tap"
+        )
+    }
+    
+    // ... other computed models for components
     
     // MARK: - Coordinator Callbacks
     var onContinue: (() -> Void)?
@@ -232,15 +259,9 @@ struct AnimalDescriptionView: View {
                     .accessibilityIdentifier("animalDescription.datePicker.tap")
                 }
                 
-                // Species dropdown (generic DropdownView)
+                // Species dropdown (uses computed model property)
                 DropdownView(
-                    model: .init(
-                        label: L10n.animalDescriptionSpeciesLabel,
-                        placeholder: L10n.animalDescriptionSpeciesPlaceholder,
-                        options: viewModel.speciesOptions.map { $0.displayName },  // Map to [String]
-                        errorMessage: viewModel.speciesErrorMessage,
-                        accessibilityID: "animalDescription.speciesDropdown.tap"
-                    ),
+                    model: viewModel.speciesDropdownModel,  // ← computed property
                     selection: $viewModel.selectedSpeciesIndex
                 )
                 .onChange(of: viewModel.selectedSpeciesIndex) { newIndex in
@@ -248,6 +269,12 @@ struct AnimalDescriptionView: View {
                         viewModel.selectSpecies(viewModel.speciesOptions[index])
                     }
                 }
+                
+                // Race text field (uses computed model property + @Binding)
+                ValidatedTextField(
+                    model: viewModel.raceTextFieldModel,  // ← computed property with error
+                    text: $viewModel.race                  // ← @Binding to @Published value
+                )
                 
                 // ... other components
                 

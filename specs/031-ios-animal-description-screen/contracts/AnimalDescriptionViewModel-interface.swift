@@ -9,65 +9,91 @@ import SwiftUI
 @MainActor
 class AnimalDescriptionViewModel: ObservableObject {
     
-    // MARK: - Published State (Reactive UI Updates)
+    // MARK: - Published State (Grouped for Clarity)
     
-    /// Date of animal disappearance (required, defaults to today).
-    @Published var disappearanceDate: Date
+    /// Form data state (all field values).
+    @Published var formData: FormData
     
-    /// Selected species from curated list (required).
-    @Published var selectedSpecies: SpeciesTaxonomyOption?
+    /// Validation errors state (all field error messages).
+    @Published var validationErrors: ValidationErrors
     
-    /// Animal breed/race text input (required, cleared when species changes).
-    @Published var race: String
+    /// UI state (alerts, toasts, loading indicators).
+    @Published var uiState: UIState
     
-    /// Selected gender (required).
-    @Published var selectedGender: Gender?
+    // MARK: - Nested State Structures
     
-    /// Animal age in years (optional, 0-40 if provided).
-    @Published var age: String
+    /// Form field values.
+    struct FormData: Equatable {
+        var disappearanceDate: Date
+        var selectedSpecies: SpeciesTaxonomyOption?
+        var race: String
+        var selectedGender: Gender?
+        var age: String
+        var location: LocationData
+        var additionalDescription: String
+        
+        struct LocationData: Equatable {
+            var latitude: String
+            var longitude: String
+        }
+        
+        static let initial = FormData(
+            disappearanceDate: Date(),
+            selectedSpecies: nil,
+            race: "",
+            selectedGender: nil,
+            age: "",
+            location: LocationData(latitude: "", longitude: ""),
+            additionalDescription: ""
+        )
+    }
     
-    /// Latitude coordinate string (optional, -90 to 90 if provided).
-    @Published var latitude: String
+    /// Validation error messages (nil = no error).
+    struct ValidationErrors: Equatable {
+        var species: String?
+        var race: String?
+        var gender: String?
+        var age: String?
+        var latitude: String?
+        var longitude: String?
+        
+        static let clear = ValidationErrors()
+    }
     
-    /// Longitude coordinate string (optional, -180 to 180 if provided).
-    @Published var longitude: String
-    
-    /// Additional description text (optional, max 500 characters).
-    @Published var additionalDescription: String
-    
-    /// Controls display of GPS permission denied alert.
-    @Published var showPermissionDeniedAlert: Bool
-    
-    /// Controls display of toast message for validation errors.
-    @Published var showToast: Bool
-    
-    /// Toast message text (displayed when showToast = true).
-    @Published var toastMessage: String
-    
-    // MARK: - Validation Error State
-    
-    /// Error message for date field (nil if valid).
-    @Published var dateErrorMessage: String?
-    
-    /// Error message for species field (nil if valid).
-    @Published var speciesErrorMessage: String?
-    
-    /// Error message for race field (nil if valid).
-    @Published var raceErrorMessage: String?
-    
-    /// Error message for gender field (nil if valid).
-    @Published var genderErrorMessage: String?
-    
-    /// Error message for age field (nil if valid).
-    @Published var ageErrorMessage: String?
-    
-    /// Error message for latitude field (nil if valid).
-    @Published var latitudeErrorMessage: String?
-    
-    /// Error message for longitude field (nil if valid).
-    @Published var longitudeErrorMessage: String?
+    /// UI-related state (alerts, toasts, etc).
+    struct UIState: Equatable {
+        var showPermissionDeniedAlert: Bool
+        var showToast: Bool
+        var toastMessage: String
+        var gpsHelperText: String?
+        
+        static let initial = UIState(
+            showPermissionDeniedAlert: false,
+            showToast: false,
+            toastMessage: "",
+            gpsHelperText: nil
+        )
+    }
     
     // MARK: - Computed Properties (for Component Models)
+    
+    /// Model for race text field (computed from current state + validation errors).
+    var raceTextFieldModel: ValidatedTextField.Model { get }
+    
+    /// Model for age text field (computed from current state + validation errors).
+    var ageTextFieldModel: ValidatedTextField.Model { get }
+    
+    /// Model for species dropdown (computed from current state + validation errors).
+    var speciesDropdownModel: DropdownView.Model { get }
+    
+    /// Model for gender selector (computed from current state + validation errors).
+    var genderSelectorModel: SelectorView.Model { get }
+    
+    /// Model for location coordinate fields (computed from current state + validation errors).
+    var locationCoordinateModel: LocationCoordinateView.Model { get }
+    
+    /// Model for description text area (computed from current state + character count).
+    var descriptionTextAreaModel: TextAreaView.Model { get }
     
     /// Character counter text for description field (formatted string).
     var characterCountText: String { get }
@@ -75,8 +101,15 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Character counter color for description field.
     var characterCountColor: Color { get }
     
-    /// Available species options from curated taxonomy.
-    var speciesOptions: [SpeciesTaxonomyOption] { get }
+    // MARK: - Internal Data Access
+    
+    /// Available species options from curated taxonomy (internal use).
+    /// Used to map selected index back to SpeciesTaxonomyOption.
+    var speciesOptions: [SpeciesTaxonomyOption] { get }  // ← Internal, not for view
+    
+    /// Available gender options (internal use).
+    /// Used to map selected index back to Gender enum.
+    var genderOptions: [Gender] { get }  // ← Gender.allCases
     
     // MARK: - Coordinator Callbacks (Navigation)
     
@@ -102,11 +135,18 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Handles species selection change.
     /// Automatically clears race field when species changes.
     /// - Parameter species: Newly selected species option.
-    func selectSpecies(_ species: SpeciesTaxonomyOption)
+    func selectSpecies(_ species: SpeciesTaxonomyOption) {
+        formData.selectedSpecies = species
+        formData.race = ""  // Clear race when species changes
+        validationErrors.race = nil
+    }
     
     /// Handles gender selection change.
     /// - Parameter gender: Newly selected gender option.
-    func selectGender(_ gender: Gender)
+    func selectGender(_ gender: Gender) {
+        formData.selectedGender = gender
+        validationErrors.gender = nil
+    }
     
     /// Handles "Request GPS position" button tap.
     /// Requests location permission if needed, fetches location, and populates Lat/Long fields.
@@ -128,7 +168,9 @@ class AnimalDescriptionViewModel: ObservableObject {
     // MARK: - Private Methods (implementation details omitted)
     
     /// Validates all required fields (date, species, race, gender).
+    /// Also validates optional fields if provided (age range, coordinate ranges).
     /// Returns array of validation errors (empty if all valid).
+    /// - Returns: Array of ValidationError cases
     private func validateAllFields() -> [ValidationError]
     
     /// Validates latitude and longitude coordinate ranges.
@@ -139,12 +181,17 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Called only when validation passes and user taps Continue.
     private func updateSession()
     
-    /// Clears all validation error messages.
-    /// Called at start of validation cycle.
-    private func clearValidationErrors()
+    /// Clears all validation error messages (resets validationErrors to .clear).
+    /// Called at start of validation cycle (before validateAllFields).
+    /// Triggers computed model properties to recompute without errors.
+    private func clearValidationErrors() {
+        validationErrors = .clear
+    }
     
-    /// Applies validation errors to respective field error properties.
-    /// - Parameter errors: Array of validation errors from validateAllFields().
+    /// Applies validation errors to validationErrors struct.
+    /// Setting properties triggers view updates (computed models recompute).
+    /// - Parameter errors: Array of validation errors from validateAllFields()
+    /// Example: .missingRace → sets validationErrors.race = "Please enter race"
     private func applyValidationErrors(_ errors: [ValidationError])
     
     /// Fetches user location from LocationService.
