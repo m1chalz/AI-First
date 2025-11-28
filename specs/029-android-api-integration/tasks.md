@@ -38,10 +38,10 @@
 
 **Purpose**: Add Ktor HTTP client dependencies to Android project
 
-- [ ] T001 Add Ktor dependencies to `/composeApp/build.gradle.kts` (ktor-client-core, ktor-client-okhttp, ktor-client-content-negotiation, ktor-serialization-kotlinx-json, ktor-client-logging)
-- [ ] T002 [P] Add Ktor test dependency to `/composeApp/build.gradle.kts` (ktor-client-mock)
-- [ ] T003 [P] Add Kotlinx Serialization plugin to `/composeApp/build.gradle.kts` if not present
-- [ ] T004 Sync Gradle and verify dependencies resolve correctly
+- [X] T001 Add Ktor dependencies to `/composeApp/build.gradle.kts` (ktor-client-core, ktor-client-okhttp, ktor-client-content-negotiation, ktor-serialization-kotlinx-json, ktor-client-logging)
+- [X] T002 [P] Add Ktor test dependency to `/composeApp/build.gradle.kts` (ktor-client-mock)
+- [X] T003 [P] Add Kotlinx Serialization plugin to `/composeApp/build.gradle.kts` if not present
+- [X] T004 Sync Gradle and verify dependencies resolve correctly
 
 **Checkpoint**: Dependencies ready - run `./gradlew :composeApp:dependencies` to verify
 
@@ -59,7 +59,7 @@
 - [ ] T008 [P] Create `AnnouncementMapperTest.kt` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/mappers/AnnouncementMapperTest.kt` with Given-When-Then tests for: all field mappings, null optional field fallbacks (FR-007), unknown status coercion to MISSING (FR-010)
 - [ ] T009 Create `AnnouncementApiClient.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/AnnouncementApiClient.kt` with Ktor HttpClient wrapper
 - [ ] T010 Update `DataModule.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DataModule.kt` to provide Ktor HttpClient and AnnouncementApiClient via Koin
-- [ ] T011 Add API base URL configuration to `/composeApp/build.gradle.kts` BuildConfig (10.0.2.2:3000 for debug)
+- [X] T011 Add API base URL configuration to `/composeApp/build.gradle.kts` BuildConfig (10.0.2.2:3000 for debug)
 
 **Checkpoint**: Foundation ready - DTOs compile, mapper tests pass, HttpClient configured
 
