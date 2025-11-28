@@ -148,6 +148,10 @@
 
 /* MARK: - Animal Description Screen */
 
+// Headings
+"animalDescription.heading" = "Your pet's details";
+"animalDescription.subheading" = "Fill out the details about the missing animal.";
+
 // Labels
 "animalDescription.dateLabel" = "Date of disappearance";
 "animalDescription.speciesLabel" = "Animal species";

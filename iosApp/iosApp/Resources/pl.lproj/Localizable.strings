@@ -139,6 +139,10 @@
 
 /* MARK: - Animal Description Screen */
 
+// Headings
+"animalDescription.heading" = "Szczegóły Twojego pupila";
+"animalDescription.subheading" = "Wypełnij szczegóły dotyczące zaginionego zwierzęcia.";
+
 // Labels
 "animalDescription.dateLabel" = "Data zaginięcia";
 "animalDescription.speciesLabel" = "Gatunek zwierzęcia";

@@ -8,6 +8,16 @@ struct AnimalDescriptionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // Heading
+                Text(L10n.AnimalDescription.heading)
+                    .font(.custom("Inter-Regular", size: 32))
+                    .foregroundColor(Color(hex: "#2D2D2D"))
+                
+                // Subheading
+                Text(L10n.AnimalDescription.subheading)
+                    .font(.custom("Inter-Regular", size: 16))
+                    .foregroundColor(Color(hex: "#545F71"))
+                
                 // Date input
                 DateInputView(
                     model: viewModel.dateInputModel,
