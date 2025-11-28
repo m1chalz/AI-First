@@ -58,8 +58,8 @@ setup_directories() {
   log_info "Setting up persistent directories..."
   
   sudo mkdir -p /var/lib/petspot/db /var/lib/petspot/images
-  sudo chown -R "$USER:$USER" /var/lib/petspot
-  chmod -R 755 /var/lib/petspot
+  sudo chmod -R 777 /var/lib/petspot/db
+  sudo chmod -R 777 /var/lib/petspot/images
   
   log_success "Persistent directories created"
 }
