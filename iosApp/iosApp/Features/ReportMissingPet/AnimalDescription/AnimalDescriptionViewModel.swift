@@ -221,6 +221,29 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     // MARK: - User Actions
     
+    /// Called when species selection changes
+    func handleSpeciesChange() {
+        // Clear error when value selected
+        speciesErrorMessage = nil
+        // Clear race field when species changes (per spec)
+        race = ""
+        raceErrorMessage = nil
+    }
+    
+    /// Called when race text changes
+    func handleRaceChange(_ newValue: String) {
+        // Clear error when user types
+        if !newValue.isEmpty {
+            raceErrorMessage = nil
+        }
+    }
+    
+    /// Called when gender selection changes
+    func handleGenderChange() {
+        // Clear error when value selected
+        genderErrorMessage = nil
+    }
+    
     /// Called when user taps Continue button
     func onContinueTapped() {
         clearValidationErrors()

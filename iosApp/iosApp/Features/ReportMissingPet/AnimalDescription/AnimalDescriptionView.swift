@@ -19,12 +19,8 @@ struct AnimalDescriptionView: View {
                     model: viewModel.speciesDropdownModel,
                     selectedValue: $viewModel.selectedSpecies
                 )
-                .onChange(of: viewModel.selectedSpecies) { _ in
-                    // Clear error when value selected
-                    viewModel.speciesErrorMessage = nil
-                    // Clear race field when species changes (per spec)
-                    viewModel.race = ""
-                    viewModel.raceErrorMessage = nil
+                .onChange(of: viewModel.selectedSpecies) { _, _ in
+                    viewModel.handleSpeciesChange()
                 }
                 
                 // Race text field (disabled until species selected)
@@ -32,11 +28,8 @@ struct AnimalDescriptionView: View {
                     model: viewModel.raceTextFieldModel,
                     text: $viewModel.race
                 )
-                .onChange(of: viewModel.race) { newValue in
-                    // Clear error when user types
-                    if !newValue.isEmpty {
-                        viewModel.raceErrorMessage = nil
-                    }
+                .onChange(of: viewModel.race) { _, newValue in
+                    viewModel.handleRaceChange(newValue)
                 }
                 
                 // Gender selector
@@ -44,11 +37,8 @@ struct AnimalDescriptionView: View {
                     model: viewModel.genderSelectorModel,
                     selectedIndex: $viewModel.selectedGenderIndex
                 )
-                .onChange(of: viewModel.selectedGenderIndex) { newIndex in
-                    if newIndex != nil {
-                        // Clear error when value selected
-                        viewModel.genderErrorMessage = nil
-                    }
+                .onChange(of: viewModel.selectedGenderIndex) { _, _ in
+                    viewModel.handleGenderChange()
                 }
                 
                 // Age text field (optional - US3)
