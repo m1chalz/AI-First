@@ -219,29 +219,64 @@ curl http://localhost/health                       # Nginx
 
 ## Updating Applications
 
-### Update Backend
+All data (database and images) persists across updates.
+
+### Update Backend Only
 
 ```bash
 cd deployment
-git pull origin main
 ./scripts/update.sh --backend
 ```
 
-### Update Frontend
+This will:
+- Pull latest code from Git
+- Rebuild backend image
+- Recreate backend container
+- Verify backend health
+
+### Update Frontend Only
 
 ```bash
 cd deployment
 ./scripts/update.sh --frontend
 ```
 
-### Update Both
+This will:
+- Pull latest code from Git
+- Rebuild frontend image
+- Recreate frontend container
+- Verify frontend health
+
+### Update All Services
 
 ```bash
 cd deployment
 ./scripts/update.sh --all
 ```
 
-Data persists across updates - database and images are preserved.
+This will:
+- Pull latest code from Git
+- Rebuild all images
+- Recreate all containers
+- Verify all services
+
+### Verification
+
+After update, verify data persistence:
+
+```bash
+# Database: Check data is intact
+docker exec petspot-backend sqlite3 /app/server/db/pets.db "SELECT COUNT(*) FROM announcements;"
+
+# Images: Check files exist
+docker exec petspot-backend ls -la /app/server/public/images/
+```
+
+### Downtime During Updates
+
+- Backend update: Frontend continues serving (nginx cached)
+- Frontend update: Backend continues running (API unaffected)
+- Full update: All services down during rebuild (~5-10 minutes)
 
 ## Networking
 
