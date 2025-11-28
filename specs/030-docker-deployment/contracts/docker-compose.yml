@@ -30,7 +30,7 @@ services:
     build:
       context: ../server  # Build from /server directory
       dockerfile: Dockerfile
-    image: petspot-backend:latest
+    image: petspot-backend:${IMAGE_TAG:-latest}  # Tag format: (commit-hash)-(timestamp)
     container_name: petspot-backend
     restart: unless-stopped
     expose:
@@ -57,7 +57,7 @@ services:
     build:
       context: ../webApp  # Build from /webApp directory
       dockerfile: Dockerfile
-    image: petspot-frontend:latest
+    image: petspot-frontend:${IMAGE_TAG:-latest}  # Tag format: (commit-hash)-(timestamp)
     container_name: petspot-frontend
     restart: unless-stopped
     expose:
