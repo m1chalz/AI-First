@@ -47,8 +47,8 @@ public enum L10n {
     public static let longitudeLabel = L10n.tr("Localizable", "animalDescription.longitudeLabel", fallback: "Longitude (optional)")
     /// e.g., 21.0122
     public static let longitudePlaceholder = L10n.tr("Localizable", "animalDescription.longitudePlaceholder", fallback: "e.g., 21.0122")
-    /// Breed / Race
-    public static let raceLabel = L10n.tr("Localizable", "animalDescription.raceLabel", fallback: "Breed / Race")
+    /// Animal race (optional)
+    public static let raceLabel = L10n.tr("Localizable", "animalDescription.raceLabel", fallback: "Animal race (optional)")
     /// e.g., Golden Retriever
     public static let racePlaceholder = L10n.tr("Localizable", "animalDescription.racePlaceholder", fallback: "e.g., Golden Retriever")
     /// Request GPS position

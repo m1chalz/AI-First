@@ -221,12 +221,6 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     // MARK: - User Actions
     
-    /// Called when user selects a gender
-    func selectGender(_ index: Int) {
-        selectedGenderIndex = index
-        genderErrorMessage = nil
-    }
-    
     /// Called when user taps Continue button
     func onContinueTapped() {
         clearValidationErrors()
@@ -298,10 +292,7 @@ class AnimalDescriptionViewModel: ObservableObject {
             errors.append(.missingSpecies)
         }
         
-        // Race validation (required)
-        if race.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            errors.append(.missingRace)
-        }
+        // Race validation - optional, no validation needed
         
         // Gender validation (required)
         if selectedGender == nil {
@@ -413,7 +404,7 @@ class AnimalDescriptionViewModel: ObservableObject {
     private func updateFlowState() {
         flowState.disappearanceDate = disappearanceDate
         flowState.animalSpecies = selectedSpecies
-        flowState.animalRace = race.trimmingCharacters(in: .whitespacesAndNewlines)
+        flowState.animalRace = race.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : race.trimmingCharacters(in: .whitespacesAndNewlines)
         flowState.animalGender = selectedGender
         
         // Optional fields (US2 & US3)

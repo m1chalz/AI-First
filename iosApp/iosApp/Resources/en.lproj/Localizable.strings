@@ -151,7 +151,7 @@
 // Labels
 "animalDescription.dateLabel" = "Date of disappearance";
 "animalDescription.speciesLabel" = "Animal species";
-"animalDescription.raceLabel" = "Breed / Race";
+"animalDescription.raceLabel" = "Animal race (optional)";
 "animalDescription.genderLabel" = "Gender";
 "animalDescription.ageLabel" = "Age (optional)";
 "animalDescription.latitudeLabel" = "Latitude (optional)";
