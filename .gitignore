@@ -19,7 +19,10 @@ captures
 node_modules/
 dist/
 *.log
-.env*
+.env
+/deployment/.env
+!.env.example
+!/deployment/.env.example
 .build/
 DerivedData/
 *.swiftpm/
