@@ -475,6 +475,22 @@ deployment/
 - [ ] CI/CD pipeline for automated deployments
 - [ ] Multi-instance deployment (Swarm/Kubernetes)
 
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| **Deploy** | `./scripts/deploy.sh` |
+| **Update Backend** | `./scripts/update.sh --backend` |
+| **Update Frontend** | `./scripts/update.sh --frontend` |
+| **Update All** | `./scripts/update.sh --all` |
+| **View Logs (all)** | `./scripts/logs.sh --follow` |
+| **View Backend Logs** | `./scripts/logs.sh --service backend --follow` |
+| **Build Images** | `./scripts/build.sh` |
+| **Container Status** | `docker compose ps` |
+| **Start Containers** | `docker compose up -d` |
+| **Stop Containers** | `docker compose down` |
+| **Database Backup** | `cp /var/lib/petspot/db/pets.db /var/lib/petspot/db/pets.db.bak` |
+
 ## Support
 
 For issues:
