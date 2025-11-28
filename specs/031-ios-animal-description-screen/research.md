@@ -52,6 +52,237 @@ extension ValidatedTextField {
 }
 ```
 
+### Generic DropdownView Pattern
+
+**Decision**: Use generic `DropdownView` component accepting `[String]` options for maximum reusability.
+
+**Rationale**:
+- More flexible than type-specific dropdowns (can be reused for species, status, or any string-based options)
+- ViewModel maps domain models (e.g., `SpeciesTaxonomyOption`) to display names when creating model
+- Component remains pure presentation without knowledge of domain types
+
+**Implementation**:
+
+```swift
+struct DropdownView: View {
+    let model: Model
+    @Binding var selectedIndex: Int?
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(model.label)
+            Picker(model.placeholder, selection: $selectedIndex) {
+                ForEach(model.options.indices, id: \.self) { index in
+                    Text(model.options[index]).tag(index as Int?)
+                }
+            }
+            .accessibilityIdentifier(model.accessibilityID)
+            
+            if let error = model.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .font(.caption)
+            }
+        }
+    }
+}
+
+extension DropdownView {
+    struct Model {
+        let label: String
+        let placeholder: String
+        let options: [String]           // Generic string array
+        let errorMessage: String?
+        let accessibilityID: String
+    }
+}
+```
+
+**Usage Pattern** (ViewModel maps domain models to strings):
+
+```swift
+// In ViewModel
+var speciesDropdownModel: DropdownView.Model {
+    DropdownView.Model(
+        label: L10n.speciesLabel,
+        placeholder: L10n.speciesPlaceholder,
+        options: SpeciesTaxonomy.options.map { $0.displayName },  // Map to [String]
+        errorMessage: speciesErrorMessage,
+        accessibilityID: "animalDescription.speciesDropdown.tap"
+    )
+}
+```
+
+### Generic SelectorView Pattern (Radio Buttons)
+
+**Decision**: Use generic `SelectorView` component accepting `[String]` options for radio button selection.
+
+**Rationale**:
+- Similar to DropdownView but displays options as radio buttons (horizontal or vertical layout)
+- Can be reused for gender, status, priority, or any mutually-exclusive choice
+- ViewModel maps enum cases to display names
+
+**Implementation**:
+
+```swift
+struct SelectorView: View {
+    let model: Model
+    @Binding var selectedIndex: Int?
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(model.label)
+            
+            HStack(spacing: 16) {
+                ForEach(model.options.indices, id: \.self) { index in
+                    Button(action: { selectedIndex = index }) {
+                        HStack {
+                            Image(systemName: selectedIndex == index ? "circle.fill" : "circle")
+                            Text(model.options[index])
+                        }
+                    }
+                    .accessibilityIdentifier("\(model.accessibilityIDPrefix).\(index)")
+                }
+            }
+            
+            if let error = model.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .font(.caption)
+            }
+        }
+    }
+}
+
+extension SelectorView {
+    struct Model {
+        let label: String
+        let options: [String]               // Generic string array
+        let errorMessage: String?
+        let accessibilityIDPrefix: String   // e.g., "animalDescription.gender"
+    }
+}
+```
+
+**Usage Pattern**:
+
+```swift
+// In ViewModel
+var genderSelectorModel: SelectorView.Model {
+    SelectorView.Model(
+        label: L10n.genderLabel,
+        options: Gender.allCases.map { $0.displayName },  // ["Male", "Female"]
+        errorMessage: genderErrorMessage,
+        accessibilityIDPrefix: "animalDescription.gender"
+    )
+}
+
+// In View
+SelectorView(
+    model: viewModel.genderSelectorModel,
+    selectedIndex: $viewModel.selectedGenderIndex
+)
+.onChange(of: viewModel.selectedGenderIndex) { newIndex in
+    if let index = newIndex {
+        viewModel.selectGender(Gender.allCases[index])
+    }
+}
+```
+
+### Component Composition: LocationCoordinateView
+
+**Decision**: `LocationCoordinateView` composes two `ValidatedTextField` instances instead of duplicating field logic.
+
+**Rationale**:
+- DRY principle - reuse existing `ValidatedTextField` for both lat/long fields
+- Simpler component - only adds GPS button + helper text on top of existing field components
+- Model composition - `LocationCoordinateView.Model` contains two `ValidatedTextField.Model` instances
+- Easier to maintain - changes to text field validation automatically apply to coordinate fields
+
+**Implementation**:
+
+```swift
+struct LocationCoordinateView: View {
+    let model: Model
+    @Binding var latitude: String
+    @Binding var longitude: String
+    let onGPSButtonTap: () async -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Composed ValidatedTextField for latitude
+            ValidatedTextField(model: model.latitudeField, text: $latitude)
+            
+            // Composed ValidatedTextField for longitude
+            ValidatedTextField(model: model.longitudeField, text: $longitude)
+            
+            // GPS capture button
+            Button(action: { Task { await onGPSButtonTap() } }) {
+                HStack {
+                    Image(systemName: "location.circle")
+                    Text(model.gpsButtonTitle)
+                }
+            }
+            .accessibilityIdentifier(model.gpsButtonAccessibilityID)
+            
+            // Optional helper text (e.g., "GPS capture successful")
+            if let helperText = model.helperText {
+                Text(helperText)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+}
+
+extension LocationCoordinateView {
+    struct Model {
+        let latitudeField: ValidatedTextField.Model
+        let longitudeField: ValidatedTextField.Model
+        let gpsButtonTitle: String
+        let gpsButtonAccessibilityID: String
+        let helperText: String?
+    }
+}
+```
+
+**Usage Pattern**:
+
+```swift
+// In ViewModel - compose two ValidatedTextField models
+var locationCoordinateModel: LocationCoordinateView.Model {
+    LocationCoordinateView.Model(
+        latitudeField: ValidatedTextField.Model(
+            label: L10n.latitudeLabel,
+            placeholder: "52.2297",
+            errorMessage: latitudeErrorMessage,
+            isDisabled: false,
+            keyboardType: .decimalPad,
+            accessibilityID: "animalDescription.latitudeTextField.input"
+        ),
+        longitudeField: ValidatedTextField.Model(
+            label: L10n.longitudeLabel,
+            placeholder: "21.0122",
+            errorMessage: longitudeErrorMessage,
+            isDisabled: false,
+            keyboardType: .decimalPad,
+            accessibilityID: "animalDescription.longitudeTextField.input"
+        ),
+        gpsButtonTitle: L10n.requestGPS,
+        gpsButtonAccessibilityID: "animalDescription.requestGPSButton.tap",
+        helperText: gpsHelperText  // e.g., "Location captured successfully"
+    )
+}
+
+// In View
+LocationCoordinateView(
+    model: viewModel.locationCoordinateModel,
+    latitude: $viewModel.latitude,
+    longitude: $viewModel.longitude,
+    onGPSButtonTap: { await viewModel.requestGPSPosition() }
+)
+```
+
 ### References
 - Constitution: Principle XI (iOS MVVM-C Architecture) - Model pattern for simple views
 - AnimalListViewModel.swift: Reference implementation of ViewModel managing state
@@ -61,7 +292,7 @@ extension ValidatedTextField {
 ## 2. Character Counter for Text Areas
 
 ### Decision
-Implement character counter using `TextField` (single-line) or custom `TextEditor` wrapper (multi-line) with live character count display and limit enforcement.
+Implement character counter using custom `TextEditor` wrapper (multi-line) with live character count display and limit enforcement.
 
 ### Rationale
 - SwiftUI `TextEditor` doesn't have built-in character limit
@@ -72,7 +303,7 @@ Implement character counter using `TextField` (single-line) or custom `TextEdito
 ### Implementation Pattern
 
 ```swift
-struct DescriptionTextArea: View {
+struct TextAreaView: View {
     let model: Model
     @Binding var text: String
     
@@ -99,9 +330,10 @@ struct DescriptionTextArea: View {
     }
 }
 
-extension DescriptionTextArea {
+extension TextAreaView {
     struct Model {
         let label: String
+        let placeholder: String
         let maxLength: Int
         let characterCountText: String      // e.g., "123/500" (formatted in ViewModel)
         let characterCountColor: Color      // Computed in ViewModel based on limit
@@ -323,31 +555,41 @@ class AnimalDescriptionViewModel: ObservableObject {
 
 ---
 
-## 7. Date Picker Limiting Future Dates
+## 7. Native DatePicker (No Custom Component)
 
 ### Decision
-Configure SwiftUI `DatePicker` with `in: ...Date()` parameter to limit selection to today or past dates.
+Use native SwiftUI `DatePicker` directly in main view (no custom wrapper component).
 
 ### Rationale
-- Spec edge case: "future 'Date of disappearance': date picker defaults to today and proactively blocks selection of any future dates"
-- SwiftUI DatePicker supports date range parameter
-- No separate error state needed (future dates cannot be selected)
+- **Built-in date range restriction**: `in: ...Date()` parameter proactively blocks future dates
+- **No validation needed**: Future dates cannot be selected, so no error state required
+- **Native iOS UX**: System date picker is familiar to users, follows iOS design guidelines
+- **Accessibility built-in**: VoiceOver and Dynamic Type support out of the box
+- **Less code**: No need for custom Model struct, wrapper component, or validation logic
+- **Spec compliance**: Edge case requirement "proactively blocks selection of any future dates" is satisfied by native picker
 
 ### Implementation Pattern
 
 ```swift
-DatePicker(
-    "Date of disappearance",
-    selection: $disappearanceDate,
-    in: ...Date(),  // Limit to today or past
-    displayedComponents: .date
-)
-.accessibilityIdentifier("animalDescription.datePicker.tap")
+// Directly in AnimalDescriptionView (no custom component)
+VStack(alignment: .leading, spacing: 4) {
+    Text(L10n.dateOfDisappearanceLabel)
+    DatePicker(
+        "",  // Empty label (custom label above)
+        selection: $viewModel.disappearanceDate,
+        in: ...Date(),  // Limit to today or past
+        displayedComponents: .date
+    )
+    .datePickerStyle(.compact)  // or .graphical / .wheel
+    .labelsHidden()
+    .accessibilityIdentifier("animalDescription.datePicker.tap")
+}
 ```
 
 ### Alternative Considered
-- Manual date validation → Rejected: Proactive blocking is better UX, no error state needed
-- Custom date picker → Rejected: SwiftUI DatePicker already supports date ranges
+- Custom DatePickerField wrapper → Rejected: Adds unnecessary abstraction, no benefit over native picker
+- Manual date validation → Rejected: Proactive blocking is better UX, native picker handles it
+- Third-party date picker → Rejected: Native picker is sufficient and zero-dependency
 
 ---
 
