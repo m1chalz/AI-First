@@ -154,8 +154,8 @@
 "animalDescription.raceLabel" = "Animal race (optional)";
 "animalDescription.genderLabel" = "Gender";
 "animalDescription.ageLabel" = "Age (optional)";
-"animalDescription.latitudeLabel" = "Latitude (optional)";
-"animalDescription.longitudeLabel" = "Longitude (optional)";
+"animalDescription.coordinatesLabel" = "Lat / Long";
+"animalDescription.coordinatePlaceholder" = "00000";
 "animalDescription.descriptionLabel" = "Additional description (optional)";
 
 // Placeholders

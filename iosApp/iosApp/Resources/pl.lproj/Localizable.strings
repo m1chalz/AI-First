@@ -145,8 +145,8 @@
 "animalDescription.raceLabel" = "Rasa zwierzęcia (opcjonalnie)";
 "animalDescription.genderLabel" = "Płeć";
 "animalDescription.ageLabel" = "Wiek (opcjonalnie)";
-"animalDescription.latitudeLabel" = "Szerokość geograficzna (opcjonalnie)";
-"animalDescription.longitudeLabel" = "Długość geograficzna (opcjonalnie)";
+"animalDescription.coordinatesLabel" = "Szer. / Dł. geogr.";
+"animalDescription.coordinatePlaceholder" = "00000";
 "animalDescription.descriptionLabel" = "Dodatkowy opis (opcjonalnie)";
 
 // Placeholders
