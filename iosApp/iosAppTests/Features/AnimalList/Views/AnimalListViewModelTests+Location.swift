@@ -14,6 +14,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     private var fakeLocationService: FakeLocationService!
     private var fakeRepository: FakeAnimalRepository!
+    private var locationHandler: LocationPermissionHandler!
     private var viewModel: AnimalListViewModel!
     
     // MARK: - Setup / Teardown
@@ -26,9 +27,26 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     override func tearDown() async throws {
         viewModel = nil
+        locationHandler = nil
         fakeRepository = nil
         fakeLocationService = nil
         try await super.tearDown()
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Creates AnimalListViewModel with LocationPermissionHandler wrapping FakeLocationService.
+    /// Uses isolated NotificationCenter for test isolation.
+    private func createViewModel() -> AnimalListViewModel {
+        locationHandler = LocationPermissionHandler(
+            locationService: fakeLocationService,
+            notificationCenter: NotificationCenter()  // Isolated instance
+        )
+        
+        return AnimalListViewModel(
+            repository: fakeRepository,
+            locationHandler: locationHandler
+        )
     }
     
     // MARK: - T019: loadAnimals fetches location when authorized
@@ -53,10 +71,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             phone: nil
         )]
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -88,10 +103,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             phone: nil
         )]
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -128,10 +140,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             phone: nil
         )]
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -160,10 +169,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             phone: nil
         )]
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -193,10 +199,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             phone: nil
         )]
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -215,10 +218,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -236,10 +236,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -256,10 +253,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceStatus(.denied)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -277,10 +271,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -298,10 +289,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceLocation(expectedLocation)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -320,10 +308,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.setAuthorizationAfterRequest(.denied)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -387,10 +372,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceStatus(.denied)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -405,10 +387,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceStatus(.restricted)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.loadAnimals()
@@ -423,10 +402,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceStatus(.denied)
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When - First call
         await viewModel.loadAnimals()
@@ -448,10 +424,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     func test_openSettings_whenCalled_shouldInvokeCoordinatorCallback() async {
         // Given
         var callbackInvoked = false
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         viewModel.onOpenAppSettings = {
             callbackInvoked = true
         }
@@ -468,10 +441,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         fakeRepository.stubbedAnimals = []
         
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
+        viewModel = createViewModel()
         
         // When
         await viewModel.continueWithoutLocation()
@@ -483,98 +453,13 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     // MARK: - User Story 4 Tests: Dynamic Permission Change Handling
     
-    // T071: Unit test AnimalListViewModel.checkPermissionStatusChange() detects status changes
-    func test_checkPermissionStatusChange_whenStatusChanges_shouldUpdatePermissionStatus() async {
-        // Given
-        await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
-        
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
-        viewModel.locationPermissionStatus = .denied
-        
-        // Change status in service
-        await setLocationServiceStatus(.authorizedWhenInUse)
-        
-        // When
-        await viewModel.checkPermissionStatusChange()
-        
-        // Then
-        XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update permission status when changed")
-    }
-    
-    // T072: Unit test checkPermissionStatusChange() triggers refresh when changing from denied to authorized
-    func test_checkPermissionStatusChange_whenChangingFromDeniedToAuthorized_shouldRefreshWithLocation() async {
-        // Given
-        await setLocationServiceStatus(.authorizedWhenInUse)
-        let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
-        await setLocationServiceLocation(expectedLocation)
-        fakeRepository.stubbedAnimals = []
-        
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
-        viewModel.locationPermissionStatus = .denied
-        
-        // When
-        await viewModel.checkPermissionStatusChange()
-        
-        // Then
-        XCTAssertNotNil(viewModel.currentLocation, "Should fetch location when permission changes to authorized")
-        XCTAssertNotNil(fakeRepository.lastLocationParameter, "Should query with coordinates after refresh")
-    }
-    
-    // T073: Unit test checkPermissionStatusChange() does not refresh when changing from authorized to denied
-    func test_checkPermissionStatusChange_whenChangingFromAuthorizedToDenied_shouldNotRefresh() async {
-        // Given
-        await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
-        
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
-        viewModel.locationPermissionStatus = .authorizedWhenInUse
-        viewModel.currentLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
-        
-        // Reset repository call tracking
-        fakeRepository.lastLocationParameter = nil
-        
-        // When
-        await viewModel.checkPermissionStatusChange()
-        
-        // Then
-        XCTAssertNil(fakeRepository.lastLocationParameter, "Should not refresh when permission changes from authorized to denied")
-        XCTAssertEqual(viewModel.locationPermissionStatus, .denied, "Should update status")
-    }
-    
-    // T074: Unit test checkPermissionStatusChange() updates locationPermissionStatus property and refreshes when changing from notDetermined to authorized
-    func test_checkPermissionStatusChange_whenChangingFromNotDeterminedToAuthorized_shouldRefresh() async {
-        // Given
-        await setLocationServiceStatus(.authorizedWhenInUse)
-        let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
-        await setLocationServiceLocation(expectedLocation)
-        fakeRepository.stubbedAnimals = []
-        
-        viewModel = AnimalListViewModel(
-            repository: fakeRepository,
-            locationService: fakeLocationService
-        )
-        viewModel.locationPermissionStatus = .notDetermined
-        
-        // Reset repository call tracking
-        fakeRepository.lastLocationParameter = nil
-        
-        // When
-        await viewModel.checkPermissionStatusChange()
-        
-        // Then
-        XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update permission status property")
-        XCTAssertNotNil(fakeRepository.lastLocationParameter, "Should refresh when changing from notDetermined to authorized")
-    }
+    // NOTE: Tests T071-T074 for checkPermissionStatusChange() have been removed.
+    // This functionality is now tested in LocationPermissionHandlerTests as it was
+    // refactored into LocationPermissionHandler.
+    // The foreground observer behavior is covered by:
+    // - testCheckPermissionStatusChange_whenChangedFromDeniedToAuthorized_returnsTrue
+    // - testCheckPermissionStatusChange_whenStatusUnchangedAuthorized_returnsFalse
+    // - testStartObservingForeground_whenNotificationPosted_triggersCallback
     
     // MARK: - Helper Methods
     

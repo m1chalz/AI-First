@@ -87,7 +87,7 @@
 // Navigation titles
 "reportMissingPet.chipNumber.title" = "Numer mikroczipu";
 "reportMissingPet.photo.title" = "Zdjęcie zwierzęcia";
-"reportMissingPet.description.title" = "Opis";
+"reportMissingPet.description.title" = "Opis zwierzęcia";
 "reportMissingPet.contactDetails.title" = "Dane kontaktowe";
 "reportMissingPet.summary.title" = "Podsumowanie";
 
@@ -134,6 +134,56 @@
 "common.retry" = "Ponów";
 "common.cancel" = "Anuluj";
 "common.ok" = "OK";
+"common.done" = "Gotowe";
 "common.continue" = "Dalej";
 "common.back" = "Wstecz";
+
+/* MARK: - Animal Description Screen */
+
+// Headings
+"animalDescription.heading" = "Szczegóły Twojego pupila";
+"animalDescription.subheading" = "Wypełnij szczegóły dotyczące zaginionego zwierzęcia.";
+
+// Labels
+"animalDescription.dateLabel" = "Data zaginięcia";
+"animalDescription.speciesLabel" = "Gatunek zwierzęcia";
+"animalDescription.raceLabel" = "Rasa zwierzęcia (opcjonalnie)";
+"animalDescription.genderLabel" = "Płeć";
+"animalDescription.ageLabel" = "Wiek zwierzęcia (opcjonalnie)";
+"animalDescription.coordinatesLabel" = "Szer. / Dł. geogr.";
+"animalDescription.coordinatePlaceholder" = "00000";
+"animalDescription.descriptionLabel" = "Dodatkowy opis zwierzęcia (opcjonalnie)";
+
+// Placeholders
+"animalDescription.speciesPlaceholder" = "Wybierz opcję";
+"animalDescription.racePlaceholder" = "np. Golden Retriever";
+"animalDescription.agePlaceholder" = "np. 5";
+"animalDescription.latitudePlaceholder" = "np. 52.2297";
+"animalDescription.longitudePlaceholder" = "np. 21.0122";
+"animalDescription.descriptionPlaceholder" = "Opisz cechy charakterystyczne...";
+
+// Buttons
+"animalDescription.requestGPSButton" = "Pobierz pozycję GPS";
+"animalDescription.continueButton" = "Dalej";
+
+// Date picker
+"animalDescription.datePicker.title" = "Wybierz datę";
+"animalDescription.datePicker.done" = "Gotowe";
+
+// Helper text
+"animalDescription.gpsHelperText" = "Lokalizacja pobrana pomyślnie";
+"animalDescription.characterCount" = "%d/%d";
+
+// Error messages
+"animalDescription.error.missingDate" = "Proszę wybrać datę";
+"animalDescription.error.missingSpecies" = "Proszę wybrać gatunek";
+"animalDescription.error.missingRace" = "Proszę wprowadzić rasę";
+"animalDescription.error.missingGender" = "Proszę wybrać płeć";
+"animalDescription.error.invalidAge" = "Wiek musi być między 0 a 40";
+"animalDescription.error.invalidLatitude" = "Szerokość geograficzna musi być między -90 a 90";
+"animalDescription.error.invalidLongitude" = "Długość geograficzna musi być między -180 a 180";
+"animalDescription.error.invalidCoordinateFormat" = "Nieprawidłowy format współrzędnych";
+
+// Toast messages
+"animalDescription.toast.validationErrors" = "Proszę poprawić podświetlone pola";
 

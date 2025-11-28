@@ -72,43 +72,38 @@ class AnimalListViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let repository: AnimalRepositoryProtocol
-    private let locationService: LocationServiceProtocol
+    private let locationHandler: LocationPermissionHandler
     
     // MARK: - Session State (User Story 3)
     
     /// Session-level flag preventing repeated permission popups (FR-013)
     private var hasShownPermissionAlert = false
-    
-    // MARK: - User Story 4: App Lifecycle Observation
-    
-    /// Notification observer token for app foreground notifications
-    private var foregroundObserver: NSObjectProtocol?
 
     // MARK: - Initialization
     
     /**
-     * Initializes ViewModel with repository and location service.
+     * Initializes ViewModel with repository and location handler.
      * Immediately loads animals on creation.
      *
      * - Parameter repository: Repository for fetching animals (injected)
-     * - Parameter locationService: Service for location permissions and fetching (injected)
+     * - Parameter locationHandler: Handler for location permission logic (injected)
      */
     init(
         repository: AnimalRepositoryProtocol,
-        locationService: LocationServiceProtocol
+        locationHandler: LocationPermissionHandler
     ) {
         self.repository = repository
-        self.locationService = locationService
+        self.locationHandler = locationHandler
         
         // User Story 4: Observe app returning from background (dynamic permission change handling)
-        foregroundObserver = NotificationCenter.default.addObserver(
-            forName: UIApplication.willEnterForegroundNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            // App is about to enter foreground (user may have changed permissions in Settings)
-            Task { @MainActor [weak self] in
-                await self?.checkPermissionStatusChange()
+        locationHandler.startObservingForeground { [weak self] status, didBecomeAuthorized in
+            // Callback is already dispatched to main thread by handler
+            self?.locationPermissionStatus = status
+            // Auto-refresh ONLY if permission changed from unauthorized → authorized
+            if didBecomeAuthorized {
+                Task {
+                    await self?.loadAnimals()
+                }
             }
         }
         
@@ -119,10 +114,7 @@ class AnimalListViewModel: ObservableObject {
     }
     
     deinit {
-        // Remove notification observer on deallocation
-        if let observer = foregroundObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        locationHandler.stopObservingForeground()
     }
     
     // MARK: - Public Methods
@@ -152,33 +144,23 @@ class AnimalListViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            // Check current permission status
-            var status = await locationService.authorizationStatus
+            // Delegate location permission handling to handler
+            let result = await locationHandler.requestLocationWithPermissions()
             
-            // User Story 2: Request permission if not determined (iOS shows system alert automatically)
-            if status == .notDetermined {
-                status = await locationService.requestWhenInUseAuthorization()
-            }
-            
-            // Update published status (reactive UI updates)
-            locationPermissionStatus = status
+            // Update published state with results
+            locationPermissionStatus = result.status
+            currentLocation = result.location
             
             // User Story 3: Show custom popup for denied/restricted (once per session)
-            if status.shouldShowCustomPopup && !hasShownPermissionAlert {
+            // ViewModel decides policy: show once per session
+            if result.status.shouldShowCustomPopup && !hasShownPermissionAlert {
                 showPermissionDeniedAlert = true
                 hasShownPermissionAlert = true
             }
             
-            // Fetch location if authorized (User Story 1 & 2: authorized users get location-aware content)
-            if status.isAuthorized {
-                currentLocation = await locationService.requestLocation()
-            } else {
-                currentLocation = nil
-            }
-            
             // Query animals with optional location (nil = no filtering, graceful fallback per FR-009)
             // Non-blocking: query executes regardless of permission outcome (FR-007, SC-001)
-            let animals = try await repository.getAnimals(near: currentLocation)
+            let animals = try await repository.getAnimals(near: result.location)
             updateCardViewModels(with: animals)
         } catch {
             self.errorMessage = error.localizedDescription
@@ -309,31 +291,5 @@ class AnimalListViewModel: ObservableObject {
         }
     }
     
-    // MARK: - User Story 4: Dynamic Permission Change Handling
-    
-    /**
-     * Checks if location permission status changed when app returns to foreground.
-     * Refreshes animal list with location if permission changed from unauthorized to authorized.
-     * Updates permission status property reactively.
-     *
-     * User Story 4: Dynamic Permission Change Handling
-     * - Detects permission changes when user returns from Settings
-     * - Auto-refreshes with location when permission granted
-     * - Updates status without refresh when permission denied
-     *
-     * Called automatically when app returns to foreground (NotificationCenter observation in init).
-     */
-    func checkPermissionStatusChange() async {
-        let newStatus = await locationService.authorizationStatus
-        
-        // If permission changed from unauthorized → authorized, refresh with location (FR-011)
-        if (newStatus.isAuthorized && !locationPermissionStatus.isAuthorized) || newStatus == .notDetermined {
-            locationPermissionStatus = newStatus
-            await loadAnimals() // Refresh with location
-        } else {
-            // Update status without refresh (permission denied or unchanged)
-            locationPermissionStatus = newStatus
-        }
-    }
 }
 

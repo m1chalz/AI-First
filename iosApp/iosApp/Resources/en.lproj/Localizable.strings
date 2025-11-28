@@ -74,6 +74,8 @@
 "animalSpecies.cat" = "Cat";
 "animalSpecies.bird" = "Bird";
 "animalSpecies.rabbit" = "Rabbit";
+"animalSpecies.rodent" = "Rodent";
+"animalSpecies.reptile" = "Reptile";
 "animalSpecies.other" = "Other";
 
 /* MARK: - Animal Gender */
@@ -87,7 +89,7 @@
 // Navigation titles
 "reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
-"reportMissingPet.description.title" = "Description";
+"reportMissingPet.description.title" = "Animal description";
 "reportMissingPet.contactDetails.title" = "Contact Details";
 "reportMissingPet.summary.title" = "Summary";
 
@@ -134,6 +136,7 @@
 "common.retry" = "Retry";
 "common.cancel" = "Cancel";
 "common.ok" = "OK";
+"common.done" = "Done";
 "common.continue" = "Continue";
 "common.back" = "Back";
 
@@ -143,4 +146,53 @@
 "location.permission.popup.message" = "Enable location access in Settings to see nearby pets.";
 "location.permission.popup.settings.button" = "Go to Settings";
 "location.permission.popup.cancel.button" = "Cancel";
+
+/* MARK: - Animal Description Screen */
+
+// Headings
+"animalDescription.heading" = "Your pet's details";
+"animalDescription.subheading" = "Fill out the details about the missing animal.";
+
+// Labels
+"animalDescription.dateLabel" = "Date of disappearance";
+"animalDescription.speciesLabel" = "Animal species";
+"animalDescription.raceLabel" = "Animal race (optional)";
+"animalDescription.genderLabel" = "Gender";
+"animalDescription.ageLabel" = "Animal age (optional)";
+"animalDescription.coordinatesLabel" = "Lat / Long";
+"animalDescription.coordinatePlaceholder" = "00000";
+"animalDescription.descriptionLabel" = "Animal additional description (optional)";
+
+// Placeholders
+"animalDescription.speciesPlaceholder" = "Select an option";
+"animalDescription.racePlaceholder" = "e.g., Golden Retriever";
+"animalDescription.agePlaceholder" = "e.g., 5";
+"animalDescription.latitudePlaceholder" = "e.g., 52.2297";
+"animalDescription.longitudePlaceholder" = "e.g., 21.0122";
+"animalDescription.descriptionPlaceholder" = "Describe distinguishing features...";
+
+// Buttons
+"animalDescription.requestGPSButton" = "Request GPS position";
+"animalDescription.continueButton" = "Continue";
+
+// Date picker
+"animalDescription.datePicker.title" = "Select Date";
+"animalDescription.datePicker.done" = "Done";
+
+// Helper text
+"animalDescription.gpsHelperText" = "Location captured successfully";
+"animalDescription.characterCount" = "%d/%d";
+
+// Error messages
+"animalDescription.error.missingDate" = "Please select a date";
+"animalDescription.error.missingSpecies" = "Please select a species";
+"animalDescription.error.missingRace" = "Please enter the breed or race";
+"animalDescription.error.missingGender" = "Please select a gender";
+"animalDescription.error.invalidAge" = "Age must be between 0 and 40";
+"animalDescription.error.invalidLatitude" = "Latitude must be between -90 and 90";
+"animalDescription.error.invalidLongitude" = "Longitude must be between -180 and 180";
+"animalDescription.error.invalidCoordinateFormat" = "Invalid coordinate format";
+
+// Toast messages
+"animalDescription.toast.validationErrors" = "Please correct the highlighted fields";
 

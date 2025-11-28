@@ -216,6 +216,7 @@ final class PhotoViewModel: ObservableObject {
     
     deinit {
         toastScheduler.cancel()
+        print("deinit PhotoViewModel")
     }
 }
 
