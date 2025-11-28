@@ -6,7 +6,7 @@ interface BackendAnnouncementsResponse {
 }
 
 export class AnimalRepository {
-    
+
     async getAnimals(): Promise<Animal[]> {
         const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements`);
         
