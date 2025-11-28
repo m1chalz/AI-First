@@ -117,6 +117,16 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     // MARK: - Computed Properties (Component Models)
     
+    /// Model for date input
+    var dateInputModel: DateInputView.Model {
+        DateInputView.Model(
+            label: L10n.AnimalDescription.dateLabel,
+            dateRange: ...Date(), // Limit to today or past
+            errorMessage: nil, // Date is always valid
+            accessibilityID: "animalDescription.datePicker.tap"
+        )
+    }
+    
     /// Model for species dropdown
     var speciesDropdownModel: DropdownView.Model {
         DropdownView.Model(

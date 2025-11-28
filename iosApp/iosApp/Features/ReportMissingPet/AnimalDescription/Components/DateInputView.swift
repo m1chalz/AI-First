@@ -1,0 +1,137 @@
+import SwiftUI
+
+/// Custom date input component matching Figma design.
+/// Displays formatted date in text field style with calendar icon.
+/// Tapping opens native date picker in sheet.
+struct DateInputView: View {
+    let model: Model
+    @Binding var date: Date
+    @State private var showDatePicker = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Label
+            Text(model.label)
+                .font(.custom("Hind-Regular", size: 16))
+                .foregroundColor(Color(hex: "#364153"))
+            
+            // Input field
+            Button(action: {
+                showDatePicker = true
+            }) {
+                HStack(spacing: 0) {
+                    // Formatted date text
+                    Text(formattedDate)
+                        .font(.custom("Hind-Regular", size: 16))
+                        .foregroundColor(Color(hex: "#364153"))
+                    
+                    Spacer()
+                    
+                    // Calendar icon
+                    Image(systemName: "calendar")
+                        .font(.system(size: 24))
+                        .foregroundColor(Color(hex: "#364153"))
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(height: 49.333)
+                .background(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+                )
+            }
+            .accessibilityIdentifier(model.accessibilityID)
+            
+            // Error message
+            if let error = model.errorMessage {
+                Text(error)
+                    .font(.custom("Hind-Regular", size: 12))
+                    .foregroundColor(.red)
+            }
+        }
+        .sheet(isPresented: $showDatePicker) {
+            DatePickerSheet(
+                date: $date,
+                dateRange: model.dateRange,
+                onDismiss: {
+                    showDatePicker = false
+                }
+            )
+        }
+    }
+    
+    /// Formats date as DD/MM/YYYY
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter.string(from: date)
+    }
+}
+
+// MARK: - Date Picker Sheet
+
+/// Sheet containing native iOS date picker
+private struct DatePickerSheet: View {
+    @Binding var date: Date
+    let dateRange: PartialRangeThrough<Date>?
+    let onDismiss: () -> Void
+    
+    var body: some View {
+        NavigationView {
+            Group {
+                if let range = dateRange {
+                    DatePicker(
+                        "Select Date",
+                        selection: $date,
+                        in: range,
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.graphical)
+                } else {
+                    DatePicker(
+                        "Select Date",
+                        selection: $date,
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.graphical)
+                }
+            }
+            .padding()
+            .navigationTitle("Select Date")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        onDismiss()
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+}
+
+// MARK: - Model
+
+extension DateInputView {
+    struct Model {
+        let label: String
+        let dateRange: PartialRangeThrough<Date>?
+        let errorMessage: String?
+        let accessibilityID: String
+        
+        init(
+            label: String,
+            dateRange: PartialRangeThrough<Date>? = nil,
+            errorMessage: String? = nil,
+            accessibilityID: String
+        ) {
+            self.label = label
+            self.dateRange = dateRange
+            self.errorMessage = errorMessage
+            self.accessibilityID = accessibilityID
+        }
+    }
+}
+
