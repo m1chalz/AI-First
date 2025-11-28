@@ -280,84 +280,139 @@ extension ValidatedTextField {
 
 ---
 
-### SpeciesDropdown.Model
+### DropdownView.Model
 
-**Purpose**: Model for species dropdown component with validation error display.
+**Purpose**: Model for generic dropdown component with validation error display.
 
-**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/SpeciesDropdown.swift`
+**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/DropdownView.swift`
 
 **Definition**:
 
 ```swift
-extension SpeciesDropdown {
+extension DropdownView {
     struct Model {
         let label: String
         let placeholder: String
-        let options: [SpeciesTaxonomyOption]
+        let options: [String]        // Generic string array for any dropdown options
         let errorMessage: String?
         let accessibilityID: String
     }
 }
 ```
 
+**Usage Note**: ViewModel maps `SpeciesTaxonomyOption` to display names when creating model:
+
+```swift
+// In ViewModel
+var speciesDropdownModel: DropdownView.Model {
+    DropdownView.Model(
+        label: L10n.speciesLabel,
+        placeholder: L10n.speciesPlaceholder,
+        options: SpeciesTaxonomy.options.map { $0.displayName },  // Convert to [String]
+        errorMessage: speciesErrorMessage,
+        accessibilityID: "animalDescription.speciesDropdown.tap"
+    )
+}
+```
+
 ---
 
-### GenderSelector.Model
+### SelectorView.Model
 
-**Purpose**: Model for male/female radio button component.
+**Purpose**: Model for generic radio button selector component.
 
-**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/GenderSelector.swift`
+**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/SelectorView.swift`
 
 **Definition**:
 
 ```swift
-extension GenderSelector {
+extension SelectorView {
     struct Model {
         let label: String
+        let options: [String]            // Generic string array for any selector options
         let errorMessage: String?
         let accessibilityIDPrefix: String  // e.g., "animalDescription.gender"
     }
 }
 ```
 
----
-
-### LocationCoordinateFields.Model
-
-**Purpose**: Model for latitude/longitude input fields with GPS capture button.
-
-**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/LocationCoordinateFields.swift`
-
-**Definition**:
+**Usage Note**: ViewModel maps domain enums to display names when creating model:
 
 ```swift
-extension LocationCoordinateFields {
-    struct Model {
-        let latitudeLabel: String
-        let longitudeLabel: String
-        let latitudeError: String?
-        let longitudeError: String?
-        let gpsButtonTitle: String
-        let gpsButtonAccessibilityID: String
-        let latitudeAccessibilityID: String
-        let longitudeAccessibilityID: String
-        let helperText: String?  // Optional helper text (e.g., "GPS capture successful")
-    }
+// In ViewModel
+var genderSelectorModel: SelectorView.Model {
+    SelectorView.Model(
+        label: L10n.genderLabel,
+        options: Gender.allCases.map { $0.displayName },  // ["Male", "Female"]
+        errorMessage: genderErrorMessage,
+        accessibilityIDPrefix: "animalDescription.gender"
+    )
 }
 ```
 
 ---
 
-### DescriptionTextArea.Model
+### LocationCoordinateView.Model
 
-**Purpose**: Model for multi-line text area with character counter.
+**Purpose**: Model for latitude/longitude coordinate input with GPS capture button. Composes two `ValidatedTextField.Model` instances.
 
-**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/DescriptionTextArea.swift`
+**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/LocationCoordinateView.swift`
 
 **Definition**:
 
 ```swift
-extension DescriptionTextArea {
+extension LocationCoordinateView {
+    struct Model {
+        let latitudeField: ValidatedTextField.Model      // Composed ValidatedTextField
+        let longitudeField: ValidatedTextField.Model     // Composed ValidatedTextField
+        let gpsButtonTitle: String
+        let gpsButtonAccessibilityID: String
+        let helperText: String?  // Optional helper text (e.g., "GPS capture successful")
+    }
+}
+```
+
+**Usage Note**: ViewModel creates two ValidatedTextField models for composition:
+
+```swift
+// In ViewModel
+var locationCoordinateModel: LocationCoordinateView.Model {
+    LocationCoordinateView.Model(
+        latitudeField: ValidatedTextField.Model(
+            label: L10n.latitudeLabel,
+            placeholder: "e.g., 52.2297",
+            errorMessage: latitudeErrorMessage,
+            isDisabled: false,
+            keyboardType: .decimalPad,
+            accessibilityID: "animalDescription.latitudeTextField.input"
+        ),
+        longitudeField: ValidatedTextField.Model(
+            label: L10n.longitudeLabel,
+            placeholder: "e.g., 21.0122",
+            errorMessage: longitudeErrorMessage,
+            isDisabled: false,
+            keyboardType: .decimalPad,
+            accessibilityID: "animalDescription.longitudeTextField.input"
+        ),
+        gpsButtonTitle: L10n.requestGPSButton,
+        gpsButtonAccessibilityID: "animalDescription.requestGPSButton.tap",
+        helperText: gpsHelperText
+    )
+}
+```
+
+---
+
+### TextAreaView.Model
+
+**Purpose**: Model for generic multi-line text area with character counter.
+
+**Location**: Defined as extension in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/TextAreaView.swift`
+
+**Definition**:
+
+```swift
+extension TextAreaView {
     struct Model {
         let label: String
         let placeholder: String

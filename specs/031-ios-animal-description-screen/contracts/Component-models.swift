@@ -37,10 +37,10 @@ extension ValidatedTextField {
     }
 }
 
-// MARK: - SpeciesDropdown.Model
+// MARK: - DropdownView.Model
 
-extension SpeciesDropdown {
-    /// Model for species dropdown component with validation error display.
+extension DropdownView {
+    /// Model for generic dropdown component with validation error display.
     struct Model {
         /// Label displayed above dropdown.
         let label: String
@@ -48,8 +48,8 @@ extension SpeciesDropdown {
         /// Placeholder text shown when no selection made.
         let placeholder: String
         
-        /// Available species options from curated taxonomy.
-        let options: [SpeciesTaxonomyOption]
+        /// Available options for selection.
+        let options: [String]
         
         /// Error message displayed below dropdown (nil if no error).
         let errorMessage: String?
@@ -59,39 +59,37 @@ extension SpeciesDropdown {
     }
 }
 
-// MARK: - GenderSelector.Model
+// MARK: - SelectorView.Model
 
-extension GenderSelector {
-    /// Model for male/female radio button component.
+extension SelectorView {
+    /// Model for generic radio button selector component.
     struct Model {
-        /// Label displayed above gender options.
+        /// Label displayed above selector options.
         let label: String
+        
+        /// Available options for selection (displayed as radio buttons).
+        let options: [String]
         
         /// Error message displayed below options (nil if no error).
         let errorMessage: String?
         
         /// Accessibility identifier prefix (e.g., "animalDescription.gender").
-        /// Component appends ".male" and ".female" for individual buttons.
+        /// Component appends option index for individual buttons (e.g., ".0", ".1").
         let accessibilityIDPrefix: String
     }
 }
 
-// MARK: - LocationCoordinateFields.Model
+// MARK: - LocationCoordinateView.Model
 
-extension LocationCoordinateFields {
-    /// Model for latitude/longitude input fields with GPS capture button.
+extension LocationCoordinateView {
+    /// Model for latitude/longitude coordinate input with GPS capture.
+    /// Composes two ValidatedTextField models + GPS button properties.
     struct Model {
-        /// Label for latitude text field.
-        let latitudeLabel: String
+        /// Model for latitude text field.
+        let latitudeField: ValidatedTextField.Model
         
-        /// Label for longitude text field.
-        let longitudeLabel: String
-        
-        /// Error message for latitude field (nil if no error).
-        let latitudeError: String?
-        
-        /// Error message for longitude field (nil if no error).
-        let longitudeError: String?
+        /// Model for longitude text field.
+        let longitudeField: ValidatedTextField.Model
         
         /// Title for GPS capture button.
         let gpsButtonTitle: String
@@ -99,21 +97,15 @@ extension LocationCoordinateFields {
         /// Accessibility identifier for GPS button.
         let gpsButtonAccessibilityID: String
         
-        /// Accessibility identifier for latitude field.
-        let latitudeAccessibilityID: String
-        
-        /// Accessibility identifier for longitude field.
-        let longitudeAccessibilityID: String
-        
         /// Optional helper text displayed below fields (e.g., "GPS capture successful").
         let helperText: String?
     }
 }
 
-// MARK: - DescriptionTextArea.Model
+// MARK: - TextAreaView.Model
 
-extension DescriptionTextArea {
-    /// Model for multi-line text area with character counter.
+extension TextAreaView {
+    /// Model for generic multi-line text area with character counter.
     struct Model {
         /// Label displayed above text area.
         let label: String
@@ -135,19 +127,9 @@ extension DescriptionTextArea {
     }
 }
 
-// MARK: - DatePickerField.Model
-
-extension DatePickerField {
-    /// Model for date picker component with label.
-    struct Model {
-        /// Label displayed above date picker.
-        let label: String
-        
-        /// Date range restriction (e.g., ...Date() for today or past).
-        let dateRange: PartialRangeThrough<Date>
-        
-        /// Accessibility identifier for UI testing.
-        let accessibilityID: String
-    }
-}
+// NOTE: DatePicker uses native SwiftUI DatePicker (inline, no custom component needed)
+// Usage example:
+//   DatePicker("", selection: $date, in: ...Date(), displayedComponents: .date)
+//     .labelsHidden()
+//     .accessibilityIdentifier("screen.datePicker.tap")
 

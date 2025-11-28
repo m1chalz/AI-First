@@ -155,12 +155,12 @@ iosApp/iosApp/
 │       │   ├── AnimalDescriptionViewModel.swift      # ViewModel (ObservableObject)
 │       │   ├── AnimalDescriptionView.swift           # Main SwiftUI view
 │       │   └── Components/
-│       │       ├── DatePickerField.swift             # Reusable date picker with label
-│       │       ├── SpeciesDropdown.swift             # Species picker with validation
-│       │       ├── ValidatedTextField.swift          # Text field with error display
-│       │       ├── GenderSelector.swift              # Male/Female radio buttons
-│       │       ├── LocationCoordinateFields.swift    # Lat/Long inputs with GPS button
-│       │       └── DescriptionTextArea.swift         # Multi-line text with char counter
+│       │       ├── ValidatedTextField.swift          # Text field with error display (base)
+│       │       ├── DropdownView.swift                # Generic picker with [String] options
+│       │       ├── SelectorView.swift                # Generic radio buttons with [String] options
+│       │       ├── LocationCoordinateView.swift      # Composes 2x ValidatedTextField + GPS button
+│       │       └── TextAreaView.swift                # Multi-line text with char counter
+│       │       # Note: Date picker uses native SwiftUI DatePicker (no custom component)
 │       └── Session/
 │           └── MissingPetFlowSession.swift           # Session container (already exists per spec 017)
 ├── Domain/

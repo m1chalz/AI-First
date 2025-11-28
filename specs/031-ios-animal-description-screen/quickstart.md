@@ -92,12 +92,13 @@ Expected output: `Build Succeeded`
 ### 2. Create Reusable Form Components
 
 **Order** (Model pattern - no ViewModel, pure presentation):
-1. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/DatePickerField.swift`
-2. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/ValidatedTextField.swift`
-3. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/SpeciesDropdown.swift`
-4. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/GenderSelector.swift`
-5. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/LocationCoordinateFields.swift`
-6. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/DescriptionTextArea.swift`
+1. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/ValidatedTextField.swift` ← **Create first** (base component)
+2. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/DropdownView.swift`
+3. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/SelectorView.swift`
+4. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/LocationCoordinateView.swift` ← **Composes 2x ValidatedTextField**
+5. `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/Components/TextAreaView.swift`
+
+**Note**: Date picker uses native SwiftUI `DatePicker` (no custom component needed)
 
 **Component Template** (Model pattern):
 
@@ -217,27 +218,36 @@ struct AnimalDescriptionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Date picker
-                DatePickerField(
-                    model: .init(
-                        label: L10n.animalDescriptionDateLabel,
-                        dateRange: ...Date(),
-                        accessibilityID: "animalDescription.datePicker.tap"
-                    ),
-                    selection: $viewModel.disappearanceDate
-                )
+                // Date picker (native SwiftUI DatePicker)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L10n.dateOfDisappearanceLabel)
+                    DatePicker(
+                        "",
+                        selection: $viewModel.disappearanceDate,
+                        in: ...Date(),  // Limit to today or past
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.compact)
+                    .labelsHidden()
+                    .accessibilityIdentifier("animalDescription.datePicker.tap")
+                }
                 
-                // Species dropdown
-                SpeciesDropdown(
+                // Species dropdown (generic DropdownView)
+                DropdownView(
                     model: .init(
                         label: L10n.animalDescriptionSpeciesLabel,
                         placeholder: L10n.animalDescriptionSpeciesPlaceholder,
-                        options: viewModel.speciesOptions,
+                        options: viewModel.speciesOptions.map { $0.displayName },  // Map to [String]
                         errorMessage: viewModel.speciesErrorMessage,
                         accessibilityID: "animalDescription.speciesDropdown.tap"
                     ),
-                    selection: $viewModel.selectedSpecies
+                    selection: $viewModel.selectedSpeciesIndex
                 )
+                .onChange(of: viewModel.selectedSpeciesIndex) { newIndex in
+                    if let index = newIndex {
+                        viewModel.selectSpecies(viewModel.speciesOptions[index])
+                    }
+                }
                 
                 // ... other components
                 
