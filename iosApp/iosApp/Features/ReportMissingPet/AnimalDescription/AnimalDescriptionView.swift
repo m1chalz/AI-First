@@ -47,14 +47,30 @@ struct AnimalDescriptionView: View {
                     text: $viewModel.age
                 )
                 
-                // Location coordinates with GPS button (US2)
-                LocationCoordinateView(
-                    model: viewModel.locationCoordinateModel,
-                    latitude: $viewModel.latitude,
-                    longitude: $viewModel.longitude,
-                    onGPSButtonTap: {
+                // GPS button
+                Button(action: {
+                    Task {
                         await viewModel.requestGPSPosition()
                     }
+                }) {
+                    Text(L10n.AnimalDescription.requestGPSButton)
+                        .font(.custom("Hind-Regular", size: 16))
+                        .foregroundColor(Color(hex: "#155DFC"))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 40)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(hex: "#155DFC"), lineWidth: 2)
+                        )
+                }
+                .buttonStyle(PlainButtonStyle())
+                .accessibilityIdentifier("animalDescription.requestGPSButton.tap")
+                
+                // Location coordinates (optional)
+                CoordinateInputView(
+                    model: viewModel.coordinateInputModel,
+                    latitude: $viewModel.latitude,
+                    longitude: $viewModel.longitude
                 )
                 
                 // Description text area (optional - US3)

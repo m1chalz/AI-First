@@ -158,28 +158,16 @@ class AnimalDescriptionViewModel: ObservableObject {
         )
     }
     
-    /// Model for location coordinate view (composes lat/long fields + GPS button)
-    var locationCoordinateModel: LocationCoordinateView.Model {
-        LocationCoordinateView.Model(
-            latitudeField: ValidatedTextField.Model(
-                label: L10n.AnimalDescription.latitudeLabel,
-                placeholder: L10n.AnimalDescription.latitudePlaceholder,
-                errorMessage: latitudeErrorMessage,
-                isDisabled: false,
-                keyboardType: .decimalPad,
-                accessibilityID: "animalDescription.latitudeTextField.input"
-            ),
-            longitudeField: ValidatedTextField.Model(
-                label: L10n.AnimalDescription.longitudeLabel,
-                placeholder: L10n.AnimalDescription.longitudePlaceholder,
-                errorMessage: longitudeErrorMessage,
-                isDisabled: false,
-                keyboardType: .decimalPad,
-                accessibilityID: "animalDescription.longitudeTextField.input"
-            ),
-            gpsButtonTitle: L10n.AnimalDescription.requestGPSButton,
-            gpsButtonAccessibilityID: "animalDescription.requestGPSButton.tap",
-            helperText: gpsHelperText
+    /// Model for coordinate input (two fields side by side)
+    var coordinateInputModel: CoordinateInputView.Model {
+        CoordinateInputView.Model(
+            label: L10n.AnimalDescription.coordinatesLabel,
+            latitudePlaceholder: L10n.AnimalDescription.coordinatePlaceholder,
+            longitudePlaceholder: L10n.AnimalDescription.coordinatePlaceholder,
+            latitudeError: latitudeErrorMessage,
+            longitudeError: longitudeErrorMessage,
+            latitudeAccessibilityID: "animalDescription.latitudeTextField.input",
+            longitudeAccessibilityID: "animalDescription.longitudeTextField.input"
         )
     }
     

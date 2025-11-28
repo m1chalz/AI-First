@@ -29,6 +29,10 @@ public enum L10n {
     }
     /// Continue
     public static let continueButton = L10n.tr("Localizable", "animalDescription.continueButton", fallback: "Continue")
+    /// 00000
+    public static let coordinatePlaceholder = L10n.tr("Localizable", "animalDescription.coordinatePlaceholder", fallback: "00000")
+    /// Lat / Long
+    public static let coordinatesLabel = L10n.tr("Localizable", "animalDescription.coordinatesLabel", fallback: "Lat / Long")
     /// MARK: - Animal Description Screen
     public static let dateLabel = L10n.tr("Localizable", "animalDescription.dateLabel", fallback: "Date of disappearance")
     /// Additional description (optional)
@@ -39,12 +43,8 @@ public enum L10n {
     public static let genderLabel = L10n.tr("Localizable", "animalDescription.genderLabel", fallback: "Gender")
     /// Location captured successfully
     public static let gpsHelperText = L10n.tr("Localizable", "animalDescription.gpsHelperText", fallback: "Location captured successfully")
-    /// Latitude (optional)
-    public static let latitudeLabel = L10n.tr("Localizable", "animalDescription.latitudeLabel", fallback: "Latitude (optional)")
     /// e.g., 52.2297
     public static let latitudePlaceholder = L10n.tr("Localizable", "animalDescription.latitudePlaceholder", fallback: "e.g., 52.2297")
-    /// Longitude (optional)
-    public static let longitudeLabel = L10n.tr("Localizable", "animalDescription.longitudeLabel", fallback: "Longitude (optional)")
     /// e.g., 21.0122
     public static let longitudePlaceholder = L10n.tr("Localizable", "animalDescription.longitudePlaceholder", fallback: "e.g., 21.0122")
     /// Animal race (optional)
