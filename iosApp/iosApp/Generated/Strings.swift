@@ -35,8 +35,8 @@ public enum L10n {
     public static let coordinatesLabel = L10n.tr("Localizable", "animalDescription.coordinatesLabel", fallback: "Lat / Long")
     /// MARK: - Animal Description Screen
     public static let dateLabel = L10n.tr("Localizable", "animalDescription.dateLabel", fallback: "Date of disappearance")
-    /// Additional description (optional)
-    public static let descriptionLabel = L10n.tr("Localizable", "animalDescription.descriptionLabel", fallback: "Additional description (optional)")
+    /// Animal additional description (optional)
+    public static let descriptionLabel = L10n.tr("Localizable", "animalDescription.descriptionLabel", fallback: "Animal additional description (optional)")
     /// Describe distinguishing features...
     public static let descriptionPlaceholder = L10n.tr("Localizable", "animalDescription.descriptionPlaceholder", fallback: "Describe distinguishing features...")
     /// Gender

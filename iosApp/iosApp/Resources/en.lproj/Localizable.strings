@@ -156,7 +156,7 @@
 "animalDescription.ageLabel" = "Age (optional)";
 "animalDescription.coordinatesLabel" = "Lat / Long";
 "animalDescription.coordinatePlaceholder" = "00000";
-"animalDescription.descriptionLabel" = "Additional description (optional)";
+"animalDescription.descriptionLabel" = "Animal additional description (optional)";
 
 // Placeholders
 "animalDescription.speciesPlaceholder" = "Select an option";

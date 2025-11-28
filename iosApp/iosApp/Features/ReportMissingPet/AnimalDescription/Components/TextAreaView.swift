@@ -7,38 +7,49 @@ struct TextAreaView: View {
     @Binding var text: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
+            // Label
             Text(model.label)
-                .font(.headline)
+                .font(.custom("Hind-Regular", size: 16))
+                .foregroundColor(Color(hex: "#364153"))
             
-            TextEditor(text: $text)
-                .frame(height: 120)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.gray, lineWidth: 1)
-                )
-                .accessibilityIdentifier(model.accessibilityID)
-                .onChange(of: text) { newValue in
-                    // Enforce character limit (hard limit: prevent input at limit, truncate paste)
-                    if newValue.count > model.maxLength {
-                        text = String(newValue.prefix(model.maxLength))
-                    }
-                }
-            
-            // Placeholder text when empty (TextEditor doesn't have native placeholder)
-            if text.isEmpty {
-                Text(model.placeholder)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 5)
+            // Text editor with placeholder overlay
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $text)
+                    .font(.custom("Hind-Regular", size: 16))
+                    .foregroundColor(Color(hex: "#364153"))
+                    .frame(height: 96)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .allowsHitTesting(false)
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+                    )
+                    .accessibilityIdentifier(model.accessibilityID)
+                    .onChange(of: text) { _, newValue in
+                        // Enforce character limit (hard limit: prevent input at limit, truncate paste)
+                        if newValue.count > model.maxLength {
+                            text = String(newValue.prefix(model.maxLength))
+                        }
+                    }
+                
+                // Placeholder text when empty (TextEditor doesn't have native placeholder)
+                if text.isEmpty {
+                    Text(model.placeholder)
+                        .font(.custom("Hind-Regular", size: 16))
+                        .foregroundColor(Color(hex: "#0A0A0A").opacity(0.5))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 16)
+                        .allowsHitTesting(false)
+                }
             }
             
             // Character counter
             HStack {
                 Spacer()
                 Text(model.characterCountText)
-                    .font(.caption)
+                    .font(.custom("Hind-Regular", size: 12))
                     .foregroundColor(model.characterCountColor)
             }
         }
