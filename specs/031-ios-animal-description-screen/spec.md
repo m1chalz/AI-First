@@ -13,7 +13,7 @@ The iOS UI MUST match Figma node `297-8209` from the PetSpot wireframes design, 
 ### Session 2025-11-26 (from multi-platform spec 022, restricted to iOS scope)
 
 - If GPS capture fails, the screen MUST NOT add extra manual location text fields beyond the latitude/longitude inputs. Reporters rely solely on latitude/longitude inputs (which can be edited manually).
-- When users edit auto-filled GPS coordinates, the capture method MUST be treated as **manual** immediately after any latitude or longitude edit, even if values originated from GPS.
+- When users edit auto-filled GPS coordinates, the screen simply treats the coordinates as user-provided values; it does not distinguish whether they came from GPS or manual entry in any separate state.
 - Species/race taxonomy MUST remain usable when the device is offline by bundling a curated read-only taxonomy snapshot in the iOS app and refreshing it silently when connectivity is available.
 - No extra analytics events are required specifically for detecting taxonomy offline fallbacks; standard client logging is sufficient for debugging.
 
@@ -55,21 +55,21 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 
 **Why this priority**: Error handling and persistence reduce abandonment while aligning with the iOS UX patterns described in spec 017 and the reference design.
 
-**Independent Test**: On iOS, populate some fields, navigate backward to Step 2 via the header arrow, re-enter Step 3, confirm values persist, clear a required field, and verify Continue disables plus error messaging until resolved.
+**Independent Test**: On iOS, populate some fields, navigate backward to Step 2 via the header arrow, re-enter Step 3, confirm values persist, clear a required field, tap Continue, and verify a toast plus inline error messaging appear and block navigation until the issues are resolved.
 
 **Acceptance Scenarios**:
 
-1. **Given** the user clears a required field (species, race, or gender), **When** they attempt to tap Continue, **Then** the CTA remains disabled and inline helper text explains what must be filled.  
+1. **Given** the user clears a required field (species, race, or gender), **When** they tap Continue, **Then** a toast message explains that some information must be corrected, the specific invalid or missing fields are visually marked with inline helper text, and navigation to Step 4 does not occur until the fields are corrected.  
 2. **Given** the user presses the back arrow in the header, **When** they return to Step 2 and then forward again to Step 3, **Then** all previously entered Step 3 data re-populates on iOS and the progress indicator updates correctly (2/4 then 3/4).
 
 ---
 
 ### Edge Cases
 
-- **Location permission denied or previously blocked**: the Request GPS button shows a non-blocking message explaining that users must manually enter latitude/longitude (or leave them blank) and, where the iOS platform allows, offers a way to open system settings.  
-- **Future “Date of disappearance”**: if the user attempts to set a future date, validation rejects it with inline copy and retains the prior valid date.  
-- **Taxonomy service for species/race unavailable**: the screen falls back to the bundled offline taxonomy snapshot, shows a small “Using offline list” banner, and prevents Continue only if both offline and live data are unavailable (with an option to retry once online).  
-- **Race dropdown opened before species selection**: the control stays disabled with helper text “Choose species first.”  
+- **Location permission denied or previously blocked**: the Request GPS button shows an alert with two options – **Cancel** (closes the alert and lets users manually enter or leave latitude/longitude blank) and **Go to Settings** (opens the iOS Settings screen for this app so users can change location permissions).  
+- **Future “Date of disappearance”**: the date picker defaults to today and proactively blocks selection of any future dates (user can only choose today or a past date), so no separate error state is shown for future dates.  
+- **Species list source**: species options always come from the fixed curated list bundled with the app; no external taxonomy service or runtime loading is attempted on this screen.  
+- **Race input before species selection**: the race input is a disabled text field until a species is selected; when the user changes species, any previously entered race text is cleared, and the field remains required once enabled.  
 - **Additional description exceeds 500 characters**: further input is blocked, a character counter communicates the limit, and other fields remain unchanged.
 
 ## Requirements *(mandatory)*
@@ -78,38 +78,36 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 
 - **FR-001**: On iOS, Step 3 MUST appear immediately after the Animal Photo screen (spec 020) and before contact details (spec 017), showing the header/back arrow, title “Animal description,” and progress chip “3/4” matching the referenced Figma design.  
 - **FR-002**: The top-left circular back button MUST always navigate to Step 2 with state persistence; the status text and progress indicator MUST update when re-entering Step 3.  
-- **FR-003**: The “Date of disappearance” field MUST default to today’s date (or the last saved value) and open the system date picker; users MAY pick any past date but future dates MUST be rejected with inline feedback.  
+- **FR-003**: The “Date of disappearance” field MUST default to today’s date (or the last saved value) and open the system date picker configured so users MAY pick any past date (including today) but future dates are disabled and cannot be selected.  
 - **FR-004**: Selecting a date MUST update the iOS Missing Pet session so the value persists across navigation, app backgrounding, and device rotation until the flow completes or is canceled.  
-- **FR-005**: The “Animal species” dropdown MUST load curated options from the taxonomy data source, display a clear placeholder (e.g., “Select an option”), and require a selection before Continue becomes available.  
-- **FR-006**: The “Animal race” dropdown MUST remain disabled until a species is chosen, then show only races associated with that species; choosing a race is required for Continue.  
+- **FR-005**: The “Animal species” dropdown MUST use a fixed curated list of species bundled with the app (no runtime taxonomy service), display a clear placeholder (e.g., “Select an option”), and require a selection before Continue becomes available.  
+- **FR-006**: The “Animal race” field MUST be implemented as a text field that stays disabled until a species is chosen; when the user changes species, any previously entered race text MUST be cleared, and once enabled the race field is required for Continue.  
 - **FR-007**: The gender selector MUST present two cards (Female, Male) behaving as mutually exclusive options with accessible labels; at least one option MUST be selected before Continue activates.  
 - **FR-008**: “Animal age (optional)” MUST accept numeric input from 0–40 with validation preventing negative values or decimals; empty state is valid.  
 - **FR-009**: Tapping “Request GPS position” MUST trigger the standard iOS location permission flow (if needed); upon success the Lat and Long fields auto-populate with decimal degrees to 5 decimal places and store the capture time in session state.  
-- **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors and block Continue. Any manual edit MUST immediately switch the capture method to manual.  
+- **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors and block Continue, regardless of whether the values came from GPS or were entered manually.  
 - **FR-011**: “Animal additional description (optional)” MUST provide a multi-line text area supporting at least 500 characters plus a live counter; characters beyond the limit are ignored.  
-- **FR-012**: The Continue CTA MUST match the primary button style from the Figma design, stay disabled until required fields (date, species, race, gender) are valid, and on tap move to Step 4 while recording that Step 3 was completed for analytics purposes.  
+- **FR-012**: The Continue CTA MUST match the primary button style from the Figma design and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender), it MUST show a toast message and highlight the specific fields with inline helper text while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while recording that Step 3 was completed for analytics purposes.  
 - **FR-013**: All inputs MUST persist within the iOS Missing Pet flow session object so that navigating backward/forward, locking the device, or experiencing temporary offline states does not wipe Step 3 data.  
-- **FR-014**: If taxonomy data or location permissions fail, the screen MUST surface inline guidance plus retry affordances without crashing; Continue remains disabled until required data is available. When offline, the app uses the bundled taxonomy snapshot and clearly indicates degraded mode while limiting diagnostics to client-side logs.  
+- **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances without crashing; Continue remains disabled only when location-related validation rules require it (e.g., invalid coordinate ranges), and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
 - **FR-015**: When GPS capture fails or is skipped, only the latitude/longitude inputs serve as the manual fallback; helper text MUST clarify that no additional textual location details are collected in this step.
 
 ### Key Entities *(include if feature involves data)*
 
 - **AnimalDescriptionDetails**: Session-bound structure containing disappearance date, species, race, gender, age, optional description, and metadata about when each value was last updated within the iOS Missing Pet flow.  
-- **LocationCapture**: Holds latitude, longitude, capture method (GPS or manual), timestamp, and permission status so downstream services know whether the user granted access; the capture method flips to manual the moment a user changes either coordinate.  
-- **SpeciesTaxonomyOption**: Represents each selectable species and its allowable races/breeds, sourced primarily from an offline-bundled snapshot that can refresh from the taxonomy provider when connectivity resumes.
+- **UserLocation**: Geographic coordinates (latitude and longitude) used for this step, matching the existing UserLocation concept in the app; the screen only needs the coordinates and does not track permission status or whether values came from GPS or manual entry.  
+- **SpeciesTaxonomyOption**: Represents each selectable species from a fixed curated list bundled with the app; there is no runtime taxonomy service or online refresh in this step.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: At least 95% of iOS users who reach Step 3 can complete it and advance to Step 4 in ≤90 seconds during usability testing.  
-- **SC-002**: 0% of QA test cases on iOS allow future dates, missing species/race, or missing gender to pass validation into Step 4.  
-- **SC-003**: At least 85% of iOS users who tap “Request GPS position” with permissions granted receive auto-populated coordinates within 5 seconds.  
-- **SC-004**: 95% of iOS sessions preserve all Step 3 entries when the user navigates away and returns within the same reporting session (per analytics).  
+- **SC-001**: 0% of QA test cases on iOS allow future dates, missing species/race, or missing gender to pass validation into Step 4.  
+- **SC-002**: 95% of iOS sessions preserve all Step 3 entries when the user navigates away and returns within the same reporting session (per analytics).  
 
 ## Assumptions
 
-- Taxonomy (species + race mappings) and copy for helper/error text are provided by product and localized outside this feature.  
+- Curated species list and copy for helper/error text are provided by product and bundled statically with the iOS app; no runtime taxonomy service or remote lookup is used on this screen.  
 - Lat/Long inputs are optional but encouraged; omission does not block Continue as long as other required fields are valid.  
 - Gender options remain binary for this release, matching the provided iOS design; future inclusivity updates will be handled separately.  
 - The age field collects whole years; if the age is unknown the reporter can leave it blank or enter “0”.  
@@ -118,7 +116,7 @@ Reporters on iOS might step away or return to previous steps; Step 3 must preser
 ## Dependencies
 
 - iOS navigation scaffolding and session container from specification 017 (Missing Pet flow).  
-- Taxonomy data source providing species/race options and an offline snapshot suitable for bundling with the iOS app.  
+- Static configuration for the curated species list bundled with the iOS app.  
 - Device location capabilities for the Request GPS button.  
 - Analytics capabilities that can track completion of Step 3 in the Missing Pet flow.
 
