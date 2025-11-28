@@ -36,9 +36,9 @@ import androidx.core.graphics.toColorInt
 import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
+import com.intive.aifirst.petspot.lib.LocationFormatter
 
 /**
  * Composable for displaying a single animal card in the list.
@@ -64,7 +64,7 @@ fun AnimalCard(
 ) {
     val placeholderInitial =
         animal.name.firstOrNull()?.uppercaseChar()?.toString()
-            ?: animal.species.displayName.firstOrNull()?.uppercaseChar()?.toString()
+            ?: animal.species.firstOrNull()?.uppercaseChar()?.toString()
             ?: "?"
 
     Card(
@@ -118,19 +118,7 @@ fun AnimalCard(
                         fontSize = 13.sp,
                     )
                     Text(
-                        text = animal.location.city,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF4A5565),
-                    )
-                    Text(
-                        text = "•",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF4A5565),
-                    )
-                    Text(
-                        text = "+${animal.location.radiusKm}km",
+                        text = LocationFormatter.formatCoordinates(animal.location),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color(0xFF4A5565),
@@ -144,7 +132,7 @@ fun AnimalCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = animal.species.displayName,
+                        text = animal.species,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color(0xFF101828),
@@ -202,8 +190,8 @@ private object AnimalCardPreviewData {
             id = "preview-1",
             name = "Luna",
             photoUrl = "",
-            location = Location(city = "Warsaw", radiusKm = 15),
-            species = AnimalSpecies.DOG,
+            location = Location(latitude = 52.2297, longitude = 21.0122),
+            species = "Dog",
             breed = "Border Collie",
             gender = AnimalGender.FEMALE,
             status = AnimalStatus.MISSING,

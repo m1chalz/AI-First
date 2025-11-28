@@ -53,12 +53,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [P] Create `AnnouncementDto.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/dto/AnnouncementDto.kt` with @Serializable annotations (exclude managementPassword per FR-009)
-- [ ] T006 [P] Create `AnnouncementsResponseDto.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/dto/AnnouncementsResponseDto.kt` for list wrapper
-- [ ] T007 Create `AnnouncementMapper.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/mappers/AnnouncementMapper.kt` with `toDomain()` extension function
-- [ ] T008 [P] Create `AnnouncementMapperTest.kt` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/mappers/AnnouncementMapperTest.kt` with Given-When-Then tests for: all field mappings, null optional field fallbacks (FR-007), unknown status coercion to MISSING (FR-010)
-- [ ] T009 Create `AnnouncementApiClient.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/AnnouncementApiClient.kt` with Ktor HttpClient wrapper
-- [ ] T010 Update `DataModule.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DataModule.kt` to provide Ktor HttpClient and AnnouncementApiClient via Koin
+- [X] T005 [P] Create `AnnouncementDto.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/dto/AnnouncementDto.kt` with @Serializable annotations (exclude managementPassword per FR-009)
+- [X] T006 [P] Create `AnnouncementsResponseDto.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/dto/AnnouncementsResponseDto.kt` for list wrapper
+- [X] T007 Create `AnnouncementMapper.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/mappers/AnnouncementMapper.kt` with `toDomain()` extension function
+- [X] T008 [P] Create `AnnouncementMapperTest.kt` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/mappers/AnnouncementMapperTest.kt` with Given-When-Then tests for: all field mappings, null optional field fallbacks (FR-007), unknown status coercion to MISSING (FR-010)
+- [X] T009 Create `AnnouncementApiClient.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/api/AnnouncementApiClient.kt` with Ktor HttpClient wrapper
+- [X] T010 Update `DataModule.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DataModule.kt` to provide Ktor HttpClient and AnnouncementApiClient via Koin
 - [X] T011 Add API base URL configuration to `/composeApp/build.gradle.kts` BuildConfig (10.0.2.2:3000 for debug)
 
 **Checkpoint**: Foundation ready - DTOs compile, mapper tests pass, HttpClient configured
