@@ -57,6 +57,12 @@ public enum L10n {
     public static let speciesLabel = L10n.tr("Localizable", "animalDescription.speciesLabel", fallback: "Species")
     /// Select species
     public static let speciesPlaceholder = L10n.tr("Localizable", "animalDescription.speciesPlaceholder", fallback: "Select species")
+    public enum DatePicker {
+      /// Done
+      public static let done = L10n.tr("Localizable", "animalDescription.datePicker.done", fallback: "Done")
+      /// Select Date
+      public static let title = L10n.tr("Localizable", "animalDescription.datePicker.title", fallback: "Select Date")
+    }
     public enum Error {
       /// Age must be between 0 and 40
       public static let invalidAge = L10n.tr("Localizable", "animalDescription.error.invalidAge", fallback: "Age must be between 0 and 40")

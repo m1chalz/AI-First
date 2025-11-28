@@ -170,6 +170,10 @@
 "animalDescription.requestGPSButton" = "Request GPS position";
 "animalDescription.continueButton" = "Continue";
 
+// Date picker
+"animalDescription.datePicker.title" = "Select Date";
+"animalDescription.datePicker.done" = "Done";
+
 // Helper text
 "animalDescription.gpsHelperText" = "Location captured successfully";
 "animalDescription.characterCount" = "%d/%d";

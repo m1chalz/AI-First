@@ -77,37 +77,57 @@ private struct DatePickerSheet: View {
     let dateRange: PartialRangeThrough<Date>?
     let onDismiss: () -> Void
     
+    @State private var temporaryDate: Date
+    
+    init(date: Binding<Date>, dateRange: PartialRangeThrough<Date>?, onDismiss: @escaping () -> Void) {
+        self._date = date
+        self.dateRange = dateRange
+        self.onDismiss = onDismiss
+        // Initialize temporary date with current value
+        self._temporaryDate = State(initialValue: date.wrappedValue)
+    }
+    
     var body: some View {
         NavigationView {
             Group {
                 if let range = dateRange {
                     DatePicker(
-                        "Select Date",
-                        selection: $date,
+                        L10n.AnimalDescription.DatePicker.title,
+                        selection: $temporaryDate,
                         in: range,
                         displayedComponents: .date
                     )
                     .datePickerStyle(.graphical)
                 } else {
                     DatePicker(
-                        "Select Date",
-                        selection: $date,
+                        L10n.AnimalDescription.DatePicker.title,
+                        selection: $temporaryDate,
                         displayedComponents: .date
                     )
                     .datePickerStyle(.graphical)
                 }
             }
             .padding()
-            .navigationTitle("Select Date")
+            .navigationTitle(L10n.AnimalDescription.DatePicker.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L10n.Common.cancel) {
                         onDismiss()
                     }
+                    .foregroundColor(Color(hex: "#2D2D2D"))
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L10n.AnimalDescription.DatePicker.done) {
+                        // Commit the temporary date to the binding
+                        date = temporaryDate
+                        onDismiss()
+                    }
+                    .foregroundColor(Color(hex: "#2D2D2D"))
                 }
             }
         }
+        .tint(Color(hex: "#2D2D2D")) // Apply to chevrons in calendar
         .presentationDetents([.medium])
     }
 }
