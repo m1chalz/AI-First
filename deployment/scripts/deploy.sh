@@ -63,18 +63,6 @@ setup_directories() {
   log_success "Persistent directories created"
 }
 
-setup_env() {
-  log_info "Setting up environment..."
-  
-  if [ ! -f "$DEPLOYMENT_DIR/.env" ]; then
-    cp "$DEPLOYMENT_DIR/envExample" "$DEPLOYMENT_DIR/.env"
-    log_success ".env file created from template"
-    log_warning "Please review and edit .env if needed: nano $DEPLOYMENT_DIR/.env"
-  else
-    log_success ".env file already exists"
-  fi
-}
-
 build_images() {
   log_info "Building Docker images..."
   
@@ -144,9 +132,6 @@ main() {
   echo ""
   
   setup_directories
-  echo ""
-  
-  setup_env
   echo ""
   
   build_images
