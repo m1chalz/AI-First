@@ -8,21 +8,11 @@ struct AnimalDescriptionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // Date picker section
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(L10n.AnimalDescription.dateLabel)
-                        .font(.headline)
-                    
-                    DatePicker(
-                        "",
-                        selection: $viewModel.disappearanceDate,
-                        in: ...Date(),  // Limit to today or past
-                        displayedComponents: .date
-                    )
-                    .datePickerStyle(.compact)
-                    .labelsHidden()
-                    .accessibilityIdentifier("animalDescription.datePicker.tap")
-                }
+                // Date input
+                DateInputView(
+                    model: viewModel.dateInputModel,
+                    date: $viewModel.disappearanceDate
+                )
                 
                 // Species dropdown
                 DropdownView(
