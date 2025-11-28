@@ -82,18 +82,19 @@ struct AnimalDescriptionView: View {
                 // Continue button
                 Button(action: { viewModel.onContinueTapped() }) {
                     Text(L10n.AnimalDescription.continueButton)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
+                        .font(.custom("Hind-Regular", size: 18))
                         .foregroundColor(.white)
-                        .cornerRadius(8)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(Color(hex: "#155DFC"))
+                        .cornerRadius(10)
                 }
                 .accessibilityIdentifier("animalDescription.continueButton.tap")
             }
             .padding()
+            .padding(.bottom, 20) // Extra bottom padding for keyboard
         }
-        .navigationTitle(L10n.ReportMissingPet.Description.title)
-        .navigationBarTitleDisplayMode(.inline)
+        .scrollDismissesKeyboard(.interactively)
         .alert("Location Permission Required", isPresented: $viewModel.showPermissionDeniedAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Go to Settings") {
