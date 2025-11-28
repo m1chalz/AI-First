@@ -23,14 +23,14 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 
 **Purpose**: Create directory structure and copy configuration templates
 
-- [ ] T001 Create `/deployment` directory in repository root
-- [ ] T002 [P] Create `/deployment/nginx` subdirectory for nginx reverse proxy config
-- [ ] T003 [P] Create `/deployment/scripts` subdirectory for shell scripts
-- [ ] T004 [P] Create `.dockerignore` file in `/server` directory
-- [ ] T005 [P] Create `.dockerignore` file in `/webApp` directory
-- [ ] T006 [P] Copy `/specs/030-docker-deployment/contracts/docker-compose.yml` to `/deployment/docker-compose.yml`
-- [ ] T007 [P] Copy `/specs/030-docker-deployment/contracts/nginx.conf` to `/deployment/nginx/nginx.conf`
-- [ ] T008 [P] Create `.env.example` file in `/deployment` directory with environment variable template
+- [x] T001 Create `/deployment` directory in repository root
+- [x] T002 [P] Create `/deployment/nginx` subdirectory for nginx reverse proxy config
+- [x] T003 [P] Create `/deployment/scripts` subdirectory for shell scripts
+- [x] T004 [P] Create `.dockerignore` file in `/server` directory
+- [x] T005 [P] Create `.dockerignore` file in `/webApp` directory
+- [x] T006 [P] Copy `/specs/030-docker-deployment/contracts/docker-compose.yml` to `/deployment/docker-compose.yml`
+- [x] T007 [P] Copy `/specs/030-docker-deployment/contracts/nginx.conf` to `/deployment/nginx/nginx.conf`
+- [x] T008 [P] Create `.env.example` file in `/deployment` directory with environment variable template
 
 ---
 
@@ -40,15 +40,15 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 [P] Copy `/specs/030-docker-deployment/contracts/Dockerfile.backend` to `/server/Dockerfile`
-- [ ] T010 [P] Copy `/specs/030-docker-deployment/contracts/Dockerfile.frontend` to `/webApp/Dockerfile`
-- [ ] T011 [P] Create `/webApp/nginx.conf` for frontend static file serving (listens on port 8080)
-- [ ] T012 Verify backend Dockerfile CMD uses `npm start` (includes --experimental-transform-types flag)
-- [ ] T013 Verify docker-compose.yml uses `${IMAGE_TAG:-latest}` for backend and frontend images
-- [ ] T014 Verify nginx.conf has simplified proxy_pass directives (no header preservation)
-- [ ] T015 Update `/server/.dockerignore` to exclude `node_modules/`, `.git/`, `coverage/`, `*.test.ts`, `__test__/`
-- [ ] T016 Update `/webApp/.dockerignore` to exclude `node_modules/`, `.git/`, `coverage/`, `dist/`, `*.test.ts`, `__test__/`
-- [ ] T017 Update `/.gitignore` to exclude `/deployment/.env` (secrets file)
+- [x] T009 [P] Copy `/specs/030-docker-deployment/contracts/Dockerfile.backend` to `/server/Dockerfile`
+- [x] T010 [P] Copy `/specs/030-docker-deployment/contracts/Dockerfile.frontend` to `/webApp/Dockerfile`
+- [x] T011 [P] Create `/webApp/nginx.conf` for frontend static file serving (listens on port 8080)
+- [x] T012 Verify backend Dockerfile CMD uses `npm start` (includes --experimental-transform-types flag)
+- [x] T013 Verify docker-compose.yml uses `${IMAGE_TAG:-latest}` for backend and frontend images
+- [x] T014 Verify nginx.conf has simplified proxy_pass directives (no header preservation)
+- [x] T015 Update `/server/.dockerignore` to exclude `node_modules/`, `.git/`, `coverage/`, `*.test.ts`, `__test__/`
+- [x] T016 Update `/webApp/.dockerignore` to exclude `node_modules/`, `.git/`, `coverage/`, `dist/`, `*.test.ts`, `__test__/`
+- [x] T017 Update `/.gitignore` to exclude `/deployment/.env` (secrets file)
 
 **Checkpoint**: Core configuration files ready - shell script implementation can now begin
 
