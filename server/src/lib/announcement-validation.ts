@@ -3,15 +3,6 @@ import { ValidationError } from './errors.ts';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import { isValidEmail, isValidPhone } from './validators.ts';
 
-function isValidHttpUrl(urlString: string): boolean {
-  try {
-    const url = new URL(urlString);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
 function isNotFutureDate(dateString: string): boolean {
   const dateObj = new Date(dateString);
   const today = new Date();
@@ -54,13 +45,6 @@ const CreateAnnouncementSchema = z
         message: 'invalid phone format',
       })
       .optional(),
-    photoUrl: z
-      .string()
-      .trim()
-      .min(1, { message: 'cannot be empty' })
-      .refine((url) => isValidHttpUrl(url), {
-        message: 'must be a valid URL with http or https protocol',
-      }),
     lastSeenDate: z
       .string()
       .trim()

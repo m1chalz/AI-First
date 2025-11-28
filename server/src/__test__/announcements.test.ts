@@ -158,6 +158,7 @@ describe('GET /api/v1/announcements/:id', () => {
     // Then: Error response returned
     expect(response.body).toEqual({
       error: {
+        requestId: expect.any(String),
         code: 'NOT_FOUND',
         message: 'Resource not found'
       }
@@ -191,7 +192,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Golden Retriever',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -227,7 +227,6 @@ describe('POST /api/v1/announcements', () => {
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       email: 'john@example.com',
       phone: '+1 555 123 4567',
@@ -255,7 +254,7 @@ describe('POST /api/v1/announcements', () => {
     expect(response.body.locationLatitude).toBe(data.locationLatitude);
     expect(response.body.locationLongitude).toBe(data.locationLongitude);
     expect(response.body.lastSeenDate).toBe(data.lastSeenDate);
-    expect(response.body.photoUrl).toBe(data.photoUrl);
+    expect(response.body.photoUrl).toBeNull();
     expect(response.body.status).toBe(data.status);
     expect(response.body.email).toBe(data.email);
     expect(response.body.phone).toBe(data.phone);
@@ -270,7 +269,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Siamese Cat',
       sex: 'FEMALE',
       lastSeenDate: '2025-11-19',
-      photoUrl: 'https://example.com/cat.jpg',
       status: 'FOUND' as const,
       locationLatitude: 51.5074,
       locationLongitude: -0.1278,
@@ -295,7 +293,6 @@ describe('POST /api/v1/announcements', () => {
     const data = {
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -310,6 +307,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_VALUE',
       field: 'species'
     });
@@ -321,7 +319,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Dog',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285
@@ -335,6 +332,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_CONTACT',
       field: 'contact'
     });
@@ -348,7 +346,6 @@ describe('POST /api/v1/announcements', () => {
       description: '<img src=x onerror=alert(1)>Test<div>content</div>',
       petName: '<div>Buddy</div>',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -375,7 +372,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Dog',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -391,6 +387,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'INVALID_FIELD',
       field: 'unknownField'
     });
@@ -402,7 +399,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Golden Retriever',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo1.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -420,7 +416,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Labrador',
       sex: 'FEMALE',
       lastSeenDate: '2025-11-21',
-      photoUrl: 'https://example.com/photo2.jpg',
       status: 'FOUND' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -435,6 +430,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then: Returns HTTP 409 with CONFLICT error
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'CONFLICT',
       message: 'An entity with this value already exists',
       field: 'microchipNumber'
