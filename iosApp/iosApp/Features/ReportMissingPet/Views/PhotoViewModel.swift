@@ -21,6 +21,11 @@ final class PhotoViewModel: ObservableObject {
         return nil
     }
     
+    /// Returns metadata for the card that should be shown on screen.
+    var cardMetadata: PhotoAttachmentMetadata? {
+        pendingMetadata ?? confirmedMetadata
+    }
+
     /// Returns true when attachment is being loaded/processed.
     var isAttachmentLoading: Bool {
         if case .loading = attachmentStatus {
@@ -44,6 +49,7 @@ final class PhotoViewModel: ObservableObject {
     // MARK: - Private State
     
     private var restorationTask: Task<Void, Never>?
+    private var pendingMetadata: PhotoAttachmentMetadata?
     
     // MARK: - Initialization
     
@@ -83,22 +89,22 @@ final class PhotoViewModel: ObservableObject {
             return
         }
         
+        let metadata = PhotoAttachmentMetadata(
+            id: UUID(),
+            fileName: selection.fileName,
+            fileSizeBytes: selection.data.count,
+            utiIdentifier: selection.contentType.identifier,
+            pixelWidth: selection.pixelWidth,
+            pixelHeight: selection.pixelHeight,
+            assetIdentifier: selection.assetIdentifier,
+            cachedURL: URL(fileURLWithPath: "/dev/null"),
+            savedAt: Date()
+        )
+
+        pendingMetadata = metadata
         updateStatus(.loading(progress: nil))
-        helperMessage = L10n.AnimalPhoto.Helper.loading
         
         do {
-            let metadata = PhotoAttachmentMetadata(
-                id: UUID(),
-                fileName: selection.fileName,
-                fileSizeBytes: selection.data.count,
-                utiIdentifier: selection.contentType.identifier,
-                pixelWidth: selection.pixelWidth,
-                pixelHeight: selection.pixelHeight,
-                assetIdentifier: selection.assetIdentifier,
-                cachedURL: URL(fileURLWithPath: "/dev/null"),
-                savedAt: Date()
-            )
-            
             let savedMetadata = try await photoAttachmentCache.save(
                 data: selection.data,
                 metadata: metadata
@@ -158,6 +164,7 @@ final class PhotoViewModel: ObservableObject {
     }
     
     private func applyConfirmedAttachment(_ metadata: PhotoAttachmentMetadata) {
+        pendingMetadata = nil
         toastScheduler.cancel()
         showsMandatoryToast = false
         helperMessage = L10n.AnimalPhoto.Helper.required
@@ -166,6 +173,7 @@ final class PhotoViewModel: ObservableObject {
     }
     
     private func resetAttachmentState(helperMessage message: String? = nil) {
+        pendingMetadata = nil
         flowState.photoAttachment = nil
         updateStatus(.empty)
         helperMessage = message ?? L10n.AnimalPhoto.Helper.required

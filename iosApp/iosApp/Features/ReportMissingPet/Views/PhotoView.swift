@@ -17,11 +17,10 @@ struct PhotoView: View {
                         pickerSelection: $pickerSelection,
                         isLoading: viewModel.isProcessingSelection || viewModel.isAttachmentLoading
                     )
-                    if viewModel.isAttachmentLoading {
-                        loadingIndicator
-                    }
-                    if let metadata = viewModel.confirmedMetadata {
-                    AnimalPhotoItemView(model: .init(metadata: metadata)) {
+                    if let metadata = viewModel.cardMetadata {
+                        AnimalPhotoItemView(
+                            model: .init(metadata: metadata, showsLoadingIcon: viewModel.isAttachmentLoading)
+                        ) {
                             viewModel.removeAttachment()
                         }
                         .transition(.opacity.combined(with: .move(edge: .top)))
@@ -67,7 +66,7 @@ struct PhotoView: View {
         }
         .background(Color.white.ignoresSafeArea())
         .animation(.easeInOut(duration: 0.2), value: viewModel.showsMandatoryToast)
-        .animation(.easeInOut(duration: 0.2), value: viewModel.confirmedMetadata?.id)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.cardMetadata?.id)
         .onChange(of: pickerSelection) { _, newSelection in
             guard let item = newSelection else { return }
             Task {
@@ -91,17 +90,6 @@ struct PhotoView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var loadingIndicator: some View {
-        HStack(spacing: 8) {
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: "#155DFC")))
-            Text(L10n.AnimalPhoto.Helper.loading)
-                .font(.system(size: 14))
-                .foregroundColor(Color(hex: "#545F71"))
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 4)
-    }
 }
 
 #if DEBUG

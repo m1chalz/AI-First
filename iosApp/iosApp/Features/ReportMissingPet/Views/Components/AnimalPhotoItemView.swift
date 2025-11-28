@@ -11,9 +11,21 @@ struct AnimalPhotoItemView: View {
                 .fill(Color(hex: model.iconBackgroundHex))
                 .frame(width: 40, height: 40)
                 .overlay(
-                    Image(systemName: model.iconSymbolName)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(Color(hex: model.iconForegroundHex))
+                    Group {
+                        if model.showsLoadingIcon {
+                            ProgressView()
+                                .progressViewStyle(
+                                    CircularProgressViewStyle(
+                                        tint: Color(hex: model.iconForegroundHex)
+                                    )
+                                )
+                                .frame(width: 24, height: 24)
+                        } else {
+                            Image(systemName: model.iconSymbolName)
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundColor(Color(hex: model.iconForegroundHex))
+                        }
+                    }
                 )
             
             VStack(alignment: .leading, spacing: 2) {

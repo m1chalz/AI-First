@@ -13,6 +13,7 @@ extension AnimalPhotoItemView {
         let removeIconBackgroundHex: String
         let cardBackgroundHex: String
         let cardBorderHex: String
+        let showsLoadingIcon: Bool
 
         init(
             fileName: String,
@@ -25,7 +26,8 @@ extension AnimalPhotoItemView {
             removeIconForegroundHex: String,
             removeIconBackgroundHex: String,
             cardBackgroundHex: String,
-            cardBorderHex: String
+            cardBorderHex: String,
+            showsLoadingIcon: Bool = false
         ) {
             self.fileName = fileName
             self.fileSizeText = fileSizeText
@@ -38,9 +40,10 @@ extension AnimalPhotoItemView {
             self.removeIconBackgroundHex = removeIconBackgroundHex
             self.cardBackgroundHex = cardBackgroundHex
             self.cardBorderHex = cardBorderHex
+            self.showsLoadingIcon = showsLoadingIcon
         }
-        
-        init(metadata: PhotoAttachmentMetadata) {
+
+        init(metadata: PhotoAttachmentMetadata, showsLoadingIcon: Bool = false) {
             self.init(
                 fileName: metadata.fileName,
                 fileSizeText: metadata.formattedFileSize,
@@ -52,7 +55,8 @@ extension AnimalPhotoItemView {
                 removeIconForegroundHex: "#2D2D2D",
                 removeIconBackgroundHex: "#FFFFFF",
                 cardBackgroundHex: "#FFFFFF",
-                cardBorderHex: "#14000000"
+                cardBorderHex: "#14000000",
+                showsLoadingIcon: showsLoadingIcon
             )
         }
     }
