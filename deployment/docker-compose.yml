@@ -35,7 +35,6 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_PATH=/app/server/db/pets.db
-      - IMAGES_PATH=/app/server/public/images
     networks:
       - petspot-network
     healthcheck:
