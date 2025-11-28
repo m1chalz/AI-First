@@ -69,42 +69,42 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 ### Implementation for User Story 1
 
 **Shell Scripts**:
-- [ ] T018 [P] [US1] Copy `/specs/030-docker-deployment/contracts/build.sh` to `/deployment/scripts/build.sh`
-- [ ] T019 [US1] Update build.sh to generate IMAGE_TAG as `(commit-hash)-(timestamp)` format
-- [ ] T020 [US1] Update build.sh to build backend image: `docker build -t petspot-backend:${IMAGE_TAG} -f ../server/Dockerfile ../server/`
-- [ ] T021 [US1] Update build.sh to build frontend image: `docker build -t petspot-frontend:${IMAGE_TAG} -f ../webApp/Dockerfile ../webApp/`
-- [ ] T022 [US1] Update build.sh to tag images as `latest` for convenience
-- [ ] T023 [US1] Update build.sh to export IMAGE_TAG environment variable for docker-compose
-- [ ] T024 [US1] Create `/deployment/scripts/deploy.sh` for initial deployment workflow
-- [ ] T025 [US1] Add prerequisite checks to deploy.sh (Docker, docker-compose, Git, ports 80/443 free)
-- [ ] T026 [US1] Add Git repository cloning step to deploy.sh (if running on fresh VM)
-- [ ] T027 [US1] Add persistent directory creation to deploy.sh (`mkdir -p /var/lib/petspot/db /var/lib/petspot/images`)
-- [ ] T028 [US1] Add permissions setup to deploy.sh (`chmod 755 /var/lib/petspot/*`, set ownership)
-- [ ] T029 [US1] Add .env file creation to deploy.sh (copy from .env.example, prompt user to edit)
-- [ ] T030 [US1] Add call to build.sh in deploy.sh
-- [ ] T031 [US1] Add container startup to deploy.sh (`docker compose -f deployment/docker-compose.yml up -d`)
-- [ ] T032 [US1] Add deployment verification to deploy.sh (health checks with curl, container status)
-- [ ] T033 [US1] Add color-coded output to deploy.sh (green=success, red=error, yellow=warning)
-- [ ] T034 [US1] Add error handling to deploy.sh (`set -euo pipefail`, exit codes for different failure types)
-- [ ] T035 [P] [US1] Make build.sh executable (`chmod +x /deployment/scripts/build.sh`)
-- [ ] T036 [P] [US1] Make deploy.sh executable (`chmod +x /deployment/scripts/deploy.sh`)
+- [x] T018 [P] [US1] Copy `/specs/030-docker-deployment/contracts/build.sh` to `/deployment/scripts/build.sh`
+- [x] T019 [US1] Update build.sh to generate IMAGE_TAG as `(commit-hash)-(timestamp)` format
+- [x] T020 [US1] Update build.sh to build backend image: `docker build -t petspot-backend:${IMAGE_TAG} -f ../server/Dockerfile ../server/`
+- [x] T021 [US1] Update build.sh to build frontend image: `docker build -t petspot-frontend:${IMAGE_TAG} -f ../webApp/Dockerfile ../webApp/`
+- [x] T022 [US1] Update build.sh to tag images as `latest` for convenience
+- [x] T023 [US1] Update build.sh to export IMAGE_TAG environment variable for docker-compose
+- [x] T024 [US1] Create `/deployment/scripts/deploy.sh` for initial deployment workflow
+- [x] T025 [US1] Add prerequisite checks to deploy.sh (Docker, docker-compose, Git, ports 80/443 free)
+- [x] T026 [US1] Add Git repository cloning step to deploy.sh (if running on fresh VM)
+- [x] T027 [US1] Add persistent directory creation to deploy.sh (`mkdir -p /var/lib/petspot/db /var/lib/petspot/images`)
+- [x] T028 [US1] Add permissions setup to deploy.sh (`chmod 755 /var/lib/petspot/*`, set ownership)
+- [x] T029 [US1] Add .env file creation to deploy.sh (copy from .env.example, prompt user to edit)
+- [x] T030 [US1] Add call to build.sh in deploy.sh
+- [x] T031 [US1] Add container startup to deploy.sh (`docker compose -f deployment/docker-compose.yml up -d`)
+- [x] T032 [US1] Add deployment verification to deploy.sh (health checks with curl, container status)
+- [x] T033 [US1] Add color-coded output to deploy.sh (green=success, red=error, yellow=warning)
+- [x] T034 [US1] Add error handling to deploy.sh (`set -euo pipefail`, exit codes for different failure types)
+- [x] T035 [P] [US1] Make build.sh executable (`chmod +x /deployment/scripts/build.sh`)
+- [x] T036 [P] [US1] Make deploy.sh executable (`chmod +x /deployment/scripts/deploy.sh`)
 
 **Documentation**:
-- [ ] T037 [P] [US1] Create `/deployment/README.md` with complete deployment documentation
-- [ ] T038 [US1] Document prerequisites in README (Docker, docker-compose, Git, SSH, ports)
-- [ ] T039 [US1] Document initial deployment steps in README (5-step quick start)
-- [ ] T040 [US1] Document verification procedures in README (curl commands, health checks)
-- [ ] T041 [US1] Document troubleshooting common issues in README (port conflicts, permissions, container failures)
-- [ ] T042 [US1] Document data persistence paths in README (`/var/lib/petspot/db`, `/var/lib/petspot/images`)
-- [ ] T043 [US1] Document environment variables in .env.example with comments
-- [ ] T044 [US1] Add inline comments to docker-compose.yml explaining service configuration
-- [ ] T045 [US1] Add inline comments to nginx.conf explaining routing rules
-- [ ] T046 [US1] Add inline comments to build.sh explaining tagging strategy
+- [x] T037 [P] [US1] Create `/deployment/README.md` with complete deployment documentation
+- [x] T038 [US1] Document prerequisites in README (Docker, docker-compose, Git, SSH, ports)
+- [x] T039 [US1] Document initial deployment steps in README (5-step quick start)
+- [x] T040 [US1] Document verification procedures in README (curl commands, health checks)
+- [x] T041 [US1] Document troubleshooting common issues in README (port conflicts, permissions, container failures)
+- [x] T042 [US1] Document data persistence paths in README (`/var/lib/petspot/db`, `/var/lib/petspot/images`)
+- [x] T043 [US1] Document environment variables in .env.example with comments
+- [x] T044 [US1] Add inline comments to docker-compose.yml explaining service configuration
+- [x] T045 [US1] Add inline comments to nginx.conf explaining routing rules
+- [x] T046 [US1] Add inline comments to build.sh explaining tagging strategy
 
 **Manual Testing (User Story 1)**:
 - [ ] T047 [US1] Test initial deployment on fresh VM following deploy.sh
 - [ ] T048 [US1] Verify frontend accessible at `http://localhost`
-- [ ] T049 [US1] Verify backend API accessible at `http://localhost/api/pets`
+- [ ] T049 [US1] Verify backend API accessible at `http://localhost/api/v1/announcements`
 - [ ] T050 [US1] Verify images served at `http://localhost/images/*`
 - [ ] T051 [US1] Verify all 3 containers running (`docker compose ps`)
 - [ ] T052 [US1] Verify container logs accessible (`docker compose logs`)
