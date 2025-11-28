@@ -79,8 +79,8 @@ setup_env() {
 build_images() {
   log_info "Building Docker images..."
   
-  cd "$DEPLOYMENT_DIR/scripts"
-  bash build.sh
+  cd "$DEPLOYMENT_DIR"
+  bash ./scripts/build.sh
   
   log_success "Docker images built"
 }
