@@ -27,6 +27,7 @@ const defaultMockRepository: IAnnouncementRepository = {
   findById: async () => null,
   existsByMicrochip: async () => false,
   create: async () => MOCK_ANNOUNCEMENT,
+  updatePhotoUrl: async () => undefined,
 };
 
 const VALID_CREATE_DATA: CreateAnnouncementDto = {

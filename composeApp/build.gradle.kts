@@ -29,6 +29,8 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             // Image Loading
             implementation(libs.coil.compose)
+            // Permissions (declarative permission handling for Compose)
+            implementation(libs.accompanist.permissions)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

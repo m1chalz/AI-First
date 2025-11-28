@@ -12,7 +12,6 @@ export interface CreateAnnouncementDto {
   locationLongitude: number;
   email?: string;
   phone?: string;
-  photoUrl: string;
   lastSeenDate: string;
   status: AnnouncementStatus;
   reward?: string;
@@ -45,7 +44,7 @@ export interface Announcement {
   locationLongitude: number;
   email?: string | null;
   phone?: string | null;
-  photoUrl: string;
+  photoUrl: string | null;
   lastSeenDate: string;
   status: AnnouncementStatus;
   reward?: string | null;
@@ -66,7 +65,7 @@ export interface AnnouncementRow {
   location_longitude: number;
   email: string | null;
   phone: string | null;
-  photo_url: string;
+  photo_url: string | null;
   last_seen_date: string;
   status: AnnouncementStatus;
   reward: string | null;

@@ -24,7 +24,6 @@ const VALID_ANNOUNCEMENT_DATA = {
   sex: 'MALE',
   locationLatitude: 40.7128,
   locationLongitude: -74.0060,
-  photoUrl: 'https://example.com/photo.jpg',
   lastSeenDate: '2025-11-19',
   status: 'MISSING' as const,
   email: 'test@example.com',
@@ -191,7 +190,6 @@ describe('validateCreateAnnouncement', () => {
       // Missing required fields
       { description: 'species is missing', fieldName: 'species', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       { description: 'sex is missing', fieldName: 'sex', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
-      { description: 'photoUrl is missing', fieldName: 'photoUrl', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       { description: 'lastSeenDate is missing', fieldName: 'lastSeenDate', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       { description: 'status is missing', fieldName: 'status', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       { description: 'locationLatitude is missing', fieldName: 'locationLatitude', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
@@ -199,14 +197,11 @@ describe('validateCreateAnnouncement', () => {
       // Empty string fields
       { description: 'species is empty string', fieldName: 'species', fieldValue: '', expectedCode: 'MISSING_VALUE' },
       { description: 'sex is empty string', fieldName: 'sex', fieldValue: '', expectedCode: 'MISSING_VALUE' },
-      { description: 'photoUrl is empty string', fieldName: 'photoUrl', fieldValue: '', expectedCode: 'MISSING_VALUE' },
       // lastSeenDate empty string fails regex first, so returns INVALID_FORMAT
       { description: 'lastSeenDate is empty string', fieldName: 'lastSeenDate', fieldValue: '', expectedCode: 'INVALID_FORMAT' },
       // Invalid formats
       { description: 'email format is invalid', fieldName: 'email', fieldValue: 'invalid-email', expectedCode: 'INVALID_FORMAT' },
       { description: 'phone format is invalid', fieldName: 'phone', fieldValue: 'no-digits', expectedCode: 'INVALID_FORMAT' },
-      { description: 'photoUrl is not a valid URL', fieldName: 'photoUrl', fieldValue: 'not-a-url', expectedCode: 'INVALID_FORMAT' },
-      { description: 'photoUrl uses non-HTTP protocol', fieldName: 'photoUrl', fieldValue: 'ftp://example.com/photo.jpg', expectedCode: 'INVALID_FORMAT' },
       { description: 'lastSeenDate format is invalid', fieldName: 'lastSeenDate', fieldValue: '2025/11/19', expectedCode: 'INVALID_FORMAT' },
       { description: 'lastSeenDate is in the future', fieldName: 'lastSeenDate', fieldValue: (() => { const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); return tomorrow.toISOString().split('T')[0]; })(), expectedCode: 'INVALID_FORMAT' },
       { description: 'status is not MISSING or FOUND', fieldName: 'status', fieldValue: 'INVALID_STATUS', expectedCode: 'INVALID_FORMAT' },
