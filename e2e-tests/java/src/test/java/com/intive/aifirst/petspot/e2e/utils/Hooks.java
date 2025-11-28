@@ -61,6 +61,7 @@ public class Hooks {
         System.out.println("========================================");
         
         // Future: Add setup logic here (e.g., test data preparation)
+        IosSimulatorMediaManager.ensurePhotoLibrarySeeded(scenario.getSourceTagNames());
     }
     
     /**

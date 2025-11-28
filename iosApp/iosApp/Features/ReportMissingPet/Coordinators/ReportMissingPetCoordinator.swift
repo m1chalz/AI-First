@@ -37,7 +37,9 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Create FlowState as coordinator property (owned by coordinator lifecycle)
         // This state object will be injected into all ViewModels
-        let flowState = ReportMissingPetFlowState()
+        let flowState = ReportMissingPetFlowState(
+            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache
+        )
         self.flowState = flowState
         
         // Navigate to chip number screen (step 1/4) - entry point
@@ -86,7 +88,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = PhotoViewModel(flowState: flowState)
+        let viewModel = PhotoViewModel(
+            flowState: flowState,
+            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
+            toastScheduler: ServiceContainer.shared.toastScheduler
+        )
         
         viewModel.onNext = { [weak self] in
             self?.navigateToDescription()
@@ -205,8 +211,12 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     /// Called when user taps back on step 1 or completes submission.
     func exitFlow() {
         // Clear all form data from flow state before dismissing
-        flowState?.clear()
+        let currentFlowState = flowState
         flowState = nil
+        
+        Task {
+            await currentFlowState?.clear()
+        }
         
         // Dismiss modal UINavigationController
         navigationController?.dismiss(animated: true) { [weak self] in

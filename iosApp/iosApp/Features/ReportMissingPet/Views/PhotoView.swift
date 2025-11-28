@@ -1,38 +1,153 @@
 import SwiftUI
+import PhotosUI
+import Foundation
 
-/// View for Photo screen (Step 2/4).
-/// Empty placeholder with Continue button only.
-/// TODO: Add photo picker in future iteration.
+/// Full PhotosPicker-driven UI for the Animal Photo step (2/4).
 struct PhotoView: View {
     @ObservedObject var viewModel: PhotoViewModel
     
+    @State private var pickerSelection: PhotosPickerItem?
+    
     var body: some View {
-        VStack {
-            Spacer()
-            
-            // Placeholder text
-            Text("Photo Screen")
-                .font(.title)
-                .foregroundColor(.gray)
-            
-            Spacer()
-            
-            // Continue button at bottom
-            Button(action: viewModel.handleNext) {
-                Text(L10n.Common.continue)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color(hex: "#155DFC"))
-                    .cornerRadius(10)
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    titleSection
+                    AnimalPhotoBrowseView(
+                        pickerSelection: $pickerSelection,
+                        isLoading: viewModel.isProcessingSelection || viewModel.isAttachmentLoading
+                    )
+                    if let metadata = viewModel.cardMetadata {
+                        AnimalPhotoItemView(
+                            model: .init(metadata: metadata, showsLoadingIcon: viewModel.isAttachmentLoading)
+                        ) {
+                            viewModel.removeAttachment()
+                        }
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+                }
+                .padding(.horizontal, 22)
+                .padding(.top, 32)
+                .padding(.bottom, 180)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 30)
-            .accessibilityIdentifier("photo.continueButton")
+            .background(Color.white)
+            
+            VStack(spacing: 12) {
+                if viewModel.showsMandatoryToast {
+                    ToastView(text: L10n.AnimalPhoto.Toast.mandatory)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .accessibilityIdentifier("animalPhoto.toast")
+                }
+                
+                Button(action: viewModel.handleNext) {
+                    Text(L10n.AnimalPhoto.Button.continue)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color(hex: "#155DFC"))
+                        .cornerRadius(10)
+                }
+                .accessibilityIdentifier("animalPhoto.continue")
+            }
+            .padding(.horizontal, 22)
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
-        .background(Color.white)
-        .edgesIgnoringSafeArea(.bottom)
+        .overlay(alignment: .topTrailing) {
+#if DEBUG
+            if ProcessInfo.processInfo.environment["UITEST_SHOW_PHOTO_DEBUG"] == "1" {
+                AnimalPhotoDebugControls(viewModel: viewModel)
+                    .padding(.top, 8)
+                    .padding(.trailing, 12)
+            }
+#endif
+        }
+        .background(Color.white.ignoresSafeArea())
+        .animation(.easeInOut(duration: 0.2), value: viewModel.showsMandatoryToast)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.cardMetadata?.id)
+        .onChange(of: pickerSelection) { _, newSelection in
+            guard let item = newSelection else { return }
+            Task {
+                await viewModel.processPickerItem(item)
+            }
+            pickerSelection = nil
+        }
     }
+    
+    // MARK: - Subviews
+    
+    private var titleSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(L10n.AnimalPhoto.title)
+                .font(.system(size: 32, weight: .regular))
+                .foregroundColor(Color(hex: "#2D2D2D"))
+            Text(viewModel.helperMessage)
+                .font(.system(size: 16))
+                .foregroundColor(Color(hex: "#545F71"))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
 }
 
+#if DEBUG
+private struct AnimalPhotoDebugControls: View {
+    @ObservedObject var viewModel: PhotoViewModel
+    
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            Button("CancelSim") {
+                viewModel.handlePickerCancellation()
+            }
+            .font(.caption2)
+            .padding(6)
+            .background(Color.yellow.opacity(0.4))
+            .cornerRadius(6)
+            .accessibilityIdentifier("animalPhoto.debug.cancel")
+            
+            Button("FailSim") {
+                viewModel.handleSelectionFailure()
+            }
+            .font(.caption2)
+            .padding(6)
+            .background(Color.red.opacity(0.4))
+            .cornerRadius(6)
+            .accessibilityIdentifier("animalPhoto.debug.fail")
+        }
+    }
+}
+#endif
+
+// MARK: - Previews
+
+#if DEBUG
+struct PhotoView_Previews: PreviewProvider {
+    private final class PreviewCache: PhotoAttachmentCacheProtocol {
+        func save(data: Data, metadata: PhotoAttachmentMetadata) async throws -> PhotoAttachmentMetadata { metadata }
+        func loadCurrent() async throws -> PhotoAttachmentMetadata? { nil }
+        func fileExists(at url: URL) async -> Bool { false }
+        func clearCurrent() async throws {}
+    }
+    
+    private final class PreviewToastScheduler: ToastSchedulerProtocol {
+        func schedule(duration: TimeInterval, handler: @escaping () -> Void) {}
+        func cancel() {}
+    }
+    
+    static var previews: some View {
+        let cache = PreviewCache()
+        let flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        let viewModel = PhotoViewModel(
+            flowState: flowState,
+            photoAttachmentCache: cache,
+            toastScheduler: PreviewToastScheduler()
+        )
+        
+        return NavigationView {
+            PhotoView(viewModel: viewModel)
+        }
+    }
+}
+#endif

@@ -48,16 +48,7 @@ public class ReportMissingPetSteps {
     // ========================================
     
     public ReportMissingPetSteps() {
-        // Initialize driver from AppiumDriverManager
-        // Driver is provided by Hooks (hooks.java) via scenario context
-    }
-    
-    /**
-     * Called before each scenario (via Hooks).
-     * Initialize driver and screen objects.
-     */
-    public void initializeDriver(AppiumDriver driver) {
-        this.driver = driver;
+        this.driver = AppiumDriverManager.getDriver("iOS");
         this.reportMissingPetScreen = new ReportMissingPetScreen(driver);
         this.microchipNumberScreen = new MicrochipNumberScreen(driver);
     }
@@ -200,6 +191,39 @@ public class ReportMissingPetSteps {
                 "Progress indicator should show " + expectedProgress + " on " + screenName);
     }
     
+    /**
+     * Step: User browses photo library and selects first seeded asset.
+     */
+    @When("I browse and select a seeded animal photo")
+    public void browseAndSelectSeededPhoto() {
+        reportMissingPetScreen.tapBrowseButton();
+        reportMissingPetScreen.selectFirstPhotoFromPicker();
+    }
+    
+    /**
+     * Step: User removes the current attachment.
+     */
+    @When("I remove the selected animal photo")
+    public void removeSelectedPhoto() {
+        reportMissingPetScreen.tapRemovePhotoButton();
+    }
+    
+    /**
+     * Step: Trigger debug cancellation helper (used in UI tests).
+     */
+    @When("I trigger the debug photo picker cancellation")
+    public void triggerDebugPickerCancellation() {
+        reportMissingPetScreen.tapDebugCancelButton();
+    }
+    
+    /**
+     * Step: Trigger debug failure helper to simulate transfer errors.
+     */
+    @When("I trigger the debug photo transfer failure")
+    public void triggerDebugPhotoFailure() {
+        reportMissingPetScreen.tapDebugFailButton();
+    }
+    
     // ========================================
     // THEN: ASSERTIONS
     // ========================================
@@ -222,6 +246,30 @@ public class ReportMissingPetSteps {
         };
         
         assertTrue(isDisplayed, "Screen '" + screenName + "' should be displayed");
+    }
+    
+    @Then("the photo confirmation card should be visible")
+    public void confirmationCardShouldBeVisible() {
+        assertTrue(reportMissingPetScreen.isConfirmationCardDisplayed(),
+            "Photo confirmation card should be visible");
+    }
+    
+    @Then("the photo confirmation card should display filename containing \"{}\"")
+    public void confirmationCardShouldDisplayFilename(String expectedFragment) {
+        assertTrue(reportMissingPetScreen.getConfirmationCardText().contains(expectedFragment),
+            "Filename should include " + expectedFragment);
+    }
+    
+    @Then("the photo confirmation card should be hidden")
+    public void confirmationCardShouldBeHidden() {
+        assertFalse(reportMissingPetScreen.isConfirmationCardDisplayed(),
+            "Photo confirmation card should not be visible");
+    }
+    
+    @Then("the mandatory photo toast should be visible")
+    public void mandatoryToastVisible() {
+        assertTrue(reportMissingPetScreen.isMandatoryToastVisible(),
+            "Mandatory toast should be visible");
     }
     
     /**

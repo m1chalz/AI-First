@@ -111,6 +111,23 @@
 "microchipNumber.fieldPlaceholder" = "00000-00000-00000";
 "microchipNumber.continueButton" = "Dalej";
 
+/* MARK: - Animal Photo Screen */
+
+"animalPhoto.title" = "Zdjęcie Twojego pupila";
+"animalPhoto.helper.required" = "Prześlij zdjęcie zaginionego zwierzęcia.";
+"animalPhoto.helper.pickerCancelled" = "Wybierz zdjęcie, aby kontynuować – możesz przeglądać ponownie w każdej chwili.";
+"animalPhoto.helper.loading" = "Pobieranie z iCloud…";
+"animalPhoto.alert.missing.title" = "Wymagane zdjęcie";
+"animalPhoto.alert.missing.message" = "Dołącz plik JPG, PNG, HEIC, GIF lub WEBP przed kontynuacją.";
+"animalPhoto.button.browse" = "Przeglądaj";
+"animalPhoto.button.remove" = "Usuń";
+"animalPhoto.button.continue" = "Kontynuuj";
+"animalPhoto.banner.settings" = "Otwórz ustawienia";
+"animalPhoto.banner.retry" = "Spróbuj ponownie";
+"animalPhoto.toast.mandatory" = "Zdjęcie jest obowiązkowe";
+"animalPhoto.tile.title" = "Dodaj zdjęcie zwierzęcia";
+"animalPhoto.tile.subtitle" = "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB";
+
 /* MARK: - Common */
 
 "common.loading" = "Ładowanie...";

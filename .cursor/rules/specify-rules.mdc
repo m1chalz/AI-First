@@ -21,6 +21,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - SQLite (current), PostgreSQL (migration path) + filesystem (public/images/ directory for uploaded photos) (021-announcement-photo-upload)
 - Swift 5.9+ (iOS 15+ deployment target) + SwiftUI (UI layer), UIKit (coordinators, navigation), Foundation (data types), SwiftGen (localization - mandatory) (019-ios-chip-number-screen)
 - In-memory flow state (ReportMissingPetFlowState class) - owned by coordinator, lifetime = flow duration (019-ios-chip-number-screen)
+- Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag) (028-ios-animal-photo-screen)
+- FileManager-backed `PhotoAttachmentCache` that writes image data to `~/Library/Caches/PetSpot/ReportMissingPet/<uuid>.img` plus lightweight metadata inside `ReportMissingPetFlowState` so selection persists through navigation/backgrounding and can be purged on submit/cancel (FR-010). (028-ios-animal-photo-screen)
 
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
@@ -48,13 +50,13 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 028-ios-animal-photo-screen: Added Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag)
 - 027-web-pet-details-screen: Added TypeScript 5.0+ (ES2020 target), React 18.2.0 + React, React DOM, React Portal (built-in), CSS Modules
 - 026-android-location-permissions: Added Kotlin (JVM 17 target)
 - 019-ios-chip-number-screen: Added Swift 5.9+ (iOS 15+ deployment target) + SwiftUI (UI layer), UIKit (coordinators, navigation), Foundation (data types), SwiftGen (localization - mandatory)
 - 017-ios-missing-pet-flow: Added Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation
 - 015-ios-location-permissions: Added Swift 5.9+ (Xcode 15+) + CoreLocation (iOS native framework for location services), SwiftUI, Combine
 - 016-e2e-java-migration: Added Java 21 (LTS)
-- 015-e2e-java-migration: Added Java 21 (LTS)
 - 010-pet-details-screen: Added Kotlin (JVM 17 target)
 - 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
 - 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E

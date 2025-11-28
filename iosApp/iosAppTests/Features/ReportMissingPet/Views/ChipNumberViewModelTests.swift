@@ -5,16 +5,19 @@ import XCTest
 final class ChipNumberViewModelTests: XCTestCase {
     
     var flowState: ReportMissingPetFlowState!
+    var cache: PhotoAttachmentCacheFake!
     var sut: ChipNumberViewModel!
     
     override func setUp() {
         super.setUp()
-        flowState = ReportMissingPetFlowState()
+        cache = PhotoAttachmentCacheFake()
+        flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
         sut = ChipNumberViewModel(flowState: flowState)
     }
     
     override func tearDown() {
         sut = nil
+        cache = nil
         flowState = nil
         super.tearDown()
     }

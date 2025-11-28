@@ -19,6 +19,12 @@ class ServiceContainer {
     /// Location service for permission management and coordinate fetching
     lazy var locationService: LocationServiceProtocol = LocationService()
     
+    /// Toast scheduler shared across ViewModels that need timer-driven toasts.
+    lazy var toastScheduler: ToastSchedulerProtocol = ToastScheduler()
+    
+    /// Disk cache for photo attachments within Report Missing Pet flow
+    lazy var photoAttachmentCache: PhotoAttachmentCacheProtocol = PhotoAttachmentCache()
+    
     // MARK: - Repositories
     
     /// Animal repository for fetching animal data

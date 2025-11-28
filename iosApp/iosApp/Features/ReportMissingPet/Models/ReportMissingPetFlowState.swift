@@ -1,10 +1,12 @@
 import Foundation
-import UIKit
 
 /// Shared state for Missing Pet Report flow.
 /// Owned by ReportMissingPetCoordinator and injected into all ViewModels.
 /// Persists data during forward/backward navigation within active session.
-class ReportMissingPetFlowState: ObservableObject {
+@MainActor
+final class ReportMissingPetFlowState: ObservableObject {
+    private let photoAttachmentCache: PhotoAttachmentCacheProtocol
+    
     // MARK: - Step 1: Chip Number
     
     /// Microchip number (optional, formatted as 00000-00000-00000 for display)
@@ -13,8 +15,11 @@ class ReportMissingPetFlowState: ObservableObject {
     
     // MARK: - Step 2: Photo
     
-    /// Selected photo of the pet (optional)
-    @Published var photo: UIImage?
+    /// Persisted attachment metadata for confirmation card rendering.
+    @Published var photoAttachment: PhotoAttachmentMetadata?
+    
+    /// Attachment lifecycle to drive UI state machine.
+    @Published var photoStatus: PhotoAttachmentStatus = .empty
     
     // MARK: - Step 3: Description
     
@@ -31,19 +36,22 @@ class ReportMissingPetFlowState: ObservableObject {
     
     // MARK: - Initialization
     
-    init() {
-        // All properties start as nil
+    init(photoAttachmentCache: PhotoAttachmentCacheProtocol) {
+        self.photoAttachmentCache = photoAttachmentCache
     }
     
     // MARK: - Methods
     
     /// Clears all flow state (called when exiting flow)
-    func clear() {
+    func clear() async {
         chipNumber = nil
-        photo = nil
+        photoAttachment = nil
+        photoStatus = .empty
         description = nil
         contactEmail = nil
         contactPhone = nil
+        
+        try? await photoAttachmentCache.clearCurrent()
     }
 }
 

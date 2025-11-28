@@ -5,6 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
+import io.appium.java_client.remote.options.ProcessArguments;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -167,6 +168,10 @@ public class AppiumDriverManager {
         // App path (relative to project root)
         String appPath = System.getProperty("user.dir") + "/apps/petspot-ios.app";
         options.setApp(appPath);
+        
+        ProcessArguments processArguments = new ProcessArguments();
+        processArguments.withEnvironment("UITEST_SHOW_PHOTO_DEBUG", "1");
+        options.setProcessArguments(processArguments);
         
         // Optional: Auto-accept alerts to avoid blocking tests
         options.setAutoAcceptAlerts(true);
