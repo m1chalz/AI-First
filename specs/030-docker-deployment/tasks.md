@@ -165,13 +165,13 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 
 ## Phase 5: User Story 3 - Build and Deploy from Source (Priority: P3)
 
-**Goal**: DevOps engineer can build Docker images directly on VM from source code with commit hash + timestamp tagging for traceability
+**Goal**: DevOps engineer can build Docker images directly on VM from source code with commit hash + date/time tagging for traceability
 
 **Independent Test**:
 1. Make code change and commit to Git
 2. Pull changes on VM
 3. Run build.sh script
-4. Verify: Images tagged with `(commit-hash)-(timestamp)` format
+4. Verify: Images tagged with `[commit-hash]-[date]T[time]` format
 5. Verify: Images also tagged as `latest`
 6. Verify: Can trace image back to specific commit
 7. Success = build completes successfully, tags enable rollback
@@ -205,7 +205,7 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 
 **Manual Testing (User Story 3)**:
 - [ ] T100 [US3] Test building images from source (run build.sh)
-- [ ] T101 [US3] Verify images tagged with correct format `(commit-hash)-(timestamp)`
+- [ ] T101 [US3] Verify images tagged with correct format `[commit-hash]-[date]T[time]`
 - [ ] T102 [US3] Verify images also tagged as `latest`
 - [ ] T103 [US3] Verify commit hash matches current Git HEAD
 - [ ] T104 [US3] Verify timestamp is current

@@ -19,8 +19,9 @@ log_info() {
 }
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
-TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-IMAGE_TAG="${COMMIT_HASH}-${TIMESTAMP}"
+DATE=$(date +%Y-%m-%d)
+TIME=$(date +%H:%M:%S)
+IMAGE_TAG="${COMMIT_HASH}-${DATE}T${TIME}"
 
 echo ""
 echo -e "${GREEN}========================================${NC}"
