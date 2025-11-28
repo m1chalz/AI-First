@@ -19,8 +19,8 @@ public enum L10n {
     }
   }
   public enum AnimalDescription {
-    /// Age (optional)
-    public static let ageLabel = L10n.tr("Localizable", "animalDescription.ageLabel", fallback: "Age (optional)")
+    /// Animal age (optional)
+    public static let ageLabel = L10n.tr("Localizable", "animalDescription.ageLabel", fallback: "Animal age (optional)")
     /// e.g., 5
     public static let agePlaceholder = L10n.tr("Localizable", "animalDescription.agePlaceholder", fallback: "e.g., 5")
     /// %d/%d
@@ -314,8 +314,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Contact Details")
     }
     public enum Description {
-      /// Description
-      public static let title = L10n.tr("Localizable", "reportMissingPet.description.title", fallback: "Description")
+      /// Animal description
+      public static let title = L10n.tr("Localizable", "reportMissingPet.description.title", fallback: "Animal description")
     }
     public enum Photo {
       /// Pet Photo

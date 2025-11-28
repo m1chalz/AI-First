@@ -89,7 +89,7 @@
 // Navigation titles
 "reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
-"reportMissingPet.description.title" = "Description";
+"reportMissingPet.description.title" = "Animal description";
 "reportMissingPet.contactDetails.title" = "Contact Details";
 "reportMissingPet.summary.title" = "Summary";
 
@@ -157,7 +157,7 @@
 "animalDescription.speciesLabel" = "Animal species";
 "animalDescription.raceLabel" = "Animal race (optional)";
 "animalDescription.genderLabel" = "Gender";
-"animalDescription.ageLabel" = "Age (optional)";
+"animalDescription.ageLabel" = "Animal age (optional)";
 "animalDescription.coordinatesLabel" = "Lat / Long";
 "animalDescription.coordinatePlaceholder" = "00000";
 "animalDescription.descriptionLabel" = "Animal additional description (optional)";
