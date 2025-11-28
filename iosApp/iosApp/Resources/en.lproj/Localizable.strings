@@ -74,6 +74,8 @@
 "animalSpecies.cat" = "Cat";
 "animalSpecies.bird" = "Bird";
 "animalSpecies.rabbit" = "Rabbit";
+"animalSpecies.rodent" = "Rodent";
+"animalSpecies.reptile" = "Reptile";
 "animalSpecies.other" = "Other";
 
 /* MARK: - Animal Gender */
@@ -143,4 +145,45 @@
 "location.permission.popup.message" = "Enable location access in Settings to see nearby pets.";
 "location.permission.popup.settings.button" = "Go to Settings";
 "location.permission.popup.cancel.button" = "Cancel";
+
+/* MARK: - Animal Description Screen */
+
+// Labels
+"animalDescription.dateLabel" = "Date of disappearance";
+"animalDescription.speciesLabel" = "Species";
+"animalDescription.raceLabel" = "Breed / Race";
+"animalDescription.genderLabel" = "Gender";
+"animalDescription.ageLabel" = "Age (optional)";
+"animalDescription.latitudeLabel" = "Latitude (optional)";
+"animalDescription.longitudeLabel" = "Longitude (optional)";
+"animalDescription.descriptionLabel" = "Additional description (optional)";
+
+// Placeholders
+"animalDescription.speciesPlaceholder" = "Select species";
+"animalDescription.racePlaceholder" = "e.g., Golden Retriever";
+"animalDescription.agePlaceholder" = "e.g., 5";
+"animalDescription.latitudePlaceholder" = "e.g., 52.2297";
+"animalDescription.longitudePlaceholder" = "e.g., 21.0122";
+"animalDescription.descriptionPlaceholder" = "Describe distinguishing features...";
+
+// Buttons
+"animalDescription.requestGPSButton" = "Request GPS position";
+"animalDescription.continueButton" = "Continue";
+
+// Helper text
+"animalDescription.gpsHelperText" = "Location captured successfully";
+"animalDescription.characterCount" = "%d/%d";
+
+// Error messages
+"animalDescription.error.missingDate" = "Please select a date";
+"animalDescription.error.missingSpecies" = "Please select a species";
+"animalDescription.error.missingRace" = "Please enter the breed or race";
+"animalDescription.error.missingGender" = "Please select a gender";
+"animalDescription.error.invalidAge" = "Age must be between 0 and 40";
+"animalDescription.error.invalidLatitude" = "Latitude must be between -90 and 90";
+"animalDescription.error.invalidLongitude" = "Longitude must be between -180 and 180";
+"animalDescription.error.invalidCoordinateFormat" = "Invalid coordinate format";
+
+// Toast messages
+"animalDescription.toast.validationErrors" = "Please correct the highlighted fields";
 

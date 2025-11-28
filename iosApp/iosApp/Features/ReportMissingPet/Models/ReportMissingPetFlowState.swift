@@ -21,10 +21,31 @@ final class ReportMissingPetFlowState: ObservableObject {
     /// Attachment lifecycle to drive UI state machine.
     @Published var photoStatus: PhotoAttachmentStatus = .empty
     
-    // MARK: - Step 3: Description
+    // MARK: - Step 3: Animal Description
     
-    /// Additional description about the pet (optional, multi-line)
-    @Published var description: String?
+    /// Date when the animal disappeared (required)
+    @Published var disappearanceDate: Date?
+    
+    /// Animal species (required)
+    @Published var animalSpecies: AnimalSpecies?
+    
+    /// Animal breed/race (required)
+    @Published var animalRace: String?
+    
+    /// Animal gender (required)
+    @Published var animalGender: AnimalGender?
+    
+    /// Animal age in years (optional, 0-40 range)
+    @Published var animalAge: Int?
+    
+    /// Last known latitude (optional, -90 to 90 range)
+    @Published var animalLatitude: Double?
+    
+    /// Last known longitude (optional, -180 to 180 range)
+    @Published var animalLongitude: Double?
+    
+    /// Additional description (optional, max 500 characters)
+    @Published var animalAdditionalDescription: String?
     
     // MARK: - Step 4: Contact Details
     
@@ -47,7 +68,14 @@ final class ReportMissingPetFlowState: ObservableObject {
         chipNumber = nil
         photoAttachment = nil
         photoStatus = .empty
-        description = nil
+        disappearanceDate = nil
+        animalSpecies = nil
+        animalRace = nil
+        animalGender = nil
+        animalAge = nil
+        animalLatitude = nil
+        animalLongitude = nil
+        animalAdditionalDescription = nil
         contactEmail = nil
         contactPhone = nil
         

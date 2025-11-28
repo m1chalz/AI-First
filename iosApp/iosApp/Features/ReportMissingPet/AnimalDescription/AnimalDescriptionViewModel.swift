@@ -1,0 +1,439 @@
+import Foundation
+import SwiftUI
+
+/// ViewModel for Animal Description screen (Step 3/4 of Missing Pet flow).
+/// Manages form data, validation, and coordinator callbacks.
+@MainActor
+class AnimalDescriptionViewModel: ObservableObject {
+    // MARK: - Published Properties (Form Data)
+    
+    /// Date when animal disappeared (required, defaults to today)
+    @Published var disappearanceDate: Date = Date()
+    
+    /// Selected species index for dropdown
+    @Published var selectedSpeciesIndex: Int?
+    
+    /// Selected species option (mapped from index)
+    var selectedSpecies: AnimalSpecies? {
+        guard let index = selectedSpeciesIndex else { return nil }
+        return AnimalSpecies.allCases[index]
+    }
+    
+    /// Breed/race text input (required, enabled only after species selected)
+    @Published var race: String = ""
+    
+    /// Selected gender index for selector
+    @Published var selectedGenderIndex: Int?
+    
+    /// Selected gender option (mapped from index)
+    var selectedGender: AnimalGender? {
+        guard let index = selectedGenderIndex else { return nil }
+        let options: [AnimalGender] = [.male, .female]
+        return options[index]
+    }
+    
+    /// Age text input (optional, 0-40 range)
+    @Published var age: String = ""
+    
+    /// Latitude text input (optional, -90 to 90 range)
+    @Published var latitude: String = ""
+    
+    /// Longitude text input (optional, -180 to 180 range)
+    @Published var longitude: String = ""
+    
+    /// Additional description text (optional, max 500 characters)
+    @Published var additionalDescription: String = ""
+    
+    // MARK: - Published Properties (Validation Errors)
+    
+    @Published var speciesErrorMessage: String?
+    @Published var raceErrorMessage: String?
+    @Published var genderErrorMessage: String?
+    @Published var ageErrorMessage: String?
+    @Published var latitudeErrorMessage: String?
+    @Published var longitudeErrorMessage: String?
+    
+    // MARK: - Published Properties (UI State)
+    
+    @Published var showToast = false
+    @Published var toastMessage = ""
+    @Published var showPermissionDeniedAlert = false
+    @Published var gpsHelperText: String?
+    
+    // MARK: - Coordinator Callbacks
+    
+    var onContinue: (() -> Void)?
+    var onBack: (() -> Void)?
+    
+    // MARK: - Dependencies
+    
+    private let flowState: ReportMissingPetFlowState
+    private let locationService: LocationServiceProtocol
+    
+    // MARK: - Initialization
+    
+    init(flowState: ReportMissingPetFlowState, locationService: LocationServiceProtocol) {
+        self.flowState = flowState
+        self.locationService = locationService
+        
+        // Load existing data from flow state if present (returning from Step 4)
+        if let existingDate = flowState.disappearanceDate {
+            self.disappearanceDate = existingDate
+        }
+        
+        if let existingSpecies = flowState.animalSpecies,
+           let index = AnimalSpecies.allCases.firstIndex(of: existingSpecies) {
+            self.selectedSpeciesIndex = index
+        }
+        
+        if let existingRace = flowState.animalRace {
+            self.race = existingRace
+        }
+        
+        if let existingGender = flowState.animalGender {
+            let options: [AnimalGender] = [.male, .female]
+            if let index = options.firstIndex(of: existingGender) {
+                self.selectedGenderIndex = index
+            }
+        }
+        
+        // Load optional fields (US2 & US3)
+        if let existingAge = flowState.animalAge {
+            self.age = String(existingAge)
+        }
+        
+        if let existingLat = flowState.animalLatitude {
+            self.latitude = String(format: "%.5f", existingLat)
+        }
+        
+        if let existingLong = flowState.animalLongitude {
+            self.longitude = String(format: "%.5f", existingLong)
+        }
+        
+        if let existingDesc = flowState.animalAdditionalDescription {
+            self.additionalDescription = existingDesc
+        }
+    }
+    
+    // MARK: - Computed Properties (Component Models)
+    
+    /// Model for species dropdown
+    var speciesDropdownModel: DropdownView.Model {
+        DropdownView.Model(
+            label: L10n.AnimalDescription.speciesLabel,
+            placeholder: L10n.AnimalDescription.speciesPlaceholder,
+            options: AnimalSpecies.allCases.map { $0.displayName },
+            errorMessage: speciesErrorMessage,
+            accessibilityID: "animalDescription.speciesDropdown.tap"
+        )
+    }
+    
+    /// Model for race text field (disabled until species selected)
+    var raceTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.AnimalDescription.raceLabel,
+            placeholder: L10n.AnimalDescription.racePlaceholder,
+            errorMessage: raceErrorMessage,
+            isDisabled: selectedSpecies == nil,
+            keyboardType: .default,
+            accessibilityID: "animalDescription.raceTextField.input"
+        )
+    }
+    
+    /// Model for gender selector
+    var genderSelectorModel: SelectorView.Model {
+        SelectorView.Model(
+            label: L10n.AnimalDescription.genderLabel,
+            options: [AnimalGender.male.displayName, AnimalGender.female.displayName],
+            errorMessage: genderErrorMessage,
+            accessibilityIDPrefix: "animalDescription.gender"
+        )
+    }
+    
+    /// Model for age text field (optional, numeric keyboard)
+    var ageTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.AnimalDescription.ageLabel,
+            placeholder: L10n.AnimalDescription.agePlaceholder,
+            errorMessage: ageErrorMessage,
+            isDisabled: false,
+            keyboardType: .numberPad,
+            accessibilityID: "animalDescription.ageTextField.input"
+        )
+    }
+    
+    /// Model for location coordinate view (composes lat/long fields + GPS button)
+    var locationCoordinateModel: LocationCoordinateView.Model {
+        LocationCoordinateView.Model(
+            latitudeField: ValidatedTextField.Model(
+                label: L10n.AnimalDescription.latitudeLabel,
+                placeholder: L10n.AnimalDescription.latitudePlaceholder,
+                errorMessage: latitudeErrorMessage,
+                isDisabled: false,
+                keyboardType: .decimalPad,
+                accessibilityID: "animalDescription.latitudeTextField.input"
+            ),
+            longitudeField: ValidatedTextField.Model(
+                label: L10n.AnimalDescription.longitudeLabel,
+                placeholder: L10n.AnimalDescription.longitudePlaceholder,
+                errorMessage: longitudeErrorMessage,
+                isDisabled: false,
+                keyboardType: .decimalPad,
+                accessibilityID: "animalDescription.longitudeTextField.input"
+            ),
+            gpsButtonTitle: L10n.AnimalDescription.requestGPSButton,
+            gpsButtonAccessibilityID: "animalDescription.requestGPSButton.tap",
+            helperText: gpsHelperText
+        )
+    }
+    
+    /// Model for description text area (optional, max 500 characters)
+    var descriptionTextAreaModel: TextAreaView.Model {
+        TextAreaView.Model(
+            label: L10n.AnimalDescription.descriptionLabel,
+            placeholder: L10n.AnimalDescription.descriptionPlaceholder,
+            maxLength: 500,
+            characterCountText: characterCountText,
+            characterCountColor: characterCountColor,
+            accessibilityID: "animalDescription.descriptionTextArea.input"
+        )
+    }
+    
+    /// Character count text for description field (e.g., "123/500")
+    var characterCountText: String {
+        return "\(additionalDescription.count)/500"
+    }
+    
+    /// Character count color (red if near limit, orange if approaching, secondary otherwise)
+    var characterCountColor: Color {
+        let count = additionalDescription.count
+        if count > 480 {
+            return .red
+        } else if count > 450 {
+            return .orange
+        } else {
+            return .secondary
+        }
+    }
+    
+    // MARK: - User Actions
+    
+    /// Called when user selects a species from dropdown
+    func selectSpecies(_ index: Int) {
+        selectedSpeciesIndex = index
+        // Clear race field when species changes (per spec)
+        race = ""
+        raceErrorMessage = nil
+    }
+    
+    /// Called when user selects a gender
+    func selectGender(_ index: Int) {
+        selectedGenderIndex = index
+        genderErrorMessage = nil
+    }
+    
+    /// Called when user taps Continue button
+    func onContinueTapped() {
+        clearValidationErrors()
+        
+        let errors = validateAllFields()
+        
+        if errors.isEmpty {
+            // All valid → update flow state and navigate
+            updateFlowState()
+            onContinue?()
+        } else {
+            // Show toast and inline errors
+            showToast = true
+            toastMessage = L10n.AnimalDescription.Toast.validationErrors
+            applyValidationErrors(errors)
+        }
+    }
+    
+    /// Called when user taps Back button
+    func onBackTapped() {
+        // Do NOT update flow state when going back
+        onBack?()
+    }
+    
+    /// Called when user taps GPS button (async)
+    func requestGPSPosition() async {
+        let status = await locationService.authorizationStatus
+        
+        if status == .notDetermined {
+            // Request permission (system alert shown automatically)
+            let newStatus = await locationService.requestWhenInUseAuthorization()
+            if newStatus.isAuthorized {
+                await fetchLocation()
+            } else {
+                showPermissionDeniedAlert = true
+            }
+        } else if status.isAuthorized {
+            await fetchLocation()
+        } else {
+            // Denied/restricted → show custom alert
+            showPermissionDeniedAlert = true
+        }
+    }
+    
+    /// Fetches location from LocationService and populates lat/long fields
+    private func fetchLocation() async {
+        guard let location = await locationService.requestLocation() else {
+            // Location fetch failed
+            gpsHelperText = "Failed to get location"
+            return
+        }
+        
+        // Update latitude/longitude fields (formatted to 5 decimals)
+        latitude = String(format: "%.5f", location.latitude)
+        longitude = String(format: "%.5f", location.longitude)
+        gpsHelperText = L10n.AnimalDescription.gpsHelperText
+    }
+    
+    // MARK: - Private Helpers
+    
+    /// Validates all required and optional fields
+    private func validateAllFields() -> [ValidationError] {
+        var errors: [ValidationError] = []
+        
+        // Date is always valid (DatePicker blocks future dates, default is today)
+        
+        // Species validation (required)
+        if selectedSpecies == nil {
+            errors.append(.missingSpecies)
+        }
+        
+        // Race validation (required)
+        if race.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errors.append(.missingRace)
+        }
+        
+        // Gender validation (required)
+        if selectedGender == nil {
+            errors.append(.missingGender)
+        }
+        
+        // Age validation (optional, but if provided must be 0-40)
+        if !age.isEmpty {
+            if let ageValue = Int(age) {
+                if ageValue < 0 || ageValue > 40 {
+                    errors.append(.invalidAge(L10n.AnimalDescription.Error.invalidAge))
+                }
+            } else {
+                errors.append(.invalidAge(L10n.AnimalDescription.Error.invalidAge))
+            }
+        }
+        
+        // Coordinate validation (optional, but if provided must be in range)
+        let coordinateValidation = validateCoordinates()
+        if case .invalid(let latError, let longError) = coordinateValidation {
+            if let latError = latError {
+                errors.append(.invalidLatitude(latError))
+            }
+            if let longError = longError {
+                errors.append(.invalidLongitude(longError))
+            }
+        }
+        
+        return errors
+    }
+    
+    /// Validates latitude and longitude ranges
+    private func validateCoordinates() -> CoordinateValidationResult {
+        // Both empty = valid (optional field)
+        let latTrimmed = latitude.trimmingCharacters(in: .whitespacesAndNewlines)
+        let longTrimmed = longitude.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if latTrimmed.isEmpty && longTrimmed.isEmpty {
+            return .valid
+        }
+        
+        // Parse to Double
+        guard let latValue = Double(latTrimmed), let longValue = Double(longTrimmed) else {
+            return .invalid(
+                latError: L10n.AnimalDescription.Error.invalidCoordinateFormat,
+                longError: L10n.AnimalDescription.Error.invalidCoordinateFormat
+            )
+        }
+        
+        // Range validation
+        let latValid = (-90...90).contains(latValue)
+        let longValid = (-180...180).contains(longValue)
+        
+        if !latValid && !longValid {
+            return .invalid(
+                latError: L10n.AnimalDescription.Error.invalidLatitude,
+                longError: L10n.AnimalDescription.Error.invalidLongitude
+            )
+        } else if !latValid {
+            return .invalid(
+                latError: L10n.AnimalDescription.Error.invalidLatitude,
+                longError: nil
+            )
+        } else if !longValid {
+            return .invalid(
+                latError: nil,
+                longError: L10n.AnimalDescription.Error.invalidLongitude
+            )
+        }
+        
+        return .valid
+    }
+    
+    /// Clears all validation error messages
+    private func clearValidationErrors() {
+        speciesErrorMessage = nil
+        raceErrorMessage = nil
+        genderErrorMessage = nil
+        ageErrorMessage = nil
+        latitudeErrorMessage = nil
+        longitudeErrorMessage = nil
+        showToast = false
+        toastMessage = ""
+    }
+    
+    /// Applies validation errors to corresponding fields
+    private func applyValidationErrors(_ errors: [ValidationError]) {
+        for error in errors {
+            switch error.field {
+            case .species:
+                speciesErrorMessage = error.message
+            case .race:
+                raceErrorMessage = error.message
+            case .gender:
+                genderErrorMessage = error.message
+            case .age:
+                ageErrorMessage = error.message
+            case .latitude:
+                latitudeErrorMessage = error.message
+            case .longitude:
+                longitudeErrorMessage = error.message
+            default:
+                break
+            }
+        }
+    }
+    
+    /// Updates flow state with current form data (all fields: required + optional)
+    private func updateFlowState() {
+        flowState.disappearanceDate = disappearanceDate
+        flowState.animalSpecies = selectedSpecies
+        flowState.animalRace = race.trimmingCharacters(in: .whitespacesAndNewlines)
+        flowState.animalGender = selectedGender
+        
+        // Optional fields (US2 & US3)
+        flowState.animalAge = age.isEmpty ? nil : Int(age)
+        flowState.animalLatitude = latitude.isEmpty ? nil : Double(latitude)
+        flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
+        flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
+    }
+}
+
+// MARK: - AnimalSpecies CaseIterable Extension
+
+extension AnimalSpecies: CaseIterable {
+    public static var allCases: [AnimalSpecies] {
+        return [.dog, .cat, .bird, .rabbit, .rodent, .reptile, .other]
+    }
+}
+

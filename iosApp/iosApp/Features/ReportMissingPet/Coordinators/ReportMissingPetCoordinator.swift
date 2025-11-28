@@ -122,9 +122,13 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = DescriptionViewModel(flowState: flowState)
+        // Create AnimalDescriptionViewModel with flow state and location service
+        let viewModel = AnimalDescriptionViewModel(
+            flowState: flowState,
+            locationService: ServiceContainer.shared.locationService
+        )
         
-        viewModel.onNext = { [weak self] in
+        viewModel.onContinue = { [weak self] in
             self?.navigateToContactDetails()
         }
         
@@ -132,7 +136,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
             self?.navigationController?.popViewController(animated: true)
         }
         
-        let view = DescriptionView(viewModel: viewModel)
+        let view = AnimalDescriptionView(viewModel: viewModel)
         let hostingController = UIHostingController(
             rootView: NavigationBackHiding { view }
         )
@@ -141,7 +145,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         hostingController.title = L10n.ReportMissingPet.Description.title
         configureProgressIndicator(hostingController: hostingController, step: 3, total: 4)
         configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
+            viewModel?.onBackTapped()
         })
         
         modalNavController.pushViewController(hostingController, animated: true)
