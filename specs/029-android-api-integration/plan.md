@@ -63,7 +63,7 @@ Replace mock `AnimalRepositoryImpl` with a real HTTP client that fetches pet ann
 
 - [x] **Asynchronous Programming Standards**: Plan uses correct async patterns
   - Android: Kotlin Coroutines (`suspend` functions) + Flow for state ✓
-  - Retrofit with coroutine adapters ✓
+  - Ktor Client with native coroutines ✓
   - No prohibited patterns ✓
 
 - [x] **Test Identifiers for UI Controls**: N/A
@@ -76,7 +76,7 @@ Replace mock `AnimalRepositoryImpl` with a real HTTP client that fetches pet ann
 
 - [x] **Given-When-Then Test Structure**: Plan ensures all tests follow convention
   - Unit tests will use Given-When-Then with backtick test names ✓
-  - MockWebServer tests will verify request/response mapping ✓
+  - Ktor MockEngine tests will verify request/response mapping ✓
 
 ### Backend Architecture & Quality Standards
 
@@ -108,7 +108,8 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │   ├── api/
 │   │   ├── AnnouncementApiClient.kt     # NEW: Ktor client wrapper
 │   │   └── dto/
-│   │       └── AnnouncementDto.kt       # NEW: API response DTOs
+│   │       ├── AnnouncementDto.kt       # NEW: Single announcement DTO
+│   │       └── AnnouncementsResponseDto.kt  # NEW: List wrapper DTO
 │   └── mappers/
 │       └── AnnouncementMapper.kt        # NEW: DTO → Domain model mapper
 ├── di/
