@@ -65,10 +65,14 @@ nano .env
 ### Step 4: Build Docker Images
 
 ```bash
-# Build backend and frontend images
+# Build backend and frontend images with commit hash + timestamp tags
 ./scripts/build.sh
 
 # This takes 5-10 minutes depending on VM resources
+# Images will be tagged as:
+#   petspot-backend:(commit-hash)-(timestamp)
+#   petspot-frontend:(commit-hash)-(timestamp)
+#   Plus 'latest' tags for convenience
 ```
 
 ### Step 5: Start Containers

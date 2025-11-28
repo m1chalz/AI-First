@@ -24,6 +24,6 @@ EXPOSE 3000
 # Run as non-root user for security
 USER node
 
-# Start the Express server
-CMD ["node", "src/index.ts"]
+# Start the Express server using npm start (includes --experimental-transform-types flag)
+CMD ["npm", "start"]
 

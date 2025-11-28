@@ -53,12 +53,11 @@
 - Traefik reverse proxy: Rejected for simplicity (nginx more familiar, less configuration)
 
 **Best Practices Applied**:
-- `proxy_set_header Host $host` to preserve original host header
-- `proxy_set_header X-Real-IP $remote_addr` for client IP logging
-- `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for` for proxy chain
-- `proxy_set_header X-Forwarded-Proto $scheme` for protocol awareness
+- Simplified configuration: Basic `proxy_pass` directives only (no header manipulation)
+- Rationale: Headers not needed for this deployment scenario, reduces complexity
 - Client max body size configured for file uploads
 - Timeouts configured appropriately for API requests
+- Clean routing rules: `/api` and `/images` to backend, `/` to frontend
 
 ---
 
@@ -130,9 +129,9 @@
 
 ---
 
-### 5. Container Build Optimization
+### 5. Container Build Optimization and Tagging Strategy
 
-**Decision**: Optimize Docker builds for speed and caching
+**Decision**: Optimize Docker builds with commit hash + timestamp tagging
 
 **Rationale**:
 - **Layer caching**:
@@ -142,13 +141,20 @@
 - **Build context**:
   - Use `.dockerignore` to exclude unnecessary files
   - Reduce build context size for faster uploads to Docker daemon
-- **Image tags**:
-  - Tag images with timestamps or commit SHAs for versioning
-  - Use `latest` tag for convenience
+- **Image tagging strategy**:
+  - Format: `(commit-hash)-(timestamp)` e.g., `abc1234-20251128-143022`
+  - Commit hash: Short Git commit hash (`git rev-parse --short HEAD`)
+  - Timestamp: `$(date +%Y%m%d-%H%M%S)`
+  - Also tag as `latest` for convenience
+  - Benefits: Traceability to source code, chronological ordering, unique identification
+- **Backend startup**:
+  - Use `npm start` command (includes `--experimental-transform-types` flag)
+  - Dockerfile CMD: `["npm", "start"]`
 - **Parallel builds**:
   - Build backend and frontend images in parallel (future optimization)
 
 **Alternatives Considered**:
+- Semantic versioning (v1.0.0): Rejected because manual versioning error-prone for deployment
 - BuildKit advanced caching: Deferred to future optimization
 - Docker layer caching with CI/CD: Not applicable for manual deployment
 - Pre-built base images: Not necessary for small deployments
@@ -159,6 +165,7 @@
 - Clean up package manager caches in same RUN command (`npm cache clean --force`)
 - Leverage Node.js official images (security-maintained)
 - Use exact Node.js version (node:24-alpine) for reproducibility
+- Image tags enable rollback to previous versions if needed
 
 ---
 
@@ -273,4 +280,7 @@
 | 2025-11-28 | Multi-stage build for frontend only | Backend simple enough for single-stage, frontend benefits from optimization |
 | 2025-11-28 | Shell scripts over Makefile | Familiarity, portability, better error handling |
 | 2025-11-28 | unless-stopped restart policy | Auto-recovery from failures, manual control during maintenance |
+| 2025-11-28 | Image tagging: (commit-hash)-(timestamp) | Traceability to source, chronological ordering, rollback capability |
+| 2025-11-28 | Simplified nginx config (no header preservation) | Reduces complexity, headers not needed for this deployment |
+| 2025-11-28 | Backend uses npm start (includes --experimental-transform-types) | Leverages existing package.json script, proper TypeScript handling |
 

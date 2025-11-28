@@ -316,20 +316,30 @@ HOST_IMAGES_PATH=/var/lib/petspot/images
 
 ### 3. build.sh
 
-**Purpose**: Build Docker images without deploying
+**Purpose**: Build Docker images with commit hash + timestamp tags
 
 **Logic Flow**:
 ```bash
-1. Build backend image
-   └── docker build -t backend:latest -f server/Dockerfile server/
+1. Generate image tag
+   ├── Get commit hash: git rev-parse --short HEAD
+   ├── Get timestamp: date +%Y%m%d-%H%M%S
+   └── Combine: IMAGE_TAG="${COMMIT_HASH}-${TIMESTAMP}"
 
-2. Build frontend image
-   └── docker build -t frontend:latest -f webApp/Dockerfile webApp/
+2. Build backend image
+   ├── docker build -t petspot-backend:${IMAGE_TAG} -f server/Dockerfile server/
+   └── docker tag petspot-backend:${IMAGE_TAG} petspot-backend:latest
 
-3. Tag images with timestamp
-   ├── docker tag backend:latest backend:$(date +%Y%m%d-%H%M%S)
-   └── docker tag frontend:latest frontend:$(date +%Y%m%d-%H%M%S)
+3. Build frontend image
+   ├── docker build -t petspot-frontend:${IMAGE_TAG} -f webApp/Dockerfile webApp/
+   └── docker tag petspot-frontend:${IMAGE_TAG} petspot-frontend:latest
+
+4. Export IMAGE_TAG for docker-compose
+   └── export IMAGE_TAG
 ```
+
+**Tagging Format**: `(commit-hash)-(timestamp)`
+- Example: `abc1234-20251128-143022`
+- Provides traceability and rollback capability
 
 **Exit Codes**:
 - 0: Success

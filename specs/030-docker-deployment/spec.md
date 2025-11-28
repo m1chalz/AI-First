@@ -22,6 +22,9 @@
 - Q: Host paths for backend persistence bind mounts? → A: Use `/var/lib/petspot/db` for SQLite and `/var/lib/petspot/images` for uploads
 - Q: Preferred method for viewing container logs? → A: Use `docker compose logs <service>` documented with examples
 - Q: Strategy when host ports 80/443 are occupied? → A: Operators must free the ports before deployment proceeds
+- Q: Docker image tagging format? → A: Use `(commit-hash)-(timestamp)` format, e.g., `abc1234-20251128-143022`, also tag as `latest`
+- Q: Nginx proxy header configuration? → A: Keep simple with basic `proxy_pass` directives only, no header preservation needed
+- Q: Backend startup command? → A: Use `npm start` which includes `--experimental-transform-types` flag for TypeScript
 
 ## User Scenarios & Testing *(mandatory)*
 
