@@ -40,7 +40,6 @@ final class PhotoViewModel: ObservableObject {
     private let photoAttachmentCache: PhotoAttachmentCacheProtocol
     private let toastScheduler: ToastSchedulerProtocol
     private let photoSelectionProcessor: PhotoSelectionProcessing
-    private let simulatedLoadingDelay: TimeInterval
     
     // MARK: - Coordinator Communication
     
@@ -58,14 +57,12 @@ final class PhotoViewModel: ObservableObject {
         flowState: ReportMissingPetFlowState,
         photoAttachmentCache: PhotoAttachmentCacheProtocol,
         toastScheduler: ToastSchedulerProtocol,
-        photoSelectionProcessor: PhotoSelectionProcessing = PhotoSelectionProcessor(),
-        simulatedLoadingDelay: TimeInterval = 3
+        photoSelectionProcessor: PhotoSelectionProcessing = PhotoSelectionProcessor()
     ) {
         self.flowState = flowState
         self.photoAttachmentCache = photoAttachmentCache
         self.toastScheduler = toastScheduler
         self.photoSelectionProcessor = photoSelectionProcessor
-        self.simulatedLoadingDelay = simulatedLoadingDelay
         self.attachmentStatus = flowState.photoStatus
         
         restorationTask = Task {
@@ -112,8 +109,6 @@ final class PhotoViewModel: ObservableObject {
                 data: selection.data,
                 metadata: metadata
             )
-            await simulateICloudDelayIfRequested()
-            
             applyConfirmedAttachment(savedMetadata)
         } catch {
             handleSelectionFailure()
@@ -183,12 +178,6 @@ final class PhotoViewModel: ObservableObject {
         helperMessage = message ?? L10n.AnimalPhoto.Helper.required
     }
     
-    /// Adds an optional delay to mimic iCloud download timing for testing/debugging.
-    private func simulateICloudDelayIfRequested() async {
-        guard simulatedLoadingDelay > .zero else { return }
-        let nanos = UInt64(simulatedLoadingDelay * 1_000_000_000)
-        try? await Task.sleep(nanoseconds: nanos)
-    }
     private func showMandatoryToast() {
         toastScheduler.cancel()
         showsMandatoryToast = true
