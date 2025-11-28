@@ -150,7 +150,7 @@
 
 // Labels
 "animalDescription.dateLabel" = "Date of disappearance";
-"animalDescription.speciesLabel" = "Species";
+"animalDescription.speciesLabel" = "Animal species";
 "animalDescription.raceLabel" = "Breed / Race";
 "animalDescription.genderLabel" = "Gender";
 "animalDescription.ageLabel" = "Age (optional)";
@@ -159,7 +159,7 @@
 "animalDescription.descriptionLabel" = "Additional description (optional)";
 
 // Placeholders
-"animalDescription.speciesPlaceholder" = "Select species";
+"animalDescription.speciesPlaceholder" = "Select an option";
 "animalDescription.racePlaceholder" = "e.g., Golden Retriever";
 "animalDescription.agePlaceholder" = "e.g., 5";
 "animalDescription.latitudePlaceholder" = "e.g., 52.2297";

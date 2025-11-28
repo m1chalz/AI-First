@@ -7,10 +7,13 @@ struct DropdownView: View {
     @Binding var selectedIndex: Int?
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
+            // Label
             Text(model.label)
-                .font(.headline)
+                .font(.custom("Hind-Regular", size: 16))
+                .foregroundColor(Color(hex: "#364153"))
             
+            // Dropdown menu
             Menu {
                 ForEach(model.options.indices, id: \.self) { index in
                     Button(model.options[index]) {
@@ -18,22 +21,35 @@ struct DropdownView: View {
                     }
                 }
             } label: {
-                HStack {
+                HStack(spacing: 0) {
+                    // Selected value or placeholder
                     Text(selectedIndex.map { model.options[$0] } ?? model.placeholder)
-                        .foregroundColor(selectedIndex == nil ? .secondary : .primary)
+                        .font(.custom("Hind-Regular", size: 16))
+                        .foregroundColor(selectedIndex == nil ? Color(hex: "#0A0A0A").opacity(0.5) : Color(hex: "#364153"))
+                    
                     Spacer()
+                    
+                    // Chevron icon
                     Image(systemName: "chevron.down")
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(hex: "#364153"))
                 }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .frame(height: 41.323)
+                .background(Color(hex: "#F3F3F5"))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+                )
             }
             .accessibilityIdentifier(model.accessibilityID)
             
+            // Error message
             if let error = model.errorMessage {
                 Text(error)
+                    .font(.custom("Hind-Regular", size: 12))
                     .foregroundColor(.red)
-                    .font(.caption)
             }
         }
     }

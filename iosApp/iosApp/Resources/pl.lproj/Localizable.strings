@@ -141,7 +141,7 @@
 
 // Labels
 "animalDescription.dateLabel" = "Data zaginięcia";
-"animalDescription.speciesLabel" = "Gatunek";
+"animalDescription.speciesLabel" = "Gatunek zwierzęcia";
 "animalDescription.raceLabel" = "Rasa";
 "animalDescription.genderLabel" = "Płeć";
 "animalDescription.ageLabel" = "Wiek (opcjonalnie)";
@@ -150,7 +150,7 @@
 "animalDescription.descriptionLabel" = "Dodatkowy opis (opcjonalnie)";
 
 // Placeholders
-"animalDescription.speciesPlaceholder" = "Wybierz gatunek";
+"animalDescription.speciesPlaceholder" = "Wybierz opcję";
 "animalDescription.racePlaceholder" = "np. Golden Retriever";
 "animalDescription.agePlaceholder" = "np. 5";
 "animalDescription.latitudePlaceholder" = "np. 52.2297";
