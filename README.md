@@ -140,6 +140,43 @@ The backend server provides REST API endpoints for all platform clients.
 
 See [server/README.md](./server/README.md) for more backend commands and documentation.
 
+### Docker Deployment
+
+Deploy PetSpot on a VM using Docker and docker-compose:
+
+**Quick Start** (5 steps, ~30 minutes):
+```bash
+cd deployment
+./scripts/deploy.sh
+```
+
+**Key Features:**
+- ✅ Automated deployment script
+- ✅ Nginx reverse proxy routing
+- ✅ SQLite database persistence
+- ✅ Independent backend/frontend updates
+- ✅ Image tagging for traceability and rollback
+
+**Common Operations:**
+```bash
+# Update backend only
+./scripts/update.sh --backend
+
+# Update frontend only
+./scripts/update.sh --frontend
+
+# View logs
+./scripts/logs.sh --service backend --follow
+
+# Build Docker images
+./scripts/build.sh
+```
+
+For complete deployment guide, see:
+- [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - Quick reference
+- [deployment/README.md](./deployment/README.md) - Full documentation
+- [specs/030-docker-deployment/](./specs/030-docker-deployment/) - Technical specifications
+
 ### Static Analysis
 
 This project uses automated static analysis tools (Detekt, ktlint, and Android Lint) to ensure consistent code quality across the Kotlin codebase (shared module and Android platform).

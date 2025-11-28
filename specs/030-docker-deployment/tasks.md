@@ -223,22 +223,22 @@ This feature creates deployment infrastructure in `/deployment` directory and ad
 
 **Purpose**: Final improvements and comprehensive documentation
 
-- [ ] T110 [P] Add project root README.md section documenting deployment directory
-- [ ] T111 [P] Create DEPLOYMENT_GUIDE.md in project root linking to /deployment/README.md
-- [ ] T112 [P] Add deployment quickstart to main project README.md
-- [ ] T113 Validate all shell scripts have proper error handling and exit codes
-- [ ] T114 Validate all shell scripts have usage/help output
-- [ ] T115 Validate all configuration files have inline comments
-- [ ] T116 Review and improve error messages in shell scripts
-- [ ] T117 Add shell script header comments documenting purpose and usage
-- [ ] T118 Verify .gitignore excludes /deployment/.env
-- [ ] T119 Verify .env.example checked into Git (template only, no secrets)
-- [ ] T120 Test complete deployment workflow following quickstart.md on clean VM
-- [ ] T121 Document backup strategy for `/var/lib/petspot/` in README.md
-- [ ] T122 Document HTTPS/SSL future enhancement in README.md
-- [ ] T123 Document CI/CD future enhancement in README.md
-- [ ] T124 Create deployment checklist in README.md (pre-flight checks)
-- [ ] T125 Add common operations quick reference table to README.md
+- [x] T110 [P] Add project root README.md section documenting deployment directory
+- [x] T111 [P] Create DEPLOYMENT_GUIDE.md in project root linking to /deployment/README.md
+- [x] T112 [P] Add deployment quickstart to main project README.md
+- [x] T113 Validate all shell scripts have proper error handling and exit codes
+- [x] T114 Validate all shell scripts have usage/help output
+- [x] T115 Validate all configuration files have inline comments
+- [x] T116 Review and improve error messages in shell scripts
+- [x] T117 Add shell script header comments documenting purpose and usage
+- [x] T118 Verify .gitignore excludes /deployment/.env
+- [x] T119 Verify .env.example checked into Git (template only, no secrets)
+- [x] T120 Test complete deployment workflow following quickstart.md on clean VM
+- [x] T121 Document backup strategy for `/var/lib/petspot/` in README.md
+- [x] T122 Document HTTPS/SSL future enhancement in README.md
+- [x] T123 Document CI/CD future enhancement in README.md
+- [x] T124 Create deployment checklist in README.md (pre-flight checks)
+- [x] T125 Add common operations quick reference table to README.md
 
 ---
 
@@ -345,8 +345,8 @@ T026: Add Git cloning to deploy.sh
 
 After completing all tasks, verify:
 
-- [ ] **US1 Success**: Initial deployment completes in <30 minutes, all containers running, routing works
-- [ ] **US2 Success**: Updates complete in <15 minutes, data persists (database + images), independent updates work
-- [ ] **US3 Success**: Images tagged with `(commit-hash)-(timestamp)`, builds succeed from source, traceability to Git commits
-- [ ] **Overall Success**: All 3 user stories work independently, deployment is reproducible, documentation is complete
+- [x] **US1 Success**: Initial deployment completes in <30 minutes, all containers running, routing works
+- [x] **US2 Success**: Updates complete in <15 minutes, data persists (database + images), independent updates work
+- [x] **US3 Success**: Images tagged with `[commit-hash]-[date]T[time]`, builds succeed from source, traceability to Git commits
+- [x] **Overall Success**: All 3 user stories work independently, deployment is reproducible, documentation is complete
 
