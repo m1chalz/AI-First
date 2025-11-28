@@ -32,6 +32,12 @@ struct AnimalDescriptionView: View {
                     model: viewModel.raceTextFieldModel,
                     text: $viewModel.race
                 )
+                .onChange(of: viewModel.race) { newValue in
+                    // Clear error when user types
+                    if !newValue.isEmpty {
+                        viewModel.raceErrorMessage = nil
+                    }
+                }
                 
                 // Gender selector
                 SelectorView(
@@ -39,8 +45,9 @@ struct AnimalDescriptionView: View {
                     selectedIndex: $viewModel.selectedGenderIndex
                 )
                 .onChange(of: viewModel.selectedGenderIndex) { newIndex in
-                    if let index = newIndex {
-                        viewModel.selectGender(index)
+                    if newIndex != nil {
+                        // Clear error when value selected
+                        viewModel.genderErrorMessage = nil
                     }
                 }
                 
