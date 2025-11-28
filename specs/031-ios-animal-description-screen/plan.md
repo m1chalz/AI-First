@@ -7,13 +7,13 @@
 
 ## Summary
 
-Implement Step 3/4 of the iOS Missing Pet flow: Animal Description screen. This screen collects structured pet data (date, species, breed/race, gender, age, location coordinates, description) before proceeding to contact details. The screen uses SwiftUI with MVVM-C architecture, reusable form components with validation, and integrates with the existing LocationService for GPS coordinate capture. Navigation and flow scaffolding are already implemented per spec 017.
+Implement Step 3/4 of the iOS Missing Pet flow: Animal Description screen. This screen collects structured pet data (date, species, breed/race, gender, age, location coordinates, description) before proceeding to contact details. The screen uses SwiftUI with MVVM-C architecture, reusable form components with validation, and integrates with the existing LocationService for GPS coordinate capture. Navigation and flow scaffolding are already implemented per spec 017 (`ReportMissingPetCoordinator` and `ReportMissingPetFlowState`).
 
 ## Technical Context
 
 **Language/Version**: Swift 5.9+ (Xcode 15+)  
 **Primary Dependencies**: SwiftUI (iOS 18+), UIKit (coordinators), CoreLocation (GPS)  
-**Storage**: In-memory session container (constructor-injected to ViewModel)  
+**Storage**: In-memory flow state container (`ReportMissingPetFlowState`, constructor-injected to ViewModel)  
 **Testing**: XCTest with Swift Concurrency (async/await), XCUITest for accessibility identifiers  
 **Target Platform**: iOS 18+ (92% device coverage per spec clarifications)  
 **Project Type**: Mobile (iOS)  
@@ -23,6 +23,8 @@ Implement Step 3/4 of the iOS Missing Pet flow: Animal Description screen. This 
 - Offline-capable (bundled curated species list)
 - No VoiceOver support (accessibility identifiers for testing only)
 - Submit-based validation (not real-time)
+- Description field: Hard limit (500 chars) - prevent keyboard input at limit, truncate pasted text
+- UserLocation reused: Existing domain model (`/iosApp/iosApp/Domain/UserLocation.swift`) with latitude, longitude, timestamp
 **Scale/Scope**: Single screen (Step 3/4 of Missing Pet flow), ~8 input fields, reusable form components
 
 ## Constitution Check
@@ -48,7 +50,7 @@ Implement Step 3/4 of the iOS Missing Pet flow: Animal Description screen. This 
   - ViewModel calls repositories directly (NO use cases per iOS architecture)
   - ViewModel communicates with coordinator via closures (e.g., `onContinue`, `onBack`)
   - SwiftUI views observe ViewModel (no business/navigation logic)
-  - Session container injected to ViewModel via constructor (manual DI)
+  - Flow state container (`ReportMissingPetFlowState`) injected to ViewModel via constructor (manual DI)
   - LocationService injected to ViewModel for GPS coordinate capture
   - All formatting logic in ViewModel (dates, coordinates), not in views
   - Violation justification: _N/A - fully compliant with iOS MVVM-C_
@@ -60,8 +62,8 @@ Implement Step 3/4 of the iOS Missing Pet flow: Animal Description screen. This 
   - Violation justification: _N/A - compliant (reuses existing LocationServiceProtocol)_
 
 - [x] **Dependency Injection**: Plan includes DI setup for each platform ✅
-  - iOS: Manual DI with constructor injection (ViewModel receives session container + LocationService)
-  - Coordinator creates ViewModel with dependencies from ServiceContainer
+  - iOS: Manual DI with constructor injection (ViewModel receives flow state container + LocationService)
+  - Coordinator creates ViewModel with dependencies (`ReportMissingPetFlowState` + `ServiceContainer.shared.locationService`)
   - Android/Web/Backend: N/A (iOS-only feature)
   - Violation justification: _N/A - fully compliant with manual DI pattern_
 
@@ -161,30 +163,35 @@ iosApp/iosApp/
 │       │       ├── LocationCoordinateView.swift      # Composes 2x ValidatedTextField + GPS button
 │       │       └── TextAreaView.swift                # Multi-line text with char counter
 │       │       # Note: Date picker uses native SwiftUI DatePicker (no custom component)
-│       └── Session/
-│           └── MissingPetFlowSession.swift           # Session container (already exists per spec 017)
+│       └── Models/
+│           └── ReportMissingPetFlowState.swift       # Flow state container (already exists per spec 017)
 ├── Domain/
 │   ├── Models/
-│   │   ├── AnimalDescriptionDetails.swift            # Session-bound struct
-│   │   └── SpeciesTaxonomyOption.swift               # Species options model
+│   │   ├── AnimalSpecies.swift                       # Species enum (EXISTING - add rodent/reptile)
+│   │   └── AnimalGender.swift                        # Gender enum (EXISTING - reused)
 │   └── Services/
 │       └── LocationServiceProtocol.swift             # Already exists
+├── Features/
+│   └── Shared/
+│       ├── AnimalSpecies+Presentation.swift          # EXISTING - update for rodent/reptile
+│       └── AnimalGender+Presentation.swift           # EXISTING - reused
 ├── Data/
-│   ├── LocationService.swift                         # Already exists
-│   └── SpeciesTaxonomy.swift                         # Bundled species list
+│   └── LocationService.swift                         # Already exists
 └── DI/
     └── ServiceContainer.swift                        # Already exists
 
 iosApp/iosAppTests/
+├── Fakes/
+│   └── FakeLocationService.swift                      # EXISTING - test double for location
 └── Features/
     └── ReportMissingPet/
         └── AnimalDescription/
             ├── AnimalDescriptionViewModelTests.swift  # ViewModel unit tests
             └── Fakes/
-                └── FakeMissingPetFlowSession.swift    # Test double for session
+                └── FakeReportMissingPetFlowState.swift # Test double for flow state
 ```
 
-**Structure Decision**: iOS mobile app following MVVM-C architecture. This feature adds the Animal Description step (Step 3/4) to the existing Missing Pet flow. Navigation scaffolding and session management already exist per spec 017. Feature-specific code lives in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/` with reusable form components in `Components/` subdirectory.
+**Structure Decision**: iOS mobile app following MVVM-C architecture. This feature adds the Animal Description step (Step 3/4) to the existing Missing Pet flow. Navigation scaffolding (`ReportMissingPetCoordinator`) and flow state management (`ReportMissingPetFlowState`) already exist per spec 017. Feature-specific code lives in `/iosApp/iosApp/Features/ReportMissingPet/AnimalDescription/` with reusable form components in `Components/` subdirectory.
 
 ## Complexity Tracking
 
