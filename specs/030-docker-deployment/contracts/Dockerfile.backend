@@ -1,0 +1,29 @@
+# Backend Dockerfile Template
+# Location: /server/Dockerfile
+# Purpose: Build Node.js Express backend application
+
+# Use official Node.js LTS Alpine image for minimal size
+FROM node:24-alpine
+
+# Set working directory
+WORKDIR /app/server
+
+# Copy package files first for better layer caching
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm ci --omit=dev && \
+    npm cache clean --force
+
+# Copy application source code
+COPY . .
+
+# Expose internal port (not mapped to host, only accessible via Docker network)
+EXPOSE 3000
+
+# Run as non-root user for security
+USER node
+
+# Start the Express server
+CMD ["node", "src/index.ts"]
+
