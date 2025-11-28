@@ -19,8 +19,8 @@ log_info() {
 }
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
-DATE=$(date +%Y-%m-%d)
-TIME=$(date +%H:%M:%S)
+DATE=$(date +%Y%m%d)
+TIME=$(date +%H%M%S)
 IMAGE_TAG="${COMMIT_HASH}-${DATE}T${TIME}"
 
 echo ""

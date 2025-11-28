@@ -115,7 +115,7 @@ Images are tagged with commit hash and timestamp for full traceability and rollb
 petspot-backend:[commit-hash]-[date]T[time]
 petspot-backend:latest
 
-Example: petspot-backend:a1b2c3d-2025-11-28T14:30:22
+Example: petspot-backend:a1b2c3d-2025-11-28T143022
 ```
 
 ### Building Images
@@ -139,10 +139,10 @@ The build script:
 docker images | grep petspot
 
 # Output:
-# petspot-backend    a1b2c3d-2025-11-28T14:30:22    ...
-# petspot-backend    latest                         ...
-# petspot-frontend   a1b2c3d-2025-11-28T14:30:22    ...
-# petspot-frontend   latest                         ...
+# petspot-backend    a1b2c3d-20251128T143022    ...
+# petspot-backend    latest                       ...
+# petspot-frontend   a1b2c3d-20251128T143022    ...
+# petspot-frontend   latest                       ...
 ```
 
 ### Tagging Benefits
@@ -161,7 +161,7 @@ If new build has issues:
 docker images | grep petspot
 
 # Restart with previous tag
-IMAGE_TAG=a1b2c3d-2025-11-27T10:20:30 docker compose up -d --force-recreate
+IMAGE_TAG=a1b2c3d-2025-11-27T102030 docker compose up -d --force-recreate
 ```
 
 ## Common Operations
