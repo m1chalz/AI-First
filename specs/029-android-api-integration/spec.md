@@ -21,8 +21,6 @@ A user opens the PetSpot Android app to browse available pet announcements. The 
 
 2. **Given** the backend has no announcements, **When** the animal list screen loads, **Then** the system displays an empty state message indicating no pets are currently listed.
 
-3. **Given** the user is viewing the list, **When** new data is available and the user triggers a refresh, **Then** the list updates with the latest data from the backend.
-
 ---
 
 ### User Story 2 - View Pet Details (Priority: P1)
@@ -61,7 +59,7 @@ A user attempts to use the app when network connectivity is unavailable or the b
 
 3. **Given** an error state is displayed, **When** the user taps the retry button, **Then** the system attempts to fetch data again from the backend.
 
-4. **Given** a server error occurs (5xx response), **When** the request fails, **Then** the system displays an appropriate error message without exposing technical details.
+4. **Given** any HTTP error occurs (4xx or 5xx response), **When** the request fails, **Then** the system displays a generic error message without exposing technical details or distinguishing error types.
 
 ---
 
@@ -83,11 +81,11 @@ A user interacts with the app and sees appropriate loading indicators while data
 
 ### Edge Cases
 
-- What happens when an announcement ID in the list no longer exists on the server? (Stale data scenario)
-- How does the system handle very large numbers of announcements? (Performance consideration)
-- What happens if the user navigates away during a network request? (Request cancellation)
-- How are optional fields (microchip, reward, age) handled when null in API response?
-- What happens if photo URL is invalid or image fails to load?
+- **Stale data (404)**: Treated as generic error - user sees error message with retry option (same as any HTTP error).
+- **Large announcement lists**: Loaded all at once (no pagination in initial implementation).
+- **Navigation during request**: Standard coroutine cancellation - request cancelled, no error shown.
+- **Null optional fields**: Display fallback values or hide sections (e.g., no reward section if reward is null).
+- **Invalid photo URL**: Display placeholder image (existing image loading handles this).
 
 ## Requirements *(mandatory)*
 
@@ -102,6 +100,7 @@ A user interacts with the app and sees appropriate loading indicators while data
 - **FR-007**: System MUST handle optional fields (petName, breed, age, microchipNumber, reward, description) gracefully when they are null or absent in API responses.
 - **FR-008**: System MUST preserve all existing screen functionality (navigation, map integration, status badges).
 - **FR-009**: System MUST NOT display the management password field returned by the API (security requirement per API documentation).
+- **FR-010**: System MUST coerce any unknown backend announcement statuses to `AnimalStatus.MISSING` for display.
 
 ### Key Entities
 
@@ -118,6 +117,13 @@ A user interacts with the app and sees appropriate loading indicators while data
 - **SC-003**: Retry functionality successfully reloads data when network connectivity is restored.
 - **SC-004**: All existing screen features (navigation, badges, map button, contact display) continue to work correctly with backend data.
 - **SC-005**: Unit test coverage for data fetching and mapping logic meets the project's 80% threshold.
+
+## Clarifications
+
+### Session 2025-11-28
+
+- Q: How should 4xx errors (including 404 for deleted announcements) be handled? → A: All 4xx errors treated uniformly as generic errors, same as 5xx - no differentiation in initial implementation.
+- Q: How should announcements with statuses outside MISSING/FOUND be displayed? → A: Treat every unknown status as `MISSING` on Android until additional states are designed.
 
 ## Assumptions
 
