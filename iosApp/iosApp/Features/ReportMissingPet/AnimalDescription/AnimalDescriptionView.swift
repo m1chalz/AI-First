@@ -35,9 +35,9 @@ struct AnimalDescriptionView: View {
                 // Gender selector
                 SelectorView(
                     model: viewModel.genderSelectorModel,
-                    selectedIndex: $viewModel.selectedGenderIndex
+                    selectedValue: $viewModel.selectedGender
                 )
-                .onChange(of: viewModel.selectedGenderIndex) { _, _ in
+                .onChange(of: viewModel.selectedGender) { _, _ in
                     viewModel.handleGenderChange()
                 }
                 

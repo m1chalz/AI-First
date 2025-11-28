@@ -16,15 +16,8 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Breed/race text input (required, enabled only after species selected)
     @Published var race: String = ""
     
-    /// Selected gender index for selector
-    @Published var selectedGenderIndex: Int?
-    
-    /// Selected gender option (mapped from index)
-    var selectedGender: AnimalGender? {
-        guard let index = selectedGenderIndex else { return nil }
-        let options: [AnimalGender] = [.male, .female]
-        return options[index]
-    }
+    /// Selected gender (nil if not selected)
+    @Published var selectedGender: AnimalGender?
     
     /// Age text input (optional, 0-40 range)
     @Published var age: String = ""
@@ -84,10 +77,7 @@ class AnimalDescriptionViewModel: ObservableObject {
         }
         
         if let existingGender = flowState.animalGender {
-            let options: [AnimalGender] = [.male, .female]
-            if let index = options.firstIndex(of: existingGender) {
-                self.selectedGenderIndex = index
-            }
+            self.selectedGender = existingGender
         }
         
         // Load optional fields (US2 & US3)
@@ -144,10 +134,13 @@ class AnimalDescriptionViewModel: ObservableObject {
     }
     
     /// Model for gender selector
-    var genderSelectorModel: SelectorView.Model {
+    var genderSelectorModel: SelectorView<AnimalGender>.Model {
         SelectorView.Model(
             label: L10n.AnimalDescription.genderLabel,
-            options: [AnimalGender.male.displayName, AnimalGender.female.displayName],
+            options: [
+                (value: .male, displayName: AnimalGender.male.displayName),
+                (value: .female, displayName: AnimalGender.female.displayName)
+            ],
             errorMessage: genderErrorMessage,
             accessibilityIDPrefix: "animalDescription.gender"
         )

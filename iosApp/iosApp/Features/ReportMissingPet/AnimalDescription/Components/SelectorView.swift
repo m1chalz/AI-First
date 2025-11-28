@@ -1,10 +1,12 @@
 import SwiftUI
 
-/// Generic radio button selector component accepting [String] options.
+/// Generic radio button selector component with typed values.
 /// Uses Model pattern for pure presentation without @Published properties.
-struct SelectorView: View {
+/// T can be any type (enum, struct, etc.) paired with display string.
+/// T must be Equatable to find selected option in list.
+struct SelectorView<T: Equatable>: View {
     let model: Model
-    @Binding var selectedIndex: Int?
+    @Binding var selectedValue: T?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -16,12 +18,13 @@ struct SelectorView: View {
             // Radio buttons
             HStack(spacing: 8) {
                 ForEach(model.options.indices, id: \.self) { index in
-                    Button(action: { selectedIndex = index }) {
+                    let option = model.options[index]
+                    Button(action: { selectedValue = option.value }) {
                         HStack(spacing: 12) {
-                            Image(systemName: selectedIndex == index ? "record.circle" : "circle")
+                            Image(systemName: selectedValue == option.value ? "record.circle" : "circle")
                                 .font(.system(size: 24))
                                 .foregroundColor(Color(hex: "#616161"))
-                            Text(model.options[index])
+                            Text(option.displayName)
                                 .font(.custom("Hind-Regular", size: 16))
                                 .foregroundColor(Color(hex: "#545F71"))
                         }
@@ -35,7 +38,7 @@ struct SelectorView: View {
                         )
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityIdentifier("\(model.accessibilityIDPrefix).\(model.options[index].lowercased()).tap")
+                    .accessibilityIdentifier("\(model.accessibilityIDPrefix).\(option.displayName.lowercased()).tap")
                 }
             }
             
@@ -52,7 +55,7 @@ struct SelectorView: View {
 extension SelectorView {
     struct Model {
         let label: String
-        let options: [String]
+        let options: [(value: T, displayName: String)]
         let errorMessage: String?
         let accessibilityIDPrefix: String
     }
