@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
 import com.intive.aifirst.petspot.domain.models.LocationCoordinates
@@ -217,8 +216,8 @@ private fun AnimalList(
 
 private class AnimalListStatePreviewProvider :
     PreviewParameterProvider<AnimalListUiState> {
-    private val warsaw = Location(city = "Central Park", radiusKm = 2)
-    private val krakow = Location(city = "Market Square", radiusKm = 3)
+    private val warsaw = Location(latitude = 52.2297, longitude = 21.0122)
+    private val krakow = Location(latitude = 50.0647, longitude = 19.9450)
 
     private val animals =
         listOf(
@@ -227,7 +226,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Luna",
                 photoUrl = "",
                 location = warsaw,
-                species = AnimalSpecies.DOG,
+                species = "Dog",
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
                 status = AnimalStatus.MISSING,
@@ -241,7 +240,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Milo",
                 photoUrl = "",
                 location = krakow,
-                species = AnimalSpecies.CAT,
+                species = "Cat",
                 breed = "Siamese",
                 gender = AnimalGender.MALE,
                 status = AnimalStatus.FOUND,
@@ -255,7 +254,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Max",
                 photoUrl = "",
                 location = warsaw,
-                species = AnimalSpecies.DOG,
+                species = "Dog",
                 breed = "German Shepherd",
                 gender = AnimalGender.MALE,
                 status = AnimalStatus.MISSING,

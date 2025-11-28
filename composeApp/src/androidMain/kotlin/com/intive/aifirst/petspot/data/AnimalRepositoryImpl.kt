@@ -3,37 +3,40 @@ package com.intive.aifirst.petspot.data
 import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
+import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
 import kotlinx.coroutines.delay
 
 /**
- * Repository implementation with mocked data for UI development.
- * Returns hardcoded list of 16 animals for testing UI flows.
- * Simulates network delay to test loading states.
- * Will be replaced with RemoteAnimalRepository when backend is ready.
+ * Repository implementation that fetches pet announcements from the backend API.
+ * Currently uses mock data - will be updated in Phase 3 to use real API calls.
+ *
+ * @property apiClient HTTP client for backend API communication
  */
-class AnimalRepositoryImpl : AnimalRepository {
-    /** Simulated network delay in milliseconds */
+class AnimalRepositoryImpl(
+    private val apiClient: AnnouncementApiClient,
+) : AnimalRepository {
+    /** Simulated network delay in milliseconds (temporary - removed in Phase 3) */
     private val networkDelayMs: Long = 500
 
     /**
-     * Retrieves mock animal data after simulated delay.
-     * Uses MockAnimalData as single source of truth for consistency across platforms.
+     * Retrieves all pet announcements from the backend API.
+     * TODO: Replace with API call in Phase 3 (T017)
      *
-     * @return List of 16 mock animals
+     * @return List of animals from backend
      */
     override suspend fun getAnimals(): List<Animal> {
-        // Simulate network delay
+        // Simulate network delay (temporary)
         delay(networkDelayMs)
 
-        // Return mock data from shared test fixtures
+        // Return mock data (temporary - replaced with API call in Phase 3)
         return MockAnimalData.generateMockAnimals()
     }
 
     /**
-     * Retrieves a single animal by ID from mock data.
-     * Simulates network delay before returning result.
+     * Retrieves a single pet announcement by ID from the backend API.
+     * TODO: Replace with API call in Phase 3 (T024)
      *
-     * @param id Unique identifier of the animal
+     * @param id Unique identifier of the announcement
      * @return Animal entity
      * @throws NoSuchElementException if animal not found
      */
