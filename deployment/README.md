@@ -105,20 +105,90 @@ SQLite database and uploaded images persist across container recreation:
     └── <uploaded files>     (mounted to container)
 ```
 
-## Docker Images
+## Docker Images & Tagging Strategy
 
-Images are tagged with commit hash and timestamp for traceability:
+Images are tagged with commit hash and timestamp for full traceability and rollback capability.
+
+### Image Tag Format
+
+```
+petspot-backend:(commit-hash)-(timestamp)
+petspot-backend:latest
+
+Example: petspot-backend:a1b2c3d-20251128-143022
+```
+
+### Building Images
 
 ```bash
-# Built as: petspot-backend:a1b2c3d-20251128-143022
-# Also tagged as: petspot-backend:latest
+cd deployment
+./scripts/build.sh
+```
 
-docker images
+The build script:
+- Generates commit hash from Git (`git rev-parse --short HEAD`)
+- Generates timestamp (`date +%Y%m%d-%H%M%S`)
+- Creates IMAGE_TAG: `${COMMIT_HASH}-${TIMESTAMP}`
+- Builds both backend and frontend images
+- Tags both with specific tag AND `latest`
+- Outputs built images for reference
+
+### Viewing Built Images
+
+```bash
+docker images | grep petspot
+
+# Output:
+# petspot-backend    a1b2c3d-20251128-143022    ...
+# petspot-backend    latest                     ...
+# petspot-frontend   a1b2c3d-20251128-143022    ...
+# petspot-frontend   latest                     ...
+```
+
+### Tagging Benefits
+
+- **Traceability**: Each image linked to exact Git commit
+- **Rollback**: Previous images preserved with old tags
+- **Audit Trail**: Can identify which commit runs on production
+- **Multiple Versions**: Run different versions side-by-side
+
+### Rollback Procedure
+
+If new build has issues:
+
+```bash
+# List available images
+docker images | grep petspot
+
+# Restart with previous tag
+IMAGE_TAG=a1b2c3d-20251127-102030 docker compose up -d --force-recreate
 ```
 
 ## Common Operations
 
 ### View Logs
+
+Use the logs script for easy log viewing:
+
+```bash
+# All services (real-time)
+./scripts/logs.sh --follow
+
+# Specific service
+./scripts/logs.sh --service backend
+./scripts/logs.sh --service backend --follow
+
+# Last 100 lines
+./scripts/logs.sh --tail 100
+
+# Frontend logs, last 50 lines, real-time
+./scripts/logs.sh --service frontend --follow --tail 50
+
+# Help
+./scripts/logs.sh --help
+```
+
+Or use docker-compose directly:
 
 ```bash
 # All services
@@ -128,6 +198,9 @@ docker compose logs -f
 docker compose logs -f backend
 docker compose logs -f frontend
 docker compose logs -f nginx
+
+# Last n lines
+docker compose logs --tail 100
 ```
 
 ### Stop All Containers
@@ -153,6 +226,67 @@ docker compose restart frontend
 
 ```bash
 docker compose down -v
+```
+
+## Image Management
+
+### List All Images
+
+```bash
+docker images | grep petspot
+```
+
+### Remove Old Images
+
+```bash
+# Remove specific image
+docker rmi petspot-backend:old-tag
+
+# Remove all untagged images
+docker image prune
+
+# Remove all images not used by containers
+docker image prune -a
+```
+
+### Disk Space
+
+```bash
+# Check Docker disk usage
+docker system df
+
+# Clean up unused data
+docker system prune -a
+```
+
+## Git-to-Deploy Workflow
+
+Full workflow from code change to production:
+
+```bash
+# 1. Make code change (e.g., modify backend API)
+nano ../server/src/routes/announcements.ts
+
+# 2. Commit and push
+git add -A
+git commit -m "Update announcements API"
+git push origin main
+
+# 3. On VM, pull changes
+cd deployment
+git pull origin main
+
+# 4. Build new images (auto-tagged with current commit)
+./scripts/build.sh
+
+# 5. Update services
+./scripts/update.sh --all
+
+# 6. Verify
+curl http://localhost/api/v1/announcements
+
+# 7. View logs
+./scripts/logs.sh --follow
 ```
 
 ## Troubleshooting
@@ -201,6 +335,35 @@ docker compose ps
 
 # View recent logs
 docker compose logs --tail=50 backend
+```
+
+### Build Failures
+
+```bash
+# Check disk space (needs ~5GB free for builds)
+df -h
+
+# Clear old images if disk full
+docker image prune -a
+
+# Rebuild without cache
+docker compose build --no-cache
+
+# Check Dockerfile syntax
+docker build --file ../server/Dockerfile ../server/ --dry-run
+```
+
+### Image Tag Issues
+
+```bash
+# Verify commit hash matches
+git rev-parse --short HEAD
+
+# Verify images were tagged correctly
+docker images | grep petspot
+
+# Check image layers
+docker history petspot-backend:latest
 ```
 
 ## Health Checks
