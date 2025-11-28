@@ -136,6 +136,7 @@
 "common.retry" = "Retry";
 "common.cancel" = "Cancel";
 "common.ok" = "OK";
+"common.done" = "Done";
 "common.continue" = "Continue";
 "common.back" = "Back";
 

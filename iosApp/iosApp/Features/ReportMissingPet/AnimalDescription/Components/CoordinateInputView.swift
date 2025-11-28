@@ -17,34 +17,10 @@ struct CoordinateInputView: View {
             // Two text fields side by side
             HStack(spacing: 10) {
                 // Latitude field
-                TextField(model.latitudePlaceholder, text: $latitude)
-                    .font(.custom("Hind-Regular", size: 16))
-                    .foregroundColor(Color(hex: "#364153"))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .frame(height: 41)
-                    .background(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
-                    )
-                    .keyboardType(.decimalPad)
-                    .accessibilityIdentifier(model.latitudeAccessibilityID)
+                latitudeTextField
                 
                 // Longitude field
-                TextField(model.longitudePlaceholder, text: $longitude)
-                    .font(.custom("Hind-Regular", size: 16))
-                    .foregroundColor(Color(hex: "#364153"))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .frame(height: 41)
-                    .background(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
-                    )
-                    .keyboardType(.decimalPad)
-                    .accessibilityIdentifier(model.longitudeAccessibilityID)
+                longitudeTextField
             }
             
             // Error messages
@@ -60,6 +36,38 @@ struct CoordinateInputView: View {
                     .foregroundColor(.red)
             }
         }
+    }
+    
+    private var latitudeTextField: some View {
+        TextField(model.latitudePlaceholder, text: $latitude)
+            .font(.custom("Hind-Regular", size: 16))
+            .foregroundColor(Color(hex: "#364153"))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .frame(height: 41)
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+            )
+            .keyboardType(.decimalPad)
+            .accessibilityIdentifier(model.latitudeAccessibilityID)
+    }
+    
+    private var longitudeTextField: some View {
+        TextField(model.longitudePlaceholder, text: $longitude)
+            .font(.custom("Hind-Regular", size: 16))
+            .foregroundColor(Color(hex: "#364153"))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .frame(height: 41)
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+            )
+            .keyboardType(.decimalPad)
+            .accessibilityIdentifier(model.longitudeAccessibilityID)
     }
 }
 
