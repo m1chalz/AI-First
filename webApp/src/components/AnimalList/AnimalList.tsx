@@ -40,11 +40,11 @@ export const AnimalList: React.FC = () => {
                     </div>
                 </header>
                 
-                {showLocationBanner && (
-                    <LocationBanner onClose={() => setIsBannerDismissed(true)} />
-                )}
-                
                 <div className={styles.content}>
+                
+                    {showLocationBanner && (
+                        <LocationBanner onClose={() => setIsBannerDismissed(true)} />
+                    )}
                     {isLoading ? (
                         <div className={styles.loading}>
                             <div className={styles.spinner}></div>

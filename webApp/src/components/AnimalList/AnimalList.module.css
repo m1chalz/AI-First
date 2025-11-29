@@ -25,7 +25,7 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow: hidden;
     margin: 0;
-    padding: 0;
+    padding: 0 32px 24px;
 }
 
 /* Main content wrapper - per Figma layout */
@@ -45,7 +45,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 32px 24px;
+    padding-top: 20px;
     margin-bottom: 44px;
 }
 
@@ -96,7 +96,6 @@
 /* Content area */
 .content {
     flex: 1;
-    padding: 0;
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -113,7 +112,6 @@
     display: flex;
     flex-direction: column;
     gap: 16px; /* 16px gap between cards for better spacing */
-    padding: 0 32px 20px;
 }
 
 /* Animal card - Horizontal layout with image on left edge */
