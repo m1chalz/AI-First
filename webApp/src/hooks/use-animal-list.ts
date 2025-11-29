@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { animalRepository } from '../services/animal-repository';
 import { useGeolocation } from './use-geolocation';
 import type { Animal } from '../types/animal';
@@ -13,14 +13,17 @@ interface UseAnimalListResult {
 
 export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingAnimals, setIsFetchingAnimals] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const geolocation = useGeolocation();
     
+    // isLoading is true when either waiting for geolocation or fetching animals
+    const isLoading = geolocation.isLoading || isFetchingAnimals;
+    
     const isEmpty = animals.length === 0 && !isLoading && error === null;
     
-    const loadAnimals = async () => {
-        setIsLoading(true);
+    const loadAnimals = useCallback(async () => {
+        setIsFetchingAnimals(true);
         setError(null);
         
         try {
@@ -29,13 +32,13 @@ export function useAnimalList(): UseAnimalListResult {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
-            setIsLoading(false);
+            setIsFetchingAnimals(false);
         }
-    };
+    }, [geolocation.coordinates]);
     
     useEffect(() => {
         loadAnimals();
-    }, [geolocation.coordinates]);
+    }, [loadAnimals]);
     
     return {
         animals,

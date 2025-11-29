@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import type { Coordinates, GeolocationState, PermissionState } from '../types/location';
+import type { Coordinates, GeolocationState } from '../types/location';
 
 export function useGeolocation(): GeolocationState {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
-  const [permissionState, setPermissionState] = useState<PermissionState>('loading');
   const [error, setError] = useState<GeolocationPositionError | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,8 +27,6 @@ export function useGeolocation(): GeolocationState {
 
   function checkPermissionAndFetchLocation() {
     navigator.permissions.query({ name: 'geolocation' }).then((status) => {
-      setPermissionState(status.state);
-
       if (status.state === 'denied') {
         setIsLoading(false);
         return;
@@ -37,7 +34,7 @@ export function useGeolocation(): GeolocationState {
 
       fetchPosition();
     }).catch(() => {
-      setPermissionState('prompt');
+      // If permissions API is not supported, just try to fetch position
       fetchPosition();
     });
   }
@@ -48,7 +45,6 @@ export function useGeolocation(): GeolocationState {
 
   return {
     coordinates,
-    permissionState,
     error,
     isLoading,
   };

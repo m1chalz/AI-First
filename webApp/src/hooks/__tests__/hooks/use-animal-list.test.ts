@@ -12,7 +12,6 @@ vi.mock('../../services/animal-repository', () => ({
 vi.mock('../../use-geolocation', () => ({
     useGeolocation: vi.fn(() => ({
         coordinates: null,
-        permissionState: 'prompt',
         error: null,
         isLoading: false,
     }))

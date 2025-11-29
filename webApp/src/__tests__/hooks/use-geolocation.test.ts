@@ -50,7 +50,6 @@ describe('useGeolocation', () => {
     // then
     expect(result.current.isLoading).toBe(true);
     expect(result.current.coordinates).toBeNull();
-    expect(result.current.permissionState).toBe('loading');
   });
 
   it('should fetch coordinates when permission is granted', async () => {
@@ -66,7 +65,6 @@ describe('useGeolocation', () => {
     // then
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.permissionState).toBe('granted');
     expect(result.current.coordinates).toEqual({
       lat: 52.229676,
       lng: 21.012229,
@@ -87,7 +85,6 @@ describe('useGeolocation', () => {
     // then
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.permissionState).toBe('granted');
     expect(result.current.coordinates).toBeNull();
     expect(result.current.error).toBeTruthy();
     expect(result.current.error?.code).toBe(3);
@@ -122,7 +119,6 @@ describe('useGeolocation', () => {
     // then
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.permissionState).toBe('denied');
     expect(result.current.coordinates).toBeNull();
   });
 
