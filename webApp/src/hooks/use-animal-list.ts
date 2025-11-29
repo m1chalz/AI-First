@@ -9,6 +9,7 @@ interface UseAnimalListResult {
     error: string | null;
     isEmpty: boolean;
     loadAnimals: () => Promise<void>;
+    geolocationError: GeolocationPositionError | null;
 }
 
 export function useAnimalList(): UseAnimalListResult {
@@ -37,8 +38,11 @@ export function useAnimalList(): UseAnimalListResult {
     }, [geolocation.coordinates]);
     
     useEffect(() => {
-        loadAnimals();
-    }, [loadAnimals]);
+        // Wait for geolocation to finish loading before fetching animals
+        if (!geolocation.isLoading) {
+            loadAnimals();
+        }
+    }, [loadAnimals, geolocation.isLoading]);
     
     return {
         animals,
@@ -46,6 +50,7 @@ export function useAnimalList(): UseAnimalListResult {
         error,
         isEmpty,
         loadAnimals,
+        geolocationError: geolocation.error
     };
 }
 
