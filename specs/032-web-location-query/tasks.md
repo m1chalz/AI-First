@@ -96,19 +96,19 @@ Phase 6 (Polish & Cross-Cutting)
 
 ### Hook: use-geolocation
 
-- [ ] T012 [P] [US1] Write test `/webApp/src/__tests__/hooks/use-geolocation.test.ts` for useGeolocation hook (test cases: granted permission success, timeout fallback, position unavailable fallback, loading state transitions)
-- [ ] T013 [US1] Implement useGeolocation hook in `/webApp/src/hooks/use-geolocation.ts` (use navigator.geolocation, navigator.permissions, 3s timeout, format coordinates)
-- [ ] T014 [US1] Run test: `npm test -- use-geolocation.test.ts` from `/webApp` (must pass)
-- [ ] T015 [US1] Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T012 [P] [US1] Write test `/webApp/src/__tests__/hooks/use-geolocation.test.ts` for useGeolocation hook (test cases: granted permission success, timeout fallback, position unavailable fallback, loading state transitions)
+- [x] T013 [US1] Implement useGeolocation hook in `/webApp/src/hooks/use-geolocation.ts` (use navigator.geolocation, navigator.permissions, 3s timeout, format coordinates)
+- [x] T014 [US1] Run test: `npm test -- use-geolocation.test.ts` from `/webApp` (must pass)
+- [x] T015 [US1] Run lint: `npm run lint` from `/webApp` (must have no errors)
 
 ### Hook: use-animal-list Integration
 
-- [ ] T016 [P] [US1] Write test cases in `/webApp/src/__tests__/hooks/use-animal-list.test.ts` for location integration (test cases: call getAnimals with location when coordinates available, call getAnimals without location when coordinates null, loading state includes location loading)
-- [ ] T017 [US1] Extend use-animal-list hook in `/webApp/src/hooks/use-animal-list.ts` to integrate useGeolocation and pass coordinates to animalRepository.getAnimals
-- [ ] T018 [US1] Run test: `npm test -- use-animal-list.test.ts` from `/webApp` (must pass all new and existing tests)
-- [ ] T019 [US1] Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T016 [P] [US1] Write test cases in `/webApp/src/__tests__/hooks/use-animal-list.test.ts` for location integration (test cases: call getAnimals with location when coordinates available, call getAnimals without location when coordinates null, loading state includes location loading)
+- [x] T017 [US1] Extend use-animal-list hook in `/webApp/src/hooks/use-animal-list.ts` to integrate useGeolocation and pass coordinates to animalRepository.getAnimals
+- [x] T018 [US1] Run test: `npm test -- use-animal-list.test.ts` from `/webApp` (must pass all new and existing tests)
+- [x] T019 [US1] Run lint: `npm run lint` from `/webApp` (must have no errors)
 
-**Completion Criteria**: User Story 1 acceptance scenarios pass, hooks tested, no lint errors.
+**Completion Criteria**: User Story 1 acceptance scenarios pass, hooks tested, no lint errors. ✅ COMPLETE
 
 **MVP Checkpoint**: ✅ After this phase, core feature (location-aware listings) is functional for returning users with granted permissions.
 

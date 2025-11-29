@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { animalRepository } from '../services/animal-repository';
+import { useGeolocation } from './use-geolocation';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
@@ -14,6 +15,7 @@ export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const geolocation = useGeolocation();
     
     const isEmpty = animals.length === 0 && !isLoading && error === null;
     
@@ -22,7 +24,7 @@ export function useAnimalList(): UseAnimalListResult {
         setError(null);
         
         try {
-            const result = await animalRepository.getAnimals();
+            const result = await animalRepository.getAnimals(geolocation.coordinates);
             setAnimals(result);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
@@ -33,7 +35,7 @@ export function useAnimalList(): UseAnimalListResult {
     
     useEffect(() => {
         loadAnimals();
-    }, []);
+    }, [geolocation.coordinates]);
     
     return {
         animals,
