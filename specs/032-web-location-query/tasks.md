@@ -128,12 +128,12 @@ Phase 6 (Polish & Cross-Cutting)
 
 ### Component: LoadingOverlay
 
-- [ ] T020 [P] [US2] Write test `/webApp/src/__tests__/components/LoadingOverlay.test.tsx` for LoadingOverlay component (test cases: renders spinner, blocks interaction, displays optional message, test-id present)
-- [ ] T021 [US2] Implement LoadingOverlay component in `/webApp/src/components/LoadingOverlay/LoadingOverlay.tsx` (full-page overlay, fixed position, z-index 1000, spinner, data-testid="petList.loading.spinner")
-- [ ] T022 [US2] Run test: `npm test -- LoadingOverlay.test.tsx` from `/webApp` (must pass)
-- [ ] T023 [US2] Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T020 [P] [US2] Write test `/webApp/src/__tests__/components/LoadingOverlay.test.tsx` for LoadingOverlay component (test cases: renders spinner, blocks interaction, displays optional message, test-id present)
+- [x] T021 [US2] Implement LoadingOverlay component in `/webApp/src/components/LoadingOverlay/LoadingOverlay.tsx` (full-page overlay, fixed position, z-index 1000, spinner, data-testid="petList.loading.spinner")
+- [x] T022 [US2] Run test: `npm test -- LoadingOverlay.test.tsx` from `/webApp` (must pass)
+- [x] T023 [US2] Run lint: `npm run lint` from `/webApp` (must have no errors)
 
-**Completion Criteria**: User Story 2 acceptance scenarios pass, LoadingOverlay tested, no lint errors. Permission prompt flow works in incognito mode.
+**Completion Criteria**: User Story 2 acceptance scenarios pass, LoadingOverlay tested, no lint errors. Permission prompt flow works in incognito mode. ✅ COMPLETE
 
 ---
 
