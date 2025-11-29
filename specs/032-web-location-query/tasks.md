@@ -52,11 +52,11 @@ Phase 6 (Polish & Cross-Cutting)
 
 **Goal**: Initialize project structure and foundational types.
 
-- [ ] T001 Create TypeScript types file `/webApp/src/types/location.ts` with Coordinates, PermissionState, GeolocationState interfaces from data-model.md
-- [ ] T002 Create utility file `/webApp/src/utils/location.ts` with formatCoordinates function stub (returns input unchanged)
-- [ ] T003 Verify project structure: run `npm run build` from `/webApp` to ensure TypeScript compilation succeeds
+- [x] T001 Create TypeScript types file `/webApp/src/types/location.ts` with Coordinates, PermissionState, GeolocationState interfaces from data-model.md
+- [x] T002 Create utility file `/webApp/src/utils/location.ts` with formatCoordinates function stub (returns input unchanged)
+- [x] T003 Verify project structure: run `npm run build` from `/webApp` to ensure TypeScript compilation succeeds
 
-**Completion Criteria**: TypeScript builds without errors, new files created.
+**Completion Criteria**: TypeScript builds without errors, new files created. ✅ COMPLETE
 
 ---
 
@@ -66,19 +66,19 @@ Phase 6 (Polish & Cross-Cutting)
 
 ### Utility: Coordinate Formatting
 
-- [ ] T004 [P] Write test `/webApp/src/__tests__/utils/location.test.ts` for formatCoordinates function (test cases: 4 decimal rounding, edge values -90/90, -180/180)
-- [ ] T005 Implement formatCoordinates in `/webApp/src/utils/location.ts` (round to 4 decimals using toFixed)
-- [ ] T006 Run test: `npm test -- location.test.ts` from `/webApp` (must pass)
-- [ ] T007 Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T004 [P] Write test `/webApp/src/__tests__/utils/location.test.ts` for formatCoordinates function (test cases: 4 decimal rounding, edge values -90/90, -180/180)
+- [x] T005 Implement formatCoordinates in `/webApp/src/utils/location.ts` (round to 4 decimals using toFixed)
+- [x] T006 Run test: `npm test -- location.test.ts` from `/webApp` (must pass)
+- [x] T007 Run lint: `npm run lint` from `/webApp` (must have no errors)
 
 ### Repository: Location Parameter Support
 
-- [ ] T008 [P] Write test `/webApp/src/__tests__/services/animal-repository.test.ts` for getAnimals with location parameter (test cases: with location params, without location params, verify URL construction)
-- [ ] T009 Extend getAnimals method in `/webApp/src/services/animal-repository.ts` to accept optional PetListingsFetchOptions parameter and append lat/lng query params using URLSearchParams
-- [ ] T010 Run test: `npm test -- animal-repository.test.ts` from `/webApp` (must pass all new and existing tests)
-- [ ] T011 Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T008 [P] Write test `/webApp/src/__tests__/services/animal-repository.test.ts` for getAnimals with location parameter (test cases: with location params, without location params, verify URL construction)
+- [x] T009 Extend getAnimals method in `/webApp/src/services/animal-repository.ts` to accept optional PetListingsFetchOptions parameter and append lat/lng query params using URLSearchParams
+- [x] T010 Run test: `npm test -- animal-repository.test.ts` from `/webApp` (must pass all new and existing tests)
+- [x] T011 Run lint: `npm run lint` from `/webApp` (must have no errors)
 
-**Completion Criteria**: Utility and repository tests pass, no lint errors.
+**Completion Criteria**: Utility and repository tests pass, no lint errors. ✅ COMPLETE
 
 ---
 
