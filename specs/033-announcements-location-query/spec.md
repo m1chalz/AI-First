@@ -5,6 +5,18 @@
 **Status**: Draft  
 **Input**: User description: "zmiana tylko w /server. dodajemy opcjonalne parametry lat, lng i range w endpoincie /api/v1/announcements (query params). jeśli parametry są podane, endpoint ma zwracać tylko ogłoszenia które znajdują się w podanym promieniu [km] od podanych koordynatów (lat, lng). jeśli podany jest parametr lat, lng również musi (i odwrotnie) - inaczej zwracamy HTTP 400. parametr range jest opcjonalny - jeśli lat i lng są podane a range nie, to dla range przyjmujemy 5"
 
+## Clarifications
+
+### Session 2025-11-29
+
+- Q: What happens when range is set to 0? → A: Treat as invalid parameter and return HTTP 400 error
+- Q: What happens when the range parameter is provided but lat/lng are not? → A: Ignore the range parameter and return all announcements (existing behavior)
+- Q: How does the system handle announcements that don't have location data? → A: Location data is mandatory for all announcements (this edge case doesn't apply)
+- Q: Should there be a maximum limit for the range parameter? → A: No maximum limit - accept any positive number
+- Q: Should the API response include calculated distance from search coordinates for each announcement? → A: No - return only announcement data without distance information
+- Q: When location filtering is applied, how should the endpoint order announcements? → A: Keep the existing default ordering (e.g., newest first)
+- Q: Should the `range` parameter accept decimal values? → A: No - reject non-integer values with HTTP 400
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Filter Announcements by Location with Custom Radius (Priority: P1)
@@ -56,12 +68,12 @@ The system validates that latitude and longitude are provided together as a pair
 
 ### Edge Cases
 
-- What happens when the range parameter is provided but lat/lng are not? (System should ignore the range parameter and return all announcements)
-- What happens when range is set to 0? (Return only announcements at exactly the same coordinates, or treat as invalid parameter)
+- What happens when the range parameter is provided but lat/lng are not? (System ignores the range parameter and returns all announcements as if no filtering was requested)
+- What happens when range is set to 0? (System validates and returns HTTP 400 as zero is not a valid search radius)
 - What happens when lat/lng values are out of valid ranges (lat: -90 to 90, lng: -180 to 180)? (System should validate and return HTTP 400)
 - What happens when range is negative? (System should validate and return HTTP 400)
-- How does the system handle announcements that don't have location data? (Exclude them from filtered results, or treat as error condition)
 - What happens when all announcements are very far from the search coordinates? (Return empty array with 200 OK)
+- What happens when range contains decimals? (System should reject with HTTP 400 because only integer kilometers are allowed)
 
 ## Requirements
 
@@ -74,13 +86,15 @@ The system validates that latitude and longitude are provided together as a pair
 - **FR-005**: When `lat` and `lng` are provided but `range` is not, the system MUST default to a 5 kilometer radius
 - **FR-006**: The system MUST calculate distances between coordinates and announcement locations using the Haversine formula (or equivalent geodetic distance calculation)
 - **FR-007**: The system MUST validate that `lat` is between -90 and 90, and `lng` is between -180 and 180
-- **FR-008**: The system MUST validate that `range` (when provided) is a positive number
+- **FR-008**: The system MUST validate that `range` (when provided) is a positive integer greater than zero; non-integer inputs MUST return HTTP 400
 - **FR-009**: When no location parameters are provided, the system MUST return all announcements (existing behavior preserved)
-- **FR-010**: Announcements without location data MUST be excluded from results when location filtering is active
+- **FR-010**: When `range` is provided without `lat`/`lng` coordinates, the system MUST ignore the range parameter and return all announcements
+- **FR-011**: The response format MUST remain unchanged - return only announcement data without adding distance information to the response payload
+- **FR-012**: Applying location filtering MUST preserve the existing default announcement ordering (e.g., newest-first), without re-sorting by distance
 
 ### Key Entities
 
-- **Announcement**: Represents a pet announcement with location data (latitude, longitude coordinates) and other announcement details. The location coordinates are used for distance-based filtering.
+- **Announcement**: Represents a pet announcement with mandatory location data (latitude, longitude coordinates) and other announcement details. All announcements in the system have location coordinates, which are used for distance-based filtering.
 - **Geographic Coordinates**: Latitude and longitude pair representing a point on Earth's surface, used for both the search origin and announcement locations.
 
 ## Success Criteria
