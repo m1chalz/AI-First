@@ -2,8 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnimalList } from '../../hooks/use-animal-list';
 import { useModal } from '../../hooks/use-modal';
+import { useGeolocation } from '../../hooks/use-geolocation';
 import { AnimalCard } from './AnimalCard';
 import { EmptyState } from './EmptyState';
+import { LocationBanner } from '../LocationBanner/LocationBanner';
 import { PetDetailsModal } from '../PetDetailsModal/PetDetailsModal';
 import styles from './AnimalList.module.css';
 
@@ -17,6 +19,10 @@ export const AnimalList: React.FC = () => {
     } = useAnimalList();
     
     const { isOpen, selectedPetId, openModal, closeModal } = useModal();
+    const geolocation = useGeolocation();
+    const [isBannerDismissed, setIsBannerDismissed] = useState(false);
+    
+    const showLocationBanner = geolocation.error?.code === 1 && !isBannerDismissed;
     
     return (
         <div className={styles.container}>
@@ -34,6 +40,10 @@ export const AnimalList: React.FC = () => {
                         </button>
                     </div>
                 </header>
+                
+                {showLocationBanner && (
+                    <LocationBanner onClose={() => setIsBannerDismissed(true)} />
+                )}
                 
                 <div className={styles.content}>
                     {isLoading ? (

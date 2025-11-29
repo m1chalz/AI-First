@@ -151,18 +151,18 @@ Phase 6 (Polish & Cross-Cutting)
 
 ### Component: LocationBanner
 
-- [ ] T024 [P] [US3] Write test `/webApp/src/__tests__/components/LocationBanner.test.tsx` for LocationBanner component (test cases: renders message, renders instructions, X button present, onClose callback triggered, test-id present)
-- [ ] T025 [US3] Implement LocationBanner component in `/webApp/src/components/LocationBanner/LocationBanner.tsx` (banner with benefit message, generic instructions, X button, data-testid="petList.locationBanner.close")
-- [ ] T026 [US3] Run test: `npm test -- LocationBanner.test.tsx` from `/webApp` (must pass)
-- [ ] T027 [US3] Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T024 [P] [US3] Write test `/webApp/src/__tests__/components/LocationBanner.test.tsx` for LocationBanner component (test cases: renders message, renders instructions, X button present, onClose callback triggered, test-id present)
+- [x] T025 [US3] Implement LocationBanner component in `/webApp/src/components/LocationBanner/LocationBanner.tsx` (banner with benefit message, generic instructions, X button, data-testid="petList.locationBanner.close")
+- [x] T026 [US3] Run test: `npm test -- LocationBanner.test.tsx` from `/webApp` (must pass)
+- [x] T027 [US3] Run lint: `npm run lint` from `/webApp` (must have no errors)
 
 ### Integration: AnimalList Component
 
-- [ ] T028 [P] [US3] Extend AnimalList component in `/webApp/src/components/AnimalList/AnimalList.tsx` to integrate useGeolocation, show LoadingOverlay during fetch, show LocationBanner when permission denied, handle all permission states
-- [ ] T029 [US3] Run test: `npm test -- AnimalList` from `/webApp` (must pass all component tests including new location scenarios)
-- [ ] T030 [US3] Run lint: `npm run lint` from `/webApp` (must have no errors)
+- [x] T028 [P] [US3] Extend AnimalList component in `/webApp/src/components/AnimalList/AnimalList.tsx` to integrate useGeolocation, show LocationBanner when permission denied, handle all permission states
+- [x] T029 [US3] Run test: `npm test -- AnimalList` from `/webApp` (must pass all component tests including new location scenarios)
+- [x] T030 [US3] Run lint: `npm run lint` from `/webApp` (must have no errors)
 
-**Completion Criteria**: User Story 3 acceptance scenarios pass, LocationBanner tested, AnimalList integrated, no lint errors. Blocked permission banner displays and dismisses correctly.
+**Completion Criteria**: User Story 3 acceptance scenarios pass, LocationBanner tested, AnimalList integrated, no lint errors. Blocked permission banner displays and dismisses correctly. ✅ COMPLETE
 
 ---
 
