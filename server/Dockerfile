@@ -1,4 +1,6 @@
-FROM node:24-alpine
+FROM alpine
+
+RUN apk add --update nodejs npm
 
 WORKDIR /app/server
 
@@ -14,4 +16,3 @@ EXPOSE 3000
 USER node
 
 CMD ["npm", "start"]
-
