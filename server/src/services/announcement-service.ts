@@ -3,14 +3,28 @@ import type { IAnnouncementRepository } from '../database/repositories/announcem
 import { ConflictError, NotFoundError } from '../lib/errors.ts';
 import { generateManagementPassword } from '../lib/password-management.ts';
 
+const DEFAULT_RANGE_KM = 5;
+
 export class AnnouncementService {
   constructor(
     private repository: IAnnouncementRepository,
     private validator: (data: CreateAnnouncementDto) => void,
-    private sanitizer: (data: string) => string
+    private sanitizer: (data: string) => string,
+    private locationValidator: (lat?: number, lng?: number, range?: number) => void
   ) {}
 
-  async getAllAnnouncements(locationFilter?: LocationFilter): Promise<Announcement[]> {
+  async getAllAnnouncements(lat?: number, lng?: number, range?: number): Promise<Announcement[]> {
+    this.locationValidator(lat, lng, range);
+    
+    let locationFilter: LocationFilter | undefined;
+    if (lat !== undefined && lng !== undefined) {
+      locationFilter = {
+        lat,
+        lng,
+        range: range ?? DEFAULT_RANGE_KM,
+      };
+    }
+    
     return this.repository.findAll(locationFilter);
   }
 

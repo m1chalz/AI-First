@@ -44,15 +44,17 @@ const VALID_CREATE_DATA: CreateAnnouncementDto = {
 describe('AnnouncementService', () => {
   const mockValidator = vi.fn();
   const mockSanitizer = vi.fn((input: string) => input);
+  const mockLocationValidator = vi.fn();
 
-  const createService = (repository: IAnnouncementRepository, validator = mockValidator, sanitizer = mockSanitizer) => {
-    return new AnnouncementService(repository, validator, sanitizer);
+  const createService = (repository: IAnnouncementRepository, validator = mockValidator, sanitizer = mockSanitizer, locationValidator = mockLocationValidator) => {
+    return new AnnouncementService(repository, validator, sanitizer, locationValidator);
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockValidator.mockClear();
     mockSanitizer.mockImplementation((input: string) => input);
+    mockLocationValidator.mockClear();
   });
 
   describe('getAllAnnouncements', () => {
@@ -76,9 +78,38 @@ describe('AnnouncementService', () => {
       expect(result.length).toBe(expectedLength);
     });
 
-    it('should pass location filter to repository', async () => {
+    it('should pass location parameters to validator and construct filter for repository', async () => {
       // given
-      const locationFilter = { lat: 50.0614, lng: 19.9383, range: 10 };
+      const lat = 50.0614;
+      const lng = 19.9383;
+      const range = 10;
+      const expectedFilter = { lat, lng, range };
+      
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const locationValidatorSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository, mockValidator, mockSanitizer, locationValidatorSpy);
+      
+      // when
+      await service.getAllAnnouncements(lat, lng, range);
+      
+      // then
+      expect(locationValidatorSpy).toHaveBeenCalledWith(lat, lng, range);
+      expect(locationValidatorSpy).toHaveBeenCalledTimes(1);
+      expect(findAllSpy).toHaveBeenCalledWith(expectedFilter);
+      expect(findAllSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use default range when not provided', async () => {
+      // given
+      const lat = 50.0614;
+      const lng = 19.9383;
+      const expectedFilter = { lat, lng, range: 5 };
+      
       const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
       const fakeRepository = {
         ...defaultMockRepository,
@@ -88,11 +119,27 @@ describe('AnnouncementService', () => {
       const service = createService(fakeRepository);
       
       // when
-      await service.getAllAnnouncements(locationFilter);
+      await service.getAllAnnouncements(lat, lng, undefined);
       
       // then
-      expect(findAllSpy).toHaveBeenCalledWith(locationFilter);
-      expect(findAllSpy).toHaveBeenCalledTimes(1);
+      expect(findAllSpy).toHaveBeenCalledWith(expectedFilter);
+    });
+
+    it('should pass undefined filter when coordinates are not provided', async () => {
+      // given
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository);
+      
+      // when
+      await service.getAllAnnouncements(undefined, undefined, undefined);
+      
+      // then
+      expect(findAllSpy).toHaveBeenCalledWith(undefined);
     });
   });
 

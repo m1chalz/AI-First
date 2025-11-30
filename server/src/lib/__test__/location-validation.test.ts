@@ -11,11 +11,8 @@ describe('validateLocation', () => {
     { lat: 0, lng: 180, description: 'maximum valid longitude' },
     { lat: 50.123456, lng: 19.987654, description: 'high precision coordinates' },
   ])('should validate $description', ({ lat, lng }) => {
-    // when
-    const result = validateLocation(lat, lng);
-
-    // then
-    expect(result).toEqual({ lat, lng, range: 5 });
+    // when/then
+    expect(() => validateLocation(lat, lng)).not.toThrow();
   });
 
   it.each([
@@ -47,23 +44,17 @@ describe('validateLocation', () => {
     }
   });
 
-  it('should return undefined when both lat and lng are absent', () => {
-    // when
-    const result = validateLocation(undefined, undefined);
-
-    // then
-    expect(result).toBeUndefined();
+  it('should not throw when both lat and lng are absent', () => {
+    // when/then
+    expect(() => validateLocation(undefined, undefined)).not.toThrow();
   });
 
   it.each([
     { lat: 50.0614, lng: 19.9383, range: 1, description: 'range = 1' },
     { lat: 50.0614, lng: 19.9383, range: 100, description: 'range = 100' },
   ])('should accept valid positive range: $description', ({ lat, lng, range }) => {
-    // when
-    const result = validateLocation(lat, lng, range);
-
-    // then
-    expect(result).toEqual({ lat, lng, range });
+    // when/then
+    expect(() => validateLocation(lat, lng, range)).not.toThrow();
   });
 
   it.each([
@@ -85,12 +76,9 @@ describe('validateLocation', () => {
     }
   });
 
-  it('should return default range of 5 when not provided', () => {
-    // when
-    const result = validateLocation(50.0614, 19.9383, undefined);
-
-    // then
-    expect(result).toEqual({ lat: 50.0614, lng: 19.9383, range: 5 });
+  it('should not throw when range is not provided', () => {
+    // when/then
+    expect(() => validateLocation(50.0614, 19.9383, undefined)).not.toThrow();
   });
 });
 

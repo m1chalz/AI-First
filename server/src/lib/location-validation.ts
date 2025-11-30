@@ -1,8 +1,5 @@
 import { z } from 'zod';
 import { ValidationError } from './errors.ts';
-import type { LocationFilter } from '../types/announcement.ts';
-
-const DEFAULT_RANGE_KM = 5;
 
 const LocationSchemaBase = z.object({
   lat: z
@@ -21,7 +18,6 @@ const LocationSchemaBase = z.object({
     .refine((val) => val !== 0, { message: 'Parameter \'range\' must be greater than zero' })
     .refine((val) => val > 0, { message: 'Parameter \'range\' must be a positive number' })
     .optional()
-    .default(DEFAULT_RANGE_KM),
 });
 
 const LocationSchema = LocationSchemaBase.refine(
@@ -41,19 +37,9 @@ const LocationSchema = LocationSchemaBase.refine(
   }
 );
 
-export function validateLocation(lat?: number, lng?: number, range?: number): LocationFilter | undefined {
+export function validateLocation(lat?: number, lng?: number, range?: number): void {
   try {
-    const result = LocationSchema.parse({ lat, lng, range });
-    
-    if (result.lat !== undefined && result.lng !== undefined) {
-      return {
-        lat: result.lat,
-        lng: result.lng,
-        range: result.range,
-      };
-    }
-    
-    return undefined;
+    LocationSchema.parse({ lat, lng, range });
   } catch (error) {
     if (error instanceof z.ZodError) {
       const firstError = error.errors[0];
