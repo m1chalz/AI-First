@@ -590,6 +590,25 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     expect(ids).not.toContain(ANNOUNCEMENT_WARSAW.id);
   });
 
+  it('should filter with 5km default when lat/lng provided without range', async () => {
+    // given
+    const searchLat = KRAKOW.lat;
+    const searchLng = KRAKOW.lng;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(2);
+    const ids = response.body.data.map((a: { id: string }) => a.id);
+    expect(ids).toContain(ANNOUNCEMENT_KRAKOW.id);
+    expect(ids).toContain(ANNOUNCEMENT_NEARBY.id);
+    expect(ids).not.toContain(ANNOUNCEMENT_WARSAW.id);
+  });
+
   it('should return HTTP 400 when only lat provided', async () => {
     // when
     const response = await request(server)
