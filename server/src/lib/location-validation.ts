@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { ValidationError } from './errors.ts';
+import type { LocationFilter } from '../types/announcement.ts';
 
 const DEFAULT_RANGE_KM = 5;
 
@@ -39,26 +41,25 @@ const LocationSchema = LocationSchemaBase.refine(
   }
 );
 
-export interface ValidationResult {
-  valid: boolean;
-  lat?: number;
-  lng?: number;
-  range?: number;
-  error?: string;
-}
-
-export function validateLocation(lat?: number, lng?: number, range?: number): ValidationResult {
-  const result = LocationSchema.safeParse({ lat, lng, range });
-  
-  if (!result.success) {
-    const firstError = result.error.errors[0];
-    return { valid: false, error: firstError.message };
+export function validateLocation(lat?: number, lng?: number, range?: number): LocationFilter | undefined {
+  try {
+    const result = LocationSchema.parse({ lat, lng, range });
+    
+    if (result.lat !== undefined && result.lng !== undefined) {
+      return {
+        lat: result.lat,
+        lng: result.lng,
+        range: result.range,
+      };
+    }
+    
+    return undefined;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const firstError = error.errors[0];
+      const field = firstError.path.length > 0 ? firstError.path[0].toString() : undefined;
+      throw new ValidationError('INVALID_PARAMETER', firstError.message, field);
+    }
+    throw error;
   }
-
-  return {
-    valid: true,
-    lat: result.data.lat,
-    lng: result.data.lng,
-    range: result.data.range,
-  };
 }

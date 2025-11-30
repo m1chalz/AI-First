@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateLocation } from '../location-validation.ts';
+import { ValidationError } from '../errors.ts';
 
 describe('validateLocation', () => {
   it.each([
@@ -14,49 +15,44 @@ describe('validateLocation', () => {
     const result = validateLocation(lat, lng);
 
     // then
-    expect(result.valid).toBe(true);
-    expect(result.lat).toBe(lat);
-    expect(result.lng).toBe(lng);
-    expect(result.range).toBe(5);
+    expect(result).toEqual({ lat, lng, range: 5 });
   });
 
   it.each([
-    { lat: -90.001, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90' },
-    { lat: 90.001, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90' },
-    { lat: -91, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90' },
-    { lat: 95, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90' },
-    { lat: 0, lng: -180.001, expectedError: 'Parameter \'lng\' must be between -180 and 180' },
-    { lat: 0, lng: 180.001, expectedError: 'Parameter \'lng\' must be between -180 and 180' },
-    { lat: 0, lng: -181, expectedError: 'Parameter \'lng\' must be between -180 and 180' },
-    { lat: 0, lng: 200, expectedError: 'Parameter \'lng\' must be between -180 and 180' },
-    { lat: NaN, lng: 0, expectedError: 'Parameter \'lat\' must be a valid number' },
-    { lat: 0, lng: NaN, expectedError: 'Parameter \'lng\' must be a valid number' },
-    { lat: '50' as unknown as number, lng: 0, expectedError: 'Parameter \'lat\' must be a valid number' },
-    { lat: 0, lng: '19' as unknown as number, expectedError: 'Parameter \'lng\' must be a valid number' },
-    { lat: 0, lng: undefined, expectedError: 'Parameter \'lng\' is required when \'lat\' is provided' },
-    { lat: undefined, lng: 0, expectedError: 'Parameter \'lat\' is required when \'lng\' is provided' },
-  ])('should reject with error', ({ lat, lng, expectedError }) => {
-    // when
-    const result = validateLocation(lat, lng);
-
-    // then
-    expect(result.valid).toBe(false);
-    expect(result.error).toBe(expectedError);
+    { lat: -90.001, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90', expectedField: 'lat' },
+    { lat: 90.001, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90', expectedField: 'lat' },
+    { lat: -91, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90', expectedField: 'lat' },
+    { lat: 95, lng: 0, expectedError: 'Parameter \'lat\' must be between -90 and 90', expectedField: 'lat' },
+    { lat: 0, lng: -180.001, expectedError: 'Parameter \'lng\' must be between -180 and 180', expectedField: 'lng' },
+    { lat: 0, lng: 180.001, expectedError: 'Parameter \'lng\' must be between -180 and 180', expectedField: 'lng' },
+    { lat: 0, lng: -181, expectedError: 'Parameter \'lng\' must be between -180 and 180', expectedField: 'lng' },
+    { lat: 0, lng: 200, expectedError: 'Parameter \'lng\' must be between -180 and 180', expectedField: 'lng' },
+    { lat: NaN, lng: 0, expectedError: 'Parameter \'lat\' must be a valid number', expectedField: 'lat' },
+    { lat: 0, lng: NaN, expectedError: 'Parameter \'lng\' must be a valid number', expectedField: 'lng' },
+    { lat: '50' as unknown as number, lng: 0, expectedError: 'Parameter \'lat\' must be a valid number', expectedField: 'lat' },
+    { lat: 0, lng: '19' as unknown as number, expectedError: 'Parameter \'lng\' must be a valid number', expectedField: 'lng' },
+    { lat: 0, lng: undefined, expectedError: 'Parameter \'lng\' is required when \'lat\' is provided', expectedField: 'lng' },
+    { lat: undefined, lng: 0, expectedError: 'Parameter \'lat\' is required when \'lng\' is provided', expectedField: 'lat' },
+  ])('should throw ValidationError: $expectedError', ({ lat, lng, expectedError, expectedField }) => {
+    // when/then
+    expect(() => validateLocation(lat, lng)).toThrow(ValidationError);
+    
+    try {
+      validateLocation(lat, lng);
+    } catch (error) {
+      expect(error).toBeInstanceOf(ValidationError);
+      expect((error as ValidationError).message).toBe(expectedError);
+      expect((error as ValidationError).code).toBe('INVALID_PARAMETER');
+      expect((error as ValidationError).field).toBe(expectedField);
+    }
   });
 
-  it('should allow both lat and lng to be absent', () => {
-    // given
-    const lat = undefined;
-    const lng = undefined;
-
+  it('should return undefined when both lat and lng are absent', () => {
     // when
-    const result = validateLocation(lat, lng);
+    const result = validateLocation(undefined, undefined);
 
     // then
-    expect(result.valid).toBe(true);
-    expect(result.lat).toBeUndefined();
-    expect(result.lng).toBeUndefined();
-    expect(result.range).toBe(5);
+    expect(result).toBeUndefined();
   });
 
   it.each([
@@ -67,8 +63,7 @@ describe('validateLocation', () => {
     const result = validateLocation(lat, lng, range);
 
     // then
-    expect(result.valid).toBe(true);
-    expect(result.range).toBe(range);
+    expect(result).toEqual({ lat, lng, range });
   });
 
   it.each([
@@ -76,13 +71,18 @@ describe('validateLocation', () => {
     { lat: 50.0614, lng: 19.9383, range: -1, expectedError: 'Parameter \'range\' must be a positive number' },
     { lat: 50.0614, lng: 19.9383, range: 0.5, expectedError: 'Parameter \'range\' must be an integer' },
     { lat: 50.0614, lng: 19.9383, range: NaN, expectedError: 'Parameter \'range\' must be a valid number' },
-  ])('should reject invalid range: $range', ({ lat, lng, range, expectedError }) => {
-    // when
-    const result = validateLocation(lat, lng, range);
-
-    // then
-    expect(result.valid).toBe(false);
-    expect(result.error).toBe(expectedError);
+  ])('should throw ValidationError for invalid range: $range', ({ lat, lng, range, expectedError }) => {
+    // when/then
+    expect(() => validateLocation(lat, lng, range)).toThrow(ValidationError);
+    
+    try {
+      validateLocation(lat, lng, range);
+    } catch (error) {
+      expect(error).toBeInstanceOf(ValidationError);
+      expect((error as ValidationError).message).toBe(expectedError);
+      expect((error as ValidationError).code).toBe('INVALID_PARAMETER');
+      expect((error as ValidationError).field).toBe('range');
+    }
   });
 
   it('should return default range of 5 when not provided', () => {
@@ -90,8 +90,7 @@ describe('validateLocation', () => {
     const result = validateLocation(50.0614, 19.9383, undefined);
 
     // then
-    expect(result.valid).toBe(true);
-    expect(result.range).toBe(5);
+    expect(result).toEqual({ lat: 50.0614, lng: 19.9383, range: 5 });
   });
 });
 

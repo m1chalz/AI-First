@@ -7,14 +7,21 @@ import type { RequestWithBasicAuth } from '../middlewares/basic-auth.ts';
 import { ValidationError } from '../lib/errors.ts';
 import path from 'path';
 import { announcementService, photoUploadService } from '../conf/di.conf.ts';
+import { validateLocation } from '../lib/location-validation.ts';
 
 
 const router = Router();
 
 const imagesDir = path.join(process.cwd(), 'public', 'images');
 
-router.get('/', async (_req, res) => {
-  const announcements = await announcementService.getAllAnnouncements();
+router.get('/', async (req, res) => {
+  const lat = req.query.lat ? parseFloat(req.query.lat as string) : undefined;
+  const lng = req.query.lng ? parseFloat(req.query.lng as string) : undefined;
+  const range = req.query.range ? parseFloat(req.query.range as string) : undefined;
+
+  const locationFilter = validateLocation(lat, lng, range);
+
+  const announcements = await announcementService.getAllAnnouncements(locationFilter);
   res.json({ data: announcements });
 });
 
