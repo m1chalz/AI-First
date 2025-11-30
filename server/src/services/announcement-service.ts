@@ -1,4 +1,4 @@
-import type { Announcement, AnnouncementDto, CreateAnnouncementDto } from '../types/announcement.ts';
+import type { Announcement, AnnouncementWithManagementPassword, CreateAnnouncementDto, LocationFilter } from '../types/announcement.ts';
 import type { IAnnouncementRepository } from '../database/repositories/announcement-repository.ts';
 import { ConflictError, NotFoundError } from '../lib/errors.ts';
 import { generateManagementPassword } from '../lib/password-management.ts';
@@ -10,8 +10,8 @@ export class AnnouncementService {
     private sanitizer: (data: string) => string
   ) {}
 
-  async getAllAnnouncements(): Promise<Announcement[]> {
-    return this.repository.findAll();
+  async getAllAnnouncements(locationFilter?: LocationFilter): Promise<Announcement[]> {
+    return this.repository.findAll(locationFilter);
   }
 
   async getAnnouncementById(id: string): Promise<Announcement> {
@@ -24,7 +24,7 @@ export class AnnouncementService {
     return announcement;
   }
 
-  async createAnnouncement(data: CreateAnnouncementDto): Promise<AnnouncementDto> {
+  async createAnnouncement(data: CreateAnnouncementDto): Promise<AnnouncementWithManagementPassword> {
     this.validator(data);
 
     if (data.microchipNumber) {
@@ -46,7 +46,7 @@ export class AnnouncementService {
 
     const managementPassword = generateManagementPassword();
 
-    const created = await this.repository.create(sanitized, managementPassword);
+    const created: Announcement = await this.repository.create(sanitized, managementPassword);
 
     return {
       ...created,

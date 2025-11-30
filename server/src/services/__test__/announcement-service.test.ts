@@ -60,7 +60,7 @@ describe('AnnouncementService', () => {
       { announcements: [MOCK_ANNOUNCEMENT], expectedLength: 1 },
       { announcements: [], expectedLength: 0 },
     ])('should return $expectedLength announcements when repository returns $expectedLength items', async ({ announcements, expectedLength }) => {
-      // Given: Repository returns specified announcements
+      // given
       const fakeRepository = {
         ...defaultMockRepository,
         findAll: async () => announcements,
@@ -68,12 +68,31 @@ describe('AnnouncementService', () => {
       
       const service = createService(fakeRepository);
       
-      // When: Service retrieves all announcements
+      // when
       const result = await service.getAllAnnouncements();
       
-      // Then: Returns expected announcements from repository
+      // then
       expect(result).toEqual(announcements);
       expect(result.length).toBe(expectedLength);
+    });
+
+    it('should pass location filter to repository', async () => {
+      // given
+      const locationFilter = { lat: 50.0614, lng: 19.9383, range: 10 };
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository);
+      
+      // when
+      await service.getAllAnnouncements(locationFilter);
+      
+      // then
+      expect(findAllSpy).toHaveBeenCalledWith(locationFilter);
+      expect(findAllSpy).toHaveBeenCalledTimes(1);
     });
   });
 

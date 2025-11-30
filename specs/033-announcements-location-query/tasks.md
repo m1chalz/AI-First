@@ -30,13 +30,13 @@
 
 **Purpose**: Project initialization and verify existing setup
 
-- [ ] T001 Verify Node.js v24 (LTS) is installed
-- [ ] T002 Verify TypeScript and ESLint are configured in `/server`
-- [ ] T003 Verify Vitest configuration exists in `/server/vitest.config.ts` with 80% coverage thresholds
-- [ ] T004 Verify Knex is configured in `/server/knexfile.ts` for SQLite
-- [ ] T005 Review existing announcement repository/query structure in `/server/src/database/`
-- [ ] T006 Review existing announcement route handler in `/server/src/routes/announcements.ts`
-- [ ] T007 Review existing announcement integration tests in `/server/src/__test__/announcements.test.ts`
+- [X] T001 Verify Node.js v24 (LTS) is installed
+- [X] T002 Verify TypeScript and ESLint are configured in `/server`
+- [X] T003 Verify Vitest configuration exists in `/server/vitest.config.ts` with 80% coverage thresholds
+- [X] T004 Verify Knex is configured in `/server/knexfile.ts` for SQLite
+- [X] T005 Review existing announcement repository/query structure in `/server/src/database/`
+- [X] T006 Review existing announcement route handler in `/server/src/routes/announcements.ts`
+- [X] T007 Review existing announcement integration tests in `/server/src/__test__/announcements.test.ts`
 
 ---
 
@@ -46,9 +46,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 [P] RED: Create test file `/server/src/lib/__test__/location-validation.test.ts` with empty test suite
-- [ ] T009 [P] Create source file `/server/src/lib/location-validation.ts` with placeholder exports
-- [ ] T010 Run `npm test` and verify tests can discover new test file
+- [X] T008 [P] RED: Create test file `/server/src/lib/__test__/location-validation.test.ts` with empty test suite
+- [X] T009 [P] Create source file `/server/src/lib/location-validation.ts` with placeholder exports
+- [X] T010 Run `npm test` and verify tests can discover new test file
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -63,60 +63,60 @@
 ### Tests for User Story 1 (TDD: Red Phase) ✅
 
 **Unit Tests - Coordinate Validation**:
-- [ ] T011 [P] [US1] RED: Write failing test "should accept valid coordinate pair" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T012 [P] [US1] RED: Write failing test "should validate latitude is between -90 and 90" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T013 [P] [US1] RED: Write failing test "should validate longitude is between -180 and 180" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T014 [P] [US1] RED: Write failing test "should reject non-numeric latitude" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T015 [P] [US1] RED: Write failing test "should reject non-numeric longitude" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T011 [P] [US1] RED: Write failing test "should accept valid coordinate pair" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T012 [P] [US1] RED: Write failing test "should validate latitude is between -90 and 90" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T013 [P] [US1] RED: Write failing test "should validate longitude is between -180 and 180" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T014 [P] [US1] RED: Write failing test "should reject non-numeric latitude" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T015 [P] [US1] RED: Write failing test "should reject non-numeric longitude" in `/server/src/lib/__test__/location-validation.test.ts`
 
 **Unit Tests - Range Validation**:
-- [ ] T016 [P] [US1] RED: Write failing test "should accept valid positive integer range" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T017 [P] [US1] RED: Write failing test "should reject range = 0 with HTTP 400" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T018 [P] [US1] RED: Write failing test "should reject negative range" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T019 [P] [US1] RED: Write failing test "should reject decimal range values" in `/server/src/lib/__test__/location-validation.test.ts`
-- [ ] T020 [P] [US1] RED: Write failing test "should reject non-numeric range" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T016 [P] [US1] RED: Write failing test "should accept valid positive integer range" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T017 [P] [US1] RED: Write failing test "should reject range = 0 with HTTP 400" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T018 [P] [US1] RED: Write failing test "should reject negative range" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T019 [P] [US1] RED: Write failing test "should reject decimal range values" in `/server/src/lib/__test__/location-validation.test.ts`
+- [X] T020 [P] [US1] RED: Write failing test "should reject non-numeric range" in `/server/src/lib/__test__/location-validation.test.ts`
 
 **Integration Tests - Custom Radius Filtering**:
-- [ ] T021 [P] [US1] RED: Write failing test "should filter announcements within custom radius (10km)" in `/server/src/__test__/announcements.test.ts`
-- [ ] T022 [P] [US1] RED: Write failing test "should return empty array when no announcements in radius" in `/server/src/__test__/announcements.test.ts`
-- [ ] T023 [P] [US1] RED: Write failing test "should return all announcements within large radius (50km)" in `/server/src/__test__/announcements.test.ts`
-- [ ] T024 [P] [US1] RED: Write failing test "should verify distance calculation accuracy (known coordinates)" in `/server/src/__test__/announcements.test.ts`
+- [X] T021 [P] [US1] RED: Write failing test "should filter announcements within custom radius (10km)" in `/server/src/__test__/announcements.test.ts`
+- [X] T022 [P] [US1] RED: Write failing test "should return empty array when no announcements in radius" in `/server/src/__test__/announcements.test.ts`
+- [X] T023 [P] [US1] RED: Write failing test "should return all announcements within large radius (50km)" in `/server/src/__test__/announcements.test.ts`
+- [X] T024 [P] [US1] RED: Write failing test "should verify distance calculation accuracy (known coordinates)" in `/server/src/__test__/announcements.test.ts`
 
 **Run and Verify Tests Fail**:
-- [ ] T025 [US1] Run `npm test` and verify ALL US1 tests fail (RED phase complete)
+- [X] T025 [US1] Run `npm test` and verify ALL US1 tests fail (RED phase complete)
 
 ### Implementation for User Story 1 (TDD: Green Phase)
 
 **Validation Implementation**:
-- [ ] T026 [P] [US1] GREEN: Implement `validateCoordinates()` function in `/server/src/lib/location-validation.ts` (minimal code to pass T011-T015)
-- [ ] T027 [P] [US1] GREEN: Implement `validateRange()` function in `/server/src/lib/location-validation.ts` (minimal code to pass T016-T020)
-- [ ] T028 [US1] Run `npm test -- location-validation.test.ts` and verify unit tests pass
+- [X] T026 [P] [US1] GREEN: Implement `validateCoordinates()` function in `/server/src/lib/location-validation.ts` (minimal code to pass T011-T015)
+- [X] T027 [P] [US1] GREEN: Implement `validateRange()` function in `/server/src/lib/location-validation.ts` (minimal code to pass T016-T020)
+- [X] T028 [US1] Run `npm test -- location-validation.test.ts` and verify unit tests pass
 
 **Database Query Implementation**:
-- [ ] T029 [US1] GREEN: Locate announcement repository/query function in `/server/src/database/repositories/`
-- [ ] T030 [US1] GREEN: Add Haversine distance calculation using Knex subquery in announcement repository (see research.md for SQL formula)
-- [ ] T031 [US1] GREEN: Add WHERE filter for distance < range in outer query
-- [ ] T032 [US1] GREEN: Preserve existing default ordering (do NOT sort by distance)
+- [X] T029 [US1] GREEN: Locate announcement repository/query function in `/server/src/database/repositories/`
+- [X] T030 [US1] GREEN: Add Haversine distance calculation using Knex subquery in announcement repository (see research.md for SQL formula)
+- [X] T031 [US1] GREEN: Add WHERE filter for distance < range in outer query
+- [X] T032 [US1] GREEN: Preserve existing default ordering (do NOT sort by distance)
 
 **Route Handler Implementation**:
-- [ ] T033 [US1] GREEN: Modify `/server/src/routes/announcements.ts` to parse `lat`, `lng`, `range` query parameters
-- [ ] T034 [US1] GREEN: Add validation calls using `validateCoordinates()` and `validateRange()` in route handler
-- [ ] T035 [US1] GREEN: Return HTTP 400 with error message when validation fails
-- [ ] T036 [US1] GREEN: Pass validated parameters to repository query when present
-- [ ] T037 [US1] GREEN: Preserve backward compatibility (no params → return all announcements)
+- [X] T033 [US1] GREEN: Modify `/server/src/routes/announcements.ts` to parse `lat`, `lng`, `range` query parameters
+- [X] T034 [US1] GREEN: Add validation calls using `validateCoordinates()` and `validateRange()` in route handler
+- [X] T035 [US1] GREEN: Return HTTP 400 with error message when validation fails
+- [X] T036 [US1] GREEN: Pass validated parameters to repository query when present
+- [X] T037 [US1] GREEN: Preserve backward compatibility (no params → return all announcements)
 
 **Verify Green Phase**:
-- [ ] T038 [US1] Run `npm test` and verify ALL US1 tests pass (GREEN phase complete)
+- [X] T038 [US1] Run `npm test` and verify ALL US1 tests pass (GREEN phase complete)
 
 ### Refactor for User Story 1 (TDD: Refactor Phase)
 
-- [ ] T039 [P] [US1] REFACTOR: Extract repeated validation error messages to constants in `/server/src/lib/location-validation.ts`
-- [ ] T040 [P] [US1] REFACTOR: Add JSDoc documentation to `validateCoordinates()` and `validateRange()` functions
-- [ ] T041 [P] [US1] REFACTOR: Add JSDoc documentation for Haversine SQL query in repository
-- [ ] T042 [US1] REFACTOR: Simplify route handler parameter extraction (reduce nesting)
-- [ ] T043 [US1] Run `npm test` and verify all tests still pass after refactoring
-- [ ] T044 [US1] Run `npm test -- --coverage` and verify ≥80% coverage for new code
-- [ ] T045 [P] [US1] Run `npm run lint` and fix any ESLint violations
+- [X] T039 [P] [US1] REFACTOR: Extract repeated validation error messages to constants in `/server/src/lib/location-validation.ts`
+- [X] T040 [P] [US1] REFACTOR: Add JSDoc documentation to `validateCoordinates()` and `validateRange()` functions
+- [X] T041 [P] [US1] REFACTOR: Add JSDoc documentation for Haversine SQL query in repository
+- [X] T042 [US1] REFACTOR: Simplify route handler parameter extraction (reduce nesting)
+- [X] T043 [US1] Run `npm test` and verify all tests still pass after refactoring
+- [X] T044 [US1] Run `npm test -- --coverage` and verify ≥80% coverage for new code
+- [X] T045 [P] [US1] Run `npm run lint` and fix any ESLint violations
 
 **Checkpoint**: User Story 1 is fully functional - custom radius filtering works independently
 
