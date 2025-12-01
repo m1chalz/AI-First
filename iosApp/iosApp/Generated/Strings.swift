@@ -257,6 +257,12 @@ public enum L10n {
       /// Failed to load pet details
       public static let title = L10n.tr("Localizable", "petDetails.error.title", fallback: "Failed to load pet details")
     }
+    public enum Format {
+      /// %d years
+      public static func yearsOld(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "petDetails.format.yearsOld", p1, fallback: "%d years")
+      }
+    }
     public enum Label {
       /// Animal Additional Description
       public static let additionalDescription = L10n.tr("Localizable", "petDetails.label.additionalDescription", fallback: "Animal Additional Description")

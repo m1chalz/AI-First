@@ -49,6 +49,9 @@
 "petDetails.label.placeOfDisappearance" = "Szer. / Dł.";
 "petDetails.label.additionalDescription" = "Dodatkowy opis zwierzęcia";
 
+// Format
+"petDetails.format.yearsOld" = "%d lat";
+
 // Buttons
 "petDetails.button.showOnMap" = "Pokaż na mapie";
 "petDetails.button.removeReport" = "Usuń zgłoszenie";

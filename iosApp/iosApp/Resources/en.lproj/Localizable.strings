@@ -49,6 +49,9 @@
 "petDetails.label.placeOfDisappearance" = "Lat / Long";
 "petDetails.label.additionalDescription" = "Animal Additional Description";
 
+// Format
+"petDetails.format.yearsOld" = "%d years";
+
 // Buttons
 "petDetails.button.showOnMap" = "Show on the map";
 "petDetails.button.removeReport" = "Remove Report";

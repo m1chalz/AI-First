@@ -139,7 +139,7 @@ struct PetDetailsView: View {
                         
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalAge,
-                            value: petDetails.approximateAge.map { "\($0) years" } ?? "—"
+                            value: viewModel.formattedAge
                         ))
                         .accessibilityIdentifier("petDetails.age.field")
                     }
