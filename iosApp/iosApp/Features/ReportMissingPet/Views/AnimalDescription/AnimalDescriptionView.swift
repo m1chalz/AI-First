@@ -98,13 +98,7 @@ struct AnimalDescriptionView: View {
             // Bottom section with toast and button (outside ScrollView)
             VStack(spacing: 12) {
                 if viewModel.showToast {
-                    Text(viewModel.toastMessage)
-                        .font(.custom("Hind-Regular", size: 14))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                        .background(Color.black.opacity(0.8))
-                        .cornerRadius(8)
+                    ToastView(text: viewModel.toastMessage)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 
