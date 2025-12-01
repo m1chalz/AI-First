@@ -29,7 +29,14 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.chipNumber)
         XCTAssertNil(sut.photoAttachment)
         XCTAssertEqual(sut.photoStatus, .empty)
-        XCTAssertNil(sut.description)
+        XCTAssertNil(sut.disappearanceDate)
+        XCTAssertNil(sut.animalSpecies)
+        XCTAssertNil(sut.animalRace)
+        XCTAssertNil(sut.animalGender)
+        XCTAssertNil(sut.animalAge)
+        XCTAssertNil(sut.animalLatitude)
+        XCTAssertNil(sut.animalLongitude)
+        XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactEmail)
         XCTAssertNil(sut.contactPhone)
     }
@@ -51,7 +58,14 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
             savedAt: Date()
         )
         sut.photoStatus = .confirmed(metadata: sut.photoAttachment!)
-        sut.description = "Test description"
+        sut.disappearanceDate = Date()
+        sut.animalSpecies = .dog
+        sut.animalRace = "Labrador"
+        sut.animalGender = .male
+        sut.animalAge = 5
+        sut.animalLatitude = 52.2297
+        sut.animalLongitude = 21.0122
+        sut.animalAdditionalDescription = "Test description"
         sut.contactEmail = "test@example.com"
         sut.contactPhone = "123456789"
         
@@ -62,7 +76,14 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.chipNumber)
         XCTAssertNil(sut.photoAttachment)
         XCTAssertEqual(sut.photoStatus, .empty)
-        XCTAssertNil(sut.description)
+        XCTAssertNil(sut.disappearanceDate)
+        XCTAssertNil(sut.animalSpecies)
+        XCTAssertNil(sut.animalRace)
+        XCTAssertNil(sut.animalGender)
+        XCTAssertNil(sut.animalAge)
+        XCTAssertNil(sut.animalLatitude)
+        XCTAssertNil(sut.animalLongitude)
+        XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactEmail)
         XCTAssertNil(sut.contactPhone)
         XCTAssertEqual(cache.clearCallCount, 1)
@@ -78,7 +99,14 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.chipNumber)
         XCTAssertNil(sut.photoAttachment)
         XCTAssertEqual(sut.photoStatus, .empty)
-        XCTAssertNil(sut.description)
+        XCTAssertNil(sut.disappearanceDate)
+        XCTAssertNil(sut.animalSpecies)
+        XCTAssertNil(sut.animalRace)
+        XCTAssertNil(sut.animalGender)
+        XCTAssertNil(sut.animalAge)
+        XCTAssertNil(sut.animalLatitude)
+        XCTAssertNil(sut.animalLongitude)
+        XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactEmail)
         XCTAssertNil(sut.contactPhone)
         XCTAssertEqual(cache.clearCallCount, 1)

@@ -36,12 +36,12 @@ class AnimalListCoordinator: CoordinatorInterface {
         // Get dependencies from DI container
         let container = ServiceContainer.shared
         let repository = container.animalRepository
-        let locationService = container.locationService
+        let locationHandler = container.locationPermissionHandler
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
         let viewModel = AnimalListViewModel(
             repository: repository,
-            locationService: locationService
+            locationHandler: locationHandler
         )
         
         // Set up coordinator closures for navigation

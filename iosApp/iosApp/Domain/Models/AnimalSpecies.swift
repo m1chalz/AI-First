@@ -6,6 +6,8 @@ enum AnimalSpecies: Codable {
     case cat
     case bird
     case rabbit
+    case rodent
+    case reptile
     case other
     
     init(from decoder: Decoder) throws {
@@ -21,6 +23,10 @@ enum AnimalSpecies: Codable {
             self = .bird
         case "RABBIT":
             self = .rabbit
+        case "RODENT":
+            self = .rodent
+        case "REPTILE":
+            self = .reptile
         case "OTHER":
             self = .other
         default:
@@ -41,6 +47,10 @@ enum AnimalSpecies: Codable {
             stringValue = "BIRD"
         case .rabbit:
             stringValue = "RABBIT"
+        case .rodent:
+            stringValue = "RODENT"
+        case .reptile:
+            stringValue = "REPTILE"
         case .other:
             stringValue = "OTHER"
         }
