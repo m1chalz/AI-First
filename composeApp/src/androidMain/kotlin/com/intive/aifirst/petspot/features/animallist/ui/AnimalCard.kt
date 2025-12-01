@@ -2,13 +2,13 @@
 
 package com.intive.aifirst.petspot.features.animallist.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
 import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
@@ -87,7 +89,7 @@ fun AnimalCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // LEFT: Photo placeholder (64dp circular)
+            // LEFT: Photo (64dp circular) - loads from URL with placeholder fallback
             Box(
                 modifier =
                     Modifier
@@ -96,9 +98,13 @@ fun AnimalCard(
                         .background(Color(0xFFEEEEEE)),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_list_image_default),
-                    contentDescription = "",
+                AsyncImage(
+                    model = animal.photoUrl,
+                    contentDescription = "Photo of ${animal.name}",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_list_image_default),
+                    error = painterResource(R.drawable.ic_list_image_default),
                 )
             }
 

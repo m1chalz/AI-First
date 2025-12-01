@@ -46,34 +46,25 @@ fun PetPhotoSection(
                 .aspectRatio(16f / 10f),
     ) {
         // Pet Photo with error fallback per FR-001
-        if (pet.photoUrl.startsWith("placeholder") || pet.photoUrl.isBlank()) {
-            // Show "Image not available" placeholder per spec
-            ImageNotAvailablePlaceholder(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .testTag("petDetails.photo"),
-            )
-        } else {
-            SubcomposeAsyncImage(
-                model = pet.photoUrl,
-                contentDescription = "Photo of ${pet.name}",
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .testTag("petDetails.photo"),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    ImageNotAvailablePlaceholder()
-                },
-                error = {
-                    ImageNotAvailablePlaceholder()
-                },
-                success = {
-                    SubcomposeAsyncImageContent()
-                },
-            )
-        }
+        SubcomposeAsyncImage(
+            model = pet.photoUrl,
+            contentDescription = "Photo of ${pet.name}",
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .testTag("petDetails.photo"),
+            contentScale = ContentScale.Crop,
+            loading = {
+                ImageNotAvailablePlaceholder()
+            },
+            error = {
+                // Handles blank/invalid URLs automatically
+                ImageNotAvailablePlaceholder()
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            },
+        )
 
         // Close Button (top left) - Per Figma design, respects status bar
         Box(
