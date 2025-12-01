@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
@@ -24,6 +25,8 @@ export function MicrochipNumberScreen() {
     clearFlowState();
     navigate('/');
   };
+
+  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout

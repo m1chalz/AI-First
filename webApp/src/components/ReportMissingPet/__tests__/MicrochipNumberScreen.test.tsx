@@ -169,5 +169,22 @@ describe('MicrochipNumberScreen', () => {
     // then (should navigate)
     expect(mockNavigate).toHaveBeenCalledWith('/report-missing/photo');
   });
+
+  it('handles browser back button by clearing flow and navigating home', () => {
+    // given
+    renderWithProviders(<MicrochipNumberScreen />);
+    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    
+    // when (enter some data)
+    fireEvent.change(input, { target: { value: '12345' } });
+    expect(input.value).toBe('12345');
+    
+    // when (simulate browser back button via popstate event)
+    const popstateEvent = new PopStateEvent('popstate', { state: null });
+    window.dispatchEvent(popstateEvent);
+    
+    // then (should navigate to home)
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
 });
 

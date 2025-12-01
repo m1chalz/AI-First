@@ -258,8 +258,8 @@
 ### Tests (TDD - Write First) ✅
 
 **Unit Tests**:
-- [ ] T096 [P] RED: Write failing test for `useBrowserBackHandler` hook in `/webApp/src/hooks/__tests__/use-browser-back-handler.test.ts` (mock popstate event)
-- [ ] T097 [P] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for browser back integration (verify hook called with clearFlowState callback)
+- [x] T096 [P] RED: Write failing test for `useBrowserBackHandler` hook in `/webApp/src/hooks/__tests__/use-browser-back-handler.test.ts` (mock popstate event)
+- [x] T097 [P] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for browser back integration (verify hook called with clearFlowState callback)
 
 **E2E Tests**:
 - [ ] T098 [P] Add Scenario 5 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (Browser back button cancels flow)
@@ -269,15 +269,15 @@
 ### Implementation
 
 **Browser Back Hook**:
-- [ ] T101 GREEN: Implement `useBrowserBackHandler` hook in `/webApp/src/hooks/use-browser-back-handler.ts` (listen to popstate event, call onBack callback)
-- [ ] T102 REFACTOR: Add JSDoc documentation explaining browser history API usage
-- [ ] T103 TEST: Run `npm test -- /webApp/src/hooks/__tests__/use-browser-back-handler.test.ts` and verify tests pass
-- [ ] T104 LINT: Run `npm run lint` and fix violations
+- [x] T101 GREEN: Implement `useBrowserBackHandler` hook in `/webApp/src/hooks/use-browser-back-handler.ts` (listen to popstate event, call onBack callback)
+- [x] T102 REFACTOR: Add JSDoc documentation explaining browser history API usage
+- [x] T103 TEST: Run `npm test -- /webApp/src/hooks/__tests__/use-browser-back-handler.test.ts` and verify tests pass
+- [x] T104 LINT: Run `npm run lint` and fix violations
 
 **Integration**:
-- [ ] T105 GREEN: Integrate `useBrowserBackHandler` in `MicrochipNumberScreen` (pass clearFlowState + navigate to /pets)
-- [ ] T106 TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify browser back test passes
-- [ ] T107 LINT: Run `npm run lint` and fix violations
+- [x] T105 GREEN: Integrate `useBrowserBackHandler` in `MicrochipNumberScreen` (pass clearFlowState + navigate to /pets)
+- [x] T106 TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify browser back test passes
+- [x] T107 LINT: Run `npm run lint` and fix violations
 
 **Route Guards**:
 - [ ] T108 [P] RED: Write failing tests for route guard utilities in `/webApp/src/utils/__tests__/route-guards.test.ts` (test canAccessPhoto, canAccessDetails, canAccessContact)
