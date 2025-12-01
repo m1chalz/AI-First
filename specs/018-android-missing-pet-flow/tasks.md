@@ -80,37 +80,37 @@
 
 ### E2E Tests for User Story 1 (MANDATORY) ✅
 
-- [ ] T016 [P] [US1] Create Cucumber feature file for forward navigation in `/e2e-tests/java/src/test/resources/features/mobile/018-android-missing-pet-flow.feature`
-- [ ] T017 [P] [US1] Add step definitions for forward navigation in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` (if not already present)
+- [x] T016 [P] [US1] Create Cucumber feature file for forward navigation in `/e2e-tests/java/src/test/resources/features/mobile/018-android-missing-pet-flow.feature`
+- [x] T017 [P] [US1] Add step definitions for forward navigation in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java` (if not already present)
 
 ### Implementation for User Story 1
 
 **Screen 1: Chip Number (Step 1/4)**:
-- [ ] T018 [P] [US1] Create `ChipNumberContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberContent.kt`
-- [ ] T019 [US1] Create `ChipNumberScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberScreen.kt`
+- [x] T018 [P] [US1] Create `ChipNumberContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberContent.kt`
+- [x] T019 [US1] Create `ChipNumberScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberScreen.kt`
 
 **Screen 2: Photo (Step 2/4)**:
-- [ ] T020 [P] [US1] Create `PhotoContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoContent.kt`
-- [ ] T021 [US1] Create `PhotoScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoScreen.kt`
+- [x] T020 [P] [US1] Create `PhotoContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoContent.kt`
+- [x] T021 [US1] Create `PhotoScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoScreen.kt`
 
 **Screen 3: Description (Step 3/4)**:
-- [ ] T022 [P] [US1] Create `DescriptionContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionContent.kt`
-- [ ] T023 [US1] Create `DescriptionScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionScreen.kt`
+- [x] T022 [P] [US1] Create `DescriptionContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionContent.kt`
+- [x] T023 [US1] Create `DescriptionScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionScreen.kt`
 
 **Screen 4: Contact Details (Step 4/4)**:
-- [ ] T024 [P] [US1] Create `ContactDetailsContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/contactdetails/ContactDetailsContent.kt`
-- [ ] T025 [US1] Create `ContactDetailsScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/contactdetails/ContactDetailsScreen.kt`
+- [x] T024 [P] [US1] Create `ContactDetailsContent` stateless composable with StepHeader, placeholder text, Continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/contactdetails/ContactDetailsContent.kt`
+- [x] T025 [US1] Create `ContactDetailsScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/contactdetails/ContactDetailsScreen.kt`
 
 **Screen 5: Summary (No Progress Indicator)**:
-- [ ] T026 [P] [US1] Create `SummaryContent` stateless composable WITHOUT StepHeader, with Close button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T027 [US1] Create `SummaryScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/summary/SummaryScreen.kt`
+- [x] T026 [P] [US1] Create `SummaryContent` stateless composable WITHOUT StepHeader, with Close button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/summary/SummaryContent.kt`
+- [x] T027 [US1] Create `SummaryScreen` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/summary/SummaryScreen.kt`
 
 **Navigation Integration**:
-- [ ] T028 [US1] Create nested nav graph `ReportMissingNavGraph` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/ReportMissingNavGraph.kt`
-- [ ] T029 [US1] Integrate nested nav graph into main `NavGraph.kt` under `NavRoute.ReportMissing` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/navigation/NavGraph.kt`
+- [x] T028 [US1] Create nested nav graph `ReportMissingNavGraph` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/ReportMissingNavGraph.kt`
+- [x] T029 [US1] Integrate nested nav graph into main `NavGraph.kt` under `NavRoute.ReportMissing` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/navigation/NavGraph.kt`
 
 **Test Tags** (MANDATORY for E2E - aligned with existing screen objects):
-- [ ] T030 [US1] Add testTag modifiers matching existing E2E patterns in `ReportMissingPetScreen.java` and `MicrochipNumberScreen.java`:
+- [x] T030 [US1] Add testTag modifiers matching existing E2E patterns in `ReportMissingPetScreen.java` and `MicrochipNumberScreen.java`:
   - Shared: `reportMissingPet.backButton`, `reportMissingPet.progressIndicator`
   - Chip Number: `missingPet.microchip.input`, `missingPet.microchip.continueButton`, `missingPet.microchip.backButton`
   - Photo: `animalPhoto.browse`, `animalPhoto.continue`, `animalPhoto.remove`, `animalPhoto.confirmationCard`

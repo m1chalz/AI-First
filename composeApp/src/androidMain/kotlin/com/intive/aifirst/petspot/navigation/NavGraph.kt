@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
 import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
+import com.intive.aifirst.petspot.features.reportmissing.ui.reportMissingNavGraph
 
 /**
  * Main navigation graph for the application.
@@ -49,10 +50,8 @@ fun PetSpotNavGraph(
             )
         }
 
-        // TODO: Add ReportMissing screen when implemented
-        // composable<NavRoute.ReportMissing> {
-        //     ReportMissingScreen(navController = navController)
-        // }
+        // Report Missing Pet Flow (Nested navigation graph)
+        reportMissingNavGraph(navController)
 
         // TODO: Add ReportFound screen when implemented
         // composable<NavRoute.ReportFound> {
