@@ -13,13 +13,16 @@ export function Header({ title, progress, onBack }: HeaderProps) {
         onClick={onBack}
         data-testid="reportMissingPet.header.backButton.click"
         className={styles.backButton}
+        aria-label="Go back"
       >
         ←
       </button>
-      <h1 className={styles.title}>
+      <p className={styles.title} data-testid="reportMissingPet.header.title">
         {title}
-      </h1>
-      <span className={styles.progress}>{progress}</span>
+      </p>
+      <div className={styles.progress} data-testid="reportMissingPet.header.progress">
+        {progress}
+      </div>
     </header>
   );
 }

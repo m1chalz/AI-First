@@ -18,14 +18,13 @@ export function MicrochipNumberContent({
 }: MicrochipNumberContentProps) {
   return (
     <div className={styles.container}>
-      <Header title="Microchip number" progress="1/4" onBack={onBack} />
-      
-      <div className={styles.content}>
+      <div className={styles.contentSection}>
+        <Header title="Microchip number" progress="1/4" onBack={onBack} />
+        
         <h2 className={styles.heading}>Identification by Microchip</h2>
         
         <p className={styles.description}>
-          Microchip identification is the most efficient way to reunite with your pet. 
-          If your pet has been microchipped and you know the microchip number, please enter it here.
+          Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.
         </p>
         
         <div className={styles.inputGroup}>
@@ -34,7 +33,8 @@ export function MicrochipNumberContent({
           </label>
           <input
             id="microchip-input"
-            type="text"
+            type="tel"
+            pattern="[0-9-]*"
             value={formattedValue}
             onChange={onMicrochipChange}
             onPaste={onMicrochipPaste}
