@@ -47,9 +47,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] Create file validation constants in `/webApp/src/utils/file-validation.ts` (ALLOWED_MIME_TYPES array with 8 formats: image/jpeg, image/png, image/gif, image/webp, image/bmp, image/tiff, image/heic, image/heif; MAX_FILE_SIZE_BYTES = 20MB)
-- [ ] T005 [P] Create format-file-size utility in `/webApp/src/utils/format-file-size.ts` (function formatFileSize(bytes: number): string returns "X MB" or "X KB")
-- [ ] T006 Update `ReportMissingPetFlowContext` test in `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx` to include photo state in assertions
+- [X] T004 [P] Create file validation constants in `/webApp/src/utils/file-validation.ts` (ALLOWED_MIME_TYPES array with 8 formats: image/jpeg, image/png, image/gif, image/webp, image/bmp, image/tiff, image/heic, image/heif; MAX_FILE_SIZE_BYTES = 20MB)
+- [X] T005 [P] Create format-file-size utility in `/webApp/src/utils/format-file-size.ts` (function formatFileSize(bytes: number): string returns "X MB" or "X KB")
+- [X] T006 Update `ReportMissingPetFlowContext` test in `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx` to include photo state in assertions
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
