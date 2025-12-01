@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
@@ -16,9 +16,17 @@ export function PhotoScreen() {
   const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
   const { message, showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // FR-024: Protect direct URL access - redirect to step 1 if accessed directly
+  useEffect(() => {
+    if (!flowState.microchipNumber && flowState.currentStep !== FlowStep.Photo) {
+      navigate('/report-missing/microchip', { replace: true });
+    }
+  }, [flowState, navigate]);
   
   const {
     photo,
+    isDragOver,
     handleFileSelect,
     handleDrop,
     handleDragOver,
@@ -71,7 +79,7 @@ export function PhotoScreen() {
 
       {!photo ? (
         <div
-          className={photoStyles.uploadCard}
+          className={`${photoStyles.uploadCard} ${isDragOver ? photoStyles.dragOverHighlight : ''}`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
