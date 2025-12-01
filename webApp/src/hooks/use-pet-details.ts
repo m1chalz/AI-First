@@ -43,7 +43,7 @@ export function usePetDetails(petId: string | null): UsePetDetailsResult {
             const petData = await Promise.race([petPromise, timeoutPromise]);
             setPet(petData);
             setError(null);
-        } catch (err) {
+        } catch {
             setPet(null);
             setError('Failed to load pet details');
         } finally {
