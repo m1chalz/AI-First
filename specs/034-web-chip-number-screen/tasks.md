@@ -83,63 +83,63 @@
 ### Tests for User Story 1 (TDD - Write First) ✅
 
 **Unit Tests - Custom Hook**:
-- [ ] T022 [P] [US1] RED: Write failing test for `useMicrochipFormatter` hook in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts` (test typing digits, state updates)
-- [ ] T023 [P] [US1] RED: Add failing test cases for paste with non-numeric characters in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts`
-- [ ] T024 [P] [US1] RED: Add failing test case for max length enforcement (15 digits) in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts`
+- [x] T022 [P] [US1] RED: Write failing test for `useMicrochipFormatter` hook in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts` (test typing digits, state updates)
+- [x] T023 [P] [US1] RED: Add failing test cases for paste with non-numeric characters in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts`
+- [x] T024 [P] [US1] RED: Add failing test case for max length enforcement (15 digits) in `/webApp/src/hooks/__tests__/use-microchip-formatter.test.ts`
 
 **Unit Tests - Components**:
-- [ ] T025 [P] [US1] RED: Write failing test for `MicrochipNumberContent` presentational component in `/webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberContent.test.tsx` (test rendering, callbacks)
-- [ ] T026 [P] [US1] RED: Write failing test for `MicrochipNumberScreen` container in `/webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` (test integration with hook and context)
+- [x] T025 [P] [US1] RED: Write failing test for `MicrochipNumberContent` presentational component in `/webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberContent.test.tsx` (test rendering, callbacks)
+- [x] T026 [P] [US1] RED: Write failing test for `MicrochipNumberScreen` container in `/webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` (test integration with hook and context)
 
 **E2E Tests**:
-- [ ] T027 [P] [US1] Create Gherkin feature file in `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (Scenario 1: Enter microchip with formatting)
-- [ ] T028 [P] [US1] Implement Page Object methods in `ReportMissingPetStep1Page.java` (enterMicrochipNumber, clickContinue, getFormattedValue)
-- [ ] T029 [P] [US1] Implement step definitions in `ReportMissingPetStep1Steps.java` for Scenario 1
+- [x] T027 [P] [US1] Create Gherkin feature file in `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (Scenario 1: Enter microchip with formatting)
+- [x] T028 [P] [US1] Implement Page Object methods in `ReportMissingPetStep1Page.java` (enterMicrochipNumber, clickContinue, getFormattedValue)
+- [x] T029 [P] [US1] Implement step definitions in `ReportMissingPetStep1Steps.java` for Scenario 1
 
 ### Implementation for User Story 1
 
 **Custom Hook**:
-- [ ] T030 [US1] GREEN: Implement `useMicrochipFormatter` hook in `/webApp/src/hooks/use-microchip-formatter.ts` (minimal code to pass tests: handleChange, handlePaste, state management)
-- [ ] T031 [US1] REFACTOR: Extract formatting logic to use utility functions from `/webApp/src/utils/microchip-formatter.ts`
-- [ ] T032 [US1] REFACTOR: Add JSDoc documentation to hook explaining formatting behavior
-- [ ] T033 [US1] TEST: Run `npm test -- /webApp/src/hooks/__tests__/use-microchip-formatter.test.ts` and verify all tests pass
-- [ ] T034 [US1] LINT: Run `npm run lint` and fix violations
+- [x] T030 [US1] GREEN: Implement `useMicrochipFormatter` hook in `/webApp/src/hooks/use-microchip-formatter.ts` (minimal code to pass tests: handleChange, handlePaste, state management)
+- [x] T031 [US1] REFACTOR: Extract formatting logic to use utility functions from `/webApp/src/utils/microchip-formatter.ts`
+- [x] T032 [US1] REFACTOR: Add JSDoc documentation to hook explaining formatting behavior
+- [x] T033 [US1] TEST: Run `npm test -- /webApp/src/hooks/__tests__/use-microchip-formatter.test.ts` and verify all tests pass
+- [x] T034 [US1] LINT: Run `npm run lint` and fix violations
 
 **Flow State Hook**:
-- [ ] T035 [P] [US1] RED: Write failing test for `useReportMissingPetFlow` consumer hook in `/webApp/src/hooks/__tests__/use-report-missing-pet-flow.test.ts`
-- [ ] T036 [US1] GREEN: Implement `useReportMissingPetFlow` consumer hook in `/webApp/src/hooks/use-report-missing-pet-flow.ts` (exports context consumer with error handling)
-- [ ] T037 [US1] TEST: Run hook tests and verify they pass
-- [ ] T038 [US1] LINT: Run `npm run lint` and fix violations
+- [x] T035 [P] [US1] RED: Write failing test for `useReportMissingPetFlow` consumer hook in `/webApp/src/hooks/__tests__/use-report-missing-pet-flow.test.ts`
+- [x] T036 [US1] GREEN: Implement `useReportMissingPetFlow` consumer hook in `/webApp/src/hooks/use-report-missing-pet-flow.ts` (exports context consumer with error handling)
+- [x] T037 [US1] TEST: Run hook tests and verify they pass
+- [x] T038 [US1] LINT: Run `npm run lint` and fix violations
 
 **Presentational Component**:
-- [ ] T039 [US1] GREEN: Implement `MicrochipNumberContent` presentational component in `/webApp/src/components/ReportMissingPet/MicrochipNumberContent.tsx` (pure component: header, input, button - no hooks)
-- [ ] T040 [US1] REFACTOR: Add data-testid attributes to all interactive elements (format: `reportMissingPet.step1.{element}.{action}`)
-- [ ] T041 [US1] REFACTOR: Extract input field to separate component if complex
-- [ ] T042 [US1] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberContent.test.tsx` and verify tests pass
-- [ ] T043 [US1] LINT: Run `npm run lint` and fix violations
+- [x] T039 [US1] GREEN: Implement `MicrochipNumberContent` presentational component in `/webApp/src/components/ReportMissingPet/MicrochipNumberContent.tsx` (pure component: header, input, button - no hooks)
+- [x] T040 [US1] REFACTOR: Add data-testid attributes to all interactive elements (format: `reportMissingPet.step1.{element}.{action}`)
+- [x] T041 [US1] REFACTOR: Extract input field to separate component if complex
+- [x] T042 [US1] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberContent.test.tsx` and verify tests pass
+- [x] T043 [US1] LINT: Run `npm run lint` and fix violations
 
 **Container Component**:
-- [ ] T044 [US1] GREEN: Implement `MicrochipNumberScreen` container in `/webApp/src/components/ReportMissingPet/MicrochipNumberScreen.tsx` (stateful: uses useMicrochipFormatter, useReportMissingPetFlow, handles Continue click)
-- [ ] T045 [US1] REFACTOR: Implement Continue button handler (save microchipNumber to flow state, update currentStep to Photo, navigate to /report-missing/photo)
-- [ ] T046 [US1] REFACTOR: Add JSDoc documentation to complex logic (flow state updates, navigation)
-- [ ] T047 [US1] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify tests pass
-- [ ] T048 [US1] LINT: Run `npm run lint` and fix violations
+- [x] T044 [US1] GREEN: Implement `MicrochipNumberScreen` container in `/webApp/src/components/ReportMissingPet/MicrochipNumberScreen.tsx` (stateful: uses useMicrochipFormatter, useReportMissingPetFlow, handles Continue click)
+- [x] T045 [US1] REFACTOR: Implement Continue button handler (save microchipNumber to flow state, update currentStep to Photo, navigate to /report-missing/photo)
+- [x] T046 [US1] REFACTOR: Add JSDoc documentation to complex logic (flow state updates, navigation)
+- [x] T047 [US1] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify tests pass
+- [x] T048 [US1] LINT: Run `npm run lint` and fix violations
 
 **Routing Integration**:
-- [ ] T049 [US1] Add route for microchip screen in `/webApp/src/routes/report-missing-pet-routes.tsx` (nested route under /report-missing with context provider)
-- [ ] T050 [US1] Update main App.tsx to include ReportMissingPet routes
-- [ ] T051 [US1] Create placeholder PhotoScreen component in `/webApp/src/components/ReportMissingPet/PhotoScreen.tsx` (displays "Photo step - Coming soon" and flow state for testing)
-- [ ] T052 [US1] Add photo route to routes configuration for navigation testing
-- [ ] T053 [US1] LINT: Run `npm run lint` and fix violations
+- [x] T049 [US1] Add route for microchip screen in `/webApp/src/routes/report-missing-pet-routes.tsx` (nested route under /report-missing with context provider)
+- [x] T050 [US1] Update main App.tsx to include ReportMissingPet routes
+- [x] T051 [US1] Create placeholder PhotoScreen component in `/webApp/src/components/ReportMissingPet/PhotoScreen.tsx` (displays "Photo step - Coming soon" and flow state for testing)
+- [x] T052 [US1] Add photo route to routes configuration for navigation testing
+- [x] T053 [US1] LINT: Run `npm run lint` and fix violations
 
 **E2E Verification**:
-- [ ] T054 [US1] Run E2E test for Scenario 1: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @reportMissingPet and @US1"`
-- [ ] T055 [US1] Verify E2E test passes (Given user on pet list → When initiate flow → Then see microchip screen → enter "123456789012345" → verify formatted as "12345-67890-12345" → click Continue → verify navigation to photo)
+- [x] T054 [US1] Run E2E test for Scenario 1: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @reportMissingPet and @US1"`
+- [x] T055 [US1] Verify E2E test passes (Given user on pet list → When initiate flow → Then see microchip screen → enter "123456789012345" → verify formatted as "12345-67890-12345" → click Continue → verify navigation to photo)
 
 **Final Verification**:
-- [ ] T056 [US1] Run all unit tests with coverage: `npm test -- --coverage` and verify 80%+ coverage
-- [ ] T057 [US1] Manual test: Navigate to http://localhost:5173/report-missing/microchip and complete User Story 1 scenario
-- [ ] T058 [US1] LINT: Run `npm run lint` for entire webApp/ and fix any violations
+- [x] T056 [US1] Run all unit tests with coverage: `npm test -- --coverage` and verify 80%+ coverage
+- [x] T057 [US1] Manual test: Navigate to http://localhost:5173/report-missing/microchip and complete User Story 1 scenario
+- [x] T058 [US1] LINT: Run `npm run lint` for entire webApp/ and fix any violations
 
 **Checkpoint**: User Story 1 is fully functional - users can enter formatted microchip number and proceed to next step
 
