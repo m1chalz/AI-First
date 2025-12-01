@@ -299,27 +299,5 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // Then - shows correct count
         XCTAssertEqual(countText, "4/500")
     }
-    
-    func testCharacterCountColor_whenUnderLimit_shouldBeGray() {
-        // Given - description under limit
-        viewModel.additionalDescription = String(repeating: "a", count: 400)
-        
-        // When - read color
-        let color = viewModel.characterCountColor
-        
-        // Then - gray color
-        XCTAssertEqual(color, Color(hex: "#6B7280"))
-    }
-    
-    func testCharacterCountColor_whenOverLimit_shouldBeRed() {
-        // Given - description over limit
-        viewModel.additionalDescription = String(repeating: "a", count: 501)
-        
-        // When - read color
-        let color = viewModel.characterCountColor
-        
-        // Then - red color
-        XCTAssertEqual(color, Color.red)
-    }
 }
 

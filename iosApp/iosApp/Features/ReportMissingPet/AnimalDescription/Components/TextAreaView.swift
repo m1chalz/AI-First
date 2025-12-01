@@ -50,7 +50,7 @@ struct TextAreaView: View {
                 Spacer()
                 Text(model.characterCountText)
                     .font(.custom("Hind-Regular", size: 12))
-                    .foregroundColor(model.characterCountColor)
+                    .foregroundColor(Color(hex: "#6B7280"))
             }
         }
     }
@@ -62,7 +62,6 @@ extension TextAreaView {
         let placeholder: String
         let maxLength: Int
         let characterCountText: String      // e.g., "123/500" (formatted in ViewModel)
-        let characterCountColor: Color      // Computed in ViewModel based on limit
         let accessibilityID: String
     }
 }

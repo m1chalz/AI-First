@@ -178,7 +178,6 @@ class AnimalDescriptionViewModel: ObservableObject {
             placeholder: L10n.AnimalDescription.descriptionPlaceholder,
             maxLength: 500,
             characterCountText: characterCountText,
-            characterCountColor: characterCountColor,
             accessibilityID: "animalDescription.descriptionTextArea.input"
         )
     }
@@ -186,18 +185,6 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Character count text for description field (e.g., "123/500")
     var characterCountText: String {
         return "\(additionalDescription.count)/500"
-    }
-    
-    /// Character count color (red if near limit, orange if approaching, secondary otherwise)
-    var characterCountColor: Color {
-        let count = additionalDescription.count
-        if count > 480 {
-            return .red
-        } else if count > 450 {
-            return .orange
-        } else {
-            return .secondary
-        }
     }
     
     // MARK: - User Actions
