@@ -334,7 +334,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 51.5000,
                 longitude: 18.5000,
                 microchipNumber: "616-093-400-123",
-                approximateAge: "3 years",
+                approximateAge: 3,
                 reward: "500 PLN",
                 createdAt: "2025-11-19T15:47:14.000Z",
                 updatedAt: "2025-11-19T15:47:14.000Z"
@@ -356,7 +356,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 52.2297,
                 longitude: 21.0122,
                 microchipNumber: "616-093-400-456",
-                approximateAge: "2 years",
+                approximateAge: 2,
                 reward: nil,
                 createdAt: "2025-11-20T10:30:00.000Z",
                 updatedAt: "2025-11-20T10:30:00.000Z"
@@ -400,7 +400,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 52.4064,
                 longitude: 16.9252,
                 microchipNumber: "616-093-400-789",
-                approximateAge: "5 years",
+                approximateAge: 5,
                 reward: "200 PLN",
                 createdAt: "2025-11-15T08:00:00.000Z",
                 updatedAt: "2025-11-15T08:00:00.000Z"

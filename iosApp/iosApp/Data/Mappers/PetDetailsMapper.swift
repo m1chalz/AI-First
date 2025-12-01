@@ -20,9 +20,6 @@ extension PetDetails {
         // Parse gender (if sex is missing, default to unknown)
         let gender = dto.sex.flatMap({ AnimalGender(fromDTO: $0) }) ?? .unknown
         
-        // Parse age
-        let approximateAge = dto.age.map { "\($0) years" }
-        
         self.init(
             id: dto.id,
             petName: dto.petName,
@@ -38,7 +35,7 @@ extension PetDetails {
             latitude: dto.locationLatitude,
             longitude: dto.locationLongitude,
             microchipNumber: dto.microchipNumber,
-            approximateAge: approximateAge,
+            approximateAge: dto.age,
             reward: dto.reward,
             createdAt: dto.createdAt,
             updatedAt: dto.updatedAt

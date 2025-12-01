@@ -43,7 +43,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             latitude: latitude,
             longitude: longitude,
             microchipNumber: "123-456-789",
-            approximateAge: "2 years",
+            approximateAge: 2,
             reward: reward,
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
