@@ -49,14 +49,16 @@ class AnimalRepository: AnimalRepositoryProtocol {
     
     func getAnimals(near location: UserLocation?) async throws -> [Animal] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
-        
+
+        // TODO: temporary do not use location
         // Add optional location query parameters
-        if let userLocation = location {
-            urlComponents.queryItems = [
-                URLQueryItem(name: "lat", value: String(userLocation.latitude)),
-                URLQueryItem(name: "lng", value: String(userLocation.longitude))
-            ]
-        }
+//        if let userLocation = location {
+//            urlComponents.queryItems = [
+//                // TODO: temporary hardcoded lat/lon
+//                URLQueryItem(name: "lat", value: String(50.6/*userLocation.latitude*/)),
+//                URLQueryItem(name: "lng", value: String(20.5/*userLocation.longitude*/))
+//            ]
+//        }
         
         guard let url = urlComponents.url else {
             throw RepositoryError.invalidURL
@@ -178,7 +180,7 @@ private struct AnnouncementDTO: Codable {
     let sex: String?
     let age: Int?
     let description: String
-    let phone: String
+    let phone: String?
     let email: String?
 }
 
