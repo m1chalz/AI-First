@@ -221,24 +221,24 @@
 ### Tests for User Story 4 (TDD - Write First) ✅
 
 **Unit Tests**:
-- [ ] T083 [P] [US4] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for flow state restoration (mount with existing microchipNumber in context, verify input populated)
-- [ ] T084 [P] [US4] RED: Add failing test for editing previously entered data (change value, click Continue, verify updated value saved)
+- [x] T083 [P] [US4] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for flow state restoration (mount with existing microchipNumber in context, verify input populated)
+- [x] T084 [P] [US4] RED: Add failing test for editing previously entered data (change value, click Continue, verify updated value saved)
 
 **E2E Tests**:
-- [ ] T085 [P] [US4] Add Scenario 4 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User edits microchip after navigating back)
-- [ ] T086 [P] [US4] Implement step definitions for Scenario 4 in `ReportMissingPetStep1Steps.java` (navigate to photo, back to microchip, verify data persists)
+- [x] T085 [P] [US4] Add Scenario 4 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User edits microchip after navigating back)
+- [x] T086 [P] [US4] Implement step definitions for Scenario 4 in `ReportMissingPetStep1Steps.java` (navigate to photo, back to microchip, verify data persists)
 
 ### Implementation for User Story 4
 
 **State Restoration**:
-- [ ] T087 [US4] GREEN: Update `MicrochipNumberScreen` to initialize hook with flow state microchipNumber on mount (useEffect to populate formattedValue from context)
-- [ ] T088 [US4] REFACTOR: Add JSDoc documentation explaining state restoration logic
-- [ ] T089 [US4] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify state restoration test passes
-- [ ] T090 [US4] LINT: Run `npm run lint` and fix violations
+- [x] T087 [US4] GREEN: Update `MicrochipNumberScreen` to initialize hook with flow state microchipNumber on mount (useEffect to populate formattedValue from context)
+- [x] T088 [US4] REFACTOR: Add JSDoc documentation explaining state restoration logic
+- [x] T089 [US4] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify state restoration test passes
+- [x] T090 [US4] LINT: Run `npm run lint` and fix violations
 
 **Photo Screen In-Flow Back**:
-- [ ] T091 [P] [US4] Update PhotoScreen placeholder to have back button that navigates to /report-missing/microchip (does NOT clear flow state)
-- [ ] T092 [US4] REFACTOR: Distinguish between cancel (header back from step 1) and in-flow back (back from step 2+)
+- [x] T091 [P] [US4] Update PhotoScreen placeholder to have back button that navigates to /report-missing/microchip (does NOT clear flow state)
+- [x] T092 [US4] REFACTOR: Distinguish between cancel (header back from step 1) and in-flow back (back from step 2+)
 
 **E2E Verification**:
 - [ ] T093 [US4] Run E2E test for Scenario 4: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @reportMissingPet and @US4"`

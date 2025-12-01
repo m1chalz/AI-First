@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -99,6 +100,74 @@ describe('MicrochipNumberScreen', () => {
     // then (should navigate to home)
     expect(mockNavigate).toHaveBeenCalledWith('/');
     expect(mockNavigate).toHaveBeenCalledTimes(1);
+  });
+
+  it('restores previously entered microchip number from flow state', () => {
+    // given (render with persistent provider to simulate real flow)
+    const TestWrapper = () => {
+      const [showMicrochip, setShowMicrochip] = React.useState(true);
+      
+      return (
+        <BrowserRouter>
+          <ReportMissingPetFlowProvider>
+            {showMicrochip ? (
+              <>
+                <MicrochipNumberScreen />
+                <button data-testid="test.navigateAway" onClick={() => setShowMicrochip(false)}>
+                  Navigate Away
+                </button>
+              </>
+            ) : (
+              <button data-testid="test.navigateBack" onClick={() => setShowMicrochip(true)}>
+                Navigate Back
+              </button>
+            )}
+          </ReportMissingPetFlowProvider>
+        </BrowserRouter>
+      );
+    };
+
+    render(<TestWrapper />);
+    
+    // when (enter data)
+    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '123456789012345' } });
+    expect(input.value).toBe('12345-67890-12345');
+    
+    // when (save to flow state and navigate away)
+    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
+    fireEvent.click(continueButton);
+    fireEvent.click(screen.getByTestId('test.navigateAway'));
+    
+    // when (navigate back)
+    fireEvent.click(screen.getByTestId('test.navigateBack'));
+    
+    // then (data should be restored from flow state)
+    const restoredInput = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    expect(restoredInput.value).toBe('12345-67890-12345');
+  });
+
+  it('allows editing previously entered microchip number', () => {
+    // given (start with existing data)
+    renderWithProviders(<MicrochipNumberScreen />);
+    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    
+    // when (enter initial value)
+    fireEvent.change(input, { target: { value: '123456789012345' } });
+    expect(input.value).toBe('12345-67890-12345');
+    
+    // when (edit the value)
+    fireEvent.change(input, { target: { value: '111111111111111' } });
+    
+    // then (should show updated value)
+    expect(input.value).toBe('11111-11111-11111');
+    
+    // when (save updated value)
+    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
+    fireEvent.click(continueButton);
+    
+    // then (should navigate)
+    expect(mockNavigate).toHaveBeenCalledWith('/report-missing/photo');
   });
 });
 

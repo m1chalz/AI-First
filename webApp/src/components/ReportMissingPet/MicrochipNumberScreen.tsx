@@ -7,8 +7,10 @@ import styles from './ReportMissingPetLayout.module.css';
 
 export function MicrochipNumberScreen() {
   const navigate = useNavigate();
-  const { value, formattedValue, handleChange, handlePaste } = useMicrochipFormatter();
-  const { updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { value, formattedValue, handleChange, handlePaste } = useMicrochipFormatter(
+    flowState.microchipNumber
+  );
 
   const handleContinue = () => {
     updateFlowState({

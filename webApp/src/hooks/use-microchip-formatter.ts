@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatMicrochip, stripNonDigits } from '../utils/microchip-formatter';
 import { UseMicrochipFormatterReturn } from '../models/ReportMissingPetFlow';
 
-export function useMicrochipFormatter(): UseMicrochipFormatterReturn {
-  const [value, setValue] = useState('');
-  const [formattedValue, setFormattedValue] = useState('');
+export function useMicrochipFormatter(initialValue: string = ''): UseMicrochipFormatterReturn {
+  const [value, setValue] = useState(initialValue);
+  const [formattedValue, setFormattedValue] = useState(formatMicrochip(initialValue));
+
+  useEffect(() => {
+    setValue(initialValue);
+    setFormattedValue(formatMicrochip(initialValue));
+  }, [initialValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
