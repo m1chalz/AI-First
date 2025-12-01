@@ -52,23 +52,23 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [P] RED: Write failing unit test for `formatMicrochipNumber` utility in `/webApp/src/utils/__tests__/microchip-formatter.test.ts`
-- [ ] T006 [P] GREEN: Implement `formatMicrochipNumber` function in `/webApp/src/utils/microchip-formatter.ts` (pure utility for 00000-00000-00000 formatting)
-- [ ] T007 [P] REFACTOR: Add JSDoc documentation to `formatMicrochipNumber` and edge case tests
-- [ ] T008 [P] LINT: Run `npm run lint` in webApp/ and fix any ESLint violations
-- [ ] T009 [P] RED: Write failing unit test for `stripNonDigits` utility in `/webApp/src/utils/__tests__/microchip-formatter.test.ts`
-- [ ] T010 [P] GREEN: Implement `stripNonDigits` function in `/webApp/src/utils/microchip-formatter.ts` (sanitizes input to digits only)
-- [ ] T011 [P] LINT: Run `npm run lint` in webApp/ and verify no violations
-- [ ] T012 [P] Create TypeScript flow state interfaces in `/webApp/src/models/ReportMissingPetFlow.ts` (copy from contracts/FlowState.ts)
-- [ ] T013 [P] Create route configuration constants in `/webApp/src/routes/report-missing-pet-routes.tsx` (copy from contracts/routes.ts)
-- [ ] T014 [P] RED: Write failing test for `ReportMissingPetFlowContext` in `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx`
-- [ ] T015 GREEN: Implement `ReportMissingPetFlowContext` provider in `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` (React Context with state management)
-- [ ] T016 REFACTOR: Add JSDoc documentation to context provider and consumer hook
-- [ ] T017 TEST: Run `npm test` and verify context tests pass
-- [ ] T018 LINT: Run `npm run lint` in webApp/ and fix violations
-- [ ] T019 [P] Create reusable Header component stub in `/webApp/src/components/ReportMissingPet/Header.tsx` (back button, title, progress indicator)
-- [ ] T020 [P] Create base Page Object Model in `/e2e-tests/src/test/java/.../pages/ReportMissingPetStep1Page.java` (Selenium locators)
-- [ ] T021 [P] Create base step definitions in `/e2e-tests/src/test/java/.../steps-web/ReportMissingPetStep1Steps.java` (Cucumber steps)
+- [x] T005 [P] RED: Write failing unit test for `formatMicrochipNumber` utility in `/webApp/src/utils/__tests__/microchip-formatter.test.ts`
+- [x] T006 [P] GREEN: Implement `formatMicrochipNumber` function in `/webApp/src/utils/microchip-formatter.ts` (pure utility for 00000-00000-00000 formatting)
+- [x] T007 [P] REFACTOR: Add JSDoc documentation to `formatMicrochipNumber` and edge case tests
+- [x] T008 [P] LINT: Run `npm run lint` in webApp/ and fix any ESLint violations
+- [x] T009 [P] RED: Write failing unit test for `stripNonDigits` utility in `/webApp/src/utils/__tests__/microchip-formatter.test.ts`
+- [x] T010 [P] GREEN: Implement `stripNonDigits` function in `/webApp/src/utils/microchip-formatter.ts` (sanitizes input to digits only)
+- [x] T011 [P] LINT: Run `npm run lint` in webApp/ and verify no violations
+- [x] T012 [P] Create TypeScript flow state interfaces in `/webApp/src/models/ReportMissingPetFlow.ts` (copy from contracts/FlowState.ts)
+- [x] T013 [P] Create route configuration constants in `/webApp/src/routes/report-missing-pet-routes.tsx` (copy from contracts/routes.ts)
+- [x] T014 [P] RED: Write failing test for `ReportMissingPetFlowContext` in `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx`
+- [x] T015 GREEN: Implement `ReportMissingPetFlowContext` provider in `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` (React Context with state management)
+- [x] T016 REFACTOR: Add JSDoc documentation to context provider and consumer hook
+- [x] T017 TEST: Run `npm test` and verify context tests pass
+- [x] T018 LINT: Run `npm run lint` in webApp/ and fix violations
+- [x] T019 [P] Create reusable Header component stub in `/webApp/src/components/ReportMissingPet/Header.tsx` (back button, title, progress indicator)
+- [x] T020 [P] Create base Page Object Model in `/e2e-tests/src/test/java/.../pages/ReportMissingPetStep1Page.java` (Selenium locators)
+- [x] T021 [P] Create base step definitions in `/e2e-tests/src/test/java/.../steps-web/ReportMissingPetStep1Steps.java` (Cucumber steps)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
