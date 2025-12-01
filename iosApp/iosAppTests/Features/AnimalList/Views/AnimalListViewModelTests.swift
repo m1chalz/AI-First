@@ -13,7 +13,7 @@ final class AnimalListViewModelTests: XCTestCase {
     
     class FakeLocationService: LocationServiceProtocol {
         var stubbedAuthorizationStatus: LocationPermissionStatus = .notDetermined
-        var stubbedLocation: UserLocation?
+        var stubbedLocation: Coordinate?
         
         var authorizationStatus: LocationPermissionStatus {
             get async { stubbedAuthorizationStatus }
@@ -23,7 +23,7 @@ final class AnimalListViewModelTests: XCTestCase {
             return stubbedAuthorizationStatus
         }
         
-        func requestLocation() async -> UserLocation? {
+        func requestLocation() async -> Coordinate? {
             return stubbedLocation
         }
     }
@@ -33,7 +33,7 @@ final class AnimalListViewModelTests: XCTestCase {
     private func createViewModel(
         repository: AnimalRepositoryProtocol,
         locationStatus: LocationPermissionStatus = .authorizedWhenInUse,
-        location: UserLocation? = nil
+        location: Coordinate? = nil
     ) -> AnimalListViewModel {
         let fakeLocationService = FakeLocationService()
         fakeLocationService.stubbedAuthorizationStatus = locationStatus
@@ -243,7 +243,7 @@ final class AnimalListViewModelTests: XCTestCase {
     /// T016: Test AnimalListViewModel loadAnimals should update animals publisher with API data
     func testLoadAnimals_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
         // Given - ViewModel with repository that returns API-like data
-        let testLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         let fakeRepository = FakeAnimalRepository(animalCount: 3, shouldFail: false)
         let viewModel = createViewModel(
             repository: fakeRepository,
@@ -264,7 +264,7 @@ final class AnimalListViewModelTests: XCTestCase {
     /// T017: Test AnimalListViewModel with location permissions should pass coordinates to repository
     func testLoadAnimals_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
         // Given - ViewModel with authorized location
-        let testLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         let fakeRepository = FakeAnimalRepository(animalCount: 5, shouldFail: false)
         let viewModel = createViewModel(
             repository: fakeRepository,

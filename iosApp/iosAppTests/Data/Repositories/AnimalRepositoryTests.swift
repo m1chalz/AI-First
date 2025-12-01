@@ -77,7 +77,7 @@ final class AnimalRepositoryTests: XCTestCase {
     /// T010: Test getAnimals with location parameters should include lat/lng query params in URL
     func testGetAnimals_withLocationParameters_shouldIncludeQueryParams() async throws {
         // Given - location parameters
-        let userLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         var capturedRequest: URLRequest?
         
         MockURLProtocol.requestHandler = { request in
