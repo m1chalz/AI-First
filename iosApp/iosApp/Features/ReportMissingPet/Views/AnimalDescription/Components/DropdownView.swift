@@ -62,14 +62,3 @@ struct DropdownView<T: Equatable>: View {
         return model.options.first { $0.value == value }?.displayName
     }
 }
-
-extension DropdownView {
-    struct Model {
-        let label: String
-        let placeholder: String
-        let options: [(value: T, displayName: String)]
-        let errorMessage: String?
-        let accessibilityID: String
-    }
-}
-
