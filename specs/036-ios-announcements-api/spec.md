@@ -5,6 +5,25 @@
 **Status**: Draft  
 **Input**: User description: "Display data from backend API on Animal list and pet details ios screens. Connect to GET /api/v1/announcements and GET /api/v1/announcements/:id endpoints. ios platform only."
 
+## Clarifications
+
+### Session 2025-12-01
+
+- Q: What happens when backend API returns malformed JSON or unexpected data structure? → A: Log error (print), show generic error message to user (no analytics tracking)
+- Q: What happens when backend returns announcement with missing required fields? → A: Skip invalid items if detectable (Option B), otherwise fail entire list with error (Option D) when Codable cannot decode
+- Q: How does the app handle extremely long description text (10,000+ characters)? → A: Out of scope - no UI changes in this story, existing UI handles text display as currently implemented
+- Q: What happens if backend returns duplicate announcement IDs in the list response? → A: Deduplicate by ID (keep first or last occurrence depending on implementation simplicity), log warning (print)
+- Q: How does the app handle photo URLs that point to non-existent images? → A: Out of scope - existing image loading components handle failures as currently implemented
+- Q: What is the network timeout duration for API requests? → A: Use URLSession system default timeout value (no custom timeout configuration)
+- Q: What happens if backend returns more than 1000 announcements in a single response? → A: Load all data into memory, iOS UI handles scrolling (backend should implement pagination/limits if needed)
+- Q: How does the app handle announcements with coordinates outside valid ranges (latitude > 90°)? → A: Out of scope - backend validates coordinates, iOS does not validate
+- Q: How does the app handle special characters and emojis in pet names and descriptions? → A: Display exactly as returned by backend (UTF-8, emoji supported natively by Swift/SwiftUI)
+- Q: What happens when user rapidly switches between animal list and details screens (race conditions)? → A: Cancel previous request before starting new one (task cancellation via async/await)
+- Q: Does backend API require HTTPS and authentication/authorization? → A: HTTP allowed (insecure), no authentication - development/testing environment only
+- Q: Should the app automatically retry failed API requests due to transient network errors? → A: No retry strategy - show error message only, user must navigate away and return to retry
+- Q: Does this feature require adding new accessibility identifiers to Animal List and Pet Details components? → A: Out of scope - existing UI components already have accessibility identifiers
+- Q: What is the backend base URL and configuration strategy for different environments? → A: http://localhost:3000 (development), easily configurable from code
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Display Real Announcements on Animal List (Priority: P1)
@@ -61,16 +80,17 @@ Users who just submitted a new pet announcement through the report flow should s
 
 ### Edge Cases
 
-- What happens when backend API returns malformed JSON or unexpected data structure?
-- What happens when backend returns announcement with missing required fields?
-- How does the app handle extremely long description text (10,000+ characters)?
-- What happens if backend returns duplicate announcement IDs in the list response?
-- How does the app handle photo URLs that point to non-existent images?
-- What happens when user's internet connection drops during data fetch?
-- How does the app handle announcements with coordinates outside valid ranges (latitude > 90°)?
-- What happens if backend returns more than 1000 announcements in a single response?
-- How does the app handle special characters and emojis in pet names and descriptions?
-- What happens when user rapidly switches between animal list and details screens (race conditions)?
+- **Malformed JSON or unexpected data structure**: App logs error (print statement), displays generic error message to user ("Unable to load data. Please try again later."), does not crash
+- **Missing required fields in announcement**: If Codable can decode partial list, skip invalid items and show valid announcements only (log error for invalid items). If Codable fails on entire response, fail list loading and show error message to user
+- **Extremely long description text (10,000+ characters)**: Out of scope - existing UI handles display, no changes to UI in this feature
+- **Duplicate announcement IDs in list response**: Deduplicate by ID (keep first or last occurrence, whichever is simpler to implement), log warning (print)
+- **Photo URLs pointing to non-existent images**: Out of scope - existing image loading components handle failures as currently implemented
+- **Network timeout or connection drop during fetch**: URLSession will use system default timeout and return error; app displays generic error message to user with no automatic retry (user must navigate away and return to retry manually)
+- **Large response with 1000+ announcements**: iOS loads all data into memory, LazyVStack/List handles scrolling performance; backend responsible for pagination if needed
+- **Invalid coordinates (latitude > 90° or longitude > 180°)**: Out of scope - backend validates and ensures valid coordinate ranges, iOS does not perform validation
+- **Special characters and emojis in pet names/descriptions**: Display exactly as returned by backend; Swift String and SwiftUI Text natively support UTF-8 and emoji rendering
+- **Rapid screen switching / race conditions**: When user quickly switches between screens (e.g., Animal List → Pet Details → another Pet Details), cancel previous API request before starting new one using async/await task cancellation to prevent stale data display
+- **Backend base URL configuration**: Default to `http://localhost:3000` for development; HTTP allowed due to local development environment (iOS ATS exception required); base URL must be easily changeable from code for different environments
 
 ## Requirements *(mandatory)*
 
@@ -86,9 +106,11 @@ Users who just submitted a new pet announcement through the report flow should s
 - **FR-008**: The app MUST handle missing optional fields in API responses (breed, email, microchipNumber, reward) by displaying placeholders
 - **FR-009**: The app MUST validate that required fields exist in API responses before attempting to create domain models
 - **FR-010**: The app MUST use the existing AnimalRepositoryProtocol interface without modifying the protocol signature
-- **FR-011**: The app MUST handle network timeout scenarios (no response after reasonable time)
+- **FR-011**: The app MUST handle network timeout scenarios using URLSession system default timeout (typically 60 seconds for resource, 7 days for request)
 - **FR-012**: The app MUST parse photo URLs from backend and pass them to image loading components
 - **FR-013**: iOS platform only - Android and Web platforms are NOT in scope
+- **FR-014**: The app MUST allow HTTP connections (insecure transport) for development/testing environment without authentication headers
+- **FR-015**: The app MUST use `http://localhost:3000` as default backend base URL, with easy code-level configurability for changing the URL without recompilation
 
 ### Key Entities *(include if feature involves data)*
 
