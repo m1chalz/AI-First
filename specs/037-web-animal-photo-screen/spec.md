@@ -36,7 +36,7 @@ Web users reach the Animal Photo step (step 2/4), click "Browse" to open the nat
 
 **Acceptance Scenarios**:
 
-1. **Given** the user is on the Animal Photo screen with no selection, **When** they click "Browse" and select a JPG/PNG/GIF/WEBP file (max 10MB) from the file picker, **Then** the picker closes, the confirmation card (green icon, filename, size, remove X button) renders matching node `315:15775`, and clicking Continue advances to the next step (step 3/4) without additional prompts.
+1. **Given** the user is on the Animal Photo screen with no selection, **When** they click "Browse" and select a JPG/PNG/GIF/WEBP/BMP/TIFF/HEIC/HEIF file (max 20MB) from the file picker, **Then** the picker closes, the confirmation card (green icon, filename, size, remove X button) renders matching node `315:15775`, and clicking Continue advances to the next step (step 3/4) without additional prompts.
 2. **Given** the user is on the empty state, **When** they drag a supported image file over the upload area and drop it, **Then** the confirmation card appears with the same visual treatment as file picker selection.
 3. **Given** the user already attached a photo and navigated to step 3/4, **When** they navigate back within the flow to step 2/4 (Animal Photo), **Then** the same confirmation card reappears with the previously selected photo still displayed.
 
@@ -60,7 +60,7 @@ Users who try to continue without attaching a photo or who remove an existing ph
 
 ### User Story 3 - Handle validation errors and invalid files (Priority: P3)
 
-Web users who attempt to select unsupported formats or files exceeding 10MB receive clear validation feedback and can retry without losing other form progress.
+Web users who attempt to select unsupported formats or files exceeding 20MB receive clear validation feedback and can retry without losing other form progress.
 
 **Why this priority**: Clear validation feedback reduces support tickets and prevents user frustration during file selection.
 
@@ -68,8 +68,8 @@ Web users who attempt to select unsupported formats or files exceeding 10MB rece
 
 **Acceptance Scenarios**:
 
-1. **Given** the user selects a file larger than 10MB, **When** they attempt to upload, **Then** an error toast displays "File size exceeds 10MB limit" for 5 seconds, the upload area remains in empty state, and they can select a different file.
-2. **Given** the user selects an unsupported format (e.g., PDF, TXT, BMP), **When** the file validation runs, **Then** an error toast displays "Please upload JPG, PNG, GIF, or WEBP format" for 5 seconds and the selection is rejected.
+1. **Given** the user selects a file larger than 20MB, **When** they attempt to upload, **Then** an error toast displays "File size exceeds 20MB limit" for 5 seconds, the upload area remains in empty state, and they can select a different file.
+2. **Given** the user selects an unsupported format (e.g., PDF, TXT, SVG), **When** the file validation runs, **Then** an error toast displays "Please upload JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, or HEIF format" for 5 seconds and the selection is rejected.
 
 ---
 
@@ -90,12 +90,12 @@ Web users who attempt to select unsupported formats or files exceeding 10MB rece
 - **FR-001**: Screen MUST display a header with back arrow button (left), "Animal photo" title (center), and "2/4" progress indicator (right)
 - **FR-002**: Back arrow button MUST dismiss the entire flow, return to the pet list screen, and clear all flow state (including selected photo)
 - **FR-003**: The Web Animal Photo screen MUST appear as step 2/4 in the missing pet flow and visually match Figma node `315:15775` including typography, colors, button spacing, and helper copy
-- **FR-004**: The "Browse" button MUST trigger an HTML5 file input limited to image types (accept="image/jpeg,image/png,image/gif,image/webp") with a maximum file size of 10MB validated on the client side
+- **FR-004**: The "Browse" button MUST trigger an HTML5 file input limited to image types (accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/heic,image/heif") with a maximum file size of 20MB validated on the client side
 - **FR-005**: The upload area MUST support drag-and-drop for image files, providing visual feedback (e.g., border highlight) when a file is dragged over the drop zone
 - **FR-006**: After a supported image is selected (via picker or drag-and-drop), the UI MUST render the confirmation card (green icon, filename, file size, Remove X button) and store the file object and metadata in React flow state (Context or custom hook)
 - **FR-007**: Clicking Continue without a stored photo MUST leave the Continue button enabled but surface a toast notification that reads "Photo is mandatory" for 3 seconds and prevent navigation to the next step
 - **FR-008**: The Remove (X) button on the confirmation card MUST clear the stored photo from React state, revert the screen to the empty state, and ensure any subsequent Continue click replays the "Photo is mandatory" toast until another valid file is selected, while retaining other step data
-- **FR-009**: Client-side validation MUST reject files that: exceed 10MB, are not in supported formats (JPG, PNG, GIF, WEBP), or fail to load. Each rejection MUST display a specific error toast for 5 seconds with clear guidance
+- **FR-009**: Client-side validation MUST reject files that: exceed 20MB, are not in supported formats (JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, HEIF), or fail to load. Each rejection MUST display a specific error toast for 5 seconds with clear guidance
 - **FR-010**: Clicking Continue with a valid photo MUST save the file object to flow state and navigate to the next screen in the flow (step 3/4)
 - **FR-011**: Selected photo data MUST persist when navigating forward to step 3/4 and back to step 2/4 within the same flow session (via React state management)
 - **FR-012**: All labels, helper copy, and error messages MUST use consistent typography and styling as defined in the Figma design and follow the existing web app localization patterns
@@ -124,7 +124,7 @@ Web users who attempt to select unsupported formats or files exceeding 10MB rece
 - **SC-001**: During QA, 100% of attempts to click Continue without a photo display the "Photo is mandatory" toast for 3 seconds and prevent forward navigation until a photo is provided
 - **SC-002**: 100% of flow sessions that include a selected photo still display the confirmation card after navigating forward to step 3/4 and back to step 2/4 within the same active flow session (without browser refresh)
 - **SC-003**: At least 90% of testers who encounter upload errors (wrong format, oversized file) can successfully recover and upload a valid file without manual support, as measured by task completion rates in usability testing
-- **SC-004**: The upload interaction (Browse or drag-and-drop to confirmation card) completes in under 2 seconds for files up to 10MB on standard broadband connections (10 Mbps+)
+- **SC-004**: The upload interaction (Browse or drag-and-drop to confirmation card) completes in under 2 seconds for files up to 20MB on standard broadband connections (10 Mbps+)
 - **SC-006**: Browser back button and refresh correctly cancel flow and clear state in 100% of test scenarios
 
 ## Assumptions
