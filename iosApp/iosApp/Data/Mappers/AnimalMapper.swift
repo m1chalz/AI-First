@@ -1,5 +1,21 @@
 import Foundation
 
+// MARK: - Helper Functions
+
+/// Converts relative photo URL to absolute URL by prepending base URL
+/// - Parameter photoUrl: Photo URL from backend (may be relative or absolute)
+/// - Returns: Absolute URL string
+private func resolvePhotoURL(_ photoUrl: String) -> String {
+    // If URL starts with /, it's relative - prepend base URL
+    if photoUrl.starts(with: "/") {
+        return APIConfig.baseURL + photoUrl
+    }
+    // Otherwise it's already absolute
+    return photoUrl
+}
+
+// MARK: - Domain Model Mappers
+
 /// Extension for converting AnnouncementDTO to Animal domain model
 extension Animal {
     /// Failable initializer - returns nil if DTO contains invalid data
@@ -24,7 +40,7 @@ extension Animal {
         self.init(
             id: dto.id,
             name: dto.petName,
-            photoUrl: dto.photoUrl,
+            photoUrl: resolvePhotoURL(dto.photoUrl),
             coordinate: Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude),
             species: species,
             breed: dto.breed,
