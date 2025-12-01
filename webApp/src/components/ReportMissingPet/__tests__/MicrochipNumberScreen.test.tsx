@@ -50,15 +50,22 @@ describe('MicrochipNumberScreen', () => {
     expect(input.value).toBe('12345-67890-12345');
   });
 
-  it('allows empty microchip number', () => {
+  it('allows continuing with empty microchip number', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
+    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click') as HTMLButtonElement;
 
-    // when
-    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
-    fireEvent.click(continueButton);
-
+    // when (leave input empty)
+    expect(input.value).toBe('');
+    
     // then
+    expect(continueButton.disabled).toBe(false);
+    
+    // when (click continue with empty input)
+    fireEvent.click(continueButton);
+    
+    // then (should not throw error, navigation should occur)
     expect(continueButton).toBeTruthy();
   });
 

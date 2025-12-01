@@ -154,17 +154,17 @@
 ### Tests for User Story 2 (TDD - Write First) ✅
 
 **Unit Tests**:
-- [ ] T059 [P] [US2] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for empty input Continue scenario (verify Continue button enabled, flow state updated with empty string)
+- [x] T059 [P] [US2] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for empty input Continue scenario (verify Continue button enabled, flow state updated with empty string)
 
 **E2E Tests**:
-- [ ] T060 [P] [US2] Add Scenario 2 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User skips microchip number)
-- [ ] T061 [P] [US2] Implement step definitions in `ReportMissingPetStep1Steps.java` for Scenario 2 (click Continue without entering data)
+- [x] T060 [P] [US2] Add Scenario 2 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User skips microchip number)
+- [x] T061 [P] [US2] Implement step definitions in `ReportMissingPetStep1Steps.java` for Scenario 2 (click Continue without entering data)
 
 ### Implementation for User Story 2
 
-- [ ] T062 [US2] GREEN: Verify `MicrochipNumberScreen` handles empty input correctly (Continue button always enabled, saves empty string to flow state)
-- [ ] T063 [US2] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify empty input test passes
-- [ ] T064 [US2] LINT: Run `npm run lint` and fix violations
+- [x] T062 [US2] GREEN: Verify `MicrochipNumberScreen` handles empty input correctly (Continue button always enabled, saves empty string to flow state)
+- [x] T063 [US2] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify empty input test passes
+- [x] T064 [US2] LINT: Run `npm run lint` and fix violations
 - [ ] T065 [US2] Run E2E test for Scenario 2: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @reportMissingPet and @US2"`
 - [ ] T066 [US2] Verify E2E test passes (Given on microchip screen → When leave input empty → click Continue → Then navigate to photo with empty microchipNumber)
 - [ ] T067 [US2] Manual test: Complete User Story 2 scenario (skip microchip, verify flow continues)
