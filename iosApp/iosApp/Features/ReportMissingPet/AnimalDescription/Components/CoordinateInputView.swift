@@ -50,7 +50,7 @@ struct CoordinateInputView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
             )
-            .keyboardType(.decimalPad)
+            .keyboardType(.numbersAndPunctuation)
             .accessibilityIdentifier(model.latitudeAccessibilityID)
     }
     
@@ -66,7 +66,7 @@ struct CoordinateInputView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
             )
-            .keyboardType(.decimalPad)
+            .keyboardType(.numbersAndPunctuation)
             .accessibilityIdentifier(model.longitudeAccessibilityID)
     }
 }
