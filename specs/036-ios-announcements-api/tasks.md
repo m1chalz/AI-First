@@ -34,9 +34,9 @@
 
 **Purpose**: Project initialization and basic iOS configuration
 
-- [ ] T001 Verify backend server endpoints are available at http://localhost:3000/api/v1/announcements
-- [ ] T002 [P] Create API configuration file in `/iosApp/iosApp/Configuration/APIConfig.swift`
-- [ ] T003 [P] Add iOS ATS exception to `/iosApp/iosApp/Info.plist` for localhost HTTP connections
+- [X] T001 Verify backend server endpoints are available at http://localhost:3000/api/v1/announcements
+- [X] T002 [P] Create API configuration file in `/iosApp/iosApp/Configuration/APIConfig.swift`
+- [X] T003 [P] Add iOS ATS exception to `/iosApp/iosApp/Info.plist` for localhost HTTP connections
 
 ---
 
@@ -46,10 +46,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create RepositoryError enum in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (for error handling across all stories)
-- [ ] T005 [P] Create JSONDecoder extension with custom date decoding strategy in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T006 [P] Verify existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` supports getAnimals and getAnimalDetails methods
-- [ ] T007 [P] Verify existing domain models (Animal, PetDetails, Species, AnimalStatus, Coordinate) in `/iosApp/iosApp/Domain/Models/` are compatible with API contracts
+- [X] T004 Create RepositoryError enum in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (for error handling across all stories)
+- [X] T005 [P] Create JSONDecoder extension with custom date decoding strategy in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T006 [P] Verify existing `AnimalRepositoryProtocol` in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` supports getAnimals and getAnimalDetails methods
+- [X] T007 [P] Verify existing domain models (Animal, PetDetails, Species, AnimalStatus, Coordinate) in `/iosApp/iosApp/Domain/Models/` are compatible with API contracts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -66,37 +66,37 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **iOS Unit Tests - Repository**:
-- [ ] T008 [P] [US1] Create MockURLProtocol class in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift` for URLSession mocking
-- [ ] T009 [P] [US1] Test: getAnimals with valid JSON response should return parsed Animal array in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T010 [P] [US1] Test: getAnimals with location parameters should include lat/lng query params in URL in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T011 [P] [US1] Test: getAnimals with HTTP 500 error should throw RepositoryError.httpError in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T012 [P] [US1] Test: getAnimals with invalid JSON should throw RepositoryError.decodingFailed in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T013 [P] [US1] Test: getAnimals with invalid species enum should skip invalid items (compactMap behavior) in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T014 [P] [US1] Test: getAnimals with duplicate IDs should deduplicate and log warning in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T015 [P] [US1] Test: getAnimals with empty list should return empty array in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T008 [P] [US1] Create MockURLProtocol class in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift` for URLSession mocking
+- [X] T009 [P] [US1] Test: getAnimals with valid JSON response should return parsed Animal array in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T010 [P] [US1] Test: getAnimals with location parameters should include lat/lng query params in URL in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T011 [P] [US1] Test: getAnimals with HTTP 500 error should throw RepositoryError.httpError in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T012 [P] [US1] Test: getAnimals with invalid JSON should throw RepositoryError.decodingFailed in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T013 [P] [US1] Test: getAnimals with invalid species enum should skip invalid items (compactMap behavior) in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T014 [P] [US1] Test: getAnimals with duplicate IDs should deduplicate and log warning in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T015 [P] [US1] Test: getAnimals with empty list should return empty array in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
 
 **iOS Unit Tests - ViewModel Integration**:
-- [ ] T016 [P] [US1] Test: AnimalListViewModel loadAnimals should update animals publisher with API data in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
-- [ ] T017 [P] [US1] Test: AnimalListViewModel with location permissions should pass coordinates to repository in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
-- [ ] T018 [P] [US1] Test: AnimalListViewModel without location permissions should call repository without coordinates in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
-- [ ] T019 [P] [US1] Test: AnimalListViewModel with repository error should set error state in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
+- [X] T016 [P] [US1] Test: AnimalListViewModel loadAnimals should update animals publisher with API data in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
+- [X] T017 [P] [US1] Test: AnimalListViewModel with location permissions should pass coordinates to repository in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
+- [X] T018 [P] [US1] Test: AnimalListViewModel without location permissions should call repository without coordinates in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
+- [X] T019 [P] [US1] Test: AnimalListViewModel with repository error should set error state in `/iosApp/iosAppTests/Features/AnimalList/ViewModels/AnimalListViewModelTests.swift`
 
 **End-to-End Tests**:
-- [ ] T020 [P] [US1] E2E test: Display real announcements from backend on Animal List screen in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts`
-- [ ] T021 [P] [US1] E2E test: Display empty state when backend has no announcements in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts`
-- [ ] T022 [P] [US1] E2E test: Display error message when backend is unavailable in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts`
+- [ ] T020 [P] [US1] E2E test: Display real announcements from backend on Animal List screen in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts` (DEFERRED - manual testing first)
+- [ ] T021 [P] [US1] E2E test: Display empty state when backend has no announcements in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts` (DEFERRED - manual testing first)
+- [ ] T022 [P] [US1] E2E test: Display error message when backend is unavailable in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts` (DEFERRED - manual testing first)
 
 ### Implementation for User Story 1
 
 **iOS Implementation**:
-- [ ] T023 [P] [US1] Create private AnnouncementsListResponse DTO struct in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T024 [P] [US1] Create private AnnouncementDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T025 [P] [US1] Create failable Animal initializer `init?(from: AnnouncementDTO)` with enum validation (lowercase conversion), date parsing, and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T026 [US1] Implement AnimalRepository class conforming to AnimalRepositoryProtocol in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T027 [US1] Implement getAnimals method with URLSession, location query params, JSON decoding, compactMap for invalid items, deduplication in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T028 [US1] Add error handling for HTTP errors, network errors, decoding errors with print logging in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T029 [US1] Update ServiceContainer to provide AnimalRepository (HTTP implementation) instead of FakeAnimalRepository in `/iosApp/iosApp/DI/ServiceContainer.swift`
-- [ ] T030 [P] [US1] Add SwiftDoc documentation to non-obvious repository methods in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T023 [P] [US1] Create private AnnouncementsListResponse DTO struct in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T024 [P] [US1] Create private AnnouncementDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T025 [P] [US1] Create failable Animal initializer `init?(from: AnnouncementDTO)` with enum validation (lowercase conversion), date parsing, and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T026 [US1] Implement AnimalRepository class conforming to AnimalRepositoryProtocol in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T027 [US1] Implement getAnimals method with URLSession, location query params, JSON decoding, compactMap for invalid items, deduplication in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T028 [US1] Add error handling for HTTP errors, network errors, decoding errors with print logging in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T029 [US1] Update ServiceContainer to provide AnimalRepository (HTTP implementation) instead of FakeAnimalRepository in `/iosApp/iosApp/DI/ServiceContainer.swift`
+- [X] T030 [P] [US1] Add SwiftDoc documentation to non-obvious repository methods in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
 
 **Verification**:
 - [ ] T031 [US1] Run unit tests: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`

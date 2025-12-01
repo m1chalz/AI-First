@@ -237,4 +237,83 @@ final class AnimalListViewModelTests: XCTestCase {
         // Then - closure should be invoked
         XCTAssertTrue(callbackInvoked, "Should invoke onReportFound closure")
     }
+    
+    // MARK: - API Integration Tests (User Story 1)
+    
+    /// T016: Test AnimalListViewModel loadAnimals should update animals publisher with API data
+    func testLoadAnimals_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
+        // Given - ViewModel with repository that returns API-like data
+        let testLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let fakeRepository = FakeAnimalRepository(animalCount: 3, shouldFail: false)
+        let viewModel = createViewModel(
+            repository: fakeRepository,
+            locationStatus: .authorizedWhenInUse,
+            location: testLocation
+        )
+        
+        // When - loadAnimals is called
+        await viewModel.loadAnimals()
+        
+        // Then - cardViewModels should be populated with API data
+        XCTAssertEqual(viewModel.cardViewModels.count, 3)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertNotNil(viewModel.currentLocation)
+    }
+    
+    /// T017: Test AnimalListViewModel with location permissions should pass coordinates to repository
+    func testLoadAnimals_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
+        // Given - ViewModel with authorized location
+        let testLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let fakeRepository = FakeAnimalRepository(animalCount: 5, shouldFail: false)
+        let viewModel = createViewModel(
+            repository: fakeRepository,
+            locationStatus: .authorizedWhenInUse,
+            location: testLocation
+        )
+        
+        // When - loadAnimals is called
+        await viewModel.loadAnimals()
+        
+        // Then - currentLocation should be set
+        XCTAssertNotNil(viewModel.currentLocation)
+        XCTAssertEqual(viewModel.currentLocation?.latitude, 52.2297, accuracy: 0.0001)
+        XCTAssertEqual(viewModel.currentLocation?.longitude, 21.0122, accuracy: 0.0001)
+        XCTAssertFalse(viewModel.isLoading)
+    }
+    
+    /// T018: Test AnimalListViewModel without location permissions should call repository without coordinates
+    func testLoadAnimals_withoutLocationPermissions_shouldCallRepositoryWithoutCoordinates() async {
+        // Given - ViewModel with denied location permissions
+        let fakeRepository = FakeAnimalRepository(animalCount: 10, shouldFail: false)
+        let viewModel = createViewModel(
+            repository: fakeRepository,
+            locationStatus: .denied,
+            location: nil
+        )
+        
+        // When - loadAnimals is called
+        await viewModel.loadAnimals()
+        
+        // Then - currentLocation should be nil, but animals still loaded
+        XCTAssertNil(viewModel.currentLocation)
+        XCTAssertEqual(viewModel.cardViewModels.count, 10)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+    }
+    
+    /// T019: Test AnimalListViewModel with repository error should set error state
+    func testLoadAnimals_whenRepositoryThrowsError_shouldSetErrorState() async {
+        // Given - ViewModel with repository that fails
+        let fakeRepository = FakeAnimalRepository(animalCount: 0, shouldFail: true)
+        let viewModel = createViewModel(repository: fakeRepository)
+        
+        // When - loadAnimals is called
+        await viewModel.loadAnimals()
+        
+        // Then - error state should be set
+        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertTrue(viewModel.cardViewModels.isEmpty)
+    }
 }

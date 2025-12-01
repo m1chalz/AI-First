@@ -10,6 +10,29 @@ enum AnimalSpecies: Codable {
     case reptile
     case other
     
+    /// Failable initializer from string (case-insensitive)
+    init?(fromString string: String) {
+        let uppercased = string.uppercased()
+        switch uppercased {
+        case "DOG":
+            self = .dog
+        case "CAT":
+            self = .cat
+        case "BIRD":
+            self = .bird
+        case "RABBIT":
+            self = .rabbit
+        case "RODENT":
+            self = .rodent
+        case "REPTILE":
+            self = .reptile
+        case "OTHER":
+            self = .other
+        default:
+            return nil
+        }
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self).uppercased()

@@ -14,8 +14,8 @@ struct Animal {
     /// URL or placeholder identifier for animal photo
     let photoUrl: String
     
-    /// Geographic location with radius for search area
-    let location: Location
+    /// Geographic coordinate (latitude and longitude)
+    let coordinate: Coordinate
     
     /// Animal species (Dog, Cat, Bird, etc.)
     let species: AnimalSpecies

@@ -6,6 +6,21 @@ enum AnimalGender: Codable {
     case female
     case unknown
     
+    /// Failable initializer from string (case-insensitive)
+    init?(fromString string: String) {
+        let uppercased = string.uppercased()
+        switch uppercased {
+        case "MALE":
+            self = .male
+        case "FEMALE":
+            self = .female
+        case "UNKNOWN":
+            self = .unknown
+        default:
+            return nil
+        }
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let stringValue = try container.decode(String.self).uppercased()
