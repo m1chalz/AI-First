@@ -7,7 +7,7 @@ import CoreLocation
 actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private var permissionContinuation: CheckedContinuation<LocationPermissionStatus, Never>?
-    private var locationContinuation: CheckedContinuation<UserLocation?, Never>?
+    private var locationContinuation: CheckedContinuation<Coordinate?, Never>?
     
     override init() {
         super.init()
@@ -45,7 +45,7 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
         }
     }
     
-    func requestLocation() async -> UserLocation? {
+    func requestLocation() async -> Coordinate? {
         let status = locationManager.authorizationStatus
         
         guard status == .authorizedWhenInUse || status == .authorizedAlways else {
@@ -76,12 +76,11 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         Task {
             if let location = locations.first {
-                let userLocation = UserLocation(
+                let coordinate = Coordinate(
                     latitude: location.coordinate.latitude,
-                    longitude: location.coordinate.longitude,
-                    timestamp: location.timestamp
+                    longitude: location.coordinate.longitude
                 )
-                await resumeLocationContinuation(with: userLocation)
+                await resumeLocationContinuation(with: coordinate)
             } else {
                 await resumeLocationContinuation(with: nil)
             }
@@ -101,7 +100,7 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
         permissionContinuation = nil
     }
     
-    private func resumeLocationContinuation(with location: UserLocation?) {
+    private func resumeLocationContinuation(with location: Coordinate?) {
         locationContinuation?.resume(returning: location)
         locationContinuation = nil
     }

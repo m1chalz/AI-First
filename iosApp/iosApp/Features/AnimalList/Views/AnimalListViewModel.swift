@@ -43,7 +43,7 @@ class AnimalListViewModel: ObservableObject {
     @Published var locationPermissionStatus: LocationPermissionStatus = .notDetermined
     
     /// Current user location (nil if unavailable)
-    @Published var currentLocation: UserLocation?
+    @Published var currentLocation: Coordinate?
     
     /// Controls custom permission denied popup display (User Story 3: recovery path)
     @Published var showPermissionDeniedAlert = false

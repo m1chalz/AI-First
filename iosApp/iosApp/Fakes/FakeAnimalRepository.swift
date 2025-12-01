@@ -20,7 +20,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     private(set) var getPetDetailsCallCount = 0
     
     /// For location testing - tracks location parameter passed
-    var lastLocationParameter: UserLocation?
+    var lastLocationParameter: Coordinate?
     
     /// For PetDetails testing - mock pet details to return
     var mockPetDetails: PetDetails?
@@ -44,7 +44,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         self.error = error
     }
     
-    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?) async throws -> [Animal] {
         getAnimalsCallCount += 1
         lastLocationParameter = location
         

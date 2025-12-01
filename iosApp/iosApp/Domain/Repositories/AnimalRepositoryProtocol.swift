@@ -17,7 +17,7 @@ protocol AnimalRepositoryProtocol {
     /// - Parameter location: Optional user location for proximity filtering (nil = no filtering)
     /// - Returns: Array of animals (may be empty if no animals found)
     /// - Throws: Error if data fetch fails
-    func getAnimals(near location: UserLocation?) async throws -> [Animal]
+    func getAnimals(near location: Coordinate?) async throws -> [Animal]
     
     /// Retrieves detailed information for a specific pet by ID.
     /// Mock implementation returns hardcoded pet details.

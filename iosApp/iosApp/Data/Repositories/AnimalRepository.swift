@@ -15,18 +15,16 @@ class AnimalRepository: AnimalRepositoryProtocol {
     
     // MARK: - AnimalRepositoryProtocol Implementation
     
-    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?) async throws -> [Animal] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
-
-        // TODO: temporary do not use location
-        // Add optional location query parameters
-//        if let userLocation = location {
-//            urlComponents.queryItems = [
-//                // TODO: temporary hardcoded lat/lon
-//                URLQueryItem(name: "lat", value: String(50.6/*userLocation.latitude*/)),
-//                URLQueryItem(name: "lng", value: String(20.5/*userLocation.longitude*/))
-//            ]
-//        }
+        
+        // Add location query parameters if provided
+        if let location = location {
+            urlComponents.queryItems = [
+                URLQueryItem(name: "lat", value: String(location.latitude)),
+                URLQueryItem(name: "lng", value: String(location.longitude))
+            ]
+        }
         
         guard let url = urlComponents.url else {
             throw RepositoryError.invalidURL
