@@ -40,8 +40,8 @@
 - ⚠️ `navigateToReportMissing()` is stubbed - will be enabled in T029 when NavGraph is updated
 
 **Tasks:**
-- [ ] T001 [P] Define `ReportMissingRoute` sealed interface with 5 nested routes (`ChipNumber`, `Photo`, `Description`, `ContactDetails`, `Summary`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/navigation/NavRoute.kt`
-- [ ] T002 [P] Create feature package structure `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/` with subdirectories: `presentation/mvi/`, `presentation/viewmodels/`, `ui/components/`, `ui/chipnumber/`, `ui/photo/`, `ui/description/`, `ui/contactdetails/`, `ui/summary/`
+- [x] T001 [P] Define `ReportMissingRoute` sealed interface with 5 nested routes (`ChipNumber`, `Photo`, `Description`, `ContactDetails`, `Summary`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/navigation/NavRoute.kt`
+- [x] T002 [P] Create feature package structure `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/` with subdirectories: `presentation/mvi/`, `presentation/viewmodels/`, `ui/components/`, `ui/chipnumber/`, `ui/photo/`, `ui/description/`, `ui/contactdetails/`, `ui/summary/`
 
 ---
 

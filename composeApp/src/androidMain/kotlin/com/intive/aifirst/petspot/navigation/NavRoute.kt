@@ -27,7 +27,7 @@ sealed interface NavRoute {
     data class AnimalDetail(val animalId: String) : NavRoute
 
     /**
-     * Report Missing Animal screen - form to report missing pet.
+     * Report Missing Animal flow - nested nav graph for multi-step wizard.
      * Route: "report_missing"
      */
     @Serializable
@@ -39,4 +39,42 @@ sealed interface NavRoute {
      */
     @Serializable
     data object ReportFound : NavRoute
+}
+
+/**
+ * Nested routes for Missing Pet Report flow.
+ * Used within NavRoute.ReportMissing navigation graph.
+ *
+ * Flow: ChipNumber (1/4) → Photo (2/4) → Description (3/4) → ContactDetails (4/4) → Summary
+ */
+sealed interface ReportMissingRoute {
+    /**
+     * Chip number input screen (Step 1/4).
+     */
+    @Serializable
+    data object ChipNumber : ReportMissingRoute
+
+    /**
+     * Photo selection screen (Step 2/4).
+     */
+    @Serializable
+    data object Photo : ReportMissingRoute
+
+    /**
+     * Description input screen (Step 3/4).
+     */
+    @Serializable
+    data object Description : ReportMissingRoute
+
+    /**
+     * Contact details input screen (Step 4/4).
+     */
+    @Serializable
+    data object ContactDetails : ReportMissingRoute
+
+    /**
+     * Summary screen (no progress indicator).
+     */
+    @Serializable
+    data object Summary : ReportMissingRoute
 }
