@@ -131,15 +131,19 @@ private struct AnnouncementDTO: Codable {
     let status: String
     let photoUrl: String
     let lastSeenDate: String
-    let latitude: Double
-    let longitude: Double
+    let locationLatitude: Double
+    let locationLongitude: Double
     let breed: String?
+    let sex: String?
+    let age: Int?
     let description: String
-    let contactPhone: String
+    let phone: String
+    let email: String?
     
     enum CodingKeys: String, CodingKey {
         case id, petName, species, status, photoUrl, lastSeenDate
-        case latitude, longitude, breed, description, contactPhone
+        case locationLatitude, locationLongitude, breed, sex, age
+        case description, phone, email
     }
 }
 ```
@@ -167,21 +171,23 @@ private struct PetDetailsDTO: Codable {
     let status: String
     let photoUrl: String
     let lastSeenDate: String
-    let latitude: Double
-    let longitude: Double
+    let locationLatitude: Double
+    let locationLongitude: Double
     let breed: String?
+    let sex: String?
+    let age: Int?
     let microchipNumber: String?
-    let contactEmail: String?
-    let contactPhone: String
-    let reward: Double?
+    let email: String?
+    let phone: String
+    let reward: String?
     let description: String
     let createdAt: String
     let updatedAt: String
     
     enum CodingKeys: String, CodingKey {
         case id, petName, species, status, photoUrl, lastSeenDate
-        case latitude, longitude, breed, microchipNumber
-        case contactEmail, contactPhone, reward, description
+        case locationLatitude, locationLongitude, breed, sex, age
+        case microchipNumber, email, phone, reward, description
         case createdAt, updatedAt
     }
 }
@@ -203,18 +209,20 @@ private struct PetDetailsDTO: Codable {
 |-------------|----------|------------------|
 | `string` (id, UUID) | `String` | Direct mapping (no conversion needed) |
 | `string` (petName) | `String` (name) | Direct mapping with custom CodingKeys |
-| `string` (species) | `Species` enum | Map string to enum case (lowercase) |
-| `string` (status) | `AnimalStatus` enum | Map string to enum case |
+| `string` (species) | `Species` enum | Map string to enum case (lowercase) - backend returns UPPERCASE |
+| `string` (status) | `AnimalStatus` enum | Map string to enum case (lowercase) - backend returns UPPERCASE |
 | `string` (photoUrl) | `String` | Direct mapping |
 | `string` (ISO date) | `Date` | Parse with ISO8601DateFormatter |
-| `number` (latitude, longitude) | `Coordinate` struct | Combine into single struct |
+| `number` (locationLatitude, locationLongitude) | `Coordinate` struct | Combine into single struct |
 | `string?` (breed) | `String?` | Optional - direct mapping |
+| `string?` (sex) | N/A | Backend field not used in iOS domain model |
+| `number?` (age) | N/A | Backend field not used in iOS domain model |
 | `string?` (microchipNumber) | `String?` | Optional - direct mapping |
-| `string?` (contactEmail) | `String?` | Optional - direct mapping |
-| `string` (contactPhone) | `String` | Direct mapping |
-| `number?` (reward) | `Double?` | Optional - direct mapping |
+| `string?` (email) | `String?` | Optional - direct mapping |
+| `string` (phone) | `String` | Direct mapping |
+| `string?` (reward) | `Double?` | Parse numeric value from string (e.g., "500 PLN" → 500.0) |
 | `string` (description) | `String` | Direct mapping |
-| `string` (ISO datetime) | `Date` | Parse with ISO8601DateFormatter |
+| `string` (ISO datetime) | `Date` | Parse with ISO8601DateFormatter - **NOTE: updatedAt uses different format!** |
 
 ### Custom CodingKeys
 
@@ -270,10 +278,10 @@ extension Animal {
         self.status = status
         self.photoUrl = dto.photoUrl
         self.lastSeenDate = lastSeen
-        self.coordinate = Coordinate(latitude: dto.latitude, longitude: dto.longitude)
+        self.coordinate = Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude)
         self.breed = dto.breed
         self.description = dto.description
-        self.contactPhone = dto.contactPhone
+        self.contactPhone = dto.phone
     }
 }
 ```
@@ -314,10 +322,32 @@ extension PetDetails {
             print("Warning: Invalid createdAt '\(dto.createdAt)' for announcement \(dto.id)")
             return nil
         }
-        guard let updated = dateFormatter.date(from: dto.updatedAt) else {
-            print("Warning: Invalid updatedAt '\(dto.updatedAt)' for announcement \(dto.id)")
-            return nil
+        
+        // updatedAt can be in two formats:
+        // 1. ISO 8601: "2025-11-18T10:00:00.000Z"
+        // 2. Custom format: "2025-12-01 14:24:13"
+        let updated: Date
+        if let isoDate = dateFormatter.date(from: dto.updatedAt) {
+            updated = isoDate
+        } else {
+            // Fallback to custom format "YYYY-MM-DD HH:MM:SS"
+            let customFormatter = DateFormatter()
+            customFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            customFormatter.timeZone = TimeZone(identifier: "UTC")
+            guard let customDate = customFormatter.date(from: dto.updatedAt) else {
+                print("Warning: Invalid updatedAt '\(dto.updatedAt)' for announcement \(dto.id)")
+                return nil
+            }
+            updated = customDate
         }
+        
+        // Parse reward string (e.g., "500 PLN") to Double
+        let rewardValue: Double? = {
+            guard let rewardStr = dto.reward else { return nil }
+            let components = rewardStr.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            let numericString = components.joined()
+            return Double(numericString)
+        }()
         
         self.id = dto.id
         self.name = dto.petName
@@ -325,12 +355,12 @@ extension PetDetails {
         self.status = status
         self.photoUrl = dto.photoUrl
         self.lastSeenDate = lastSeen
-        self.coordinate = Coordinate(latitude: dto.latitude, longitude: dto.longitude)
+        self.coordinate = Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude)
         self.breed = dto.breed
         self.microchipNumber = dto.microchipNumber
-        self.contactEmail = dto.contactEmail
-        self.contactPhone = dto.contactPhone
-        self.reward = dto.reward
+        self.contactEmail = dto.email
+        self.contactPhone = dto.phone
+        self.reward = rewardValue
         self.description = dto.description
         self.createdAt = created
         self.updatedAt = updated
@@ -346,6 +376,29 @@ guard let details = PetDetails(from: dto) else {
 }
 return details
 ```
+
+---
+
+## Date Format Inconsistency (Backend Issue)
+
+**Critical**: Backend returns two different date formats in the same response:
+
+- **`createdAt`**: ISO 8601 format with timezone
+  - Example: `"2025-11-18T10:00:00.000Z"`
+  - Format: `YYYY-MM-DDTHH:MM:SS.sssZ`
+  - Parseable by `ISO8601DateFormatter`
+
+- **`updatedAt`**: Custom format without timezone
+  - Example: `"2025-12-01 14:24:13"`
+  - Format: `YYYY-MM-DD HH:MM:SS` (space instead of 'T', no timezone)
+  - NOT parseable by `ISO8601DateFormatter`
+
+**Solution**: iOS client must handle both formats with fallback:
+1. Try parsing with `ISO8601DateFormatter` first
+2. If fails, fallback to `DateFormatter` with pattern `"yyyy-MM-dd HH:mm:ss"`
+3. Assume UTC timezone for custom format
+
+This ensures compatibility with current backend implementation while remaining forward-compatible if backend standardizes to ISO 8601.
 
 ---
 
@@ -440,15 +493,18 @@ No complex state transitions in this feature. Models are immutable value types (
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
       "petName": "Max",
-      "species": "dog",
-      "status": "missing",
-      "photoUrl": "http://localhost:3000/images/max.jpg",
+      "species": "DOG",
+      "status": "MISSING",
+      "photoUrl": "/images/max.jpg",
       "lastSeenDate": "2024-11-15",
-      "latitude": 52.2297,
-      "longitude": 21.0122,
+      "locationLatitude": 52.2297,
+      "locationLongitude": 21.0122,
       "breed": "Golden Retriever",
+      "sex": "MALE",
+      "age": 5,
       "description": "Friendly golden retriever, responds to Max",
-      "contactPhone": "+48123456789"
+      "phone": "+48123456789",
+      "email": "owner@example.com"
     }
   ]
 }
@@ -460,20 +516,22 @@ No complex state transitions in this feature. Models are immutable value types (
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "petName": "Max",
-  "species": "dog",
-  "status": "missing",
-  "photoUrl": "http://localhost:3000/images/max.jpg",
+  "species": "DOG",
+  "status": "MISSING",
+  "photoUrl": "/images/max.jpg",
   "lastSeenDate": "2024-11-15",
-  "latitude": 52.2297,
-  "longitude": 21.0122,
+  "locationLatitude": 52.2297,
+  "locationLongitude": 21.0122,
   "breed": "Golden Retriever",
+  "sex": "MALE",
+  "age": 5,
   "microchipNumber": "123456789012345",
-  "contactEmail": "owner@example.com",
-  "contactPhone": "+48123456789",
-  "reward": 500.0,
+  "email": "owner@example.com",
+  "phone": "+48123456789",
+  "reward": "500 PLN",
   "description": "Friendly golden retriever, responds to Max",
   "createdAt": "2024-11-20T10:30:00.000Z",
-  "updatedAt": "2024-11-20T10:30:00.000Z"
+  "updatedAt": "2024-12-01 14:24:13"
 }
 ```
 
@@ -484,8 +542,10 @@ No complex state transitions in this feature. Models are immutable value types (
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "petName": "Max",
-  "species": "dinosaur",  // Invalid - not in iOS enum
-  "status": "missing",
+  "species": "DINOSAUR",  // Invalid - not in iOS enum (even after lowercasing)
+  "status": "MISSING",
+  "locationLatitude": 52.2297,
+  "locationLongitude": 21.0122,
   // ... rest of fields
 }
 ```
@@ -495,8 +555,10 @@ No complex state transitions in this feature. Models are immutable value types (
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   // Missing "petName"
-  "species": "dog",
-  "status": "missing",
+  "species": "DOG",
+  "status": "MISSING",
+  "locationLatitude": 52.2297,
+  "locationLongitude": 21.0122,
   // ... rest of fields
 }
 ```
@@ -506,10 +568,12 @@ No complex state transitions in this feature. Models are immutable value types (
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "petName": "Max",
-  "species": "dog",
-  "status": "missing",
-  "photoUrl": "http://localhost:3000/images/max.jpg",
-  "lastSeenDate": "15-11-2024",  // Invalid format
+  "species": "DOG",
+  "status": "MISSING",
+  "photoUrl": "/images/max.jpg",
+  "lastSeenDate": "15-11-2024",  // Invalid format (should be YYYY-MM-DD)
+  "locationLatitude": 52.2297,
+  "locationLongitude": 21.0122,
   // ... rest of fields
 }
 ```

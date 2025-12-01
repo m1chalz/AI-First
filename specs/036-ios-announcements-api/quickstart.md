@@ -196,11 +196,14 @@ private struct AnnouncementDTO: Codable {
     let status: String
     let photoUrl: String
     let lastSeenDate: String
-    let latitude: Double
-    let longitude: Double
+    let locationLatitude: Double
+    let locationLongitude: Double
     let breed: String?
+    let sex: String?
+    let age: Int?
     let description: String
-    let contactPhone: String
+    let phone: String
+    let email: String?
 }
 
 private struct PetDetailsDTO: Codable {
@@ -210,13 +213,15 @@ private struct PetDetailsDTO: Codable {
     let status: String
     let photoUrl: String
     let lastSeenDate: String
-    let latitude: Double
-    let longitude: Double
+    let locationLatitude: Double
+    let locationLongitude: Double
     let breed: String?
+    let sex: String?
+    let age: Int?
     let microchipNumber: String?
-    let contactEmail: String?
-    let contactPhone: String
-    let reward: Double?
+    let email: String?
+    let phone: String
+    let reward: String?
     let description: String
     let createdAt: String
     let updatedAt: String
@@ -312,10 +317,10 @@ extension Animal {
         self.status = status
         self.photoUrl = dto.photoUrl
         self.lastSeenDate = lastSeen
-        self.coordinate = Coordinate(latitude: dto.latitude, longitude: dto.longitude)
+        self.coordinate = Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude)
         self.breed = dto.breed
         self.description = dto.description
-        self.contactPhone = dto.contactPhone
+        self.contactPhone = dto.phone
     }
 }
 
@@ -343,10 +348,36 @@ extension PetDetails {
             print("Warning: Invalid createdAt '\(dto.createdAt)' for announcement \(dto.id)")
             return nil
         }
-        guard let updated = dateFormatter.date(from: dto.updatedAt) else {
-            print("Warning: Invalid updatedAt '\(dto.updatedAt)' for announcement \(dto.id)")
-            return nil
+        
+        // updatedAt can be in two formats:
+        // 1. ISO 8601: "2025-11-18T10:00:00.000Z"
+        // 2. Custom format: "2025-12-01 14:24:13"
+        let updated: Date
+        if let isoDate = dateFormatter.date(from: dto.updatedAt) {
+            updated = isoDate
+        } else {
+            // Fallback to custom format "YYYY-MM-DD HH:MM:SS"
+            let customFormatter = DateFormatter()
+            customFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            customFormatter.timeZone = TimeZone(identifier: "UTC")
+            guard let customDate = customFormatter.date(from: dto.updatedAt) else {
+                print("Warning: Invalid updatedAt '\(dto.updatedAt)' for announcement \(dto.id)")
+                return nil
+            }
+            updated = customDate
         }
+        
+        // Parse reward string (e.g., "500 PLN") to Double if needed
+        // For now, iOS will store reward as String since backend returns it as "500 PLN"
+        // If PetDetails model expects Double, we'd need to parse, but based on the current
+        // domain model definition, we'll keep it as optional Double for compatibility
+        let rewardValue: Double? = {
+            guard let rewardStr = dto.reward else { return nil }
+            // Try to extract numeric value from string like "500 PLN"
+            let components = rewardStr.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            let numericString = components.joined()
+            return Double(numericString)
+        }()
         
         self.id = dto.id
         self.name = dto.petName
@@ -354,12 +385,12 @@ extension PetDetails {
         self.status = status
         self.photoUrl = dto.photoUrl
         self.lastSeenDate = lastSeen
-        self.coordinate = Coordinate(latitude: dto.latitude, longitude: dto.longitude)
+        self.coordinate = Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude)
         self.breed = dto.breed
         self.microchipNumber = dto.microchipNumber
-        self.contactEmail = dto.contactEmail
-        self.contactPhone = dto.contactPhone
-        self.reward = dto.reward
+        self.contactEmail = dto.email
+        self.contactPhone = dto.phone
+        self.reward = rewardValue
         self.description = dto.description
         self.createdAt = created
         self.updatedAt = updated
