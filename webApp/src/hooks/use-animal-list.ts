@@ -8,9 +8,6 @@ interface UseAnimalListResult {
     error: string | null;
     isEmpty: boolean;
     loadAnimals: () => Promise<void>;
-    selectAnimal: (id: string) => void;
-    reportMissing: () => void;
-    reportFound: () => void;
 }
 
 export function useAnimalList(): UseAnimalListResult {
@@ -34,18 +31,6 @@ export function useAnimalList(): UseAnimalListResult {
         }
     };
     
-    const selectAnimal = (id: string) => {
-        console.log('Navigate to animal details:', id);
-    };
-    
-    const reportMissing = () => {
-        console.log('Navigate to report missing form');
-    };
-    
-    const reportFound = () => {
-        console.log('Navigate to report found form');
-    };
-    
     useEffect(() => {
         loadAnimals();
     }, []);
@@ -56,9 +41,6 @@ export function useAnimalList(): UseAnimalListResult {
         error,
         isEmpty,
         loadAnimals,
-        selectAnimal,
-        reportMissing,
-        reportFound
     };
 }
 
