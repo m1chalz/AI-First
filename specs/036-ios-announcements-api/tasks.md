@@ -142,8 +142,8 @@
 ### Implementation for User Story 2
 
 **iOS Implementation**:
-- [ ] T050 [P] [US2] Create private PetDetailsDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields, reward as String) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T051 [P] [US2] Create failable PetDetails initializer `init?(from: PetDetailsDTO)` with enum validation (lowercase conversion), date parsing with fallback (lastSeenDate ISO 8601, createdAt ISO 8601, updatedAt custom "YYYY-MM-DD HH:MM:SS"), reward string parsing ("500 PLN" → 500.0), and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [ ] T050 [P] [US2] Create private PetDetailsDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields, reward as Double?) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [ ] T051 [P] [US2] Create failable PetDetails initializer `init?(from: PetDetailsDTO)` with enum validation (lowercase conversion), date parsing with fallback (lastSeenDate ISO 8601, createdAt ISO 8601, updatedAt custom "YYYY-MM-DD HH:MM:SS"), and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
 - [ ] T052 [US2] Implement getAnimalDetails method with URLSession, path parameter, JSON decoding, error handling (404→notFound, 500→httpError) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
 - [ ] T053 [US2] Add invalidData error handling for failed DTO→Domain conversion in getAnimalDetails in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
 - [ ] T054 [P] [US2] Add SwiftDoc documentation to getAnimalDetails method in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
@@ -205,12 +205,9 @@
 - [ ] T075 [P] Code review: Verify all SwiftDoc comments are concise and high-level (1-3 sentences)
 - [ ] T076 [P] Code review: Verify error messages are user-friendly (no technical details exposed)
 - [ ] T077 [P] Code review: Verify print statements used for logging (no analytics tracking)
-- [ ] T078 [P] Performance test: Verify Animal List loads within 2 seconds under normal network conditions
-- [ ] T079 [P] Performance test: Verify Pet Details loads within 1.5 seconds under normal network conditions
-- [ ] T080 [P] Performance test: Test with Network Link Conditioner (Very Bad Network) to verify timeout handling
-- [ ] T081 [P] Verify quickstart.md instructions are accurate by following step-by-step
-- [ ] T082 Update IMPLEMENTATION-COMPLETE document in `/specs/036-ios-announcements-api/` with completion summary
-- [ ] T083 Final manual testing: Run through all acceptance scenarios from spec.md
+- [ ] T078 [P] Verify quickstart.md instructions are accurate by following step-by-step
+- [ ] T079 Update IMPLEMENTATION-COMPLETE document in `/specs/036-ios-announcements-api/` with completion summary
+- [ ] T080 Final manual testing: Run through all acceptance scenarios from spec.md
 
 ---
 
@@ -380,21 +377,21 @@ With 3 developers:
 
 ## Summary
 
-**Total Tasks**: 83 tasks across 6 phases  
+**Total Tasks**: 80 tasks across 6 phases  
 **MVP Tasks**: T001-T036 (36 tasks for User Story 1 only)  
 **Test Tasks**: 44 tasks (unit tests + E2E tests, including updatedAt format test)  
 **Implementation Tasks**: 31 tasks (code + configuration)  
-**Verification Tasks**: 8 tasks (coverage, manual testing, polish)
+**Verification Tasks**: 5 tasks (coverage, manual testing, polish)
 
 **Task Count by User Story**:
 - User Story 1 (P1): 29 tasks (tests + implementation + verification) - MVP
 - User Story 2 (P2): 24 tasks (tests + implementation + verification, including updatedAt format handling)
 - User Story 3 (P3): 11 tasks (tests + implementation + verification)
 - Setup + Foundational: 7 tasks
-- Polish: 12 tasks
+- Polish: 9 tasks
 
 **Parallel Opportunities**: 
-- 53 tasks marked [P] can run in parallel with other [P] tasks in same phase
+- 50 tasks marked [P] can run in parallel with other [P] tasks in same phase
 - User Stories 1 and 2 can be developed in parallel after Foundational phase
 - All unit tests within a story can run in parallel
 - All E2E tests can run in parallel
@@ -409,6 +406,6 @@ With 3 developers:
 - MVP (US1): 4-6 hours
 - US2: 3-4 hours
 - US3: 2-3 hours
-- Polish: 1-2 hours
-- **Total**: 10-15 hours for complete feature
+- Polish: 1 hour
+- **Total**: 10-14 hours for complete feature
 

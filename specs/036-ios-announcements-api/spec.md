@@ -123,11 +123,9 @@ Users who just submitted a new pet announcement through the report flow should s
 
 ### Measurable Outcomes
 
-- **SC-001**: Users see real pet announcements from the backend database within 2 seconds of opening the Animal List screen (under normal network conditions)
-- **SC-002**: Users can view complete details of any pet by tapping its card, with data loaded within 1.5 seconds
-- **SC-003**: 100% of required fields from backend API are correctly displayed in both list and detail views
-- **SC-004**: Users receive clear, actionable error messages when backend is unavailable or data cannot be loaded
-- **SC-005**: The app remains responsive and does not freeze or crash when fetching data from the backend
-- **SC-006**: Location-aware filtering works correctly - users with location enabled see nearby announcements, users without location see all announcements
-- **SC-007**: Users who submit new announcements see their submissions appear in the list when they return to the Animal List screen
+- **SC-001**: 100% of required fields from backend API are correctly displayed in both list and detail views
+- **SC-002**: Users receive clear, actionable error messages when backend is unavailable or data cannot be loaded
+- **SC-003**: The app remains responsive and does not freeze or crash when fetching data from the backend
+- **SC-004**: Location-aware filtering works correctly - users with location enabled see nearby announcements, users without location see all announcements
+- **SC-005**: Users who submit new announcements see their submissions appear in the list when they return to the Animal List screen
 
