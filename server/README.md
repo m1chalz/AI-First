@@ -18,9 +18,17 @@ PORT | Port on which the server is exposed | 3000
 
 ### GET `/api/v1/announcements`
 
-Retrieves all pet announcements.
+Retrieves all pet announcements. Optionally filter by location using geographic coordinates and radius.
 
-**Request:** No request body required
+**Query Parameters (all optional):**
+- `lat` (number): Latitude coordinate (-90 to 90). Must be provided with `lng`.
+- `lng` (number): Longitude coordinate (-180 to 180). Must be provided with `lat`.
+- `range` (integer): Search radius in kilometers (positive integer). Defaults to 5km if `lat`/`lng` provided without `range`. Ignored if `lat`/`lng` not provided.
+
+**Examples:**
+- `GET /api/v1/announcements` - Returns all announcements
+- `GET /api/v1/announcements?lat=50.0614&lng=19.9383` - Returns announcements within 5km (default) of coordinates
+- `GET /api/v1/announcements?lat=50.0614&lng=19.9383&range=10` - Returns announcements within 10km of coordinates
 
 **Response (200 OK):**
 ```json
@@ -50,9 +58,28 @@ Retrieves all pet announcements.
 }
 ```
 
-**Note:** Returns empty array `{"data": []}` if no announcements exist.
+**Note:** Returns empty array `{"data": []}` if no announcements exist or no announcements match the location filter.
 
 **Error Responses:**
+
+- **400 Bad Request**: Invalid location parameters
+  ```json
+  {
+    "error": {
+      "code": "INVALID_PARAMETER",
+      "message": "Parameter 'lng' is required when 'lat' is provided",
+      "field": "lng"
+    }
+  }
+  ```
+  
+  **Common validation errors:**
+  - `lat` or `lng` must be valid numbers
+  - `lat` must be between -90 and 90
+  - `lng` must be between -180 and 180
+  - Both `lat` and `lng` must be provided together (coordinate pair)
+  - `range` must be a positive integer
+  - `range` must be greater than zero
 
 - **500 Internal Server Error**: Server error
   ```json
