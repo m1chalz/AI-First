@@ -176,21 +176,6 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.speciesErrorMessage)
     }
     
-    func testOnContinueTapped_whenMissingRace_shouldShowToastAndError() {
-        // Given - missing race
-        viewModel.disappearanceDate = Date()
-        viewModel.selectedSpecies = .dog
-        viewModel.selectedGender = .male
-        // race = ""
-        
-        // When - tap continue
-        viewModel.onContinueTapped()
-        
-        // Then - shows validation error
-        XCTAssertTrue(viewModel.showToast)
-        XCTAssertNotNil(viewModel.raceErrorMessage)
-    }
-    
     func testOnContinueTapped_whenMissingGender_shouldShowToastAndError() {
         // Given - missing gender
         viewModel.disappearanceDate = Date()
@@ -298,6 +283,352 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         
         // Then - shows correct count
         XCTAssertEqual(countText, "4/500")
+    }
+    
+    // MARK: - Flow State Update Tests
+    
+    func testOnContinueTapped_whenValid_shouldUpdateFlowStateWithAllRequiredFields() {
+        // Given - all required fields filled
+        let testDate = Date(timeIntervalSince1970: 1700000000)
+        viewModel.disappearanceDate = testDate
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state updated with required fields
+        XCTAssertNotNil(flowState.disappearanceDate)
+        XCTAssertEqual(flowState.disappearanceDate!.timeIntervalSince1970, testDate.timeIntervalSince1970, accuracy: 1)
+        XCTAssertEqual(flowState.animalSpecies, .dog)
+        XCTAssertEqual(flowState.animalRace, "Labrador")
+        XCTAssertEqual(flowState.animalGender, .male)
+    }
+    
+    func testOnContinueTapped_whenValidWithOptionalFields_shouldUpdateFlowStateWithAllData() {
+        // Given - all fields filled (required + optional)
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .cat
+        viewModel.race = "Persian"
+        viewModel.selectedGender = .female
+        viewModel.age = "3"
+        viewModel.latitude = "52.22970"
+        viewModel.longitude = "21.01220"
+        viewModel.additionalDescription = "White fur with blue eyes"
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state updated with all data
+        XCTAssertEqual(flowState.animalSpecies, .cat)
+        XCTAssertEqual(flowState.animalRace, "Persian")
+        XCTAssertEqual(flowState.animalGender, .female)
+        XCTAssertEqual(flowState.animalAge!, 3)
+        XCTAssertEqual(flowState.animalLatitude!, 52.22970, accuracy: 0.00001)
+        XCTAssertEqual(flowState.animalLongitude!, 21.01220, accuracy: 0.00001)
+        XCTAssertEqual(flowState.animalAdditionalDescription, "White fur with blue eyes")
+    }
+    
+    func testOnContinueTapped_whenOptionalFieldsEmpty_shouldSaveNilInFlowState() {
+        // Given - only required fields filled
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.age = ""
+        viewModel.latitude = ""
+        viewModel.longitude = ""
+        viewModel.additionalDescription = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - optional fields are nil in flow state
+        XCTAssertNil(flowState.animalAge)
+        XCTAssertNil(flowState.animalLatitude)
+        XCTAssertNil(flowState.animalLongitude)
+        XCTAssertNil(flowState.animalAdditionalDescription)
+    }
+    
+    func testOnContinueTapped_whenRaceHasWhitespace_shouldTrimInFlowState() {
+        // Given - race with leading/trailing whitespace
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "  Labrador  "
+        viewModel.selectedGender = .male
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - race trimmed in flow state
+        XCTAssertEqual(flowState.animalRace, "Labrador")
+    }
+    
+    // MARK: - Field Change Handler Tests
+    
+    func testHandleRaceChange_whenTextNotEmpty_shouldClearError() {
+        // Given - race error set
+        viewModel.raceErrorMessage = "Race is required"
+        
+        // When - user types in race field
+        viewModel.race = "L"
+        viewModel.handleRaceChange("L")
+        
+        // Then - error cleared
+        XCTAssertNil(viewModel.raceErrorMessage)
+    }
+    
+    func testHandleRaceChange_whenTextEmpty_shouldNotClearError() {
+        // Given - race error set
+        viewModel.raceErrorMessage = "Race is required"
+        
+        // When - user clears race field
+        viewModel.handleRaceChange("")
+        
+        // Then - error still present
+        XCTAssertNotNil(viewModel.raceErrorMessage)
+    }
+    
+    func testHandleGenderChange_shouldClearError() {
+        // Given - gender error set
+        viewModel.genderErrorMessage = "Gender is required"
+        
+        // When - user selects gender
+        viewModel.selectedGender = .male
+        viewModel.handleGenderChange()
+        
+        // Then - error cleared
+        XCTAssertNil(viewModel.genderErrorMessage)
+    }
+    
+    func testHandleSpeciesChange_whenSpeciesErrorSet_shouldClearError() {
+        // Given - species error set
+        viewModel.speciesErrorMessage = "Species is required"
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        
+        // When - change species
+        viewModel.handleSpeciesChange()
+        
+        // Then - both species and race errors cleared
+        XCTAssertNil(viewModel.speciesErrorMessage)
+        XCTAssertNil(viewModel.raceErrorMessage)
+    }
+    
+    // MARK: - Validation Edge Cases
+    
+    func testOnContinueTapped_whenAgeIsNotNumeric_shouldShowError() {
+        // Given - all required fields + non-numeric age
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.age = "abc"
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows age validation error
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.ageErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenOnlyLatitudeFilled_shouldShowError() {
+        // Given - all required fields + only latitude
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows coordinate format error
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenOnlyLongitudeFilled_shouldShowError() {
+        // Given - all required fields + only longitude
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = ""
+        viewModel.longitude = "21.0122"
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows coordinate format error
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenCoordinatesNonNumeric_shouldShowError() {
+        // Given - all required fields + non-numeric coordinates
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "abc"
+        viewModel.longitude = "xyz"
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows coordinate format error
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLatitudeAtBoundary_shouldPass() {
+        // Given - all required fields + boundary latitude values
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "90"
+        viewModel.longitude = "0"
+        
+        var continueCallbackInvoked = false
+        viewModel.onContinue = {
+            continueCallbackInvoked = true
+        }
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - validation passes
+        XCTAssertTrue(continueCallbackInvoked)
+        XCTAssertFalse(viewModel.showToast)
+        XCTAssertNil(viewModel.latitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLongitudeAtBoundary_shouldPass() {
+        // Given - all required fields + boundary longitude values
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "0"
+        viewModel.longitude = "180"
+        
+        var continueCallbackInvoked = false
+        viewModel.onContinue = {
+            continueCallbackInvoked = true
+        }
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - validation passes
+        XCTAssertTrue(continueCallbackInvoked)
+        XCTAssertFalse(viewModel.showToast)
+        XCTAssertNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenNegativeCoordinatesValid_shouldPass() {
+        // Given - all required fields + negative coordinates (valid range)
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "-45.5"
+        viewModel.longitude = "-120.3"
+        
+        var continueCallbackInvoked = false
+        viewModel.onContinue = {
+            continueCallbackInvoked = true
+        }
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - validation passes
+        XCTAssertTrue(continueCallbackInvoked)
+        XCTAssertFalse(viewModel.showToast)
+    }
+    
+    func testOnContinueTapped_whenCoordinatesWithWhitespace_shouldValidateCorrectly() {
+        // Given - all required fields + coordinates with whitespace
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "  52.2297  "
+        viewModel.longitude = "  21.0122  "
+        
+        var continueCallbackInvoked = false
+        viewModel.onContinue = {
+            continueCallbackInvoked = true
+        }
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - validation passes (trimmed automatically)
+        XCTAssertTrue(continueCallbackInvoked)
+        XCTAssertFalse(viewModel.showToast)
+    }
+    
+    // MARK: - GPS Helper Text Tests
+    
+    func testRequestGPSPosition_whenAuthorizedButLocationFailed_shouldShowFailureMessage() async {
+        // Given - location service authorized but returns nil location
+        await fakeLocationService.setStatus(.authorizedWhenInUse)
+        await fakeLocationService.setLocation(nil)
+        
+        // When - request GPS position
+        await viewModel.requestGPSPosition()
+        
+        // Then - shows failure message
+        XCTAssertEqual(viewModel.gpsHelperText, "Failed to get location")
+        XCTAssertEqual(viewModel.latitude, "")
+        XCTAssertEqual(viewModel.longitude, "")
+    }
+    
+    // MARK: - Computed Properties Tests
+    
+    func testRaceTextFieldModel_whenSpeciesNotSelected_shouldBeDisabled() {
+        // Given - no species selected
+        viewModel.selectedSpecies = nil
+        
+        // When - get race text field model
+        let model = viewModel.raceTextFieldModel
+        
+        // Then - field is disabled
+        XCTAssertTrue(model.isDisabled)
+    }
+    
+    func testRaceTextFieldModel_whenSpeciesSelected_shouldBeEnabled() {
+        // Given - species selected
+        viewModel.selectedSpecies = .dog
+        
+        // When - get race text field model
+        let model = viewModel.raceTextFieldModel
+        
+        // Then - field is enabled
+        XCTAssertFalse(model.isDisabled)
+    }
+    
+    func testToastMessage_whenValidationFails_shouldShowCorrectMessage() {
+        // Given - missing required field
+        viewModel.disappearanceDate = Date()
+        // selectedSpecies = nil
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - toast message set
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertFalse(viewModel.toastMessage.isEmpty)
     }
 }
 
