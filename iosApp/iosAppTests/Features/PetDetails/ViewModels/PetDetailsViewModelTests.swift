@@ -95,7 +95,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertFalse(message.isEmpty)
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
         XCTAssertEqual(repository.getPetDetailsCallCount, 1)
     }
     
@@ -112,7 +113,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertTrue(message.contains("not found") || message.contains("Not found"))
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
     }
     
     func testRetry_whenInErrorState_shouldTransitionToLoading() async {
@@ -687,22 +689,6 @@ final class PetDetailsViewModelTests: XCTestCase {
     /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
     
     /// T046: Test PetDetailsViewModel with network error should set appropriate error state
-    func testLoadPetDetails_whenNetworkError_shouldSetErrorState() async {
-        // Given - ViewModel with repository that fails
-        let (sut, repository) = makeSUT(petId: "test-id")
-        repository.shouldFail = true
-        
-        // When - loadPetDetails is called
-        await sut.loadPetDetails()
-        
-        // Then - error state should be set
-        guard case .error(let message) = sut.state else {
-            XCTFail("Expected error state, got \(sut.state)")
-            return
-        }
-        XCTAssertFalse(message.isEmpty, "Error message should not be empty")
-        XCTAssertEqual(repository.getPetDetailsCallCount, 1)
-    }
     
 }
 
