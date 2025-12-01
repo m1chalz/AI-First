@@ -1,4 +1,3 @@
-@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
 
 package com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails
 
@@ -40,7 +39,9 @@ fun ContactDetailsScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is ReportMissingEffect.NavigateToStep -> {
-                    navController.navigate(effect.step.toRoute())
+                    navController.navigate(effect.step.toRoute()) {
+                        launchSingleTop = true
+                    }
                 }
                 is ReportMissingEffect.NavigateBack -> {
                     navController.popBackStack()
