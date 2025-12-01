@@ -32,10 +32,11 @@ show_usage() {
   echo "Options:"
   echo "  --backend     Update backend service only"
   echo "  --frontend    Update frontend service only"
-  echo "  --all         Update both services"
+  echo "  --all         Update both services (default)"
   echo "  --help        Show this help message"
   echo ""
   echo "Examples:"
+  echo "  $0              # Updates all services"
   echo "  $0 --backend"
   echo "  $0 --frontend"
   echo "  $0 --all"
@@ -148,10 +149,8 @@ update_all() {
 
 main() {
   if [ $# -eq 0 ]; then
-    log_error "No option specified"
-    echo ""
-    show_usage
-    exit 1
+    update_all
+    return
   fi
   
   case "$1" in
