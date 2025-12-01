@@ -167,5 +167,5 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('announcement').del();
   await knex('announcement').insert(ANNOUNCEMENTS)
     .onConflict('id')
-    .ignore();
+    .merge();
 }
