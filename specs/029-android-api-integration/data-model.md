@@ -239,3 +239,4 @@ fun AnnouncementDto.toDomain(): Animal = Animal(
 3. **Security**: `managementPassword` is excluded from DTO definition entirely (not just ignored)
 4. **Unknown enums**: Default to safe values (MISSING, UNKNOWN, OTHER) rather than throwing
 
+

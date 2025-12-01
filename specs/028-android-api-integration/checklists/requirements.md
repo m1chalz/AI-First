@@ -36,3 +36,4 @@
 - Existing architecture (MVI, Repository pattern) is preserved
 - API contract from server README.md provides clear integration point
 
+

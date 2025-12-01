@@ -81,3 +81,4 @@ All error responses follow this format:
 
 **Note**: Per spec clarification, all HTTP errors are treated uniformly with a generic error message.
 
+

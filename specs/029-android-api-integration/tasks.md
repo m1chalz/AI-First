@@ -73,15 +73,15 @@
 
 ### Tests for User Story 1 (MANDATORY) ✅
 
-- [ ] T012 [P] [US1] Create `AnimalRepositoryImplTest.kt` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/AnimalRepositoryImplTest.kt`
-- [ ] T013 [US1] Add test `should return list of animals when API returns success` using Ktor MockEngine
-- [ ] T014 [US1] Add test `should return empty list when API returns empty data array`
-- [ ] T015 [US1] Add test `should throw exception when API returns error` (generic error handling per clarification)
+- [X] T012 [P] [US1] Create `AnimalRepositoryImplTest.kt` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/data/AnimalRepositoryImplTest.kt`
+- [X] T013 [US1] Add test `should return list of animals when API returns success` using Ktor MockEngine
+- [X] T014 [US1] Add test `should return empty list when API returns empty data array`
+- [X] T015 [US1] Add test `should throw exception when API returns error` (generic error handling per clarification)
 
 ### Implementation for User Story 1
 
-- [ ] T016 [US1] Add `getAnnouncements(): AnnouncementsResponseDto` suspend function to `AnnouncementApiClient.kt`
-- [ ] T017 [US1] Update `AnimalRepositoryImpl.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/AnimalRepositoryImpl.kt` - replace mock `getAnimals()` with API call using AnnouncementApiClient
+- [X] T016 [US1] Add `getAnnouncements(): AnnouncementsResponseDto` suspend function to `AnnouncementApiClient.kt`
+- [X] T017 [US1] Update `AnimalRepositoryImpl.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/data/AnimalRepositoryImpl.kt` - replace mock `getAnimals()` with API call using AnnouncementApiClient
 
 **Checkpoint**: Animal list displays real backend data - US1 independently testable
 
