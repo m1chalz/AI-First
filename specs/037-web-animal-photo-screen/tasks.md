@@ -35,9 +35,9 @@
 
 **Purpose**: Update flow state model and add photo-related utilities
 
-- [ ] T001 Update `ReportMissingPetFlowState` interface in `/webApp/src/models/ReportMissingPetFlow.ts` to add `photo: PhotoAttachment | null` field and create `PhotoAttachment` interface (file, filename, size, mimeType, previewUrl)
-- [ ] T002 Update `initialFlowState` in `/webApp/src/models/ReportMissingPetFlow.ts` to include `photo: null`
-- [ ] T003 Add `FlowStep.Photo` enum value in `/webApp/src/models/ReportMissingPetFlow.ts`
+- [X] T001 Update `ReportMissingPetFlowState` interface in `/webApp/src/models/ReportMissingPetFlow.ts` to add `photo: PhotoAttachment | null` field and create `PhotoAttachment` interface (file, filename, size, mimeType, previewUrl)
+- [X] T002 Update `initialFlowState` in `/webApp/src/models/ReportMissingPetFlow.ts` to include `photo: null`
+- [X] T003 Add `FlowStep.Photo` enum value in `/webApp/src/models/ReportMissingPetFlow.ts`
 
 ---
 
