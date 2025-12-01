@@ -6,6 +6,9 @@
 **Platform**: Android  
 **Input**: User description: "Stwórz flow dodawania zaginiętego zwierzęcia. W scope wchodzi: podłączenie nawigacji pod przycisk report missing animal, stworzenie ekranów tylko z przyciskiem do przechodzenia na następny ekran, pierwszy ekran: dodanie nr chipu, drugi ekran: dodanie zdjęcia, trzeci ekran: dodanie opisu, czwarty ekran: dane kontaktowe, piąty ekran: podsumowanie, w scope jest tylko UI, platforma Android, indykator postępu też jest w scope"
 
+> **Implementation Scope (Milestone 018)**  
+> This feature delivers navigation scaffolding with placeholder UI components only. Actual form widgets, validation, and submission logic will be implemented in a follow-up feature (019) once the scaffolding is validated.
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Complete Missing Pet Report (Priority: P1)
@@ -73,7 +76,7 @@ A user realizes they made a mistake or want to change information on a previous 
 - **FR-010**: System MUST support backward navigation from any screen to the previous screen (including from summary back to step 4, and from step 1 back to animal list screen)
 - **FR-011**: System MUST connect navigation from "report missing animal" button on animal list screen to the first screen of the flow (chip number input, step 1 of 4)
 - **FR-012**: Progress indicator MUST update automatically as user navigates between the 4 data collection screens
-- **FR-013**: Each screen MUST display appropriate input controls for its designated purpose (text field for chip number, image picker for photo, text area for description, contact form fields for contact details, read-only summary for final screen)
+- **FR-013**: Each screen MUST display placeholder components that clearly represent the intended input controls (e.g., labeled text placeholders, disabled text fields, photo placeholder card, contact info placeholders) while deferring fully functional inputs to Feature 019
 - **FR-014**: System MUST handle Android configuration changes (device rotation) gracefully without losing user input data
 
 ### Key Entities
@@ -87,17 +90,18 @@ A user realizes they made a mistake or want to change information on a previous 
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can navigate through all 5 screens of the missing pet report flow (4 data collection screens + summary) without errors
+- **SC-001**: Users can navigate through all 5 placeholder screens of the missing pet report flow (4 data collection screens + summary) without errors
 - **SC-002**: Progress indicator accurately displays current step out of 4 total steps (1/4, 2/4, 3/4, 4/4) on data collection screens only, and is not displayed on summary screen
-- **SC-003**: Users can complete the entire flow navigation (from tapping "report missing animal" to reaching summary screen) in under 1 minute
-- **SC-004**: All screen transitions respond within 300ms of user interaction
-- **SC-005**: UI renders correctly on all supported Android device sizes without layout issues
+- **SC-003**: The "report missing animal" CTA on the animal list screen consistently launches the flow and lands on Step 1 without crashes
+- **SC-004**: Navigation actions (Next/Back/Close) always lead to the expected destination in the flow without skipping or repeating steps
+- **SC-005**: Placeholder UI renders correctly on all supported Android device sizes without layout issues
 - **SC-006**: Users can successfully navigate backwards to any previous screen without data loss, including from summary screen back to step 4
-- **SC-007**: User input data persists through device rotation on all screens
+- **SC-007**: Placeholder user input state persists through device rotation on all screens
 
 ## Assumptions
 
-- This feature implements UI flow only - no data submission or persistence functionality
+- This feature implements placeholder UI flow only - no production-ready input controls, data submission, or persistence functionality
+- Fully interactive inputs and validation will be tackled in Feature 019 once scaffolding is validated
 - Backend API integration will be implemented in a separate feature
 - User authentication/authorization is handled separately and assumed to be complete before accessing this flow
 - Standard Android navigation patterns (Navigation Component, back button handling) are acceptable
@@ -127,6 +131,7 @@ A user realizes they made a mistake or want to change information on a previous 
 - Backend API integration
 - Data persistence/storage
 - Form submission functionality
+- Production-ready input controls (text entry, photo capture, contact fields) – handled by Feature 019
 - iOS or Web platform implementations
 - Error handling for network/API failures
 - User authentication

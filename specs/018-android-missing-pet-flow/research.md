@@ -130,27 +130,38 @@ fun StepProgressIndicator(
 
 ### 5. Back Navigation Handling
 
-**Decision**: System back handled by Navigation Component; first screen exits to animal list.
+**Decision**: System back handled by Navigation Component; first screen exits to animal list automatically.
 
 **Rationale**:
-- Navigation Component handles back stack automatically
-- From screens 2-5: `navController.popBackStack()` returns to previous screen
-- From screen 1: `navController.popBackStack()` exits flow back to AnimalList
+- Navigation Component handles back stack automatically for nested nav graphs
+- From screens 2-5: `navController.popBackStack()` returns to previous screen in nested graph
+- From screen 1: `navController.popBackStack()` pops entire nested graph, returning to AnimalList
+- No step-aware logic needed in ViewModel - single `NavigateBack` effect works for all screens
 - State cleared when ViewModel is destroyed (flow exit)
+- Aligns with existing pattern (PetDetailsScreen uses same approach, no BackHandler)
 
 **Implementation**:
 ```kotlin
-// In each Screen composable
-BackHandler {
-    viewModel.dispatchIntent(ReportMissingIntent.NavigateBack)
+// In StepHeader composable - back button callback
+StepHeader(
+    onBackClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateBack) }
+)
+
+// In ViewModel - simple effect emission (no step checking)
+private fun handleNavigateBack() {
+    viewModelScope.launch {
+        _effects.emit(ReportMissingEffect.NavigateBack)
+    }
 }
 
-// In ViewModel effect handling
+// In NavGraph - effect handling
 when (effect) {
     is ReportMissingEffect.NavigateBack -> navController.popBackStack()
-    is ReportMissingEffect.NavigateToNext -> navController.navigate(nextRoute)
+    is ReportMissingEffect.NavigateToStep -> navController.navigate(effect.step.route)
 }
 ```
+
+**Note**: No `BackHandler` composable needed - system back gesture is handled correctly by Navigation Component's automatic back stack management for nested graphs.
 
 ### 6. Test Tag Naming Convention
 

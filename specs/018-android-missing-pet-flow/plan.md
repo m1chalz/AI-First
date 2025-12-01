@@ -7,9 +7,9 @@
 
 ## Summary
 
-Implement a 5-screen wizard flow for reporting missing pets on Android using Jetpack Compose with MVI architecture. The flow consists of 4 data collection screens (chip number, photo, description, contact details) with a progress indicator (1/4 through 4/4) and a final summary screen without progress indicator. This is a UI-only feature with no backend integration - screens contain basic input placeholders and "Next" navigation buttons.
+Implement a 5-screen wizard flow for reporting missing pets on Android using Jetpack Compose with MVI architecture. The flow consists of 4 data collection screens (chip number, photo, description, contact details) with a progress indicator (1/4 through 4/4) and a final summary screen without progress indicator. This is a UI-only feature with no backend integration - screens contain basic input placeholders and "Next" navigation buttons. The existing Animal List screen gains a prominent "Report missing animal" CTA wired into the new navigation flow so users can launch the wizard end-to-end. Responsiveness is validated via a Compose preview matrix (Compact/Medium/Expanded width buckets) to satisfy SC-005, while navigation stability is validated through instrumentation/unit tests that assert flows never skip steps and CTA always reaches step 1 (SC-003/SC-004).
 
-**Technical approach**: Use Jetpack Navigation Component with a nested nav graph for the flow. A shared ViewModel (`ReportMissingPetViewModel`) scoped to the nav graph manages flow state across all screens, following MVI architecture with `StateFlow<UiState>`, sealed `UserIntent`, and `SharedFlow<UiEffect>` for navigation events.
+**Technical approach**: Use Jetpack Navigation Component with a nested nav graph for the flow. A shared ViewModel (`ReportMissingViewModel`) scoped to the nav graph manages flow state across all screens, following MVI architecture with `StateFlow<UiState>`, sealed `UserIntent`, and `SharedFlow<UiEffect>` for navigation events.
 
 ## Figma Designs
 
@@ -32,7 +32,7 @@ Implement a 5-screen wizard flow for reporting missing pets on Android using Jet
 **Target Platform**: Android (minSdk consistent with project, likely API 24+)
 **Project Type**: Mobile (Android platform)  
 **Performance Goals**: N/A (simple UI flow, no heavy processing)  
-**Constraints**: State must survive configuration changes (device rotation) via ViewModel  
+**Constraints**: State must survive configuration changes (device rotation) via ViewModel; placeholder UI must adapt to compact/medium/expanded width classes verified through multi-size previews  
 **Scale/Scope**: 5 screens, ~15 Compose files, 1 ViewModel, 1 nav graph addition
 
 ## Constitution Check
@@ -139,6 +139,10 @@ specs/018-android-missing-pet-flow/
 ```text
 composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 ├── features/
+│   ├── animallist/
+│   │   └── ui/
+│   │       ├── AnimalListContent.kt      # UPDATE: add CTA + effect dispatch
+│   │       └── AnimalListScreen.kt       # UPDATE: consume new effect → navigate
 │   └── reportmissing/                    # NEW: Missing pet report feature
 │       ├── presentation/
 │       │   ├── mvi/
@@ -167,7 +171,7 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │           │   └── ContactDetailsContent.kt
 │           └── summary/
 │               ├── SummaryScreen.kt
-│               └── SummaryContent.kt
+│               └── SummaryContent.kt      # ADD: multi-size previews for responsive QA
 ├── navigation/
 │   ├── NavRoute.kt                       # ADD: ReportMissing nested routes
 │   ├── NavGraph.kt                       # UPDATE: Add reportMissing navigation()
