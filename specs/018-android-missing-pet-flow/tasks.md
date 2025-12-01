@@ -51,22 +51,22 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 [P] Create `FlowStep` enum in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
-- [ ] T004 [P] Create `ReportMissingUiState` data class with computed properties (`showProgressIndicator`, `progressStepNumber`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
-- [ ] T005 [P] Create `ReportMissingIntent` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingIntent.kt`
-- [ ] T006 [P] Create `ReportMissingEffect` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingEffect.kt`
-- [ ] T007 Create `ReportMissingReducer` with pure state transition functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducer.kt`
-- [ ] T008 Create `ReportMissingViewModel` with StateFlow + SharedFlow in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModel.kt`
-- [ ] T009 Register `ReportMissingViewModel` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
-- [ ] T010 [P] Create `StepProgressIndicator` composable (circular progress with "X/4" text) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/components/StepProgressIndicator.kt`
-- [ ] T011 [P] Create `StepHeader` composable (back button + title + progress) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/components/StepHeader.kt`
-- [ ] T012 [P] Create `ReportMissingUiStatePreviewProvider` for Compose previews in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
+- [x] T003 [P] Create `FlowStep` enum in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
+- [x] T004 [P] Create `ReportMissingUiState` data class with computed properties (`showProgressIndicator`, `progressStepNumber`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
+- [x] T005 [P] Create `ReportMissingIntent` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingIntent.kt`
+- [x] T006 [P] Create `ReportMissingEffect` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingEffect.kt`
+- [x] T007 Create `ReportMissingReducer` with pure state transition functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducer.kt`
+- [x] T008 Create `ReportMissingViewModel` with StateFlow + SharedFlow in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModel.kt`
+- [x] T009 Register `ReportMissingViewModel` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
+- [x] T010 [P] Create `StepProgressIndicator` composable (circular progress with "X/4" text) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/components/StepProgressIndicator.kt`
+- [x] T011 [P] Create `StepHeader` composable (back button + title + progress) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/components/StepHeader.kt`
+- [x] T012 [P] Create `ReportMissingUiStatePreviewProvider` for Compose previews in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
 
 **Unit Tests** (MANDATORY - write FIRST, verify FAIL before implementation):
 
-- [ ] T013 [P] Unit test for `ReportMissingUiState` computed properties in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiStateTest.kt`
-- [ ] T014 [P] Unit test for `ReportMissingReducer` state transitions in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducerTest.kt`
-- [ ] T015 Unit test for `ReportMissingViewModel` intent dispatch and effects in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModelTest.kt`
+- [x] T013 [P] Unit test for `ReportMissingUiState` computed properties in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiStateTest.kt`
+- [x] T014 [P] Unit test for `ReportMissingReducer` state transitions in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducerTest.kt`
+- [x] T015 Unit test for `ReportMissingViewModel` intent dispatch and effects in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModelTest.kt`
 
 **Checkpoint**: Foundation ready - MVI infrastructure complete, reusable components ready, unit tests passing
 
