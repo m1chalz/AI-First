@@ -14,6 +14,7 @@
 - Q: How should the browser's back button be handled during the flow? → A: Treat browser back same as in-app back arrow (cancel flow, return to pet list, clear state)
 - Q: What should happen when a user directly accesses step 2/4 URL without starting from step 1/4? → A: Redirect to step 1 - always start flow from beginning
 - Q: Which storage mechanism for photo file within active flow session? → A: In-memory React state only (no localStorage/sessionStorage) - photo survives in-flow navigation but not browser refresh
+- Q: What file content validation is required beyond MIME type and file size? → A: Only MIME type and file size validation on client side - no additional content validation (e.g., magic number checking)
 
 ## Scope & Background
 
@@ -100,7 +101,6 @@ Web users who attempt to select unsupported formats or files exceeding 10MB rece
 - **FR-012**: All labels, helper copy, and error messages MUST use consistent typography and styling as defined in the Figma design and follow the existing web app localization patterns
 - **FR-013**: The screen MUST expose test identifiers following the `{screen}.{element}.{action}` convention (e.g., `animalPhoto.browse.click`, `animalPhoto.remove.click`, `animalPhoto.continue.click`, `animalPhoto.back.click`) using `data-testid` attributes for automated E2E tests
 - **FR-014**: The file preview (if implemented) MUST use `URL.createObjectURL()` for local file preview and properly revoke the object URL when the component unmounts or file changes to prevent memory leaks
-- **FR-015**: The component MUST be keyboard accessible with proper focus management and ARIA labels for screen reader users (e.g., "Upload animal photo, Browse button", "Remove photo", "Continue to next step", "Back to previous step")
 - **FR-016**: Screen layout MUST be responsive and adapt to different viewport sizes (mobile: 320px+, tablet: 768px+, desktop: 1024px+)
 - **FR-017**: Screen MUST display in a centered white card with border on desktop/tablet viewports (as shown in Figma design)
 - **FR-018**: Flow State MUST be managed via React state management (Context API, custom hooks, or state management library)
@@ -125,7 +125,6 @@ Web users who attempt to select unsupported formats or files exceeding 10MB rece
 - **SC-002**: 100% of flow sessions that include a selected photo still display the confirmation card after navigating forward to step 3/4 and back to step 2/4 within the same active flow session (without browser refresh)
 - **SC-003**: At least 90% of testers who encounter upload errors (wrong format, oversized file) can successfully recover and upload a valid file without manual support, as measured by task completion rates in usability testing
 - **SC-004**: The upload interaction (Browse or drag-and-drop to confirmation card) completes in under 2 seconds for files up to 10MB on standard broadband connections (10 Mbps+)
-- **SC-005**: 100% of keyboard-only testers can successfully navigate to the photo upload area, trigger the file picker, proceed to the next step, and cancel the flow using only keyboard controls
 - **SC-006**: Browser back button and refresh correctly cancel flow and clear state in 100% of test scenarios
 
 ## Assumptions
