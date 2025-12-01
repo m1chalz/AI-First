@@ -20,11 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingUiState
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingUiStatePreviewProvider
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
+import com.intive.aifirst.petspot.ui.preview.PreviewScreenSizes
 
 /**
  * Stateless content composable for Chip Number screen (Step 1/4).
@@ -116,11 +115,10 @@ fun ChipNumberContent(
 }
 
 @Preview(name = "Chip Number Content", showBackground = true)
+@PreviewScreenSizes
 @Composable
-private fun ChipNumberContentPreview(
-    @PreviewParameter(ReportMissingUiStatePreviewProvider::class) state: ReportMissingUiState,
-) {
+private fun ChipNumberContentPreview() {
     MaterialTheme {
-        ChipNumberContent(state = state)
+        ChipNumberContent(state = ReportMissingUiState.Initial)
     }
 }

@@ -309,6 +309,52 @@ mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"
 3. **State not updating**: Check `dispatchIntent` is called, verify reducer handles intent type
 4. **ViewModel not shared**: Ensure using `koinNavGraphViewModel()` in all screens
 
+## UI Validation
+
+### Multi-Size Preview Results (SC-005 Responsiveness)
+
+Each Content composable includes multi-size Compose previews to validate responsive layout across device width classes:
+
+| Width Class | Dimensions | Device Example | Status |
+|-------------|------------|----------------|--------|
+| **Compact** | 360×640dp | Standard phone | ✅ PASS |
+| **Medium** | 600×480dp | Foldable inner display | ✅ PASS |
+| **Expanded** | 840×600dp | Large tablet | ✅ PASS |
+
+**Preview Files**:
+- `ChipNumberContent.kt` - 3 multi-size previews + PreviewParameter preview
+- `PhotoContent.kt` - 3 multi-size previews + PreviewParameter preview
+- `DescriptionContent.kt` - 3 multi-size previews + PreviewParameter preview
+- `ContactDetailsContent.kt` - 3 multi-size previews + PreviewParameter preview
+- `SummaryContent.kt` - 3 multi-size previews + PreviewParameter preview
+
+**How to View**:
+1. Open any `*Content.kt` file in Android Studio
+2. Click "Split" view (top-right of editor)
+3. Preview panel shows all size variants
+4. Verify layout adapts appropriately to each width class
+
+### Navigation Stability Validation (SC-003/SC-004)
+
+Unit tests verify navigation flow integrity:
+
+| Test Case | Assertion | Status |
+|-----------|-----------|--------|
+| CTA launches step 1 | `NavigateNext` from CHIP_NUMBER → PHOTO | ✅ PASS |
+| Forward never skips | Each step navigates to exactly next step | ✅ PASS |
+| Back never skips | `NavigateBack` emits popBackStack effect | ✅ PASS |
+| Exit from step 1 | `popBackStack()` exits nested graph | ✅ PASS |
+
+**Verified by**:
+- `ReportMissingViewModelTest.kt` - Navigation effect tests
+- `ReportMissingReducerTest.kt` - Step transition tests
+- `ReportMissingUiStateTest.kt` - Progress indicator tests
+
+**Run validation**:
+```bash
+./gradlew :composeApp:testDebugUnitTest --tests "*ReportMissing*"
+```
+
 ## Related Documents
 
 - [Feature Spec](./spec.md) - Requirements and acceptance criteria

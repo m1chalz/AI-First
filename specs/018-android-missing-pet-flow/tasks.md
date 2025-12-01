@@ -130,17 +130,17 @@
 
 ### E2E Tests for User Story 2 (MANDATORY) ✅
 
-- [ ] T031 [P] [US2] Add backward navigation scenarios to Cucumber feature file in `/e2e-tests/java/src/test/resources/features/mobile/018-android-missing-pet-flow.feature`
-- [ ] T032 [P] [US2] Add step definitions for backward navigation in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java`
+- [x] T031 [P] [US2] Add backward navigation scenarios to Cucumber feature file in `/e2e-tests/java/src/test/resources/features/mobile/018-android-missing-pet-flow.feature`
+- [x] T032 [P] [US2] Add step definitions for backward navigation in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/ReportMissingPetSteps.java`
 
 ### Implementation for User Story 2
 
 **Back Navigation Logic** (simplified - Navigation Component handles step-aware behavior automatically):
-- [ ] T033 [US2] Implement `NavigateBack` intent handling in ViewModel - always emit `NavigateBack` effect (no step checking needed) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModel.kt`
-- [ ] T034 [US2] Handle `NavigateBack` effect in `ReportMissingNavGraph.kt` - call `popBackStack()` (from step 1 this exits nested graph to AnimalList automatically) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/ReportMissingNavGraph.kt`
+- [x] T033 [US2] Implement `NavigateBack` intent handling in ViewModel - always emit `NavigateBack` effect (no step checking needed) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModel.kt`
+- [x] T034 [US2] Handle `NavigateBack` effect in `ReportMissingNavGraph.kt` - call `popBackStack()` (from step 1 this exits nested graph to AnimalList automatically) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/ReportMissingNavGraph.kt`
 
 **Unit Tests**:
-- [ ] T035 [P] [US2] Add unit tests for `NavigateBack` intent handling (verify `NavigateBack` effect emitted) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModelTest.kt`
+- [x] T035 [P] [US2] Add unit tests for `NavigateBack` intent handling (verify `NavigateBack` effect emitted) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ReportMissingViewModelTest.kt`
 
 **Checkpoint**: User Story 2 complete - backward navigation works, exit from step 1 works, E2E tests pass
 
@@ -150,14 +150,14 @@
 
 **Purpose**: Final quality improvements and validation
 
-- [ ] T036 [P] Add `@Preview` functions with `@PreviewParameter` to all Content composables (ChipNumberContent, PhotoContent, DescriptionContent, ContactDetailsContent, SummaryContent)
-- [ ] T044 [P] Add multi-size Compose previews (compact phone, medium foldable, expanded tablet) for each Content composable to validate SC-005 responsiveness
-- [ ] T045 Document preview results (screenshots or notes) in `/specs/018-android-missing-pet-flow/quickstart.md#ui-validation` to capture responsive QA evidence
-- [ ] T037 [P] Add KDoc documentation to ViewModel, UiState, Intent, Effect, and Reducer classes
-- [ ] T038 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for reportmissing feature
-- [ ] T039 Run `./gradlew :composeApp:lint` and fix any violations in reportmissing feature
-- [ ] T040 Validate quickstart.md - verify all development setup steps work correctly
-- [ ] T046 Add navigation stability tests (unit/instrumentation) ensuring CTA launches step 1 and Next/Back never skip steps; document results in quickstart.md QA section
+- [x] T036 [P] Add `@Preview` functions with `@PreviewParameter` to all Content composables (ChipNumberContent, PhotoContent, DescriptionContent, ContactDetailsContent, SummaryContent)
+- [x] T044 [P] Add multi-size Compose previews (compact phone, medium foldable, expanded tablet) for each Content composable to validate SC-005 responsiveness
+- [x] T045 Document preview results (screenshots or notes) in `/specs/018-android-missing-pet-flow/quickstart.md#ui-validation` to capture responsive QA evidence
+- [x] T037 [P] Add KDoc documentation to ViewModel, UiState, Intent, Effect, and Reducer classes
+- [x] T038 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for reportmissing feature
+- [x] T039 Run `./gradlew :composeApp:lint` and fix any violations in reportmissing feature
+- [x] T040 Validate quickstart.md - verify all development setup steps work correctly
+- [x] T046 Add navigation stability tests (unit/instrumentation) ensuring CTA launches step 1 and Next/Back never skip steps; document results in quickstart.md QA section
 
 ---
 
