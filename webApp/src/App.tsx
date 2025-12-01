@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimalList } from './components/AnimalList/AnimalList';
 import { MicrochipNumberScreen } from './components/ReportMissingPet/MicrochipNumberScreen';
 import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
+import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
 import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
 
 export function App() {
@@ -24,6 +25,14 @@ export function App() {
           element={
             <ReportMissingPetFlowProvider>
               <PhotoScreen />
+            </ReportMissingPetFlowProvider>
+          }
+        />
+        <Route
+          path="/report-missing/details"
+          element={
+            <ReportMissingPetFlowProvider>
+              <DetailsScreen />
             </ReportMissingPetFlowProvider>
           }
         />

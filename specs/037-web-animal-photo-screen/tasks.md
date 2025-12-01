@@ -81,18 +81,18 @@
 - [X] T015 [US1] ✅ GREEN: Implement `use-photo-upload` hook in `/webApp/src/hooks/use-photo-upload.ts` (minimal code to pass T009 tests: useState for photo/error/isDragOver, handleFileSelect validates and creates PhotoAttachment with URL.createObjectURL, handleDrop extracts file and calls handleFileSelect, handleDragOver/handleDragLeave toggle isDragOver, removePhoto clears photo and calls URL.revokeObjectURL, useEffect cleanup calls URL.revokeObjectURL on unmount)
 - [X] T016 [US1] 🔧 REFACTOR: Extract validation logic into reusable helper if needed, add JSDoc comments to use-photo-upload hook documenting file handling and cleanup behavior
 - [X] T017 [US1] ✅ RUN TESTS: Execute `npm test -- --coverage` from webApp/, verify all US1 tests pass (T007-T009) and coverage ≥80% for new files
-- [ ] T018 [P] [US1] Create `PhotoScreen.tsx` component in `/webApp/src/components/ReportMissingPet/PhotoScreen.tsx` following MicrochipNumberScreen pattern: imports (useNavigate, useReportMissingPetFlow, use-photo-upload, use-browser-back-handler, ReportMissingPetLayout), handleContinue (validates photo exists, updates flow state with photo and currentStep: FlowStep.Details, navigates to /report-missing/details), handleBack (clears flow state, navigates to /), useBrowserBackHandler(handleBack), returns ReportMissingPetLayout with title="Animal photo" progress="2/4" onBack={handleBack}
-- [ ] T019 [US1] Add upload UI to PhotoScreen: empty state with heading "Upload Animal Photo", helper text, hidden file input with accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/heic,image/heif", Browse button with data-testid="animalPhoto.browse.click" that triggers file input, drag-and-drop zone with data-testid="animalPhoto.dropZone.area" and onDrop/onDragOver/onDragLeave handlers
-- [ ] T020 [US1] Add confirmation card to PhotoScreen: conditional render when photo exists, displays green icon + filename (data-testid="animalPhoto.filename.text") + formatted file size (data-testid="animalPhoto.filesize.text") + Remove X button (data-testid="animalPhoto.remove.click" calls removePhoto from hook)
-- [ ] T021 [US1] Add Continue button to PhotoScreen with data-testid="animalPhoto.continue.click", onClick calls handleContinue, always enabled (validation happens in handleContinue)
-- [ ] T022 [US1] Add drag-over visual feedback in PhotoScreen: apply border highlight style when isDragOver is true from use-photo-upload hook
-- [ ] T023 [P] [US1] Add PhotoScreen styles in `/webApp/src/components/ReportMissingPet/PhotoScreen.module.css`: .dropZone (border, padding, hover state), .confirmationCard (green background, flex layout), .dragOverHighlight (blue border)
-- [ ] T024 [US1] Add PhotoScreen route in `/webApp/src/routes/report-missing-pet-routes.tsx`: `<Route path="photo" element={<PhotoScreen />} />` within ReportMissingPetFlowProvider
-- [ ] T025 [US1] Update MicrochipNumberScreen navigation in `/webApp/src/components/ReportMissingPet/MicrochipNumberScreen.tsx`: change handleContinue to navigate to '/report-missing/photo' instead of placeholder
+- [X] T018 [P] [US1] Create `PhotoScreen.tsx` component in `/webApp/src/components/ReportMissingPet/PhotoScreen.tsx` following MicrochipNumberScreen pattern: imports (useNavigate, useReportMissingPetFlow, use-photo-upload, use-browser-back-handler, ReportMissingPetLayout), handleContinue (validates photo exists, updates flow state with photo and currentStep: FlowStep.Details, navigates to /report-missing/details), handleBack (clears flow state, navigates to /), useBrowserBackHandler(handleBack), returns ReportMissingPetLayout with title="Animal photo" progress="2/4" onBack={handleBack}
+- [X] T019 [US1] Add upload UI to PhotoScreen: empty state with heading "Upload Animal Photo", helper text, hidden file input with accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/heic,image/heif", Browse button with data-testid="animalPhoto.browse.click" that triggers file input, drag-and-drop zone with data-testid="animalPhoto.dropZone.area" and onDrop/onDragOver/onDragLeave handlers
+- [X] T020 [US1] Add confirmation card to PhotoScreen: conditional render when photo exists, displays green icon + filename (data-testid="animalPhoto.filename.text") + formatted file size (data-testid="animalPhoto.filesize.text") + Remove X button (data-testid="animalPhoto.remove.click" calls removePhoto from hook)
+- [X] T021 [US1] Add Continue button to PhotoScreen with data-testid="animalPhoto.continue.click", onClick calls handleContinue, always enabled (validation happens in handleContinue)
+- [X] T022 [US1] Add drag-over visual feedback in PhotoScreen: apply border highlight style when isDragOver is true from use-photo-upload hook
+- [X] T023 [P] [US1] Add PhotoScreen styles in `/webApp/src/components/ReportMissingPet/PhotoScreen.module.css`: .dropZone (border, padding, hover state), .confirmationCard (green background, flex layout), .dragOverHighlight (blue border)
+- [X] T024 [US1] Add PhotoScreen route in `/webApp/src/routes/report-missing-pet-routes.tsx`: `<Route path="photo" element={<PhotoScreen />} />` within ReportMissingPetFlowProvider
+- [X] T025 [US1] Update MicrochipNumberScreen navigation in `/webApp/src/components/ReportMissingPet/MicrochipNumberScreen.tsx`: change handleContinue to navigate to '/report-missing/photo' instead of placeholder
 - [ ] T026 [P] [US1] Create Page Object Model in `/e2e-tests/src/test/java/.../pages/AnimalPhotoPage.java` with XPath locators for browse button (@FindBy xpath using data-testid="animalPhoto.browse.click"), drop zone, confirmation card, filename, file size, remove button, continue button
 - [ ] T027 [P] [US1] Create Step Definitions in `/e2e-tests/src/test/java/.../steps-web/AnimalPhotoSteps.java` implementing Gherkin scenarios from T010 (navigate to photo screen, click browse, upload file, verify confirmation card, click continue, verify navigation)
-- [ ] T028 [US1] ✅ RUN TESTS: Execute `npm test` from webApp/, verify all unit tests pass with no regressions
-- [ ] T029 [US1] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
+- [X] T028 [US1] ✅ RUN TESTS: Execute `npm test` from webApp/, verify all unit tests pass with no regressions
+- [X] T029 [US1] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
 - [ ] T030 [US1] ✅ RUN E2E TESTS: Execute `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @US1"`, verify US1 scenarios pass
 
 **Checkpoint**: User Story 1 complete - photo upload via file picker and drag-and-drop works, confirmation card displays, Continue navigates to step 3/4 with photo in flow state
@@ -120,11 +120,11 @@
 - [X] T034 [P] [US2] ✅ GREEN: Implement `use-toast` hook in `/webApp/src/hooks/use-toast.ts` (minimal code to pass T031 tests: useState for message, showToast function sets message and uses setTimeout to clear after duration, returns { message, showToast })
 - [X] T035 [P] [US2] ✅ GREEN: Create `Toast.tsx` component in `/webApp/src/components/Toast/Toast.tsx` (minimal code: conditionally render div with message if message is not null, auto-hide after prop duration)
 - [X] T036 [P] [US2] Create `Toast.module.css` in `/webApp/src/components/Toast/Toast.module.css` with styles: position fixed bottom center, background semi-transparent dark, padding, border-radius, fade-in animation
-- [ ] T037 [US2] ✅ GREEN: Update PhotoScreen.tsx to use `use-toast` hook (minimal code to pass T032 tests: call useToast(), in handleContinue check if photo exists, if not call showToast("Photo is mandatory", 3000) and return early without navigation)
-- [ ] T038 [US2] Add Toast component to PhotoScreen.tsx render output: `<Toast message={toastMessage} />` at end of ReportMissingPetLayout children
-- [ ] T039 [US2] 🔧 REFACTOR: Extract toast duration constants (MANDATORY_PHOTO_TOAST_DURATION = 3000, VALIDATION_ERROR_TOAST_DURATION = 5000) into separate file if needed for reusability
-- [ ] T040 [US2] ✅ RUN TESTS: Execute `npm test` from webApp/, verify all US2 tests pass (T031-T032) and no regressions in US1 tests
-- [ ] T041 [US2] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
+- [X] T037 [US2] ✅ GREEN: Update PhotoScreen.tsx to use `use-toast` hook (minimal code to pass T032 tests: call useToast(), in handleContinue check if photo exists, if not call showToast("Photo is mandatory", 3000) and return early without navigation)
+- [X] T038 [US2] Add Toast component to PhotoScreen.tsx render output: `<Toast message={toastMessage} />` at end of ReportMissingPetLayout children
+- [X] T039 [US2] 🔧 REFACTOR: Extract toast duration constants (MANDATORY_PHOTO_TOAST_DURATION = 3000, VALIDATION_ERROR_TOAST_DURATION = 5000) into separate file if needed for reusability
+- [X] T040 [US2] ✅ RUN TESTS: Execute `npm test` from webApp/, verify all US2 tests pass (T031-T032) and no regressions in US1 tests
+- [X] T041 [US2] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
 - [ ] T042 [P] [US2] Update AnimalPhotoPage.java to add locators for toast element (@FindBy xpath for toast message div)
 - [ ] T043 [P] [US2] Update AnimalPhotoSteps.java to implement US2 Gherkin scenarios (verify toast appears, wait 3 seconds, verify toast disappears, verify no navigation occurred)
 - [ ] T044 [US2] ✅ RUN E2E TESTS: Execute `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @US2"`, verify US2 scenarios pass
@@ -142,7 +142,7 @@
 ### Tests for User Story 3 (TDD: Write FIRST, ensure FAIL before implementation) ✅
 
 **Web Unit Tests**:
-- [ ] T045 [P] [US3] 🔴 RED: Add tests to `/webApp/src/hooks/__tests__/use-photo-upload.test.ts` for validation errors: (1) selecting oversized file (21MB) sets error state and calls showToast with "File size exceeds 20MB limit", (2) selecting invalid format (PDF) sets error state and calls showToast with format error message, (3) error state clears when valid file selected
+- [X] T045 [P] [US3] 🔴 RED: Add tests to `/webApp/src/hooks/__tests__/use-photo-upload.test.ts` for validation errors: (1) selecting oversized file (21MB) sets error state and calls showToast with "File size exceeds 20MB limit", (2) selecting invalid format (PDF) sets error state and calls showToast with format error message, (3) error state clears when valid file selected
 - [ ] T046 [P] [US3] 🔴 RED: Add tests to `/webApp/src/components/ReportMissingPet/__tests__/PhotoScreen.test.tsx` for validation error display: (1) validation error shows toast for 5 seconds, (2) upload area remains in empty state after validation error, (3) subsequent valid file selection clears error and shows confirmation card
 
 **End-to-End Tests**:
@@ -151,11 +151,11 @@
 ### Implementation for User Story 3 (TDD: Implement AFTER tests fail)
 
 **Web Implementation**:
-- [ ] T048 [P] [US3] ✅ GREEN: Update `use-photo-upload` hook in `/webApp/src/hooks/use-photo-upload.ts` to add validation in handleFileSelect (minimal code to pass T045 tests: call getFileValidationError(file), if error returned set error state and call showToast(error, 5000) and return early without creating PhotoAttachment, if valid clear error state and proceed)
-- [ ] T049 [US3] Update PhotoScreen.tsx to pass showToast function from use-toast to use-photo-upload hook as prop (modify use-photo-upload signature to accept showToast callback)
-- [ ] T050 [US3] 🔧 REFACTOR: Review error handling flow, ensure error state properly cleared on successful file selection, add JSDoc comments documenting validation error behavior
-- [ ] T051 [US3] ✅ RUN TESTS: Execute `npm test -- --coverage` from webApp/, verify all US3 tests pass (T045-T046), verify coverage ≥80% for all new code, no regressions in US1/US2 tests
-- [ ] T052 [US3] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
+- [X] T048 [P] [US3] ✅ GREEN: Update `use-photo-upload` hook in `/webApp/src/hooks/use-photo-upload.ts` to add validation in handleFileSelect (minimal code to pass T045 tests: call getFileValidationError(file), if error returned set error state and call showToast(error, 5000) and return early without creating PhotoAttachment, if valid clear error state and proceed)
+- [X] T049 [US3] Update PhotoScreen.tsx to pass showToast function from use-toast to use-photo-upload hook as prop (modify use-photo-upload signature to accept showToast callback)
+- [X] T050 [US3] 🔧 REFACTOR: Review error handling flow, ensure error state properly cleared on successful file selection, add JSDoc comments documenting validation error behavior
+- [X] T051 [US3] ✅ RUN TESTS: Execute `npm test -- --coverage` from webApp/, verify all US3 tests pass (T045-T046), verify coverage ≥80% for all new code, no regressions in US1/US2 tests
+- [X] T052 [US3] 🧹 RUN LINTING: Execute `npm run lint` from webApp/, fix any ESLint violations (expect 0 issues)
 - [ ] T053 [P] [US3] Update AnimalPhotoSteps.java to implement US3 Gherkin scenarios (upload invalid files, verify error toast appears, wait 5 seconds, verify toast disappears, verify upload area still in empty state)
 - [ ] T054 [US3] ✅ RUN E2E TESTS: Execute `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @US3"`, verify US3 scenarios pass
 
