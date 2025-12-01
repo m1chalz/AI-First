@@ -276,9 +276,12 @@ final class AnimalListViewModelTests: XCTestCase {
         await viewModel.loadAnimals()
         
         // Then - currentLocation should be set
-        XCTAssertNotNil(viewModel.currentLocation)
-        XCTAssertEqual(viewModel.currentLocation?.latitude, 52.2297, accuracy: 0.0001)
-        XCTAssertEqual(viewModel.currentLocation?.longitude, 21.0122, accuracy: 0.0001)
+        XCTAssertNotNil(viewModel.currentLocation, "currentLocation should not be nil")
+        guard let location = viewModel.currentLocation else {
+            return // Test already failed at XCTAssertNotNil
+        }
+        XCTAssertEqual(location.latitude, 52.2297, accuracy: 0.0001)
+        XCTAssertEqual(location.longitude, 21.0122, accuracy: 0.0001)
         XCTAssertFalse(viewModel.isLoading)
     }
     
