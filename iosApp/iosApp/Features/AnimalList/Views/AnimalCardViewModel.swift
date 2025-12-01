@@ -32,6 +32,11 @@ class AnimalCardViewModel: ObservableObject {
     
     // MARK: - Computed Properties (Presentation Layer)
     
+    /// Photo URL
+    var photoUrl: String {
+        animal.photoUrl
+    }
+    
     /// Formatted location text with coordinates
     var locationText: String {
         let lat = animal.coordinate.latitude

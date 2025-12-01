@@ -1,26 +1,17 @@
 import Foundation
 
-// MARK: - Helper Functions
-
-/// Converts relative photo URL to absolute URL by prepending base URL
-/// - Parameter photoUrl: Photo URL from backend (may be relative or absolute)
-/// - Returns: Absolute URL string
-private func resolvePhotoURL(_ photoUrl: String) -> String {
-    // If URL starts with /, it's relative - prepend base URL
-    if photoUrl.starts(with: "/") {
-        return APIConfig.baseURL + photoUrl
+/// Mapper for converting AnnouncementDTO to Animal domain model
+struct AnimalMapper {
+    private let photoURLMapper: PhotoURLMapper
+    
+    init(photoURLMapper: PhotoURLMapper = PhotoURLMapper()) {
+        self.photoURLMapper = photoURLMapper
     }
-    // Otherwise it's already absolute
-    return photoUrl
-}
-
-// MARK: - Domain Model Mappers
-
-/// Extension for converting AnnouncementDTO to Animal domain model
-extension Animal {
-    /// Failable initializer - returns nil if DTO contains invalid data
-    /// Allows graceful handling of invalid items in list (skip instead of crash)
-    init?(fromDTO dto: AnnouncementDTO) {
+    
+    /// Converts AnnouncementDTO to Animal
+    /// - Parameter dto: DTO from backend API
+    /// - Returns: Animal domain model, or nil if DTO contains invalid data
+    func map(_ dto: AnnouncementDTO) -> Animal? {
         // Parse species
         guard let species = AnimalSpecies(fromDTO: dto.species) else {
             print("Warning: Invalid species '\(dto.species)' for announcement \(dto.id), skipping item")
@@ -37,10 +28,10 @@ extension Animal {
         // Parse gender (if sex is missing, default to unknown)
         let gender = dto.sex.flatMap({ AnimalGender(fromDTO: $0) }) ?? .unknown
         
-        self.init(
+        return Animal(
             id: dto.id,
             name: dto.petName,
-            photoUrl: resolvePhotoURL(dto.photoUrl),
+            photoUrl: photoURLMapper.resolve(dto.photoUrl),
             coordinate: Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude),
             species: species,
             breed: dto.breed,
@@ -53,4 +44,3 @@ extension Animal {
         )
     }
 }
-

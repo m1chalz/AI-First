@@ -9,10 +9,19 @@ import Foundation
 class AnimalRepository: AnimalRepositoryProtocol {
     private let urlSession: URLSession
     private let apiDecoder: APIDecoder
+    private let animalMapper: AnimalMapper
+    private let petDetailsMapper: PetDetailsMapper
     
-    init(urlSession: URLSession = .shared, apiDecoder: APIDecoder = APIDecoder()) {
+    init(
+        urlSession: URLSession = .shared,
+        apiDecoder: APIDecoder = APIDecoder(),
+        animalMapper: AnimalMapper = AnimalMapper(),
+        petDetailsMapper: PetDetailsMapper = PetDetailsMapper()
+    ) {
         self.urlSession = urlSession
         self.apiDecoder = apiDecoder
+        self.animalMapper = animalMapper
+        self.petDetailsMapper = petDetailsMapper
     }
     
     // MARK: - AnimalRepositoryProtocol Implementation
@@ -50,7 +59,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
             
             // Convert DTOs to domain models, skipping invalid items
             let animals = listResponse.data.compactMap { dto -> Animal? in
-                return Animal(fromDTO: dto)
+                return animalMapper.map(dto)
             }
             
             // Deduplicate by ID (keep first occurrence)
@@ -97,7 +106,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
             let dto = try apiDecoder.decode(PetDetailsDTO.self, from: data)
             
             // Convert DTO to domain model, throw error if invalid
-            guard let details = PetDetails(fromDTO: dto) else {
+            guard let details = petDetailsMapper.map(dto) else {
                 print("Error: Failed to convert DTO to PetDetails for id: \(id)")
                 throw RepositoryError.invalidData
             }

@@ -1,25 +1,17 @@
 import Foundation
 
-// MARK: - Helper Functions
-
-/// Converts relative photo URL to absolute URL by prepending base URL
-/// - Parameter photoUrl: Photo URL from backend (may be relative or absolute)
-/// - Returns: Absolute URL string
-private func resolvePhotoURL(_ photoUrl: String) -> String {
-    // If URL starts with /, it's relative - prepend base URL
-    if photoUrl.starts(with: "/") {
-        return APIConfig.baseURL + photoUrl
+/// Mapper for converting PetDetailsDTO to PetDetails domain model
+struct PetDetailsMapper {
+    private let photoURLMapper: PhotoURLMapper
+    
+    init(photoURLMapper: PhotoURLMapper = PhotoURLMapper()) {
+        self.photoURLMapper = photoURLMapper
     }
-    // Otherwise it's already absolute
-    return photoUrl
-}
-
-// MARK: - Domain Model Mappers
-
-/// Extension for converting PetDetailsDTO to PetDetails domain model
-extension PetDetails {
-    /// Failable initializer - returns nil if DTO contains invalid data
-    init?(fromDTO dto: PetDetailsDTO) {
+    
+    /// Converts PetDetailsDTO to PetDetails
+    /// - Parameter dto: DTO from backend API
+    /// - Returns: PetDetails domain model, or nil if DTO contains invalid data
+    func map(_ dto: PetDetailsDTO) -> PetDetails? {
         // Parse species
         guard let species = AnimalSpecies(fromDTO: dto.species) else {
             print("Warning: Invalid species '\(dto.species)' for announcement \(dto.id)")
@@ -36,10 +28,10 @@ extension PetDetails {
         // Parse gender (if sex is missing, default to unknown)
         let gender = dto.sex.flatMap({ AnimalGender(fromDTO: $0) }) ?? .unknown
         
-        self.init(
+        return PetDetails(
             id: dto.id,
             petName: dto.petName,
-            photoUrl: resolvePhotoURL(dto.photoUrl),
+            photoUrl: photoURLMapper.resolve(dto.photoUrl),
             status: status,
             lastSeenDate: dto.lastSeenDate,
             species: species,
@@ -58,4 +50,3 @@ extension PetDetails {
         )
     }
 }
-
