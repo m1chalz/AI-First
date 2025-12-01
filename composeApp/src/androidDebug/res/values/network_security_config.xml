@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Allow HTTP traffic for local debugging scenarios. -->
+    <bool name="allow_clear_text">true</bool>
+</resources>
+
+

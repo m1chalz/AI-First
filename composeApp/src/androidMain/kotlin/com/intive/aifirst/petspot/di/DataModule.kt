@@ -1,7 +1,16 @@
 package com.intive.aifirst.petspot.di
 
+import com.intive.aifirst.petspot.BuildConfig
 import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
 import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
+import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 /**
@@ -16,6 +25,28 @@ import org.koin.dsl.module
  */
 val dataModule =
     module {
+        // Ktor HttpClient with OkHttp engine
+        single {
+            HttpClient(OkHttp) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                        },
+                    )
+                }
+                if (BuildConfig.DEBUG) {
+                    install(Logging) {
+                        level = LogLevel.BODY
+                    }
+                }
+            }
+        }
+
+        // API Clients
+        single { AnnouncementApiClient(get(), BuildConfig.API_BASE_URL) }
+
         // Repository implementations
-        single<AnimalRepository> { AnimalRepositoryImpl() }
+        single<AnimalRepository> { AnimalRepositoryImpl(get()) }
     }

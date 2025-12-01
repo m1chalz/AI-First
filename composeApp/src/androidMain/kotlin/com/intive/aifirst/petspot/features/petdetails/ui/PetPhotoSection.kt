@@ -22,7 +22,6 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
@@ -47,34 +46,25 @@ fun PetPhotoSection(
                 .aspectRatio(16f / 10f),
     ) {
         // Pet Photo with error fallback per FR-001
-        if (pet.photoUrl.startsWith("placeholder") || pet.photoUrl.isBlank()) {
-            // Show "Image not available" placeholder per spec
-            ImageNotAvailablePlaceholder(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .testTag("petDetails.photo"),
-            )
-        } else {
-            SubcomposeAsyncImage(
-                model = pet.photoUrl,
-                contentDescription = "Photo of ${pet.name}",
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .testTag("petDetails.photo"),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    ImageNotAvailablePlaceholder()
-                },
-                error = {
-                    ImageNotAvailablePlaceholder()
-                },
-                success = {
-                    SubcomposeAsyncImageContent()
-                },
-            )
-        }
+        SubcomposeAsyncImage(
+            model = pet.photoUrl,
+            contentDescription = "Photo of ${pet.name}",
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .testTag("petDetails.photo"),
+            contentScale = ContentScale.Crop,
+            loading = {
+                ImageNotAvailablePlaceholder()
+            },
+            error = {
+                // Handles blank/invalid URLs automatically
+                ImageNotAvailablePlaceholder()
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            },
+        )
 
         // Close Button (top left) - Per Figma design, respects status bar
         Box(
@@ -136,8 +126,8 @@ private fun PetPhotoSectionPreview() {
                 id = "1",
                 name = "Luna",
                 photoUrl = "",
-                location = Location(city = "Warsaw", radiusKm = 2),
-                species = AnimalSpecies.DOG,
+                location = Location(latitude = 52.2297, longitude = 21.0122),
+                species = "Dog",
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
                 status = AnimalStatus.MISSING,

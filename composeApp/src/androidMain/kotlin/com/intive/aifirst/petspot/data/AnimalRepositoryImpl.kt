@@ -1,45 +1,40 @@
 package com.intive.aifirst.petspot.data
 
-import com.intive.aifirst.petspot.composeapp.domain.fixtures.MockAnimalData
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
-import kotlinx.coroutines.delay
+import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
+import com.intive.aifirst.petspot.data.mappers.toDomain
 
 /**
- * Repository implementation with mocked data for UI development.
- * Returns hardcoded list of 16 animals for testing UI flows.
- * Simulates network delay to test loading states.
- * Will be replaced with RemoteAnimalRepository when backend is ready.
+ * Repository implementation that fetches pet announcements from the backend API.
+ *
+ * @property apiClient HTTP client for backend API communication
  */
-class AnimalRepositoryImpl : AnimalRepository {
-    /** Simulated network delay in milliseconds */
-    private val networkDelayMs: Long = 500
-
+class AnimalRepositoryImpl(
+    private val apiClient: AnnouncementApiClient,
+) : AnimalRepository {
     /**
-     * Retrieves mock animal data after simulated delay.
-     * Uses MockAnimalData as single source of truth for consistency across platforms.
+     * Retrieves all pet announcements from the backend API.
      *
-     * @return List of 16 mock animals
+     * @return List of animals from backend
+     * @throws Exception on network or API errors
      */
     override suspend fun getAnimals(): List<Animal> {
-        // Simulate network delay
-        delay(networkDelayMs)
-
-        // Return mock data from shared test fixtures
-        return MockAnimalData.generateMockAnimals()
+        val response = apiClient.getAnnouncements()
+        return response.data.map { it.toDomain() }
     }
 
     /**
-     * Retrieves a single animal by ID from mock data.
-     * Simulates network delay before returning result.
+     * Retrieves a single pet announcement by ID from the backend API.
      *
-     * @param id Unique identifier of the animal
+     * @param id Unique identifier of the announcement
      * @return Animal entity
-     * @throws NoSuchElementException if animal not found
+     * @throws io.ktor.client.plugins.ClientRequestException on 4xx errors (including 404)
+     * @throws io.ktor.client.plugins.ServerResponseException on 5xx errors
+     * @throws java.io.IOException on network failures
      */
     override suspend fun getAnimalById(id: String): Animal {
-        delay(networkDelayMs)
-        return MockAnimalData.generateMockAnimals().find { it.id == id }
-            ?: throw NoSuchElementException("Animal not found: $id")
+        val response = apiClient.getAnnouncementById(id)
+        return response.toDomain()
     }
 }

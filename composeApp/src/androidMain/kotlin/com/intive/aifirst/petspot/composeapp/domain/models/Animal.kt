@@ -19,7 +19,7 @@ package com.intive.aifirst.petspot.composeapp.domain.models
  * @property phone Contact phone number of the person who reported/owns the animal (optional)
  * @property microchipNumber Microchip number for pet identification (optional)
  * @property rewardAmount Reward amount as string, displayed as-is (optional)
- * @property approximateAge Approximate age description (optional)
+ * @property age Approximate age in years (optional)
  */
 data class Animal(
     val id: String,
@@ -27,7 +27,8 @@ data class Animal(
     // URL or placeholder identifier
     val photoUrl: String,
     val location: Location,
-    val species: AnimalSpecies,
+    // Species or breed description from API (e.g., "Golden Retriever", "Cat")
+    val species: String,
     val breed: String,
     val gender: AnimalGender,
     val status: AnimalStatus,
@@ -42,6 +43,6 @@ data class Animal(
     val microchipNumber: String? = null,
     // Optional reward amount (displayed as-is)
     val rewardAmount: String? = null,
-    // Optional approximate age description
-    val approximateAge: String? = null,
+    // Optional age in years
+    val age: Int? = null,
 )

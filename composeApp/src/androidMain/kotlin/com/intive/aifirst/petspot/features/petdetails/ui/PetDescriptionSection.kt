@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
 
@@ -67,8 +66,8 @@ private fun PetDescriptionSectionPreview() {
                 id = "1",
                 name = "Luna",
                 photoUrl = "",
-                location = Location(city = "Central Park", radiusKm = 2),
-                species = AnimalSpecies.DOG,
+                location = Location(latitude = 40.7829, longitude = -73.9654),
+                species = "Dog",
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
                 status = AnimalStatus.MISSING,
