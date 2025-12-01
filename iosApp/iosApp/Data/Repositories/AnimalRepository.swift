@@ -234,7 +234,7 @@ extension Animal {
             photoUrl: dto.photoUrl,
             coordinate: Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude),
             species: species,
-            breed: dto.breed ?? "Unknown",
+            breed: dto.breed,
             gender: gender,
             status: status,
             lastSeenDate: dto.lastSeenDate,

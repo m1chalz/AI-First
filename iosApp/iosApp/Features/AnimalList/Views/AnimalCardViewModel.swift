@@ -44,7 +44,7 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Breed name
     var breedName: String {
-        animal.breed
+        animal.breed ?? "Unknown"
     }
     
     /// Status badge text

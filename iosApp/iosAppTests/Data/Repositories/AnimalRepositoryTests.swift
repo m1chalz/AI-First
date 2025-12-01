@@ -360,6 +360,52 @@ final class AnimalRepositoryTests: XCTestCase {
         XCTAssertEqual(animals[0].email, "owner@example.com")
     }
     
+    /// Test: getAnimals with null breed should parse successfully (optional field)
+    func testGetAnimals_whenBreedIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null breed
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Reksio",
+                    "species": "DOG",
+                    "status": "FOUND",
+                    "photoUrl": "http://localhost:3000/images/reksio.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": null,
+                    "sex": "MALE",
+                    "age": 8,
+                    "description": "Small mixed breed dog",
+                    "phone": "+48123456789",
+                    "email": null
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let animals = try await sut.getAnimals(near: nil)
+        
+        // Then - animal parsed successfully with nil breed
+        XCTAssertEqual(animals.count, 1)
+        XCTAssertEqual(animals[0].name, "Reksio")
+        XCTAssertNil(animals[0].breed)
+        XCTAssertEqual(animals[0].species, .dog)
+    }
+    
     // MARK: - getPetDetails Tests (User Story 2)
     
     /// T037: Test getPetDetails with valid JSON response should return PetDetails with all fields

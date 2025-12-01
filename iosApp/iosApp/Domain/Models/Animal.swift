@@ -21,7 +21,7 @@ struct Animal {
     let species: AnimalSpecies
     
     /// Specific breed name (e.g., "Maine Coon", "German Shepherd")
-    let breed: String
+    let breed: String?
     
     /// Biological sex (Male, Female, Unknown)
     let gender: AnimalGender
