@@ -659,5 +659,66 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(result, "34.6037° S, 58.3816° W")
     }
     
+    // MARK: - API Integration Tests (User Story 2)
+    
+    /// T044: Test PetDetailsViewModel loadDetails should update petDetails publisher with API data
+    func testLoadPetDetails_whenRepositoryReturnsApiData_shouldUpdateState() async {
+        // Given - ViewModel with repository that returns API-like data
+        let (sut, repository) = makeSUT(petId: "api-test-id")
+        let apiPetDetails = makeMockPetDetails(
+            id: "api-test-id",
+            photoUrl: "http://localhost:3000/images/test.jpg"
+        )
+        repository.mockPetDetails = apiPetDetails
+        
+        // When - loadPetDetails is called
+        await sut.loadPetDetails()
+        
+        // Then - state should be loaded with API data
+        guard case .loaded(let details) = sut.state else {
+            XCTFail("Expected loaded state, got \(sut.state)")
+            return
+        }
+        XCTAssertEqual(details.id, "api-test-id")
+        XCTAssertEqual(details.petName, "Test Pet")
+        XCTAssertEqual(repository.getPetDetailsCallCount, 1)
+    }
+    
+    /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
+    func testLoadPetDetails_when404Error_shouldSetNotFoundErrorState() async {
+        // Given - ViewModel with repository that returns not found
+        let (sut, repository) = makeSUT(petId: "non-existent-id")
+        repository.mockPetDetails = nil // Simulates 404
+        
+        // When - loadPetDetails is called
+        await sut.loadPetDetails()
+        
+        // Then - error state should be set with appropriate message
+        guard case .error(let message) = sut.state else {
+            XCTFail("Expected error state, got \(sut.state)")
+            return
+        }
+        XCTAssertTrue(message.contains("not found") || message.contains("Not found"), 
+                      "Error message should indicate not found")
+    }
+    
+    /// T046: Test PetDetailsViewModel with network error should set appropriate error state
+    func testLoadPetDetails_whenNetworkError_shouldSetErrorState() async {
+        // Given - ViewModel with repository that fails
+        let (sut, repository) = makeSUT(petId: "test-id")
+        repository.shouldFail = true
+        
+        // When - loadPetDetails is called
+        await sut.loadPetDetails()
+        
+        // Then - error state should be set
+        guard case .error(let message) = sut.state else {
+            XCTFail("Expected error state, got \(sut.state)")
+            return
+        }
+        XCTAssertFalse(message.isEmpty, "Error message should not be empty")
+        XCTAssertEqual(repository.getPetDetailsCallCount, 1)
+    }
+    
 }
 

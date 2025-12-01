@@ -313,6 +313,287 @@ final class AnimalRepositoryTests: XCTestCase {
         // Then - empty array returned
         XCTAssertEqual(animals.count, 0)
     }
+    
+    // MARK: - getPetDetails Tests (User Story 2)
+    
+    /// T037: Test getPetDetails with valid JSON response should return PetDetails with all fields
+    func testGetPetDetails_whenServerReturnsValidData_shouldReturnPetDetails() async throws {
+        // Given - valid pet details JSON
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": "123456789012345",
+            "email": "owner@example.com",
+            "phone": "+48123456789",
+            "reward": "500 PLN",
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "550e8400-e29b-41d4-a716-446655440000")
+        
+        // Then - verify all fields
+        XCTAssertEqual(details.id, "550e8400-e29b-41d4-a716-446655440000")
+        XCTAssertEqual(details.petName, "Max")
+        XCTAssertEqual(details.species, .dog)
+        XCTAssertEqual(details.status, .active) // MISSING mapped to ACTIVE
+        XCTAssertEqual(details.breed, "Golden Retriever")
+        XCTAssertEqual(details.microchipNumber, "123456789012345")
+        XCTAssertEqual(details.email, "owner@example.com")
+        XCTAssertEqual(details.reward, "500 PLN")
+    }
+    
+    /// T038: Test getPetDetails with HTTP 404 error should throw RepositoryError.notFound
+    func testGetPetDetails_whenServerReturns404_shouldThrowNotFoundError() async {
+        // Given - 404 response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 404,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, Data())
+        }
+        
+        // When/Then - should throw not found error
+        do {
+            _ = try await sut.getPetDetails(id: "non-existent-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .notFound = error {
+                // Expected error
+            } else {
+                XCTFail("Expected notFound, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T039: Test getPetDetails with HTTP 500 error should throw RepositoryError.httpError
+    func testGetPetDetails_whenServerReturns500_shouldThrowHttpError() async {
+        // Given - server error response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 500,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, Data())
+        }
+        
+        // When/Then - should throw http error
+        do {
+            _ = try await sut.getPetDetails(id: "some-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .httpError(let statusCode) = error {
+                XCTAssertEqual(statusCode, 500)
+            } else {
+                XCTFail("Expected httpError, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T040: Test getPetDetails with invalid JSON should throw RepositoryError.decodingFailed
+    func testGetPetDetails_whenResponseHasInvalidJSON_shouldThrowDecodingError() async {
+        // Given - invalid JSON
+        let invalidJSON = "{ invalid json }".data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, invalidJSON)
+        }
+        
+        // When/Then - should throw decoding error
+        do {
+            _ = try await sut.getPetDetails(id: "some-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .decodingFailed = error {
+                // Expected error
+            } else {
+                XCTFail("Expected decodingFailed, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T041: Test getPetDetails with invalid species should throw RepositoryError.invalidData
+    func testGetPetDetails_whenResponseHasInvalidSpecies_shouldThrowInvalidDataError() async {
+        // Given - JSON with invalid species
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DINOSAUR",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When/Then - should throw invalid data error
+        do {
+            _ = try await sut.getPetDetails(id: "some-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .invalidData = error {
+                // Expected error
+            } else {
+                XCTFail("Expected invalidData, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T042: Test getPetDetails with missing optional fields should return PetDetails with nil values
+    func testGetPetDetails_whenOptionalFieldsMissing_shouldReturnDetailsWithNilValues() async throws {
+        // Given - JSON with nil optional fields
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": null,
+            "sex": "MALE",
+            "age": null,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - optional fields should be nil
+        XCTAssertNil(details.breed)
+        XCTAssertNil(details.microchipNumber)
+        XCTAssertNil(details.email)
+        XCTAssertNil(details.reward)
+        XCTAssertNil(details.approximateAge)
+        XCTAssertEqual(details.petName, "Max")
+    }
+    
+    /// T043a: Test getPetDetails with updatedAt in custom format should parse correctly
+    func testGetPetDetails_whenUpdatedAtInCustomFormat_shouldParseCorrectly() async throws {
+        // Given - JSON with updatedAt in "YYYY-MM-DD HH:MM:SS" format (backend inconsistency)
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2025-12-01 14:24:13"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - updatedAt should be parsed successfully (no crash/error)
+        XCTAssertEqual(details.petName, "Max")
+        XCTAssertEqual(details.updatedAt, "2025-12-01 14:24:13")
+    }
 }
 
 // MARK: - Mock URLProtocol

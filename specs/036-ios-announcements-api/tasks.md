@@ -121,18 +121,18 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **iOS Unit Tests - Repository**:
-- [ ] T037 [P] [US2] Test: getAnimalDetails with valid JSON response should return PetDetails with all fields in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T038 [P] [US2] Test: getAnimalDetails with HTTP 404 error should throw RepositoryError.notFound in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T039 [P] [US2] Test: getAnimalDetails with HTTP 500 error should throw RepositoryError.httpError in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T040 [P] [US2] Test: getAnimalDetails with invalid JSON should throw RepositoryError.decodingFailed in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T041 [P] [US2] Test: getAnimalDetails with invalid species should throw RepositoryError.invalidData in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T042 [P] [US2] Test: getAnimalDetails with missing optional fields should return PetDetails with nil values in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
-- [ ] T043a [P] [US2] Test: getAnimalDetails with updatedAt in custom format "YYYY-MM-DD HH:MM:SS" should parse correctly (backend inconsistency) in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T037 [P] [US2] Test: getAnimalDetails with valid JSON response should return PetDetails with all fields in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T038 [P] [US2] Test: getAnimalDetails with HTTP 404 error should throw RepositoryError.notFound in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T039 [P] [US2] Test: getAnimalDetails with HTTP 500 error should throw RepositoryError.httpError in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T040 [P] [US2] Test: getAnimalDetails with invalid JSON should throw RepositoryError.decodingFailed in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T041 [P] [US2] Test: getAnimalDetails with invalid species should throw RepositoryError.invalidData in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T042 [P] [US2] Test: getAnimalDetails with missing optional fields should return PetDetails with nil values in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
+- [X] T043a [P] [US2] Test: getAnimalDetails with updatedAt in custom format "YYYY-MM-DD HH:MM:SS" should parse correctly (backend inconsistency) in `/iosApp/iosAppTests/Data/Repositories/AnimalRepositoryTests.swift`
 
 **iOS Unit Tests - ViewModel Integration**:
-- [ ] T044 [P] [US2] Test: PetDetailsViewModel loadDetails should update petDetails publisher with API data in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
-- [ ] T045 [P] [US2] Test: PetDetailsViewModel with 404 error should set appropriate error state in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
-- [ ] T046 [P] [US2] Test: PetDetailsViewModel with network error should set appropriate error state in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
+- [X] T044 [P] [US2] Test: PetDetailsViewModel loadDetails should update petDetails publisher with API data in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
+- [X] T045 [P] [US2] Test: PetDetailsViewModel with 404 error should set appropriate error state in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
+- [X] T046 [P] [US2] Test: PetDetailsViewModel with network error should set appropriate error state in `/iosApp/iosAppTests/Features/PetDetails/ViewModels/PetDetailsViewModelTests.swift`
 
 **End-to-End Tests**:
 - [ ] T047 [P] [US2] E2E test: Display pet details when tapping animal card from list in `/e2e-tests/mobile/specs/ios-announcements-api.spec.ts`
@@ -142,11 +142,11 @@
 ### Implementation for User Story 2
 
 **iOS Implementation**:
-- [ ] T050 [P] [US2] Create private PetDetailsDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields, reward as Double?) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T051 [P] [US2] Create failable PetDetails initializer `init?(from: PetDetailsDTO)` with enum validation (lowercase conversion), date parsing with fallback (lastSeenDate ISO 8601, createdAt ISO 8601, updatedAt custom "YYYY-MM-DD HH:MM:SS"), and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T052 [US2] Implement getAnimalDetails method with URLSession, path parameter, JSON decoding, error handling (404→notFound, 500→httpError) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T053 [US2] Add invalidData error handling for failed DTO→Domain conversion in getAnimalDetails in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
-- [ ] T054 [P] [US2] Add SwiftDoc documentation to getAnimalDetails method in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T050 [P] [US2] Create private PetDetailsDTO struct with CodingKeys (locationLatitude/locationLongitude, phone, email fields, reward as Double?) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T051 [P] [US2] Create failable PetDetails initializer `init?(from: PetDetailsDTO)` with enum validation (lowercase conversion), date parsing with fallback (lastSeenDate ISO 8601, createdAt ISO 8601, updatedAt custom "YYYY-MM-DD HH:MM:SS"), and correct field mapping in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T052 [US2] Implement getAnimalDetails method with URLSession, path parameter, JSON decoding, error handling (404→notFound, 500→httpError) in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T053 [US2] Add invalidData error handling for failed DTO→Domain conversion in getAnimalDetails in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
+- [X] T054 [P] [US2] Add SwiftDoc documentation to getAnimalDetails method in `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift`
 
 **Verification**:
 - [ ] T055 [US2] Run unit tests and verify all US2 tests pass
