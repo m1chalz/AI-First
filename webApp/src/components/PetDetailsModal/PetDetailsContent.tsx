@@ -8,6 +8,7 @@ import { formatMicrochip } from '../../utils/microchip-formatter';
 import { formatSpecies, formatSex } from '../../utils/species-formatter';
 import { buildMapUrl } from '../../utils/map-url-builder';
 import styles from './PetDetailsContent.module.css';
+import config from '../../config/config';
 
 interface PetDetailsContentProps {
     pet: Animal;
@@ -19,9 +20,7 @@ const getGenderIcon = (sex: string): string => {
     return '';
 };
 
-const getStatusBadgeColor = (status: AnimalStatus): string => {
-    return ANIMAL_STATUS_BADGE_COLORS[status] || '#93A2B4';
-};
+const getStatusBadgeColor = (status: AnimalStatus): string => ANIMAL_STATUS_BADGE_COLORS[status] || '#93A2B4';
 
 export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => {
     const statusColor = getStatusBadgeColor(pet.status);
@@ -37,7 +36,7 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
             {pet.photoUrl && (
                 <div className={styles.heroSection}>
                     <img
-                        src={pet.photoUrl}
+                        src={`${config.apiBaseUrl}${pet.photoUrl}`}
                         alt={pet.petName ? `${pet.petName} photo` : 'Pet photo'}
                         className={styles.heroImage}
                     />

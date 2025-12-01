@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Disable cleartext traffic by default; overridden in debug builds. -->
+    <bool name="allow_clear_text">false</bool>
+</resources>
+
+

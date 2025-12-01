@@ -25,7 +25,10 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - FileManager-backed `PhotoAttachmentCache` that writes image data to `~/Library/Caches/PetSpot/ReportMissingPet/<uuid>.img` plus lightweight metadata inside `ReportMissingPetFlowState` so selection persists through navigation/backgrounding and can be purged on submit/cancel (FR-010). (028-ios-animal-photo-screen)
 - Kotlin (JVM 17 target) + Jetpack Compose, Navigation Compose (androidx.navigation:navigation-compose), Koin (018-android-missing-pet-flow)
 - N/A (UI-only, state managed in ViewModel memory only) (018-android-missing-pet-flow)
-
+- Kotlin 2.0+, JVM 17 + Ktor Client + OkHttp Engine (HTTP client), Kotlinx Serialization (JSON), Koin (DI - already configured) (029-android-api-integration)
+- N/A (read-only API consumption) (029-android-api-integration)
+- Swift 5.9+ (Xcode 15+) + SwiftUI (iOS 18+), UIKit (coordinators), CoreLocation (GPS) (031-ios-animal-description-screen)
+- In-memory session container (constructor-injected to ViewModel) (031-ios-animal-description-screen)
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
@@ -52,9 +55,25 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
-- 018-android-missing-pet-flow: Added Kotlin (JVM 17 target) + Jetpack Compose, Navigation Compose (androidx.navigation:navigation-compose), Koin
+- 031-ios-animal-description-screen: Added Swift 5.9+ (Xcode 15+) + SwiftUI (iOS 18+), UIKit (coordinators), CoreLocation (GPS)
+- 029-android-api-integration: Added Kotlin 2.0+, JVM 17 + Ktor Client + OkHttp Engine (HTTP client), Kotlinx Serialization (JSON), Koin (DI - already configured)
 - 028-ios-animal-photo-screen: Added Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag)
 - 027-web-pet-details-screen: Added TypeScript 5.0+ (ES2020 target), React 18.2.0 + React, React DOM, React Portal (built-in), CSS Modules
+- 026-android-location-permissions: Added Kotlin (JVM 17 target)
+- 021-announcement-photo-upload: Added Node.js v24 (LTS), TypeScript (strict mode)
+- 019-ios-chip-number-screen: Added Swift 5.9+ (iOS 15+ deployment target) + SwiftUI (UI layer), UIKit (coordinators, navigation), Foundation (data types), SwiftGen (localization - mandatory)
+- 018-android-missing-pet-flow: Added Kotlin (JVM 17 target) + Jetpack Compose, Navigation Compose (androidx.navigation:navigation-compose), Koin
+- 017-ios-missing-pet-flow: Added Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation
+- 016-e2e-java-migration: Added Java 21 (LTS)
+- 015-ios-location-permissions: Added Swift 5.9+ (Xcode 15+) + CoreLocation (iOS native framework for location services), SwiftUI, Combine
+- 010-pet-details-screen: Added Kotlin (JVM 17 target)
+- 014-remove-location-fields: Added TypeScript (strict mode) + Express.js, Knex, Zod, Vitest, SuperTes
+- 013-animal-list-screen: Added Kotlin (Android, version as defined in Gradle `libs.versions.toml`) + Jetpack Compose UI, AndroidX Navigation (Navigation Component), Kotlin Coroutines + Flow, Koin (DI), JUnit + Kotlin Test + Turbine for unit tests, Appium + WebdriverIO + TypeScript for mobile E2E
+- 012-ios-pet-details-screen: Added Swift 5.9+ + SwiftUI (UI layer), UIKit (coordinator navigation), URLSession or Alamofire (HTTP client)
+- 011-migrate-from-kmp: Added N/A (infrastructure migration, no data storage changes)
+- 006-pets-api: Added TypeScript with Node.js v24 (LTS), strict mode enabled + Express.js (web framework), Knex (query builder), SQLite3 (development database), Vitest (test runner), SuperTest (API testing), ESLint with TypeScript plugin
+- 005-animal-list: Added Kotlin 2.2.20+ (Android/Shared), Swift 5.9+ (iOS), TypeScript 5.x (Web), Node.js v24 (Backend - not affected by this feature)
+- 001-koin-kmp: Added Kotlin 1.9+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests)
 
 
 <!-- MANUAL ADDITIONS START -->

@@ -1,16 +1,17 @@
-export function formatMicrochip(raw: string): string {
-  const cleaned = raw.replace(/\D/g, '');
-  if (cleaned.length === 0) {
-    return '';
+export function stripNonDigits(input: string): string {
+  return input.replace(/\D/g, '');
+}
+
+export function formatMicrochip(digits: string): string {
+  const cleaned = digits.slice(0, 15);
+  
+  if (cleaned.length <= 5) {
+    return cleaned;
   }
-  // If exactly 15 digits, format as XXXXX-XXXXX-XXXXX
-  if (cleaned.length === 15) {
-    return cleaned.replace(/(\d{5})(\d{5})(\d{5})/, '$1-$2-$3');
+  
+  if (cleaned.length <= 10) {
+    return `${cleaned.slice(0, 5)}-${cleaned.slice(5)}`;
   }
-  // If more than 15 digits, take first 15 and format
-  if (cleaned.length > 15) {
-    return cleaned.substring(0, 15).replace(/(\d{5})(\d{5})(\d{5})/, '$1-$2-$3');
-  }
-  // Otherwise return as-is (for numbers less than 15 digits)
-  return raw;
+  
+  return `${cleaned.slice(0, 5)}-${cleaned.slice(5, 10)}-${cleaned.slice(10)}`;
 }
