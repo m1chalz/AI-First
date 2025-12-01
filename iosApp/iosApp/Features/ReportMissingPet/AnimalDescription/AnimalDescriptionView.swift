@@ -6,8 +6,9 @@ struct AnimalDescriptionView: View {
     @ObservedObject var viewModel: AnimalDescriptionViewModel
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
                 // Heading
                 Text(L10n.AnimalDescription.heading)
                     .font(.custom("Inter-Regular", size: 32))
@@ -88,8 +89,25 @@ struct AnimalDescriptionView: View {
                     model: viewModel.descriptionTextAreaModel,
                     text: $viewModel.additionalDescription
                 )
+            }
+            .padding()
+            .padding(.bottom, 120) // Extra bottom padding for button section
+            }
+            .background(Color.white)
+            
+            // Bottom section with toast and button (outside ScrollView)
+            VStack(spacing: 12) {
+                if viewModel.showToast {
+                    Text(viewModel.toastMessage)
+                        .font(.custom("Hind-Regular", size: 14))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(Color.black.opacity(0.8))
+                        .cornerRadius(8)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
                 
-                // Continue button
                 Button(action: { viewModel.onContinueTapped() }) {
                     Text(L10n.AnimalDescription.continueButton)
                         .font(.custom("Hind-Regular", size: 18))
@@ -101,10 +119,23 @@ struct AnimalDescriptionView: View {
                 }
                 .accessibilityIdentifier("animalDescription.continueButton.tap")
             }
-            .padding()
-            .padding(.bottom, 20) // Extra bottom padding for keyboard
+            .padding(.horizontal, 22)
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .scrollDismissesKeyboard(.interactively)
+        .animation(.easeInOut(duration: 0.3), value: viewModel.showToast)
+        .onChange(of: viewModel.showToast) { newValue in
+            if newValue {
+                // Auto-hide toast after 3 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    withAnimation {
+                        viewModel.showToast = false
+                    }
+                }
+            }
+        }
         .alert("Location Permission Required", isPresented: $viewModel.showPermissionDeniedAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Go to Settings") {
@@ -116,29 +147,6 @@ struct AnimalDescriptionView: View {
         } message: {
             Text("Location access is needed to capture GPS coordinates. Please enable it in Settings.")
         }
-        .overlay(
-            // Toast notification for validation errors
-            Group {
-                if viewModel.showToast {
-                    VStack {
-                        Spacer()
-                        Text(viewModel.toastMessage)
-                            .padding()
-                            .background(Color.black.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .padding(.bottom, 50)
-                    }
-                    .transition(.move(edge: .bottom))
-                    .animation(.easeInOut, value: viewModel.showToast)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            viewModel.showToast = false
-                        }
-                    }
-                }
-            }
-        )
     }
 }
 

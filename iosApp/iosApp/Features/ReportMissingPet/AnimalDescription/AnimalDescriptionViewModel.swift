@@ -236,9 +236,11 @@ class AnimalDescriptionViewModel: ObservableObject {
             updateFlowState()
             onContinue?()
         } else {
-            // Show toast and inline errors
-            showToast = true
-            toastMessage = L10n.AnimalDescription.Toast.validationErrors
+            // Show toast and inline errors with animation
+            withAnimation {
+                showToast = true
+                toastMessage = L10n.AnimalDescription.Toast.validationErrors
+            }
             applyValidationErrors(errors)
         }
     }
