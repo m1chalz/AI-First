@@ -1,3 +1,4 @@
+import config from '../config/config';
 import type { Animal } from '../types/animal';
 
 interface BackendAnnouncementsResponse {
@@ -5,10 +6,9 @@ interface BackendAnnouncementsResponse {
 }
 
 export class AnimalRepository {
-    private readonly apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
     
     async getAnimals(): Promise<Animal[]> {
-        const response = await fetch(`${this.apiBaseUrl}/api/v1/announcements`);
+        const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements`);
         
         if (!response.ok) {
             throw new Error(`Failed to fetch animals: ${response.status} ${response.statusText}`);
@@ -19,7 +19,7 @@ export class AnimalRepository {
     }
     
     async getPetById(id: string): Promise<Animal> {
-        const response = await fetch(`${this.apiBaseUrl}/api/v1/announcements/${id}`);
+        const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements/${id}`);
         
         if (!response.ok) {
             if (response.status === 404) {

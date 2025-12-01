@@ -4,6 +4,7 @@ import { ANIMAL_STATUS_BADGE_COLORS, type Animal, type AnimalSex } from '../../t
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatSpecies } from '../../utils/species-formatter';
 import styles from './AnimalList.module.css';
+import config from '../../config/config';
 
 interface AnimalCardProps {
     animal: Animal;
@@ -28,7 +29,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }
             <div className={styles.photoPlaceholder}>
                 {animal.photoUrl ? (
                     <img
-                        src={animal.photoUrl}
+                        src={`${config.apiBaseUrl}${animal.photoUrl}`}
                         alt={`${animal.petName || 'Pet'} photo`}
                         className={styles.photoImage}
                         loading="lazy"

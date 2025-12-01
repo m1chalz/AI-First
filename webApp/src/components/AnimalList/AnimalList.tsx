@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAnimalList } from '../../hooks/use-animal-list';
 import { useModal } from '../../hooks/use-modal';
 import { AnimalCard } from './AnimalCard';
@@ -7,12 +8,12 @@ import { PetDetailsModal } from '../PetDetailsModal/PetDetailsModal';
 import styles from './AnimalList.module.css';
 
 export const AnimalList: React.FC = () => {
+    const navigate = useNavigate();
     const {
         animals,
         isLoading,
         error,
         isEmpty,
-        reportMissing
     } = useAnimalList();
     
     const { isOpen, selectedPetId, openModal, closeModal } = useModal();
@@ -26,7 +27,7 @@ export const AnimalList: React.FC = () => {
                     <div className={styles.headerButtons}>
                         <button
                             className={styles.primaryButton}
-                            onClick={reportMissing}
+                            onClick={() => navigate('/report-missing/microchip')}
                             data-testid="animalList.reportMissingButton"
                         >
                             Report a Missing Animal
