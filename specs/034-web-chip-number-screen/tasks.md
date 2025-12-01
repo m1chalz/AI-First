@@ -182,26 +182,26 @@
 ### Tests for User Story 3 (TDD - Write First) ✅
 
 **Unit Tests**:
-- [ ] T068 [P] [US3] RED: Write failing test for Header component back button in `/webApp/src/components/ReportMissingPet/__tests__/Header.test.tsx` (test onBack callback invocation)
-- [ ] T069 [P] [US3] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for back button handler (verify clearFlowState called, navigation to /pets)
+- [x] T068 [P] [US3] RED: Write failing test for Header component back button in `/webApp/src/components/ReportMissingPet/__tests__/Header.test.tsx` (test onBack callback invocation)
+- [x] T069 [P] [US3] RED: Add failing test to `MicrochipNumberScreen.test.tsx` for back button handler (verify clearFlowState called, navigation to /pets)
 
 **E2E Tests**:
-- [ ] T070 [P] [US3] Add Scenario 3 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User cancels flow via back button)
-- [ ] T071 [P] [US3] Implement Page Object methods for back button in `ReportMissingPetStep1Page.java` (clickBackButton)
-- [ ] T072 [P] [US3] Implement step definitions for Scenario 3 in `ReportMissingPetStep1Steps.java`
+- [x] T070 [P] [US3] Add Scenario 3 to `/e2e-tests/src/test/resources/features/web/report-missing-pet-step1.feature` (User cancels flow via back button)
+- [x] T071 [P] [US3] Implement Page Object methods for back button in `ReportMissingPetStep1Page.java` (clickBackButton)
+- [x] T072 [P] [US3] Implement step definitions for Scenario 3 in `ReportMissingPetStep1Steps.java`
 
 ### Implementation for User Story 3
 
 **Header Component**:
-- [ ] T073 [P] [US3] GREEN: Implement Header component in `/webApp/src/components/ReportMissingPet/Header.tsx` (back button, title, progress indicator with data-testid attributes)
-- [ ] T074 [US3] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/Header.test.tsx` and verify tests pass
-- [ ] T075 [US3] LINT: Run `npm run lint` and fix violations
+- [x] T073 [P] [US3] GREEN: Implement Header component in `/webApp/src/components/ReportMissingPet/Header.tsx` (back button, title, progress indicator with data-testid attributes)
+- [x] T074 [US3] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/Header.test.tsx` and verify tests pass
+- [x] T075 [US3] LINT: Run `npm run lint` and fix violations
 
 **Back Button Handler**:
-- [ ] T076 [US3] GREEN: Implement back button handler in `MicrochipNumberScreen` (call clearFlowState, navigate to /pets)
-- [ ] T077 [US3] REFACTOR: Extract navigation logic to utility function if complex
-- [ ] T078 [US3] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify back button test passes
-- [ ] T079 [US3] LINT: Run `npm run lint` and fix violations
+- [x] T076 [US3] GREEN: Implement back button handler in `MicrochipNumberScreen` (call clearFlowState, navigate to /pets)
+- [x] T077 [US3] REFACTOR: Extract navigation logic to utility function if complex
+- [x] T078 [US3] TEST: Run `npm test -- /webApp/src/components/ReportMissingPet/__tests__/MicrochipNumberScreen.test.tsx` and verify back button test passes
+- [x] T079 [US3] LINT: Run `npm run lint` and fix violations
 
 **E2E Verification**:
 - [ ] T080 [US3] Run E2E test for Scenario 3: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web and @reportMissingPet and @US3"`

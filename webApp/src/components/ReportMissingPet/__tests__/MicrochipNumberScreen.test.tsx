@@ -1,8 +1,18 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MicrochipNumberScreen } from '../MicrochipNumberScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+
+const mockNavigate = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 const renderWithProviders = (component: React.ReactElement) => {
   return render(
@@ -15,6 +25,10 @@ const renderWithProviders = (component: React.ReactElement) => {
 };
 
 describe('MicrochipNumberScreen', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+  });
+
   it('renders the screen', () => {
     // when
     renderWithProviders(<MicrochipNumberScreen />);
@@ -69,16 +83,22 @@ describe('MicrochipNumberScreen', () => {
     expect(continueButton).toBeTruthy();
   });
 
-  it('handles back button click', () => {
+  it('navigates to home and clears flow state when back button clicked', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
-
-    // when
+    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    
+    // when (enter some data first)
+    fireEvent.change(input, { target: { value: '12345' } });
+    expect(input.value).toBe('12345');
+    
+    // when (click back button)
     const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
     fireEvent.click(backButton);
 
-    // then
-    expect(backButton).toBeTruthy();
+    // then (should navigate to home)
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
   });
 });
 
