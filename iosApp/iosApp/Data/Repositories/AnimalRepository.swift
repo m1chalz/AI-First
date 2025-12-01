@@ -206,6 +206,54 @@ private struct PetDetailsDTO: Codable {
     let updatedAt: String
 }
 
+// MARK: - Data Layer Extensions (DTO Conversion Helpers)
+
+/// Extension for converting backend DTO strings to domain enums
+/// Located in Data layer to prevent Domain layer from knowing about Data layer conversion needs
+extension AnimalSpecies {
+    /// Failable initializer from backend API string (case-insensitive)
+    /// Used for DTO→Domain conversion in repository
+    fileprivate init?(fromDTO string: String) {
+        let uppercased = string.uppercased()
+        switch uppercased {
+        case "DOG":
+            self = .dog
+        case "CAT":
+            self = .cat
+        case "BIRD":
+            self = .bird
+        case "RABBIT":
+            self = .rabbit
+        case "RODENT":
+            self = .rodent
+        case "REPTILE":
+            self = .reptile
+        case "OTHER":
+            self = .other
+        default:
+            return nil
+        }
+    }
+}
+
+extension AnimalGender {
+    /// Failable initializer from backend API string (case-insensitive)
+    /// Used for DTO→Domain conversion in repository
+    fileprivate init?(fromDTO string: String) {
+        let uppercased = string.uppercased()
+        switch uppercased {
+        case "MALE":
+            self = .male
+        case "FEMALE":
+            self = .female
+        case "UNKNOWN":
+            self = .unknown
+        default:
+            return nil
+        }
+    }
+}
+
 // MARK: - Domain Model Extensions
 
 extension Animal {
@@ -213,7 +261,7 @@ extension Animal {
     /// Allows graceful handling of invalid items in list (skip instead of crash)
     fileprivate init?(from dto: AnnouncementDTO) {
         // Parse species
-        guard let species = AnimalSpecies(fromString: dto.species) else {
+        guard let species = AnimalSpecies(fromDTO: dto.species) else {
             print("Warning: Invalid species '\(dto.species)' for announcement \(dto.id), skipping item")
             return nil
         }
@@ -226,7 +274,7 @@ extension Animal {
         }
         
         // Parse gender (if sex is missing, default to unknown)
-        let gender = dto.sex.flatMap({ AnimalGender(fromString: $0) }) ?? .unknown
+        let gender = dto.sex.flatMap({ AnimalGender(fromDTO: $0) }) ?? .unknown
         
         self.init(
             id: dto.id,
@@ -249,7 +297,7 @@ extension PetDetails {
     /// Failable initializer - returns nil if DTO contains invalid data
     fileprivate init?(from dto: PetDetailsDTO) {
         // Parse species
-        guard let species = AnimalSpecies(fromString: dto.species) else {
+        guard let species = AnimalSpecies(fromDTO: dto.species) else {
             print("Warning: Invalid species '\(dto.species)' for announcement \(dto.id)")
             return nil
         }
@@ -262,7 +310,7 @@ extension PetDetails {
         }
         
         // Parse gender (if sex is missing, default to unknown)
-        let gender = dto.sex.flatMap({ AnimalGender(fromString: $0) }) ?? .unknown
+        let gender = dto.sex.flatMap({ AnimalGender(fromDTO: $0) }) ?? .unknown
         
         // Parse age
         let approximateAge = dto.age.map { "\($0) years" }
