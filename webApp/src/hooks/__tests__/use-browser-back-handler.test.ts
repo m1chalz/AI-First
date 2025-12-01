@@ -3,22 +3,22 @@ import { renderHook } from '@testing-library/react';
 import { useBrowserBackHandler } from '../use-browser-back-handler';
 
 describe('useBrowserBackHandler', () => {
-  let popstateListeners: Array<(event: PopStateEvent) => void> = [];
+  let popstateListeners: ((event: PopStateEvent) => void)[] = [];
 
   beforeEach(() => {
     popstateListeners = [];
     
     // Mock addEventListener to capture listeners
-    vi.spyOn(window, 'addEventListener').mockImplementation((event: string, listener: any) => {
+    vi.spyOn(window, 'addEventListener').mockImplementation((event: string, listener: EventListenerOrEventListenerObject) => {
       if (event === 'popstate') {
-        popstateListeners.push(listener);
+        popstateListeners.push(listener as (event: PopStateEvent) => void);
       }
     });
 
     // Mock removeEventListener to remove listeners
-    vi.spyOn(window, 'removeEventListener').mockImplementation((event: string, listener: any) => {
+    vi.spyOn(window, 'removeEventListener').mockImplementation((event: string, listener: EventListenerOrEventListenerObject) => {
       if (event === 'popstate') {
-        const index = popstateListeners.indexOf(listener);
+        const index = popstateListeners.indexOf(listener as (event: PopStateEvent) => void);
         if (index > -1) {
           popstateListeners.splice(index, 1);
         }

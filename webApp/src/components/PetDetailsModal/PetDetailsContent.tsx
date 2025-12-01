@@ -20,9 +20,7 @@ const getGenderIcon = (sex: string): string => {
     return '';
 };
 
-const getStatusBadgeColor = (status: AnimalStatus): string => {
-    return ANIMAL_STATUS_BADGE_COLORS[status] || '#93A2B4';
-};
+const getStatusBadgeColor = (status: AnimalStatus): string => ANIMAL_STATUS_BADGE_COLORS[status] || '#93A2B4';
 
 export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => {
     const statusColor = getStatusBadgeColor(pet.status);

@@ -15,15 +15,13 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-const renderWithProviders = (component: React.ReactElement) => {
-  return render(
+const renderWithProviders = (component: React.ReactElement) => render(
     <BrowserRouter>
       <ReportMissingPetFlowProvider>
         {component}
       </ReportMissingPetFlowProvider>
     </BrowserRouter>
   );
-};
 
 describe('MicrochipNumberScreen', () => {
   beforeEach(() => {
