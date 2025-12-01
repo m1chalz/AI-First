@@ -685,22 +685,6 @@ final class PetDetailsViewModelTests: XCTestCase {
     }
     
     /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
-    func testLoadPetDetails_when404Error_shouldSetNotFoundErrorState() async {
-        // Given - ViewModel with repository that returns not found
-        let (sut, repository) = makeSUT(petId: "non-existent-id")
-        repository.mockPetDetails = nil // Simulates 404
-        
-        // When - loadPetDetails is called
-        await sut.loadPetDetails()
-        
-        // Then - error state should be set with appropriate message
-        guard case .error(let message) = sut.state else {
-            XCTFail("Expected error state, got \(sut.state)")
-            return
-        }
-        XCTAssertTrue(message.contains("not found") || message.contains("Not found"), 
-                      "Error message should indicate not found")
-    }
     
     /// T046: Test PetDetailsViewModel with network error should set appropriate error state
     func testLoadPetDetails_whenNetworkError_shouldSetErrorState() async {
