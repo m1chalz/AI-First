@@ -108,7 +108,7 @@
 ### Tests for User Story 2 (TDD: Write FIRST, ensure FAIL before implementation) ✅
 
 **Web Unit Tests**:
-- [ ] T031 [P] [US2] 🔴 RED: Create failing test file `/webApp/src/hooks/__tests__/use-toast.test.ts` with tests for showToast() (sets message, auto-clears after duration), multiple rapid showToast calls (last message wins), and clearToast() (immediately clears message)
+- [X] T031 [P] [US2] 🔴 RED: Create failing test file `/webApp/src/hooks/__tests__/use-toast.test.ts` with tests for showToast() (sets message, auto-clears after duration), multiple rapid showToast calls (last message wins), and clearToast() (immediately clears message)
 - [ ] T032 [P] [US2] 🔴 RED: Add tests to `/webApp/src/components/ReportMissingPet/__tests__/PhotoScreen.test.tsx` for mandatory photo validation: (1) clicking Continue without photo shows toast and prevents navigation, (2) selecting photo then removing it shows toast on next Continue click, (3) clicking back arrow with/without photo clears flow state and navigates to /
 
 **End-to-End Tests**:
@@ -117,9 +117,9 @@
 ### Implementation for User Story 2 (TDD: Implement AFTER tests fail)
 
 **Web Implementation**:
-- [ ] T034 [P] [US2] ✅ GREEN: Implement `use-toast` hook in `/webApp/src/hooks/use-toast.ts` (minimal code to pass T031 tests: useState for message, showToast function sets message and uses setTimeout to clear after duration, returns { message, showToast })
-- [ ] T035 [P] [US2] ✅ GREEN: Create `Toast.tsx` component in `/webApp/src/components/Toast/Toast.tsx` (minimal code: conditionally render div with message if message is not null, auto-hide after prop duration)
-- [ ] T036 [P] [US2] Create `Toast.module.css` in `/webApp/src/components/Toast/Toast.module.css` with styles: position fixed bottom center, background semi-transparent dark, padding, border-radius, fade-in animation
+- [X] T034 [P] [US2] ✅ GREEN: Implement `use-toast` hook in `/webApp/src/hooks/use-toast.ts` (minimal code to pass T031 tests: useState for message, showToast function sets message and uses setTimeout to clear after duration, returns { message, showToast })
+- [X] T035 [P] [US2] ✅ GREEN: Create `Toast.tsx` component in `/webApp/src/components/Toast/Toast.tsx` (minimal code: conditionally render div with message if message is not null, auto-hide after prop duration)
+- [X] T036 [P] [US2] Create `Toast.module.css` in `/webApp/src/components/Toast/Toast.module.css` with styles: position fixed bottom center, background semi-transparent dark, padding, border-radius, fade-in animation
 - [ ] T037 [US2] ✅ GREEN: Update PhotoScreen.tsx to use `use-toast` hook (minimal code to pass T032 tests: call useToast(), in handleContinue check if photo exists, if not call showToast("Photo is mandatory", 3000) and return early without navigation)
 - [ ] T038 [US2] Add Toast component to PhotoScreen.tsx render output: `<Toast message={toastMessage} />` at end of ReportMissingPetLayout children
 - [ ] T039 [US2] 🔧 REFACTOR: Extract toast duration constants (MANDATORY_PHOTO_TOAST_DURATION = 3000, VALIDATION_ERROR_TOAST_DURATION = 5000) into separate file if needed for reusability
