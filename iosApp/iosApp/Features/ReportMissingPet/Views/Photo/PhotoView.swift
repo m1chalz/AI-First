@@ -34,7 +34,7 @@ struct PhotoView: View {
             
             VStack(spacing: 12) {
                 if viewModel.showsMandatoryToast {
-                    ToastView(text: L10n.AnimalPhoto.Toast.mandatory)
+                    ToastView(model: .init(text: L10n.AnimalPhoto.Toast.mandatory))
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .accessibilityIdentifier("animalPhoto.toast")
                 }
