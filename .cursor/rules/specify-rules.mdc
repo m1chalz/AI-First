@@ -27,6 +27,8 @@ Auto-generated from all feature plans. Last updated: 2025-11-17
 - N/A (read-only API consumption) (029-android-api-integration)
 - Swift 5.9+ (Xcode 15+) + SwiftUI (iOS 18+), UIKit (coordinators), CoreLocation (GPS) (031-ios-animal-description-screen)
 - In-memory session container (constructor-injected to ViewModel) (031-ios-animal-description-screen)
+- Swift 5.9+, iOS 15+ + UIKit (coordinators), SwiftUI (views), Foundation (URLSession for HTTP) (036-ios-announcements-api)
+- N/A (consuming REST API only, no local persistence in this feature) (036-ios-announcements-api)
 - Swift 5.9+ + UIKit (navigation), SwiftUI (views), Foundation (017-ios-missing-pet-flow)
 - N/A (UI-only, no persistence) (017-ios-missing-pet-flow)
 - Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web) + Koin (io.insert-koin:koin-core for shared, koin-android for Android, koin-test for tests) (001-koin-kmp)
@@ -53,6 +55,7 @@ npm test && npm run lint
 Kotlin 2.2.20+ (KMP), Swift 5.9+ (iOS), TypeScript/ES2015+ (Web): Follow standard conventions
 
 ## Recent Changes
+- 036-ios-announcements-api: Added Swift 5.9+, iOS 15+ + UIKit (coordinators), SwiftUI (views), Foundation (URLSession for HTTP)
 - 031-ios-animal-description-screen: Added Swift 5.9+ (Xcode 15+) + SwiftUI (iOS 18+), UIKit (coordinators), CoreLocation (GPS)
 - 029-android-api-integration: Added Kotlin 2.0+, JVM 17 + Ktor Client + OkHttp Engine (HTTP client), Kotlinx Serialization (JSON), Koin (DI - already configured)
 - 028-ios-animal-photo-screen: Added Swift 5.0 toolchain (per Xcode project) targeting iOS 15+ modal flow + SwiftUI, UIKit `NavigationBackHiding`, PhotosUI `PHPickerViewController`, PhotoKit (`PHPhotoLibrary`, `PHImageManager`), SwiftGen, XCTest, Appium+Cucumber (`@ios` tag)
