@@ -95,13 +95,13 @@
 
 ### Tests for User Story 2 (MANDATORY) ✅
 
-- [ ] T021 [P] [US2] Add test `should return animal when API returns announcement by ID` to `AnimalRepositoryImplTest.kt`
-- [ ] T022 [US2] Add test `should throw exception when API returns 404 for unknown ID`
+- [X] T021 [P] [US2] Add test `should return animal when API returns announcement by ID` to `AnimalRepositoryImplTest.kt`
+- [X] T022 [US2] Add test `should throw exception when API returns 404 for unknown ID`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Add `getAnnouncementById(id: String): AnnouncementDto` suspend function to `AnnouncementApiClient.kt`
-- [ ] T024 [US2] Update `AnimalRepositoryImpl.kt` - replace mock `getAnimalById()` with API call using AnnouncementApiClient
+- [X] T023 [US2] Add `getAnnouncementById(id: String): AnnouncementDto` suspend function to `AnnouncementApiClient.kt`
+- [X] T024 [US2] Update `AnimalRepositoryImpl.kt` - replace mock `getAnimalById()` with API call using AnnouncementApiClient
 
 **Checkpoint**: Pet details displays real backend data - US2 independently testable
 
@@ -115,15 +115,15 @@
 
 ### Tests for User Story 3 (MANDATORY) ✅
 
-- [ ] T026 [P] [US3] Add test `should throw exception when network is unavailable` to `AnimalRepositoryImplTest.kt` using MockEngine that throws IOException
-- [ ] T027 [US3] Add test `should throw exception when API returns 5xx server error`
-- [ ] T028 [US3] Add test `should throw exception when API returns 4xx client error` (same handling as 5xx per clarification)
+- [X] T026 [P] [US3] Add test `should throw exception when network is unavailable` to `AnimalRepositoryImplTest.kt` using MockEngine that throws IOException
+- [X] T027 [US3] Add test `should throw exception when API returns 5xx server error`
+- [X] T028 [US3] Add test `should throw exception when API returns 4xx client error` (same handling as 5xx per clarification)
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] Verify `AnimalRepositoryImpl` wraps Ktor exceptions appropriately (IOException, ClientRequestException, ServerResponseException)
-- [ ] T030 [US3] Verify existing `AnimalListReducer` handles repository exceptions and sets error state (code review only - no changes expected)
-- [ ] T031 [US3] Verify existing `PetDetailsReducer` handles repository exceptions and sets error state (code review only - no changes expected)
+- [X] T029 [US3] Verify `AnimalRepositoryImpl` wraps Ktor exceptions appropriately (IOException, ClientRequestException, ServerResponseException)
+- [X] T030 [US3] Verify existing `AnimalListReducer` handles repository exceptions and sets error state (code review only - no changes expected)
+- [X] T031 [US3] Verify existing `PetDetailsReducer` handles repository exceptions and sets error state (code review only - no changes expected)
 
 **Checkpoint**: Error states display correctly for all failure scenarios - US3 independently testable
 
@@ -137,8 +137,8 @@
 
 ### Verification for User Story 4
 
-- [ ] T032 [US4] Verify `AnimalListUiState.isLoading` is set to true before API call in ViewModel
-- [ ] T033 [US4] Verify `PetDetailsUiState.isLoading` is set to true before API call in ViewModel
+- [X] T032 [US4] Verify `AnimalListUiState.isLoading` is set to true before API call in ViewModel
+- [X] T033 [US4] Verify `PetDetailsUiState.isLoading` is set to true before API call in ViewModel
 - [ ] T034 [US4] Manual test: Launch app with slow network → Verify loading spinner appears
 
 **Checkpoint**: Loading states display correctly - US4 verified
@@ -149,11 +149,11 @@
 
 **Purpose**: Final cleanup and verification
 
-- [ ] T035 [P] Add KDoc to `AnnouncementApiClient.kt` public methods
-- [ ] T036 [P] Add KDoc to `AnnouncementMapper.kt` for complex mapping rules
-- [ ] T037 Remove all `MockAnimalData` references and delay() calls from `AnimalRepositoryImpl.kt`
-- [ ] T038 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for new code
-- [ ] T039 Run `./gradlew :composeApp:assembleDebug` and verify app builds successfully
+- [X] T035 [P] Add KDoc to `AnnouncementApiClient.kt` public methods
+- [X] T036 [P] Add KDoc to `AnnouncementMapper.kt` for complex mapping rules
+- [X] T037 Remove all `MockAnimalData` references and delay() calls from `AnimalRepositoryImpl.kt`
+- [X] T038 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for new code
+- [X] T039 Run `./gradlew :composeApp:assembleDebug` and verify app builds successfully
 - [ ] T040 Manual smoke test: Launch app → View list → Tap card → View details → Back → Verify no regressions
 - [ ] T041 Verify quickstart.md instructions work for new developers
 

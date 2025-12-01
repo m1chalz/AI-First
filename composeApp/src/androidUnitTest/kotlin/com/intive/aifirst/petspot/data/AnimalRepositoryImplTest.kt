@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.IOException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -160,6 +161,149 @@ class AnimalRepositoryImplTest {
             // When/Then
             assertThrows<Exception> {
                 repository.getAnimals()
+            }
+        }
+
+    @Test
+    fun `getAnimals should throw exception when network is unavailable`() =
+        runTest {
+            // Given
+            val mockEngine =
+                MockEngine { _ ->
+                    throw IOException("Network unavailable")
+                }
+            val repository = createRepository(mockEngine)
+
+            // When/Then
+            assertThrows<IOException> {
+                repository.getAnimals()
+            }
+        }
+
+    // endregion
+
+    // region getAnimalById - Success scenarios
+
+    @Test
+    fun `getAnimalById should return animal when API returns announcement by ID`() =
+        runTest {
+            // Given
+            val animalId = "550e8400-e29b-41d4-a716-446655440000"
+            val mockEngine =
+                MockEngine { request ->
+                    assertEquals("$baseUrl/api/v1/announcements/$animalId", request.url.toString())
+                    respond(
+                        content =
+                            """
+                            {
+                                "id": "$animalId",
+                                "petName": "Buddy",
+                                "species": "Golden Retriever",
+                                "breed": "Purebred",
+                                "sex": "MALE",
+                                "age": 3,
+                                "description": "Very friendly golden retriever",
+                                "microchipNumber": "123456789012345",
+                                "locationLatitude": 52.2297,
+                                "locationLongitude": 21.0122,
+                                "lastSeenDate": "2025-11-25",
+                                "email": "owner@example.com",
+                                "phone": "+48 123 456 789",
+                                "photoUrl": "https://example.com/buddy.jpg",
+                                "status": "MISSING",
+                                "reward": "1000 PLN",
+                                "createdAt": "2025-11-24T12:00:00Z",
+                                "updatedAt": "2025-11-24T12:00:00Z"
+                            }
+                            """.trimIndent(),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val repository = createRepository(mockEngine)
+
+            // When
+            val result = repository.getAnimalById(animalId)
+
+            // Then
+            assertEquals(animalId, result.id)
+            assertEquals("Buddy", result.name)
+            assertEquals("Golden Retriever", result.species)
+            assertEquals("Purebred", result.breed)
+            assertEquals(AnimalGender.MALE, result.gender)
+            assertEquals(AnimalStatus.MISSING, result.status)
+            assertEquals(3, result.age)
+            assertEquals("Very friendly golden retriever", result.description)
+            assertEquals("123456789012345", result.microchipNumber)
+            assertEquals(52.2297, result.location.latitude)
+            assertEquals(21.0122, result.location.longitude)
+            assertEquals("2025-11-25", result.lastSeenDate)
+            assertEquals("owner@example.com", result.email)
+            assertEquals("+48 123 456 789", result.phone)
+            assertEquals("https://example.com/buddy.jpg", result.photoUrl)
+            assertEquals("1000 PLN", result.rewardAmount)
+        }
+
+    // endregion
+
+    // region getAnimalById - Error scenarios
+
+    @Test
+    fun `getAnimalById should throw exception when API returns 404 for unknown ID`() =
+        runTest {
+            // Given
+            val unknownId = "unknown-id-12345"
+            val mockEngine =
+                MockEngine { _ ->
+                    respond(
+                        content = """{"error": "Announcement not found"}""",
+                        status = HttpStatusCode.NotFound,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val repository = createRepository(mockEngine)
+
+            // When/Then
+            assertThrows<Exception> {
+                repository.getAnimalById(unknownId)
+            }
+        }
+
+    @Test
+    fun `getAnimalById should throw exception when API returns 5xx server error`() =
+        runTest {
+            // Given
+            val animalId = "some-id"
+            val mockEngine =
+                MockEngine { _ ->
+                    respond(
+                        content = """{"error": "Internal Server Error"}""",
+                        status = HttpStatusCode.InternalServerError,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val repository = createRepository(mockEngine)
+
+            // When/Then
+            assertThrows<Exception> {
+                repository.getAnimalById(animalId)
+            }
+        }
+
+    @Test
+    fun `getAnimalById should throw exception when network is unavailable`() =
+        runTest {
+            // Given
+            val animalId = "some-id"
+            val mockEngine =
+                MockEngine { _ ->
+                    throw IOException("Network unavailable")
+                }
+            val repository = createRepository(mockEngine)
+
+            // When/Then
+            assertThrows<IOException> {
+                repository.getAnimalById(animalId)
             }
         }
 
