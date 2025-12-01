@@ -8,9 +8,11 @@ import Foundation
 /// - GET /api/v1/announcements/:id
 class AnimalRepository: AnimalRepositoryProtocol {
     private let urlSession: URLSession
+    private let apiDecoder: APIDecoder
     
-    init(urlSession: URLSession = .shared) {
+    init(urlSession: URLSession = .shared, apiDecoder: APIDecoder = APIDecoder()) {
         self.urlSession = urlSession
+        self.apiDecoder = apiDecoder
     }
     
     // MARK: - AnimalRepositoryProtocol Implementation
@@ -41,7 +43,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 throw RepositoryError.httpError(statusCode: httpResponse.statusCode)
             }
             
-            let listResponse = try JSONDecoder.apiDecoder.decode(
+            let listResponse = try apiDecoder.decode(
                 AnnouncementsListResponse.self,
                 from: data
             )
@@ -92,7 +94,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 throw RepositoryError.httpError(statusCode: httpResponse.statusCode)
             }
             
-            let dto = try JSONDecoder.apiDecoder.decode(PetDetailsDTO.self, from: data)
+            let dto = try apiDecoder.decode(PetDetailsDTO.self, from: data)
             
             // Convert DTO to domain model, throw error if invalid
             guard let details = PetDetails(fromDTO: dto) else {
