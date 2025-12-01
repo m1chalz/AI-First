@@ -89,7 +89,7 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
     func testRequestGPSPosition_whenAuthorized_shouldPopulateCoordinates() async {
         // Given - location service authorized with sample location
         await fakeLocationService.setStatus(.authorizedWhenInUse)
-        let sampleLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let sampleLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await fakeLocationService.setLocation(sampleLocation)
         
         // When - request GPS position
@@ -118,7 +118,7 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
     func testRequestGPSPosition_whenNotDetermined_shouldRequestPermission() async {
         // Given - location service not determined, will grant permission
         await fakeLocationService.setStatus(.notDetermined)
-        let sampleLocation = UserLocation(latitude: 40.7128, longitude: -74.0060)
+        let sampleLocation = Coordinate(latitude: 40.7128, longitude: -74.0060)
         await fakeLocationService.setLocation(sampleLocation)
         
         // Simulate user granting permission

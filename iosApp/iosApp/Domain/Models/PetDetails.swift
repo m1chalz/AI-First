@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents comprehensive pet information displayed on the details screen.
-struct PetDetails: Identifiable, Codable {
+struct PetDetails: Identifiable {
     // MARK: - Required Fields
     
     /// Unique identifier for the pet

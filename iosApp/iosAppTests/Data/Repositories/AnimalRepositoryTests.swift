@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for HTTP-based AnimalRepository implementation
 /// Tests network operations, JSON decoding, error handling, and data transformation
