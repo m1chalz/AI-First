@@ -39,10 +39,10 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Verify React Router v6 is installed in `/webApp/package.json` (required dependency)
-- [ ] T002 Verify Vitest and React Testing Library are configured in `/webApp/vite.config.ts`
-- [ ] T003 Verify E2E test infrastructure exists in `/e2e-tests/` (Selenium + Cucumber)
-- [ ] T004 Create feature directory structure in `/webApp/src/components/ReportMissingPet/`
+- [x] T001 Verify React Router v6 is installed in `/webApp/package.json` (required dependency)
+- [x] T002 Verify Vitest and React Testing Library are configured in `/webApp/vite.config.ts`
+- [x] T003 Verify E2E test infrastructure exists in `/e2e-tests/` (Selenium + Cucumber)
+- [x] T004 Create feature directory structure in `/webApp/src/components/ReportMissingPet/`
 
 ---
 
