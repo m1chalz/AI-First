@@ -34,7 +34,11 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Formatted location text with coordinates
     var locationText: String {
-        String(format: "%.4f, %.4f", animal.coordinate.latitude, animal.coordinate.longitude)
+        let lat = animal.coordinate.latitude
+        let lon = animal.coordinate.longitude
+        let latDir = lat >= 0 ? "N" : "S"
+        let lonDir = lon >= 0 ? "E" : "W"
+        return String(format: "%.4f° %@, %.4f° %@", abs(lat), latDir, abs(lon), lonDir)
     }
     
     /// Species display name

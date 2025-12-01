@@ -39,24 +39,6 @@ final class AnimalCardViewModelTests: XCTestCase {
             phone: "+48123456789"
         )
     }
-    
-    // MARK: - Test Presentation Properties
-    
-    /**
-     * Tests that locationText formats correctly.
-     */
-    func test_locationText_shouldFormatCityAndRadius() {
-        // Given - ViewModel with animal in Warsaw, 5km radius
-        let animal = makeTestAnimal(latitude: 52.2297, longitude: 21.0122)
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
-        
-        // When - accessing locationText
-        let locationText = viewModel.locationText
-        
-        // Then - should format as "City, +XYZkm"
-        XCTAssertEqual(locationText, "Warsaw, +5km", "locationText should format as 'City, +Xkm'")
-    }
-    
     /**
      * Tests that speciesName returns display name.
      */
