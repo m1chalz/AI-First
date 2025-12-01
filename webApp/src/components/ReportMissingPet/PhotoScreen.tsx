@@ -1,17 +1,47 @@
+import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { flowNavigation } from '../../routes/report-missing-pet-routes';
+import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import styles from './ReportMissingPetLayout.module.css';
 
 export function PhotoScreen() {
-  const { flowState } = useReportMissingPetFlow();
+  const navigate = useNavigate();
+  const { flowState, clearFlowState } = useReportMissingPetFlow();
+
+  const handleBack = () => {
+    navigate(flowNavigation.goToPreviousStep(FlowStep.Photo));
+  };
+
+  const handleContinue = () => {
+    clearFlowState();
+    navigate('/', { replace: true });
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Photo Step - Coming Soon</h1>
-      <p>This is step 2/4 of the flow</p>
-      <p>
-        <strong>Flow State:</strong>
+    <ReportMissingPetLayout
+      title="Photo"
+      progress="2/4"
+      onBack={handleBack}
+    >
+      <h2 className={styles.heading}>Photo Upload</h2>
+      
+      <p className={styles.description}>
+        This is a placeholder for the photo upload step. Future implementation will allow uploading pet photos.
       </p>
-      <pre>{JSON.stringify(flowState, null, 2)}</pre>
-    </div>
+      
+      <div className={styles.description} style={{ marginTop: '16px' }}>
+        <strong>Current Flow State:</strong>
+        <br />
+        Microchip Number: {flowState.microchipNumber || 'N/A'}
+        <br />
+        Current Step: {flowState.currentStep}
+      </div>
+      
+      <button onClick={handleContinue} className={styles.primaryButton}>
+        Complete Flow (Placeholder)
+      </button>
+    </ReportMissingPetLayout>
   );
 }
 
