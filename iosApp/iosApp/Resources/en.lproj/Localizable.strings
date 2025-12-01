@@ -22,6 +22,7 @@
 "animalList.error.title" = "Error";
 "animalList.error.prefix" = "Error: %@";
 "animalList.error.generic" = "Something went wrong. Please try again.";
+"animalList.error.loadingFailed" = "Failed to load announcements. Please try again.";
 "animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
 
 /* MARK: - Animal Card */
@@ -36,6 +37,7 @@
 
 // Error state
 "petDetails.error.title" = "Failed to load pet details";
+"petDetails.error.loadingFailed" = "Failed to load pet details. Please try again.";
 
 // Labels
 "petDetails.label.dateOfDisappearance" = "Date of Disappearance";

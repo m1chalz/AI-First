@@ -52,7 +52,7 @@ class PetDetailsViewModel: ObservableObject {
             let petDetails = try await repository.getPetDetails(id: petId)
             state = .loaded(petDetails)
         } catch {
-            state = .error(error.localizedDescription)
+            state = .error(L10n.PetDetails.Error.loadingFailed)
         }
     }
     

@@ -163,7 +163,7 @@ class AnimalListViewModel: ObservableObject {
             let animals = try await repository.getAnimals(near: result.location)
             updateCardViewModels(with: animals)
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = L10n.AnimalList.Error.loadingFailed
         }
         
         isLoading = false
@@ -287,7 +287,7 @@ class AnimalListViewModel: ObservableObject {
             let animals = try await repository.getAnimals(near: nil)
             updateCardViewModels(with: animals)
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = L10n.AnimalList.Error.loadingFailed
         }
     }
     
