@@ -55,13 +55,13 @@ class AnimalDescriptionViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let flowState: ReportMissingPetFlowState
-    private let locationService: LocationServiceProtocol
+    private let locationHandler: LocationPermissionHandler
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState, locationService: LocationServiceProtocol) {
+    init(flowState: ReportMissingPetFlowState, locationHandler: LocationPermissionHandler) {
         self.flowState = flowState
-        self.locationService = locationService
+        self.locationHandler = locationHandler
         
         // Load existing data from flow state if present (returning from Step 4)
         if let existingDate = flowState.disappearanceDate {
@@ -253,36 +253,22 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     /// Called when user taps GPS button (async)
     func requestGPSPosition() async {
-        let status = await locationService.authorizationStatus
+        let result = await locationHandler.requestLocationWithPermissions()
         
-        if status == .notDetermined {
-            // Request permission (system alert shown automatically)
-            let newStatus = await locationService.requestWhenInUseAuthorization()
-            if newStatus.isAuthorized {
-                await fetchLocation()
-            } else {
-                showPermissionDeniedAlert = true
-            }
-        } else if status.isAuthorized {
-            await fetchLocation()
-        } else {
-            // Denied/restricted → show custom alert
+        // Show alert for denied/restricted (per-action policy - always show)
+        if result.status.shouldShowCustomPopup {
             showPermissionDeniedAlert = true
         }
-    }
-    
-    /// Fetches location from LocationService and populates lat/long fields
-    private func fetchLocation() async {
-        guard let location = await locationService.requestLocation() else {
-            // Location fetch failed
-            gpsHelperText = "Failed to get location"
-            return
-        }
         
-        // Update latitude/longitude fields (formatted to 5 decimals)
-        latitude = String(format: "%.5f", location.latitude)
-        longitude = String(format: "%.5f", location.longitude)
-        gpsHelperText = L10n.AnimalDescription.gpsHelperText
+        // Populate fields if location fetched successfully
+        if let location = result.location {
+            latitude = String(format: "%.5f", location.latitude)
+            longitude = String(format: "%.5f", location.longitude)
+            gpsHelperText = L10n.AnimalDescription.gpsHelperText
+        } else if result.status.isAuthorized {
+            // Authorized but location fetch failed
+            gpsHelperText = "Failed to get location"
+        }
     }
     
     // MARK: - Private Helpers

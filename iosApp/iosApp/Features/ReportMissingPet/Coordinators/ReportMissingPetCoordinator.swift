@@ -122,10 +122,10 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        // Create AnimalDescriptionViewModel with flow state and location service
+        // Create AnimalDescriptionViewModel with flow state and location handler
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationService: ServiceContainer.shared.locationService
+            locationHandler: ServiceContainer.shared.locationPermissionHandler
         )
         
         viewModel.onContinue = { [weak self] in
