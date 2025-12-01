@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "na podstawie specyfikacji 019 przygotuj podobną dla aplikacji webowej. oprzyj się na designach z figmy dla webówki: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=315-15744&m=dev"
 
+## Clarifications
+
+### Session 2025-12-01
+
+- Q: How should the application handle the browser's back button during the 4-step flow? → A: Treat browser back same as in-app back arrow (cancel flow, return to pet list, clear state)
+- Q: Should flow state persist across browser refreshes? → A: No persistence - refresh clears all flow state (user must restart from pet list)
+- Q: How should navigation between screens be implemented? → A: React Router - URL-based routing with routes for each step
+- Q: What should happen when a user directly accesses a flow step URL without starting from step 1? → A: Redirect to step 1 - always start flow from beginning
+- Q: How should the input field handle paste operations? → A: Strip non-numeric characters automatically (sanitize pasted content to digits only)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Report Missing Pet with Known Microchip (Priority: P1)
@@ -72,12 +82,15 @@ User enters microchip data, proceeds to step 2/4, then navigates back to step 1/
 ### Edge Cases
 
 - What happens when user enters non-numeric characters into the microchip field? (Should be prevented via input type="tel" or pattern validation)
+- What happens when user pastes content with non-numeric characters (e.g., "ABC123XYZ456")? (Non-numeric characters are automatically stripped; only digits remain and are formatted)
+- What happens when user pastes more than 15 digits? (Accept first 15 digits only, discard excess)
 - What happens when user enters fewer than 15 digits? (Should be allowed since field is optional)
 - What happens when user attempts to enter more than 15 digits? (Input should be limited to 15 digits)
 - What happens when user rapidly types digits? (Formatting should keep up without lag or cursor jumping)
 - How does the screen handle different viewport sizes (mobile, tablet, desktop)? (Layout should be responsive and centered)
-- What happens if user refreshes the browser during the flow? (Data should not persist across page refreshes unless explicitly saved to session/local storage)
-- What happens when user uses browser back button instead of the in-app back arrow? (Should handle gracefully, ideally preventing default behavior or managing flow state correctly)
+- What happens if user refreshes the browser during the flow? (All flow state is cleared; user returns to pet list and must restart flow)
+- What happens when user uses browser back button instead of the in-app back arrow? (Treated same as in-app back arrow: cancels flow, returns to pet list, clears all flow state)
+- What happens when user directly accesses a flow step URL (e.g., types /report-missing/step2 or uses bookmarked URL)? (Redirected to step 1 to ensure complete data collection from the beginning)
 
 ## Requirements *(mandatory)*
 
@@ -104,6 +117,11 @@ User enters microchip data, proceeds to step 2/4, then navigates back to step 1/
 - **FR-019**: Flow State MUST be managed via React state management (Context API, custom hooks, or state management library)
 - **FR-020**: Flow State MUST persist microchip number and other inputs as user progresses through the 4-step "report missing pet" flow
 - **FR-021**: Flow State MUST be cleared when user cancels the flow (clicks back arrow) or completes the flow
+- **FR-022**: Browser back button MUST be handled to cancel the entire flow, return to pet list, and clear flow state (same behavior as in-app back arrow)
+- **FR-023**: Browser refresh MUST clear all flow state and return user to pet list (no persistence to sessionStorage or localStorage)
+- **FR-024**: Navigation MUST use React Router with URL-based routing for each flow step (each step has its own route/URL)
+- **FR-025**: Direct URL access to any flow step (step 2/4, 3/4, or 4/4) without active flow state MUST redirect user to step 1/4 to ensure complete data collection
+- **FR-026**: Paste operations MUST automatically strip all non-numeric characters from pasted content and apply formatting to remaining digits (e.g., pasting "ABC123XYZ456" results in "12345-6" displayed)
 
 ### Key Entities
 
