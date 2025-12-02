@@ -17,24 +17,27 @@
 - Q: Backend API response format – which JSON fields are returned and what do we pass to summary? → A: Backend returns both `"id"` (UUID, e.g., `"bb3fc451-1f51-407d-bb85-2569dc9baed3"`) and `"managementPassword"` (6-digit string, e.g., `"467432"`). Extract and pass `managementPassword` to summary view (not `id`). Response also includes `photoUrl: null` (photo uploaded separately per spec 021).
 - Q: Reward field component type – should reward use single-line ValidatedTextField or multi-line TextAreaView? → A: Option A – Single-line ValidatedTextField (like phone/email fields) with `maxLength: 120` parameter to enforce character limit. Simpler and faster for short reward descriptions.
 - Q: Report submission flow – is it a single request or multiple steps? → A: **2-step process**: (1) POST /api/v1/announcements creates announcement and returns `id` + `managementPassword`; (2) POST /api/v1/announcements/:id/photos uploads photo using Basic auth (id:managementPassword). **Happy path only**: Both must succeed for navigation to summary. If either step fails, show generic error popup with retry (retries full 2-step flow). Partial failure handling (step 1 success, step 2 fail) is out of scope for initial implementation.
+- Q: Localization support – which languages and what localization system? → A: Support Polish (PL) and English (EN) using SwiftGen L10n. All user-facing strings (labels, placeholders, error messages, button text, validation messages) MUST use L10n.tr() for localization. String keys follow pattern `owners_details.{element}.{property}` (e.g., `L10n.tr("owners_details.phone.placeholder")`).
+- Q: Are we creating new files or modifying existing ones? → A: Modifying existing placeholder files: `ContactDetailsView` and `ContactDetailsViewModel` already exist in the codebase as placeholders. Navigation integration with ReportMissingPetCoordinator (spec 017) is already implemented. This spec focuses on implementing the screen content and submission logic only.
 
 ## Scope & Background
 
 This specification defines the iOS-specific implementation of the Owner's Details screen (Step 4/4) in the Missing Pet flow. It builds on the functional requirements from specification 023 but focuses exclusively on SwiftUI/UIKit implementation, iOS patterns, and integration with the ReportMissingPetCoordinator from specification 017.
 
 **Key Scope Items**:
+- **Modify existing ContactDetailsView/ContactDetailsViewModel placeholders** with full implementation
 - SwiftUI UI implementation matching Figma node 297-8113 exactly
-- MVVM-C architecture with coordinator-based navigation
-- Integration with ReportMissingPetFlowState session management
+- Input validation, 2-step backend submission (announcements + photo upload)
+- Integration with ReportMissingPetFlowState session management (already present)
 - iOS-native validation patterns and error handling
-- Backend submission on Continue (finalizes report before summary)
-- Offline handling with inline retry messaging
+- Polish/English localization using SwiftGen L10n
+- Offline handling with popup alert retry messaging
 
 **Out of Scope**:
+- Coordinator/navigation implementation (already complete per spec 017)
 - Android/Web implementations (handled by other platform specs)
 - Backend API changes (spec 009/021 contracts remain unchanged)
 - Summary screen layout (governed by spec 017)
-- Localization beyond English (future iteration)
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -109,6 +112,7 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **iOS version**: Requires iOS 15+ (align with project baseline from spec 017).
 - **2-step submission**: Step 1 creates announcement (POST /api/v1/announcements), step 2 uploads photo (POST /api/v1/announcements/:id/photos) using Basic auth with id:managementPassword from step 1. Both must succeed for navigation to summary.
 - **Failure handling**: Any failure in either step (network, backend error, timeout) shows generic error popup and retries full 2-step submission from beginning. Partial failure handling (step 1 success, step 2 fail) is out of scope for initial implementation.
+- **Localization**: All user-facing strings use SwiftGen L10n with Polish (pl-PL) and English (fallback) support. String keys follow `owners_details.*` pattern. Device locale determines display language (Polish for pl-PL, English for all others).
 
 ## Requirements *(mandatory)*
 
@@ -127,10 +131,11 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **FR-011**: When Continue is tapped with valid inputs but device is offline, the app MUST stay on Step 4, show popup alert "No connection. Please check your network and try again." with "Try Again" and "Cancel" buttons, keep all inputs intact, retry submission on "Try Again", and dismiss alert on "Cancel" without clearing inputs.
 - **FR-012**: Successful Continue action MUST complete 2-step submission: (1) create announcement via POST /api/v1/announcements → receive `id` and `managementPassword`; (2) upload photo via POST /api/v1/announcements/:id/photos. Only after BOTH succeed, pass managementPassword to summary via coordinator closure `onReportSent(managementPassword: String)` and navigate to summary screen showing managementPassword for user reference. Backend sends confirmation email asynchronously after step 1. **Failure handling**: If either step fails (network error, backend 4xx/5xx, timeout), stay on Step 4, show generic popup alert "Something went wrong. Please try again later." with "Try Again" / "Cancel" buttons, preserve all inputs, and retry full 2-step submission on "Try Again".
 - **FR-013**: Returning from summary to Owner's Details MUST repopulate all fields exactly as saved and re-enable Continue if session data remains valid.
+- **FR-014**: All user-facing text (screen title, field labels, placeholders, helper text, validation errors, button labels, popup messages) MUST be localized using SwiftGen L10n with support for Polish (PL) and English (EN). String keys MUST follow pattern `owners_details.{element}.{property}` (e.g., `owners_details.phone.placeholder`, `owners_details.continue.button`, `owners_details.error.no_connection`).
 
 ### Key Entities *(include if feature involves data)*
 
-- **OwnersDetailsViewModel**: SwiftUI ObservableObject with @Published properties (phone, email, rewardDescription), validation computed properties (isPhoneValid, isEmailValid, canContinue), coordinator closure `onReportSent: ((String) -> Void)?` for passing managementPassword, and submitForm() action that calls backend API, extracts `managementPassword` from HTTP 201 response JSON, invokes `onReportSent(managementPassword)` on success, or shows popup alert on failure.
+- **ContactDetailsViewModel** (MODIFY EXISTING): SwiftUI ObservableObject placeholder file that needs implementation. Add @Published properties (phone, email, rewardDescription), validation computed properties (isPhoneValid, isEmailValid), coordinator closure `onReportSent: ((String) -> Void)?` for passing managementPassword (already present in placeholder), and submitForm() action that calls backend API, extracts `managementPassword` from HTTP 201 response JSON, invokes `onReportSent(managementPassword)` on success, or shows popup alert on failure.
 - **ReportMissingPetFlowState**: Existing session container from spec 017, extended to store OwnerContactDetails (phone, email, rewardDescription) and computed property hasContactInfo.
 - **OwnerContactDetails**: Session-bound structure containing phone, email, rewardDescription strings plus validation flags.
 - **AnnouncementCreatePayload**: DTO for step 1 (POST /api/v1/announcements): species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status ("MISSING"), microchipNumber (optional), description (optional), reward (optional).
@@ -155,9 +160,13 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - Summary screen (from spec 017) displays managementPassword to user for future reference.
 - Photo from Steps 1-3 is stored in FlowState (from spec 017) as UIImage or Data ready for multipart upload in step 2.
 - Repository layer will create dedicated DTO/model for announcement submission to encapsulate 2-step flow logic.
-- Reward currency/formatting is freeform; app does not auto-format or localize reward text.
+- Reward currency/formatting is freeform; app does not auto-format or localize reward text (user-entered text is submitted as-is to backend).
 - Phone validation follows same heuristics as spec 006 (Pets API) for consistency.
 - iOS version baseline is 15+ (from spec 017).
+- SwiftGen is configured in project (swiftgen.yml exists) and generates L10n enum from Localizable.strings files for PL and EN locales.
+- App supports system language detection; displays Polish for pl-PL locale, English for all other locales (English as fallback).
+- **ContactDetailsView and ContactDetailsViewModel already exist as placeholder files** in the codebase with basic structure and coordinator integration (from spec 017). This implementation will replace placeholder content with full functionality.
+- ReportMissingPetCoordinator navigation integration is already complete; ContactDetailsView is already wired into the Missing Pet flow (Step 4/4).
 
 ## Dependencies
 
@@ -168,6 +177,7 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **Design System**: Colors (#155DFC blue, #FB2C36 red, #364153 labels), typography (Hind, Inter, SF Pro fallback), spacing tokens from `.specify/memory/constitution.md`.
 - **Analytics**: Instrumentation pipeline for `missing_pet.step4_completed` event.
 - **Figma**: Design reference node 297-8113 for exact UI layout.
+- **SwiftGen L10n**: Localization system for Polish and English strings. All user-facing text uses L10n.tr() with keys following `owners_details.*` pattern. Localizable.strings files managed via SwiftGen (swiftgen.yml configuration).
 
 ## Out of Scope
 
@@ -175,20 +185,23 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - Currency selection, structured reward amount, or reward terms/conditions.
 - Android/Web implementations (platform-specific specs handle those).
 - Summary screen layout changes (governed by spec 017).
-- Localization beyond English (future iteration).
+- Additional languages beyond Polish and English (future iteration).
 - Dark mode support (not specified in design or requirements).
 - Partial failure handling (step 1 success, step 2 fail): advanced retry logic for photo-only retry, preventing duplicate announcements, local storage of announcement ID - deferred to future iteration.
 - Offline queue for background retry (user must manually tap "Try Again").
 - Automatic retry on connectivity restoration (user must manually tap "Try Again").
 - Photo upload progress indicator (spec 021 scope).
+- **Coordinator/Navigation implementation**: ReportMissingPetCoordinator integration is already implemented per spec 017. ContactDetailsView/ContactDetailsViewModel are already wired into navigation flow. This spec focuses only on screen content and submission logic.
 
 ## Technical Architecture Notes
 
 ### SwiftUI Component Structure
 
+**File to Modify**: `ContactDetailsView.swift` (existing placeholder)
+
 ```
-OwnersDetailsView (SwiftUI View)
-├── NavigationBar (back button, title, progress badge)
+ContactDetailsView (SwiftUI View - MODIFY EXISTING)
+├── NavigationBar (back button, title, progress badge) [already implemented by coordinator]
 ├── ScrollView (keyboard avoidance)
 │   ├── VStack (main content)
 │   │   ├── Title: "Your contact info"
@@ -203,7 +216,11 @@ OwnersDetailsView (SwiftUI View)
 
 **Component Reuse**: ValidatedTextField component from AnimalDescriptionView (spec 031) is reused for all three input fields. Reward field uses `maxLength: 120` parameter to enforce character limit. Validation errors are displayed inline when Continue tap triggers validation.
 
+**Implementation Note**: ContactDetailsView already exists as placeholder in the codebase. Implementation will replace placeholder content with full UI implementation above.
+
 ### ViewModel Responsibilities
+
+**File to Modify**: `ContactDetailsViewModel.swift` (existing placeholder)
 
 - Manage @Published input state (phone, email, rewardDescription)
 - Manage @Published validation error states (phoneError, emailError) shown in ValidatedTextField components
@@ -217,14 +234,19 @@ OwnersDetailsView (SwiftUI View)
 - Handle retry action from alert "Try Again" button: retry full 2-step submission from step 1
 - Emit analytics event on full successful submission (after both steps complete)
 
+**Implementation Note**: ContactDetailsViewModel already exists as placeholder with basic coordinator integration (onReportSent closure). Implementation will add input state management, validation logic, and 2-step submission flow.
+
 ### Coordinator Integration
 
+**Already Implemented** (spec 017):
 - ReportMissingPetCoordinator manages navigation stack
-- OwnersDetailsView created by coordinator with injected ViewModel and FlowState
+- ContactDetailsView created by coordinator with injected ContactDetailsViewModel and FlowState
 - Coordinator provides `onReportSent: (String) -> Void` closure to ViewModel during initialization
 - On Continue success, ViewModel invokes closure with managementPassword (6-digit string); coordinator captures managementPassword and pushes SummaryView with FlowState and managementPassword for display to user
-- On back button, coordinator pops to AnimalDescriptionView
+- On back button, coordinator pops to AnimalDescriptionView (spec 031)
 - FlowState persists across navigation
+
+**This Spec Scope**: Implementation focuses on ContactDetailsView UI and ContactDetailsViewModel submission logic only. Navigation integration is already complete and out of scope.
 
 ### Accessibility Identifiers
 
@@ -236,6 +258,38 @@ OwnersDetailsView (SwiftUI View)
 - `ownersDetails.progress.badge`
 - `ownersDetails.title.label`
 - `ownersDetails.subtitle.label`
+
+### Localization Keys (SwiftGen L10n)
+
+All user-facing strings use L10n.tr() with keys following pattern `owners_details.{element}.{property}`:
+
+**Labels & Titles:**
+- `owners_details.screen_title` → "Owner's details" / "Dane właściciela"
+- `owners_details.subtitle` → "Add your contact information and potential reward." / "Dodaj swoje dane kontaktowe i ewentualną nagrodę."
+- `owners_details.phone.label` → "Phone number" / "Numer telefonu"
+- `owners_details.email.label` → "Email" / "Email"
+- `owners_details.reward.label` → "Reward (optional)" / "Nagroda (opcjonalnie)"
+
+**Placeholders:**
+- `owners_details.phone.placeholder` → "Enter phone number" / "Wpisz numer telefonu"
+- `owners_details.email.placeholder` → "Enter email address" / "Wpisz adres email"
+- `owners_details.reward.placeholder` → "Describe reward" / "Opisz nagrodę"
+
+**Validation Errors:**
+- `owners_details.phone.error` → "Enter at least 7 digits" / "Wpisz co najmniej 7 cyfr"
+- `owners_details.email.error` → "Enter a valid email address" / "Wpisz poprawny adres email"
+
+**Buttons:**
+- `owners_details.continue.button` → "Continue" / "Dalej"
+- `owners_details.back.button` → "Back" / "Wstecz"
+
+**Popup Alerts:**
+- `owners_details.error.no_connection.title` → "No connection" / "Brak połączenia"
+- `owners_details.error.no_connection.message` → "Please check your network and try again." / "Sprawdź połączenie i spróbuj ponownie."
+- `owners_details.error.generic.title` → "Something went wrong" / "Coś poszło nie tak"
+- `owners_details.error.generic.message` → "Please try again later." / "Spróbuj ponownie później."
+- `owners_details.alert.try_again` → "Try Again" / "Spróbuj ponownie"
+- `owners_details.alert.cancel` → "Cancel" / "Anuluj"
 
 ### Test Coverage Requirements
 
@@ -252,11 +306,17 @@ OwnersDetailsView (SwiftUI View)
   - Navigation to summary only after both submission steps succeed
   - Popup alert for submission failure with retry/cancel options
   - Retry attempts full 2-step submission
+  - Localization strings display correctly for PL and EN locales
 - **Integration Tests**:
   - 2-step backend submission (POST announcements → POST photos)
   - Photo upload authentication with Basic auth (id:managementPassword)
   - Email notification triggered after step 1
   - Session persistence across navigation
+- **Localization Tests**:
+  - All UI text uses L10n.tr() (no hardcoded strings)
+  - Polish translations display when device locale is pl-PL
+  - English translations display for all other locales (fallback)
+  - String keys follow `owners_details.*` pattern consistently
 
 ## Related Specifications
 
