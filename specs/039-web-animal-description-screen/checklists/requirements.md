@@ -38,6 +38,7 @@
 - Specification builds on established patterns from specs 034 and 037 for consistency
 - All required fields are identified and validation rules are explicit
 - Responsive design requirements align with existing web app standards
-- GPS support is gracefully degraded for browsers that don't support geolocation
+- "Request GPS position" button is a visual placeholder only (no functionality in this spec)
+- GPS location capture will be implemented in a separate specification
 - Flow state management architecture is consistent with previous web steps
 
