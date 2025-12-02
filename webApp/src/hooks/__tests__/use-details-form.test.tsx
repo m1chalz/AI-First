@@ -1,17 +1,17 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { useAnimalDescriptionForm } from '../use-animal-description-form';
+import { useDetailsForm } from '../use-details-form';
 import { ReportMissingPetFlowProvider } from '../../contexts/ReportMissingPetFlowContext';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>
 );
 
-describe('useAnimalDescriptionForm', () => {
+describe('useDetailsForm', () => {
   describe('initialization', () => {
     it('should initialize with default values', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       const today = new Date().toISOString().split('T')[0];
       expect(result.current.formData.lastSeenDate).toBe(today);
@@ -25,7 +25,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should initialize validationErrors as empty object', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       expect(result.current.formData.validationErrors).toEqual({});
     });
@@ -33,7 +33,7 @@ describe('useAnimalDescriptionForm', () => {
 
   describe('field updates', () => {
     it('should update lastSeenDate', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('lastSeenDate', '2025-12-01');
@@ -43,7 +43,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update species', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('species', 'DOG');
@@ -53,7 +53,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update breed', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('breed', 'Golden Retriever');
@@ -63,7 +63,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update sex', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('sex', 'MALE');
@@ -73,7 +73,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update age', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('age', '5');
@@ -83,7 +83,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update description', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('description', 'Friendly dog');
@@ -93,7 +93,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update latitude', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('latitude', '52.5200');
@@ -103,7 +103,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should update longitude', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('longitude', '13.4050');
@@ -115,7 +115,7 @@ describe('useAnimalDescriptionForm', () => {
 
   describe('breed field clearing', () => {
     it('should clear breed when species changes', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('species', 'DOG');
@@ -135,7 +135,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should not clear breed when updating other fields', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('species', 'DOG');
@@ -155,7 +155,7 @@ describe('useAnimalDescriptionForm', () => {
 
   describe('handleSubmit', () => {
     it('should return false when required fields are missing', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       let submitResult: boolean = true;
       act(() => {
@@ -166,7 +166,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should set validation errors when form is invalid', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.handleSubmit();
@@ -176,7 +176,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should return true when all required fields are valid', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('lastSeenDate', '2025-12-01');
@@ -194,7 +194,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should clear validation errors when form is valid', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.handleSubmit();
@@ -217,7 +217,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should save data to flow state on valid submission', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('lastSeenDate', '2025-12-01');
@@ -245,7 +245,7 @@ describe('useAnimalDescriptionForm', () => {
     });
 
     it('should save null latitude/longitude when empty strings', () => {
-      const { result } = renderHook(() => useAnimalDescriptionForm(), { wrapper });
+      const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
         result.current.updateField('lastSeenDate', '2025-12-01');

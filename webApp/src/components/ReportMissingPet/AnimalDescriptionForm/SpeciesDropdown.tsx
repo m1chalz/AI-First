@@ -1,6 +1,6 @@
 import React from 'react';
-import { ANIMAL_SPECIES } from '../../types/animal';
-import { SPECIES_LABELS } from '../../utils/display-labels';
+import { ANIMAL_SPECIES } from '../../../types/animal';
+import { SPECIES_LABELS } from '../../../utils/display-labels';
 
 export interface SpeciesDropdownProps {
   value: string;
@@ -13,7 +13,7 @@ export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({
   value,
   onChange,
   error,
-  testId = 'animalDescription.species.select'
+  testId = 'details.species.select'
 }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

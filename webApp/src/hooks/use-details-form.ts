@@ -3,7 +3,7 @@ import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext
 import { validateAllFields } from '../utils/form-validation';
 import { AnimalSpecies, AnimalSex } from '../types/animal';
 
-export interface AnimalDescriptionFormData {
+export interface DetailsFormData {
   lastSeenDate: string;
   species: string;
   breed: string;
@@ -15,17 +15,17 @@ export interface AnimalDescriptionFormData {
   validationErrors: Record<string, string>;
 }
 
-export interface UseAnimalDescriptionFormReturn {
-  formData: AnimalDescriptionFormData;
-  updateField: (field: keyof AnimalDescriptionFormData, value: string) => void;
+export interface UseDetailsFormReturn {
+  formData: DetailsFormData;
+  updateField: (field: keyof DetailsFormData, value: string) => void;
   handleSubmit: () => boolean;
   flowState: ReturnType<typeof useReportMissingPetFlow>['flowState'];
 }
 
-export function useAnimalDescriptionForm(): UseAnimalDescriptionFormReturn {
+export function useDetailsForm(): UseDetailsFormReturn {
   const { flowState, updateFlowState } = useReportMissingPetFlow();
   
-  const [formData, setFormData] = useState<AnimalDescriptionFormData>({
+  const [formData, setFormData] = useState<DetailsFormData>({
     lastSeenDate: flowState.lastSeenDate || new Date().toISOString().split('T')[0],
     species: flowState.species || '',
     breed: flowState.breed || '',
@@ -46,7 +46,7 @@ export function useAnimalDescriptionForm(): UseAnimalDescriptionFormReturn {
     }
   }, [formData.species, previousSpecies]);
 
-  const updateField = (field: keyof AnimalDescriptionFormData, value: string) => {
+  const updateField = (field: keyof DetailsFormData, value: string) => {
     if (field === 'validationErrors') {
       return;
     }

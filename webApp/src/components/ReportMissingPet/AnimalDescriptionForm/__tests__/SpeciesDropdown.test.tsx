@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { SpeciesDropdown } from '../species-dropdown';
+import { SpeciesDropdown } from '../SpeciesDropdown';
 
 describe('SpeciesDropdown', () => {
   const mockOnChange = vi.fn();
@@ -50,7 +50,7 @@ describe('SpeciesDropdown', () => {
   });
 
   it('should include data-testid attribute', () => {
-    const testId = 'animalDescription.species.select';
+    const testId = 'details.species.select';
     render(<SpeciesDropdown value="" onChange={mockOnChange} testId={testId} />);
     
     const select = screen.getByRole('combobox');

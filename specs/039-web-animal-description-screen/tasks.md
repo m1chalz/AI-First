@@ -185,7 +185,7 @@ This document provides an actionable, dependency-ordered task list for implement
 
 #### Gender Selector Component (TDD)
 
-- [ ] T020 **[P] [US1] TDD-RED**: Write test suite for GenderSelector at `/webApp/src/components/AnimalDescriptionForm/__tests__/GenderSelector.test.tsx`
+- [X] T020 **[P] [US1] TDD-RED**: Write test suite for GenderSelector at `/webApp/src/components/AnimalDescriptionForm/__tests__/gender-selector.test.tsx`
   - Test renders Male and Female options
   - Test displays capitalized labels
   - Test mutually exclusive selection
@@ -194,7 +194,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test includes data-testid attribute
   - Expected: All tests FAIL
 
-- [ ] T021 **[P] [US1] TDD-GREEN**: Implement GenderSelector component at `/webApp/src/components/AnimalDescriptionForm/GenderSelector.tsx`
+- [X] T021 **[P] [US1] TDD-GREEN**: Implement GenderSelector component at `/webApp/src/components/AnimalDescriptionForm/gender-selector.tsx`
   - Render two radio buttons or cards (Male, Female)
   - Handle mutually exclusive selection
   - Display capitalized labels
@@ -203,31 +203,31 @@ This document provides an actionable, dependency-ordered task list for implement
   - Add data-testid attribute
   - Expected: All tests PASS
 
-- [ ] T022 **[P] [US1] TDD-VERIFY**: Run GenderSelector tests and lint
-  - Command: `npm test -- GenderSelector.test.tsx`
-  - Command: `npm run lint -- src/components/AnimalDescriptionForm/GenderSelector.tsx`
+- [X] T022 **[P] [US1] TDD-VERIFY**: Run GenderSelector tests and lint
+  - Command: `npm test -- gender-selector.test.tsx`
+  - Command: `npm run lint -- src/components/AnimalDescriptionForm/gender-selector.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Character Counter Component (TDD)
 
-- [ ] T023 **[P] [US1] TDD-RED**: Write test suite for CharacterCounter at `/webApp/src/components/AnimalDescriptionForm/__tests__/CharacterCounter.test.tsx`
+- [X] T023 **[P] [US1] TDD-RED**: Write test suite for CharacterCounter at `/webApp/src/components/AnimalDescriptionForm/__tests__/character-counter.test.tsx`
   - Test displays current/max format (e.g., "250/500 characters")
   - Test applies "exceeded" class when over limit
   - Expected: All tests FAIL
 
-- [ ] T024 **[P] [US1] TDD-GREEN**: Implement CharacterCounter component at `/webApp/src/components/AnimalDescriptionForm/CharacterCounter.tsx`
+- [X] T024 **[P] [US1] TDD-GREEN**: Implement CharacterCounter component at `/webApp/src/components/AnimalDescriptionForm/character-counter.tsx`
   - Display "{current}/{max} characters"
   - Apply exceeded styling when current > max
   - Expected: All tests PASS
 
-- [ ] T025 **[P] [US1] TDD-VERIFY**: Run CharacterCounter tests and lint
-  - Command: `npm test -- CharacterCounter.test.tsx`
-  - Command: `npm run lint -- src/components/AnimalDescriptionForm/CharacterCounter.tsx`
+- [X] T025 **[P] [US1] TDD-VERIFY**: Run CharacterCounter tests and lint
+  - Command: `npm test -- character-counter.test.tsx`
+  - Command: `npm run lint -- src/components/AnimalDescriptionForm/character-counter.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Main Form Component (TDD)
 
-- [ ] T026 **[US1] TDD-RED**: Write test suite for AnimalDescriptionForm at `/webApp/src/components/AnimalDescriptionForm/__tests__/AnimalDescriptionForm.test.tsx`
+- [X] T026 **[US1] TDD-RED**: Write test suite for AnimalDescriptionForm at `/webApp/src/components/AnimalDescriptionForm/__tests__/animal-description-form.test.tsx`
   - Test renders all form fields (date, species, breed, sex, age, description, GPS button)
   - Test breed field disabled until species selected
   - Test date picker has max={today}
@@ -237,7 +237,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test all fields have correct data-testid attributes
   - Expected: All tests FAIL
 
-- [ ] T027 **[US1] TDD-GREEN**: Implement AnimalDescriptionForm component at `/webApp/src/components/AnimalDescriptionForm/AnimalDescriptionForm.tsx`
+- [X] T027 **[US1] TDD-GREEN**: Implement AnimalDescriptionForm component at `/webApp/src/components/AnimalDescriptionForm/animal-description-form.tsx`
   - Render all form fields with correct types
   - Implement conditional breed field disabling
   - Add date picker with max={today}
@@ -248,14 +248,14 @@ This document provides an actionable, dependency-ordered task list for implement
   - Integrate sub-components (SpeciesDropdown, GenderSelector, CharacterCounter)
   - Expected: All tests PASS
 
-- [ ] T028 **[US1] TDD-VERIFY**: Run AnimalDescriptionForm tests and lint
-  - Command: `npm test -- AnimalDescriptionForm.test.tsx`
-  - Command: `npm run lint -- src/components/AnimalDescriptionForm/AnimalDescriptionForm.tsx`
+- [X] T028 **[US1] TDD-VERIFY**: Run AnimalDescriptionForm tests and lint
+  - Command: `npm test -- animal-description-form.test.tsx`
+  - Command: `npm run lint -- src/components/AnimalDescriptionForm/animal-description-form.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Page Component (TDD)
 
-- [ ] T029 **[US1] TDD-RED**: Write test suite for Step3_AnimalDescription page at `/webApp/src/pages/ReportMissingPet/__tests__/Step3_AnimalDescription.test.tsx`
+- [X] T029 **[US1] TDD-RED**: Write test suite for Step3_AnimalDescription page at `/webApp/src/pages/ReportMissingPet/__tests__/step3-animal-description.test.tsx`
   - Test renders header with back arrow, title, progress (3/4)
   - Test back arrow navigates to /report-missing/photo (Step 2)
   - Test successful submit navigates to /report-missing/contact (Step 4)
@@ -263,7 +263,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test header has correct data-testid attributes
   - Expected: All tests FAIL
 
-- [ ] T030 **[US1] TDD-GREEN**: Implement Step3_AnimalDescription page at `/webApp/src/pages/ReportMissingPet/Step3_AnimalDescription.tsx`
+- [X] T030 **[US1] TDD-GREEN**: Implement Step3_AnimalDescription page at `/webApp/src/pages/ReportMissingPet/step3-animal-description.tsx`
   - Render header with back arrow, title, progress
   - Wire back arrow to navigate to Step 2
   - Wire Continue to navigate to Step 4 on valid submission
@@ -272,19 +272,19 @@ This document provides an actionable, dependency-ordered task list for implement
   - Add all data-testid attributes per spec
   - Expected: All tests PASS
 
-- [ ] T031 **[US1] TDD-VERIFY**: Run page tests and lint
-  - Command: `npm test -- Step3_AnimalDescription.test.tsx`
-  - Command: `npm run lint -- src/pages/ReportMissingPet/Step3_AnimalDescription.tsx`
+- [X] T031 **[US1] TDD-VERIFY**: Run page tests and lint
+  - Command: `npm test -- step3-animal-description.test.tsx`
+  - Command: `npm run lint -- src/pages/ReportMissingPet/step3-animal-description.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Route Integration
 
-- [ ] T032 **[US1]** Add Step 3 route to React Router configuration at main routing file (App.tsx or routes config)
+- [X] T032 **[US1]** Add Step 3 route to React Router configuration at main routing file (App.tsx or routes config)
   - Import Step3_AnimalDescription component
   - Add route: `/report-missing/description` → Step3_AnimalDescription
-  - Add route guard: redirect to Step 1 if currentStep < 3
+  - Updated PhotoScreen to navigate to /report-missing/description
 
-- [ ] T033 **[US1] TDD-VERIFY**: Run all tests for User Story 1 and verify coverage
+- [X] T033 **[US1] TDD-VERIFY**: Run all tests for User Story 1 and verify coverage
   - Command: `npm test -- --coverage`
   - Expected: 80%+ coverage for all US1 files, all tests pass
   - Verify: User can navigate Step 2 → Step 3 → Step 4 with data persistence
