@@ -86,7 +86,7 @@ export function validateDescription(description: string): string | null {
 
 export function validateLatitude(latitudeStr: string): string | null {
   if (!latitudeStr || !latitudeStr.trim()) {
-    return null;
+    return VALIDATION_MESSAGES.LATITUDE_REQUIRED;
   }
   
   const latitude = Number(latitudeStr);
@@ -104,7 +104,7 @@ export function validateLatitude(latitudeStr: string): string | null {
 
 export function validateLongitude(longitudeStr: string): string | null {
   if (!longitudeStr || !longitudeStr.trim()) {
-    return null;
+    return VALIDATION_MESSAGES.LONGITUDE_REQUIRED;
   }
   
   const longitude = Number(longitudeStr);

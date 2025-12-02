@@ -103,6 +103,7 @@ describe('validateDescription', () => {
 
 describe('validateLatitude', () => {
   it.each([
+    ['empty', '', VALIDATION_MESSAGES.LATITUDE_REQUIRED],
     ['not a number', 'abc', VALIDATION_MESSAGES.LATITUDE_INVALID_NUMBER],
     ['less than -90', '-91', VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE],
     ['greater than 90', '91', VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE],
@@ -111,7 +112,6 @@ describe('validateLatitude', () => {
   });
 
   it.each([
-    ['empty', ''],
     ['-90', '-90'],
     ['90', '90'],
     ['0', '0'],
@@ -123,6 +123,7 @@ describe('validateLatitude', () => {
 
 describe('validateLongitude', () => {
   it.each([
+    ['empty', '', VALIDATION_MESSAGES.LONGITUDE_REQUIRED],
     ['not a number', 'abc', VALIDATION_MESSAGES.LONGITUDE_INVALID_NUMBER],
     ['less than -180', '-181', VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE],
     ['greater than 180', '181', VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE],
@@ -131,7 +132,6 @@ describe('validateLongitude', () => {
   });
 
   it.each([
-    ['empty', ''],
     ['-180', '-180'],
     ['180', '180'],
     ['0', '0'],
@@ -159,6 +159,8 @@ describe('validateAllFields', () => {
     expect(errors.lastSeenDate).toBe(VALIDATION_MESSAGES.LAST_SEEN_DATE_REQUIRED);
     expect(errors.species).toBe(VALIDATION_MESSAGES.SPECIES_REQUIRED);
     expect(errors.sex).toBe(VALIDATION_MESSAGES.SEX_REQUIRED);
+    expect(errors.latitude).toBe(VALIDATION_MESSAGES.LATITUDE_REQUIRED);
+    expect(errors.longitude).toBe(VALIDATION_MESSAGES.LONGITUDE_REQUIRED);
     expect(errors.breed).toBeUndefined();
   });
 
@@ -205,22 +207,22 @@ describe('isFormValid', () => {
     ],
     [
       'all required fields are valid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '', longitude: '' },
+      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '52.52', longitude: '13.40' },
       true
     ],
     [
       'optional field age is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '50', description: '', latitude: '', longitude: '' },
+      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '50', description: '', latitude: '52.52', longitude: '13.40' },
       false
     ],
     [
-      'optional field latitude is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '100', longitude: '' },
+      'latitude is invalid',
+      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '100', longitude: '13.40' },
       false
     ],
     [
-      'optional field longitude is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '', longitude: '200' },
+      'longitude is invalid',
+      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '52.52', longitude: '200' },
       false
     ],
   ])('should return correct result when %s', (_, formData, result) => {

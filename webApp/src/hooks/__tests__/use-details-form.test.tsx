@@ -183,6 +183,8 @@ describe('useDetailsForm', () => {
         result.current.updateField('species', 'DOG');
         result.current.updateField('breed', 'Golden Retriever');
         result.current.updateField('sex', 'MALE');
+        result.current.updateField('latitude', '52.5200');
+        result.current.updateField('longitude', '13.4050');
       });
       
       let submitResult = false;
@@ -207,6 +209,8 @@ describe('useDetailsForm', () => {
         result.current.updateField('species', 'DOG');
         result.current.updateField('breed', 'Golden Retriever');
         result.current.updateField('sex', 'MALE');
+        result.current.updateField('latitude', '52.5200');
+        result.current.updateField('longitude', '13.4050');
       });
       
       act(() => {
@@ -244,7 +248,7 @@ describe('useDetailsForm', () => {
       expect(result.current.flowState.longitude).toBe(13.4050);
     });
 
-    it('should save null latitude/longitude when empty strings', () => {
+    it('should not save to flow state when latitude/longitude are empty', () => {
       const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
       act(() => {
@@ -256,12 +260,14 @@ describe('useDetailsForm', () => {
         result.current.updateField('longitude', '');
       });
       
+      let submitResult = true;
       act(() => {
-        result.current.handleSubmit();
+        submitResult = result.current.handleSubmit();
       });
       
-      expect(result.current.flowState.latitude).toBeNull();
-      expect(result.current.flowState.longitude).toBeNull();
+      expect(submitResult).toBe(false);
+      expect(result.current.formData.validationErrors.latitude).toBeDefined();
+      expect(result.current.formData.validationErrors.longitude).toBeDefined();
     });
   });
 });
