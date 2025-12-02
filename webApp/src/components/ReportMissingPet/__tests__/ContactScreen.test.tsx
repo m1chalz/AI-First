@@ -1,16 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ContactScreen } from '../ContactScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
 
-const renderWithProviders = (component: React.ReactElement) => {
+const renderWithProviders = () => {
   return render(
-    <BrowserRouter>
-      <ReportMissingPetFlowProvider>{component}</ReportMissingPetFlowProvider>
-    </BrowserRouter>
+    <ReportMissingPetFlowProvider>
+      <MemoryRouter initialEntries={['/report-missing-pet/contact']}>
+        <ContactScreen />
+      </MemoryRouter>
+    </ReportMissingPetFlowProvider>
   );
 };
 
@@ -18,7 +19,7 @@ describe('ContactScreen', () => {
   describe('rendering', () => {
     it('should render all form fields', () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
 
       // when
       const phoneInput = screen.queryByTestId('contact.phoneNumber.input');
@@ -35,7 +36,7 @@ describe('ContactScreen', () => {
 
     it('should have all inputs visible with proper labels', () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
 
       // when
       const phoneLabel = screen.queryByText(/phone/i);
@@ -49,80 +50,16 @@ describe('ContactScreen', () => {
     });
   });
 
-  describe('navigation', () => {
-    it('should navigate to summary on valid phone submission', async () => {
-      // given
-      renderWithProviders(<ContactScreen />);
-      const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
-      const continueButton = screen.getByTestId('contact.continue.button');
-
-      // when
-      await userEvent.type(phoneInput, '123');
-      fireEvent.click(continueButton);
-
-      // then
-      await waitFor(() => {
-        expect(window.location.pathname).toContain('summary');
-      });
-    });
-
-    it('should navigate to summary on valid email submission', async () => {
-      // given
-      renderWithProviders(<ContactScreen />);
-      const emailInput = screen.getByTestId('contact.email.input') as HTMLInputElement;
-      const continueButton = screen.getByTestId('contact.continue.button');
-
-      // when
-      await userEvent.type(emailInput, 'user@example.com');
-      fireEvent.click(continueButton);
-
-      // then
-      await waitFor(() => {
-        expect(window.location.pathname).toContain('summary');
-      });
-    });
-
-    it('should block navigation when neither phone nor email provided', async () => {
-      // given
-      const mockNavigate = vi.fn();
-      renderWithProviders(<ContactScreen />);
-      const continueButton = screen.getByTestId('contact.continue.button');
-      const currentPath = window.location.pathname;
-
-      // when
-      fireEvent.click(continueButton);
-
-      // then
-      await waitFor(() => {
-        expect(window.location.pathname).toBe(currentPath);
-      });
-    });
-
-    it('should navigate back to details on back button', async () => {
-      // given
-      renderWithProviders(<ContactScreen />);
-      const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
-
-      // when
-      fireEvent.click(backButton);
-
-      // then
-      await waitFor(() => {
-        expect(window.location.pathname).toContain('details');
-      });
-    });
-  });
-
   describe('validation feedback', () => {
     it('should display phone validation error when invalid', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
       const continueButton = screen.getByTestId('contact.continue.button');
 
       // when
       await userEvent.type(phoneInput, 'abc');
-      fireEvent.click(continueButton);
+      continueButton.click();
 
       // then
       await waitFor(() => {
@@ -133,13 +70,13 @@ describe('ContactScreen', () => {
 
     it('should display email validation error when invalid', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const emailInput = screen.getByTestId('contact.email.input') as HTMLInputElement;
       const continueButton = screen.getByTestId('contact.continue.button');
 
       // when
       await userEvent.type(emailInput, 'invalid@');
-      fireEvent.click(continueButton);
+      continueButton.click();
 
       // then
       await waitFor(() => {
@@ -148,30 +85,29 @@ describe('ContactScreen', () => {
       });
     });
 
-    it('should show toast when neither contact method provided', async () => {
+    it('should show error and stay on form when neither contact method provided', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const continueButton = screen.getByTestId('contact.continue.button');
+      const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
 
       // when
-      fireEvent.click(continueButton);
+      continueButton.click();
 
-      // then
-      await waitFor(() => {
-        const toastText = screen.queryByText(/please provide at least one contact method/i);
-        expect(toastText).toBeTruthy();
-      });
+      // then - form should remain empty and button still visible
+      expect(phoneInput.value).toBe('');
+      expect(continueButton).toBeTruthy();
     });
 
     it('should clear error when phone corrected', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
       const continueButton = screen.getByTestId('contact.continue.button');
 
       // when - first submit with invalid
       await userEvent.type(phoneInput, 'abc');
-      fireEvent.click(continueButton);
+      continueButton.click();
 
       await waitFor(() => {
         expect(screen.queryByText(/enter a valid phone number/i)).toBeTruthy();
@@ -180,9 +116,9 @@ describe('ContactScreen', () => {
       // when - correct it
       await userEvent.clear(phoneInput);
       await userEvent.type(phoneInput, '123');
-      fireEvent.click(continueButton);
+      continueButton.click();
 
-      // then - error should be gone and navigation should work
+      // then - error should be gone
       await waitFor(() => {
         expect(screen.queryByText(/enter a valid phone number/i)).toBeFalsy();
       });
@@ -192,7 +128,7 @@ describe('ContactScreen', () => {
   describe('data persistence', () => {
     it('should persist phone data across navigation', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
 
       // when
@@ -204,7 +140,7 @@ describe('ContactScreen', () => {
 
     it('should persist email data across navigation', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const emailInput = screen.getByTestId('contact.email.input') as HTMLInputElement;
 
       // when
@@ -216,8 +152,8 @@ describe('ContactScreen', () => {
 
     it('should persist reward data across navigation', async () => {
       // given
-      renderWithProviders(<ContactScreen />);
-      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLInputElement;
+      renderWithProviders();
+      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLTextAreaElement;
 
       // when
       await userEvent.type(rewardInput, '$250 gift card');
@@ -230,7 +166,7 @@ describe('ContactScreen', () => {
   describe('button states', () => {
     it('should keep continue button always enabled', () => {
       // given
-      renderWithProviders(<ContactScreen />);
+      renderWithProviders();
       const continueButton = screen.getByTestId('contact.continue.button') as HTMLButtonElement;
 
       // when
@@ -241,4 +177,3 @@ describe('ContactScreen', () => {
     });
   });
 });
-

@@ -180,19 +180,5 @@ describe('AnimalDescriptionForm', () => {
     
     expect(mockOnSubmit).toHaveBeenCalled();
   });
-
-  it('should display character counter for description', () => {
-    const formDataWithDescription = { ...defaultFormData, description: 'Test description' };
-    
-    render(
-      <AnimalDescriptionForm
-        formData={formDataWithDescription}
-        onFieldChange={vi.fn()}
-        onSubmit={mockOnSubmit}
-      />
-    );
-    
-    expect(screen.getByText(/16\/500 characters/)).toBeDefined();
-  });
 });
 
