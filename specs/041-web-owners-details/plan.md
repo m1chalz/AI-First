@@ -1,7 +1,7 @@
 # Implementation Plan: Web Owner's Details Screen
 
-**Branch**: `032-web-owners-details` | **Date**: 2025-12-02 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/032-web-owners-details/spec.md`
+**Branch**: `041-web-owners-details` | **Date**: 2025-12-02 | **Spec**: [spec.md](./spec.md)
+**Input**: Feature specification from `/specs/041-web-owners-details/spec.md`
 
 ## Summary
 
@@ -91,7 +91,7 @@ Implement Step 4/4 (Owner's Details) of the Missing Pet flow for the web platfor
 ### Documentation (this feature)
 
 ```text
-specs/032-web-owners-details/
+specs/041-web-owners-details/
 ├── spec.md              # Feature specification
 ├── plan.md              # This file
 ├── research.md          # Phase 0 output (minimal - reusing patterns)

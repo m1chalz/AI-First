@@ -236,12 +236,15 @@ describe('isFormValid', () => {
 // Contact form validation tests
 describe('validatePhoneNumber', () => {
   it.each([
-    { phone: '123', expectedError: null },
+    { phone: '1234567', expectedError: null },
     { phone: '+1 234 567 890', expectedError: null },
-    { phone: 'abc123def', expectedError: null },
+    { phone: 'abc1234567def', expectedError: null },
+    { phone: '(123) 456-7890', expectedError: null },
     { phone: '', expectedError: null },
-    { phone: 'abc', expectedError: 'Enter a valid phone number' },
-    { phone: '+++', expectedError: 'Enter a valid phone number' },
+    { phone: '123', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: 'abc', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: '+++', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: '123456', expectedError: 'Phone number must have at least 7 digits' },
   ])('should validate phone "$phone" with error "$expectedError"', ({ phone, expectedError }) => {
     expect(validatePhoneNumber(phone)).toBe(expectedError);
   });
@@ -264,9 +267,9 @@ describe('validateEmailAddress', () => {
 
 describe('validateContactForm', () => {
   it.each([
-    { phone: '123', email: '', isValid: true },
+    { phone: '1234567', email: '', isValid: true },
     { phone: '', email: 'user@example.com', isValid: true },
-    { phone: '123', email: 'user@example.com', isValid: true },
+    { phone: '1234567', email: 'user@example.com', isValid: true },
     { phone: '', email: '', isValid: false },
     { phone: 'abc', email: '', isValid: false },
     { phone: '', email: 'invalid@', isValid: false },
@@ -279,12 +282,12 @@ describe('validateContactForm', () => {
 
   it('should return appropriate error messages', () => {
     const result = validateContactForm({ phone: 'abc', email: 'invalid@' });
-    expect(result.phoneError).toBe('Enter a valid phone number');
+    expect(result.phoneError).toBe('Phone number must have at least 7 digits');
     expect(result.emailError).toBe('Enter a valid email address');
   });
 
   it('should return empty errors for valid inputs', () => {
-    const result = validateContactForm({ phone: '123', email: '' });
+    const result = validateContactForm({ phone: '1234567', email: '' });
     expect(result.phoneError).toBe('');
     expect(result.emailError).toBe('');
     expect(result.isValid).toBe(true);

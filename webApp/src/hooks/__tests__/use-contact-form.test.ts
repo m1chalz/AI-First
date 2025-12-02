@@ -73,7 +73,7 @@ describe('useContactForm', () => {
       });
 
       // then
-      expect(result.current.phoneError).toBe('Enter a valid phone number');
+      expect(result.current.phoneError).toBe('Phone number must have at least 7 digits');
     });
 
     it('should clear phone error on validation success', () => {
@@ -82,7 +82,7 @@ describe('useContactForm', () => {
 
       // when
       act(() => {
-        result.current.validatePhone('123');
+        result.current.validatePhone('1234567');
       });
 
       // then
@@ -121,7 +121,7 @@ describe('useContactForm', () => {
 
       // when
       act(() => {
-        result.current.handlePhoneChange('abc');
+        result.current.handlePhoneChange('123');
       });
 
       act(() => {
@@ -133,7 +133,7 @@ describe('useContactForm', () => {
       });
 
       // then
-      expect(result.current.phoneError).toBe('Enter a valid phone number');
+      expect(result.current.phoneError).toBe('Phone number must have at least 7 digits');
     });
 
     it('should persist email error after failed submit', () => {
@@ -165,7 +165,7 @@ describe('useContactForm', () => {
 
       // when
       act(() => {
-        result.current.handlePhoneChange('123');
+        result.current.handlePhoneChange('1234567');
         result.current.handleEmailChange('');
       });
 
@@ -221,7 +221,7 @@ describe('useContactForm', () => {
 
       // when
       act(() => {
-        result.current.handlePhoneChange('123');
+        result.current.handlePhoneChange('1234567');
         result.current.handleRewardChange('any text @#$%');
       });
 
@@ -250,8 +250,59 @@ describe('useContactForm', () => {
 
       // when
       act(() => {
-        result.current.handlePhoneChange('123');
+        result.current.handlePhoneChange('1234567');
         result.current.handleRewardChange('');
+      });
+
+      // then
+      expect(result.current.handleSubmit()).toBe(true);
+    });
+
+    it('should save reward to flow state exactly as entered (T073)', () => {
+      // given
+      const { result } = renderHook(() => useContactForm(), { wrapper });
+
+      // when
+      act(() => {
+        result.current.handlePhoneChange('1234567');
+        result.current.handleRewardChange('$250 gift card + hugs');
+        result.current.handleSubmit();
+      });
+
+      // then
+      expect(result.current.reward).toBe('$250 gift card + hugs');
+    });
+
+    it('should accept submission with any reward text regardless of content (T074)', () => {
+      // given
+      const { result } = renderHook(() => useContactForm(), { wrapper });
+
+      // when
+      act(() => {
+        result.current.handlePhoneChange('1234567');
+        result.current.handleRewardChange('!@#$%^&*()_+-=[]{}|;:,.<>?');
+      });
+
+      // then
+      expect(result.current.handleSubmit()).toBe(true);
+    });
+
+    it.each([
+      '$250',
+      '$250 gift card',
+      '$250 gift card + hugs',
+      'Free ice cream for life',
+      '😀 Happy face reward',
+      'Multiple\nlines\nof\ntext',
+      '',
+    ])('should accept submission with reward text: "%s"', (rewardText) => {
+      // given
+      const { result } = renderHook(() => useContactForm(), { wrapper });
+
+      // when
+      act(() => {
+        result.current.handlePhoneChange('1234567');
+        result.current.handleRewardChange(rewardText);
       });
 
       // then

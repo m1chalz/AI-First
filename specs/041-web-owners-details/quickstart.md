@@ -1,6 +1,6 @@
 # Developer Quickstart: Web Owner's Details Screen
 
-**Feature**: 032-web-owners-details  
+**Feature**: 041-web-owners-details  
 **Date**: 2025-12-02
 
 ## Prerequisites
@@ -8,7 +8,7 @@
 Before starting development on this feature:
 
 1. **Node.js v24 (LTS)** installed
-2. **Repository cloned** and on branch `032-web-owners-details`
+2. **Repository cloned** and on branch `041-web-owners-details`
 3. **Dependencies installed**: Run `npm install` from `/webApp` directory
 4. **Familiarity with existing flow**: Review Steps 1-3 (specs 034, 037, 039) for pattern consistency
 
@@ -21,7 +21,7 @@ Before starting development on this feature:
 cd /path/to/AI-First
 
 # 2. Verify you're on the feature branch
-git branch  # Should show * 032-web-owners-details
+git branch  # Should show * 041-web-owners-details
 
 # 3. Install web app dependencies (if not already done)
 cd webApp

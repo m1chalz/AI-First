@@ -171,7 +171,6 @@ export function isFormValid(formData: {
 }
 
 // Contact form validation
-const PHONE_REGEX = /\d/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function validatePhoneNumber(phone: string): string | null {
@@ -179,8 +178,12 @@ export function validatePhoneNumber(phone: string): string | null {
     return null;
   }
 
-  if (!PHONE_REGEX.test(phone)) {
-    return 'Enter a valid phone number';
+  // Extract only digits from phone number
+  const digitsOnly = phone.replace(/\D/g, '');
+
+  // Require at least 7 digits
+  if (digitsOnly.length < 7) {
+    return 'Phone number must have at least 7 digits';
   }
 
   return null;

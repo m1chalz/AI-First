@@ -63,7 +63,7 @@ describe('ContactScreen', () => {
 
       // then
       await waitFor(() => {
-        const errorText = screen.queryByText(/enter a valid phone number/i);
+        const errorText = screen.queryByText(/must have at least 7 digits/i);
         expect(errorText).toBeTruthy();
       });
     });
@@ -110,17 +110,17 @@ describe('ContactScreen', () => {
       continueButton.click();
 
       await waitFor(() => {
-        expect(screen.queryByText(/enter a valid phone number/i)).toBeTruthy();
+        expect(screen.queryByText(/must have at least 7 digits/i)).toBeTruthy();
       });
 
       // when - correct it
       await userEvent.clear(phoneInput);
-      await userEvent.type(phoneInput, '123');
+      await userEvent.type(phoneInput, '1234567');
       continueButton.click();
 
       // then - error should be gone
       await waitFor(() => {
-        expect(screen.queryByText(/enter a valid phone number/i)).toBeFalsy();
+        expect(screen.queryByText(/must have at least 7 digits/i)).toBeFalsy();
       });
     });
   });
@@ -160,6 +160,70 @@ describe('ContactScreen', () => {
 
       // then
       expect(rewardInput.value).toBe('$250 gift card');
+    });
+
+    it('should persist reward with any text without validation (T075)', async () => {
+      // given
+      renderWithProviders();
+      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLTextAreaElement;
+
+      // when
+      await userEvent.type(rewardInput, '$500 cash reward + pizza party!');
+
+      // then
+      expect(rewardInput.value).toBe('$500 cash reward + pizza party!');
+    });
+  });
+
+  describe('reward field validation', () => {
+    it('should not display error for reward field with any text (T076)', async () => {
+      // given
+      renderWithProviders();
+      const continueButton = screen.getByTestId('contact.continue.button');
+      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLTextAreaElement;
+
+      // when
+      await userEvent.type(rewardInput, 'any reward text @#$');
+      continueButton.click();
+
+      // then - no error text should appear for reward field
+      const errorTexts = screen.queryAllByText(/reward/i);
+      const rewardErrorText = errorTexts.find(el => el.style.color === '#FB2C36');
+      expect(rewardErrorText).toBeFalsy();
+    });
+
+    it('should not prevent submission on invalid contact when reward is entered', async () => {
+      // given
+      renderWithProviders();
+      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLTextAreaElement;
+
+      // when
+      await userEvent.type(rewardInput, '$500 reward');
+
+      // then - reward field should not have validation errors
+      const errorTexts = screen.queryAllByText(/is required/i).filter(el => el.textContent?.includes('reward'));
+      expect(errorTexts.length).toBe(0);
+    });
+
+    it('should accept submission with valid contact and any reward text', async () => {
+      // given
+      renderWithProviders();
+      const phoneInput = screen.getByTestId('contact.phoneNumber.input') as HTMLInputElement;
+      const rewardInput = screen.getByTestId('contact.reward.input') as HTMLTextAreaElement;
+      const continueButton = screen.getByTestId('contact.continue.button');
+
+      // when
+      await userEvent.type(phoneInput, '1234567');
+      await userEvent.type(rewardInput, '💰 Big money 💰');
+      continueButton.click();
+
+      // then - no errors should show, including for reward
+      const phoneErrorText = screen.queryByText(/must have at least 7 digits/i);
+      const emailErrorText = screen.queryByText(/enter a valid email/i);
+      const contactErrorText = screen.queryByText(/phone number or email is required/i);
+      expect(phoneErrorText).toBeFalsy();
+      expect(emailErrorText).toBeFalsy();
+      expect(contactErrorText).toBeFalsy();
     });
   });
 

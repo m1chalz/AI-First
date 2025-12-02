@@ -1,6 +1,6 @@
 # Feature Specification: Web Owner's Details Screen
 
-**Feature Branch**: `032-web-owners-details`  
+**Feature Branch**: `041-web-owners-details`  
 **Created**: 2025-12-02  
 **Status**: Draft  
 **Input**: Web implementation of Owner's Details screen (Step 4/4) from spec 035
