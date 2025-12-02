@@ -46,6 +46,9 @@ fun ContactDetailsScreen(
                 is ReportMissingEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
+                is ReportMissingEffect.ExitFlow -> {
+                    // Only handled by SummaryScreen
+                }
             }
         }
     }

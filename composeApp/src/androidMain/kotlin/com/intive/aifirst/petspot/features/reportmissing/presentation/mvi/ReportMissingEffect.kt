@@ -13,7 +13,12 @@ sealed interface ReportMissingEffect {
     /**
      * Navigate back to previous screen.
      * Note: From step 1, popBackStack() automatically exits nested graph to AnimalList.
-     * Also used for Summary close button - popBackStack exits the entire flow.
      */
     data object NavigateBack : ReportMissingEffect
+
+    /**
+     * Exit the entire flow and return to AnimalList.
+     * Only handled by SummaryScreen after submission.
+     */
+    data object ExitFlow : ReportMissingEffect
 }

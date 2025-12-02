@@ -74,12 +74,12 @@ class ReportMissingViewModel : ViewModel() {
 
     /**
      * Handles Submit intent: placeholder for future backend integration.
-     * For now, emits NavigateBack to exit the wizard (popBackStack exits nested graph).
+     * Emits ExitFlow to close the wizard and return to AnimalList.
      */
     private fun handleSubmit() {
         viewModelScope.launch {
             // TODO: Add backend submission in future feature
-            _effects.emit(ReportMissingEffect.NavigateBack)
+            _effects.emit(ReportMissingEffect.ExitFlow)
         }
     }
 

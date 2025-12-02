@@ -38,8 +38,8 @@ fun SummaryScreen(
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is ReportMissingEffect.NavigateBack -> {
-                    // From summary, pop back to AnimalList (exit entire flow)
+                is ReportMissingEffect.ExitFlow -> {
+                    // Exit entire flow and return to AnimalList
                     navController.popBackStack(NavRoute.AnimalList, inclusive = false)
                 }
                 else -> { /* Other effects not handled on Summary */ }
