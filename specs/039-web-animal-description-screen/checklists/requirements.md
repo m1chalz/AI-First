@@ -41,4 +41,5 @@
 - "Request GPS position" button is a visual placeholder only (no functionality in this spec)
 - GPS location capture will be implemented in a separate specification
 - Flow state management architecture is consistent with previous web steps
+- **IMPORTANT**: Back arrow navigation clarified - in-app back arrow navigates to previous step (preserving state), browser back button cancels entire flow. Specs 034 and 037 need updating to implement this consistent behavior.
 
