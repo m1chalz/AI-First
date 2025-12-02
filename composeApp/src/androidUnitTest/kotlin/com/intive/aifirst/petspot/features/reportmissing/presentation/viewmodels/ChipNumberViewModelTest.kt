@@ -242,6 +242,29 @@ class ChipNumberViewModelTest {
             }
         }
 
+    @Test
+    fun `handleIntent ContinueClicked with empty chip number should save empty string to shared state`() =
+        runTest {
+            // Given - no chip number entered (optional field per FR-013)
+            val viewModel = ChipNumberViewModel(sharedViewModel)
+            advanceUntilIdle()
+
+            // Verify local state is empty
+            assertEquals("", viewModel.state.value.chipNumber)
+
+            // When
+            viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
+            advanceUntilIdle()
+            testScheduler.advanceUntilIdle()
+
+            // Then - empty string should be saved to shared state
+            assertEquals(
+                "",
+                sharedViewModel.state.value.chipNumber,
+                "Empty chip number should be saved to shared state"
+            )
+        }
+
     // ========================================
     // BackClicked Tests (covered in Phase 5)
     // ========================================

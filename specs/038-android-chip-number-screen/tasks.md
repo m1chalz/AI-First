@@ -100,12 +100,12 @@
 
 ### Tests for User Story 2 (MANDATORY) ✅
 
-- [ ] T025 [P] [US2] Add test for ContinueClicked with empty chipNumber saves empty string to flow state in `ChipNumberViewModelTest.kt`
+- [x] T025 [P] [US2] Add test for ContinueClicked with empty chipNumber saves empty string to flow state in `ChipNumberViewModelTest.kt`
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Verify Continue button has no disabled state logic in `ChipNumberContent.kt` (button always enabled per FR-013)
-- [ ] T027 [US2] Verify handleIntent(ContinueClicked) works correctly with empty chipNumber in `ChipNumberViewModel.kt`
+- [x] T026 [US2] Verify Continue button has no disabled state logic in `ChipNumberContent.kt` (button always enabled per FR-013)
+- [x] T027 [US2] Verify handleIntent(ContinueClicked) works correctly with empty chipNumber in `ChipNumberViewModel.kt`
 
 **Checkpoint**: User Story 2 complete - users can skip chip number entry
 
