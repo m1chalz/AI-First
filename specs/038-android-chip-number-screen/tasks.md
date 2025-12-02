@@ -32,9 +32,9 @@
 
 **Purpose**: Verify existing infrastructure from spec 018 and prepare for enhancements
 
-- [ ] T001 Verify spec 018 infrastructure exists: `ChipNumberContent.kt`, `ChipNumberScreen.kt`, `ReportMissingUiState.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/`
-- [ ] T002 [P] Create util directory structure at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/`
-- [ ] T003 [P] Create test directory structure at `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/`
+- [x] T001 Verify spec 018 infrastructure exists: `ChipNumberContent.kt`, `ChipNumberScreen.kt`, `ReportMissingUiState.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/`
+- [x] T002 [P] Create util directory structure at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/`
+- [x] T003 [P] Create test directory structure at `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/`
 
 ---
 
@@ -46,15 +46,15 @@
 
 ### Unit Tests (Write FIRST - must FAIL)
 
-- [ ] T004 [P] Create `MicrochipNumberFormatterTest.kt` with format() tests in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatterTest.kt`
-- [ ] T005 [P] Add extractDigits() tests to `MicrochipNumberFormatterTest.kt`
+- [x] T004 [P] Create `MicrochipNumberFormatterTest.kt` with format() tests in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatterTest.kt`
+- [x] T005 [P] Add extractDigits() tests to `MicrochipNumberFormatterTest.kt`
 
 ### Implementation
 
-- [ ] T006 Implement `MicrochipNumberFormatter` object with `format()` and `extractDigits()` methods in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatter.kt`
-- [ ] T007 Implement `MicrochipVisualTransformation` class in same file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatter.kt`
-- [ ] T008 Implement `MicrochipOffsetMapping` private class for cursor position mapping in same file
-- [ ] T009 Run formatter tests and verify they pass: `./gradlew :composeApp:testDebugUnitTest --tests "*MicrochipNumberFormatterTest*"`
+- [x] T006 Implement `MicrochipNumberFormatter` object with `format()` and `extractDigits()` methods in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatter.kt`
+- [x] T007 Implement `MicrochipVisualTransformation` class in same file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/MicrochipNumberFormatter.kt`
+- [x] T008 Implement `MicrochipOffsetMapping` private class for cursor position mapping in same file
+- [x] T009 Run formatter tests and verify they pass: `./gradlew :composeApp:testDebugUnitTest --tests "*MicrochipNumberFormatterTest*"`
 
 **Checkpoint**: Formatter utility complete and tested - user story implementation can begin
 
