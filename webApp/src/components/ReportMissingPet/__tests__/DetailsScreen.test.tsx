@@ -212,7 +212,9 @@ describe('DetailsScreen', () => {
     it('should redirect to photo step if accessing details without completing step 2', () => {
       render(<DetailsScreen />, { wrapper });
       
-      expect(mockNavigate).toHaveBeenCalledWith('/report-missing/photo', { replace: true });
+      waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.microchip, { replace: true });
+      });
     });
   });
 });

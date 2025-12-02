@@ -14,7 +14,7 @@ import styles from './ReportMissingPetLayout.module.css';
 
 export function PhotoScreen() {
   const navigate = useNavigate();
-  const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useReportMissingPetFlow();
   const { message, showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

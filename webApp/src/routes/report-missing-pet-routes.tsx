@@ -46,6 +46,8 @@ export const flowNavigation: FlowNavigation = {
       case FlowStep.Contact: 
       case FlowStep.Completed:
         return '/';
+      default:
+        return ReportMissingPetRoutes.microchip;
     }
   },
 
@@ -56,6 +58,8 @@ export const flowNavigation: FlowNavigation = {
       case FlowStep.Details: return ReportMissingPetRoutes.photo;
       case FlowStep.Contact: return ReportMissingPetRoutes.details;
       case FlowStep.Completed: return ReportMissingPetRoutes.contact;
+      default:
+        return '/';
     }
   },
 

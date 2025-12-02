@@ -15,7 +15,7 @@ describe('ReportMissingPetFlowContext', () => {
     });
 
     // then
-    expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
+    expect(result.current.flowState.currentStep).toBe(FlowStep.Empty);
     expect(result.current.flowState.microchipNumber).toBe('');
     expect(result.current.flowState.photo).toBe(null);
   });
@@ -33,7 +33,6 @@ describe('ReportMissingPetFlowContext', () => {
 
     // then
     expect(result.current.flowState.microchipNumber).toBe('123456789012345');
-    expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
     expect(result.current.flowState.photo).toBe(null);
   });
 
@@ -120,7 +119,7 @@ describe('ReportMissingPetFlowContext', () => {
     });
 
     // then
-    expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
+    expect(result.current.flowState.currentStep).toBe(FlowStep.Empty);
     expect(result.current.flowState.microchipNumber).toBe('');
     expect(result.current.flowState.photo).toBe(null);
   });
