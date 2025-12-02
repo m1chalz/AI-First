@@ -98,7 +98,7 @@ description: "Task list for iOS Owner's Details Screen implementation"
 
 **End-to-End Tests**:
 - [ ] T019 [P] [US1] Create ContactDetailsScreen object in `/e2e-tests/mobile/screens/ContactDetailsScreen.ts` (Screen Object Model with methods: enterPhone, enterEmail, enterReward, tapContinue, getTitle, getPhoneError, getEmailError, isSubmitting, using accessibilityIdentifiers: ownersDetails.phoneInput, ownersDetails.emailInput, ownersDetails.rewardInput, ownersDetails.continueButton, ownersDetails.title)
-- [ ] T020 [US1] Create E2E test spec in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Given-When-Then scenarios for US1: Scenario 1 - valid phone and email, tap Continue, verify 2-step submission and navigation to summary with managementPassword, emit analytics event; Scenario 2 - navigate back from summary, verify phone and email persist, progress badge returns to "4/4")
+- [ ] T020 [US1] Create E2E test spec in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Given-When-Then scenarios for US1: Scenario 1 - valid phone and email, tap Continue, verify 2-step submission and navigation to summary with managementPassword; Scenario 2 - navigate back from summary, verify phone and email persist, progress badge returns to "4/4")
 
 ### Implementation for User Story 1
 
