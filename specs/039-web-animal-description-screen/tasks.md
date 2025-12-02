@@ -122,24 +122,24 @@ This document provides an actionable, dependency-ordered task list for implement
 
 #### Extend Flow State Context (TDD)
 
-- [ ] T011 **[US1] TDD-RED**: Write test for extended ReportMissingPetFlowState type at `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx`
+- [X] T011 **[US1] TDD-RED**: Write test for extended ReportMissingPetFlowState type at `/webApp/src/contexts/__tests__/ReportMissingPetFlowContext.test.tsx`
   - Test flow state includes Step 3 fields: lastSeenDate, species, breed, sex, age, description
   - Test updateFlowState updates Step 3 fields
   - Expected: Tests FAIL (types don't exist yet)
 
-- [ ] T012 **[US1] TDD-GREEN**: Extend ReportMissingPetFlowState interface at `/webApp/src/contexts/ReportMissingPetFlowContext.tsx`
+- [X] T012 **[US1] TDD-GREEN**: Extend ReportMissingPetFlowState interface at `/webApp/src/contexts/ReportMissingPetFlowContext.tsx`
   - Add Step 3 fields with correct types (per data-model.md)
   - Update initialState with Step 3 defaults
   - Expected: Tests PASS
 
-- [ ] T013 **[US1] TDD-VERIFY**: Run flow state tests and lint
+- [X] T013 **[US1] TDD-VERIFY**: Run flow state tests and lint
   - Command: `npm test -- ReportMissingPetFlowContext.test.tsx`
   - Command: `npm run lint -- src/contexts/ReportMissingPetFlowContext.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Custom Form Hook (TDD)
 
-- [ ] T014 **[US1] TDD-RED**: Write test suite for useAnimalDescriptionForm hook at `/webApp/src/hooks/__tests__/useAnimalDescriptionForm.test.ts`
+- [X] T014 **[US1] TDD-RED**: Write test suite for useAnimalDescriptionForm hook at `/webApp/src/hooks/__tests__/useAnimalDescriptionForm.test.ts`
   - Test hook initializes with flow state or defaults
   - Test formData updates on field changes
   - Test breed field clears when species changes
@@ -147,7 +147,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test handleSubmit saves to flow state on valid submission
   - Expected: All tests FAIL
 
-- [ ] T015 **[US1] TDD-GREEN**: Implement useAnimalDescriptionForm hook at `/webApp/src/hooks/useAnimalDescriptionForm.ts`
+- [X] T015 **[US1] TDD-GREEN**: Implement useAnimalDescriptionForm hook at `/webApp/src/hooks/useAnimalDescriptionForm.ts`
   - Initialize formData from flow state or defaults
   - Handle field updates with setFormData
   - Clear breed when species changes (useEffect)
@@ -155,14 +155,14 @@ This document provides an actionable, dependency-ordered task list for implement
   - Convert form data to flow state types on submit
   - Expected: All tests PASS
 
-- [ ] T016 **[US1] TDD-VERIFY**: Run hook tests and lint
+- [X] T016 **[US1] TDD-VERIFY**: Run hook tests and lint
   - Command: `npm test -- useAnimalDescriptionForm.test.ts`
   - Command: `npm run lint -- src/hooks/useAnimalDescriptionForm.ts`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Species Dropdown Component (TDD)
 
-- [ ] T017 **[P] [US1] TDD-RED**: Write test suite for SpeciesDropdown at `/webApp/src/components/AnimalDescriptionForm/__tests__/SpeciesDropdown.test.tsx`
+- [X] T017 **[P] [US1] TDD-RED**: Write test suite for SpeciesDropdown at `/webApp/src/components/AnimalDescriptionForm/__tests__/SpeciesDropdown.test.tsx`
   - Test renders all 5 species options (Dog, Cat, Bird, Rabbit, Other)
   - Test displays capitalized labels
   - Test onChange callback fires with correct enum value
@@ -170,7 +170,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test includes data-testid attribute
   - Expected: All tests FAIL
 
-- [ ] T018 **[P] [US1] TDD-GREEN**: Implement SpeciesDropdown component at `/webApp/src/components/AnimalDescriptionForm/SpeciesDropdown.tsx`
+- [X] T018 **[P] [US1] TDD-GREEN**: Implement SpeciesDropdown component at `/webApp/src/components/AnimalDescriptionForm/SpeciesDropdown.tsx`
   - Render select with all AnimalSpecies options
   - Map enums to capitalized labels
   - Handle onChange with proper typing
@@ -178,7 +178,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Add data-testid attribute
   - Expected: All tests PASS
 
-- [ ] T019 **[P] [US1] TDD-VERIFY**: Run SpeciesDropdown tests and lint
+- [X] T019 **[P] [US1] TDD-VERIFY**: Run SpeciesDropdown tests and lint
   - Command: `npm test -- SpeciesDropdown.test.tsx`
   - Command: `npm run lint -- src/components/AnimalDescriptionForm/SpeciesDropdown.tsx`
   - Expected: 100% tests pass, 0 lint errors

@@ -1,3 +1,5 @@
+import { ANIMAL_SPECIES } from '../types/animal';
+
 export const VALIDATION_MESSAGES = {
   LAST_SEEN_DATE_REQUIRED: 'Please select the date of disappearance',
   LAST_SEEN_DATE_FUTURE: 'Date cannot be in the future',
@@ -9,9 +11,11 @@ export const VALIDATION_MESSAGES = {
   AGE_INVALID_NUMBER: 'Age must be a whole number',
   AGE_OUT_OF_RANGE: 'Age must be between 0 and 40',
   DESCRIPTION_TOO_LONG: 'Description cannot exceed 500 characters',
+  LATITUDE_INVALID_NUMBER: 'Latitude must be a number',
+  LATITUDE_OUT_OF_RANGE: 'Latitude must be between -90 and 90',
+  LONGITUDE_INVALID_NUMBER: 'Longitude must be a number',
+  LONGITUDE_OUT_OF_RANGE: 'Longitude must be between -180 and 180',
 } as const;
-
-const VALID_SPECIES: string[] = ['DOG', 'CAT', 'BIRD', 'RABBIT', 'OTHER'];
 
 export function validateLastSeenDate(date: string): string | null {
   if (!date) {
@@ -34,7 +38,7 @@ export function validateSpecies(species: string): string | null {
     return VALIDATION_MESSAGES.SPECIES_REQUIRED;
   }
   
-  if (!VALID_SPECIES.includes(species)) {
+  if (!ANIMAL_SPECIES.includes(species as typeof ANIMAL_SPECIES[number])) {
     return VALIDATION_MESSAGES.SPECIES_INVALID;
   }
   
@@ -87,6 +91,42 @@ export function validateDescription(description: string): string | null {
   return null;
 }
 
+export function validateLatitude(latitudeStr: string): string | null {
+  if (!latitudeStr) {
+    return null;
+  }
+  
+  const latitude = Number(latitudeStr);
+  
+  if (isNaN(latitude)) {
+    return VALIDATION_MESSAGES.LATITUDE_INVALID_NUMBER;
+  }
+  
+  if (latitude < -90 || latitude > 90) {
+    return VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE;
+  }
+  
+  return null;
+}
+
+export function validateLongitude(longitudeStr: string): string | null {
+  if (!longitudeStr) {
+    return null;
+  }
+  
+  const longitude = Number(longitudeStr);
+  
+  if (isNaN(longitude)) {
+    return VALIDATION_MESSAGES.LONGITUDE_INVALID_NUMBER;
+  }
+  
+  if (longitude < -180 || longitude > 180) {
+    return VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE;
+  }
+  
+  return null;
+}
+
 export function validateAllFields(formData: {
   lastSeenDate: string;
   species: string;
@@ -94,6 +134,8 @@ export function validateAllFields(formData: {
   sex: string;
   age: string;
   description: string;
+  latitude: string;
+  longitude: string;
 }): Record<string, string> {
   const errors: Record<string, string> = {};
   
@@ -115,6 +157,12 @@ export function validateAllFields(formData: {
   const descError = validateDescription(formData.description);
   if (descError) errors.description = descError;
   
+  const latitudeError = validateLatitude(formData.latitude);
+  if (latitudeError) errors.latitude = latitudeError;
+  
+  const longitudeError = validateLongitude(formData.longitude);
+  if (longitudeError) errors.longitude = longitudeError;
+  
   return errors;
 }
 
@@ -125,6 +173,8 @@ export function isFormValid(formData: {
   sex: string;
   age: string;
   description: string;
+  latitude: string;
+  longitude: string;
 }): boolean {
   const errors = validateAllFields(formData);
   return Object.keys(errors).length === 0;
