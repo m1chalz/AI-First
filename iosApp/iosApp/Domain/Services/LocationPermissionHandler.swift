@@ -49,7 +49,7 @@ class LocationPermissionHandler {
     
     /// Result of location request with permission handling.
     struct LocationRequestResult {
-        let location: UserLocation?
+        let location: Coordinate?
         let status: LocationPermissionStatus
     }
     
@@ -72,7 +72,7 @@ class LocationPermissionHandler {
         lastKnownStatus = status
         
         // Fetch location if authorized
-        let location: UserLocation? = if status.isAuthorized {
+        let location: Coordinate? = if status.isAuthorized {
             await locationService.requestLocation()
         } else {
             nil

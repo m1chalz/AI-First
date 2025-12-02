@@ -32,12 +32,18 @@ class AnimalCardViewModel: ObservableObject {
     
     // MARK: - Computed Properties (Presentation Layer)
     
-    /// Formatted location text: "City, +XYZkm"
+    /// Photo URL
+    var photoUrl: String {
+        animal.photoUrl
+    }
+    
+    /// Formatted location text with coordinates
     var locationText: String {
-        L10n.AnimalCard.Location.format(
-            animal.location.city,
-            Int(animal.location.radiusKm)
-        )
+        let lat = animal.coordinate.latitude
+        let lon = animal.coordinate.longitude
+        let latDir = lat >= 0 ? "N" : "S"
+        let lonDir = lon >= 0 ? "E" : "W"
+        return String(format: "%.4f° %@, %.4f° %@", abs(lat), latDir, abs(lon), lonDir)
     }
     
     /// Species display name
@@ -47,7 +53,7 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Breed name
     var breedName: String {
-        animal.breed
+        animal.breed ?? "-"
     }
     
     /// Status badge text

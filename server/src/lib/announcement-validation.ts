@@ -6,7 +6,6 @@ import { isValidEmail, isValidPhone } from './validators.ts';
 function isNotFutureDate(dateString: string): boolean {
   const dateObj = new Date(dateString);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
   return dateObj <= today;
 }
 

@@ -43,7 +43,7 @@ final class PetDetailsViewModelTests: XCTestCase {
             latitude: latitude,
             longitude: longitude,
             microchipNumber: "123-456-789",
-            approximateAge: "2 years",
+            approximateAge: 2,
             reward: reward,
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
@@ -95,7 +95,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertFalse(message.isEmpty)
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
         XCTAssertEqual(repository.getPetDetailsCallCount, 1)
     }
     
@@ -112,7 +113,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertTrue(message.contains("not found") || message.contains("Not found"))
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
     }
     
     func testRetry_whenInErrorState_shouldTransitionToLoading() async {
@@ -658,6 +660,35 @@ final class PetDetailsViewModelTests: XCTestCase {
         // Then
         XCTAssertEqual(result, "34.6037° S, 58.3816° W")
     }
+    
+    // MARK: - API Integration Tests (User Story 2)
+    
+    /// T044: Test PetDetailsViewModel loadDetails should update petDetails publisher with API data
+    func testLoadPetDetails_whenRepositoryReturnsApiData_shouldUpdateState() async {
+        // Given - ViewModel with repository that returns API-like data
+        let (sut, repository) = makeSUT(petId: "api-test-id")
+        let apiPetDetails = makeMockPetDetails(
+            id: "api-test-id",
+            photoUrl: "http://localhost:3000/images/test.jpg"
+        )
+        repository.mockPetDetails = apiPetDetails
+        
+        // When - loadPetDetails is called
+        await sut.loadPetDetails()
+        
+        // Then - state should be loaded with API data
+        guard case .loaded(let details) = sut.state else {
+            XCTFail("Expected loaded state, got \(sut.state)")
+            return
+        }
+        XCTAssertEqual(details.id, "api-test-id")
+        XCTAssertEqual(details.petName, "Test Pet")
+        XCTAssertEqual(repository.getPetDetailsCallCount, 1)
+    }
+    
+    /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
+    
+    /// T046: Test PetDetailsViewModel with network error should set appropriate error state
     
 }
 

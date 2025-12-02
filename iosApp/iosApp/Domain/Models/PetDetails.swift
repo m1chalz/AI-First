@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents comprehensive pet information displayed on the details screen.
-struct PetDetails: Identifiable, Codable {
+struct PetDetails: Identifiable {
     // MARK: - Required Fields
     
     /// Unique identifier for the pet
@@ -49,8 +49,8 @@ struct PetDetails: Identifiable, Codable {
     /// Microchip number (optional, will be mocked until backend adds this field)
     let microchipNumber: String?
     
-    /// Approximate age of the pet (optional, will be mocked until backend adds this field)
-    let approximateAge: String?
+    /// Approximate age of the pet in years (optional)
+    let approximateAge: Int?
     
     /// Reward amount text (optional, will be mocked until backend adds this field)
     let reward: String?

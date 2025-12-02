@@ -7,7 +7,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
     
     class FakeLocationService: LocationServiceProtocol {
         var stubbedAuthorizationStatus: LocationPermissionStatus = .notDetermined
-        var stubbedLocation: UserLocation?
+        var stubbedLocation: Coordinate?
         var requestAuthorizationCalled = false
         var requestLocationCalled = false
         
@@ -20,7 +20,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
             return stubbedAuthorizationStatus
         }
         
-        func requestLocation() async -> UserLocation? {
+        func requestLocation() async -> Coordinate? {
             requestLocationCalled = true
             return stubbedLocation
         }
@@ -32,7 +32,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
         // Given - location service with authorized status and sample location
         let fakeService = FakeLocationService()
         fakeService.stubbedAuthorizationStatus = .authorizedWhenInUse
-        fakeService.stubbedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        fakeService.stubbedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         
         let handler = LocationPermissionHandler(
             locationService: fakeService,
@@ -109,7 +109,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
         // Given - location service with always authorized status
         let fakeService = FakeLocationService()
         fakeService.stubbedAuthorizationStatus = .authorizedAlways
-        fakeService.stubbedLocation = UserLocation(latitude: 40.7128, longitude: -74.0060)
+        fakeService.stubbedLocation = Coordinate(latitude: 40.7128, longitude: -74.0060)
         
         let handler = LocationPermissionHandler(
             locationService: fakeService,

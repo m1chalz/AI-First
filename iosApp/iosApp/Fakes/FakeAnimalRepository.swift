@@ -20,13 +20,16 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     private(set) var getPetDetailsCallCount = 0
     
     /// For location testing - tracks location parameter passed
-    var lastLocationParameter: UserLocation?
+    var lastLocationParameter: Coordinate?
     
     /// For PetDetails testing - mock pet details to return
     var mockPetDetails: PetDetails?
     
     /// For location testing - stubbed animals to return
     var stubbedAnimals: [Animal] = []
+    
+    /// For testing async cancellation - simulates slow network (User Story 3)
+    var delayDuration: TimeInterval = 0
     
     /// Creates a fake repository with configurable behavior.
     ///
@@ -44,9 +47,14 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         self.error = error
     }
     
-    func getAnimals(near location: UserLocation?) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Animal] {
         getAnimalsCallCount += 1
         lastLocationParameter = location
+        
+        // Simulate network delay if configured (for testing task cancellation)
+        if delayDuration > 0 {
+            try await Task.sleep(for: .seconds(delayDuration))
+        }
         
         if shouldFail {
             throw error
@@ -83,29 +91,29 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     
     /// Generates mock animal data for testing.
     /// Matches structure of production mock data for consistency.
-    private func generateMockAnimals(count: Int) -> [Animal] {
+    func generateMockAnimals(count: Int) -> [Animal] {
         guard count > 0 else { return [] }
         
         let mockAnimals: [Animal] = [
-        Animal(
-            id: "1",
-            name: "Fluffy",
-            photoUrl: "placeholder_cat",
-            location: Location(city: "Pruszkow", radiusKm: 5),
-            species: .cat,
-            breed: "Maine Coon",
-            gender: .male,
-            status: .active,
-            lastSeenDate: "18/11/2025",
-            description: "Friendly orange tabby cat, last seen near the park.",
-            email: "john.doe@example.com",
-            phone: "+48 123 456 789"
-        ),
+            Animal(
+                id: "1",
+                name: "Fluffy",
+                photoUrl: "placeholder_cat",
+                coordinate: Coordinate(latitude: 52.1764, longitude: 20.8132),
+                species: .cat,
+                breed: "Maine Coon",
+                gender: .male,
+                status: .active,
+                lastSeenDate: "18/11/2025",
+                description: "Friendly orange tabby cat, last seen near the park.",
+                email: "john.doe@example.com",
+                phone: "+48 123 456 789"
+            ),
         Animal(
             id: "2",
             name: "Rex",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Warsaw", radiusKm: 10),
+                coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "German Shepherd",
             gender: .female,
@@ -119,7 +127,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "3",
             name: "Bella",
             photoUrl: "placeholder_cat",
-            location: Location(city: "Krakow", radiusKm: 3),
+                coordinate: Coordinate(latitude: 50.0647, longitude: 19.9450),
             species: .cat,
             breed: "Siamese",
             gender: .female,
@@ -133,7 +141,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "4",
             name: "Buddy",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Wroclaw", radiusKm: 7),
+            coordinate: Coordinate(latitude: 51.1079, longitude: 17.0385),
             species: .dog,
             breed: "Labrador Retriever",
             gender: .male,
@@ -147,7 +155,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "5",
             name: "Tweety",
             photoUrl: "placeholder_bird",
-            location: Location(city: "Gdansk", radiusKm: 15),
+            coordinate: Coordinate(latitude: 54.3520, longitude: 18.6466),
             species: .bird,
             breed: "Cockatiel",
             gender: .unknown,
@@ -161,7 +169,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "6",
             name: "Snowball",
             photoUrl: "placeholder_cat",
-            location: Location(city: "Poznan", radiusKm: 8),
+            coordinate: Coordinate(latitude: 52.4064, longitude: 16.9252),
             species: .cat,
             breed: "Persian",
             gender: .female,
@@ -175,7 +183,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "7",
             name: "Snoopy",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Lodz", radiusKm: 12),
+            coordinate: Coordinate(latitude: 51.7592, longitude: 19.4560),
             species: .dog,
             breed: "Beagle",
             gender: .male,
@@ -189,7 +197,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "8",
             name: "Thumper",
             photoUrl: "placeholder_rabbit",
-            location: Location(city: "Katowice", radiusKm: 6),
+            coordinate: Coordinate(latitude: 50.2649, longitude: 19.0238),
             species: .rabbit,
             breed: "Dwarf Rabbit",
             gender: .female,
@@ -203,7 +211,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "9",
             name: "Shadow",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Szczecin", radiusKm: 20),
+            coordinate: Coordinate(latitude: 53.4285, longitude: 14.5528),
             species: .dog,
             breed: "Husky",
             gender: .male,
@@ -217,7 +225,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "10",
             name: "Whiskers",
             photoUrl: "placeholder_cat",
-            location: Location(city: "Bialystok", radiusKm: 4),
+            coordinate: Coordinate(latitude: 53.1325, longitude: 23.1688),
             species: .cat,
             breed: "British Shorthair",
             gender: .male,
@@ -231,7 +239,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "11",
             name: "Luna",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Lublin", radiusKm: 9),
+            coordinate: Coordinate(latitude: 51.2465, longitude: 22.5684),
             species: .dog,
             breed: "Golden Retriever",
             gender: .female,
@@ -245,7 +253,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "12",
             name: "Charlie",
             photoUrl: "placeholder_cat",
-            location: Location(city: "Rzeszow", radiusKm: 5),
+            coordinate: Coordinate(latitude: 50.0412, longitude: 21.9991),
             species: .cat,
             breed: "Ragdoll",
             gender: .male,
@@ -259,7 +267,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "13",
             name: "Max",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Torun", radiusKm: 11),
+            coordinate: Coordinate(latitude: 53.0138, longitude: 18.5984),
             species: .dog,
             breed: "Dachshund",
             gender: .male,
@@ -273,7 +281,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "14",
             name: "Milo",
             photoUrl: "placeholder_bird",
-            location: Location(city: "Gliwice", radiusKm: 6),
+            coordinate: Coordinate(latitude: 50.2945, longitude: 18.6714),
             species: .bird,
             breed: "Parrot",
             gender: .unknown,
@@ -287,7 +295,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "15",
             name: "Daisy",
             photoUrl: "placeholder_cat",
-            location: Location(city: "Bydgoszcz", radiusKm: 7),
+            coordinate: Coordinate(latitude: 53.1235, longitude: 18.0084),
             species: .cat,
             breed: "Bengal",
             gender: .female,
@@ -301,7 +309,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             id: "16",
             name: "Rocky",
             photoUrl: "placeholder_dog",
-            location: Location(city: "Olsztyn", radiusKm: 13),
+            coordinate: Coordinate(latitude: 53.7784, longitude: 20.4801),
             species: .dog,
             breed: "Rottweiler",
             gender: .male,
@@ -334,7 +342,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 51.5000,
                 longitude: 18.5000,
                 microchipNumber: "616-093-400-123",
-                approximateAge: "3 years",
+                approximateAge: 3,
                 reward: "500 PLN",
                 createdAt: "2025-11-19T15:47:14.000Z",
                 updatedAt: "2025-11-19T15:47:14.000Z"
@@ -356,7 +364,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 52.2297,
                 longitude: 21.0122,
                 microchipNumber: "616-093-400-456",
-                approximateAge: "2 years",
+                approximateAge: 2,
                 reward: nil,
                 createdAt: "2025-11-20T10:30:00.000Z",
                 updatedAt: "2025-11-20T10:30:00.000Z"
@@ -400,7 +408,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 latitude: 52.4064,
                 longitude: 16.9252,
                 microchipNumber: "616-093-400-789",
-                approximateAge: "5 years",
+                approximateAge: 5,
                 reward: "200 PLN",
                 createdAt: "2025-11-15T08:00:00.000Z",
                 updatedAt: "2025-11-15T08:00:00.000Z"

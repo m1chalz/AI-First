@@ -17,9 +17,9 @@ final class AnimalCardViewModelTests: XCTestCase {
     private func makeTestAnimal(
         id: String = "test-id-123",
         name: String = "Buddy",
-        breed: String = "Golden Retriever",
-        city: String = "Warsaw",
-        radiusKm: Int = 5,
+        breed: String? = "Golden Retriever",
+        latitude: Double = 52.2297,
+        longitude: Double = 21.0122,
         species: AnimalSpecies = .dog,
         status: AnimalStatus = .active,
         lastSeenDate: String = "20/11/2024"
@@ -28,7 +28,7 @@ final class AnimalCardViewModelTests: XCTestCase {
             id: id,
             name: name,
             photoUrl: "https://example.com/photo.jpg",
-            location: Location(city: city, radiusKm: radiusKm),
+            coordinate: Coordinate(latitude: latitude, longitude: longitude),
             species: species,
             breed: breed,
             gender: .male,
@@ -39,24 +39,6 @@ final class AnimalCardViewModelTests: XCTestCase {
             phone: "+48123456789"
         )
     }
-    
-    // MARK: - Test Presentation Properties
-    
-    /**
-     * Tests that locationText formats correctly.
-     */
-    func test_locationText_shouldFormatCityAndRadius() {
-        // Given - ViewModel with animal in Warsaw, 5km radius
-        let animal = makeTestAnimal(city: "Warsaw", radiusKm: 5)
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
-        
-        // When - accessing locationText
-        let locationText = viewModel.locationText
-        
-        // Then - should format as "City, +XYZkm"
-        XCTAssertEqual(locationText, "Warsaw, +5km", "locationText should format as 'City, +Xkm'")
-    }
-    
     /**
      * Tests that speciesName returns display name.
      */
@@ -182,29 +164,30 @@ final class AnimalCardViewModelTests: XCTestCase {
         let initialAnimal = makeTestAnimal(
             id: "same-id",
             breed: "Golden Retriever",
-            city: "Warsaw",
+            latitude: 52.2297,
+            longitude: 21.0122,
             status: .active
         )
         let viewModel = AnimalCardViewModel(animal: initialAnimal, onAction: { _ in })
         
         // Verify initial state
         XCTAssertEqual(viewModel.breedName, "Golden Retriever")
-        XCTAssertEqual(viewModel.locationText, "Warsaw, +5km")
+        XCTAssertEqual(viewModel.locationText, "52.2297° N, 21.0122° E")
         XCTAssertEqual(viewModel.statusText, AnimalStatus.active.displayName)
         
         // When - update is called with modified animal
         let updatedAnimal = makeTestAnimal(
             id: "same-id",
             breed: "Labrador",
-            city: "Krakow",
-            radiusKm: 10,
+            latitude: 50.0647,
+            longitude: 19.9450,
             status: .found
         )
         viewModel.update(with: updatedAnimal)
         
         // Then - computed properties should reflect new values
         XCTAssertEqual(viewModel.breedName, "Labrador", "breedName should update")
-        XCTAssertEqual(viewModel.locationText, "Krakow, +10km", "locationText should update")
+        XCTAssertEqual(viewModel.locationText, "50.0647° N, 19.9450° E", "locationText should update")
         XCTAssertEqual(viewModel.statusText, AnimalStatus.found.displayName, "statusText should update")
     }
     

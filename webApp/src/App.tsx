@@ -3,6 +3,7 @@ import { AnimalList } from './components/AnimalList/AnimalList';
 import { MicrochipNumberScreen } from './components/ReportMissingPet/MicrochipNumberScreen';
 import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
 import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
+import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
 import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
 
 export function App() {
@@ -10,7 +11,6 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AnimalList />} />
-        
         <Route path="/report-missing" element={<ReportMissingPetFlowProvider><Navigate to="microchip" replace /></ReportMissingPetFlowProvider>} />
         <Route
           path="/report-missing/microchip"
@@ -33,6 +33,14 @@ export function App() {
           element={
             <ReportMissingPetFlowProvider>
               <DetailsScreen />
+            </ReportMissingPetFlowProvider>
+          }
+        />
+        <Route
+          path="/report-missing/contact"
+          element={
+            <ReportMissingPetFlowProvider>
+              <ContactScreen />
             </ReportMissingPetFlowProvider>
           }
         />

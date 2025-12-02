@@ -1,6 +1,11 @@
-export type AnimalStatus = 'MISSING' | 'FOUND' | 'CLOSED';
-export type AnimalSex = 'MALE' | 'FEMALE' | 'UNKNOWN';
-export type AnimalSpecies = 'DOG' | 'CAT' | 'BIRD' | 'RABBIT' | 'OTHER';
+export const ANIMAL_STATUSES = ['MISSING', 'FOUND', 'CLOSED'] as const;
+export type AnimalStatus = typeof ANIMAL_STATUSES[number];
+
+export const ANIMAL_SEXES = ['MALE', 'FEMALE', 'UNKNOWN'] as const;
+export type AnimalSex = typeof ANIMAL_SEXES[number];
+
+export const ANIMAL_SPECIES = ['DOG', 'CAT', 'BIRD', 'RABBIT', 'OTHER'] as const;
+export type AnimalSpecies = typeof ANIMAL_SPECIES[number];
 
 export const ANIMAL_STATUS_BADGE_COLORS: Record<AnimalStatus, string> = {
   MISSING: '#FF0000',

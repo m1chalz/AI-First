@@ -15,9 +15,10 @@ protocol AnimalRepositoryProtocol {
     /// Real implementation will support pagination and filtering by proximity when location provided.
     ///
     /// - Parameter location: Optional user location for proximity filtering (nil = no filtering)
+    /// - Parameter range: Search radius in kilometers
     /// - Returns: Array of animals (may be empty if no animals found)
     /// - Throws: Error if data fetch fails
-    func getAnimals(near location: UserLocation?) async throws -> [Animal]
+    func getAnimals(near location: Coordinate?, range: Int) async throws -> [Animal]
     
     /// Retrieves detailed information for a specific pet by ID.
     /// Mock implementation returns hardcoded pet details.
@@ -27,5 +28,15 @@ protocol AnimalRepositoryProtocol {
     /// - Returns: Pet details
     /// - Throws: Error if pet not found or data fetch fails
     func getPetDetails(id: String) async throws -> PetDetails
+}
+
+// MARK: - Protocol Extension (Default Values)
+
+extension AnimalRepositoryProtocol {
+    /// Convenience method with default range value (100km).
+    /// Calls full method with default range parameter.
+    func getAnimals(near location: Coordinate?) async throws -> [Animal] {
+        return try await getAnimals(near: location, range: 100)
+    }
 }
 

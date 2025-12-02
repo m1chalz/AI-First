@@ -52,7 +52,7 @@ class PetDetailsViewModel: ObservableObject {
             let petDetails = try await repository.getPetDetails(id: petId)
             state = .loaded(petDetails)
         } catch {
-            state = .error(error.localizedDescription)
+            state = .error(L10n.PetDetails.Error.loadingFailed)
         }
     }
     
@@ -87,6 +87,13 @@ class PetDetailsViewModel: ObservableObject {
     var formattedCoordinates: String {
         guard case .loaded(let petDetails) = state else { return "—" }
         return formatCoordinates(latitude: petDetails.latitude, longitude: petDetails.longitude)
+    }
+    
+    /// Returns formatted age string (e.g., "3 years" or "3 lat")
+    var formattedAge: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        guard let age = petDetails.approximateAge else { return "—" }
+        return L10n.PetDetails.Format.yearsOld(age)
     }
     
     /// Creates PetPhotoWithBadgesView.Model with pet details

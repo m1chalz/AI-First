@@ -3,8 +3,10 @@ import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
+import { useEffect } from 'react';
 
 export function MicrochipNumberScreen() {
   const navigate = useNavigate();
@@ -13,12 +15,20 @@ export function MicrochipNumberScreen() {
     flowState.microchipNumber
   );
 
+  useEffect(() => {
+    if (flowState.currentStep === FlowStep.Empty) {
+      updateFlowState({
+        currentStep: FlowStep.Microchip,
+      });
+    }
+  }, [flowState.currentStep, updateFlowState]);
+
   const handleContinue = () => {
     updateFlowState({
       microchipNumber: value,
       currentStep: FlowStep.Photo,
     });
-    navigate('/report-missing/photo');
+    navigate(ReportMissingPetRoutes.photo);
   };
 
   const handleBack = () => {
@@ -35,11 +45,11 @@ export function MicrochipNumberScreen() {
       onBack={handleBack}
     >
       <h2 className={styles.heading}>Identification by Microchip</h2>
-      
+
       <p className={styles.description}>
         Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.
       </p>
-      
+
       <div className={styles.inputGroup}>
         <label htmlFor="microchip-input" className={styles.label}>
           Microchip number (optional)
@@ -56,7 +66,7 @@ export function MicrochipNumberScreen() {
           data-testid="reportMissingPet.step1.microchipInput.field"
         />
       </div>
-      
+
       <button
         onClick={handleContinue}
         className={styles.primaryButton}

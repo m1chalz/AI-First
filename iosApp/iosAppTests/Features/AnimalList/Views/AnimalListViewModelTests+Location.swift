@@ -55,12 +55,12 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
-        await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
+        await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
         fakeRepository.stubbedAnimals = [Animal(
             id: "test",
             name: "Test",
             photoUrl: "test",
-            location: Location(city: "Test", radiusKm: 1),
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "Test",
             gender: .male,
@@ -85,14 +85,14 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     func test_loadAnimals_whenLocationAvailable_shouldQueryWithCoordinates() async {
         // Given
-        let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let expectedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(expectedLocation)
         fakeRepository.stubbedAnimals = [Animal(
             id: "test",
             name: "Test",
             photoUrl: "test",
-            location: Location(city: "Test", radiusKm: 1),
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "Test",
             gender: .male,
@@ -129,7 +129,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             id: "test",
             name: "Test",
             photoUrl: "test",
-            location: Location(city: "Test", radiusKm: 1),
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "Test",
             gender: .male,
@@ -158,7 +158,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             id: "test",
             name: "Test",
             photoUrl: "test",
-            location: Location(city: "Test", radiusKm: 1),
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "Test",
             gender: .male,
@@ -188,7 +188,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
             id: "test",
             name: "Test",
             photoUrl: "test",
-            location: Location(city: "Test", radiusKm: 1),
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
             species: .dog,
             breed: "Test",
             gender: .male,
@@ -233,7 +233,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
-        await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
+        await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
         fakeRepository.stubbedAnimals = []
         
         viewModel = createViewModel()
@@ -268,7 +268,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
-        await setLocationServiceLocation(UserLocation(latitude: 52.2297, longitude: 21.0122))
+        await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
         fakeRepository.stubbedAnimals = []
         
         viewModel = createViewModel()
@@ -285,7 +285,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
-        let expectedLocation = UserLocation(latitude: 52.2297, longitude: 21.0122)
+        let expectedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceLocation(expectedLocation)
         fakeRepository.stubbedAnimals = []
         
@@ -467,7 +467,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.setStatus(status)
     }
     
-    private func setLocationServiceLocation(_ location: UserLocation?) async {
+    private func setLocationServiceLocation(_ location: Coordinate?) async {
         await fakeLocationService.setLocation(location)
     }
 }
@@ -479,7 +479,7 @@ extension FakeLocationService {
         stubbedAuthorizationStatus = status
     }
     
-    func setLocation(_ location: UserLocation?) {
+    func setLocation(_ location: Coordinate?) {
         stubbedLocation = location
     }
     

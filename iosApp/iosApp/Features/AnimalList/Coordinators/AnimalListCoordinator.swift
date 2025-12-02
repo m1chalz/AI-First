@@ -15,6 +15,11 @@ class AnimalListCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?
     var childCoordinators: [CoordinatorInterface] = []
     
+    /// Animal List ViewModel reference for triggering refresh after report sent (User Story 3: T066)
+    /// Weak to avoid keeping ViewModel in memory when screen is not visible
+    /// UIHostingController/SwiftUI holds the strong reference
+    private weak var animalListViewModel: AnimalListViewModel?
+    
     /**
      * Initializes coordinator with navigation controller.
      *
@@ -39,31 +44,34 @@ class AnimalListCoordinator: CoordinatorInterface {
         let locationHandler = container.locationPermissionHandler
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
-        let viewModel = AnimalListViewModel(
+        let animalListViewModel = AnimalListViewModel(
             repository: repository,
             locationHandler: locationHandler
         )
         
+        // Store weak reference for refresh triggering after report sent (User Story 3: T066)
+        self.animalListViewModel = animalListViewModel
+        
         // Set up coordinator closures for navigation
-        viewModel.onAnimalSelected = { [weak self] animalId in
+        animalListViewModel.onAnimalSelected = { [weak self] animalId in
             self?.showAnimalDetails(animalId: animalId)
         }
         
-        viewModel.onReportMissing = { [weak self] in
+        animalListViewModel.onReportMissing = { [weak self] in
             self?.showReportMissing()
         }
         
-        viewModel.onReportFound = { [weak self] in
+        animalListViewModel.onReportFound = { [weak self] in
             self?.showReportFound()
         }
         
         // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
-        viewModel.onOpenAppSettings = { [weak self] in
+        animalListViewModel.onOpenAppSettings = { [weak self] in
             self?.openAppSettings()
         }
         
         // Create SwiftUI view with ViewModel
-        let view = AnimalListView(viewModel: viewModel)
+        let view = AnimalListView(viewModel: animalListViewModel)
         
         // Wrap in UIHostingController for UIKit navigation
         let hostingController = UIHostingController(rootView: view)
@@ -111,6 +119,7 @@ class AnimalListCoordinator: CoordinatorInterface {
     /**
      * Shows Report Missing Animal form.
      * Creates and starts ReportMissingPetCoordinator as child coordinator.
+     * User Story 3 (T066): Sets up callback chain to refresh list when report is sent.
      */
     private func showReportMissing() {
         guard let navigationController = navigationController else { return }
@@ -120,6 +129,13 @@ class AnimalListCoordinator: CoordinatorInterface {
             parentNavigationController: navigationController
         )
         reportCoordinator.parentCoordinator = self
+        
+        // User Story 3 (T066): Set callback to refresh list when user sends report
+        // Coordinator -> ViewModel communication via public method
+        reportCoordinator.onReportSent = { [weak self] in
+            self?.animalListViewModel?.requestToRefreshData()
+        }
+        
         childCoordinators.append(reportCoordinator)
         
         // Start modal flow
@@ -154,6 +170,8 @@ class AnimalListCoordinator: CoordinatorInterface {
         }
         UIApplication.shared.open(settingsUrl)
     }
+    
+    // MARK: - CoordinatorInterface Protocol
     
     // MARK: - Deinitialization
     

@@ -5,6 +5,7 @@ import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
 import { PhotoConfirmationCard } from './PhotoConfirmationCard';
@@ -13,16 +14,19 @@ import styles from './ReportMissingPetLayout.module.css';
 
 export function PhotoScreen() {
   const navigate = useNavigate();
-  const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useReportMissingPetFlow();
   const { message, showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // FR-024: Protect direct URL access - redirect to step 1 if accessed directly
   useEffect(() => {
-    if (!flowState.microchipNumber && flowState.currentStep !== FlowStep.Photo) {
-      navigate('/report-missing/microchip', { replace: true });
+    if (flowState.currentStep === FlowStep.Empty) {
+      navigate(ReportMissingPetRoutes.microchip, { replace: true });
     }
-  }, [flowState, navigate]);
+  }, [flowState.currentStep, navigate]);
+
+  const handleBack = () => {
+    navigate(ReportMissingPetRoutes.microchip);
+  };
   
   const {
     photo,
@@ -44,12 +48,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details,
     });
-    navigate('/report-missing/details');
-  };
-
-  const handleBack = () => {
-    clearFlowState();
-    navigate('/');
+    navigate(ReportMissingPetRoutes.details);
   };
 
   const handleBrowseClick = () => {

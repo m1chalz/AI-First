@@ -93,6 +93,21 @@ describe('GET /api/v1/announcements', () => {
     });
   });
 
+  it('should filter out the announcements without photoUrl', async () => {
+    // Given: Database has 2 test announcements
+    await db('announcement').insert({
+      ...TEST_ANNOUNCEMENT_1,
+      photo_url: null,
+    });
+    
+    // When: Client requests all announcements
+    const response = await request(server).get('/api/v1/announcements');
+    
+    // Then: Returns HTTP 200 with JSON array containing announcements
+    expect(response.status).toBe(200);
+    expect(response.body.data).toHaveLength(0);
+  });
+
   it('should return 200 with empty array when database is empty', async () => {
     // Given: Database has no announcements (cleaned in beforeEach)
     
@@ -457,7 +472,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     last_seen_date: '2025-11-20',
     email: 'krakow@example.com',
     phone: null,
-    photo_url: null,
+    photo_url: 'url',
     status: 'MISSING',
     reward: null,
     management_password_hash: 'hash1',
@@ -479,7 +494,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     last_seen_date: '2025-11-21',
     email: 'nearby@example.com',
     phone: null,
-    photo_url: null,
+    photo_url: 'url',
     status: 'MISSING',
     reward: null,
     management_password_hash: 'hash2',
@@ -501,7 +516,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     last_seen_date: '2025-11-22',
     email: 'warsaw@example.com',
     phone: null,
-    photo_url: null,
+    photo_url: 'url',
     status: 'MISSING',
     reward: null,
     management_password_hash: 'hash3',

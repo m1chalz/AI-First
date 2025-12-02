@@ -43,7 +43,7 @@ class AnimalListViewModel: ObservableObject {
     @Published var locationPermissionStatus: LocationPermissionStatus = .notDetermined
     
     /// Current user location (nil if unavailable)
-    @Published var currentLocation: UserLocation?
+    @Published var currentLocation: Coordinate?
     
     /// Controls custom permission denied popup display (User Story 3: recovery path)
     @Published var showPermissionDeniedAlert = false
@@ -78,6 +78,10 @@ class AnimalListViewModel: ObservableObject {
     
     /// Session-level flag preventing repeated permission popups (FR-013)
     private var hasShownPermissionAlert = false
+    
+    /// Active load task for cancellation support (User Story 3: T065)
+    /// Stores current loadAnimals task to enable cancellation when new load starts
+    private var loadTask: Task<Void, Never>?
 
     // MARK: - Initialization
     
@@ -97,27 +101,45 @@ class AnimalListViewModel: ObservableObject {
         
         // User Story 4: Observe app returning from background (dynamic permission change handling)
         locationHandler.startObservingForeground { [weak self] status, didBecomeAuthorized in
+            guard let self = self else { return }
             // Callback is already dispatched to main thread by handler
-            self?.locationPermissionStatus = status
+            self.locationPermissionStatus = status
             // Auto-refresh ONLY if permission changed from unauthorized → authorized
             if didBecomeAuthorized {
-                Task {
-                    await self?.loadAnimals()
+                // Cancel previous task before starting new one
+                self.loadTask?.cancel()
+                self.loadTask = Task {
+                    await self.loadAnimals()
                 }
             }
         }
         
         // Load animals on initialization
-        Task {
+        loadTask = Task {
             await loadAnimals()
         }
     }
     
     deinit {
+        // User Story 3 (T065): Cancel active task to prevent memory leaks
+        loadTask?.cancel()
         locationHandler.stopObservingForeground()
     }
     
     // MARK: - Public Methods
+    
+    /**
+     * Requests data refresh from external source (e.g., coordinator after report sent).
+     * User Story 3 (T066): Called by coordinator when user successfully submits announcement.
+     * Encapsulates refresh logic without exposing internal loadAnimals() implementation.
+     */
+    func requestToRefreshData() {
+        // User Story 3 (T065): Cancel previous load task before starting new one
+        loadTask?.cancel()
+        loadTask = Task { @MainActor in
+            await loadAnimals()
+        }
+    }
     
     /**
      * Loads animals from repository with location-aware filtering.
@@ -137,6 +159,10 @@ class AnimalListViewModel: ObservableObject {
      * - Fetches location if user grants permission
      * - Continues query without location if user denies (non-blocking fallback)
      *
+     * User Story 3 (P3): Task Cancellation for Refresh
+     * - Cancels previous load task if still running (prevents stale data)
+     * - Checks for cancellation after async operations
+     *
      * Note: Calls repository directly per iOS MVVM-C architecture (no use case layer).
      */
     func loadAnimals() async {
@@ -146,6 +172,9 @@ class AnimalListViewModel: ObservableObject {
         do {
             // Delegate location permission handling to handler
             let result = await locationHandler.requestLocationWithPermissions()
+            
+            // User Story 3 (T067): Check for cancellation after async operation
+            try Task.checkCancellation()
             
             // Update published state with results
             locationPermissionStatus = result.status
@@ -161,9 +190,16 @@ class AnimalListViewModel: ObservableObject {
             // Query animals with optional location (nil = no filtering, graceful fallback per FR-009)
             // Non-blocking: query executes regardless of permission outcome (FR-007, SC-001)
             let animals = try await repository.getAnimals(near: result.location)
+            
+            // Check for cancellation before updating UI state
+            try Task.checkCancellation()
+            
             updateCardViewModels(with: animals)
+        } catch is CancellationError {
+            // Task was cancelled - this is normal, don't show error to user
+            // Keep loading state but don't update error message
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = L10n.AnimalList.Error.loadingFailed
         }
         
         isLoading = false
@@ -287,7 +323,7 @@ class AnimalListViewModel: ObservableObject {
             let animals = try await repository.getAnimals(near: nil)
             updateCardViewModels(with: animals)
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = L10n.AnimalList.Error.loadingFailed
         }
     }
     

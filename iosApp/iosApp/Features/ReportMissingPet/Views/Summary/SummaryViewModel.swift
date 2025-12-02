@@ -21,8 +21,7 @@ class SummaryViewModel: ObservableObject {
     
     // MARK: - Actions
     
-    /// Submit report (placeholder - no backend yet).
-    /// Exits flow after submission.
+    /// Exits summary screen (back to app after report submission).
     func handleSubmit() {
         onSubmit?()
     }
