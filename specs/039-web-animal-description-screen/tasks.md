@@ -42,10 +42,10 @@ This document provides an actionable, dependency-ordered task list for implement
 
 ### Tasks
 
-- [ ] T001 Verify existing flow state context exists at `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` (prerequisite check)
-- [ ] T002 Verify Animal types exist at `/webApp/src/types/animal.ts` with AnimalSpecies and AnimalSex enums (prerequisite check)
-- [ ] T003 Create component directory structure: `/webApp/src/components/AnimalDescriptionForm/`
-- [ ] T004 Create page component file: `/webApp/src/pages/ReportMissingPet/Step3_AnimalDescription.tsx`
+- [X] T001 Verify existing flow state context exists at `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` (prerequisite check)
+- [X] T002 Verify Animal types exist at `/webApp/src/types/animal.ts` with AnimalSpecies and AnimalSex enums (prerequisite check)
+- [X] T003 Create component directory structure: `/webApp/src/components/AnimalDescriptionForm/`
+- [X] T004 Create page component file: `/webApp/src/pages/ReportMissingPet/Step3_AnimalDescription.tsx`
 
 ---
 
