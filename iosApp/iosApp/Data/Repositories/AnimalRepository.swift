@@ -228,7 +228,6 @@ class AnimalRepository: AnimalRepositoryProtocol {
         
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"photo\"; filename=\"pet.jpg\"\r\n".data(using: .utf8)!)
-        // [FIXIT][3] Value of type 'PhotoAttachmentMetadata' has no member 'mimeType'
         body.append("Content-Type: \(photo.mimeType)\r\n\r\n".data(using: .utf8)!)
         body.append(photoData)
         body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
