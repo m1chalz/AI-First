@@ -172,8 +172,8 @@ final class AnimalRepositoryTests: XCTestCase {
     }
     
     /// T013: Test getAnimals with invalid species enum should skip invalid items (compactMap behavior)
-    func testGetAnimals_whenItemHasInvalidSpecies_shouldSkipItem() async throws {
-        // Given - JSON with one valid and one invalid species
+    func testGetAnimals_whenItemHasUnknownSpecies_shouldMapToOther() async throws {
+        // Given - JSON with one known and one unknown species (graceful degradation)
         let jsonData = """
         {
             "data": [
@@ -226,9 +226,12 @@ final class AnimalRepositoryTests: XCTestCase {
         // When - fetch animals
         let animals = try await sut.getAnimals(near: nil)
         
-        // Then - only valid item returned, invalid skipped
-        XCTAssertEqual(animals.count, 1)
+        // Then - both items returned, unknown species mapped to .other
+        XCTAssertEqual(animals.count, 2, "Should return both items with graceful species handling")
         XCTAssertEqual(animals[0].name, "Valid Dog")
+        XCTAssertEqual(animals[0].species, .dog)
+        XCTAssertEqual(animals[1].name, "Invalid Species")
+        XCTAssertEqual(animals[1].species, .other, "Unknown species should map to .other")
     }
     
     /// T014: Test getAnimals with duplicate IDs should deduplicate and log warning
@@ -547,9 +550,9 @@ final class AnimalRepositoryTests: XCTestCase {
         }
     }
     
-    /// T041: Test getPetDetails with invalid species should throw RepositoryError.invalidData
-    func testGetPetDetails_whenResponseHasInvalidSpecies_shouldThrowInvalidDataError() async {
-        // Given - JSON with invalid species
+    /// T041: Test getPetDetails with unknown species should map to .other
+    func testGetPetDetails_whenResponseHasUnknownSpecies_shouldMapToOther() async throws {
+        // Given - JSON with unknown species (graceful degradation)
         let jsonData = """
         {
             "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -583,19 +586,13 @@ final class AnimalRepositoryTests: XCTestCase {
             return (response, jsonData)
         }
         
-        // When/Then - should throw invalid data error
-        do {
-            _ = try await sut.getPetDetails(id: "some-id")
-            XCTFail("Expected error to be thrown")
-        } catch let error as RepositoryError {
-            if case .invalidData = error {
-                // Expected error
-            } else {
-                XCTFail("Expected invalidData, got \(error)")
-            }
-        } catch {
-            XCTFail("Expected RepositoryError, got \(error)")
-        }
+        // When - fetch pet details
+        let petDetails = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - should successfully map unknown species to .other
+        XCTAssertEqual(petDetails.species, .other, "Unknown species should map to .other")
+        XCTAssertEqual(petDetails.petName, "Max")
+        XCTAssertEqual(petDetails.status, .active, "MISSING status should map to .active")
     }
     
     /// T042: Test getPetDetails with missing optional fields should return PetDetails with nil values

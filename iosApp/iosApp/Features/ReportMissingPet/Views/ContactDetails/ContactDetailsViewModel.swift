@@ -147,7 +147,9 @@ class ContactDetailsViewModel: ObservableObject {
             // Delegate to service for 2-step submission
             let managementPassword = try await submissionService.submitAnnouncement(flowState: flowState)
             
-            // Success: navigate to summary with managementPassword
+            // Success: clear any previous error state and navigate to summary
+            showAlert = false
+            alertMessage = nil
             onReportSent?(managementPassword)
             
         } catch {

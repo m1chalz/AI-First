@@ -25,16 +25,18 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     /// - Throws: Error on submission failure (network, backend, validation)
     @MainActor
     func submitAnnouncement(flowState: ReportMissingPetFlowState) async throws -> String {
+        // Validate photo upfront (required)
+        guard let photoAttachment = flowState.photoAttachment else {
+            throw SubmissionValidationError.missingPhoto
+        }
+        
         // Build domain model from FlowState
         let announcementData = try await buildAnnouncementData(from: flowState)
         
         // Step 1: Create announcement
         let result = try await repository.createAnnouncement(data: announcementData)
         
-        // Step 2: Upload photo (required)
-        guard let photoAttachment = flowState.photoAttachment else {
-            throw SubmissionValidationError.missingPhoto
-        }
+        // Step 2: Upload photo
         
         try await repository.uploadPhoto(
             announcementId: result.id,

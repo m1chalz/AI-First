@@ -1,6 +1,7 @@
 import Foundation
 
 /// DTO enum for animal species - maps to backend API string values
+/// Gracefully handles unknown species from API by defaulting to .other
 enum AnimalSpeciesDTO: String, Codable {
     case dog = "DOG"
     case cat = "CAT"
@@ -9,6 +10,14 @@ enum AnimalSpeciesDTO: String, Codable {
     case rodent = "RODENT"
     case reptile = "REPTILE"
     case other = "OTHER"
+    
+    /// Custom decoder that defaults to .other for unknown species values
+    /// Ensures backward compatibility when API introduces new species
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = AnimalSpeciesDTO(rawValue: rawValue) ?? .other
+    }
     
     /// Creates DTO from domain model (Domain → DTO)
     init(domain: AnimalSpecies) {
