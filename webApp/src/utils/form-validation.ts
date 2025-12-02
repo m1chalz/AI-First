@@ -213,10 +213,11 @@ export function validateContactForm(formData: ContactFormValidation): {
 
   const hasAtLeastOneContact = (formData.phone !== '' && !phoneError) || (formData.email !== '' && !emailError);
   const allProvidedFieldsValid = !phoneError && !emailError;
+  const bothEmpty = formData.phone === '' && formData.email === '';
 
   return {
-    phoneError: phoneError || '',
-    emailError: emailError || '',
+    phoneError: (phoneError || (bothEmpty ? 'Phone number or email is required' : '')) || '',
+    emailError: (emailError || (bothEmpty ? 'Phone number or email is required' : '')) || '',
     isValid: hasAtLeastOneContact && allProvidedFieldsValid,
   };
 }

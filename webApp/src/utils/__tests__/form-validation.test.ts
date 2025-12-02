@@ -289,5 +289,12 @@ describe('validateContactForm', () => {
     expect(result.emailError).toBe('');
     expect(result.isValid).toBe(true);
   });
+
+  it('should return error message when both fields are empty', () => {
+    const result = validateContactForm({ phone: '', email: '' });
+    expect(result.phoneError).toBe('Phone number or email is required');
+    expect(result.emailError).toBe('Phone number or email is required');
+    expect(result.isValid).toBe(false);
+  });
 });
 
