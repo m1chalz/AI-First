@@ -26,9 +26,9 @@ protocol LocationServiceProtocol {
     /// Requires location permission to be granted (`.authorizedWhenInUse` or `.authorizedAlways`).
     /// Uses one-time location request (no continuous monitoring).
     ///
-    /// - Returns: UserLocation with coordinates and timestamp, or nil if unavailable
+    /// - Returns: Coordinate with latitude and longitude, or nil if unavailable
     /// - Note: Returns nil for any failure (permission denied, GPS unavailable, timeout, etc.)
     ///         App uses silent fallback - queries server without coordinates when nil
-    func requestLocation() async -> UserLocation?
+    func requestLocation() async -> Coordinate?
 }
 

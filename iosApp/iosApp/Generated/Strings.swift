@@ -114,6 +114,8 @@ public enum L10n {
     public enum Error {
       /// Something went wrong. Please try again.
       public static let generic = L10n.tr("Localizable", "animalList.error.generic", fallback: "Something went wrong. Please try again.")
+      /// Failed to load announcements. Please try again.
+      public static let loadingFailed = L10n.tr("Localizable", "animalList.error.loadingFailed", fallback: "Failed to load announcements. Please try again.")
       /// No internet connection. Please check your network settings.
       public static let networkUnavailable = L10n.tr("Localizable", "animalList.error.networkUnavailable", fallback: "No internet connection. Please check your network settings.")
       /// Error: %@
@@ -254,8 +256,16 @@ public enum L10n {
       public static let showOnMap = L10n.tr("Localizable", "petDetails.button.showOnMap", fallback: "Show on the map")
     }
     public enum Error {
+      /// Failed to load pet details. Please try again.
+      public static let loadingFailed = L10n.tr("Localizable", "petDetails.error.loadingFailed", fallback: "Failed to load pet details. Please try again.")
       /// Failed to load pet details
       public static let title = L10n.tr("Localizable", "petDetails.error.title", fallback: "Failed to load pet details")
+    }
+    public enum Format {
+      /// %d years
+      public static func yearsOld(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "petDetails.format.yearsOld", p1, fallback: "%d years")
+      }
     }
     public enum Label {
       /// Animal Additional Description

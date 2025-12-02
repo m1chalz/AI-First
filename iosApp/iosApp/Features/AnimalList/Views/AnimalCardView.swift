@@ -27,16 +27,37 @@ struct AnimalCardView: View {
     
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
-            // Photo placeholder (63pt circular)
-            ZStack {
-                Circle()
-                    .fill(Color(hex: "#EEEEEE")) // Light gray placeholder
-                    .frame(width: 63, height: 63)
-                
-                // Animal icon placeholder
-                Image(systemName: "pawprint.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(Color(hex: "#93A2B4")) // Tertiary text color
+            // Photo (63pt circular)
+            AsyncImage(url: URL(string: viewModel.photoUrl)) { phase in
+                switch phase {
+                case .empty:
+                    // Loading placeholder
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: "#EEEEEE"))
+                            .frame(width: 63, height: 63)
+                        ProgressView()
+                    }
+                case .success(let image):
+                    // Successfully loaded image
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 63, height: 63)
+                        .clipShape(Circle())
+                case .failure:
+                    // Error placeholder
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: "#EEEEEE"))
+                            .frame(width: 63, height: 63)
+                        Image(systemName: "pawprint.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(Color(hex: "#93A2B4"))
+                    }
+                @unknown default:
+                    EmptyView()
+                }
             }
             
             // Animal info column (location + species/breed)

@@ -11,6 +11,10 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     var childCoordinators: [CoordinatorInterface] = []
     var navigationController: UINavigationController? // Modal nav controller
     
+    /// Callback triggered when user successfully sends report (User Story 3: T066)
+    /// Set by parent coordinator (AnimalListCoordinator) to trigger list refresh
+    var onReportSent: (() -> Void)?
+    
     private let parentNavigationController: UINavigationController
     private var flowState: ReportMissingPetFlowState?
     
@@ -158,6 +162,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         let viewModel = ContactDetailsViewModel(flowState: flowState)
         
+        // User Story 3 (T066): Chain callback to parent coordinator when report is sent
+        viewModel.onReportSent = { [weak self] in
+            self?.onReportSent?()
+        }
+        
         viewModel.onNext = { [weak self] in
             self?.navigateToSummary()
         }
@@ -189,7 +198,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let viewModel = SummaryViewModel(flowState: flowState)
         
         viewModel.onSubmit = { [weak self] in
-            self?.exitFlow() // Placeholder - no backend submission yet
+            self?.exitFlow()
         }
         
         viewModel.onBack = { [weak self] in

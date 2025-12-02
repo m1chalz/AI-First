@@ -13,7 +13,7 @@ actor FakeLocationService: LocationServiceProtocol {
     var stubbedAuthorizationStatus: LocationPermissionStatus = .notDetermined
     
     /// Stubbed location returned by requestLocation() (nil = unavailable)
-    var stubbedLocation: UserLocation?
+    var stubbedLocation: Coordinate?
     
     /// Status returned after requestWhenInUseAuthorization() call
     var stubbedAuthorizationAfterRequest: LocationPermissionStatus = .authorizedWhenInUse
@@ -39,7 +39,7 @@ actor FakeLocationService: LocationServiceProtocol {
         return stubbedAuthorizationAfterRequest
     }
     
-    func requestLocation() async -> UserLocation? {
+    func requestLocation() async -> Coordinate? {
         requestLocationCalled = true
         return stubbedLocation
     }
