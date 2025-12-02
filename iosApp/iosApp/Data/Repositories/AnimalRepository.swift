@@ -26,6 +26,11 @@ class AnimalRepository: AnimalRepositoryProtocol {
     
     // MARK: - AnimalRepositoryProtocol Implementation
     
+    /// Fetches animal announcements from backend API with optional location filtering.
+    /// Deduplicates results and skips invalid items gracefully.
+    /// - Parameter location: Optional coordinate for location-based filtering (nil = all announcements)
+    /// - Returns: Array of valid Animal models
+    /// - Throws: RepositoryError if network or parsing fails
     func getAnimals(near location: Coordinate?) async throws -> [Animal] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
         
@@ -44,6 +49,10 @@ class AnimalRepository: AnimalRepositoryProtocol {
         do {
             let (data, response) = try await urlSession.data(from: url)
             
+            // User Story 3 (T067): Check for cancellation after network call
+            // URLSession automatically cancels requests, but checking here saves CPU time on decoding
+            try Task.checkCancellation()
+            
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw RepositoryError.invalidResponse
             }
@@ -56,6 +65,9 @@ class AnimalRepository: AnimalRepositoryProtocol {
                 AnnouncementsListResponse.self,
                 from: data
             )
+            
+            // User Story 3 (T067): Check for cancellation before expensive mapping operation
+            try Task.checkCancellation()
             
             // Convert DTOs to domain models, skipping invalid items
             let animals = listResponse.data.compactMap { dto -> Animal? in
@@ -84,6 +96,10 @@ class AnimalRepository: AnimalRepositoryProtocol {
         }
     }
     
+    /// Fetches detailed pet information from backend API by ID.
+    /// - Parameter id: Unique identifier of the pet announcement
+    /// - Returns: Complete PetDetails model with all fields
+    /// - Throws: RepositoryError.notFound if pet doesn't exist, or other RepositoryError types
     func getPetDetails(id: String) async throws -> PetDetails {
         guard let url = URL(string: "\(APIConfig.fullBaseURL)/announcements/\(id)") else {
             throw RepositoryError.invalidURL
@@ -91,6 +107,9 @@ class AnimalRepository: AnimalRepositoryProtocol {
         
         do {
             let (data, response) = try await urlSession.data(from: url)
+            
+            // User Story 3 (T067): Check for cancellation after network call
+            try Task.checkCancellation()
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw RepositoryError.invalidResponse
@@ -104,6 +123,9 @@ class AnimalRepository: AnimalRepositoryProtocol {
             }
             
             let dto = try apiDecoder.decode(PetDetailsDTO.self, from: data)
+            
+            // User Story 3 (T067): Check for cancellation before mapping
+            try Task.checkCancellation()
             
             // Convert DTO to domain model, throw error if invalid
             guard let details = petDetailsMapper.map(dto) else {

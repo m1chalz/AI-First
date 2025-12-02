@@ -28,6 +28,9 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     /// For location testing - stubbed animals to return
     var stubbedAnimals: [Animal] = []
     
+    /// For testing async cancellation - simulates slow network (User Story 3)
+    var delayDuration: TimeInterval = 0
+    
     /// Creates a fake repository with configurable behavior.
     ///
     /// - Parameters:
@@ -47,6 +50,11 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     func getAnimals(near location: Coordinate?) async throws -> [Animal] {
         getAnimalsCallCount += 1
         lastLocationParameter = location
+        
+        // Simulate network delay if configured (for testing task cancellation)
+        if delayDuration > 0 {
+            try await Task.sleep(for: .seconds(delayDuration))
+        }
         
         if shouldFail {
             throw error
@@ -83,7 +91,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     
     /// Generates mock animal data for testing.
     /// Matches structure of production mock data for consistency.
-    private func generateMockAnimals(count: Int) -> [Animal] {
+    func generateMockAnimals(count: Int) -> [Animal] {
         guard count > 0 else { return [] }
         
         let mockAnimals: [Animal] = [

@@ -15,6 +15,9 @@ class AnimalListCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?
     var childCoordinators: [CoordinatorInterface] = []
     
+    /// ViewModel reference for triggering refresh after child flows (User Story 3: T066)
+    private var viewModel: AnimalListViewModel?
+    
     /**
      * Initializes coordinator with navigation controller.
      *
@@ -43,6 +46,9 @@ class AnimalListCoordinator: CoordinatorInterface {
             repository: repository,
             locationHandler: locationHandler
         )
+        
+        // Store viewModel for refresh triggering after child flows (User Story 3: T066)
+        self.viewModel = viewModel
         
         // Set up coordinator closures for navigation
         viewModel.onAnimalSelected = { [weak self] animalId in
@@ -153,6 +159,27 @@ class AnimalListCoordinator: CoordinatorInterface {
             return
         }
         UIApplication.shared.open(settingsUrl)
+    }
+    
+    // MARK: - CoordinatorInterface Protocol
+    
+    /**
+     * Called by child coordinator when it finishes its flow.
+     * Removes child from childCoordinators array and triggers refresh if needed.
+     * User Story 3 (T066): Automatically refresh animal list after creating announcement.
+     *
+     * - Parameter child: Child coordinator that finished
+     */
+    func childDidFinish(_ child: CoordinatorInterface) {
+        // Remove child from array (default behavior)
+        childCoordinators.removeAll { $0 === child }
+        
+        // User Story 3 (T066): Trigger refresh after ReportMissingPet flow completes
+        // This ensures newly created announcements appear in the list
+        // Calls public method (Coordinator -> ViewModel communication pattern)
+        if child is ReportMissingPetCoordinator {
+            viewModel?.refreshData()
+        }
     }
     
     // MARK: - Deinitialization
