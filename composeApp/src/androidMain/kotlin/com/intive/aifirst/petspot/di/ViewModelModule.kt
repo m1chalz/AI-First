@@ -2,7 +2,9 @@ package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
+import com.intive.aifirst.petspot.features.reportmissing.ui.FlowStateHolder
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -32,5 +34,21 @@ val viewModelModule =
         // AnimalListViewModel: GetAnimalsUseCase (required) + location use cases (optional)
         viewModel { AnimalListViewModel(get(), getOrNull(), getOrNull()) }
         viewModel { PetDetailsViewModel(get()) }
+
+        // Report Missing flow
+        // Legacy shared ViewModel (used by Photo, Description, ContactDetails, Summary screens)
         viewModel { ReportMissingViewModel() }
+
+        // FlowStateHolder: Holds shared flow state, scoped to NavGraph
+        viewModel { FlowStateHolder() }
+
+        // ChipNumberViewModel: Hybrid pattern with FlowState + navigation callbacks
+        // Parameters: flowState, onNavigateToPhoto callback, onExitFlow callback
+        viewModel { params ->
+            ChipNumberViewModel(
+                flowState = params.get(),
+                onNavigateToPhoto = params.get(),
+                onExitFlow = params.get(),
+            )
+        }
     }

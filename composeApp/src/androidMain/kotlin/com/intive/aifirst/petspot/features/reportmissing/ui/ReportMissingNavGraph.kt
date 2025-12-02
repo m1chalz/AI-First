@@ -1,4 +1,3 @@
-
 package com.intive.aifirst.petspot.features.reportmissing.ui
 
 import androidx.compose.runtime.remember
@@ -6,6 +5,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen
@@ -15,13 +16,14 @@ import com.intive.aifirst.petspot.features.reportmissing.ui.summary.SummaryScree
 import com.intive.aifirst.petspot.navigation.NavRoute
 import com.intive.aifirst.petspot.navigation.ReportMissingRoute
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Adds the Report Missing Pet nested navigation graph to the NavGraphBuilder.
  *
- * Uses navigation<>() for proper nested graph with shared NavController,
- * ensuring system back gestures work automatically and ViewModel is scoped
- * to the navigation graph.
+ * Architecture:
+ * - ChipNumberScreen uses hybrid pattern: FlowState (observable) + callbacks (navigation)
+ * - Other screens still use shared ReportMissingViewModel (to be migrated incrementally)
  *
  * @param navController Shared NavController for navigation
  */
@@ -30,63 +32,60 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
         startDestination = ReportMissingRoute.ChipNumber,
     ) {
         composable<ReportMissingRoute.ChipNumber> { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) {
-                    navController.getBackStackEntry<NavRoute.ReportMissing>()
-                }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            ChipNumberScreen(
-                viewModel = viewModel,
-                navController = navController,
-            )
+            // Get parent entry for NavGraph-scoped state
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<NavRoute.ReportMissing>()
+            }
+
+            // Shared flow state (NavGraph-scoped via parent ViewModel's SavedStateHandle alternative)
+            // For now, get from Koin - scoped to parent entry
+            val flowState: ReportMissingFlowState = koinViewModel<FlowStateHolder>(
+                viewModelStoreOwner = parentEntry
+            ).flowState
+
+            // Screen ViewModel with hybrid pattern: state holder + navigation callbacks
+            val viewModel: ChipNumberViewModel = koinViewModel {
+                parametersOf(
+                    flowState,
+                    { navController.navigate(ReportMissingRoute.Photo) { launchSingleTop = true } },  // onNavigateToPhoto
+                    { navController.popBackStack() },  // onExitFlow
+                )
+            }
+
+            ChipNumberScreen(viewModel = viewModel)
         }
 
+        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
         composable<ReportMissingRoute.Photo> { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) {
-                    navController.getBackStackEntry<NavRoute.ReportMissing>()
-                }
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<NavRoute.ReportMissing>()
+            }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            PhotoScreen(
-                viewModel = viewModel,
-                navController = navController,
-            )
+            PhotoScreen(viewModel = viewModel, navController = navController)
         }
 
         composable<ReportMissingRoute.Description> { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) {
-                    navController.getBackStackEntry<NavRoute.ReportMissing>()
-                }
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<NavRoute.ReportMissing>()
+            }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            DescriptionScreen(
-                viewModel = viewModel,
-                navController = navController,
-            )
+            DescriptionScreen(viewModel = viewModel, navController = navController)
         }
 
         composable<ReportMissingRoute.ContactDetails> { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) {
-                    navController.getBackStackEntry<NavRoute.ReportMissing>()
-                }
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<NavRoute.ReportMissing>()
+            }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            ContactDetailsScreen(
-                viewModel = viewModel,
-                navController = navController,
-            )
+            ContactDetailsScreen(viewModel = viewModel, navController = navController)
         }
 
         composable<ReportMissingRoute.Summary> { backStackEntry ->
-            val parentEntry =
-                remember(backStackEntry) {
-                    navController.getBackStackEntry<NavRoute.ReportMissing>()
-                }
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<NavRoute.ReportMissing>()
+            }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            SummaryScreen(
-                viewModel = viewModel,
-                navController = navController,
-            )
+            SummaryScreen(viewModel = viewModel, navController = navController)
         }
     }
 }

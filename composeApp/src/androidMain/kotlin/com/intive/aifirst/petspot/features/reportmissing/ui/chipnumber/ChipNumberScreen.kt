@@ -1,71 +1,40 @@
-
 package com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.FlowStep
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingEffect
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingIntent
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
-import com.intive.aifirst.petspot.navigation.ReportMissingRoute
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUserIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 
 /**
  * State host composable for Chip Number screen (Step 1/4).
- * Collects state from ViewModel, handles effects, and dispatches intents.
+ * Collects state from ViewModel, handles system back, and dispatches intents.
  *
- * @param viewModel Shared ViewModel for the flow (scoped to nav graph)
- * @param navController Shared NavController for navigation
+ * Navigation is handled via callbacks injected into the ViewModel,
+ * not via effects - following the hybrid pattern.
+ *
+ * @param viewModel Screen-specific ViewModel (injected with flowState + callbacks)
  * @param modifier Modifier for the component
  */
 @Composable
 fun ChipNumberScreen(
-    viewModel: ReportMissingViewModel,
-    navController: NavController,
+    viewModel: ChipNumberViewModel,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    // Update ViewModel with current step
-    LaunchedEffect(Unit) {
-        viewModel.updateCurrentStep(FlowStep.CHIP_NUMBER)
-    }
-
-    // Handle navigation effects
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is ReportMissingEffect.NavigateToStep -> {
-                    navController.navigate(effect.step.toRoute()) {
-                        launchSingleTop = true
-                    }
-                }
-                is ReportMissingEffect.NavigateBack -> {
-                    navController.popBackStack()
-                }
-                is ReportMissingEffect.ExitFlow -> {
-                    // Only handled by SummaryScreen
-                }
-            }
-        }
+    // Handle system back button/gesture (FR-018)
+    BackHandler {
+        viewModel.handleIntent(ChipNumberUserIntent.BackClicked)
     }
 
     ChipNumberContent(
         state = state,
         modifier = modifier,
-        onBackClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateBack) },
-        onContinueClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateNext) },
+        onChipNumberChange = { viewModel.handleIntent(ChipNumberUserIntent.UpdateChipNumber(it)) },
+        onBackClick = { viewModel.handleIntent(ChipNumberUserIntent.BackClicked) },
+        onContinueClick = { viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked) },
     )
 }
-
-private fun FlowStep.toRoute(): ReportMissingRoute =
-    when (this) {
-        FlowStep.CHIP_NUMBER -> ReportMissingRoute.ChipNumber
-        FlowStep.PHOTO -> ReportMissingRoute.Photo
-        FlowStep.DESCRIPTION -> ReportMissingRoute.Description
-        FlowStep.CONTACT_DETAILS -> ReportMissingRoute.ContactDetails
-        FlowStep.SUMMARY -> ReportMissingRoute.Summary
-    }
