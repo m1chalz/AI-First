@@ -93,6 +93,16 @@ fun ChipNumberContent(
             val primaryBlue = Color(0xFF155DFC)       // Button and focused state
             val borderGray = Color(0xFFD1D5DC)        // Unfocused border per Figma
             val placeholderGray = Color(0xFF9CA3AF)   // Placeholder text
+            val labelGray = Color(0xFF364153)         // Label text
+
+            // Label above field (matching Figma - static, not floating)
+            Text(
+                text = "Microchip number (optional)",
+                style = MaterialTheme.typography.bodyMedium,
+                color = labelGray,
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Microchip number input field (FR-006 to FR-011)
             OutlinedTextField(
@@ -102,7 +112,6 @@ fun ChipNumberContent(
                     Modifier
                         .fillMaxWidth()
                         .testTag("missingPet.microchip.input"),
-                label = { Text("Microchip number (optional)") },
                 placeholder = { Text("00000-00000-00000", color = placeholderGray) },
                 visualTransformation = MicrochipVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -110,11 +119,9 @@ fun ChipNumberContent(
                 colors = OutlinedTextFieldDefaults.colors(
                     // Focused state - primary blue
                     focusedBorderColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
                     cursorColor = primaryBlue,
                     // Unfocused state - gray per Figma
                     unfocusedBorderColor = borderGray,
-                    unfocusedLabelColor = placeholderGray,
                 ),
             )
         }
