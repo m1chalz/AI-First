@@ -194,7 +194,7 @@ class ReportMissingViewModelTest {
         }
 
     @Test
-    fun `dispatchIntent Submit should emit NavigateBack effect to exit flow`() =
+    fun `dispatchIntent Submit should emit ExitFlow effect to exit flow`() =
         runTest {
             // Given
             val viewModel = ReportMissingViewModel()
@@ -208,8 +208,8 @@ class ReportMissingViewModelTest {
                 // Then
                 val effect = awaitItem()
                 assertTrue(
-                    effect is ReportMissingEffect.NavigateBack,
-                    "Should emit NavigateBack effect on submit (exits nested graph)",
+                    effect is ReportMissingEffect.ExitFlow,
+                    "Should emit ExitFlow effect on submit (exits nested graph)",
                 )
 
                 cancelAndIgnoreRemainingEvents()
