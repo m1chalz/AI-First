@@ -48,7 +48,7 @@ Users who ignore the requirement (e.g., tap Continue without attaching anything 
 
 **Acceptance Scenarios**:
 
-1. **Given** no photo is selected, **When** the user taps Continue, **Then** the app stays on the Animal Photo screen, a toast displays "Photo is mandatory" for 3 seconds, and no navigation occurs.
+1. **Given** no photo is selected, **When** the user taps Continue, **Then** the app stays on the Animal Photo screen, a toast displays "Photo is mandatory" using Android's standard long duration (`Toast.LENGTH_LONG`, ~3.5s), and no navigation occurs.
 2. **Given** a photo is attached and Continue would normally advance, **When** the user taps the "Remove" (X icon) action, **Then** the confirmation card disappears, helper text reiterates the requirement, Continue remains enabled, and any subsequent Continue tap shows the same toast until a new file is selected.
 
 ---
@@ -70,12 +70,11 @@ Android users who cancel the Photo Picker or encounter loading issues receive cl
 
 ### Edge Cases
 
-- User cancels the Photo Picker: remain on the empty state, show helper text, keep Continue enabled, and surface the 3-second toast if they try to Continue without selecting a photo.
+- User cancels the Photo Picker: remain on the empty state, show helper text, keep Continue enabled, and surface the standard long-duration toast if they try to Continue without selecting a photo.
 - Device resumes from background after extended period: previously selected photo metadata/card must still render because the draft session survives configuration changes via ViewModel; note: process death clears state (consistent with chip number step); draft is only cleared when exiting the entire flow (nav graph).
 - Configuration change (device rotation): all UI state, including selected photo, must persist without re-prompting the user.
 - Storage permission denied (Android 12 and below): surface guidance to enable permissions in Settings while keeping the last good selection; prevent data loss.
 - Photo Picker unavailable (older devices without Google Play Services updates): fall back to intent-based gallery picker with the same behavior.
-- TalkBack enabled: announce upload instructions, filename, size, and the Remove control with clear content descriptions.
 
 ## Requirements *(mandatory)*
 
@@ -84,7 +83,7 @@ Android users who cancel the Photo Picker or encounter loading issues receive cl
 - **FR-001**: The Android Animal Photo screen MUST appear as step 2/4 in the missing pet flow (spec 018) and visually match Figma nodes `297:7991` (empty) and `297:8041` (attached) including typography, button spacing, and helper copy.
 - **FR-002**: The "Browse" button MUST launch the Android Photo Picker scoped to image media types only (JPG, PNG, GIF, WEBP). On devices where Photo Picker is unavailable, MUST fall back to ACTION_PICK or ACTION_GET_CONTENT intent.
 - **FR-003**: After a supported image is selected, the UI MUST show a brief loading indicator (spinner or shimmer) on the card area while processing the image metadata, then render the confirmation card (icon, filename, size, remove control) and enable the Continue CTA while storing the selection inside the ViewModel state so it survives navigation and configuration changes.
-- **FR-004**: Tapping Continue without a stored photo MUST leave the CTA enabled but surface a toast message that literally reads "Photo is mandatory" for 3 seconds and prevent navigation.
+- **FR-004**: Tapping Continue without a stored photo MUST leave the CTA enabled but surface a toast message that literally reads "Photo is mandatory" using Android's standard long duration (`Toast.LENGTH_LONG`, ~3.5s) and prevent navigation.
 - **FR-005**: The Remove (X) control MUST clear the stored photo, revert the screen to the empty state, and ensure any subsequent Continue tap replays the "Photo is mandatory" toast until another valid file is selected, while retaining other step data.
 - **FR-006**: The Photo Picker does not require runtime permissions on Android 13+; for Android 12 and below, the app MUST request READ_EXTERNAL_STORAGE permission if needed and handle denial gracefully with guidance to Settings.
 - **FR-007**: All state (selected photo metadata, other flow inputs) MUST persist through configuration changes and navigation between steps using ViewModel and shared flow state (consistent with chip number step). Process death survival is not required.
@@ -104,16 +103,17 @@ Android users who cancel the Photo Picker or encounter loading issues receive cl
 
 ### Measurable Outcomes
 
-- **SC-001**: During QA, 100% of attempts to tap Continue without a photo display the "Photo is mandatory" toast for 3 seconds and prevent forward navigation until a photo is provided.
+- **SC-001**: During QA, 100% of attempts to tap Continue without a photo display the "Photo is mandatory" toast with the standard long duration (`Toast.LENGTH_LONG`, ~3.5s) and prevent forward navigation until a photo is provided.
 - **SC-002**: 95% of Android draft sessions that include a selected photo still display the confirmation card after navigating away and back within the same app session (process death clears state, consistent with chip number step).
 - **SC-003**: At least 90% of testers who cancel the picker or encounter loading issues can recover without manual support by following the inline guidance and retry affordances.
-- **SC-004**: Support tickets tagged "Android photo upload missing" drop by 40% within one month of release compared to the prior version.
 
 ## Assumptions
 
 - Only the Photo Picker ("Browse") is required for this milestone; capturing a new photo with the camera is deferred.
 - Image format validation relies on Photo Picker filters; no additional compression or client-side resizing is introduced for Android.
 - Copywriting, localization, and icon assets will be delivered by Product Design and Content teams before implementation begins.
+- Accessibility enhancements (e.g., new TalkBack announcements) are deferred to a later accessibility-focused milestone.
+- Analytics instrumentation or KPI tracking (e.g., support-ticket deltas) is handled by a separate product analytics initiative and is out of scope for this milestone.
 - Backend upload policies (no size limit, formats allowed) remain identical to those defined in feature 020; this spec only covers the Android front-end experience.
 - This feature targets Android 7.0 (API 24) and above, consistent with the app's minimum SDK.
 - The Photo Picker (available on Android 13+ and backported via Google Play Services) will be used where available; older devices fall back to intent-based picker.

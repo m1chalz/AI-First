@@ -252,6 +252,6 @@ All technical decisions align with existing project patterns:
 - MVI architecture preserved
 - Koin DI unchanged (ViewModel already scoped)
 - Jetpack Compose patterns followed
-- State persistence via SavedStateHandle
+- State persistence via ReportMissingFlowState (nav graph scoped, not SavedStateHandle)
 - Photo Picker with GetContent fallback for broad device support
 

@@ -47,7 +47,7 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmiss
 
 ```
 composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/
-└── ReportMissingViewModel.kt    # Add photo intent handling, SavedStateHandle
+└── PhotoViewModel.kt            # NEW: Photo step ViewModel (follows ChipNumberViewModel pattern)
 ```
 
 ### UI Components
@@ -133,8 +133,8 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/core/util/
 
 ### Validation
 
-- [ ] Tap "Continue" without photo → Toast "Photo is mandatory" for 3s
-- [ ] Toast disappears after 3s
+- [ ] Tap "Continue" without photo → Toast "Photo is mandatory" shows with Android standard long duration (`Toast.LENGTH_LONG`)
+- [ ] Toast disappears after the standard long duration (~3.5s)
 - [ ] Select photo → Remove (X) → Confirmation card disappears
 - [ ] After remove, "Continue" shows toast again
 
@@ -146,11 +146,7 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/core/util/
 - [ ] Navigate back from any step → Photo preserved (state NOT cleared on back)
 - [ ] Exit flow entirely (leave nav graph) → Draft cleared
 
-### Accessibility
-
-- [ ] TalkBack announces "Browse, button"
-- [ ] TalkBack announces filename and size
-- [ ] TalkBack announces "Remove photo, button"
+> Accessibility audits (TalkBack announcements) are deferred and not part of this milestone.
 
 ## Dependencies
 

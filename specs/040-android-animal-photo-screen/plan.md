@@ -5,7 +5,7 @@
 
 ## Summary
 
-Implement the photo selection step (step 2/4) in the Android missing pet report flow. Users must attach a photo via Android Photo Picker before continuing. The UI displays a confirmation card with thumbnail, filename, and size after selection. Photo selection is mandatory - attempting to continue without a photo shows a 3-second toast. State persists through configuration changes and process death.
+Implement the photo selection step (step 2/4) in the Android missing pet report flow. Users must attach a photo via Android Photo Picker before continuing. The UI displays a confirmation card with thumbnail, filename, and size after selection. Photo selection is mandatory - attempting to continue without a photo shows the Android standard long toast (`Toast.LENGTH_LONG`). State persists through configuration changes and navigation within the flow but is cleared on process death, matching the spec.
 
 **Technical Approach**: Extend existing MVI architecture with photo-specific state and intents. Use `ActivityResultContracts.PickVisualMedia` for Photo Picker with fallback to `ACTION_GET_CONTENT` for older devices. Store photo metadata in `ReportMissingFlowState` (nav graph scoped) for consistency with chip number step - state survives navigation and rotation but not process death.
 
@@ -121,7 +121,7 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │   │   │   ├── ReportMissingEffect.kt       # MODIFY: Add ShowToast effect
 │   │   │   └── ReportMissingReducer.kt      # MODIFY: Add photo reducers
 │   │   └── viewmodels/
-│   │       └── ReportMissingViewModel.kt    # MODIFY: Add photo handling
+│   │       └── PhotoViewModel.kt            # NEW: Photo step ViewModel (follows ChipNumberViewModel pattern)
 │   └── ui/
 │       └── photo/
 │           ├── PhotoScreen.kt               # MODIFY: Add photo picker launcher
@@ -138,7 +138,7 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 │   ├── mvi/
 │   │   └── PhotoReducerTest.kt              # NEW: Test photo state transitions
 │   └── viewmodels/
-│       └── ReportMissingViewModelPhotoTest.kt # NEW: Test photo handling
+│       └── PhotoViewModelTest.kt            # NEW: Test photo handling
 └── ui/photo/
     └── PhotoContentTest.kt                  # NEW: Compose UI tests
 

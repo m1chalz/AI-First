@@ -224,7 +224,7 @@ sealed interface ReportMissingEffect {
 
 | Field | Rule | Error Handling |
 |-------|------|----------------|
-| `photoAttachment.uri` | Required before navigation from PHOTO step | Toast "Photo is mandatory" for 3 seconds |
+| `photoAttachment.uri` | Required before navigation from PHOTO step | Toast "Photo is mandatory" using Android standard long duration (`Toast.LENGTH_LONG`) |
 | `photoAttachment.status` | Must be CONFIRMED for valid photo | LOADING blocks navigation, ERROR clears state |
 | File format | JPG, PNG, GIF, WEBP only | Handled by Photo Picker filter |
 | File size | No limit (per spec assumptions) | N/A |

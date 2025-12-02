@@ -49,7 +49,7 @@
 | Measurable success criteria | ✅ Pass | SC-001 through SC-005 include percentages, time limits, and counts |
 | Technology-agnostic criteria | ✅ Pass | Success criteria focus on user outcomes, not implementation metrics |
 | Acceptance scenarios | ✅ Pass | Each user story has 2 acceptance scenarios with Given/When/Then format |
-| Edge cases | ✅ Pass | 6 edge cases covering cancellation, persistence, permissions, accessibility |
+| Edge cases | ✅ Pass | 5 edge cases covering cancellation, persistence, permissions (accessibility deferred) |
 | Bounded scope | ✅ Pass | Clear Android-only focus, explicitly defers camera capture to future milestone |
 | Dependencies identified | ✅ Pass | References spec 018 (Android missing pet flow) and feature 020 (baseline) |
 
