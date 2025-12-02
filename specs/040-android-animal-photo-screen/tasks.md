@@ -151,27 +151,27 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 
 ### Tests for User Story 2 ✅
 
-- [ ] T036 [P] [US2] Write unit test for NavigateNext on PHOTO step without photo: should NOT emit NavigateToStep, should emit ShowToast in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoViewModelTest.kt`
-- [ ] T037 [P] [US2] Write unit test for NavigateNext on PHOTO step WITH photo: should emit NavigateToStep(DESCRIPTION) in same file
-- [ ] T038 [P] [US2] Write unit test for RemovePhoto intent: clears photoAttachment, clears FlowState photo data in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoReducerTest.kt`
+- [X] T036 [P] [US2] Write unit test for NavigateNext on PHOTO step without photo: should NOT emit NavigateToStep, should emit ShowToast in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/PhotoViewModelTest.kt`
+- [X] T037 [P] [US2] Write unit test for NavigateNext on PHOTO step WITH photo: should emit NavigateToStep(DESCRIPTION) in same file
+- [X] T038 [P] [US2] Write unit test for RemovePhoto intent: clears photoAttachment, clears FlowState photo data in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/PhotoViewModelTest.kt`
 
 ### Implementation for User Story 2
 
 **Validation Logic**:
 
-- [ ] T039 [US2] Implement RemovePhoto reducer: reset photoAttachment to Empty, clear FlowState via `flowState.clearPhoto()` in ReportMissingReducer.kt
-- [ ] T040 [US2] Modify NavigateNext handling in PhotoViewModel: if currentStep==PHOTO && !photoAttachment.hasPhoto → emit ShowToast(R.string.photo_mandatory), block navigation
-- [ ] T041 [US2] Implement Continue button validation: if photo present, save to FlowState and navigate; if not, show toast
+- [X] T039 [US2] Implement RemovePhoto reducer: reset photoAttachment to Empty, clear FlowState via `flowState.clearPhoto()` in ReportMissingReducer.kt
+- [X] T040 [US2] Modify NavigateNext handling in PhotoViewModel: if currentStep==PHOTO && !photoAttachment.hasPhoto → emit ShowToast(R.string.photo_mandatory), block navigation
+- [X] T041 [US2] Implement Continue button validation: if photo present, save to FlowState and navigate; if not, show toast
 
 **UI Layer**:
 
-- [ ] T042 [US2] Handle ShowToast effect in PhotoScreen: `Toast.makeText(context, messageResId, duration).show()`
-- [ ] T043 [US2] Wire Remove button in PhotoConfirmationCard to dispatch RemovePhoto intent
-- [ ] T044 [US2] Add testTag to remove button: `animalPhoto.removeButton`
+- [X] T042 [US2] Handle ShowToast effect in PhotoScreen: `Toast.makeText(context, messageResId, Toast.LENGTH_LONG).show()`
+- [X] T043 [US2] Wire Remove button in PhotoConfirmationCard to dispatch RemovePhoto intent
+- [X] T044 [US2] Add testTag to remove button: `animalPhoto.removeButton`
 
 **String Resources**:
 
-- [ ] T045 [P] [US2] Add string resource: `photo_mandatory` = "Photo is mandatory" in strings.xml
+- [X] T045 [P] [US2] Add string resource: `photo_mandatory` = "Photo is mandatory" in strings.xml (as `report_missing_photo_mandatory`)
 
 **Checkpoint**: User Story 2 complete - mandatory validation works independently
 

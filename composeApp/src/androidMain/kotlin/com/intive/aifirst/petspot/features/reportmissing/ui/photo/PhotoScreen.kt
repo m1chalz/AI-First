@@ -78,7 +78,7 @@ fun PhotoScreen(
                     Toast.makeText(
                         context,
                         context.getString(R.string.report_missing_photo_mandatory),
-                        Toast.LENGTH_SHORT,
+                        Toast.LENGTH_LONG,
                     ).show()
                 }
                 is PhotoEffect.ShowMetadataFailedToast -> {
