@@ -4,6 +4,11 @@ import { AnimalList } from '../../components/AnimalList/AnimalList';
 import * as useAnimalListModule from '../../hooks/use-animal-list';
 import { Animal } from '../../types/animal';
 
+// Mock react-router-dom
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
+
 // Mock the hooks
 vi.mock('../../hooks/use-animal-list', () => ({
   useAnimalList: vi.fn(() => ({
@@ -11,7 +16,7 @@ vi.mock('../../hooks/use-animal-list', () => ({
     isLoading: false,
     error: null,
     isEmpty: true,
-    reportMissing: vi.fn(),
+    loadAnimals: vi.fn(),
     geolocationError: null,
   }))
 }));
