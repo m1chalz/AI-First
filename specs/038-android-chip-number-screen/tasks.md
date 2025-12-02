@@ -68,25 +68,25 @@
 
 ### Tests for User Story 1 (MANDATORY) ✅
 
-- [ ] T010 [P] [US1] Create `ChipNumberViewModelTest.kt` with initial state test in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ChipNumberViewModelTest.kt`
-- [ ] T011 [P] [US1] Add UpdateChipNumber intent tests (digits extraction, 15-digit limit) to `ChipNumberViewModelTest.kt`
-- [ ] T012 [P] [US1] Add ContinueClicked tests (save to flow state, emit NavigateToPhoto effect) using Turbine to `ChipNumberViewModelTest.kt`
+- [x] T010 [P] [US1] Create `ChipNumberViewModelTest.kt` with initial state test in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ChipNumberViewModelTest.kt`
+- [x] T011 [P] [US1] Add UpdateChipNumber intent tests (digits extraction, 15-digit limit) to `ChipNumberViewModelTest.kt`
+- [x] T012 [P] [US1] Add ContinueClicked tests (save to flow state, emit NavigateToPhoto effect) using Turbine to `ChipNumberViewModelTest.kt`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create `ChipNumberUiState.kt` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUiState.kt`
-- [ ] T014 [P] [US1] Create `ChipNumberUserIntent.kt` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUserIntent.kt`
-- [ ] T015 [P] [US1] Create `ChipNumberUiEffect.kt` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUiEffect.kt`
-- [ ] T016 [US1] Create `ChipNumberViewModel.kt` with handleIntent(), state/effects flows in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ChipNumberViewModel.kt`
-- [ ] T016b [US1] Register `ChipNumberViewModel` in Koin module at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ReportMissingModule.kt`
-- [ ] T017 [US1] Enhance existing `ChipNumberContent.kt` - replace placeholder Text with OutlinedTextField using MicrochipVisualTransformation in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberContent.kt`
-- [ ] T018 [US1] Add KeyboardOptions(keyboardType = KeyboardType.Number) to OutlinedTextField
-- [ ] T019 [US1] Add label "Microchip number (optional)" and placeholder "00000-00000-00000" to OutlinedTextField
-- [ ] T020 [US1] Update `ChipNumberScreen.kt` to use new ChipNumberViewModel, collect state, dispatch intents in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberScreen.kt`
-- [ ] T021 [US1] Wire effect handling in ChipNumberScreen for NavigateToPhoto effect
-- [ ] T022 [US1] Create `ChipNumberUiStateProvider` PreviewParameterProvider with empty, partial, complete states in `ChipNumberContent.kt`
-- [ ] T023 [US1] Update @Preview function to use @PreviewParameter(ChipNumberUiStateProvider::class)
-- [ ] T024 [US1] Run ViewModel tests and verify pass: `./gradlew :composeApp:testDebugUnitTest --tests "*ChipNumberViewModelTest*"`
+- [x] T013 [P] [US1] Create `ChipNumberUiState.kt` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUiState.kt`
+- [x] T014 [P] [US1] Create `ChipNumberUserIntent.kt` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUserIntent.kt`
+- [x] T015 [P] [US1] Create `ChipNumberUiEffect.kt` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ChipNumberUiEffect.kt`
+- [x] T016 [US1] Create `ChipNumberViewModel.kt` with handleIntent(), state/effects flows in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/ChipNumberViewModel.kt`
+- [x] T016b [US1] Register `ChipNumberViewModel` in Koin module at `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
+- [x] T017 [US1] Enhance existing `ChipNumberContent.kt` - replace placeholder Text with OutlinedTextField using MicrochipVisualTransformation in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberContent.kt`
+- [x] T018 [US1] Add KeyboardOptions(keyboardType = KeyboardType.Number) to OutlinedTextField
+- [x] T019 [US1] Add label "Microchip number (optional)" and placeholder "00000-00000-00000" to OutlinedTextField
+- [x] T020 [US1] Update `ChipNumberScreen.kt` to use new ChipNumberViewModel, collect state, dispatch intents in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/chipnumber/ChipNumberScreen.kt`
+- [x] T021 [US1] Wire effect handling in ChipNumberScreen for NavigateToPhoto effect
+- [x] T022 [US1] Create `ChipNumberUiStateProvider` PreviewParameterProvider with empty, partial, complete states in `ChipNumberContent.kt`
+- [x] T023 [US1] Update @Preview function to use @PreviewParameter(ChipNumberUiStateProvider::class)
+- [x] T024 [US1] Run ViewModel tests and verify pass: `./gradlew :composeApp:testDebugUnitTest --tests "*ChipNumberViewModelTest*"`
 
 **Checkpoint**: User Story 1 complete - users can enter chip number with formatting and continue
 

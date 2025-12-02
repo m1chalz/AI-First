@@ -2,6 +2,7 @@ package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -33,4 +34,8 @@ val viewModelModule =
         viewModel { AnimalListViewModel(get(), getOrNull(), getOrNull()) }
         viewModel { PetDetailsViewModel(get()) }
         viewModel { ReportMissingViewModel() }
+
+        // Report Missing flow screen-specific ViewModels
+        // ChipNumberViewModel receives shared ReportMissingViewModel as parameter
+        viewModel { params -> ChipNumberViewModel(params.get()) }
     }

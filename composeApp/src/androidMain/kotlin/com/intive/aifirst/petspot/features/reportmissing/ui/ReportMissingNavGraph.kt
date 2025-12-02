@@ -34,9 +34,9 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
                 remember(backStackEntry) {
                     navController.getBackStackEntry<NavRoute.ReportMissing>()
                 }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
+            val sharedViewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
             ChipNumberScreen(
-                viewModel = viewModel,
+                sharedViewModel = sharedViewModel,
                 navController = navController,
             )
         }
