@@ -50,8 +50,8 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         
         let data = fakeRepository.lastCreateAnnouncementData
         XCTAssertNotNil(data)
-        XCTAssertEqual(data?.species, "DOG")
-        XCTAssertEqual(data?.sex, "MALE")
+        XCTAssertEqual(data?.species, .dog)
+        XCTAssertEqual(data?.sex, .male)
         XCTAssertEqual(data?.location.latitude, 52.2297)
         XCTAssertEqual(data?.location.longitude, 21.0122)
         XCTAssertEqual(data?.contact.phone, "+48123456789")
@@ -67,10 +67,15 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         // Given: Valid FlowState with photo attachment
         setupValidFlowState()
         let mockPhotoMetadata = PhotoAttachmentMetadata(
+            id: UUID(),
+            fileName: "test.jpg",
+            fileSizeBytes: 1024,
+            utiIdentifier: "public.jpeg",
+            pixelWidth: 800,
+            pixelHeight: 600,
+            assetIdentifier: nil,
             cachedURL: URL(fileURLWithPath: "/tmp/test.jpg"),
-            mimeType: "image/jpeg",
-            fileSize: 1024,
-            capturedAt: Date()
+            savedAt: Date()
         )
         flowState.photoAttachment = mockPhotoMetadata
         
@@ -145,10 +150,15 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         // Given: Valid FlowState with photo, repository throws error on uploadPhoto
         setupValidFlowState()
         flowState.photoAttachment = PhotoAttachmentMetadata(
+            id: UUID(),
+            fileName: "test.jpg",
+            fileSizeBytes: 1024,
+            utiIdentifier: "public.jpeg",
+            pixelWidth: 800,
+            pixelHeight: 600,
+            assetIdentifier: nil,
             cachedURL: URL(fileURLWithPath: "/tmp/test.jpg"),
-            mimeType: "image/jpeg",
-            fileSize: 1024,
-            capturedAt: Date()
+            savedAt: Date()
         )
         fakeRepository.shouldThrowOnUploadPhoto = true
         fakeRepository.uploadPhotoThrowsError = RepositoryError.unauthorized

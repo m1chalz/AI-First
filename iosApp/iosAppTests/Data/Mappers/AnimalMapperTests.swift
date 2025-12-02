@@ -30,14 +30,14 @@ final class AnimalMapperTests: XCTestCase {
         let dto = AnnouncementDTO(
             id: "test-id",
             petName: "Buddy",
-            species: "DOG",
-            status: "ACTIVE",
+            species: .dog,
+            status: .missing,
             photoUrl: "/images/buddy.jpg",
             lastSeenDate: "2024-12-01",
             locationLatitude: 52.2297,
             locationLongitude: 21.0122,
             breed: "Golden Retriever",
-            sex: "MALE",
+            sex: .male,
             age: 5,
             description: "Friendly dog",
             phone: "+48123456789",
@@ -62,7 +62,7 @@ final class AnimalMapperTests: XCTestCase {
     
     func test_map_whenMISSINGStatus_shouldMapToACTIVE() {
         // Given - DTO with MISSING status
-        let dto = makeTestDTO(status: "MISSING")
+        let dto = makeTestDTO(status: .missing)
         
         // When
         let animal = sut.map(dto)
@@ -98,37 +98,15 @@ final class AnimalMapperTests: XCTestCase {
     
     // MARK: - Failure Cases
     
-    func test_map_whenInvalidSpecies_shouldReturnNil() {
-        // Given - DTO with invalid species
-        let dto = makeTestDTO(species: "INVALID")
-        
-        // When
-        let animal = sut.map(dto)
-        
-        // Then - should return nil and skip item
-        XCTAssertNil(animal)
-    }
-    
-    func test_map_whenInvalidStatus_shouldReturnNil() {
-        // Given - DTO with invalid status
-        let dto = makeTestDTO(status: "INVALID")
-        
-        // When
-        let animal = sut.map(dto)
-        
-        // Then - should return nil and skip item
-        XCTAssertNil(animal)
-    }
-    
     // MARK: - Helper Methods
     
     private func makeTestDTO(
         id: String = "test-id",
-        species: String = "DOG",
-        status: String = "ACTIVE",
+        species: AnimalSpeciesDTO = .dog,
+        status: AnimalStatusDTO = .missing,
         photoUrl: String = "/images/test.jpg",
         breed: String? = "Test Breed",
-        sex: String? = "MALE"
+        sex: AnimalGenderDTO? = .male
     ) -> AnnouncementDTO {
         return AnnouncementDTO(
             id: id,
