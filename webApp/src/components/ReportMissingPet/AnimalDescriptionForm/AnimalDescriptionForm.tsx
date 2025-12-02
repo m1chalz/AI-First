@@ -70,11 +70,6 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
           className={sharedStyles.input}
           data-testid="details.breed.input"
         />
-        {formData.validationErrors.breed && (
-          <span role="alert" className={styles.errorMessage}>
-            {formData.validationErrors.breed}
-          </span>
-        )}
       </div>
 
       <div className={sharedStyles.inputGroup}>

@@ -5,7 +5,6 @@ export const VALIDATION_MESSAGES = {
   LAST_SEEN_DATE_FUTURE: 'Date cannot be in the future',
   SPECIES_REQUIRED: 'Please select a species',
   SPECIES_INVALID: 'Invalid species selected',
-  BREED_REQUIRED: 'Please enter the breed',
   SEX_REQUIRED: 'Please select a gender',
   SEX_INVALID: 'Invalid gender selected',
   AGE_INVALID_NUMBER: 'Age must be a whole number',
@@ -44,13 +43,6 @@ export function validateSpecies(species: string): string | null {
     return VALIDATION_MESSAGES.SPECIES_INVALID;
   }
   
-  return null;
-}
-
-export function validateBreed(breed: string, species: string): string | null {
-  if (species && !breed.trim()) {
-    return VALIDATION_MESSAGES.BREED_REQUIRED;
-  }
   return null;
 }
 
@@ -145,9 +137,6 @@ export function validateAllFields(formData: {
   
   const speciesError = validateSpecies(formData.species);
   if (speciesError) errors.species = speciesError;
-  
-  const breedError = validateBreed(formData.breed, formData.species);
-  if (breedError) errors.breed = breedError;
   
   const sexError = validateSex(formData.sex);
   if (sexError) errors.sex = sexError;

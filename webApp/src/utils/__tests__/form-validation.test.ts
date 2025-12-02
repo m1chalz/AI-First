@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   validateLastSeenDate,
   validateSpecies,
-  validateBreed,
   validateSex,
   validateAge,
   validateDescription,
@@ -48,22 +47,6 @@ describe('validateSpecies', () => {
       expect(validateSpecies(species)).toBeNull();
     }
   );
-});
-
-describe('validateBreed', () => {
-  it.each([
-    ['empty with species selected', '', 'DOG', VALIDATION_MESSAGES.BREED_REQUIRED],
-    ['whitespace only with species selected', '   ', 'DOG', VALIDATION_MESSAGES.BREED_REQUIRED],
-  ])('should return error when breed is %s', (_, breed, species, expectedError) => {
-    expect(validateBreed(breed, species)).toBe(expectedError);
-  });
-
-  it.each([
-    ['species not selected', '', ''],
-    ['species selected and breed provided', 'Golden Retriever', 'DOG'],
-  ])('should return null when %s', (_, breed, species) => {
-    expect(validateBreed(breed, species)).toBeNull();
-  });
 });
 
 describe('validateSex', () => {
@@ -193,22 +176,6 @@ describe('validateAllFields', () => {
 
     const errors = validateAllFields(formData);
     expect(Object.keys(errors).length).toBe(0);
-  });
-
-  it('should validate breed when species is selected', () => {
-    const formData = {
-      lastSeenDate: '2025-01-01',
-      species: 'DOG',
-      breed: '',
-      sex: 'MALE',
-      age: '',
-      description: '',
-      latitude: '',
-      longitude: ''
-    };
-
-    const errors = validateAllFields(formData);
-    expect(errors.breed).toBe(VALIDATION_MESSAGES.BREED_REQUIRED);
   });
 
   it('should return errors for invalid latitude/longitude', () => {
