@@ -401,7 +401,7 @@ class ServiceContainer {
 # Open Xcode
 open iosApp/iosApp.xcodeproj
 
-# Select iOS Simulator (iPhone 15, iOS 17+)
+# Select iOS Simulator (iPhone 16, iOS 17+)
 # Build and run: Cmd+R
 ```
 
@@ -457,7 +457,7 @@ func deepLinkToContactDetails() {
 
 ```bash
 # Run unit tests
-xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES
+xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES
 
 # View coverage report
 open ~/Library/Developer/Xcode/DerivedData/iosApp-*/Logs/Test/*.xcresult
