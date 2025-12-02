@@ -12,13 +12,6 @@ struct AnimalMapper {
     /// - Parameter dto: DTO from backend API
     /// - Returns: Animal domain model, or nil if DTO contains invalid data
     func map(_ dto: AnnouncementDTO) -> Animal? {
-        // Parse status - map MISSING to ACTIVE
-        let statusString = dto.status.uppercased() == "MISSING" ? "ACTIVE" : dto.status.uppercased()
-        guard let status = AnimalStatus(rawValue: statusString) else {
-            print("Warning: Invalid status '\(dto.status)' for announcement \(dto.id), skipping item")
-            return nil
-        }
-        
         return Animal(
             id: dto.id,
             name: dto.petName,
@@ -27,7 +20,7 @@ struct AnimalMapper {
             species: dto.species.toDomain,
             breed: dto.breed,
             gender: dto.sex?.toDomain ?? .unknown,
-            status: status,
+            status: dto.status.toDomain,
             lastSeenDate: dto.lastSeenDate,
             description: dto.description,
             email: dto.email,

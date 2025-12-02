@@ -12,7 +12,7 @@ struct AnnouncementResponseDTO: Codable {
     let locationLongitude: Double
     let email: String
     let phone: String
-    let status: String
+    let status: AnimalStatusDTO
     let microchipNumber: String?
     let description: String?
     let reward: String?
