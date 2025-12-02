@@ -103,41 +103,41 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 
 ### Tests for User Story 1 ✅
 
-- [ ] T015 [P] [US1] Write unit test for photo selection reducer: `PhotoSelected` → status=LOADING in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoReducerTest.kt`
-- [ ] T016 [P] [US1] Write unit test for photo metadata reducer: `PhotoMetadataLoaded` → status=CONFIRMED with uri, filename, sizeBytes in same file
-- [ ] T017 [P] [US1] Write unit test for state persistence: photoAttachment survives navigation to Description and back in same file
-- [ ] T018 [P] [US1] Write ViewModel test for OpenPhotoPicker intent → emits LaunchPhotoPicker effect using Turbine in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoViewModelTest.kt`
-- [ ] T019 [P] [US1] Write ViewModel test for PhotoSelected → updates state to LOADING, extracts metadata, updates to CONFIRMED in same file
+- [X] T015 [P] [US1] Write unit test for photo selection reducer: `PhotoSelected` → status=LOADING in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoReducerTest.kt`
+- [X] T016 [P] [US1] Write unit test for photo metadata reducer: `PhotoMetadataLoaded` → status=CONFIRMED with uri, filename, sizeBytes in same file
+- [X] T017 [P] [US1] Write unit test for state persistence: photoAttachment survives navigation to Description and back in same file
+- [X] T018 [P] [US1] Write ViewModel test for OpenPhotoPicker intent → emits LaunchPhotoPicker effect using Turbine in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/PhotoViewModelTest.kt`
+- [X] T019 [P] [US1] Write ViewModel test for PhotoSelected → updates state to LOADING, extracts metadata, updates to CONFIRMED in same file
 
 ### Implementation for User Story 1
 
 **Reducer & ViewModel**:
 
-- [ ] T020 [US1] Implement photo selection reducers in `ReportMissingReducer`: handle PhotoSelected (set LOADING), PhotoMetadataLoaded (set CONFIRMED with data) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducer.kt`
-- [ ] T021 [US1] Create `PhotoViewModel` following ChipNumberViewModel pattern: inject ReportMissingFlowState, callbacks for navigation in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/PhotoViewModel.kt`
-- [ ] T022 [US1] Implement OpenPhotoPicker intent handler in PhotoViewModel: emit LaunchPhotoPicker effect
-- [ ] T023 [US1] Implement PhotoSelected intent handler: set LOADING state, extract metadata using ContentResolver, dispatch PhotoMetadataLoaded
-- [ ] T024 [US1] Implement metadata extraction: query OpenableColumns.DISPLAY_NAME and SIZE, take persistable URI permission
-- [ ] T025 [US1] Save photo data to FlowState on successful selection using `flowState.updatePhoto(uri, filename, sizeBytes)`
-- [ ] T026 [US1] Initialize PhotoViewModel state from FlowState for back navigation support
+- [X] T020 [US1] Implement photo selection reducers in `ReportMissingReducer`: handle PhotoSelected (set LOADING), PhotoMetadataLoaded (set CONFIRMED with data) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingReducer.kt`
+- [X] T021 [US1] Create `PhotoViewModel` following ChipNumberViewModel pattern: inject ReportMissingFlowState, callbacks for navigation in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/PhotoViewModel.kt`
+- [X] T022 [US1] Implement OpenPhotoPicker intent handler in PhotoViewModel: emit LaunchPhotoPicker effect
+- [X] T023 [US1] Implement PhotoSelected intent handler: set LOADING state, extract metadata using ContentResolver, dispatch PhotoMetadataLoaded
+- [X] T024 [US1] Implement metadata extraction: query OpenableColumns.DISPLAY_NAME and SIZE, take persistable URI permission
+- [X] T025 [US1] Save photo data to FlowState on successful selection using `flowState.updatePhoto(uri, filename, sizeBytes)`
+- [X] T026 [US1] Initialize PhotoViewModel state from FlowState for back navigation support
 
 **UI Layer**:
 
-- [ ] T027 [US1] Update `PhotoContent` to render PhotoEmptyState when status=EMPTY, PhotoLoadingState when status=LOADING, PhotoConfirmationCard when status=CONFIRMED in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoContent.kt`
-- [ ] T028 [US1] Update `PhotoScreen` to create photo picker launcher using `rememberLauncherForActivityResult(PickVisualMedia())` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoScreen.kt`
-- [ ] T029 [US1] Handle LaunchPhotoPicker effect in PhotoScreen: check Photo Picker availability, launch with ImageOnly filter
-- [ ] T030 [US1] Implement photo picker fallback: if `isPhotoPickerAvailable()` returns false, use `GetContent` with "image/*" MIME type
-- [ ] T031 [US1] Wire picker result to ViewModel: on success dispatch PhotoSelected(uri), on cancel dispatch PhotoPickerCancelled
-- [ ] T032 [US1] Add testTags to PhotoContent: `animalPhoto.browseButton`, `animalPhoto.thumbnail`, `animalPhoto.filename`, `animalPhoto.fileSize`, `animalPhoto.removeButton`
+- [X] T027 [US1] Update `PhotoContent` to render PhotoEmptyState when status=EMPTY, PhotoLoadingState when status=LOADING, PhotoConfirmationCard when status=CONFIRMED in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoContent.kt`
+- [X] T028 [US1] Update `PhotoScreen` to create photo picker launcher using `rememberLauncherForActivityResult(PickVisualMedia())` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/PhotoScreen.kt`
+- [X] T029 [US1] Handle LaunchPhotoPicker effect in PhotoScreen: check Photo Picker availability, launch with ImageOnly filter
+- [X] T030 [US1] Implement photo picker fallback: if `isPhotoPickerAvailable()` returns false, use `GetContent` with "image/*" MIME type
+- [X] T031 [US1] Wire picker result to ViewModel: on success dispatch PhotoSelected(uri), on cancel dispatch PhotoPickerCancelled
+- [X] T032 [US1] Add testTags to PhotoContent: `animalPhoto.browseButton`, `animalPhoto.thumbnail`, `animalPhoto.filename`, `animalPhoto.fileSize`, `animalPhoto.removeButton`
 
 **Previews**:
 
-- [ ] T033 [P] [US1] Create `PhotoContentPreviewProvider` with empty, loading, confirmed (short name), confirmed (long name) states in PhotoContent.kt
-- [ ] T034 [P] [US1] Add @Preview function for PhotoContent using @PreviewParameter with callback lambdas defaulted to no-ops
+- [X] T033 [P] [US1] Create `PhotoContentPreviewProvider` with empty, loading, confirmed (short name), confirmed (long name) states in PhotoContent.kt
+- [X] T034 [P] [US1] Add @Preview function for PhotoContent using @PreviewParameter with callback lambdas defaulted to no-ops
 
 **String Resources**:
 
-- [ ] T035 [P] [US1] Add string resources: `photo_screen_title`, `photo_helper_text`, `photo_browse_button` in `/composeApp/src/androidMain/res/values/strings.xml`
+- [X] T035 [P] [US1] Add string resources: `photo_screen_title`, `photo_helper_text`, `photo_browse_button` in `/composeApp/src/androidMain/res/values/strings.xml`
 
 **Checkpoint**: User Story 1 complete - photo selection happy path works independently
 
