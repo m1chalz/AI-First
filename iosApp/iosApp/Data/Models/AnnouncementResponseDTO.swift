@@ -1,7 +1,7 @@
 import Foundation
 
 /// DTO for announcement creation response (POST /api/v1/announcements returns HTTP 201)
-/// Maps from snake_case JSON format used by backend API
+/// Maps from camelCase JSON format used by backend API
 struct AnnouncementResponseDTO: Codable {
     let id: String
     let managementPassword: String
@@ -20,19 +20,19 @@ struct AnnouncementResponseDTO: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id
-        case managementPassword = "management_password"
+        case managementPassword
         case species
         case sex
-        case lastSeenDate = "last_seen_date"
-        case locationLatitude = "location_latitude"
-        case locationLongitude = "location_longitude"
+        case lastSeenDate
+        case locationLatitude
+        case locationLongitude
         case email
         case phone
         case status
-        case microchipNumber = "microchip_number"
+        case microchipNumber
         case description
         case reward
-        case photoUrl = "photo_url"
+        case photoUrl
     }
 }
 

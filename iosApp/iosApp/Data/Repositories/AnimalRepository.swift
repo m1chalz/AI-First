@@ -164,7 +164,6 @@ class AnimalRepository: AnimalRepositoryProtocol {
         
         // Encode DTO to JSON
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         guard let body = try? encoder.encode(requestDTO) else {
             throw RepositoryError.encodingFailed
         }
@@ -188,7 +187,6 @@ class AnimalRepository: AnimalRepositoryProtocol {
             
             // Decode response DTO
             let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
             let responseDTO = try decoder.decode(AnnouncementResponseDTO.self, from: responseData)
             
             // Convert DTO to domain model

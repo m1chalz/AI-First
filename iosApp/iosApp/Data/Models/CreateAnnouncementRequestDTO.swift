@@ -1,7 +1,7 @@
 import Foundation
 
 /// DTO for announcement creation request (POST /api/v1/announcements)
-/// Maps to snake_case JSON format used by backend API
+/// Maps to camelCase JSON format used by backend API
 struct CreateAnnouncementRequestDTO: Codable {
     let species: AnimalSpeciesDTO
     let sex: AnimalGenderDTO
@@ -18,13 +18,13 @@ struct CreateAnnouncementRequestDTO: Codable {
     enum CodingKeys: String, CodingKey {
         case species
         case sex
-        case lastSeenDate = "last_seen_date"
-        case locationLatitude = "location_latitude"
-        case locationLongitude = "location_longitude"
+        case lastSeenDate
+        case locationLatitude
+        case locationLongitude
         case email
         case phone
         case status
-        case microchipNumber = "microchip_number"
+        case microchipNumber
         case description
         case reward
     }
