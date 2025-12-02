@@ -29,9 +29,9 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Review existing ReportMissingPetFlowContext in `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` to understand state management pattern
-- [ ] T002 Review existing ReportMissingPetLayout in `/webApp/src/components/ReportMissingPet/ReportMissingPetLayout.tsx` to understand layout pattern
-- [ ] T003 Review existing validation hooks (use-details-form.ts, use-microchip-formatter.ts) to understand validation pattern
+- [X] T001 Review existing ReportMissingPetFlowContext in `/webApp/src/contexts/ReportMissingPetFlowContext.tsx` to understand state management pattern
+- [X] T002 Review existing ReportMissingPetLayout in `/webApp/src/components/ReportMissingPet/ReportMissingPetLayout.tsx` to understand layout pattern
+- [X] T003 Review existing validation hooks (use-details-form.ts, use-microchip-formatter.ts) to understand validation pattern
 
 ---
 
@@ -41,10 +41,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] RED: Write failing test for ReportMissingPetFlowState extension in `/webApp/src/models/__tests__/ReportMissingPetFlow.test.ts` (test initial values for phone, email, reward fields)
-- [ ] T005 GREEN: Extend ReportMissingPetFlowState interface in `/webApp/src/models/ReportMissingPetFlow.ts` (add phone: string, email: string, reward: string fields)
-- [ ] T006 GREEN: Update initialFlowState in `/webApp/src/models/ReportMissingPetFlow.ts` (add phone: '', email: '', reward: '' initial values)
-- [ ] T007 REFACTOR: Verify tests pass and run linter `npm run lint` (from webApp/)
+- [X] T004 [P] RED: Write failing test for ReportMissingPetFlowState extension in `/webApp/src/models/__tests__/ReportMissingPetFlow.test.ts` (test initial values for phone, email, reward fields)
+- [X] T005 GREEN: Extend ReportMissingPetFlowState interface in `/webApp/src/models/ReportMissingPetFlow.ts` (add phone: string, email: string, reward: string fields)
+- [X] T006 GREEN: Update initialFlowState in `/webApp/src/models/ReportMissingPetFlow.ts` (add phone: '', email: '', reward: '' initial values)
+- [X] T007 REFACTOR: Verify tests pass and run linter `npm run lint` (from webApp/)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -62,14 +62,14 @@
 
 **Custom Hook Tests** (use-contact-form.ts):
 
-- [ ] T008 [P] [US1] RED: Write failing test for phone validation with valid digits in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123", When: validatePhone called, Then: phoneError is empty)
-- [ ] T009 [P] [US1] RED: Write failing test for phone validation with no digits in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="abc", When: validatePhone called, Then: phoneError="Enter a valid phone number")
-- [ ] T010 [P] [US1] RED: Write failing test for email validation with valid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: email="user@example.com", When: validateEmail called, Then: emailError is empty)
-- [ ] T011 [P] [US1] RED: Write failing test for email validation with invalid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: email="invalid@", When: validateEmail called, Then: emailError="Enter a valid email address")
-- [ ] T012 [P] [US1] RED: Write failing test for successful submission with phone only in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123" and email="", When: handleSubmit called, Then: returns true and updates flow state)
-- [ ] T013 [P] [US1] RED: Write failing test for successful submission with email only in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="" and email="user@example.com", When: handleSubmit called, Then: returns true and updates flow state)
-- [ ] T014 [P] [US1] RED: Write failing test for blocked submission with no contact in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="" and email="", When: handleSubmit called, Then: returns false)
-- [ ] T015 [P] [US1] RED: Write failing test for blocked submission with valid phone + invalid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123" and email="invalid", When: handleSubmit called, Then: returns false)
+- [X] T008 [P] [US1] RED: Write failing test for phone validation with valid digits in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123", When: validatePhone called, Then: phoneError is empty)
+- [X] T009 [P] [US1] RED: Write failing test for phone validation with no digits in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="abc", When: validatePhone called, Then: phoneError="Enter a valid phone number")
+- [X] T010 [P] [US1] RED: Write failing test for email validation with valid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: email="user@example.com", When: validateEmail called, Then: emailError is empty)
+- [X] T011 [P] [US1] RED: Write failing test for email validation with invalid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: email="invalid@", When: validateEmail called, Then: emailError="Enter a valid email address")
+- [X] T012 [P] [US1] RED: Write failing test for successful submission with phone only in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123" and email="", When: handleSubmit called, Then: returns true and updates flow state)
+- [X] T013 [P] [US1] RED: Write failing test for successful submission with email only in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="" and email="user@example.com", When: handleSubmit called, Then: returns true and updates flow state)
+- [X] T014 [P] [US1] RED: Write failing test for blocked submission with no contact in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="" and email="", When: handleSubmit called, Then: returns false)
+- [X] T015 [P] [US1] RED: Write failing test for blocked submission with valid phone + invalid email in `/webApp/src/hooks/__tests__/use-contact-form.test.ts` (Given: phone="123" and email="invalid", When: handleSubmit called, Then: returns false)
 
 **Component Tests** (ContactScreen.tsx):
 
@@ -80,44 +80,44 @@
 
 **Summary Screen Tests**:
 
-- [ ] T020 [P] [US1] RED: Write failing test for displaying flow state in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: flow state with data, When: component renders, Then: displays microchip, photo, species, phone, email, reward)
-- [ ] T021 [P] [US1] RED: Write failing test for back button in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: on summary screen, When: back button clicked, Then: navigates to /report-missing-pet/contact)
-- [ ] T022 [P] [US1] RED: Write failing test for complete button in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: on summary screen, When: complete button clicked, Then: clears flow state and navigates to /)
+- [X] T020 [P] [US1] RED: Write failing test for displaying flow state in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: flow state with data, When: component renders, Then: displays microchip, photo, species, phone, email, reward)
+- [X] T021 [P] [US1] RED: Write failing test for back button in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: on summary screen, When: back button clicked, Then: navigates to /report-missing-pet/contact)
+- [X] T022 [P] [US1] RED: Write failing test for complete button in `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx` (Given: on summary screen, When: complete button clicked, Then: clears flow state and navigates to /)
 
 ### Implementation for User Story 1 (TDD: GREEN phase)
 
 **Custom Hook Implementation**:
 
-- [ ] T023 [US1] GREEN: Create use-contact-form.ts hook in `/webApp/src/hooks/use-contact-form.ts` (minimal implementation: export function useContactForm with basic structure)
-- [ ] T024 [US1] GREEN: Implement phone validation in `/webApp/src/hooks/use-contact-form.ts` (validatePhone function with /\d/ regex matching backend validators.ts)
-- [ ] T025 [US1] GREEN: Implement email validation in `/webApp/src/hooks/use-contact-form.ts` (validateEmail function with RFC 5322 regex matching backend validators.ts)
-- [ ] T026 [US1] GREEN: Implement handleSubmit logic in `/webApp/src/hooks/use-contact-form.ts` (validate all fields, check at least one contact, update flow state on success)
-- [ ] T027 [US1] GREEN: Implement input change handlers in `/webApp/src/hooks/use-contact-form.ts` (handlePhoneChange, handleEmailChange, handleRewardChange)
-- [ ] T028 [US1] GREEN: Add JSDoc documentation to useContactForm hook in `/webApp/src/hooks/use-contact-form.ts` (describe purpose, validation rules, integration with flow context)
-- [ ] T029 [US1] Verify hook tests pass: run `npm test use-contact-form.test.ts` (from webApp/)
+- [X] T023 [US1] GREEN: Create use-contact-form.ts hook in `/webApp/src/hooks/use-contact-form.ts` (minimal implementation: export function useContactForm with basic structure)
+- [X] T024 [US1] GREEN: Implement phone validation in `/webApp/src/hooks/use-contact-form.ts` (validatePhone function with /\d/ regex matching backend validators.ts)
+- [X] T025 [US1] GREEN: Implement email validation in `/webApp/src/hooks/use-contact-form.ts` (validateEmail function with RFC 5322 regex matching backend validators.ts)
+- [X] T026 [US1] GREEN: Implement handleSubmit logic in `/webApp/src/hooks/use-contact-form.ts` (validate all fields, check at least one contact, update flow state on success)
+- [X] T027 [US1] GREEN: Implement input change handlers in `/webApp/src/hooks/use-contact-form.ts` (handlePhoneChange, handleEmailChange, handleRewardChange)
+- [X] T028 [US1] GREEN: Add JSDoc documentation to useContactForm hook in `/webApp/src/hooks/use-contact-form.ts` (describe purpose, validation rules, integration with flow context)
+- [X] T029 [US1] Verify hook tests pass: run `npm test use-contact-form.test.ts` (from webApp/)
 
 **Component Implementation**:
 
-- [ ] T030 [US1] GREEN: Replace ContactScreen debug view in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (import useContactForm, render form with phone/email/reward inputs)
-- [ ] T031 [US1] GREEN: Add Continue button handler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (call handleSubmit, navigate to summary on success)
-- [ ] T032 [US1] GREEN: Add back button handler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (navigate to /report-missing-pet/details)
-- [ ] T033 [US1] GREEN: Add useBrowserBackHandler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (clear flow state, navigate to /)
-- [ ] T034 [US1] GREEN: Add data-testid attributes to all interactive elements in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (contact.phoneNumber.input, contact.email.input, contact.reward.input, contact.continue.button)
-- [ ] T035 [US1] GREEN: Add redirect logic if flowState.currentStep === Empty in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (useEffect to redirect to microchip step)
+- [X] T030 [US1] GREEN: Replace ContactScreen debug view in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (import useContactForm, render form with phone/email/reward inputs)
+- [X] T031 [US1] GREEN: Add Continue button handler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (call handleSubmit, navigate to summary on success)
+- [X] T032 [US1] GREEN: Add back button handler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (navigate to /report-missing-pet/details)
+- [X] T033 [US1] GREEN: Add useBrowserBackHandler in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (clear flow state, navigate to /)
+- [X] T034 [US1] GREEN: Add data-testid attributes to all interactive elements in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (contact.phoneNumber.input, contact.email.input, contact.reward.input, contact.continue.button)
+- [X] T035 [US1] GREEN: Add redirect logic if flowState.currentStep === Empty in `/webApp/src/components/ReportMissingPet/ContactScreen.tsx` (useEffect to redirect to microchip step)
 - [ ] T036 [US1] Verify ContactScreen tests pass: run `npm test ContactScreen.test.tsx` (from webApp/)
 
 **Summary Screen Implementation**:
 
-- [ ] T037 [US1] GREEN: Create SummaryScreen component in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (display all flow state data in debug view format)
-- [ ] T038 [US1] GREEN: Add back button to contact in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (navigate to /report-missing-pet/contact)
-- [ ] T039 [US1] GREEN: Add complete button in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (clear flow state, navigate to /)
-- [ ] T040 [US1] GREEN: Add data-testid attributes in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (summary.back.button, summary.complete.button)
+- [X] T037 [US1] GREEN: Create SummaryScreen component in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (display all flow state data in debug view format)
+- [X] T038 [US1] GREEN: Add back button to contact in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (navigate to /report-missing-pet/contact)
+- [X] T039 [US1] GREEN: Add complete button in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (clear flow state, navigate to /)
+- [X] T040 [US1] GREEN: Add data-testid attributes in `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx` (summary.back.button, summary.complete.button)
 - [ ] T041 [US1] Verify SummaryScreen tests pass: run `npm test SummaryScreen.test.tsx` (from webApp/)
 
 **Routing Updates**:
 
-- [ ] T042 [US1] GREEN: Add summary route in `/webApp/src/routes/report-missing-pet-routes.tsx` (add summary: '/report-missing-pet/summary' to ReportMissingPetRoutes)
-- [ ] T043 [US1] GREEN: Add SummaryScreen route to router configuration in main routes file (add <Route path="/report-missing-pet/summary" element={<SummaryScreen />} />)
+- [X] T042 [US1] GREEN: Add summary route in `/webApp/src/routes/report-missing-pet-routes.tsx` (add summary: '/report-missing-pet/summary' to ReportMissingPetRoutes)
+- [X] T043 [US1] GREEN: Add SummaryScreen route to router configuration in main routes file (add <Route path="/report-missing-pet/summary" element={<SummaryScreen />} />)
 
 ### Refactor & Validate for User Story 1 (TDD: REFACTOR phase)
 

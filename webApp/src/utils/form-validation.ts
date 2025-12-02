@@ -170,3 +170,54 @@ export function isFormValid(formData: {
   return Object.keys(errors).length === 0;
 }
 
+// Contact form validation
+const PHONE_REGEX = /\d/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function validatePhoneNumber(phone: string): string | null {
+  if (phone === '') {
+    return null;
+  }
+
+  if (!PHONE_REGEX.test(phone)) {
+    return 'Enter a valid phone number';
+  }
+
+  return null;
+}
+
+export function validateEmailAddress(email: string): string | null {
+  if (email === '') {
+    return null;
+  }
+
+  if (!EMAIL_REGEX.test(email)) {
+    return 'Enter a valid email address';
+  }
+
+  return null;
+}
+
+export interface ContactFormValidation {
+  phone: string;
+  email: string;
+}
+
+export function validateContactForm(formData: ContactFormValidation): {
+  phoneError: string;
+  emailError: string;
+  isValid: boolean;
+} {
+  const phoneError = validatePhoneNumber(formData.phone);
+  const emailError = validateEmailAddress(formData.email);
+
+  const hasAtLeastOneContact = (formData.phone !== '' && !phoneError) || (formData.email !== '' && !emailError);
+  const allProvidedFieldsValid = !phoneError && !emailError;
+
+  return {
+    phoneError: phoneError || '',
+    emailError: emailError || '',
+    isValid: hasAtLeastOneContact && allProvidedFieldsValid,
+  };
+}
+

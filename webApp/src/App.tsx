@@ -4,6 +4,7 @@ import { MicrochipNumberScreen } from './components/ReportMissingPet/MicrochipNu
 import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
 import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
 import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
+import { SummaryScreen } from './components/ReportMissingPet/SummaryScreen';
 import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
 
 export function App() {
@@ -41,6 +42,14 @@ export function App() {
           element={
             <ReportMissingPetFlowProvider>
               <ContactScreen />
+            </ReportMissingPetFlowProvider>
+          }
+        />
+        <Route
+          path="/report-missing/summary"
+          element={
+            <ReportMissingPetFlowProvider>
+              <SummaryScreen />
             </ReportMissingPetFlowProvider>
           }
         />

@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
-import { formatFileSize } from '../../utils/format-file-size';
+import { useContactForm } from '../../hooks/use-contact-form';
+import { useToast } from '../../hooks/use-toast';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
@@ -10,7 +11,19 @@ import { FlowStep } from '../../models/ReportMissingPetFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();
-  const { flowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState } = useReportMissingPetFlow();
+  const {
+    phone,
+    email,
+    reward,
+    phoneError,
+    emailError,
+    handlePhoneChange,
+    handleEmailChange,
+    handleRewardChange,
+    handleSubmit,
+  } = useContactForm();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
@@ -22,9 +35,15 @@ export function ContactScreen() {
     navigate(ReportMissingPetRoutes.details);
   };
 
-  const handleCancel = () => {
-    clearFlowState();
-    navigate('/');
+  const handleContinue = () => {
+    const success = handleSubmit();
+    if (!success) {
+      if (phone === '' && email === '') {
+        showToast('Please provide at least one contact method');
+      }
+      return;
+    }
+    navigate(ReportMissingPetRoutes.summary);
   };
 
   useBrowserBackHandler(handleBack);
@@ -35,119 +54,73 @@ export function ContactScreen() {
       progress="4/4"
       onBack={handleBack}
     >
-      <h2 className={styles.heading}>Flow State Debug</h2>
-      
-      <p className={styles.description}>
-        This is a temporary screen showing the current flow state.
-      </p>
-
-      <div style={{
-        backgroundColor: '#f8f9fa',
-        border: '1px solid #dee2e6',
-        borderRadius: '8px',
-        padding: '20px',
-        marginBottom: '24px',
-        fontFamily: 'monospace',
-        fontSize: '14px',
-      }}>
-        <h3 style={{ marginTop: 0, marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
-          Current Flow State:
-        </h3>
-        
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Current Step:</strong> {flowState.currentStep}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Microchip Number:</strong> {flowState.microchipNumber || '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Photo:</strong>
-          {flowState.photo ? (
-            <div style={{ marginTop: '8px', paddingLeft: '16px' }}>
-              <div>✓ Photo uploaded</div>
-              <div style={{ marginTop: '4px' }}>
-                <strong>Filename:</strong> {flowState.photo.filename}
-              </div>
-              <div style={{ marginTop: '4px' }}>
-                <strong>Size:</strong> {formatFileSize(flowState.photo.size)}
-              </div>
-              <div style={{ marginTop: '4px' }}>
-                <strong>MIME Type:</strong> {flowState.photo.mimeType}
-              </div>
-              <div style={{ marginTop: '4px' }}>
-                <strong>Preview URL:</strong> {flowState.photo.previewUrl ? '✓ Generated' : '✗ None'}
-              </div>
-              {flowState.photo.previewUrl && (
-                <div style={{ marginTop: '12px' }}>
-                  <img 
-                    src={flowState.photo.previewUrl} 
-                    alt="Preview" 
-                    style={{ 
-                      maxWidth: '200px', 
-                      maxHeight: '200px', 
-                      border: '1px solid #ddd',
-                      borderRadius: '4px'
-                    }} 
-                  />
-                </div>
-              )}
+      <form onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+        <div className={styles.inputGroup}>
+          <label htmlFor="phone" className={styles.label}>
+            Phone number (optional)
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            className={styles.input}
+            value={phone}
+            onChange={(e) => handlePhoneChange(e.target.value)}
+            placeholder="e.g., +48123456789"
+            data-testid="contact.phoneNumber.input"
+            style={phoneError ? { borderColor: '#dc3545' } : {}}
+          />
+          {phoneError && (
+            <div style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px' }}>
+              {phoneError}
             </div>
-          ) : (
-            <span> (no photo)</span>
           )}
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Last Seen Date:</strong> {flowState.lastSeenDate || '(empty)'}
+        <div className={styles.inputGroup}>
+          <label htmlFor="email" className={styles.label}>
+            Email address (optional)
+          </label>
+          <input
+            id="email"
+            type="email"
+            className={styles.input}
+            value={email}
+            onChange={(e) => handleEmailChange(e.target.value)}
+            placeholder="e.g., owner@example.com"
+            data-testid="contact.email.input"
+            style={emailError ? { borderColor: '#dc3545' } : {}}
+          />
+          {emailError && (
+            <div style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px' }}>
+              {emailError}
+            </div>
+          )}
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Species:</strong> {flowState.species || '(empty)'}
+        <div className={styles.inputGroup}>
+          <label htmlFor="reward" className={styles.label}>
+            Reward description (optional)
+          </label>
+          <textarea
+            id="reward"
+            className={styles.input}
+            value={reward}
+            onChange={(e) => handleRewardChange(e.target.value)}
+            placeholder="e.g., $250 reward"
+            data-testid="contact.reward.input"
+            rows={3}
+          />
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Breed:</strong> {flowState.breed || '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Sex:</strong> {flowState.sex || '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Age:</strong> {flowState.age !== null ? flowState.age : '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Description:</strong> {flowState.description || '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Latitude:</strong> {flowState.latitude !== null ? flowState.latitude : '(empty)'}
-        </div>
-
-        <div style={{ marginBottom: '12px' }}>
-          <strong>Longitude:</strong> {flowState.longitude !== null ? flowState.longitude : '(empty)'}
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: '12px' }}>
         <button
-          onClick={handleBack}
+          type="button"
+          onClick={handleContinue}
           className={styles.primaryButton}
-          style={{ flex: 1 }}
+          data-testid="contact.continue.button"
         >
-          Back to Description
+          Continue
         </button>
-        <button
-          onClick={handleCancel}
-          className={styles.primaryButton}
-          style={{ flex: 1, backgroundColor: '#6c757d' }}
-        >
-          Cancel Flow
-        </button>
-      </div>
+      </form>
     </ReportMissingPetLayout>
   );
 }
