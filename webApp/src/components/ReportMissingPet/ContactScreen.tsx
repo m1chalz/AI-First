@@ -5,10 +5,18 @@ import { formatFileSize } from '../../utils/format-file-size';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
+import { useEffect } from 'react';
+import { FlowStep } from '../../models/ReportMissingPetFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();
   const { flowState, clearFlowState } = useReportMissingPetFlow();
+
+  useEffect(() => {
+    if (flowState.currentStep === FlowStep.Empty) {
+      navigate(ReportMissingPetRoutes.microchip, { replace: true });
+    }
+  }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
     navigate(ReportMissingPetRoutes.details);

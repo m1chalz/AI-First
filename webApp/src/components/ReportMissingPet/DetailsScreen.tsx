@@ -15,8 +15,8 @@ export const DetailsScreen: React.FC = () => {
   const { message: toastMessage, showToast } = useToast();
 
   useEffect(() => {
-    if (flowState.currentStep === FlowStep.Microchip || flowState.currentStep === FlowStep.Photo) {
-      navigate(ReportMissingPetRoutes.photo, { replace: true });
+    if (flowState.currentStep === FlowStep.Empty) {
+      navigate(ReportMissingPetRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 

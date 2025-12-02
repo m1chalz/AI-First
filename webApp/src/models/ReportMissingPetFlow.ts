@@ -1,6 +1,7 @@
 import { AnimalSpecies, AnimalSex } from '../types/animal';
 
 export enum FlowStep {
+  Empty = 'emtpy',
   Microchip = 'microchip',
   Photo = 'photo',
   Details = 'details',
@@ -31,7 +32,7 @@ export interface ReportMissingPetFlowState {
 }
 
 export const initialFlowState: ReportMissingPetFlowState = {
-  currentStep: FlowStep.Microchip,
+  currentStep: FlowStep.Empty,
   microchipNumber: '',
   photo: null,
   lastSeenDate: new Date().toISOString().split('T')[0],

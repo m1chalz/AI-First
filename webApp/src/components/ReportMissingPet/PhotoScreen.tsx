@@ -19,10 +19,14 @@ export function PhotoScreen() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (flowState.currentStep === FlowStep.Microchip) {
+    if (flowState.currentStep === FlowStep.Empty) {
       navigate(ReportMissingPetRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
+
+  const handleBack = () => {
+    navigate(ReportMissingPetRoutes.microchip);
+  };
   
   const {
     photo,
@@ -45,11 +49,6 @@ export function PhotoScreen() {
       currentStep: FlowStep.Details,
     });
     navigate(ReportMissingPetRoutes.details);
-  };
-
-  const handleBack = () => {
-    clearFlowState();
-    navigate('/');
   };
 
   const handleBrowseClick = () => {
