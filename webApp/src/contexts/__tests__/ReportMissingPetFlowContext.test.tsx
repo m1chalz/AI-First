@@ -16,6 +16,7 @@ describe('ReportMissingPetFlowContext', () => {
     // then
     expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
     expect(result.current.flowState.microchipNumber).toBe('');
+    expect(result.current.flowState.photo).toBe(null);
   });
 
   it('updates microchip number', () => {
@@ -32,6 +33,7 @@ describe('ReportMissingPetFlowContext', () => {
     // then
     expect(result.current.flowState.microchipNumber).toBe('123456789012345');
     expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
+    expect(result.current.flowState.photo).toBe(null);
   });
 
   it('updates current step', () => {
@@ -68,16 +70,46 @@ describe('ReportMissingPetFlowContext', () => {
     expect(result.current.flowState.currentStep).toBe(FlowStep.Photo);
   });
 
+  it('updates photo state', () => {
+    // given
+    const { result } = renderHook(() => useReportMissingPetFlow(), {
+      wrapper: ReportMissingPetFlowProvider,
+    });
+    const mockPhoto = {
+      file: new File(['test'], 'test.jpg', { type: 'image/jpeg' }),
+      filename: 'test.jpg',
+      size: 1024,
+      mimeType: 'image/jpeg',
+      previewUrl: 'blob:mock-url',
+    };
+
+    // when
+    act(() => {
+      result.current.updateFlowState({ photo: mockPhoto });
+    });
+
+    // then
+    expect(result.current.flowState.photo).toEqual(mockPhoto);
+  });
+
   it('clears flow state to initial values', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
       wrapper: ReportMissingPetFlowProvider,
     });
+    const mockPhoto = {
+      file: new File(['test'], 'test.jpg', { type: 'image/jpeg' }),
+      filename: 'test.jpg',
+      size: 1024,
+      mimeType: 'image/jpeg',
+      previewUrl: 'blob:mock-url',
+    };
 
     act(() => {
       result.current.updateFlowState({
         microchipNumber: '123456789012345',
         currentStep: FlowStep.Photo,
+        photo: mockPhoto,
       });
     });
 
@@ -89,6 +121,7 @@ describe('ReportMissingPetFlowContext', () => {
     // then
     expect(result.current.flowState.currentStep).toBe(FlowStep.Microchip);
     expect(result.current.flowState.microchipNumber).toBe('');
+    expect(result.current.flowState.photo).toBe(null);
   });
 
   it('throws error when hook used outside provider', () => {

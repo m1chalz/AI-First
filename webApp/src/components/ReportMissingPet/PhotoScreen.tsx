@@ -1,47 +1,105 @@
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
+import { usePhotoUpload } from '../../hooks/use-photo-upload';
+import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
-import { flowNavigation } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import { PhotoUploadCard } from './PhotoUploadCard';
+import { PhotoConfirmationCard } from './PhotoConfirmationCard';
+import { Toast } from '../Toast/Toast';
 import styles from './ReportMissingPetLayout.module.css';
 
 export function PhotoScreen() {
   const navigate = useNavigate();
-  const { flowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { message, showToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleBack = () => {
-    navigate(flowNavigation.goToPreviousStep(FlowStep.Photo));
-  };
+  // FR-024: Protect direct URL access - redirect to step 1 if accessed directly
+  useEffect(() => {
+    if (!flowState.microchipNumber && flowState.currentStep !== FlowStep.Photo) {
+      navigate('/report-missing/microchip', { replace: true });
+    }
+  }, [flowState, navigate]);
+  
+  const {
+    photo,
+    isDragOver,
+    handleFileSelect,
+    handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    removePhoto,
+  } = usePhotoUpload(flowState.photo, showToast);
 
   const handleContinue = () => {
-    clearFlowState();
-    navigate('/', { replace: true });
+    if (!photo) {
+      showToast('Photo is mandatory', 3000);
+      return;
+    }
+
+    updateFlowState({
+      photo,
+      currentStep: FlowStep.Details,
+    });
+    navigate('/report-missing/details');
   };
+
+  const handleBack = () => {
+    clearFlowState();
+    navigate('/');
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout
-      title="Photo"
+      title="Animal photo"
       progress="2/4"
       onBack={handleBack}
     >
-      <h2 className={styles.heading}>Photo Upload</h2>
+      <h2 className={styles.heading}>Your pet&apos;s photo</h2>
       
       <p className={styles.description}>
-        This is a placeholder for the photo upload step. Future implementation will allow uploading pet photos.
+        Please upload a photo of the missing animal.
       </p>
+
+      {!photo ? (
+        <PhotoUploadCard
+          isDragOver={isDragOver}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onBrowseClick={handleBrowseClick}
+          fileInputRef={fileInputRef}
+          onFileInputChange={handleFileInputChange}
+        />
+      ) : (
+        <PhotoConfirmationCard photo={photo} onRemove={removePhoto} />
+      )}
       
-      <div className={styles.description} style={{ marginTop: '16px' }}>
-        <strong>Current Flow State:</strong>
-        <br />
-        Microchip Number: {flowState.microchipNumber || 'N/A'}
-        <br />
-        Current Step: {flowState.currentStep}
-      </div>
-      
-      <button onClick={handleContinue} className={styles.primaryButton}>
-        Complete Flow (Placeholder)
+      <button
+        onClick={handleContinue}
+        className={styles.primaryButton}
+        data-testid="animalPhoto.continue.click"
+      >
+        Continue
       </button>
+
+      <Toast message={message} />
     </ReportMissingPetLayout>
   );
 }
-

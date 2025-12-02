@@ -6,14 +6,24 @@ export enum FlowStep {
   Completed = 'completed',
 }
 
+export interface PhotoAttachment {
+  file: File;
+  filename: string;
+  size: number;
+  mimeType: string;
+  previewUrl: string | null;
+}
+
 export interface ReportMissingPetFlowState {
   currentStep: FlowStep;
   microchipNumber: string;
+  photo: PhotoAttachment | null;
 }
 
 export const initialFlowState: ReportMissingPetFlowState = {
   currentStep: FlowStep.Microchip,
   microchipNumber: '',
+  photo: null,
 };
 
 export interface ReportMissingPetFlowContextValue {
