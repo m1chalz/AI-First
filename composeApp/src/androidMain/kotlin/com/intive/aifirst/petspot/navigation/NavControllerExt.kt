@@ -33,17 +33,13 @@ fun NavController.navigateToAnimalDetail(
 }
 
 /**
- * Navigate to Report Missing Animal screen.
- *
- * Note: This will log a warning until ReportMissingScreen is implemented.
- * The navigation will be added to NavGraph when the screen is ready.
+ * Navigate to Report Missing Animal flow.
+ * Opens the 5-screen wizard for reporting a missing pet.
  *
  * @param builder Optional navigation options
  */
 fun NavController.navigateToReportMissing(builder: NavOptionsBuilder.() -> Unit = {}) {
-    Log.w("Navigation", "navigateToReportMissing() called but ReportMissingScreen not yet implemented")
-    // TODO: Uncomment when ReportMissingScreen is added to NavGraph
-    // navigate(NavRoute.ReportMissing, builder)
+    navigate(NavRoute.ReportMissing, builder)
 }
 
 /**

@@ -1,4 +1,3 @@
-@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
 @file:OptIn(ExperimentalPermissionsApi::class)
 
 package com.intive.aifirst.petspot.features.animallist.ui
