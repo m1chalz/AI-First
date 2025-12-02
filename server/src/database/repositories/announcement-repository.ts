@@ -17,7 +17,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   async findAll(locationFilter?: LocationFilter): Promise<Announcement[]> {
     let rows: AnnouncementRow[] = [];
     if (!locationFilter) {
-      rows = await this.db('announcement').select('*');
+      rows = await this.db('announcement').whereNotNull('photo_url').select('*');
     } else {
       const { lat, lng, range } = locationFilter;
   
@@ -43,6 +43,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       rows = await this.db
         .from(subquery.as('announcements_with_distance'))
         .where('distance', '<', range)
+        .whereNotNull('photo_url')
         .select('*');
     }
 
