@@ -3,6 +3,7 @@ import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
 
@@ -18,7 +19,7 @@ export function MicrochipNumberScreen() {
       microchipNumber: value,
       currentStep: FlowStep.Photo,
     });
-    navigate('/report-missing/photo');
+    navigate(ReportMissingPetRoutes.photo);
   };
 
   const handleBack = () => {

@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
 
 const mockNavigate = vi.fn();
 
@@ -57,7 +58,7 @@ describe('DetailsScreen', () => {
     const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
     fireEvent.click(backButton);
     
-    expect(mockNavigate).toHaveBeenCalledWith('/report-missing/photo');
+    expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.photo);
   });
 
   it('should navigate to Step 4 on successful submit with valid data', () => {
@@ -88,7 +89,7 @@ describe('DetailsScreen', () => {
     const continueButton = screen.getByTestId('details.continue.click');
     fireEvent.click(continueButton);
     
-    expect(mockNavigate).toHaveBeenCalledWith('/report-missing/contact');
+    expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.contact);
   });
 
   it('should integrate useAnimalDescriptionForm hook', () => {
@@ -120,7 +121,7 @@ describe('DetailsScreen', () => {
       const continueButton = screen.getByTestId('details.continue.click');
       fireEvent.click(continueButton);
       
-      expect(mockNavigate).not.toHaveBeenCalledWith('/report-missing/contact');
+      expect(mockNavigate).not.toHaveBeenCalledWith(ReportMissingPetRoutes.contact);
     });
 
     it('should display inline errors for missing required fields', () => {

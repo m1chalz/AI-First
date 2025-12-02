@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { formatFileSize } from '../../utils/format-file-size';
+import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
 
@@ -10,7 +11,7 @@ export function ContactScreen() {
   const { flowState, clearFlowState } = useReportMissingPetFlow();
 
   const handleBack = () => {
-    navigate('/report-missing/details');
+    navigate(ReportMissingPetRoutes.details);
   };
 
   const handleCancel = () => {

@@ -5,6 +5,7 @@ import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
 import { PhotoConfirmationCard } from './PhotoConfirmationCard';
@@ -17,10 +18,9 @@ export function PhotoScreen() {
   const { message, showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // FR-024: Protect direct URL access - redirect to step 1 if accessed directly
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Microchip) {
-      navigate('/report-missing/microchip', { replace: true });
+      navigate(ReportMissingPetRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
   
@@ -44,7 +44,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details,
     });
-    navigate('/report-missing/details');
+    navigate(ReportMissingPetRoutes.details);
   };
 
   const handleBack = () => {

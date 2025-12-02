@@ -6,6 +6,7 @@ import { AnimalDescriptionForm } from './AnimalDescriptionForm/AnimalDescription
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { Toast } from '../Toast/Toast';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
+import { FlowStep } from '../../models/ReportMissingPetFlow';
 import styles from './ReportMissingPetLayout.module.css';
 
 export const DetailsScreen: React.FC = () => {
@@ -14,19 +15,19 @@ export const DetailsScreen: React.FC = () => {
   const { message: toastMessage, showToast } = useToast();
 
   useEffect(() => {
-    if (!flowState.photo) {
+    if (flowState.currentStep === FlowStep.Microchip || flowState.currentStep === FlowStep.Photo) {
       navigate(ReportMissingPetRoutes.photo, { replace: true });
     }
-  }, [flowState.photo, navigate]);
+  }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate('/report-missing/photo');
+    navigate(ReportMissingPetRoutes.photo);
   };
 
   const handleContinue = () => {
     const isValid = handleSubmit();
     if (isValid) {
-      navigate('/report-missing/contact');
+      navigate(ReportMissingPetRoutes.contact);
     } else {
       showToast('Please correct the errors below', 5000);
     }
