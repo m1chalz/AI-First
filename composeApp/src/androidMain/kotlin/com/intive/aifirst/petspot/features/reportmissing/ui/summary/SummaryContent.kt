@@ -47,67 +47,72 @@ fun SummaryContent(
             modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .padding(16.dp)
                 .testTag("reportMissing.summary.content"),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // Title
-        Text(
-            text = "Report created",
-            style = MaterialTheme.typography.headlineMedium,
-            color = Color(0xFF2D2D2D),
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Description
-        Text(
-            text =
-                "Your missing pet report has been created successfully. " +
-                    "We will notify you if someone finds your pet.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF545F71),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp),
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Placeholder for removal code (future implementation)
-        Text(
-            text = "Summary Screen",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color(0xFF9CA3AF),
-            modifier = Modifier.testTag("reportMissing.summary.placeholder"),
-        )
-
-        // Placeholder removal code display
-        Text(
-            text = "5216577",
-            style =
-                MaterialTheme.typography.headlineLarge.copy(
-                    fontSize = 32.sp,
-                    letterSpacing = 4.sp,
-                ),
-            color = Color(0xFF155DFC),
-            textAlign = TextAlign.Center,
+        // Content area with horizontal padding (matching other screens)
+        Column(
             modifier =
                 Modifier
-                    .padding(vertical = 24.dp)
-                    .testTag("reportMissing.summary.removalCode"),
-        )
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(48.dp))
 
-        Text(
-            text = "Save this code to remove the report later",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color(0xFF9CA3AF),
-            textAlign = TextAlign.Center,
-        )
+            // Title
+            Text(
+                text = "Report created",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color(0xFF2D2D2D),
+                textAlign = TextAlign.Center,
+            )
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Description
+            Text(
+                text =
+                    "Your missing pet report has been created successfully. " +
+                        "We will notify you if someone finds your pet.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF545F71),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Placeholder for removal code (future implementation)
+            Text(
+                text = "Summary Screen",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF),
+                modifier = Modifier.testTag("reportMissing.summary.placeholder"),
+            )
+
+            // Placeholder removal code display
+            Text(
+                text = "5216577",
+                style =
+                    MaterialTheme.typography.headlineLarge.copy(
+                        fontSize = 32.sp,
+                        letterSpacing = 4.sp,
+                    ),
+                color = Color(0xFF155DFC),
+                textAlign = TextAlign.Center,
+                modifier =
+                    Modifier
+                        .padding(vertical = 24.dp)
+                        .testTag("reportMissing.summary.removalCode"),
+            )
+
+            Text(
+                text = "Save this code to remove the report later",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9CA3AF),
+                textAlign = TextAlign.Center,
+            )
+        }
 
         // Close button
         Button(
@@ -116,7 +121,7 @@ fun SummaryContent(
                 Modifier
                     .fillMaxWidth()
                     .navigationBarsPadding()
-                    .padding(bottom = 16.dp)
+                    .padding(16.dp)
                     .testTag("summary.submitButton"),
             shape = RoundedCornerShape(10.dp),
             colors =
