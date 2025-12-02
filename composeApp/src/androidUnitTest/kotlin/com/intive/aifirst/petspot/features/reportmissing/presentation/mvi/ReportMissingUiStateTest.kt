@@ -158,7 +158,7 @@ class ReportMissingUiStateTest {
 
         // Then
         assertEquals("", state.chipNumber, "Chip number should be empty initially")
-        assertEquals(null, state.photoUri, "Photo URI should be null initially")
+        assertEquals(null, state.photoAttachment.uri, "Photo URI should be null initially")
         assertEquals("", state.description, "Description should be empty initially")
         assertEquals("", state.contactEmail, "Contact email should be empty initially")
         assertEquals("", state.contactPhone, "Contact phone should be empty initially")

@@ -109,13 +109,13 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/core/util/
 
 | Element | Test Tag |
 |---------|----------|
-| Browse button | `animalPhoto.browse.click` |
-| Remove button | `animalPhoto.remove.click` |
-| Continue button | `animalPhoto.continue.click` |
-| Filename text | `animalPhoto.filename.text` |
-| File size text | `animalPhoto.filesize.text` |
-| Thumbnail image | `animalPhoto.thumbnail.image` |
-| Loading indicator | `animalPhoto.loading.indicator` |
+| Browse button | `animalPhoto.browseButton` |
+| Remove button | `animalPhoto.removeButton` |
+| Continue button | `animalPhoto.continueButton` |
+| Filename text | `animalPhoto.filename` |
+| File size text | `animalPhoto.fileSize` |
+| Thumbnail image | `animalPhoto.thumbnail` |
+| Loading indicator | `animalPhoto.loadingIndicator` |
 | Content container | `reportMissing.photo.content` |
 
 ## Manual Testing Checklist

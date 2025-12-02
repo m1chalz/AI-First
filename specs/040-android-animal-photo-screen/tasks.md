@@ -64,32 +64,32 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 
 ### Data Model Foundation
 
-- [ ] T001 [P] Create `PhotoStatus` enum (EMPTY, LOADING, CONFIRMED, ERROR) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoStatus.kt`
-- [ ] T002 [P] Create `PhotoAttachmentState` data class with uri, filename, sizeBytes, status fields and computed properties (hasPhoto, formattedSize, displayFilename) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoAttachmentState.kt`
-- [ ] T003 Extend `FlowData` with photoFilename and photoSizeBytes fields in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt`
-- [ ] T004 Add `updatePhoto(uri, filename, sizeBytes)` and `clearPhoto()` methods to `ReportMissingFlowState` in same file
+- [X] T001 [P] Create `PhotoStatus` enum (EMPTY, LOADING, CONFIRMED, ERROR) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoStatus.kt`
+- [X] T002 [P] Create `PhotoAttachmentState` data class with uri, filename, sizeBytes, status fields and computed properties (hasPhoto, formattedSize, displayFilename) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoAttachmentState.kt`
+- [X] T003 Extend `FlowData` with photoFilename and photoSizeBytes fields in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt`
+- [X] T004 Add `updatePhoto(uri, filename, sizeBytes)` and `clearPhoto()` methods to `ReportMissingFlowState` in same file
 
 ### Utility Foundation
 
-- [ ] T005 [P] Create `FileSizeFormatter` object with `format(bytes: Long): String` function (returns "X B", "X.X KB", or "X.X MB") in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/core/util/FileSizeFormatter.kt`
-- [ ] T006 [P] Write unit test for `FileSizeFormatter` covering bytes, KB, MB ranges in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/core/util/FileSizeFormatterTest.kt`
+- [X] T005 [P] Create `FileSizeFormatter` object with `format(bytes: Long): String` function (returns "X B", "X.X KB", or "X.X MB") in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/core/util/FileSizeFormatter.kt`
+- [X] T006 [P] Write unit test for `FileSizeFormatter` covering bytes, KB, MB ranges in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/core/util/FileSizeFormatterTest.kt`
 
 ### MVI Foundation
 
-- [ ] T007 [P] Add photo intents to `ReportMissingIntent`: OpenPhotoPicker, PhotoSelected(uri), PhotoMetadataLoaded(uri, filename, sizeBytes), PhotoLoadFailed, RemovePhoto, PhotoPickerCancelled in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingIntent.kt`
-- [ ] T008 [P] Add photo effects to `ReportMissingEffect`: LaunchPhotoPicker, ShowToast(messageResId, duration) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingEffect.kt`
-- [ ] T009 Modify `ReportMissingUiState` to replace `photoUri: String?` with `photoAttachment: PhotoAttachmentState` field in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
-- [ ] T010 Update `ReportMissingUiStatePreviewProvider` with sample PhotoAttachmentState values (empty, loading, confirmed, long filename) in same file
+- [X] T007 [P] Add photo intents to `ReportMissingIntent`: OpenPhotoPicker, PhotoSelected(uri), PhotoMetadataLoaded(uri, filename, sizeBytes), PhotoLoadFailed, RemovePhoto, PhotoPickerCancelled in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingIntent.kt`
+- [X] T008 [P] Add photo effects to `ReportMissingEffect`: LaunchPhotoPicker, ShowToast(messageResId, duration) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingEffect.kt`
+- [X] T009 Modify `ReportMissingUiState` to replace `photoUri: String?` with `photoAttachment: PhotoAttachmentState` field in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/ReportMissingUiState.kt`
+- [X] T010 Update `ReportMissingUiStatePreviewProvider` with sample PhotoAttachmentState values (empty, loading, confirmed, long filename) in same file
 
 ### UI Component Foundation
 
-- [ ] T011 [P] Create `PhotoEmptyState` composable (placeholder icon, "Your pet's photo" title, helper text, Browse button with testTag) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoEmptyState.kt`
-- [ ] T012 [P] Create `PhotoConfirmationCard` composable (AsyncImage thumbnail, filename text, file size text, Remove X button, all with testTags) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoConfirmationCard.kt`
-- [ ] T013 [P] Create `PhotoLoadingState` composable (shimmer/spinner indicator on card area) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoLoadingState.kt`
+- [X] T011 [P] Create `PhotoEmptyState` composable (placeholder icon, "Your pet's photo" title, helper text, Browse button with testTag `animalPhoto.browseButton`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoEmptyState.kt`
+- [X] T012 [P] Create `PhotoConfirmationCard` composable (AsyncImage thumbnail, filename text, file size text, Remove X button, all with testTags: `animalPhoto.thumbnail`, `animalPhoto.filename`, `animalPhoto.fileSize`, `animalPhoto.removeButton`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoConfirmationCard.kt`
+- [X] T013 [P] Create `PhotoLoadingState` composable (shimmer/spinner indicator with testTag `animalPhoto.loadingIndicator`) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/photo/components/PhotoLoadingState.kt`
 
 ### Test Foundation
 
-- [ ] T014 [P] Write unit tests for `PhotoAttachmentState` computed properties (hasPhoto, displayFilename truncation) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoAttachmentStateTest.kt`
+- [X] T014 [P] Write unit tests for `PhotoAttachmentState` computed properties (hasPhoto, displayFilename truncation) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/PhotoAttachmentStateTest.kt`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -128,7 +128,7 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 - [ ] T029 [US1] Handle LaunchPhotoPicker effect in PhotoScreen: check Photo Picker availability, launch with ImageOnly filter
 - [ ] T030 [US1] Implement photo picker fallback: if `isPhotoPickerAvailable()` returns false, use `GetContent` with "image/*" MIME type
 - [ ] T031 [US1] Wire picker result to ViewModel: on success dispatch PhotoSelected(uri), on cancel dispatch PhotoPickerCancelled
-- [ ] T032 [US1] Add testTags to PhotoContent: `animalPhoto.browse.click`, `animalPhoto.thumbnail.image`, `animalPhoto.filename.text`, `animalPhoto.filesize.text`
+- [ ] T032 [US1] Add testTags to PhotoContent: `animalPhoto.browseButton`, `animalPhoto.thumbnail`, `animalPhoto.filename`, `animalPhoto.fileSize`, `animalPhoto.removeButton`
 
 **Previews**:
 
@@ -167,7 +167,7 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 
 - [ ] T042 [US2] Handle ShowToast effect in PhotoScreen: `Toast.makeText(context, messageResId, duration).show()`
 - [ ] T043 [US2] Wire Remove button in PhotoConfirmationCard to dispatch RemovePhoto intent
-- [ ] T044 [US2] Add testTag to remove button: `animalPhoto.remove.click`
+- [ ] T044 [US2] Add testTag to remove button: `animalPhoto.removeButton`
 
 **String Resources**:
 

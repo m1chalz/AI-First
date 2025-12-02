@@ -49,6 +49,12 @@ fun ContactDetailsScreen(
                 is ReportMissingEffect.ExitFlow -> {
                     // Only handled by SummaryScreen
                 }
+                is ReportMissingEffect.LaunchPhotoPicker -> {
+                    // Only handled by PhotoScreen
+                }
+                is ReportMissingEffect.ShowToast -> {
+                    // Only handled by PhotoScreen
+                }
             }
         }
     }

@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
  * Tests format() and extractDigits() methods following Given-When-Then structure.
  */
 class MicrochipNumberFormatterTest {
-
     // ===== format() tests =====
 
     @Test
@@ -205,4 +204,3 @@ class MicrochipNumberFormatterTest {
         assertEquals("123456789", result)
     }
 }
-

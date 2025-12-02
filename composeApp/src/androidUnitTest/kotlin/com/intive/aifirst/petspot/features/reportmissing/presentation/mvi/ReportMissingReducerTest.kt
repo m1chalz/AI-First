@@ -38,20 +38,29 @@ class ReportMissingReducerTest {
         val newState = ReportMissingReducer.reduce(initialState, intent)
 
         // Then
-        assertEquals("content://photo/1", newState.photoUri, "Photo URI should be updated")
+        assertEquals("content://photo/1", newState.photoAttachment.uri, "Photo URI should be updated")
+        assertEquals(PhotoStatus.CONFIRMED, newState.photoAttachment.status, "Status should be CONFIRMED")
     }
 
     @Test
     fun `reduce UpdatePhotoUri with null should clear photo URI`() {
         // Given
-        val initialState = ReportMissingUiState(photoUri = "content://photo/1")
+        val initialState =
+            ReportMissingUiState(
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://photo/1",
+                        status = PhotoStatus.CONFIRMED,
+                    ),
+            )
         val intent = ReportMissingIntent.UpdatePhotoUri(null)
 
         // When
         val newState = ReportMissingReducer.reduce(initialState, intent)
 
         // Then
-        assertNull(newState.photoUri, "Photo URI should be cleared")
+        assertNull(newState.photoAttachment.uri, "Photo URI should be cleared")
+        assertEquals(PhotoStatus.EMPTY, newState.photoAttachment.status, "Status should be EMPTY")
     }
 
     @Test

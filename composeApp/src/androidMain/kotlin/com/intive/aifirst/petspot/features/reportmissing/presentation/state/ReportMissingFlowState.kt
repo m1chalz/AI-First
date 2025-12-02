@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.update
  * Lifecycle: Should be scoped to the NavGraph (created when flow starts, cleared when flow ends).
  */
 class ReportMissingFlowState {
-
     private val _data = MutableStateFlow(FlowData())
     val data: StateFlow<FlowData> = _data.asStateFlow()
 
@@ -27,6 +26,32 @@ class ReportMissingFlowState {
     /** Update photo URI (Step 2/4) */
     fun updatePhotoUri(uri: String?) {
         _data.update { it.copy(photoUri = uri) }
+    }
+
+    /** Update photo data (Step 2/4) */
+    fun updatePhoto(
+        uri: String?,
+        filename: String?,
+        sizeBytes: Long,
+    ) {
+        _data.update {
+            it.copy(
+                photoUri = uri,
+                photoFilename = filename,
+                photoSizeBytes = sizeBytes,
+            )
+        }
+    }
+
+    /** Clear photo data */
+    fun clearPhoto() {
+        _data.update {
+            it.copy(
+                photoUri = null,
+                photoFilename = null,
+                photoSizeBytes = 0,
+            )
+        }
     }
 
     /** Update description (Step 3/4) */
@@ -57,8 +82,9 @@ class ReportMissingFlowState {
 data class FlowData(
     val chipNumber: String = "",
     val photoUri: String? = null,
+    val photoFilename: String? = null,
+    val photoSizeBytes: Long = 0,
     val description: String = "",
     val contactEmail: String = "",
     val contactPhone: String = "",
 )
-

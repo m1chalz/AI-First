@@ -88,7 +88,7 @@ Android users who cancel the Photo Picker or encounter loading issues receive cl
 - **FR-006**: The Photo Picker does not require runtime permissions on Android 13+; for Android 12 and below, the app MUST request READ_EXTERNAL_STORAGE permission if needed and handle denial gracefully with guidance to Settings.
 - **FR-007**: All state (selected photo metadata, other flow inputs) MUST persist through configuration changes and navigation between steps using ViewModel and shared flow state (consistent with chip number step). Process death survival is not required.
 - **FR-008**: All labels, helper copy, and error messaging MUST use Android string resources so translations stay consistent with other steps.
-- **FR-009**: The screen MUST expose test tags following the `{screen}.{element}.{action}` convention (e.g., `animalPhoto.browse.click`, `animalPhoto.remove.click`, `animalPhoto.continue.click`) for automated UI tests.
+- **FR-009**: The screen MUST expose test tags following the `{screen}.{element}` convention (e.g., `animalPhoto.browseButton`, `animalPhoto.removeButton`, `animalPhoto.continueButton`) for automated UI tests.
 - **FR-010**: ViewModel MUST follow MVI pattern with single StateFlow<UiState>, sealed UserIntent, and SharedFlow<UiEffect> as per project architecture.
 - **FR-011**: The confirmation card MUST display an actual thumbnail preview of the selected photo, the filename (truncated to 20 characters with ellipsis if longer), and file size formatted in human-readable units (KB or MB). The empty state displays a generic placeholder icon per Figma node `297:7991`.
 - **FR-012**: When the Photo Picker returns a content URI, the app MUST take persistable URI permissions to ensure the image remains accessible for the duration of the flow.

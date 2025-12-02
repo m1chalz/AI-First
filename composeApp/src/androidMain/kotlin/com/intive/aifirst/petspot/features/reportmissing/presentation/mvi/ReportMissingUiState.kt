@@ -25,7 +25,7 @@ data class ReportMissingUiState(
     // Step 1: Chip Number
     val chipNumber: String = "",
     // Step 2: Photo
-    val photoUri: String? = null,
+    val photoAttachment: PhotoAttachmentState = PhotoAttachmentState.Empty,
     // Step 3: Description
     val description: String = "",
     // Step 4: Contact Details
@@ -79,29 +79,81 @@ class ReportMissingUiStatePreviewProvider : PreviewParameterProvider<ReportMissi
                 currentStep = FlowStep.CHIP_NUMBER,
                 chipNumber = "123456789012345",
             ),
-            // Step 2: Photo screen
+            // Step 2: Photo screen empty
             ReportMissingUiState(
                 currentStep = FlowStep.PHOTO,
                 chipNumber = "123456789012345",
+            ),
+            // Step 2: Photo screen loading
+            ReportMissingUiState(
+                currentStep = FlowStep.PHOTO,
+                chipNumber = "123456789012345",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/1",
+                        status = PhotoStatus.LOADING,
+                    ),
+            ),
+            // Step 2: Photo screen confirmed
+            ReportMissingUiState(
+                currentStep = FlowStep.PHOTO,
+                chipNumber = "123456789012345",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/1",
+                        filename = "dog_photo.jpg",
+                        sizeBytes = 1_234_567,
+                        status = PhotoStatus.CONFIRMED,
+                    ),
+            ),
+            // Step 2: Photo screen with long filename
+            ReportMissingUiState(
+                currentStep = FlowStep.PHOTO,
+                chipNumber = "123456789012345",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/2",
+                        filename = "my_missing_pet_photo_2024.jpg",
+                        sizeBytes = 5_678_901,
+                        status = PhotoStatus.CONFIRMED,
+                    ),
             ),
             // Step 3: Description with photo
             ReportMissingUiState(
                 currentStep = FlowStep.DESCRIPTION,
                 chipNumber = "123456789012345",
-                photoUri = "content://photo/1",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/1",
+                        filename = "dog_photo.jpg",
+                        sizeBytes = 1_234_567,
+                        status = PhotoStatus.CONFIRMED,
+                    ),
             ),
             // Step 4: Contact details
             ReportMissingUiState(
                 currentStep = FlowStep.CONTACT_DETAILS,
                 chipNumber = "123456789012345",
-                photoUri = "content://photo/1",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/1",
+                        filename = "dog_photo.jpg",
+                        sizeBytes = 1_234_567,
+                        status = PhotoStatus.CONFIRMED,
+                    ),
                 description = "Small brown dog, friendly",
             ),
             // Step 5: Summary with all data
             ReportMissingUiState(
                 currentStep = FlowStep.SUMMARY,
                 chipNumber = "123456789012345",
-                photoUri = "content://photo/1",
+                photoAttachment =
+                    PhotoAttachmentState(
+                        uri = "content://media/picker/0/photo/1",
+                        filename = "dog_photo.jpg",
+                        sizeBytes = 1_234_567,
+                        status = PhotoStatus.CONFIRMED,
+                    ),
                 description = "Small brown dog, friendly",
                 contactEmail = "owner@example.com",
                 contactPhone = "+1234567890",

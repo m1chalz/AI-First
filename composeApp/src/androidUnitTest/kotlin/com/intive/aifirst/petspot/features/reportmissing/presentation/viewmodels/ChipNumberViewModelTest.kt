@@ -44,11 +44,12 @@ class ChipNumberViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createViewModel() = ChipNumberViewModel(
-        flowState = flowState,
-        onNavigateToPhoto = { navigateToPhotoCalled = true },
-        onExitFlow = { exitFlowCalled = true },
-    )
+    private fun createViewModel() =
+        ChipNumberViewModel(
+            flowState = flowState,
+            onNavigateToPhoto = { navigateToPhotoCalled = true },
+            onExitFlow = { exitFlowCalled = true },
+        )
 
     // ========================================
     // Initial State Tests
@@ -87,7 +88,7 @@ class ChipNumberViewModelTest {
                 assertEquals(
                     "123456789012345",
                     currentState.chipNumber,
-                    "Should load chip number from flow state"
+                    "Should load chip number from flow state",
                 )
                 cancelAndIgnoreRemainingEvents()
             }
@@ -199,7 +200,7 @@ class ChipNumberViewModelTest {
             assertEquals(
                 "123456789012345",
                 flowState.data.value.chipNumber,
-                "Should save chip number to flow state"
+                "Should save chip number to flow state",
             )
         }
 
@@ -251,7 +252,7 @@ class ChipNumberViewModelTest {
             assertEquals(
                 "",
                 flowState.data.value.chipNumber,
-                "Empty chip number should be saved to flow state"
+                "Empty chip number should be saved to flow state",
             )
         }
 
@@ -290,7 +291,7 @@ class ChipNumberViewModelTest {
             assertEquals(
                 "",
                 flowState.data.value.chipNumber,
-                "Should NOT save chip number on back navigation"
+                "Should NOT save chip number on back navigation",
             )
         }
 

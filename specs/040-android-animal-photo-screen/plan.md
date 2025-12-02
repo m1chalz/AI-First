@@ -61,7 +61,7 @@ Implement the photo selection step (step 2/4) in the Android missing pet report 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
   - Mobile E2E tests in `/e2e-tests/src/test/resources/features/mobile/`
   - Screen Object Model with `@AndroidFindBy` annotations
-  - Test tags exposed: `animalPhoto.browse.click`, `animalPhoto.remove.click`, `animalPhoto.continue.click`
+  - Test tags exposed: `animalPhoto.browseButton`, `animalPhoto.removeButton`, `animalPhoto.continueButton`
   - Violation justification: _N/A - compliant_
 
 - [x] **Asynchronous Programming Standards**: Plan uses correct async patterns
@@ -72,7 +72,7 @@ Implement the photo selection step (step 2/4) in the Android missing pet report 
 
 - [x] **Test Identifiers for UI Controls**: Plan includes test identifiers
   - `testTag` modifier on all interactive composables
-  - Naming: `animalPhoto.browse.click`, `animalPhoto.remove.click`, `animalPhoto.continue.click`, `animalPhoto.filename.text`, `animalPhoto.filesize.text`
+  - Naming: `animalPhoto.browseButton`, `animalPhoto.removeButton`, `animalPhoto.continueButton`, `animalPhoto.filename`, `animalPhoto.fileSize`
   - Violation justification: _N/A - compliant_
 
 - [x] **Public API Documentation**: Plan ensures public APIs have documentation

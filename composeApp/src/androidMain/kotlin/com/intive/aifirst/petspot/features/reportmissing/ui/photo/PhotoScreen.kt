@@ -49,6 +49,12 @@ fun PhotoScreen(
                 is ReportMissingEffect.ExitFlow -> {
                     // Only handled by SummaryScreen
                 }
+                is ReportMissingEffect.LaunchPhotoPicker -> {
+                    // Will be implemented in Phase 3
+                }
+                is ReportMissingEffect.ShowToast -> {
+                    // Will be implemented in Phase 4
+                }
             }
         }
     }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PetSpot</string>
+
+    <!-- Photo Screen -->
+    <string name="photo_screen_title">Your pet\'s photo</string>
+    <string name="photo_helper_text">Select a clear photo of your missing pet to help others identify them</string>
+    <string name="photo_browse_button">Browse</string>
+    <string name="photo_mandatory">Photo is mandatory</string>
 </resources>
