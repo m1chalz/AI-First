@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for ContactDetailsViewModel error handling (User Story 4)
 @MainActor
@@ -7,12 +7,12 @@ final class ContactDetailsViewModelErrorHandlingTests: XCTestCase {
     var sut: ContactDetailsViewModel!
     var fakeService: FakeAnnouncementSubmissionService!
     var flowState: ReportMissingPetFlowState!
-    var fakePhotoCache: FakePhotoAttachmentCache!
+    var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
         try await super.setUp()
         fakeService = FakeAnnouncementSubmissionService()
-        fakePhotoCache = FakePhotoAttachmentCache()
+        fakePhotoCache = PhotoAttachmentCacheFake()
         flowState = ReportMissingPetFlowState(photoAttachmentCache: fakePhotoCache)
         sut = ContactDetailsViewModel(
             submissionService: fakeService,

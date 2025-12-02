@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for AnnouncementSubmissionService
 @MainActor
@@ -7,12 +7,12 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
     var sut: AnnouncementSubmissionService!
     var fakeRepository: FakeAnimalRepository!
     var flowState: ReportMissingPetFlowState!
-    var fakePhotoCache: FakePhotoAttachmentCache!
+    var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
         try await super.setUp()
         fakeRepository = FakeAnimalRepository()
-        fakePhotoCache = FakePhotoAttachmentCache()
+        fakePhotoCache = PhotoAttachmentCacheFake()
         sut = AnnouncementSubmissionService(repository: fakeRepository)
         flowState = ReportMissingPetFlowState(photoAttachmentCache: fakePhotoCache)
     }
@@ -175,21 +175,6 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
             email: "owner@example.com",
             rewardDescription: nil
         )
-    }
-}
-
-/// Fake photo cache for testing
-class FakePhotoAttachmentCache: PhotoAttachmentCacheProtocol {
-    func saveCurrent(from url: URL) async throws -> PhotoAttachmentMetadata {
-        fatalError("Not implemented")
-    }
-    
-    func getCurrent() -> PhotoAttachmentMetadata? {
-        return nil
-    }
-    
-    func clearCurrent() async throws {
-        // No-op
     }
 }
 

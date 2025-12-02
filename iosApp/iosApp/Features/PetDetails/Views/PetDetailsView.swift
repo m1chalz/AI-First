@@ -210,21 +210,4 @@ struct PetDetailsView: View {
         .background(Color.white)
     }
     
-    // MARK: - Formatting Helpers
 }
-
-// MARK: - Previews
-
-#if DEBUG
-struct PetDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let repository = FakeAnimalRepository()
-        let viewModel = PetDetailsViewModel(repository: repository, petId: "preview-id")
-        
-        return NavigationView {
-            PetDetailsView(viewModel: viewModel)
-                .navigationBarHidden(true)
-        }
-    }
-}
-#endif

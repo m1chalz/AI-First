@@ -1,8 +1,8 @@
 import Foundation
-@testable import iosApp
+@testable import PetSpot
 
-/// Fake implementation of AnnouncementSubmissionService for unit testing
-class FakeAnnouncementSubmissionService {
+/// Fake implementation of AnnouncementSubmissionServiceProtocol for unit testing
+class FakeAnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     // MARK: - Test Configuration
     
     var shouldThrow = false

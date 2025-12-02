@@ -37,8 +37,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLatitude)
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
-        XCTAssertNil(sut.contactEmail)
-        XCTAssertNil(sut.contactPhone)
+        XCTAssertNil(sut.contactDetails)
     }
     
     // MARK: - clear() Method Tests
@@ -66,8 +65,11 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         sut.animalLatitude = 52.2297
         sut.animalLongitude = 21.0122
         sut.animalAdditionalDescription = "Test description"
-        sut.contactEmail = "test@example.com"
-        sut.contactPhone = "123456789"
+        sut.contactDetails = OwnerContactDetails(
+            phone: "123456789",
+            email: "test@example.com",
+            rewardDescription: nil
+        )
         
         // When: clear() is called
         await sut.clear()
@@ -84,8 +86,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLatitude)
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
-        XCTAssertNil(sut.contactEmail)
-        XCTAssertNil(sut.contactPhone)
+        XCTAssertNil(sut.contactDetails)
         XCTAssertEqual(cache.clearCallCount, 1)
     }
     
@@ -107,8 +108,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLatitude)
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
-        XCTAssertNil(sut.contactEmail)
-        XCTAssertNil(sut.contactPhone)
+        XCTAssertNil(sut.contactDetails)
         XCTAssertEqual(cache.clearCallCount, 1)
     }
 }

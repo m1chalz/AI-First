@@ -30,7 +30,7 @@ class ServiceContainer {
         LocationPermissionHandler(locationService: locationService)
     
     /// Announcement submission service for 2-step submission orchestration
-    lazy var announcementSubmissionService: AnnouncementSubmissionService =
+    lazy var announcementSubmissionService: AnnouncementSubmissionServiceProtocol =
         AnnouncementSubmissionService(repository: animalRepository)
 
     // MARK: - Repositories

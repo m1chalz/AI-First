@@ -1,7 +1,17 @@
 import Foundation
 
+/// Protocol for announcement submission orchestration
+protocol AnnouncementSubmissionServiceProtocol {
+    /// Submits complete announcement with photo.
+    /// - Parameter flowState: ReportMissingPetFlowState with all data from Steps 1-4
+    /// - Returns: managementPassword for summary screen
+    /// - Throws: Error on submission failure (network, backend, validation)
+    @MainActor
+    func submitAnnouncement(flowState: ReportMissingPetFlowState) async throws -> String
+}
+
 /// Orchestrates 2-step announcement submission (create + photo upload)
-class AnnouncementSubmissionService {
+class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     private let repository: AnimalRepositoryProtocol
     
     init(repository: AnimalRepositoryProtocol) {
