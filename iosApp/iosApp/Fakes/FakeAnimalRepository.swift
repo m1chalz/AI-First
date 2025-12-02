@@ -47,7 +47,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         self.error = error
     }
     
-    func getAnimals(near location: Coordinate?) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Animal] {
         getAnimalsCallCount += 1
         lastLocationParameter = location
         

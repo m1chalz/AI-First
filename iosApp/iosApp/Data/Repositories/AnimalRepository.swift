@@ -31,14 +31,15 @@ class AnimalRepository: AnimalRepositoryProtocol {
     /// - Parameter location: Optional coordinate for location-based filtering (nil = all announcements)
     /// - Returns: Array of valid Animal models
     /// - Throws: RepositoryError if network or parsing fails
-    func getAnimals(near location: Coordinate?) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Animal] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
         
         // Add location query parameters if provided
         if let location = location {
             urlComponents.queryItems = [
                 URLQueryItem(name: "lat", value: String(location.latitude)),
-                URLQueryItem(name: "lng", value: String(location.longitude))
+                URLQueryItem(name: "lng", value: String(location.longitude)),
+                URLQueryItem(name: "range", value: String(range))
             ]
         }
         

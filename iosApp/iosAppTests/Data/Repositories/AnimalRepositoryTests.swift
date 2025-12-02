@@ -94,19 +94,22 @@ final class AnimalRepositoryTests: XCTestCase {
             return (response, jsonData)
         }
         
-        // When - fetch with location
+        // When - fetch with location (uses default range=100)
         _ = try await sut.getAnimals(near: userLocation)
         
         // Then - verify query parameters in URL
         let url = capturedRequest?.url
         XCTAssertNotNil(url)
         let components = URLComponents(url: url!, resolvingAgainstBaseURL: false)
-        XCTAssertEqual(components?.queryItems?.count, 2)
+        XCTAssertEqual(components?.queryItems?.count, 3)
         XCTAssertTrue(components?.queryItems?.contains(where: {
             $0.name == "lat" && $0.value == "52.2297"
         }) ?? false)
         XCTAssertTrue(components?.queryItems?.contains(where: {
             $0.name == "lng" && $0.value == "21.0122"
+        }) ?? false)
+        XCTAssertTrue(components?.queryItems?.contains(where: {
+            $0.name == "range" && $0.value == "100"
         }) ?? false)
     }
     
