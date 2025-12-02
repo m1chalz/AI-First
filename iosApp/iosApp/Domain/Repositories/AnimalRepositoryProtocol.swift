@@ -28,6 +28,23 @@ protocol AnimalRepositoryProtocol {
     /// - Returns: Pet details
     /// - Throws: Error if pet not found or data fetch fails
     func getPetDetails(id: String) async throws -> PetDetails
+    
+    /// Creates a new missing pet announcement.
+    /// Calls POST /api/v1/announcements with JSON body.
+    ///
+    /// - Parameter data: Announcement data with contact info, location, and pet details
+    /// - Returns: AnnouncementResult with id and managementPassword
+    /// - Throws: Error on network failure or backend error
+    func createAnnouncement(data: CreateAnnouncementData) async throws -> AnnouncementResult
+    
+    /// Uploads photo for an existing announcement.
+    /// Calls POST /api/v1/announcements/:id/photos with multipart form-data and Basic auth.
+    ///
+    /// - Parameter announcementId: Announcement identifier from createAnnouncement
+    /// - Parameter photo: Photo metadata with cachedURL for file loading
+    /// - Parameter managementPassword: Password for Basic auth
+    /// - Throws: Error on network failure, auth failure, or backend error
+    func uploadPhoto(announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String) async throws
 }
 
 // MARK: - Protocol Extension (Default Values)

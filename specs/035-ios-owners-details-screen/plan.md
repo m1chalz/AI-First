@@ -1,220 +1,258 @@
-# Implementation Plan: iOS Owner's Details Screen
+# Implementation Plan: [FEATURE]
 
-**Branch**: `035-ios-owners-details-screen` | **Date**: 2025-12-02 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/035-ios-owners-details-screen/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
-Implement iOS Owner's Details screen (Step 4/4) in the Missing Pet flow by modifying existing placeholder files `ContactDetailsView` and `ContactDetailsViewModel`. The screen collects mandatory contact information (phone, email) and optional reward description, validates inputs on Continue tap, delegates to `AnnouncementSubmissionService` for 2-step backend submission (announcement creation + photo upload via extended `AnimalRepository`), and navigates to summary with managementPassword on success. Implementation focuses on SwiftUI UI, validation logic in ViewModel, business logic in Service layer, error handling with retry, and Polish/English localization using SwiftGen L10n.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: Swift 5.9+ (Xcode 15+)
-**Primary Dependencies**: SwiftUI, UIKit (coordinators), SwiftGen (localization), URLSession (HTTP client)
-**Storage**: In-memory session state (ReportMissingPetFlowState), PhotoAttachmentCache (disk cache for photo files)
-**Testing**: XCTest with Swift Concurrency (async/await), 80% coverage target for ViewModels
-**Target Platform**: iOS 15+
-**Project Type**: Mobile (iOS) - modifying existing placeholder files in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/`
-**Performance Goals**: N/A (standard iOS app performance)
-**Constraints**: Must support offline detection, maintain input state during submission, disable back navigation during 2-step submission
-**Scale/Scope**: Single screen implementation (Step 4/4), modifying 2 existing placeholder files (ContactDetailsView, ContactDetailsViewModel) + extending AnimalRepository with announcement methods + creating AnnouncementSubmissionService + adding localization strings
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [single/web/mobile - determines source structure]  
+**Performance Goals**: [Optional for low-traffic projects; specify if needed, e.g., 1000 req/s, 10k lines/sec, 60 fps or N/A]  
+**Constraints**: [Optional for low-traffic projects; specify if critical, e.g., <200ms p95, <100MB memory, offline-capable or N/A]  
+**Scale/Scope**: [Optional for low-traffic projects; specify if known, e.g., 10k users, 1M LOC, 50 screens or N/A]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Pre-Design Check**: ✅ PASSED (2025-12-02)  
-**Post-Design Check**: ✅ PASSED (2025-12-02)
-
-> **Note**: This is an iOS-only feature (modifying ContactDetailsView/ContactDetailsViewModel), so Android MVI checks are marked N/A. Backend is not affected, so backend checks are N/A.
+> **Note**: For backend-only features (affecting only `/server` module), you may mark frontend-related checks (Platform Independence, Android MVI, iOS MVVM-C, Test Identifiers for UI, E2E Tests for mobile/web) as N/A. Focus on Backend Architecture & Quality Standards checks.
 
 ### Platform Architecture Compliance
 
-- [x] **Platform Independence**: Each platform implements full stack independently
-  - Android: N/A (iOS-only feature)
-  - iOS: Implementation in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/` (modifying existing placeholders)
-  - Web: N/A (iOS-only feature)
-  - Backend: N/A (backend API already exists per spec 009 and 021)
+- [ ] **Platform Independence**: Each platform implements full stack independently
+  - Android: Domain models, use cases, repositories, ViewModels in `/composeApp`
+  - iOS: Domain models, use cases, repositories, ViewModels in `/iosApp`
+  - Web: Domain models, services, state management in `/webApp`
+  - Backend: Independent Node.js/Express API in `/server`
   - NO shared compiled code between platforms
-  - Violation justification: _N/A - compliant_
+  - Violation justification: _[Required if not compliant]_
 
-- [x] **Android MVI Architecture**: N/A (iOS-only feature)
-  - Violation justification: _N/A - not applicable to iOS implementation_
+- [ ] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
+  - Single `StateFlow<UiState>` source of truth with immutable data classes
+  - Sealed `UserIntent` and optional `UiEffect` types co-located with feature packages
+  - Reducers implemented as pure functions (no side effects) and unit-tested
+  - `dispatchIntent` entry wired from UI → ViewModel → reducer, with effects delivered via `SharedFlow`
+  - Navigation MUST use Jetpack Navigation Component (androidx.navigation:navigation-compose)
+  - Navigation graph defined with `NavHost` composable
+  - ViewModels trigger navigation via `UiEffect`, not direct `NavController` calls
+  - Composable screens follow two-layer pattern: state host (stateful) + stateless content composable
+  - Stateless composables MUST have `@Preview` with `@PreviewParameter` using custom `PreviewParameterProvider<UiState>`
+  - Callback lambdas MUST be defaulted to no-ops in stateless composables
+  - Previews focus on light mode only (no dark mode previews required)
+  - Violation justification: _[Required if Android diverges from MVI, Navigation Component, or Composable pattern]_
 
-- [x] **iOS MVVM-C Architecture**: iOS features follow MVVM-Coordinator pattern
-  - UIKit-based coordinators manage navigation and create `UIHostingController` instances (already implemented in ReportMissingPetCoordinator per spec 017)
-  - ViewModels conform to `ObservableObject` with `@Published` properties (ContactDetailsViewModel will have @Published phone, email, rewardDescription, phoneError, emailError, isSubmitting, alertMessage, showAlert)
-  - ViewModels communicate with coordinators via closures (onReportSent: (String) -> Void already present in placeholder)
-  - SwiftUI views observe ViewModels (ContactDetailsView will observe ContactDetailsViewModel, no business logic in view)
-  - SwiftUI views wrapped in NavigationBackHiding then UIHostingController (already implemented by coordinator)
-  - **Service layer for business logic**: ContactDetailsViewModel calls AnnouncementSubmissionService (NOT repository directly). Service encapsulates 2-step submission logic and calls AnimalRepository.
-  - Manual DI with constructor injection (ViewModel receives service, service receives repository via initializer)
-  - SwiftGen for localization (all strings use L10n.tr() with owners_details.* keys)
-  - Presentation model extensions in Features/Shared/ (not needed for this simple form)
-  - Colors as hex strings in models, converted to Color in views (not needed - using design system colors)
-  - Data formatting in ViewModels/Models (validation logic in ViewModel, views only display)
-  - Repository protocols use "Protocol" suffix (AnimalRepositoryProtocol - extended with announcement methods)
-  - Violation justification: _N/A - compliant with MVVM-C requirements_
+- [ ] **iOS MVVM-C Architecture**: iOS features follow MVVM-Coordinator pattern
+  - UIKit-based coordinators manage navigation and create `UIHostingController` instances
+  - ViewModels conform to `ObservableObject` with `@Published` properties
+  - ViewModels communicate with coordinators via methods or closures
+  - SwiftUI views observe ViewModels (no business/navigation logic in views)
+  - Violation justification: _[Required if iOS diverges from MVVM-C]_
 
-- [x] **Interface-Based Design**: Domain logic uses interfaces for repositories (per platform)
-  - Android: N/A (iOS-only feature)
-  - iOS: Will extend existing AnimalRepositoryProtocol (with "Protocol" suffix per constitution) in `/iosApp/iosApp/Domain/Repositories/`, implementation in AnimalRepository (already exists in `/iosApp/iosApp/Data/Repositories/`)
-  - Web: N/A (iOS-only feature)
-  - Backend: N/A (backend already exists)
-  - Service layer will reference protocol, not concrete implementation
-  - Violation justification: _N/A - compliant_
+- [ ] **Interface-Based Design**: Domain logic uses interfaces for repositories (per platform)
+  - Android: Repository interfaces in `/composeApp/src/androidMain/.../domain/repositories/`
+  - iOS: Repository protocols in `/iosApp/iosApp/Domain/Repositories/`
+  - Web: Service interfaces in `/webApp/src/services/`
+  - Backend: Repository interfaces in `/server/src/database/repositories/`
+  - Implementations in platform-specific data/repositories modules
+  - Use cases reference interfaces, not concrete implementations
+  - Violation justification: _[Required if not compliant]_
 
-- [x] **Dependency Injection**: Plan includes DI setup for each platform
-  - Android: N/A (iOS-only feature)
-  - iOS: MUST use manual DI - Three-layer injection:
-    - AnimalRepository receives HTTPClient via initializer (already exists)
-    - AnnouncementSubmissionService receives AnimalRepositoryProtocol via initializer
-    - ContactDetailsViewModel receives AnnouncementSubmissionService via initializer
-    - Coordinator injects service (from ServiceContainer) into ViewModel during initialization
-  - Web: N/A (iOS-only feature)
-  - Backend: N/A (backend not affected)
-  - Violation justification: _N/A - compliant with manual DI requirement_
+- [ ] **Dependency Injection**: Plan includes DI setup for each platform
+  - Android: MUST use Koin - DI modules in `/composeApp/src/androidMain/.../di/`
+  - iOS: MUST use manual DI - setup in `/iosApp/iosApp/DI/` (ServiceContainer with constructor injection)
+  - Web: SHOULD use React Context - setup in `/webApp/src/di/`
+  - Backend: Manual DI in `/server/src/` (constructor injection, factory functions)
+  - Violation justification: _[Required if DI not using specified approach]_
 
-- [x] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform
-  - Android: N/A (iOS-only feature)
-  - iOS: Tests in `/iosApp/iosAppTests/Features/ReportMissingPet/ContactDetails/`, run via XCTest with coverage enabled, coverage target 80% line + branch
-    - Test scope: ContactDetailsViewModel validation logic (phone, email), submission flow (2-step: announcement + photo), error handling, retry logic, loading states
-  - Web: N/A (iOS-only feature)
-  - Backend: N/A (backend not affected)
-  - Coverage target: 80% line + branch coverage for iOS ViewModels
-  - Violation justification: _N/A - compliant_
+- [ ] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform
+  - Android: Tests in `/composeApp/src/androidUnitTest/`, run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
+  - iOS: Tests in `/iosApp/iosAppTests/`, run via XCTest
+  - Web: Tests in `/webApp/src/__tests__/`, run `npm test -- --coverage`
+  - Backend: Tests in `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`, run `npm test -- --coverage`
+  - Coverage target: 80% line + branch coverage per platform
+  - Violation justification: _[Required if coverage < 80%]_
 
-- [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
-  - Web: N/A (iOS-only feature)
-  - Mobile: E2E tests for iOS Owner's Details screen will be added in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Appium + TypeScript + Cucumber with @ios tag)
-  - Screen Object Model in `/e2e-tests/mobile/screens/ContactDetailsScreen.ts` with accessibilityIdentifiers
-  - Each user story from spec (US1-US4) has E2E test coverage
-  - Violation justification: _N/A - E2E tests planned_
+- [ ] **End-to-End Tests**: Plan includes E2E tests for all user stories
+  - Web: Playwright tests in `/e2e-tests/web/specs/[feature-name].spec.ts`
+  - Mobile: Appium tests in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
+  - All tests written in TypeScript
+  - Page Object Model / Screen Object Model used
+  - Each user story has at least one E2E test
+  - Violation justification: _[Required if E2E tests missing]_
 
-- [x] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
-  - Android: N/A (iOS-only feature)
-  - iOS: Swift Concurrency (`async`/`await`) with `@MainActor` for ViewModel - submitForm() method will use async/await for repository calls
-  - Web: N/A (iOS-only feature)
-  - Backend: N/A (backend not affected)
+- [ ] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
+  - Android: Kotlin Coroutines (`viewModelScope`) + Flow for state
+  - iOS: Swift Concurrency (`async`/`await`) with `@MainActor`
+  - Web: Native `async`/`await` (no Promise chains)
+  - Backend: Native `async`/`await` (Express async handlers)
   - No Combine, RxJava, RxSwift, or callback-based patterns for new code
-  - Violation justification: _N/A - compliant with Swift Concurrency requirement_
+  - Violation justification: _[Required if using prohibited patterns]_
 
-- [x] **Test Identifiers for UI Controls**: Plan includes test identifiers for all interactive elements
-  - Android: N/A (iOS-only feature)
-  - iOS: `.accessibilityIdentifier()` modifier on all interactive views
-    - ownersDetails.backButton
-    - ownersDetails.phoneInput
-    - ownersDetails.emailInput
-    - ownersDetails.rewardInput
-    - ownersDetails.continueButton
-    - ownersDetails.progressBadge
-    - ownersDetails.title
-    - ownersDetails.subtitle
-  - Web: N/A (iOS-only feature)
-  - Naming convention: `{screen}.{element}` (e.g., `ownersDetails.continueButton`) - iOS uses camelCase without action suffix
-  - Violation justification: _N/A - compliant_
+- [ ] **Test Identifiers for UI Controls**: Plan includes test identifiers for all interactive elements
+  - Android: `testTag` modifier on all interactive composables
+  - iOS: `accessibilityIdentifier` modifier on all interactive views
+  - Web: `data-testid` attribute on all interactive elements
+  - Naming convention: `{screen}.{element}.{action}` (e.g., `petList.addButton.click`)
+  - List items use stable IDs (e.g., `petList.item.${id}`)
+  - Violation justification: _[Required if testIDs missing]_
 
-- [x] **Public API Documentation**: Plan ensures public APIs have documentation when needed
-  - Kotlin: N/A (iOS-only feature)
-  - Swift: SwiftDoc format (`/// ...`) for ContactDetailsViewModel public methods
-    - Document submitForm() method (complex 2-step submission logic)
-    - Document validation computed properties (isPhoneValid, isEmailValid) if logic is non-obvious
-    - Skip documentation for simple @Published properties (phone, email, rewardDescription) - names are self-explanatory
-  - TypeScript: N/A (iOS-only feature)
+- [ ] **Public API Documentation**: Plan ensures public APIs have documentation when needed
+  - Kotlin: KDoc format (`/** ... */`)
+  - Swift: SwiftDoc format (`/// ...`)
+  - TypeScript: JSDoc format (`/** ... */`)
   - Documentation must be concise and high-level (1-3 sentences: WHAT/WHY, not HOW)
-  - Violation justification: _N/A - compliant_
+  - Document only when purpose is not clear from name alone
+  - Skip documentation for self-explanatory methods, variables, and constants
+  - Violation justification: _[Required if complex APIs lack documentation]_
 
-- [x] **Given-When-Then Test Structure**: Plan ensures all tests follow Given-When-Then convention
+- [ ] **Given-When-Then Test Structure**: Plan ensures all tests follow Given-When-Then convention
   - Unit tests clearly separate setup (Given), action (When), verification (Then)
-  - ViewModel tests use Given-When-Then pattern with descriptive names (Swift convention: testLoadPets_whenRepositorySucceeds_shouldUpdatePetsState)
-  - E2E tests structure scenarios with Given-When-Then phases (Cucumber Gherkin format)
-  - Test names follow Swift convention: camelCase_with_underscores (e.g., testSubmitForm_whenPhoneInvalid_shouldShowValidationError)
-  - Comments mark test phases in complex tests (// Given, // When, // Then)
-  - Violation justification: _N/A - compliant_
+  - ViewModel tests use Given-When-Then pattern with descriptive names
+  - E2E tests structure scenarios with Given-When-Then phases
+  - Test names follow platform conventions (backticks for Kotlin, camelCase_with_underscores for Swift, descriptive strings for TypeScript)
+  - Comments mark test phases in complex tests
+  - Violation justification: _[Required if tests don't follow convention]_
 
 ### Backend Architecture & Quality Standards (if `/server` affected)
 
-- [x] **Backend Technology Stack**: N/A (backend not affected - using existing APIs from spec 009 and 021)
-  - Violation justification: _N/A - backend already exists and is not modified in this spec_
+- [ ] **Backend Technology Stack**: Plan uses modern Node.js stack for `/server` module
+  - Runtime: Node.js v24 (LTS)
+  - Framework: Express.js
+  - Language: TypeScript with strict mode enabled
+  - Database: Knex query builder + SQLite (designed for PostgreSQL migration)
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
 
-- [x] **Backend Code Quality**: N/A (backend not affected)
-  - Violation justification: _N/A - backend not modified_
+- [ ] **Backend Code Quality**: Plan enforces quality standards for `/server` code
+  - ESLint with TypeScript plugin configured and enabled
+  - Clean Code principles applied:
+    - Small, focused functions (single responsibility)
+    - Descriptive naming (avoid unclear abbreviations)
+    - Maximum 3 nesting levels
+    - DRY principle (extract reusable logic)
+    - JSDoc documentation for all public APIs
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
 
-- [x] **Backend Dependency Management**: N/A (backend not affected)
-  - Violation justification: _N/A - backend not modified_
+- [ ] **Backend Dependency Management**: Plan minimizes dependencies in `/server/package.json`
+  - Only add dependencies providing significant value
+  - Prefer well-maintained, security-audited packages
+  - Avoid micro-dependencies (e.g., "is-even", "left-pad")
+  - Document rationale for each dependency in comments
+  - Regular `npm audit` security checks planned
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
 
-- [x] **Backend Directory Structure**: N/A (backend not affected)
-  - Violation justification: _N/A - backend not modified_
+- [ ] **Backend Directory Structure**: Plan follows standardized layout in `/server/src/`
+  - `/middlewares/` - Express middlewares (auth, logging, error handling)
+  - `/routes/` - REST API endpoint definitions (Express routers)
+  - `/services/` - Business logic layer (testable, pure functions)
+  - `/database/` - Database config, migrations, query repositories
+  - `/lib/` - Utility functions, helpers (pure, reusable)
+  - `/__test__/` - Integration tests for REST API endpoints
+  - `app.ts` - Express app configuration
+  - `index.ts` - Server entry point
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
 
-- [x] **Backend TDD Workflow**: N/A (backend not affected)
-  - Violation justification: _N/A - backend not modified_
+- [ ] **Backend TDD Workflow**: Plan follows Test-Driven Development (Red-Green-Refactor)
+  - RED: Write failing test first
+  - GREEN: Write minimal code to pass test
+  - REFACTOR: Improve code quality without changing behavior
+  - Tests written BEFORE implementation code
+  - Violation justification: _[Required if not compliant or N/A if /server not affected]_
 
-- [x] **Backend Testing Strategy**: N/A (backend not affected)
-  - Violation justification: _N/A - backend not modified_
+- [ ] **Backend Testing Strategy**: Plan includes comprehensive test coverage for `/server`
+  - Unit tests (Vitest):
+    - Location: `/src/services/__test__/`, `/src/lib/__test__/`
+    - Coverage target: 80% line + branch coverage
+    - Scope: Business logic and utility functions
+  - Integration tests (Vitest + SuperTest):
+    - Location: `/src/__test__/`
+    - Coverage target: 80% for API endpoints
+    - Scope: REST API end-to-end (request → response)
+  - All tests follow Given-When-Then structure
+  - Run commands: `npm test`, `npm test -- --coverage`
+  - Violation justification: _[Required if coverage < 80% or N/A if /server not affected]_
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/035-ios-owners-details-screen/
+specs/[###-feature]/
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output (/speckit.plan command)
 ├── data-model.md        # Phase 1 output (/speckit.plan command)
 ├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command) - references to existing spec 009/021 contracts
+├── contracts/           # Phase 1 output (/speckit.plan command)
 └── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
-iosApp/iosApp/
-├── Features/
-│   └── ReportMissingPet/
-│       └── ContactDetails/
-│           ├── Views/
-│           │   ├── ContactDetailsView.swift           # MODIFY - SwiftUI view (placeholder → full implementation)
-│           │   └── ContactDetailsViewModel.swift      # MODIFY - ViewModel (placeholder → full implementation)
-│           └── (Navigation already handled by ReportMissingPetCoordinator from spec 017)
-├── Domain/
-│   ├── Services/
-│   │   └── AnnouncementSubmissionService.swift        # CREATE - business logic for 2-step submission
-│   └── Repositories/
-│       └── AnimalRepositoryProtocol.swift             # MODIFY - ADD methods: createAnnouncement, uploadPhoto
-├── Data/
-│   └── Repositories/
-│       └── AnimalRepository.swift                     # MODIFY - IMPLEMENT new methods (already exists)
-└── Resources/
-    └── en.lproj/
-        └── Localizable.strings                        # ADD - localization strings for owners_details.* keys
-    └── pl.lproj/
-        └── Localizable.strings                        # ADD - Polish translations
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
-iosAppTests/
-└── Features/
-    └── ReportMissingPet/
-        └── ContactDetails/
-            ├── ContactDetailsViewModelTests.swift     # CREATE - unit tests for ViewModel (80% coverage)
-            ├── AnnouncementSubmissionServiceTests.swift # CREATE - unit tests for Service (80% coverage)
-            └── Fakes/
-                ├── FakeAnimalRepository.swift         # MODIFY/CREATE - extend existing fake or create new with announcement methods
-                └── FakeAnnouncementSubmissionService.swift # CREATE - fake service for ViewModel tests
+tests/
+├── contract/
+├── integration/
+└── unit/
 
-e2e-tests/
-├── mobile/
-│   ├── specs/
-│   │   └── owners-details.spec.ts                    # CREATE - E2E tests for iOS Owner's Details (Appium + Cucumber @ios)
-│   └── screens/
-│       └── ContactDetailsScreen.ts                   # CREATE - Screen Object Model with accessibilityIdentifiers
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: iOS mobile application (Option 3 from template). This feature modifies existing placeholder files (`ContactDetailsView.swift`, `ContactDetailsViewModel.swift`) in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/Views/` and adds localization strings, tests, and potentially repository protocol/implementation if they don't exist. Navigation integration with `ReportMissingPetCoordinator` is already implemented per spec 017.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-N/A - No violations. All Constitution Check items are compliant or not applicable to this iOS-only feature.
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

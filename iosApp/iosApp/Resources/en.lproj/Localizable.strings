@@ -201,3 +201,26 @@
 // Toast messages
 "animalDescription.toast.validationErrors" = "Please correct the highlighted fields";
 
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Owner's details";
+"owners_details.subtitle" = "Add your contact information and potential reward.";
+"owners_details.phone.label" = "Phone number";
+"owners_details.phone.placeholder" = "Enter phone number";
+"owners_details.phone.error" = "Enter at least 7 digits";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Enter email address";
+"owners_details.email.error" = "Enter a valid email address";
+"owners_details.reward.label" = "Reward (optional)";
+"owners_details.reward.placeholder" = "Describe reward";
+"owners_details.continue.button" = "Continue";
+"owners_details.back.button" = "Back";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "No connection";
+"owners_details.error.no_connection.message" = "Please check your network and try again.";
+"owners_details.error.generic.title" = "Something went wrong";
+"owners_details.error.generic.message" = "Please try again later.";
+"owners_details.alert.try_again" = "Try Again";
+"owners_details.alert.cancel" = "Cancel";
+

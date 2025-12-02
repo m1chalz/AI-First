@@ -43,9 +43,9 @@ description: "Task list for iOS Owner's Details Screen implementation"
 
 **Purpose**: Project initialization and localization setup
 
-- [ ] T001 [P] Add English localization strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (owners_details.* keys: screen_title, subtitle, phone.label, phone.placeholder, phone.error, email.label, email.placeholder, email.error, reward.label, reward.placeholder, continue.button, back.button, error.no_connection.title, error.no_connection.message, error.generic.title, error.generic.message, alert.try_again, alert.cancel)
-- [ ] T002 [P] Add Polish localization strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (same keys as T001 with Polish translations per quickstart.md)
-- [ ] T003 Run SwiftGen to generate L10n enum from Localizable.strings files (execute `swiftgen` in `/iosApp/` directory)
+- [X] T001 [P] Add English localization strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (owners_details.* keys: screen_title, subtitle, phone.label, phone.placeholder, phone.error, email.label, email.placeholder, email.error, reward.label, reward.placeholder, continue.button, back.button, error.no_connection.title, error.no_connection.message, error.generic.title, error.generic.message, alert.try_again, alert.cancel)
+- [X] T002 [P] Add Polish localization strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (same keys as T001 with Polish translations per quickstart.md)
+- [X] T003 Run SwiftGen to generate L10n enum from Localizable.strings files (execute `swiftgen` in `/iosApp/` directory)
 
 ---
 
@@ -56,25 +56,25 @@ description: "Task list for iOS Owner's Details Screen implementation"
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 **Data Layer (DTOs for HTTP/API)**:
-- [ ] T004 [P] Create CreateAnnouncementRequestDTO struct in `/iosApp/iosApp/Data/Models/CreateAnnouncementRequestDTO.swift` (Codable with CodingKeys for snake_case JSON mapping: species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status, microchipNumber, description, reward - used for POST /api/v1/announcements JSON body)
-- [ ] T005 [P] Create AnnouncementResponseDTO struct in `/iosApp/iosApp/Data/Models/AnnouncementResponseDTO.swift` (Codable with CodingKeys for snake_case: id, managementPassword, species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status, microchipNumber, description, reward, photoUrl - used for HTTP 201 response parsing)
-- [ ] T006 [P] Create PhotoUploadRequestDTO struct in `/iosApp/iosApp/Data/Models/PhotoUploadRequestDTO.swift` (contains announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String - internal DTO for uploadPhoto implementation)
+- [X] T004 [P] Create CreateAnnouncementRequestDTO struct in `/iosApp/iosApp/Data/Models/CreateAnnouncementRequestDTO.swift` (Codable with CodingKeys for snake_case JSON mapping: species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status, microchipNumber, description, reward - used for POST /api/v1/announcements JSON body)
+- [X] T005 [P] Create AnnouncementResponseDTO struct in `/iosApp/iosApp/Data/Models/AnnouncementResponseDTO.swift` (Codable with CodingKeys for snake_case: id, managementPassword, species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status, microchipNumber, description, reward, photoUrl - used for HTTP 201 response parsing)
+- [X] T006 [P] Create PhotoUploadRequestDTO struct in `/iosApp/iosApp/Data/Models/PhotoUploadRequestDTO.swift` (contains announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String - internal DTO for uploadPhoto implementation)
 
 **Domain Layer (Pure business models)**:
-- [ ] T007 [P] Create AnnouncementResult struct in `/iosApp/iosApp/Domain/Models/AnnouncementResult.swift` (pure domain model with id: String, managementPassword: String - no Codable, no snake_case, business data only)
-- [ ] T008 [P] Create CreateAnnouncementData struct in `/iosApp/iosApp/Domain/Models/CreateAnnouncementData.swift` (pure domain model for announcement creation: species: String, sex: String, lastSeenDate: Date, location: (latitude: Double, longitude: Double), contact: (email: String, phone: String), microchipNumber: String?, description: String?, reward: String? - used by Service to pass data to Repository)
+- [X] T007 [P] Create AnnouncementResult struct in `/iosApp/iosApp/Domain/Models/AnnouncementResult.swift` (pure domain model with id: String, managementPassword: String - no Codable, no snake_case, business data only)
+- [X] T008 [P] Create CreateAnnouncementData struct in `/iosApp/iosApp/Domain/Models/CreateAnnouncementData.swift` (pure domain model for announcement creation: species: String, sex: String, lastSeenDate: Date, location: (latitude: Double, longitude: Double), contact: (email: String, phone: String), microchipNumber: String?, description: String?, reward: String? - used by Service to pass data to Repository)
 
 **Mappers (DTO ↔ Domain conversion)**:
-- [ ] T009 [P] Create AnnouncementMapper in `/iosApp/iosApp/Data/Mappers/AnnouncementMapper.swift` (static methods: toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult converts DTO to domain model; toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO converts domain to DTO)
+- [X] T009 [P] Create AnnouncementMapper in `/iosApp/iosApp/Data/Mappers/AnnouncementMapper.swift` (static methods: toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult converts DTO to domain model; toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO converts domain to DTO)
 
 **Repository Protocol & Implementation**:
-- [ ] T010 Extend AnimalRepositoryProtocol in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` with new methods using pure domain models: createAnnouncement(data: CreateAnnouncementData) async throws -> AnnouncementResult, uploadPhoto(announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String) async throws
-- [ ] T011 Implement createAnnouncement method in AnimalRepository at `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (convert CreateAnnouncementData to CreateAnnouncementRequestDTO using AnnouncementMapper, POST /api/v1/announcements with JSON body, parse HTTP 201 response to AnnouncementResponseDTO, convert DTO to AnnouncementResult using AnnouncementMapper, return domain model)
-- [ ] T012 Implement uploadPhoto method in AnimalRepository at `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (POST /api/v1/announcements/:id/photos with multipart form-data, Basic auth header with base64(announcementId:managementPassword), load photo Data from PhotoAttachmentMetadata.cachedURL, return Void on success)
+- [X] T010 Extend AnimalRepositoryProtocol in `/iosApp/iosApp/Domain/Repositories/AnimalRepositoryProtocol.swift` with new methods using pure domain models: createAnnouncement(data: CreateAnnouncementData) async throws -> AnnouncementResult, uploadPhoto(announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String) async throws
+- [X] T011 Implement createAnnouncement method in AnimalRepository at `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (convert CreateAnnouncementData to CreateAnnouncementRequestDTO using AnnouncementMapper, POST /api/v1/announcements with JSON body, parse HTTP 201 response to AnnouncementResponseDTO, convert DTO to AnnouncementResult using AnnouncementMapper, return domain model)
+- [X] T012 Implement uploadPhoto method in AnimalRepository at `/iosApp/iosApp/Data/Repositories/AnimalRepository.swift` (POST /api/v1/announcements/:id/photos with multipart form-data, Basic auth header with base64(announcementId:managementPassword), load photo Data from PhotoAttachmentMetadata.cachedURL, return Void on success)
 
 **Service Layer (Business logic orchestration)**:
-- [ ] T013 Create AnnouncementSubmissionService in `/iosApp/iosApp/Domain/Services/AnnouncementSubmissionService.swift` (receives AnimalRepositoryProtocol in constructor, submitAnnouncement(flowState:) async throws -> String orchestrates 2-step submission: builds CreateAnnouncementData from FlowState, calls repository.createAnnouncement, receives AnnouncementResult, calls repository.uploadPhoto with id and managementPassword, returns managementPassword String)
-- [ ] T014 Update ServiceContainer in `/iosApp/iosApp/DI/ServiceContainer.swift` to add announcementSubmissionService lazy property (inject animalRepository into service constructor)
+- [X] T013 Create AnnouncementSubmissionService in `/iosApp/iosApp/Domain/Services/AnnouncementSubmissionService.swift` (receives AnimalRepositoryProtocol in constructor, submitAnnouncement(flowState:) async throws -> String orchestrates 2-step submission: builds CreateAnnouncementData from FlowState, calls repository.createAnnouncement, receives AnnouncementResult, calls repository.uploadPhoto with id and managementPassword, returns managementPassword String)
+- [X] T014 Update ServiceContainer in `/iosApp/iosApp/DI/ServiceContainer.swift` to add announcementSubmissionService lazy property (inject animalRepository into service constructor)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -91,10 +91,10 @@ description: "Task list for iOS Owner's Details Screen implementation"
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **iOS Unit Tests**:
-- [ ] T015 [P] [US1] Create FakeAnimalRepository in `/iosAppTests/Fakes/FakeAnimalRepository.swift` (extend existing fake or create new with announcement methods: createAnnouncement returns mock AnnouncementResult with id and managementPassword, uploadPhoto succeeds or throws error based on test scenario)
-- [ ] T016 [P] [US1] Create FakeAnnouncementSubmissionService in `/iosAppTests/Fakes/FakeAnnouncementSubmissionService.swift` (mock service with submitAnnouncement method that returns mock managementPassword or throws error based on test scenario)
-- [ ] T017 [P] [US1] Unit test for AnnouncementSubmissionService in `/iosAppTests/Features/ReportMissingPet/ContactDetails/AnnouncementSubmissionServiceTests.swift` (test builds CreateAnnouncementData from FlowState, test submitAnnouncement orchestrates 2-step flow, test returns managementPassword on success, test throws error on step 1 failure, test throws error on step 2 failure, test photo upload skipped when photoAttachment is nil)
-- [ ] T018 [P] [US1] Unit test for ContactDetailsViewModel submission flow in `/iosAppTests/Features/ReportMissingPet/ContactDetails/ContactDetailsViewModelTests.swift` (test submitForm calls service with FlowState, test onReportSent closure invoked with managementPassword on success, test isSubmitting = true during submission, test isSubmitting = false after success)
+- [X] T015 [P] [US1] Create FakeAnimalRepository in `/iosAppTests/Fakes/FakeAnimalRepository.swift` (extend existing fake or create new with announcement methods: createAnnouncement returns mock AnnouncementResult with id and managementPassword, uploadPhoto succeeds or throws error based on test scenario)
+- [X] T016 [P] [US1] Create FakeAnnouncementSubmissionService in `/iosAppTests/Fakes/FakeAnnouncementSubmissionService.swift` (mock service with submitAnnouncement method that returns mock managementPassword or throws error based on test scenario)
+- [X] T017 [P] [US1] Unit test for AnnouncementSubmissionService in `/iosAppTests/Features/ReportMissingPet/ContactDetails/AnnouncementSubmissionServiceTests.swift` (test builds CreateAnnouncementData from FlowState, test submitAnnouncement orchestrates 2-step flow, test returns managementPassword on success, test throws error on step 1 failure, test throws error on step 2 failure, test photo upload skipped when photoAttachment is nil)
+- [X] T018 [P] [US1] Unit test for ContactDetailsViewModel submission flow in `/iosAppTests/Features/ReportMissingPet/ContactDetails/ContactDetailsViewModelTests.swift` (test submitForm calls service with FlowState, test onReportSent closure invoked with managementPassword on success, test isSubmitting = true during submission, test isSubmitting = false after success)
 
 **End-to-End Tests**:
 - [ ] T019 [P] [US1] Create ContactDetailsScreen object in `/e2e-tests/mobile/screens/ContactDetailsScreen.ts` (Screen Object Model with methods: enterPhone, enterEmail, enterReward, tapContinue, getTitle, getPhoneError, getEmailError, isSubmitting, using accessibilityIdentifiers: ownersDetails.phoneInput, ownersDetails.emailInput, ownersDetails.rewardInput, ownersDetails.continueButton, ownersDetails.title)
@@ -103,13 +103,13 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Implementation for User Story 1
 
 **iOS** (Full Stack Implementation - NO use cases, ViewModels call services directly):
-- [ ] T021 [P] [US1] Create OwnerContactDetails struct in `/iosApp/iosApp/Domain/Models/OwnerContactDetails.swift` or extend ReportMissingPetFlowState (struct with phone: String, email: String, rewardDescription: String?)
-- [ ] T022 [US1] Modify ContactDetailsViewModel in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/Views/ContactDetailsViewModel.swift` (replace placeholder with full implementation: @Published properties for phone, email, rewardDescription, phoneError, emailError, isSubmitting, alertMessage, showAlert; init with AnnouncementSubmissionService and ReportMissingPetFlowState via manual DI; computed properties isPhoneValid, isEmailValid; submitForm() async method delegates to service, sets isSubmitting = true during submission, invokes onReportSent(managementPassword) on success, calls handleSubmissionError on failure)
-- [ ] T023 [US1] Modify ContactDetailsView in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/Views/ContactDetailsView.swift` (replace placeholder with SwiftUI UI: VStack with title, subtitle, three ValidatedTextField components for phone/email/reward, Continue button with spinner when isSubmitting, alert popup for errors, all text uses L10n.tr() with owners_details.* keys)
-- [ ] T024 [US1] Add accessibilityIdentifier to all interactive views in ContactDetailsView (ownersDetails.phoneInput, ownersDetails.emailInput, ownersDetails.rewardInput, ownersDetails.continueButton, ownersDetails.title, ownersDetails.subtitle, ownersDetails.backButton, ownersDetails.progressBadge)
-- [ ] T025 [US1] Update ReportMissingPetCoordinator in `/iosApp/iosApp/Coordinators/ReportMissingPetCoordinator.swift` to inject AnnouncementSubmissionService from ServiceContainer into ContactDetailsViewModel during showContactDetails() method, set onReportSent closure to capture managementPassword and call showSummary(managementPassword:)
-- [ ] T026 [P] [US1] Add SwiftDoc documentation to ContactDetailsViewModel.submitForm() method (explain 2-step submission logic: WHAT/WHY, not HOW, 1-3 sentences)
-- [ ] T027 [P] [US1] Add SwiftDoc documentation to AnnouncementSubmissionService.submitAnnouncement() method (explain orchestration of announcement creation + photo upload)
+- [X] T021 [P] [US1] Create OwnerContactDetails struct in `/iosApp/iosApp/Domain/Models/OwnerContactDetails.swift` or extend ReportMissingPetFlowState (struct with phone: String, email: String, rewardDescription: String?)
+- [X] T022 [US1] Modify ContactDetailsViewModel in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/Views/ContactDetailsViewModel.swift` (replace placeholder with full implementation: @Published properties for phone, email, rewardDescription, phoneError, emailError, isSubmitting, alertMessage, showAlert; init with AnnouncementSubmissionService and ReportMissingPetFlowState via manual DI; computed properties isPhoneValid, isEmailValid; submitForm() async method delegates to service, sets isSubmitting = true during submission, invokes onReportSent(managementPassword) on success, calls handleSubmissionError on failure)
+- [X] T023 [US1] Modify ContactDetailsView in `/iosApp/iosApp/Features/ReportMissingPet/ContactDetails/Views/ContactDetailsView.swift` (replace placeholder with SwiftUI UI: VStack with title, subtitle, three ValidatedTextField components for phone/email/reward, Continue button with spinner when isSubmitting, alert popup for errors, all text uses L10n.tr() with owners_details.* keys)
+- [X] T024 [US1] Add accessibilityIdentifier to all interactive views in ContactDetailsView (ownersDetails.phoneInput, ownersDetails.emailInput, ownersDetails.rewardInput, ownersDetails.continueButton, ownersDetails.title, ownersDetails.subtitle, ownersDetails.backButton, ownersDetails.progressBadge)
+- [X] T025 [US1] Update ReportMissingPetCoordinator in `/iosApp/iosApp/Coordinators/ReportMissingPetCoordinator.swift` to inject AnnouncementSubmissionService from ServiceContainer into ContactDetailsViewModel during showContactDetails() method, set onReportSent closure to capture managementPassword and call showSummary(managementPassword:)
+- [X] T026 [P] [US1] Add SwiftDoc documentation to ContactDetailsViewModel.submitForm() method (explain 2-step submission logic: WHAT/WHY, not HOW, 1-3 sentences)
+- [X] T027 [P] [US1] Add SwiftDoc documentation to AnnouncementSubmissionService.submitAnnouncement() method (explain orchestration of announcement creation + photo upload)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - user can submit valid contact info and navigate to summary
 
@@ -124,8 +124,8 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **iOS Unit Tests**:
-- [ ] T028 [P] [US2] Unit test for phone validation in ContactDetailsViewModelTests (test isPhoneValid = true for 7-11 digits, test isPhoneValid = false for < 7 digits, test accepts leading "+", test sanitizes spaces/dashes, test phoneError set when submitForm() called with invalid phone, test phoneError = nil when valid)
-- [ ] T029 [P] [US2] Unit test for email validation in ContactDetailsViewModelTests (test isEmailValid = true for local@domain.tld, test isEmailValid = false for missing @, test case-insensitive, test trims whitespace, test emailError set when submitForm() called with invalid email, test emailError = nil when valid)
+- [X] T028 [P] [US2] Unit test for phone validation in ContactDetailsViewModelTests (test isPhoneValid = true for 7-11 digits, test isPhoneValid = false for < 7 digits, test accepts leading "+", test sanitizes spaces/dashes, test phoneError set when submitForm() called with invalid phone, test phoneError = nil when valid)
+- [X] T029 [P] [US2] Unit test for email validation in ContactDetailsViewModelTests (test isEmailValid = true for local@domain.tld, test isEmailValid = false for missing @, test case-insensitive, test trims whitespace, test emailError set when submitForm() called with invalid email, test emailError = nil when valid)
 
 **End-to-End Tests**:
 - [ ] T030 [US2] Add E2E test scenarios for US2 in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Scenario 1 - enter invalid phone "123", tap Continue, verify red border and error text "Enter at least 7 digits", correct to valid phone, tap Continue, verify submission succeeds; Scenario 2 - enter invalid email "owner@", tap Continue, verify red border and error text "Enter a valid email address", correct to valid email, tap Continue, verify submission succeeds)
@@ -133,9 +133,9 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Implementation for User Story 2
 
 **iOS**:
-- [ ] T031 [US2] Add validation logic to ContactDetailsViewModel.submitForm() method (before submission: check isPhoneValid, set phoneError = L10n.tr("owners_details.phone.error") if invalid, return early; check isEmailValid, set emailError = L10n.tr("owners_details.email.error") if invalid, return early; clear errors before validation)
-- [ ] T032 [US2] Add computed properties isPhoneValid and isEmailValid to ContactDetailsViewModel (isPhoneValid: sanitize phone to digits and "+", count digits, return true if 7-11 digits; isEmailValid: use regex or NSPredicate to validate RFC 5322 basic format local@domain.tld)
-- [ ] T033 [US2] Wire phoneError and emailError @Published properties to ValidatedTextField components in ContactDetailsView (ValidatedTextField displays red border and error text when error property is non-nil)
+- [X] T031 [US2] Add validation logic to ContactDetailsViewModel.submitForm() method (before submission: check isPhoneValid, set phoneError = L10n.tr("owners_details.phone.error") if invalid, return early; check isEmailValid, set emailError = L10n.tr("owners_details.email.error") if invalid, return early; clear errors before validation)
+- [X] T032 [US2] Add computed properties isPhoneValid and isEmailValid to ContactDetailsViewModel (isPhoneValid: sanitize phone to digits and "+", count digits, return true if 7-11 digits; isEmailValid: use regex or NSPredicate to validate RFC 5322 basic format local@domain.tld)
+- [X] T033 [US2] Wire phoneError and emailError @Published properties to ValidatedTextField components in ContactDetailsView (ValidatedTextField displays red border and error text when error property is non-nil)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - validation prevents invalid submissions and guides users to correct inputs
 
@@ -150,7 +150,7 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Tests for User Story 3 (MANDATORY) ✅
 
 **iOS Unit Tests**:
-- [ ] T034 [P] [US3] Unit test for reward persistence in ContactDetailsViewModelTests (test rewardDescription persists in FlowState.contactDetails when submitForm() succeeds, test rewardDescription = nil when field is empty, test rewardDescription stores text verbatim when non-empty)
+- [X] T034 [P] [US3] Unit test for reward persistence in ContactDetailsViewModelTests (test rewardDescription persists in FlowState.contactDetails when submitForm() succeeds, test rewardDescription = nil when field is empty, test rewardDescription stores text verbatim when non-empty)
 
 **End-to-End Tests**:
 - [ ] T035 [US3] Add E2E test scenarios for US3 in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Scenario 1 - enter "$250 gift card + hugs" in reward, navigate away and back, verify text persists and can proceed with Continue if phone/email valid; Scenario 2 - enter 120 characters in reward, try to type 121st character, verify ValidatedTextField maxLength enforces limit and rejects additional character)
@@ -158,9 +158,9 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Implementation for User Story 3
 
 **iOS**:
-- [ ] T036 [US3] Add ValidatedTextField for reward in ContactDetailsView with maxLength: 120 parameter (label: L10n.tr("owners_details.reward.label"), placeholder: L10n.tr("owners_details.reward.placeholder"), text: $viewModel.rewardDescription, error: nil, maxLength: 120)
-- [ ] T037 [US3] Add rewardDescription @Published property to ContactDetailsViewModel (initialized from FlowState.contactDetails?.rewardDescription ?? "", saved to FlowState.contactDetails in submitForm() - store nil if empty, store text verbatim if non-empty)
-- [ ] T038 [US3] Add accessibilityIdentifier "ownersDetails.rewardInput" to reward ValidatedTextField in ContactDetailsView
+- [X] T036 [US3] Add ValidatedTextField for reward in ContactDetailsView with maxLength: 120 parameter (label: L10n.tr("owners_details.reward.label"), placeholder: L10n.tr("owners_details.reward.placeholder"), text: $viewModel.rewardDescription, error: nil, maxLength: 120)
+- [X] T037 [US3] Add rewardDescription @Published property to ContactDetailsViewModel (initialized from FlowState.contactDetails?.rewardDescription ?? "", saved to FlowState.contactDetails in submitForm() - store nil if empty, store text verbatim if non-empty)
+- [X] T038 [US3] Add accessibilityIdentifier "ownersDetails.rewardInput" to reward ValidatedTextField in ContactDetailsView
 
 **Checkpoint**: All user stories (US1, US2, US3) should now be independently functional - users can optionally add reward without blocking submission
 
@@ -175,9 +175,9 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Tests for User Story 4 (MANDATORY) ✅
 
 **iOS Unit Tests**:
-- [ ] T039 [P] [US4] Unit test for network error handling in ContactDetailsViewModelTests (test submitForm() with service throwing URLError.notConnectedToInternet, verify isSubmitting = false, verify showAlert = true, verify alertMessage = L10n.tr("owners_details.error.no_connection.message"), verify inputs remain intact, verify validation errors remain cleared)
-- [ ] T040 [P] [US4] Unit test for backend error handling in ContactDetailsViewModelTests (test submitForm() with service throwing generic error, verify isSubmitting = false, verify showAlert = true, verify alertMessage = L10n.tr("owners_details.error.generic.message"), verify inputs remain intact)
-- [ ] T041 [P] [US4] Unit test for retry logic in ContactDetailsViewModelTests (test submitForm() called again after failure, verify isSubmitting = true again, verify full 2-step submission retried from step 1)
+- [X] T039 [P] [US4] Unit test for network error handling in ContactDetailsViewModelTests (test submitForm() with service throwing URLError.notConnectedToInternet, verify isSubmitting = false, verify showAlert = true, verify alertMessage = L10n.tr("owners_details.error.no_connection.message"), verify inputs remain intact, verify validation errors remain cleared)
+- [X] T040 [P] [US4] Unit test for backend error handling in ContactDetailsViewModelTests (test submitForm() with service throwing generic error, verify isSubmitting = false, verify showAlert = true, verify alertMessage = L10n.tr("owners_details.error.generic.message"), verify inputs remain intact)
+- [X] T041 [P] [US4] Unit test for retry logic in ContactDetailsViewModelTests (test submitForm() called again after failure, verify isSubmitting = true again, verify full 2-step submission retried from step 1)
 
 **End-to-End Tests**:
 - [ ] T042 [US4] Add E2E test scenarios for US4 in `/e2e-tests/mobile/specs/owners-details.spec.ts` (Scenario 1 - disable network, enter valid phone/email, tap Continue, verify popup alert "No connection. Please check your network and try again." with "Try Again" and "Cancel" buttons, tap "Try Again", verify retry attempts submission, tap "Cancel", verify alert dismissed and inputs intact; Scenario 2 - simulate backend error, tap Continue, verify popup alert "Something went wrong. Please try again later.", tap "Try Again", verify full 2-step retry from step 1)
@@ -185,11 +185,11 @@ description: "Task list for iOS Owner's Details Screen implementation"
 ### Implementation for User Story 4
 
 **iOS**:
-- [ ] T043 [US4] Add error handling to ContactDetailsViewModel.submitForm() method (wrap service call in do-catch, catch URLError for network errors, catch generic Error for backend errors, call handleSubmissionError(error) in catch block, set isSubmitting = false in defer block)
-- [ ] T044 [US4] Implement handleSubmissionError(_ error: Error) method in ContactDetailsViewModel (if error is URLError.notConnectedToInternet or URLError.timedOut: set alertMessage = L10n.tr("owners_details.error.no_connection.message"); else: set alertMessage = L10n.tr("owners_details.error.generic.message"); set showAlert = true)
-- [ ] T045 [US4] Add alert modifier to ContactDetailsView (`.alert(isPresented: $viewModel.showAlert)` with title = alertMessage, primaryButton = "Try Again" calls submitForm(), secondaryButton = "Cancel" dismisses alert)
-- [ ] T046 [US4] Add loading state to Continue button in ContactDetailsView (show ActivityIndicator spinner when isSubmitting = true, disable button when isSubmitting = true)
-- [ ] T047 [US4] Add loading state to back button in ContactDetailsView (disable back button when isSubmitting = true to prevent navigation away mid-submission)
+- [X] T043 [US4] Add error handling to ContactDetailsViewModel.submitForm() method (wrap service call in do-catch, catch URLError for network errors, catch generic Error for backend errors, call handleSubmissionError(error) in catch block, set isSubmitting = false in defer block)
+- [X] T044 [US4] Implement handleSubmissionError(_ error: Error) method in ContactDetailsViewModel (if error is URLError.notConnectedToInternet or URLError.timedOut: set alertMessage = L10n.tr("owners_details.error.no_connection.message"); else: set alertMessage = L10n.tr("owners_details.error.generic.message"); set showAlert = true)
+- [X] T045 [US4] Add alert modifier to ContactDetailsView (`.alert(isPresented: $viewModel.showAlert)` with title = alertMessage, primaryButton = "Try Again" calls submitForm(), secondaryButton = "Cancel" dismisses alert)
+- [X] T046 [US4] Add loading state to Continue button in ContactDetailsView (show ActivityIndicator spinner when isSubmitting = true, disable button when isSubmitting = true)
+- [X] T047 [US4] Add loading state to back button in ContactDetailsView (disable back button when isSubmitting = true to prevent navigation away mid-submission)
 
 **Checkpoint**: All user stories should now be fully functional and independently testable - submission failures are handled gracefully with retry
 

@@ -145,5 +145,123 @@ class AnimalRepository: AnimalRepositoryProtocol {
             throw RepositoryError.networkError(error)
         }
     }
+    
+    /// Creates a new missing pet announcement via POST /api/v1/announcements.
+    /// Converts domain model to DTO, sends JSON request, parses response, converts back to domain.
+    /// - Parameter data: Domain model with announcement details
+    /// - Returns: AnnouncementResult with id and managementPassword
+    /// - Throws: RepositoryError on network failure or backend error
+    func createAnnouncement(data: CreateAnnouncementData) async throws -> AnnouncementResult {
+        guard let url = URL(string: "\(APIConfig.fullBaseURL)/announcements") else {
+            throw RepositoryError.invalidURL
+        }
+        
+        // Convert domain model to DTO
+        let requestDTO = AnnouncementMapper.toDTO(data)
+        
+        // Encode DTO to JSON
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        guard let body = try? encoder.encode(requestDTO) else {
+            throw RepositoryError.encodingFailed
+        }
+        
+        // Build HTTP request
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = body
+        
+        do {
+            let (responseData, response) = try await urlSession.data(for: urlRequest)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw RepositoryError.invalidResponse
+            }
+            
+            guard httpResponse.statusCode == 201 else {
+                throw RepositoryError.httpError(statusCode: httpResponse.statusCode)
+            }
+            
+            // Decode response DTO
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let responseDTO = try decoder.decode(AnnouncementResponseDTO.self, from: responseData)
+            
+            // Convert DTO to domain model
+            return AnnouncementMapper.toDomain(responseDTO)
+            
+        } catch let error as DecodingError {
+            print("JSON decoding error: \(error)")
+            throw RepositoryError.decodingFailed(error)
+        } catch let error as RepositoryError {
+            throw error
+        } catch {
+            print("Network error: \(error)")
+            throw RepositoryError.networkError(error)
+        }
+    }
+    
+    /// Uploads photo for existing announcement via POST /api/v1/announcements/:id/photos.
+    /// Loads photo data from disk cache, builds multipart form-data, sends with Basic auth.
+    /// - Parameter announcementId: Announcement identifier from createAnnouncement
+    /// - Parameter photo: Photo metadata with cachedURL for file loading
+    /// - Parameter managementPassword: Password for Basic auth
+    /// - Throws: RepositoryError on file I/O failure, network failure, or auth failure
+    func uploadPhoto(announcementId: String, photo: PhotoAttachmentMetadata, managementPassword: String) async throws {
+        guard let url = URL(string: "\(APIConfig.fullBaseURL)/announcements/\(announcementId)/photos") else {
+            throw RepositoryError.invalidURL
+        }
+        
+        // Load photo data from disk cache
+        guard let photoData = try? Data(contentsOf: photo.cachedURL) else {
+            print("Error: Failed to load photo from \(photo.cachedURL)")
+            throw RepositoryError.fileIOError
+        }
+        
+        // Build multipart form-data body
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var body = Data()
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"photo\"; filename=\"pet.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: \(photo.mimeType)\r\n\r\n".data(using: .utf8)!)
+        body.append(photoData)
+        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        // Build HTTP request with Basic auth
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        let credentials = "\(announcementId):\(managementPassword)"
+        let base64Credentials = credentials.data(using: .utf8)!.base64EncodedString()
+        urlRequest.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
+        
+        urlRequest.httpBody = body
+        
+        do {
+            let (_, response) = try await urlSession.data(for: urlRequest)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw RepositoryError.invalidResponse
+            }
+            
+            guard httpResponse.statusCode == 201 else {
+                if httpResponse.statusCode == 401 {
+                    throw RepositoryError.unauthorized
+                }
+                throw RepositoryError.httpError(statusCode: httpResponse.statusCode)
+            }
+            
+            // Success - no response body needed
+            
+        } catch let error as RepositoryError {
+            throw error
+        } catch {
+            print("Network error: \(error)")
+            throw RepositoryError.networkError(error)
+        }
+    }
 }
 

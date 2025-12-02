@@ -7,6 +7,9 @@ enum RepositoryError: Error, LocalizedError {
     case httpError(statusCode: Int)
     case networkError(Error)
     case decodingFailed(Error)
+    case encodingFailed
+    case fileIOError
+    case unauthorized
     case notFound
     case invalidData
     
@@ -22,6 +25,12 @@ enum RepositoryError: Error, LocalizedError {
             return "Network connection failed"
         case .decodingFailed:
             return "Failed to parse server response"
+        case .encodingFailed:
+            return "Failed to encode request data"
+        case .fileIOError:
+            return "Failed to read file from disk"
+        case .unauthorized:
+            return "Authentication failed"
         case .notFound:
             return "Announcement not found"
         case .invalidData:

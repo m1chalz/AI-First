@@ -192,3 +192,26 @@
 // Toast messages
 "animalDescription.toast.validationErrors" = "Proszę poprawić podświetlone pola";
 
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Dane właściciela";
+"owners_details.subtitle" = "Dodaj swoje dane kontaktowe i ewentualną nagrodę.";
+"owners_details.phone.label" = "Numer telefonu";
+"owners_details.phone.placeholder" = "Wpisz numer telefonu";
+"owners_details.phone.error" = "Wpisz co najmniej 7 cyfr";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Wpisz adres email";
+"owners_details.email.error" = "Wpisz poprawny adres email";
+"owners_details.reward.label" = "Nagroda (opcjonalnie)";
+"owners_details.reward.placeholder" = "Opisz nagrodę";
+"owners_details.continue.button" = "Dalej";
+"owners_details.back.button" = "Wstecz";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "Brak połączenia";
+"owners_details.error.no_connection.message" = "Sprawdź połączenie i spróbuj ponownie.";
+"owners_details.error.generic.title" = "Coś poszło nie tak";
+"owners_details.error.generic.message" = "Spróbuj ponownie później.";
+"owners_details.alert.try_again" = "Spróbuj ponownie";
+"owners_details.alert.cancel" = "Anuluj";
+

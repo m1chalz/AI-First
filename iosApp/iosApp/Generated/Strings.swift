@@ -248,6 +248,62 @@ public enum L10n {
     /// MARK: - Microchip Number Screen
     public static let title = L10n.tr("Localizable", "microchipNumber.title", fallback: "Microchip number")
   }
+  public enum OwnersDetails {
+    /// MARK: - Owner's Details Screen
+    public static let screenTitle = L10n.tr("Localizable", "owners_details.screen_title", fallback: "Owner's details")
+    /// Add your contact information and potential reward.
+    public static let subtitle = L10n.tr("Localizable", "owners_details.subtitle", fallback: "Add your contact information and potential reward.")
+    public enum Alert {
+      /// Cancel
+      public static let cancel = L10n.tr("Localizable", "owners_details.alert.cancel", fallback: "Cancel")
+      /// Try Again
+      public static let tryAgain = L10n.tr("Localizable", "owners_details.alert.try_again", fallback: "Try Again")
+    }
+    public enum Back {
+      /// Back
+      public static let button = L10n.tr("Localizable", "owners_details.back.button", fallback: "Back")
+    }
+    public enum Continue {
+      /// Continue
+      public static let button = L10n.tr("Localizable", "owners_details.continue.button", fallback: "Continue")
+    }
+    public enum Email {
+      /// Enter a valid email address
+      public static let error = L10n.tr("Localizable", "owners_details.email.error", fallback: "Enter a valid email address")
+      /// Email
+      public static let label = L10n.tr("Localizable", "owners_details.email.label", fallback: "Email")
+      /// Enter email address
+      public static let placeholder = L10n.tr("Localizable", "owners_details.email.placeholder", fallback: "Enter email address")
+    }
+    public enum Error {
+      public enum Generic {
+        /// Please try again later.
+        public static let message = L10n.tr("Localizable", "owners_details.error.generic.message", fallback: "Please try again later.")
+        /// Something went wrong
+        public static let title = L10n.tr("Localizable", "owners_details.error.generic.title", fallback: "Something went wrong")
+      }
+      public enum NoConnection {
+        /// Please check your network and try again.
+        public static let message = L10n.tr("Localizable", "owners_details.error.no_connection.message", fallback: "Please check your network and try again.")
+        /// No connection
+        public static let title = L10n.tr("Localizable", "owners_details.error.no_connection.title", fallback: "No connection")
+      }
+    }
+    public enum Phone {
+      /// Enter at least 7 digits
+      public static let error = L10n.tr("Localizable", "owners_details.phone.error", fallback: "Enter at least 7 digits")
+      /// Phone number
+      public static let label = L10n.tr("Localizable", "owners_details.phone.label", fallback: "Phone number")
+      /// Enter phone number
+      public static let placeholder = L10n.tr("Localizable", "owners_details.phone.placeholder", fallback: "Enter phone number")
+    }
+    public enum Reward {
+      /// Reward (optional)
+      public static let label = L10n.tr("Localizable", "owners_details.reward.label", fallback: "Reward (optional)")
+      /// Describe reward
+      public static let placeholder = L10n.tr("Localizable", "owners_details.reward.placeholder", fallback: "Describe reward")
+    }
+  }
   public enum PetDetails {
     public enum Button {
       /// Remove Report

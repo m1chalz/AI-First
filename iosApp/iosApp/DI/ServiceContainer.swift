@@ -28,6 +28,10 @@ class ServiceContainer {
     /// Location permission handler (shared across ViewModels for consistent permission management)
     lazy var locationPermissionHandler: LocationPermissionHandler =
         LocationPermissionHandler(locationService: locationService)
+    
+    /// Announcement submission service for 2-step submission orchestration
+    lazy var announcementSubmissionService: AnnouncementSubmissionService =
+        AnnouncementSubmissionService(repository: animalRepository)
 
     // MARK: - Repositories
     
