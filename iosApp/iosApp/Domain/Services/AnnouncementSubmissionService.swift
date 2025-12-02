@@ -19,7 +19,8 @@ class AnnouncementSubmissionService {
         
         // Step 1: Create announcement
         let result = try await repository.createAnnouncement(data: announcementData)
-        
+
+        // [FIXIT][4] musi istnieć photo, jak nie ma to nie uploadujemy tylko zwracamy błąd. no i flowState jest mainActor
         // Step 2: Upload photo (if exists)
         if let photoAttachment = flowState.photoAttachment {
             try await repository.uploadPhoto(
@@ -32,7 +33,8 @@ class AnnouncementSubmissionService {
         // Return managementPassword for summary
         return result.managementPassword
     }
-    
+
+    // [FIXIT][5] flowState jest MainActor, ta funkcja powinna być async
     private func buildAnnouncementData(from flowState: ReportMissingPetFlowState) throws -> CreateAnnouncementData {
         guard let contactDetails = flowState.contactDetails else {
             throw ValidationError.missingContactDetails
@@ -51,8 +53,8 @@ class AnnouncementSubmissionService {
         }
         
         return CreateAnnouncementData(
-            species: species.rawValue.uppercased(),
-            sex: gender.rawValue.uppercased(),
+            species: species,
+            sex: gender,
             lastSeenDate: disappearanceDate,
             location: (
                 latitude: flowState.animalLatitude ?? 0.0,
@@ -71,6 +73,7 @@ class AnnouncementSubmissionService {
 
 // MARK: - Validation Errors
 
+// [FIXIT][6] invalid redeclaration, mamy już w warstwie prezentacji, chyba zmiana nazwy jednego będzie ok, albo nawet obu (AnnouncementSubmissionServiceValidationError może?, albo wrzucić go jako podtyp do service, w extension?)
 enum ValidationError: Error, LocalizedError {
     case missingContactDetails
     case missingSpecies

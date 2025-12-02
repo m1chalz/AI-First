@@ -11,17 +11,20 @@ class AnimalRepository: AnimalRepositoryProtocol {
     private let apiDecoder: APIDecoder
     private let animalMapper: AnimalMapper
     private let petDetailsMapper: PetDetailsMapper
+    private let announcementMapper: AnnouncementMapper
     
     init(
         urlSession: URLSession = .shared,
         apiDecoder: APIDecoder = APIDecoder(),
         animalMapper: AnimalMapper = AnimalMapper(),
-        petDetailsMapper: PetDetailsMapper = PetDetailsMapper()
+        petDetailsMapper: PetDetailsMapper = PetDetailsMapper(),
+        announcementMapper: AnnouncementMapper = AnnouncementMapper()
     ) {
         self.urlSession = urlSession
         self.apiDecoder = apiDecoder
         self.animalMapper = animalMapper
         self.petDetailsMapper = petDetailsMapper
+        self.announcementMapper = announcementMapper
     }
     
     // MARK: - AnimalRepositoryProtocol Implementation
@@ -157,7 +160,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
         }
         
         // Convert domain model to DTO
-        let requestDTO = AnnouncementMapper.toDTO(data)
+        let requestDTO = announcementMapper.toDTO(data)
         
         // Encode DTO to JSON
         let encoder = JSONEncoder()
@@ -189,7 +192,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
             let responseDTO = try decoder.decode(AnnouncementResponseDTO.self, from: responseData)
             
             // Convert DTO to domain model
-            return AnnouncementMapper.toDomain(responseDTO)
+            return announcementMapper.toDomain(responseDTO)
             
         } catch let error as DecodingError {
             print("JSON decoding error: \(error)")
@@ -225,6 +228,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
         
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"photo\"; filename=\"pet.jpg\"\r\n".data(using: .utf8)!)
+        // [FIXIT][3] Value of type 'PhotoAttachmentMetadata' has no member 'mimeType'
         body.append("Content-Type: \(photo.mimeType)\r\n\r\n".data(using: .utf8)!)
         body.append(photoData)
         body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)

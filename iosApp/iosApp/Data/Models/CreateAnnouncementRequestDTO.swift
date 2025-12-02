@@ -3,8 +3,8 @@ import Foundation
 /// DTO for announcement creation request (POST /api/v1/announcements)
 /// Maps to snake_case JSON format used by backend API
 struct CreateAnnouncementRequestDTO: Codable {
-    let species: String
-    let sex: String
+    let species: AnimalSpeciesDTO
+    let sex: AnimalGenderDTO
     let lastSeenDate: String
     let locationLatitude: Double
     let locationLongitude: Double

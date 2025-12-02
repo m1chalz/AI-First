@@ -1,23 +1,24 @@
 import Foundation
 
 /// Mapper for converting between DTOs (Data layer) and Domain models
-struct AnnouncementMapper {
+class AnnouncementMapper {
+    
     /// Converts DTO from HTTP response to domain model
-    static func toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult {
-        return AnnouncementResult(
+    func toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult {
+        AnnouncementResult(
             id: dto.id,
             managementPassword: dto.managementPassword
         )
     }
     
     /// Converts domain model to DTO for HTTP request
-    static func toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO {
+    func toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate]
         
         return CreateAnnouncementRequestDTO(
-            species: data.species,
-            sex: data.sex,
+            species: AnimalSpeciesDTO(domain: data.species),
+            sex: AnimalGenderDTO(domain: data.sex),
             lastSeenDate: dateFormatter.string(from: data.lastSeenDate),
             locationLatitude: data.location.latitude,
             locationLongitude: data.location.longitude,
@@ -30,4 +31,3 @@ struct AnnouncementMapper {
         )
     }
 }
-

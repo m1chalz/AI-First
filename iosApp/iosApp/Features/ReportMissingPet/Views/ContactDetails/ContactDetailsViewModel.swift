@@ -77,11 +77,11 @@ class ContactDetailsViewModel: ObservableObject {
         // Clear previous errors
         phoneError = nil
         emailError = nil
-        
+
         // Validate phone
         if !isPhoneValid {
             phoneError = L10n.OwnersDetails.Phone.error // "Enter at least 7 digits"
-            return
+            return // [FIXIT][7] zawsze walidujmy oba, nie ma sensu wracać tutaj, jak się okaże, że oba są źle
         }
         
         // Validate email

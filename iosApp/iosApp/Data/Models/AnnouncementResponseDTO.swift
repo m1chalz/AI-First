@@ -5,8 +5,8 @@ import Foundation
 struct AnnouncementResponseDTO: Codable {
     let id: String
     let managementPassword: String
-    let species: String
-    let sex: String
+    let species: AnimalSpeciesDTO
+    let sex: AnimalGenderDTO
     let lastSeenDate: String
     let locationLatitude: Double
     let locationLongitude: Double

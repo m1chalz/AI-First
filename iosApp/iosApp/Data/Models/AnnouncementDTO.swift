@@ -5,14 +5,14 @@ import Foundation
 struct AnnouncementDTO: Codable {
     let id: String
     let petName: String
-    let species: String
+    let species: AnimalSpeciesDTO
     let status: String
     let photoUrl: String
     let lastSeenDate: String
     let locationLatitude: Double
     let locationLongitude: Double
     let breed: String?
-    let sex: String?
+    let sex: AnimalGenderDTO?
     let age: Int?
     let description: String
     let phone: String?
