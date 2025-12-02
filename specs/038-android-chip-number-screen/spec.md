@@ -97,7 +97,7 @@ User enters microchip data, proceeds to step 2/4, then navigates back to step 1/
 
 ### Dependencies
 
-- **Spec 018** (018-android-missing-pet-flow): Provides nested Navigation Graph infrastructure and shared flow ViewModel. Must be merged before this feature can be fully integrated.
+- **Spec 018** (018-android-missing-pet-flow): ✅ **MERGED** - Provides nested Navigation Graph infrastructure, shared flow ViewModel, and placeholder ChipNumberContent.kt. This spec enhances the existing placeholder with actual microchip input functionality.
 
 ### Functional Requirements
 
