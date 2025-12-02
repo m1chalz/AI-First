@@ -4,6 +4,8 @@ import com.intive.aifirst.petspot.BuildConfig
 import com.intive.aifirst.petspot.composeapp.domain.repositories.AnimalRepository
 import com.intive.aifirst.petspot.data.AnimalRepositoryImpl
 import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
+import com.intive.aifirst.petspot.features.reportmissing.data.repositories.PhotoMetadataRepositoryImpl
+import com.intive.aifirst.petspot.features.reportmissing.domain.repositories.PhotoMetadataRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -11,6 +13,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 /**
@@ -49,4 +52,5 @@ val dataModule =
 
         // Repository implementations
         single<AnimalRepository> { AnimalRepositoryImpl(get()) }
+        single<PhotoMetadataRepository> { PhotoMetadataRepositoryImpl(androidApplication()) }
     }

@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen
@@ -64,16 +65,39 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
             ChipNumberScreen(viewModel = viewModel)
         }
 
-        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
         composable<ReportMissingRoute.Photo> { backStackEntry ->
+            // Get parent entry for NavGraph-scoped state
             val parentEntry =
                 remember(backStackEntry) {
                     navController.getBackStackEntry<NavRoute.ReportMissing>()
                 }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            PhotoScreen(viewModel = viewModel, navController = navController)
+
+            // Shared flow state (NavGraph-scoped)
+            val flowState: ReportMissingFlowState =
+                koinViewModel<FlowStateHolder>(
+                    viewModelStoreOwner = parentEntry,
+                ).flowState
+
+            // Screen ViewModel with hybrid pattern: repository + state holder + navigation callbacks
+            val viewModel: PhotoViewModel =
+                koinViewModel {
+                    parametersOf(
+                        flowState,
+                        // onNavigateToDescription
+                        {
+                            navController.navigate(
+                                ReportMissingRoute.Description,
+                            ) { launchSingleTop = true }
+                        },
+                        // onNavigateBack
+                        { navController.popBackStack() },
+                    )
+                }
+
+            PhotoScreen(viewModel = viewModel)
         }
 
+        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
         composable<ReportMissingRoute.Description> { backStackEntry ->
             val parentEntry =
                 remember(backStackEntry) {

@@ -3,6 +3,7 @@ package com.intive.aifirst.petspot.di
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.FlowStateHolder
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -49,6 +50,17 @@ val viewModelModule =
                 flowState = params.get(),
                 onNavigateToPhoto = params.get(),
                 onExitFlow = params.get(),
+            )
+        }
+
+        // PhotoViewModel: Hybrid pattern with use case + FlowState + navigation callbacks
+        // Parameters: flowState, onNavigateToDescription, onNavigateBack
+        viewModel { params ->
+            PhotoViewModel(
+                extractPhotoMetadataUseCase = get(),
+                flowState = params.get(),
+                onNavigateToDescription = params.get(),
+                onNavigateBack = params.get(),
             )
         }
     }
