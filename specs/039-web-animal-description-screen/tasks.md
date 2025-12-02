@@ -309,25 +309,25 @@ This document provides an actionable, dependency-ordered task list for implement
 
 #### Validation Error Display (TDD)
 
-- [ ] T034 **[P] [US2] TDD-RED**: Write test for toast notification component at `/webApp/src/components/__tests__/Toast.test.tsx`
+- [X] T034 **[P] [US2] TDD-RED**: Write test for toast notification component at `/webApp/src/components/__tests__/Toast.test.tsx`
   - Test renders toast message when visible
   - Test auto-dismisses after 5 seconds
   - Test displays error styling
   - Expected: All tests FAIL
 
-- [ ] T035 **[P] [US2] TDD-GREEN**: Implement Toast component at `/webApp/src/components/Toast.tsx` (or integrate with existing toast system)
+- [X] T035 **[P] [US2] TDD-GREEN**: Implement Toast component at `/webApp/src/components/Toast.tsx` (or integrate with existing toast system)
   - Render toast with message prop
   - Auto-dismiss after 5 seconds (useEffect with setTimeout)
   - Apply error styling
   - Position fixed at bottom center
   - Expected: All tests PASS
 
-- [ ] T036 **[P] [US2] TDD-VERIFY**: Run toast tests and lint
+- [X] T036 **[P] [US2] TDD-VERIFY**: Run toast tests and lint
   - Command: `npm test -- Toast.test.tsx`
   - Command: `npm run lint -- src/components/Toast.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
-- [ ] T037 **[US2]** Integrate toast in Step3_AnimalDescription page
+- [X] T037 **[US2]** Integrate toast in Step3_AnimalDescription page
   - Add showToast state from useAnimalDescriptionForm
   - Render Toast component conditionally
   - Display "Please correct the errors below" message
@@ -335,14 +335,14 @@ This document provides an actionable, dependency-ordered task list for implement
 
 #### Inline Error Display (TDD)
 
-- [ ] T038 **[US2] TDD-RED**: Write test for inline error display in form fields
+- [X] T038 **[US2] TDD-RED**: Write test for inline error display in form fields
   - Test species dropdown shows error message below select
   - Test breed input shows error message below input
   - Test sex selector shows error message below radio group
   - Add to existing component test files
   - Expected: Tests FAIL
 
-- [ ] T039 **[US2] TDD-GREEN**: Update form components to display inline errors
+- [X] T039 **[US2] TDD-GREEN**: Update form components to display inline errors
   - Update AnimalDescriptionForm to pass validationErrors to child components
   - Update SpeciesDropdown to render error span below select
   - Update GenderSelector to render error span below options
@@ -350,33 +350,33 @@ This document provides an actionable, dependency-ordered task list for implement
   - Apply error styling (red text, margin-top)
   - Expected: All tests PASS
 
-- [ ] T040 **[US2] TDD-VERIFY**: Run updated component tests and lint
+- [X] T040 **[US2] TDD-VERIFY**: Run updated component tests and lint
   - Command: `npm test -- AnimalDescriptionForm.test.tsx SpeciesDropdown.test.tsx GenderSelector.test.tsx`
   - Expected: All tests pass with error display coverage
 
 #### Navigation Preservation (TDD)
 
-- [ ] T041 **[US2] TDD-RED**: Write test for navigation preservation
+- [X] T041 **[US2] TDD-RED**: Write test for navigation preservation
   - Test data persists when navigating Step 3 → Step 2 → Step 3
   - Test currentStep updates correctly on navigation
   - Test form re-populates with saved values
   - Add to Step3_AnimalDescription.test.tsx
   - Expected: Tests FAIL
 
-- [ ] T042 **[US2] TDD-GREEN**: Implement navigation preservation in useAnimalDescriptionForm hook
+- [X] T042 **[US2] TDD-GREEN**: Implement navigation preservation in useAnimalDescriptionForm hook
   - Ensure hook initializes from flowState on mount
   - Verify flow state not cleared on Step 3 → Step 2 navigation
   - Test back arrow uses in-app navigation (not browser back)
   - Expected: All tests PASS
 
-- [ ] T043 **[US2] TDD-VERIFY**: Run navigation tests and verify preservation
+- [X] T043 **[US2] TDD-VERIFY**: Run navigation tests and verify preservation
   - Command: `npm test -- Step3_AnimalDescription.test.tsx`
   - Manual test: Fill form → back → forward → verify data
   - Expected: All tests pass, data persists
 
 #### Edge Case Handling
 
-- [ ] T044 **[P] [US2] TDD-RED**: Write tests for edge cases
+- [X] T044 **[P] [US2] TDD-RED**: Write tests for edge cases
   - Test future date blocked in date picker
   - Test species change clears breed field
   - Test description truncated at 500 characters
@@ -384,25 +384,25 @@ This document provides an actionable, dependency-ordered task list for implement
   - Add to existing component test files
   - Expected: Tests FAIL (edge cases not fully handled)
 
-- [ ] T045 **[P] [US2] TDD-GREEN**: Implement edge case handling
+- [X] T045 **[P] [US2] TDD-GREEN**: Implement edge case handling
   - Add date picker max attribute (already in T027, verify works)
   - Implement breed clear on species change (useEffect in hook)
   - Add description maxLength and paste handler
   - Add age validation (integer, range check)
   - Expected: All tests PASS
 
-- [ ] T046 **[P] [US2] TDD-VERIFY**: Run edge case tests
+- [X] T046 **[P] [US2] TDD-VERIFY**: Run edge case tests
   - Command: `npm test -- --grep "edge case"`
   - Expected: All edge case scenarios pass
 
 #### Direct URL Access Guard
 
-- [ ] T047 **[US2]** Implement route guard for direct URL access
+- [X] T047 **[US2]** Implement route guard for direct URL access
   - Add guard in routing configuration
   - Redirect to Step 1 if currentStep < 3 or flowState is empty
   - Test: Access /report-missing/description directly → redirects to /report-missing/microchip
 
-- [ ] T048 **[US2] TDD-VERIFY**: Run all tests for User Story 2
+- [X] T048 **[US2] TDD-VERIFY**: Run all tests for User Story 2
   - Command: `npm test -- --coverage`
   - Expected: 80%+ coverage maintained, all US2 tests pass
   - Verify: Validation errors display correctly, navigation preserves data

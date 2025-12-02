@@ -47,7 +47,10 @@ export function validateSpecies(species: string): string | null {
   return null;
 }
 
-export function validateBreed(_breed: string, _species: string): string | null {
+export function validateBreed(breed: string, species: string): string | null {
+  if (species && !breed.trim()) {
+    return VALIDATION_MESSAGES.BREED_REQUIRED;
+  }
   return null;
 }
 
@@ -91,7 +94,7 @@ export function validateDescription(description: string): string | null {
 
 export function validateLatitude(latitudeStr: string): string | null {
   if (!latitudeStr || !latitudeStr.trim()) {
-    return VALIDATION_MESSAGES.LATITUDE_REQUIRED;
+    return null;
   }
   
   const latitude = Number(latitudeStr);
@@ -109,7 +112,7 @@ export function validateLatitude(latitudeStr: string): string | null {
 
 export function validateLongitude(longitudeStr: string): string | null {
   if (!longitudeStr || !longitudeStr.trim()) {
-    return VALIDATION_MESSAGES.LONGITUDE_REQUIRED;
+    return null;
   }
   
   const longitude = Number(longitudeStr);

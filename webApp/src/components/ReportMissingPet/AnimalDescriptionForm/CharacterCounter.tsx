@@ -11,14 +11,12 @@ export const CharacterCounter: React.FC<CharacterCounterProps> = ({
   current,
   max,
   isExceeded
-}) => {
-  return (
-    <span
-      data-testid="character-counter"
-      className={`${styles.characterCounter} ${isExceeded ? styles.exceeded : ''}`}
-    >
-      {current}/{max} characters
-    </span>
-  );
-};
+}) => (
+  <span
+    data-testid="character-counter"
+    className={`${styles.characterCounter} ${isExceeded ? styles.exceeded : ''}`}
+  >
+    {current}/{max} characters
+  </span>
+);
 

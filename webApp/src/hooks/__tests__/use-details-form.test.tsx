@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { useDetailsForm } from '../use-details-form';
@@ -157,7 +157,7 @@ describe('useDetailsForm', () => {
     it('should return false when required fields are missing', () => {
       const { result } = renderHook(() => useDetailsForm(), { wrapper });
       
-      let submitResult: boolean = true;
+      let submitResult = true;
       act(() => {
         submitResult = result.current.handleSubmit();
       });
@@ -185,7 +185,7 @@ describe('useDetailsForm', () => {
         result.current.updateField('sex', 'MALE');
       });
       
-      let submitResult: boolean = false;
+      let submitResult = false;
       act(() => {
         submitResult = result.current.handleSubmit();
       });
