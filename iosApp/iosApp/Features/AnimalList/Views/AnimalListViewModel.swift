@@ -126,11 +126,11 @@ class AnimalListViewModel: ObservableObject {
     // MARK: - Public Methods
     
     /**
-     * Triggers data refresh from external source (e.g., coordinator after child flow completes).
-     * User Story 3 (T066): Called by coordinator when returning from create announcement flow.
+     * Requests data refresh from external source (e.g., coordinator after report sent).
+     * User Story 3 (T066): Called by coordinator when user successfully submits announcement.
      * Encapsulates refresh logic without exposing internal loadAnimals() implementation.
      */
-    func refreshData() {
+    func requestToRefreshData() {
         loadTask = Task { @MainActor in
             await loadAnimals()
         }
