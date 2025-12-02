@@ -1,8 +1,8 @@
 package com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels
 
 import app.cash.turbine.test
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUserIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -14,22 +14,29 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
  * Unit tests for ChipNumberViewModel.
- * Tests screen-specific MVI behavior: initial state, intent handling, and effect emissions.
+ * Tests screen-specific MVI behavior with hybrid pattern: FlowState + callbacks.
  * Follows Given-When-Then structure per project constitution.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChipNumberViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var sharedViewModel: ReportMissingViewModel
+    private lateinit var flowState: ReportMissingFlowState
+
+    // Track callback invocations
+    private var navigateToPhotoCalled = false
+    private var exitFlowCalled = false
 
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        sharedViewModel = ReportMissingViewModel()
+        flowState = ReportMissingFlowState()
+        navigateToPhotoCalled = false
+        exitFlowCalled = false
     }
 
     @AfterEach
@@ -37,17 +44,23 @@ class ChipNumberViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun createViewModel() = ChipNumberViewModel(
+        flowState = flowState,
+        onNavigateToPhoto = { navigateToPhotoCalled = true },
+        onExitFlow = { exitFlowCalled = true },
+    )
+
     // ========================================
-    // T010: Initial State Tests
+    // Initial State Tests
     // ========================================
 
     @Test
-    fun `initial state should have empty chip number when shared state is empty`() =
+    fun `initial state should have empty chip number when flow state is empty`() =
         runTest {
-            // Given - shared ViewModel with empty state
+            // Given - flow state with empty data
 
             // When
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // Then
@@ -59,18 +72,13 @@ class ChipNumberViewModelTest {
         }
 
     @Test
-    fun `initial state should load chip number from shared state when available`() =
+    fun `initial state should load chip number from flow state when available`() =
         runTest {
-            // Given - shared ViewModel with existing chip number
-            sharedViewModel.dispatchIntent(
-                com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingIntent.UpdateChipNumber(
-                    "123456789012345"
-                )
-            )
-            advanceUntilIdle()
+            // Given - flow state with existing chip number
+            flowState.updateChipNumber("123456789012345")
 
             // When
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // Then
@@ -79,21 +87,21 @@ class ChipNumberViewModelTest {
                 assertEquals(
                     "123456789012345",
                     currentState.chipNumber,
-                    "Should load chip number from shared state"
+                    "Should load chip number from flow state"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     // ========================================
-    // T011: UpdateChipNumber Intent Tests
+    // UpdateChipNumber Intent Tests
     // ========================================
 
     @Test
     fun `handleIntent UpdateChipNumber should update local state with digits only`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When - input with non-digits
@@ -112,7 +120,7 @@ class ChipNumberViewModelTest {
     fun `handleIntent UpdateChipNumber should limit to 15 digits`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When - input exceeds 15 digits
@@ -132,7 +140,7 @@ class ChipNumberViewModelTest {
     fun `handleIntent UpdateChipNumber should accept partial input`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When - partial input
@@ -151,7 +159,7 @@ class ChipNumberViewModelTest {
     fun `handleIntent UpdateChipNumber should handle empty input`() =
         runTest {
             // Given - ViewModel with existing chip number
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             viewModel.handleIntent(ChipNumberUserIntent.UpdateChipNumber("12345"))
             advanceUntilIdle()
 
@@ -168,14 +176,14 @@ class ChipNumberViewModelTest {
         }
 
     // ========================================
-    // T012: ContinueClicked Intent Tests
+    // ContinueClicked Intent Tests
     // ========================================
 
     @Test
-    fun `handleIntent ContinueClicked should save chip number to shared state`() =
+    fun `handleIntent ContinueClicked should save chip number to flow state`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
             viewModel.handleIntent(ChipNumberUserIntent.UpdateChipNumber("123456789012345"))
             advanceUntilIdle()
@@ -187,66 +195,49 @@ class ChipNumberViewModelTest {
             viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
             advanceUntilIdle()
 
-            // Allow all coroutines to complete
-            testScheduler.advanceUntilIdle()
-
-            // Then - verify shared state was updated
+            // Then - verify flow state was updated
             assertEquals(
                 "123456789012345",
-                sharedViewModel.state.value.chipNumber,
-                "Should save chip number to shared state"
+                flowState.data.value.chipNumber,
+                "Should save chip number to flow state"
             )
         }
 
     @Test
-    fun `handleIntent ContinueClicked should emit NavigateToPhoto effect`() =
+    fun `handleIntent ContinueClicked should trigger onNavigateToPhoto callback`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When
-            viewModel.effects.test {
-                viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
-                advanceUntilIdle()
+            viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
+            advanceUntilIdle()
 
-                // Then
-                val effect = awaitItem()
-                assertTrue(
-                    effect is ChipNumberUiEffect.NavigateToPhoto,
-                    "Should emit NavigateToPhoto effect"
-                )
-                cancelAndIgnoreRemainingEvents()
-            }
+            // Then
+            assertTrue(navigateToPhotoCalled, "Should trigger onNavigateToPhoto callback")
         }
 
     @Test
     fun `handleIntent ContinueClicked with empty chip number should still navigate`() =
         runTest {
             // Given - no chip number entered (optional field)
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When
-            viewModel.effects.test {
-                viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
-                advanceUntilIdle()
+            viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
+            advanceUntilIdle()
 
-                // Then - should still emit navigation effect
-                val effect = awaitItem()
-                assertTrue(
-                    effect is ChipNumberUiEffect.NavigateToPhoto,
-                    "Should navigate even with empty chip number"
-                )
-                cancelAndIgnoreRemainingEvents()
-            }
+            // Then - should still trigger navigation callback
+            assertTrue(navigateToPhotoCalled, "Should navigate even with empty chip number")
         }
 
     @Test
-    fun `handleIntent ContinueClicked with empty chip number should save empty string to shared state`() =
+    fun `handleIntent ContinueClicked with empty chip number should save empty string to flow state`() =
         runTest {
             // Given - no chip number entered (optional field per FR-013)
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // Verify local state is empty
@@ -255,47 +246,39 @@ class ChipNumberViewModelTest {
             // When
             viewModel.handleIntent(ChipNumberUserIntent.ContinueClicked)
             advanceUntilIdle()
-            testScheduler.advanceUntilIdle()
 
-            // Then - empty string should be saved to shared state
+            // Then - empty string should be saved to flow state
             assertEquals(
                 "",
-                sharedViewModel.state.value.chipNumber,
-                "Empty chip number should be saved to shared state"
+                flowState.data.value.chipNumber,
+                "Empty chip number should be saved to flow state"
             )
         }
 
     // ========================================
-    // BackClicked Tests (covered in Phase 5)
+    // BackClicked Tests
     // ========================================
 
     @Test
-    fun `handleIntent BackClicked should emit NavigateBack effect`() =
+    fun `handleIntent BackClicked should trigger onExitFlow callback`() =
         runTest {
             // Given
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             advanceUntilIdle()
 
             // When
-            viewModel.effects.test {
-                viewModel.handleIntent(ChipNumberUserIntent.BackClicked)
-                advanceUntilIdle()
+            viewModel.handleIntent(ChipNumberUserIntent.BackClicked)
+            advanceUntilIdle()
 
-                // Then
-                val effect = awaitItem()
-                assertTrue(
-                    effect is ChipNumberUiEffect.NavigateBack,
-                    "Should emit NavigateBack effect"
-                )
-                cancelAndIgnoreRemainingEvents()
-            }
+            // Then
+            assertTrue(exitFlowCalled, "Should trigger onExitFlow callback")
         }
 
     @Test
-    fun `handleIntent BackClicked should NOT save chip number to shared state`() =
+    fun `handleIntent BackClicked should NOT save chip number to flow state`() =
         runTest {
             // Given - local chip number entered but not saved
-            val viewModel = ChipNumberViewModel(sharedViewModel)
+            val viewModel = createViewModel()
             viewModel.handleIntent(ChipNumberUserIntent.UpdateChipNumber("123456789"))
             advanceUntilIdle()
 
@@ -303,16 +286,27 @@ class ChipNumberViewModelTest {
             viewModel.handleIntent(ChipNumberUserIntent.BackClicked)
             advanceUntilIdle()
 
-            // Then - shared state should remain empty
-            sharedViewModel.state.test {
-                val sharedState = awaitItem()
-                assertEquals(
-                    "",
-                    sharedState.chipNumber,
-                    "Should NOT save chip number on back navigation"
-                )
-                cancelAndIgnoreRemainingEvents()
-            }
+            // Then - flow state should remain empty
+            assertEquals(
+                "",
+                flowState.data.value.chipNumber,
+                "Should NOT save chip number on back navigation"
+            )
+        }
+
+    @Test
+    fun `handleIntent BackClicked should NOT trigger onNavigateToPhoto callback`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(ChipNumberUserIntent.BackClicked)
+            advanceUntilIdle()
+
+            // Then
+            assertFalse(navigateToPhotoCalled, "Should NOT trigger onNavigateToPhoto on back")
+            assertTrue(exitFlowCalled, "Should trigger onExitFlow instead")
         }
 }
-

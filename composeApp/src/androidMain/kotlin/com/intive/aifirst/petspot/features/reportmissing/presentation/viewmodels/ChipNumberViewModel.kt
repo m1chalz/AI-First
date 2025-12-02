@@ -2,47 +2,43 @@ package com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUiState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ChipNumberUserIntent
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.util.MicrochipNumberFormatter
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for Chip Number screen (Step 1/4) following MVI architecture.
- * Manages screen-specific state and coordinates with shared flow ViewModel.
+ * Uses hybrid pattern: shared state holder for data, callbacks for navigation.
  *
- * @param sharedViewModel NavGraph-scoped ViewModel for flow state persistence
+ * @param flowState Shared state holder for flow data persistence
+ * @param onNavigateToPhoto Callback when user taps Continue (navigation event)
+ * @param onExitFlow Callback when user taps Back (navigation event)
  */
 class ChipNumberViewModel(
-    private val sharedViewModel: ReportMissingViewModel,
+    private val flowState: ReportMissingFlowState,
+    private val onNavigateToPhoto: () -> Unit,
+    private val onExitFlow: () -> Unit,
 ) : ViewModel() {
 
     // Screen-specific state
     private val _state = MutableStateFlow(ChipNumberUiState.Initial)
     val state: StateFlow<ChipNumberUiState> = _state.asStateFlow()
 
-    // One-off navigation effects
-    private val _effects = MutableSharedFlow<ChipNumberUiEffect>()
-    val effects: SharedFlow<ChipNumberUiEffect> = _effects.asSharedFlow()
-
     init {
         // Initialize from shared flow state (for data persistence on back navigation)
         viewModelScope.launch {
-            val sharedState = sharedViewModel.state.value
-            _state.value = ChipNumberUiState(chipNumber = sharedState.chipNumber)
+            val chipNumber = flowState.data.value.chipNumber
+            _state.value = ChipNumberUiState(chipNumber = chipNumber)
         }
     }
 
     /**
-     * Processes user intents and updates state or emits effects accordingly.
+     * Processes user intents and updates state or triggers navigation.
      */
     fun handleIntent(intent: ChipNumberUserIntent) {
         when (intent) {
@@ -63,28 +59,21 @@ class ChipNumberViewModel(
     }
 
     /**
-     * Saves chip number to shared flow state and navigates to Photo screen.
+     * Saves chip number to shared flow state and triggers navigation callback.
      */
     private fun handleContinueClicked() {
-        viewModelScope.launch {
-            // Save to shared state
-            sharedViewModel.dispatchIntent(
-                ReportMissingIntent.UpdateChipNumber(_state.value.chipNumber)
-            )
-            // Navigate to next screen
-            _effects.emit(ChipNumberUiEffect.NavigateToPhoto)
-        }
+        // Save to shared state
+        flowState.updateChipNumber(_state.value.chipNumber)
+        // Trigger navigation via callback
+        onNavigateToPhoto()
     }
 
     /**
-     * Navigates back without saving chip number.
+     * Exits flow without saving chip number.
      * Local state is discarded; shared state remains unchanged.
      */
     private fun handleBackClicked() {
-        viewModelScope.launch {
-            // Do NOT save to shared state - just emit navigation effect
-            _effects.emit(ChipNumberUiEffect.NavigateBack)
-        }
+        // Do NOT save to shared state - just trigger navigation
+        onExitFlow()
     }
 }
-
