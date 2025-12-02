@@ -19,10 +19,10 @@ export function PhotoScreen() {
 
   // FR-024: Protect direct URL access - redirect to step 1 if accessed directly
   useEffect(() => {
-    if (!flowState.microchipNumber && flowState.currentStep !== FlowStep.Photo) {
+    if (flowState.currentStep === FlowStep.Microchip) {
       navigate('/report-missing/microchip', { replace: true });
     }
-  }, [flowState, navigate]);
+  }, [flowState.currentStep, navigate]);
   
   const {
     photo,

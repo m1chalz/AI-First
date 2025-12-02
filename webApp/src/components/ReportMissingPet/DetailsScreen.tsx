@@ -23,7 +23,7 @@ export const DetailsScreen: React.FC = () => {
     navigate('/report-missing/photo');
   };
 
-  const handleFormSubmit = () => {
+  const handleContinue = () => {
     const isValid = handleSubmit();
     if (isValid) {
       navigate('/report-missing/contact');
@@ -47,7 +47,7 @@ export const DetailsScreen: React.FC = () => {
       <AnimalDescriptionForm
         formData={formData}
         onFieldChange={(field, value) => updateField(field as keyof typeof formData, value)}
-        onSubmit={handleFormSubmit}
+        onSubmit={handleContinue}
       />
 
       <Toast message={toastMessage} />

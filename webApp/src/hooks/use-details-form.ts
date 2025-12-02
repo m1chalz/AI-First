@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext';
 import { validateAllFields } from '../utils/form-validation';
 import { AnimalSpecies, AnimalSex } from '../types/animal';
+import { FlowStep } from '../models/ReportMissingPetFlow';
 
 export interface DetailsFormData {
   lastSeenDate: string;
@@ -87,6 +88,7 @@ export function useDetailsForm(): UseDetailsFormReturn {
       description: formData.description,
       latitude: formData.latitude ? Number(formData.latitude) : null,
       longitude: formData.longitude ? Number(formData.longitude) : null,
+      currentStep: FlowStep.Contact,
     });
 
     return true;
