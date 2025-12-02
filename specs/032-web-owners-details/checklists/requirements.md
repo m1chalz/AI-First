@@ -44,7 +44,7 @@
 ✅ **PASS**: All functional requirements are testable:
 - FR-001: Visual matching can be verified against Figma
 - FR-002: Navigation behavior can be tested
-- FR-003: Validation rules are specific (7-11 digits, RFC 5322)
+- FR-003: Validation rules are specific (must contain at least one digit, RFC 5322)
 - FR-004-006: Input validation rules are explicit
 - FR-007-013: Session management and error handling are testable
 - FR-014: Responsive design breakpoints are specified

@@ -11,7 +11,7 @@
 
 ### Session 2025-12-02
 
-- Q: When should validation occur for the contact fields (phone/email)? → A: Same pattern as previous screens (specs 034, 037, 039) - validation on blur with inline error feedback
+- Q: When should validation occur for the contact fields (phone/email)? → A: Same pattern as previous screens (specs 034, 037, 039) - validation on Continue click with toast + inline error feedback
 - Q: Should flow state persist across browser refresh? → A: Clear state on refresh - consistent with specs 034, 037, 039 (user returns to pet list)
 - Q: Should Continue button be disabled until valid contact exists, or always enabled with validation on click? → A: Always enabled, validate on click - consistent with specs 034, 037, 039 (show errors on submit)
 - Q: Should in-app back arrow close entire flow or navigate to previous step? → A: Navigate to previous step - Step 4→Step 3, preserve flow state (evolved pattern from spec 039)
@@ -57,17 +57,17 @@ Web users who complete Steps 1-3 (chip, photo, description) reach the Owner's De
 
 ### User Story 2 - Receive inline validation feedback for invalid inputs (Priority: P2)
 
-Users who mistype contact details see inline validation errors (red border + error text) on blur. If they click Continue without at least one valid contact method, validation blocks navigation and shows errors. This prevents submission of malformed contact info.
+Users who mistype contact details and click Continue see inline validation errors (red border + error text + toast message). If they click Continue without at least one valid contact method, validation blocks navigation and shows errors. This prevents submission of malformed contact info.
 
 **Why this priority**: Invalid contact data breaks the reconnection flow. Inline validation catches errors early and guides users to correct them.
 
-**Independent Test**: Enter invalid email (e.g., "owner@"), blur field, observe inline error, click Continue, verify navigation is blocked with error feedback, correct email, click Continue again, verify navigation succeeds.
+**Independent Test**: Enter invalid email (e.g., "owner@"), click Continue, verify toast message and inline error appear, verify navigation is blocked, correct email, click Continue again, verify navigation succeeds.
 
 **Acceptance Scenarios**:
 
-1. **Given** the user enters "123" in the phone field (leaving email empty), **When** focus leaves the field, **Then** a red border appears with inline error text "Enter at least 7 digits". **When** they click Continue, **Then** navigation is blocked and validation errors persist until phone is corrected to 7-11 digits OR a valid email is entered.
-2. **Given** the user enters "owner@" in email (leaving phone empty), **When** focus leaves the field, **Then** a red border + error text appears below email field explaining format requirement (e.g., "Enter a valid email address"). **When** they click Continue, **Then** navigation is blocked until email is valid OR a valid phone is entered.
-3. **Given** the user has a valid phone but invalid email, **When** they click Continue, **Then** navigation is blocked, inline error persists on email field, and user must either fix the email or clear it entirely before proceeding.
+1. **Given** the user enters "abc" in the phone field (leaving email empty), **When** they click Continue, **Then** validation occurs, a toast message "Please provide at least one contact method (phone or email)" displays for 5 seconds, a red border appears with inline error text "Enter a valid phone number", and navigation is blocked until phone contains at least one digit OR a valid email is entered.
+2. **Given** the user enters "owner@" in email (leaving phone empty), **When** they click Continue, **Then** validation occurs, a toast message "Please provide at least one contact method (phone or email)" displays for 5 seconds, a red border + error text "Enter a valid email address" appears below email field, and navigation is blocked until email is valid OR a valid phone is entered.
+3. **Given** the user has a valid phone but invalid email, **When** they click Continue, **Then** validation occurs, a toast message displays for 5 seconds, navigation is blocked, inline error "Enter a valid email address" appears with red border on email field, and user must either fix the email or clear it entirely before proceeding.
 
 ---
 
@@ -91,7 +91,7 @@ Some users want to offer a reward. They can enter free-text reward details (e.g.
 
 ### Edge Cases
 
-- **Phone validation**: Accept leading "+", reject letters/symbols (except digits), enforce 7-11 digits, sanitize whitespace/dashes but preserve user-entered formatting in UI. Field is optional but must be valid if provided.
+- **Phone validation**: Must contain at least one digit (aligned with backend `/server/src/lib/validators.ts`). Accepts any format as long as it contains digits. Field is optional but must be valid if provided.
 - **Email validation**: RFC 5322-compatible (basic local@domain.tld), case-insensitive, trim whitespace. Field is optional but must be valid if provided.
 - **At least one contact required**: User must provide either valid phone OR valid email (or both) to proceed. All non-empty fields must be valid - partial invalid data (e.g., valid phone + malformed email) blocks navigation until user fixes or clears invalid fields.
 - **Reward field**: No validation, no character limits, accepts any text input. Completely optional.
@@ -107,8 +107,8 @@ Some users want to offer a reward. They can enter free-text reward details (e.g.
 - **FR-001**: The Owner's Details screen MUST render as Step 4/4 in the Missing Pet flow and visually match Figma node 315-15943 including circular back button, centered "Owner's details" title, progress badge "4/4", three inputs (phone, email, reward), helper text, and blue Continue button.
 - **FR-002**: The circular back button (in-app navigation) MUST navigate to Step 3 (Animal Description screen), restore its data, update progress to "3/4", and preserve all Step 4 entries in flow state (consistent with spec 039 evolved pattern). Browser back button separately cancels entire flow.
 - **FR-003**: Continue MUST remain enabled at all times (consistent with specs 034, 037, 039); clicking Continue MUST validate that (a) at least one contact method (phone OR email) is valid AND (b) all non-empty fields are valid. If validation passes, MUST save contact data to ReportMissingPetFlowState and navigate to summary screen. If validation fails, MUST show inline errors and block navigation until user fixes or clears invalid fields.
-- **FR-004**: Phone input MUST be optional but when provided MUST accept digits and leading "+", trim spaces/dashes for validation but preserve user-entered formatting in UI, enforce 7-11 digits, and show inline error "Enter at least 7 digits" with red border on blur when invalid (non-empty but incorrect format).
-- **FR-005**: Email input MUST be optional but when provided MUST validate against RFC 5322-compatible pattern (basic local@domain.tld), be case-insensitive, trim whitespace, and show inline error "Enter a valid email address" with red border on blur when invalid (non-empty but incorrect format).
+- **FR-004**: Phone input MUST be optional but when provided MUST contain at least one digit (aligned with backend `/server/src/lib/validators.ts`); validation occurs on Continue click, showing inline error "Enter a valid phone number" with red border when invalid (non-empty but no digits).
+- **FR-005**: Email input MUST be optional but when provided MUST validate against RFC 5322-compatible pattern `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` (aligned with backend `/server/src/lib/validators.ts`), be case-insensitive, trim whitespace; validation occurs on Continue click, showing inline error "Enter a valid email address" with red border when invalid (non-empty but incorrect format).
 - **FR-006**: Reward description field MUST accept any text input without validation or character limits, display "(optional)" in label, allow clearing to blank without error, and store text verbatim in session.
 - **FR-007**: All inputs MUST synchronize with ReportMissingPetFlowState (existing session container), survive navigation between steps, and remain editable until flow is completed or canceled. Browser refresh clears all flow state (consistent with specs 034, 037, 039).
 - **FR-008**: Inline helper text "Add your contact information and potential reward." MUST appear below screen title.
@@ -116,12 +116,12 @@ Some users want to offer a reward. They can enter free-text reward details (e.g.
 - **FR-010**: Continue button MUST use primary blue (#155DFC), stretch full width on mobile (responsive), expose `data-testid="contact.continue.button"` attribute, and remain enabled at all times (consistent with specs 034, 037, 039).
 - **FR-011**: Returning from summary to Owner's Details MUST repopulate all fields exactly as saved with Continue remaining enabled.
 - **FR-012**: The screen MUST be responsive and work on mobile (320px+), tablet (768px+), and desktop (1024px+) viewports with appropriate layout adjustments.
-- **FR-013**: Summary screen MUST display all collected flow state data (microchip number, photo, last seen date, species, breed, sex, age, description, location, phone, email, reward) in a debug-style view similar to current ContactScreen implementation, with options to navigate back to Step 4 or complete/cancel the flow.
+- **FR-013**: Summary screen MUST display all collected flow state data (microchip number, photo, last seen date, species, breed, sex, age, description, location, phone, email, reward) in a debug-style view similar to current ContactScreen implementation, with options to navigate back to Step 4 or complete the flow.
 
 ### Key Entities *(include if feature involves data)*
 
-- **ReportMissingPetFlowState**: Existing session container extended to store contact details (phone, email, rewardDescription) and computed property hasContactInfo.
-- **ContactDetails**: Session-bound structure containing phone (optional), email (optional), rewardDescription (optional) strings.
+- **ReportMissingPetFlowState**: Existing session container extended to store contact details (phone, email, reward) and computed property hasContactInfo.
+- **ContactDetails**: Session-bound structure containing phone (optional), email (optional), reward (optional) strings.
 
 ## Success Criteria *(mandatory)*
 
@@ -183,11 +183,11 @@ ContactScreen (React Component)
 
 ### Validation Logic
 
-- Phone: Optional, but if provided must match regex `/^\+?\d{7,11}$/` after sanitizing spaces/dashes
-- Email: Optional, but if provided must match standard email regex with RFC 5322 basic compliance
+- Phone: Optional, but if provided must contain at least one digit (regex `/\d/` - matches backend `/server/src/lib/validators.ts`)
+- Email: Optional, but if provided must match regex `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` (matches backend `/server/src/lib/validators.ts`)
 - Reward: No validation
 - Continue validation requires: (a) at least one of phone OR email must be valid AND (b) all non-empty fields must be valid
-- Validation timing: On blur for individual fields (consistent with specs 034, 037, 039)
+- Validation timing: On Continue click only (consistent with specs 034, 037, 039)
 
 ### Accessibility
 
@@ -210,14 +210,14 @@ ContactScreen (React Component)
 ### Test Coverage Requirements
 
 - **Unit Tests** (Hook): 80% coverage
-  - Phone validation logic (7-11 digits, leading +, reject letters) when field is non-empty
-  - Email validation (RFC 5322 basic) when field is non-empty
+  - Phone validation logic (must contain at least one digit - matches backend) when field is non-empty
+  - Email validation (RFC 5322 basic - matches backend) when field is non-empty
   - At least one contact method required logic (phone OR email)
   - All non-empty fields must be valid (block navigation if any field is invalid)
   - No reward field validation
   - Session save on Continue click
 - **Component Tests**: 
-  - Input validation errors appear/disappear on blur
+  - Input validation errors appear on Continue click (not on blur)
   - Continue always enabled (consistent with specs 034, 037, 039)
   - Continue blocks navigation when no valid contact method exists
   - Continue blocks navigation when valid phone + invalid email (all non-empty must be valid)
