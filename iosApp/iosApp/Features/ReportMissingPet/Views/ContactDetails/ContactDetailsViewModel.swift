@@ -77,16 +77,22 @@ class ContactDetailsViewModel: ObservableObject {
         // Clear previous errors
         phoneError = nil
         emailError = nil
-
-        // Validate phone
+        
+        // Validate all fields and collect errors
+        var hasErrors = false
+        
         if !isPhoneValid {
             phoneError = L10n.OwnersDetails.Phone.error // "Enter at least 7 digits"
-            return // [FIXIT][7] zawsze walidujmy oba, nie ma sensu wracać tutaj, jak się okaże, że oba są źle
+            hasErrors = true
         }
         
-        // Validate email
         if !isEmailValid {
             emailError = L10n.OwnersDetails.Email.error // "Enter a valid email address"
+            hasErrors = true
+        }
+        
+        // Stop if any validation errors
+        if hasErrors {
             return
         }
         
