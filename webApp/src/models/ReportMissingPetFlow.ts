@@ -1,4 +1,7 @@
+import { AnimalSpecies, AnimalSex } from '../types/animal';
+
 export enum FlowStep {
+  Empty = 'emtpy',
   Microchip = 'microchip',
   Photo = 'photo',
   Details = 'details',
@@ -18,12 +21,28 @@ export interface ReportMissingPetFlowState {
   currentStep: FlowStep;
   microchipNumber: string;
   photo: PhotoAttachment | null;
+  lastSeenDate: string;
+  species: AnimalSpecies | null;
+  breed: string;
+  sex: AnimalSex | null;
+  age: number | null;
+  description: string;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export const initialFlowState: ReportMissingPetFlowState = {
-  currentStep: FlowStep.Microchip,
+  currentStep: FlowStep.Empty,
   microchipNumber: '',
   photo: null,
+  lastSeenDate: new Date().toISOString().split('T')[0],
+  species: null,
+  breed: '',
+  sex: null,
+  age: null,
+  description: '',
+  latitude: null,
+  longitude: null,
 };
 
 export interface ReportMissingPetFlowContextValue {

@@ -111,7 +111,6 @@ describe('validateCreateAnnouncement', () => {
     it('should accept today\'s date as valid lastSeenDate', () => {
       // Given: Data with today's date
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
       const todayString = today.toISOString().split('T')[0];
       
       const data = {
@@ -128,7 +127,6 @@ describe('validateCreateAnnouncement', () => {
       // Given: Data with yesterday's date
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      yesterday.setHours(0, 0, 0, 0);
       const yesterdayString = yesterday.toISOString().split('T')[0];
       
       const data = {

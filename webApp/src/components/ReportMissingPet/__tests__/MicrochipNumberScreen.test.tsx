@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MicrochipNumberScreen } from '../MicrochipNumberScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
 
 const mockNavigate = vi.fn();
 
@@ -165,7 +166,7 @@ describe('MicrochipNumberScreen', () => {
     fireEvent.click(continueButton);
     
     // then (should navigate)
-    expect(mockNavigate).toHaveBeenCalledWith('/report-missing/photo');
+    expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.photo);
   });
 
   it('handles browser back button by clearing flow and navigating home', () => {
