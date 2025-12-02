@@ -73,6 +73,7 @@ export function ContactScreen() {
             type="tel"
             className={styles.input}
             value={phone}
+            placeholder="Enter phone number..."
             onChange={(e) => handlePhoneChange(e.target.value)}
             data-testid="contact.phoneNumber.input"
             style={phoneError ? { borderColor: '#FB2C36' } : {}}
@@ -93,6 +94,7 @@ export function ContactScreen() {
             type="email"
             className={styles.input}
             value={email}
+            placeholder="username@example.com"
             onChange={(e) => handleEmailChange(e.target.value)}
             data-testid="contact.email.input"
             style={emailError ? { borderColor: '#FB2C36' } : {}}
@@ -108,9 +110,10 @@ export function ContactScreen() {
           <label htmlFor="reward" className={styles.label}>
             Reward for the finder (optional)
           </label>
-          <textarea
+          <input
             id="reward"
-            className={styles.textarea}
+            type="text"
+            className={styles.input}
             value={reward}
             onChange={(e) => handleRewardChange(e.target.value)}
             placeholder="Enter amount..."
