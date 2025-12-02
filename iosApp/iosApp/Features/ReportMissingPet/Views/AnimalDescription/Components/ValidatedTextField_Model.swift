@@ -7,6 +7,7 @@ extension ValidatedTextField {
         let errorMessage: String?
         let isDisabled: Bool
         let keyboardType: UIKeyboardType
+        let maxLength: Int?
         let accessibilityID: String
         
         init(
@@ -15,6 +16,7 @@ extension ValidatedTextField {
             errorMessage: String? = nil,
             isDisabled: Bool = false,
             keyboardType: UIKeyboardType = .default,
+            maxLength: Int? = nil,
             accessibilityID: String
         ) {
             self.label = label
@@ -22,6 +24,7 @@ extension ValidatedTextField {
             self.errorMessage = errorMessage
             self.isDisabled = isDisabled
             self.keyboardType = keyboardType
+            self.maxLength = maxLength
             self.accessibilityID = accessibilityID
         }
     }

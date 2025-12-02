@@ -27,31 +27,19 @@ struct ContactDetailsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     ValidatedTextField(
-                        label: L10n.OwnersDetails.Phone.label,
-                        placeholder: L10n.OwnersDetails.Phone.placeholder,
-                        text: $viewModel.phone,
-                        error: viewModel.phoneError,
-                        keyboardType: .phonePad
+                        model: viewModel.phoneTextFieldModel,
+                        text: $viewModel.phone
                     )
-                    .accessibilityIdentifier("ownersDetails.phoneInput")
                     
                     ValidatedTextField(
-                        label: L10n.OwnersDetails.Email.label,
-                        placeholder: L10n.OwnersDetails.Email.placeholder,
-                        text: $viewModel.email,
-                        error: viewModel.emailError,
-                        keyboardType: .emailAddress
+                        model: viewModel.emailTextFieldModel,
+                        text: $viewModel.email
                     )
-                    .accessibilityIdentifier("ownersDetails.emailInput")
                     
                     ValidatedTextField(
-                        label: L10n.OwnersDetails.Reward.label,
-                        placeholder: L10n.OwnersDetails.Reward.placeholder,
-                        text: $viewModel.rewardDescription,
-                        error: nil,
-                        maxLength: 120
+                        model: viewModel.rewardTextFieldModel,
+                        text: $viewModel.rewardDescription
                     )
-                    .accessibilityIdentifier("ownersDetails.rewardInput")
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 24)

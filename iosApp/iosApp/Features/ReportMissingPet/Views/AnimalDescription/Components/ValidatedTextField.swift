@@ -28,6 +28,12 @@ struct ValidatedTextField: View {
                 .keyboardType(model.keyboardType)
                 .disabled(model.isDisabled)
                 .accessibilityIdentifier(model.accessibilityID)
+                .onChange(of: text) { _, newValue in
+                    // Enforce character limit if maxLength is set
+                    if let maxLength = model.maxLength, newValue.count > maxLength {
+                        text = String(newValue.prefix(maxLength))
+                    }
+                }
             
             // Error message
             if let error = model.errorMessage {

@@ -69,6 +69,42 @@ class ContactDetailsViewModel: ObservableObject {
         return predicate.evaluate(with: email.trimmingCharacters(in: .whitespaces))
     }
     
+    // MARK: - ValidatedTextField Models
+    
+    var phoneTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.OwnersDetails.Phone.label,
+            placeholder: L10n.OwnersDetails.Phone.placeholder,
+            errorMessage: phoneError,
+            isDisabled: isSubmitting,
+            keyboardType: .phonePad,
+            accessibilityID: "ownersDetails.phoneInput"
+        )
+    }
+    
+    var emailTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.OwnersDetails.Email.label,
+            placeholder: L10n.OwnersDetails.Email.placeholder,
+            errorMessage: emailError,
+            isDisabled: isSubmitting,
+            keyboardType: .emailAddress,
+            accessibilityID: "ownersDetails.emailInput"
+        )
+    }
+    
+    var rewardTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.OwnersDetails.Reward.label,
+            placeholder: L10n.OwnersDetails.Reward.placeholder,
+            errorMessage: nil,
+            isDisabled: isSubmitting,
+            keyboardType: .default,
+            maxLength: 120,
+            accessibilityID: "ownersDetails.rewardInput"
+        )
+    }
+    
     // MARK: - Actions
     
     /// Validates inputs and submits announcement via service.
