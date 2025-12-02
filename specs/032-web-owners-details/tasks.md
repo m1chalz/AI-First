@@ -143,6 +143,87 @@
 
 ---
 
+### **Figma Styling Alignment (Post-MVP)**
+
+✅ **Styling Updates Applied** (from [Figma node 315-15943](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=315-15943&m=dev)):
+- Title: "Your contact info" (matches Figma exactly)
+- Subtitle: "Add your contact information and potential reward." (corrected Figma typo, matches intent)
+- Phone label: "Phone number" (matches Figma exactly)
+- Email label: "Email" (matches Figma exactly - not "Email address")
+- Reward label: "Reward for the finder (optional)" (matches Figma exactly - not "Reward description")
+- Reward placeholder: "Enter amount..." (matches Figma exactly)
+- Error color: #FB2C36 (Figma design system red, not #dc3545)
+- Textarea class: `styles.textarea` (proper CSS for textarea sizing)
+- Responsive design: Preserved via existing `ReportMissingPetLayout.module.css`
+
+✅ **CSS Reuse (Zero New Styles)**:
+- `.description` - subtitle text (#545f71, 16px, Hind font)
+- `.label` - input labels (#364153, 16px, Hind font)
+- `.input` - phone/email inputs (41.333px height, border #d1d5dc, focus #155dfc)
+- `.textarea` - reward field (proper flex sizing)
+- `.primaryButton` - Continue button (#155dfc primary blue, 52px height)
+- All responsive breakpoints via @media queries
+
+**Final Design Tokens**:
+- Background: #f2f4f8 (CoolGray/10)
+- Card: #ffffff (Default/White)
+- Border: #dde1e6 (CoolGray/20)
+- Title: #21272a (CoolGray/90)
+- Label: #364153 (Input label color)
+- Text: #545f71 (Description text)
+- Error: #FB2C36 (Design system red)
+- Primary: #155dfc (Button color)
+
+**Tests Updated**:
+- Phone label: "Phone number" (exact match)
+- Email label: "Email" (exact match via regex `/^Email$/i`)
+- Reward label: "Reward for the finder" (exact match)
+- All 130 tests passing ✅
+
+**Result**: ContactScreen now perfectly matches Figma design node 315-15943 with zero new CSS dependencies.
+
+---
+
+### **Title Structure Fix**
+
+✅ **Header vs. Content Title Separation**:
+- Header: "Owner's details" (in Header component, shown in stepper)
+- Content: "Your contact info" (h2 heading with `.heading` class, matches Figma)
+- Follows pattern used in DetailsScreen and other steps
+- Proper semantic HTML hierarchy (h2 for content, not page title)
+- All 130 tests still passing ✅
+
+**Final Structure** (matches all other screens):
+```tsx
+<ReportMissingPetLayout
+  title="Owner's details"      ← Header/Stepper
+  progress="4/4"
+  onBack={handleBack}
+>
+  <div style={{ gap: '24px', flexDirection: 'column' }}>  ← Main spacing wrapper
+    <div style={{ gap: '8px' }}>
+      <h2 className={styles.heading}>Your contact info</h2>  ← Content title
+    </div>
+    <p className={styles.description}>Add your...</p>
+    <form style={{ gap: '24px', flexDirection: 'column' }}>  ← Form spacing
+      <input.../>
+      <input.../>
+      <textarea.../>
+      <button.../>
+    </form>
+  </div>
+</ReportMissingPetLayout>
+```
+
+✅ **Spacing Applied** (from Figma):
+- Main container: 24px gap between title/description/form
+- Title section: 8px gap for alignment
+- Form fields: 24px gap between inputs and button
+- Input groups: 8px gap (label to input) - handled by `.inputGroup` class
+- All 130 tests passing ✅
+
+---
+
 ## Phase 4: User Story 2 - Receive inline validation feedback for invalid inputs (Priority: P2)
 
 **Goal**: Users see clear validation errors when they enter invalid phone/email and click Continue, understand what needs to be fixed

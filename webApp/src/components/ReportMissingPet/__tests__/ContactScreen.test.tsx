@@ -39,9 +39,9 @@ describe('ContactScreen', () => {
       renderWithProviders();
 
       // when
-      const phoneLabel = screen.queryByText(/phone/i);
-      const emailLabel = screen.queryByText(/email/i);
-      const rewardLabel = screen.queryByText(/reward/i);
+      const phoneLabel = screen.queryByText(/phone number/i);
+      const emailLabel = screen.queryByText(/^Email$/i);
+      const rewardLabel = screen.queryByText(/reward for the finder/i);
 
       // then
       expect(phoneLabel).toBeTruthy();

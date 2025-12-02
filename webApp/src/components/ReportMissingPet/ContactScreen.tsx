@@ -50,14 +50,23 @@ export function ContactScreen() {
 
   return (
     <ReportMissingPetLayout
-      title="Contact details"
+      title="Owner's details"
       progress="4/4"
       onBack={handleBack}
     >
-      <form onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
+          <h2 className={styles.heading}>Your contact info</h2>
+        </div>
+
+        <p className={styles.description}>
+          Add your contact information and potential reward.
+        </p>
+
+        <form onSubmit={(e) => { e.preventDefault(); handleContinue(); }} style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
         <div className={styles.inputGroup}>
           <label htmlFor="phone" className={styles.label}>
-            Phone number (optional)
+            Phone number
           </label>
           <input
             id="phone"
@@ -65,12 +74,11 @@ export function ContactScreen() {
             className={styles.input}
             value={phone}
             onChange={(e) => handlePhoneChange(e.target.value)}
-            placeholder="e.g., +48123456789"
             data-testid="contact.phoneNumber.input"
-            style={phoneError ? { borderColor: '#dc3545' } : {}}
+            style={phoneError ? { borderColor: '#FB2C36' } : {}}
           />
           {phoneError && (
-            <div style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px' }}>
+            <div style={{ color: '#FB2C36', fontSize: '14px', marginTop: '4px' }}>
               {phoneError}
             </div>
           )}
@@ -78,7 +86,7 @@ export function ContactScreen() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>
-            Email address (optional)
+            Email
           </label>
           <input
             id="email"
@@ -86,12 +94,11 @@ export function ContactScreen() {
             className={styles.input}
             value={email}
             onChange={(e) => handleEmailChange(e.target.value)}
-            placeholder="e.g., owner@example.com"
             data-testid="contact.email.input"
-            style={emailError ? { borderColor: '#dc3545' } : {}}
+            style={emailError ? { borderColor: '#FB2C36' } : {}}
           />
           {emailError && (
-            <div style={{ color: '#dc3545', fontSize: '14px', marginTop: '4px' }}>
+            <div style={{ color: '#FB2C36', fontSize: '14px', marginTop: '4px' }}>
               {emailError}
             </div>
           )}
@@ -99,16 +106,15 @@ export function ContactScreen() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="reward" className={styles.label}>
-            Reward description (optional)
+            Reward for the finder (optional)
           </label>
           <textarea
             id="reward"
-            className={styles.input}
+            className={styles.textarea}
             value={reward}
             onChange={(e) => handleRewardChange(e.target.value)}
-            placeholder="e.g., $250 reward"
+            placeholder="Enter amount..."
             data-testid="contact.reward.input"
-            rows={3}
           />
         </div>
 
@@ -120,7 +126,8 @@ export function ContactScreen() {
         >
           Continue
         </button>
-      </form>
+        </form>
+      </div>
     </ReportMissingPetLayout>
   );
 }
