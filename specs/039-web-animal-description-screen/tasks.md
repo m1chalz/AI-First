@@ -61,7 +61,7 @@ This document provides an actionable, dependency-ordered task list for implement
 
 #### Validation Utilities (TDD)
 
-- [ ] T005 **[P] TDD-RED**: Write test suite for form validation functions at `/webApp/src/utils/__tests__/form-validation.test.ts`
+- [X] T005 **[P] TDD-RED**: Write test suite for form validation functions at `/webApp/src/utils/__tests__/form-validation.test.ts`
   - Test validateLastSeenDate (required, no future dates)
   - Test validateSpecies (required, valid enum)
   - Test validateBreed (required when species selected, cleared on species change)
@@ -70,7 +70,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Test validateDescription (optional, max 500 chars)
   - Expected: All tests FAIL (functions don't exist yet)
 
-- [ ] T006 **TDD-GREEN**: Implement validation functions at `/webApp/src/utils/form-validation.ts`
+- [X] T006 **TDD-GREEN**: Implement validation functions at `/webApp/src/utils/form-validation.ts`
   - Implement validateLastSeenDate with future date check
   - Implement validateSpecies with enum validation
   - Implement validateBreed with conditional requirement
@@ -80,24 +80,24 @@ This document provides an actionable, dependency-ordered task list for implement
   - Implement validateAllFields helper
   - Expected: All tests PASS
 
-- [ ] T007 **TDD-VERIFY**: Run validation tests and lint
+- [X] T007 **TDD-VERIFY**: Run validation tests and lint
   - Command: `npm test -- form-validation.test.ts`
   - Command: `npm run lint -- src/utils/form-validation.ts`
   - Expected: 100% tests pass, 0 lint errors
 
 #### Display Label Mappings (TDD)
 
-- [ ] T008 **[P] TDD-RED**: Write test suite for display label utilities at `/webApp/src/utils/__tests__/display-labels.test.ts`
+- [X] T008 **[P] TDD-RED**: Write test suite for display label utilities at `/webApp/src/utils/__tests__/display-labels.test.ts`
   - Test SPECIES_LABELS maps enums to capitalized strings
   - Test SEX_LABELS maps enums to capitalized strings
   - Expected: All tests FAIL
 
-- [ ] T009 **[P] TDD-GREEN**: Implement display label constants at `/webApp/src/utils/display-labels.ts`
+- [X] T009 **[P] TDD-GREEN**: Implement display label constants at `/webApp/src/utils/display-labels.ts`
   - Export SPECIES_LABELS: Record<AnimalSpecies, string>
   - Export SEX_LABELS: Record<AnimalSex, string>
   - Expected: All tests PASS
 
-- [ ] T010 **[P] TDD-VERIFY**: Run label tests and lint
+- [X] T010 **[P] TDD-VERIFY**: Run label tests and lint
   - Command: `npm test -- display-labels.test.ts`
   - Command: `npm run lint -- src/utils/display-labels.ts`
   - Expected: 100% tests pass, 0 lint errors
