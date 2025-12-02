@@ -38,8 +38,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
         if let location = location {
             urlComponents.queryItems = [
                 URLQueryItem(name: "lat", value: String(location.latitude)),
-                URLQueryItem(name: "lng", value: String(location.longitude)),
-                URLQueryItem(name: "range", value: "10")
+                URLQueryItem(name: "lng", value: String(location.longitude))
             ]
         }
         

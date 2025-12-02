@@ -101,12 +101,15 @@ class AnimalListViewModel: ObservableObject {
         
         // User Story 4: Observe app returning from background (dynamic permission change handling)
         locationHandler.startObservingForeground { [weak self] status, didBecomeAuthorized in
+            guard let self = self else { return }
             // Callback is already dispatched to main thread by handler
-            self?.locationPermissionStatus = status
+            self.locationPermissionStatus = status
             // Auto-refresh ONLY if permission changed from unauthorized → authorized
             if didBecomeAuthorized {
-                self?.loadTask = Task {
-                    await self?.loadAnimals()
+                // Cancel previous task before starting new one
+                self.loadTask?.cancel()
+                self.loadTask = Task {
+                    await self.loadAnimals()
                 }
             }
         }
@@ -131,6 +134,8 @@ class AnimalListViewModel: ObservableObject {
      * Encapsulates refresh logic without exposing internal loadAnimals() implementation.
      */
     func requestToRefreshData() {
+        // User Story 3 (T065): Cancel previous load task before starting new one
+        loadTask?.cancel()
         loadTask = Task { @MainActor in
             await loadAnimals()
         }
@@ -161,20 +166,14 @@ class AnimalListViewModel: ObservableObject {
      * Note: Calls repository directly per iOS MVVM-C architecture (no use case layer).
      */
     func loadAnimals() async {
-        // User Story 3 (T065): Cancel previous load task if still running
-        loadTask?.cancel()
-        
         isLoading = true
         errorMessage = nil
         
         do {
-            // Check for cancellation before starting work
-            try Task.checkCancellation()
-            
             // Delegate location permission handling to handler
             let result = await locationHandler.requestLocationWithPermissions()
             
-            // Check for cancellation after async operation
+            // User Story 3 (T067): Check for cancellation after async operation
             try Task.checkCancellation()
             
             // Update published state with results
