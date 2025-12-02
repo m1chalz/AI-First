@@ -4,15 +4,13 @@ import { MemoryRouter } from 'react-router-dom';
 import { SummaryScreen } from '../SummaryScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
 
-const renderWithProviders = () => {
-  return render(
-    <ReportMissingPetFlowProvider>
-      <MemoryRouter initialEntries={['/report-missing-pet/summary']}>
-        <SummaryScreen />
-      </MemoryRouter>
-    </ReportMissingPetFlowProvider>
-  );
-};
+const renderWithProviders = () => render(
+  <ReportMissingPetFlowProvider>
+    <MemoryRouter initialEntries={['/report-missing-pet/summary']}>
+      <SummaryScreen />
+    </MemoryRouter>
+  </ReportMissingPetFlowProvider>
+);
 
 describe('SummaryScreen', () => {
   describe('rendering', () => {

@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useContactForm } from '../use-contact-form';
 import { ReportMissingPetFlowProvider } from '../../contexts/ReportMissingPetFlowContext';
 
-const wrapper = ({ children }: { children: ReactNode }) =>
-  React.createElement(ReportMissingPetFlowProvider, { children });
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>
+);
 
 describe('useContactForm', () => {
   describe('input field state management', () => {

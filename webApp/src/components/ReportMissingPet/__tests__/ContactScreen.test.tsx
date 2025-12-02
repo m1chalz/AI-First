@@ -5,15 +5,13 @@ import { MemoryRouter } from 'react-router-dom';
 import { ContactScreen } from '../ContactScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
 
-const renderWithProviders = () => {
-  return render(
-    <ReportMissingPetFlowProvider>
-      <MemoryRouter initialEntries={['/report-missing-pet/contact']}>
-        <ContactScreen />
-      </MemoryRouter>
-    </ReportMissingPetFlowProvider>
-  );
-};
+const renderWithProviders = () => render(
+  <ReportMissingPetFlowProvider>
+    <MemoryRouter initialEntries={['/report-missing-pet/contact']}>
+      <ContactScreen />
+    </MemoryRouter>
+  </ReportMissingPetFlowProvider>
+);
 
 describe('ContactScreen', () => {
   describe('rendering', () => {
