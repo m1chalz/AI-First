@@ -1,6 +1,7 @@
 import React from 'react';
 import { ANIMAL_SPECIES } from '../../../types/animal';
 import { SPECIES_LABELS } from '../../../utils/display-labels';
+import styles from './AnimalDescriptionForm.module.css';
 
 export interface SpeciesDropdownProps {
   value: string;
@@ -25,6 +26,7 @@ export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({
       <select
         value={value}
         onChange={handleChange}
+        className={styles.select}
         data-testid={testId}
       >
         <option value="">Select species</option>
@@ -35,7 +37,7 @@ export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({
         ))}
       </select>
       {error && (
-        <span role="alert" style={{ color: 'red', display: 'block', marginTop: '4px' }}>
+        <span role="alert" className={styles.errorMessage}>
           {error}
         </span>
       )}

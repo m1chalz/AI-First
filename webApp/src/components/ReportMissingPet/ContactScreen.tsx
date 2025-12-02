@@ -89,6 +89,38 @@ export function ContactScreen() {
             <span> (no photo)</span>
           )}
         </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Last Seen Date:</strong> {flowState.lastSeenDate || '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Species:</strong> {flowState.species || '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Breed:</strong> {flowState.breed || '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Sex:</strong> {flowState.sex || '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Age:</strong> {flowState.age !== null ? flowState.age : '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Description:</strong> {flowState.description || '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Latitude:</strong> {flowState.latitude !== null ? flowState.latitude : '(empty)'}
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <strong>Longitude:</strong> {flowState.longitude !== null ? flowState.longitude : '(empty)'}
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: '12px' }}>

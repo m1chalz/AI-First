@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './AnimalDescriptionForm.module.css';
 
 export interface CharacterCounterProps {
   current: number;
@@ -14,8 +15,7 @@ export const CharacterCounter: React.FC<CharacterCounterProps> = ({
   return (
     <span
       data-testid="character-counter"
-      className={isExceeded ? 'exceeded' : ''}
-      style={{ color: isExceeded ? 'red' : 'gray', fontSize: '14px' }}
+      className={`${styles.characterCounter} ${isExceeded ? styles.exceeded : ''}`}
     >
       {current}/{max} characters
     </span>

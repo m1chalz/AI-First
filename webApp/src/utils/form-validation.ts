@@ -11,8 +11,10 @@ export const VALIDATION_MESSAGES = {
   AGE_INVALID_NUMBER: 'Age must be a whole number',
   AGE_OUT_OF_RANGE: 'Age must be between 0 and 40',
   DESCRIPTION_TOO_LONG: 'Description cannot exceed 500 characters',
+  LATITUDE_REQUIRED: 'Please enter latitude',
   LATITUDE_INVALID_NUMBER: 'Latitude must be a number',
   LATITUDE_OUT_OF_RANGE: 'Latitude must be between -90 and 90',
+  LONGITUDE_REQUIRED: 'Please enter longitude',
   LONGITUDE_INVALID_NUMBER: 'Longitude must be a number',
   LONGITUDE_OUT_OF_RANGE: 'Longitude must be between -180 and 180',
 } as const;
@@ -45,11 +47,7 @@ export function validateSpecies(species: string): string | null {
   return null;
 }
 
-export function validateBreed(breed: string, species: string): string | null {
-  if (species && !breed.trim()) {
-    return VALIDATION_MESSAGES.BREED_REQUIRED;
-  }
-  
+export function validateBreed(_breed: string, _species: string): string | null {
   return null;
 }
 
@@ -92,8 +90,8 @@ export function validateDescription(description: string): string | null {
 }
 
 export function validateLatitude(latitudeStr: string): string | null {
-  if (!latitudeStr) {
-    return null;
+  if (!latitudeStr || !latitudeStr.trim()) {
+    return VALIDATION_MESSAGES.LATITUDE_REQUIRED;
   }
   
   const latitude = Number(latitudeStr);
@@ -110,8 +108,8 @@ export function validateLatitude(latitudeStr: string): string | null {
 }
 
 export function validateLongitude(longitudeStr: string): string | null {
-  if (!longitudeStr) {
-    return null;
+  if (!longitudeStr || !longitudeStr.trim()) {
+    return VALIDATION_MESSAGES.LONGITUDE_REQUIRED;
   }
   
   const longitude = Number(longitudeStr);

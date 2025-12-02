@@ -1,6 +1,7 @@
 import React from 'react';
 import { ANIMAL_SEXES } from '../../../types/animal';
 import { SEX_LABELS } from '../../../utils/display-labels';
+import styles from './AnimalDescriptionForm.module.css';
 
 export interface GenderSelectorProps {
   value: string;
@@ -23,20 +24,23 @@ export const GenderSelector: React.FC<GenderSelectorProps> = ({
 
   return (
     <div data-testid={testId}>
-      {sexOptions.map((sex) => (
-        <label key={sex} style={{ marginRight: '16px', display: 'inline-block' }}>
-          <input
-            type="radio"
-            name="sex"
-            value={sex}
-            checked={value === sex}
-            onChange={handleChange}
-          />
-          {' '}{SEX_LABELS[sex]}
-        </label>
-      ))}
+      <div className={styles.genderContainer}>
+        {sexOptions.map((sex) => (
+          <div key={sex} className={styles.genderOption}>
+            <input
+              type="radio"
+              name="sex"
+              id={`sex-${sex}`}
+              value={sex}
+              checked={value === sex}
+              onChange={handleChange}
+            />
+            <label htmlFor={`sex-${sex}`}>{SEX_LABELS[sex]}</label>
+          </div>
+        ))}
+      </div>
       {error && (
-        <span role="alert" style={{ color: 'red', display: 'block', marginTop: '4px' }}>
+        <span role="alert" className={styles.errorMessage}>
           {error}
         </span>
       )}
