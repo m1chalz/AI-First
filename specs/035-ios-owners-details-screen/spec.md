@@ -19,6 +19,11 @@
 - Q: Report submission flow – is it a single request or multiple steps? → A: **2-step process**: (1) POST /api/v1/announcements creates announcement and returns `id` + `managementPassword`; (2) POST /api/v1/announcements/:id/photos uploads photo using Basic auth (id:managementPassword). **Happy path only**: Both must succeed for navigation to summary. If either step fails, show generic error popup with retry (retries full 2-step flow). Partial failure handling (step 1 success, step 2 fail) is out of scope for initial implementation.
 - Q: Localization support – which languages and what localization system? → A: Support Polish (PL) and English (EN) using SwiftGen L10n. All user-facing strings (labels, placeholders, error messages, button text, validation messages) MUST use L10n.tr() for localization. String keys follow pattern `owners_details.{element}.{property}` (e.g., `L10n.tr("owners_details.phone.placeholder")`).
 - Q: Are we creating new files or modifying existing ones? → A: Modifying existing placeholder files: `ContactDetailsView` and `ContactDetailsViewModel` already exist in the codebase as placeholders. Navigation integration with ReportMissingPetCoordinator (spec 017) is already implemented. This spec focuses on implementing the screen content and submission logic only.
+- Q: Loading state during submission – what should happen in UI during 2-step submission (announcement + photo upload)? → A: Option C – Button shows spinner (ActivityIndicator) and disables; inputs remain editable but Continue is blocked until completion or error. Prevents double submission while keeping user data accessible.
+- Q: Back navigation during submission – can user go back (button or gesture) during ongoing 2-step submission? → A: Option B – Back navigation disabled during submission (isSubmitting = true disables back button). Prevents data inconsistency and orphaned announcements if user navigates away mid-submission. Note: Swipe-back gesture may not be supported by coordinator implementation (UIKit-based navigation).
+- Q: Validation state after network error – what happens to validation errors after failed submission due to network error? → A: Option A – Validation errors remain cleared (inputs were valid before submission attempt). Validation state reflects input format correctness, not network status. Network errors shown via popup alert only, not inline validation.
+- Q: Photo data format in FlowState – in what format is photo stored in ReportMissingPetFlowState and passed to repository? → A: Option C – URL (file path to disk cache location). FlowState stores PhotoAttachmentMetadata containing cachedURL (path to Library/Caches/PetSpot/ReportMissingPet). Repository reads Data from cachedURL during upload. PhotoAttachmentCache handles disk I/O.
+- Q: Photo data loading responsibility – who loads photo Data from cachedURL during submission - ContactDetailsViewModel or Repository? → A: Option B – Repository (or intermediate service object) loads Data from cachedURL; ViewModel passes PhotoAttachmentMetadata only. Separates UI logic from data access. Implementation may introduce intermediate service object (e.g., AnnouncementSubmissionService) to encapsulate 2-step flow logic, keeping repository methods simple. Planning phase will determine final approach.
 
 ## Scope & Background
 
@@ -111,6 +116,8 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **Accessibility**: VoiceOver announces field labels, validation errors, and button states; all inputs expose `ownersDetails.*` accessibility identifiers.
 - **iOS version**: Requires iOS 15+ (align with project baseline from spec 017).
 - **2-step submission**: Step 1 creates announcement (POST /api/v1/announcements), step 2 uploads photo (POST /api/v1/announcements/:id/photos) using Basic auth with id:managementPassword from step 1. Both must succeed for navigation to summary.
+- **Submission loading state**: During 2-step submission, Continue button displays ActivityIndicator spinner and is disabled; back button is also disabled to prevent navigation away mid-submission; input fields remain editable but not submittable.
+- **Back navigation blocking**: Back button is disabled (non-interactive) while isSubmitting = true to prevent data inconsistency from partial submission (e.g., announcement created but photo not uploaded).
 - **Failure handling**: Any failure in either step (network, backend error, timeout) shows generic error popup and retries full 2-step submission from beginning. Partial failure handling (step 1 success, step 2 fail) is out of scope for initial implementation.
 - **Localization**: All user-facing strings use SwiftGen L10n with Polish (pl-PL) and English (fallback) support. String keys follow `owners_details.*` pattern. Device locale determines display language (Polish for pl-PL, English for all others).
 
@@ -129,9 +136,10 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **FR-009**: Error states MUST use design system red (#FB2C36 or similar) for text and borders, maintain WCAG AA contrast, and immediately restore neutral borders when errors are cleared.
 - **FR-010**: Continue button MUST use primary blue (#155DFC), stretch full width (327px design, responsive in code), and expose `ownersDetails.continue.tap` accessibility identifier.
 - **FR-011**: When Continue is tapped with valid inputs but device is offline, the app MUST stay on Step 4, show popup alert "No connection. Please check your network and try again." with "Try Again" and "Cancel" buttons, keep all inputs intact, retry submission on "Try Again", and dismiss alert on "Cancel" without clearing inputs.
-- **FR-012**: Successful Continue action MUST complete 2-step submission: (1) create announcement via POST /api/v1/announcements → receive `id` and `managementPassword`; (2) upload photo via POST /api/v1/announcements/:id/photos. Only after BOTH succeed, pass managementPassword to summary via coordinator closure `onReportSent(managementPassword: String)` and navigate to summary screen showing managementPassword for user reference. Backend sends confirmation email asynchronously after step 1. **Failure handling**: If either step fails (network error, backend 4xx/5xx, timeout), stay on Step 4, show generic popup alert "Something went wrong. Please try again later." with "Try Again" / "Cancel" buttons, preserve all inputs, and retry full 2-step submission on "Try Again".
+- **FR-012**: Successful Continue action MUST complete 2-step submission: (1) create announcement via POST /api/v1/announcements → receive `id` and `managementPassword`; (2) upload photo via POST /api/v1/announcements/:id/photos. During submission, Continue button MUST display ActivityIndicator spinner and remain disabled (prevent double submission), while all input fields remain editable. Only after BOTH steps succeed, pass managementPassword to summary via coordinator closure `onReportSent(managementPassword: String)` and navigate to summary screen showing managementPassword for user reference. Backend sends confirmation email asynchronously after step 1. **Failure handling**: If either step fails (network error, backend 4xx/5xx, timeout), stay on Step 4, show generic popup alert "Something went wrong. Please try again later." with "Try Again" / "Cancel" buttons, re-enable Continue button, preserve all inputs, and retry full 2-step submission on "Try Again".
 - **FR-013**: Returning from summary to Owner's Details MUST repopulate all fields exactly as saved and re-enable Continue if session data remains valid.
-- **FR-014**: All user-facing text (screen title, field labels, placeholders, helper text, validation errors, button labels, popup messages) MUST be localized using SwiftGen L10n with support for Polish (PL) and English (EN). String keys MUST follow pattern `owners_details.{element}.{property}` (e.g., `owners_details.phone.placeholder`, `owners_details.continue.button`, `owners_details.error.no_connection`).
+- **FR-014**: Back navigation (circular back button) MUST be disabled during 2-step submission (while isSubmitting = true) to prevent data inconsistency and orphaned announcements. Back button should remain visible but non-interactive (dimmed or disabled state) until submission completes or fails.
+- **FR-015**: All user-facing text (screen title, field labels, placeholders, helper text, validation errors, button labels, popup messages) MUST be localized using SwiftGen L10n with support for Polish (PL) and English (EN). String keys MUST follow pattern `owners_details.{element}.{property}` (e.g., `owners_details.phone.placeholder`, `owners_details.continue.button`, `owners_details.error.no_connection`).
 
 ### Key Entities *(include if feature involves data)*
 
@@ -140,8 +148,9 @@ When either step of submission fails (offline, backend error, timeout), the app 
 - **OwnerContactDetails**: Session-bound structure containing phone, email, rewardDescription strings plus validation flags.
 - **AnnouncementCreatePayload**: DTO for step 1 (POST /api/v1/announcements): species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status ("MISSING"), microchipNumber (optional), description (optional), reward (optional).
 - **PhotoUploadPayload**: Multipart form-data for step 2 (POST /api/v1/announcements/:id/photos): photo file + Basic auth header with base64-encoded `id:managementPassword`.
-- **SubmitAnnouncementRequest**: Dedicated model encapsulating full 2-step submission (announcement data + photo) for repository layer. Implementation details deferred to planning phase.
+- **SubmitAnnouncementRequest**: Dedicated model encapsulating full 2-step submission (announcement data + photo metadata with cachedURL) for data layer. Implementation details deferred to planning phase.
 - **AnnouncementResponse**: Backend HTTP 201 response containing `"id"` (UUID string, e.g., `"bb3fc451-1f51-407d-bb85-2569dc9baed3"`), `"managementPassword"` (6-digit string, e.g., `"467432"`), and other announcement fields. Extract `managementPassword` field for passing to summary. Note: `photoUrl` returns `null` (photo uploaded separately per spec 021).
+- **AnnouncementSubmissionService** (optional): Intermediate service object that may be introduced during planning to encapsulate 2-step submission logic (announcement creation + photo upload). Would load photo Data from PhotoAttachmentMetadata.cachedURL and orchestrate both repository calls. Keeps repository methods simple and ViewModel focused on UI concerns. Final architecture decision deferred to planning phase.
 
 ## Success Criteria *(mandatory)*
 
@@ -158,8 +167,8 @@ When either step of submission fails (offline, backend error, timeout), the app 
   - Step 1: POST /api/v1/announcements (spec 009) accepts announcement data, returns HTTP 201 with `id` (UUID) and `managementPassword` (6-digit string), and triggers email asynchronously
   - Step 2: POST /api/v1/announcements/:id/photos (spec 021) accepts photo with Basic auth (id:managementPassword), returns HTTP 201 on success
 - Summary screen (from spec 017) displays managementPassword to user for future reference.
-- Photo from Steps 1-3 is stored in FlowState (from spec 017) as UIImage or Data ready for multipart upload in step 2.
-- Repository layer will create dedicated DTO/model for announcement submission to encapsulate 2-step flow logic.
+- Photo from Step 2 is stored in FlowState as PhotoAttachmentMetadata containing cachedURL (file path to Library/Caches/PetSpot/ReportMissingPet). Repository reads Data from cachedURL during step 2 photo upload. PhotoAttachmentCache handles disk I/O operations.
+- Repository layer will create dedicated DTO/model for announcement submission to encapsulate 2-step flow logic (loading photo Data from cachedURL and executing both API calls).
 - Reward currency/formatting is freeform; app does not auto-format or localize reward text (user-entered text is submitted as-is to backend).
 - Phone validation follows same heuristics as spec 006 (Pets API) for consistency.
 - iOS version baseline is 15+ (from spec 017).
@@ -224,17 +233,20 @@ ContactDetailsView (SwiftUI View - MODIFY EXISTING)
 
 - Manage @Published input state (phone, email, rewardDescription)
 - Manage @Published validation error states (phoneError, emailError) shown in ValidatedTextField components
+- Manage @Published isSubmitting state (true during 2-step submission, false otherwise) to control Continue button spinner and disabled state
 - Validate inputs only when Continue is tapped (validate phone: 7-11 digits; email: RFC 5322 basic format)
 - Prevent submission if validation fails; show inline validation errors via @Published error properties
 - Execute 2-step submission via dependency-injected repository if validation succeeds:
-  1. POST /api/v1/announcements (announcement data) → extract `id` and `managementPassword` from HTTP 201 response
-  2. POST /api/v1/announcements/:id/photos (photo with Basic auth using id:managementPassword) → wait for HTTP 201
+  1. Set isSubmitting = true and show spinner in Continue button
+  2. POST /api/v1/announcements (announcement data) → extract `id` and `managementPassword` from HTTP 201 response
+  3. POST /api/v1/announcements/:id/photos (photo with Basic auth using id:managementPassword) → wait for HTTP 201
+  4. Set isSubmitting = false on completion (success or failure)
 - Invoke `onReportSent(managementPassword)` closure only after BOTH steps succeed to pass managementPassword to coordinator
-- Publish alert state (@Published alertMessage, showAlert) on any failure (either step): show generic error popup "Something went wrong. Please try again later." with "Try Again" / "Cancel" buttons
-- Handle retry action from alert "Try Again" button: retry full 2-step submission from step 1
+- Publish alert state (@Published alertMessage, showAlert) on any failure (either step): set isSubmitting = false, show generic error popup "Something went wrong. Please try again later." with "Try Again" / "Cancel" buttons; validation error state remains cleared (inputs were valid before submission)
+- Handle retry action from alert "Try Again" button: retry full 2-step submission from step 1 (sets isSubmitting = true again); validation not re-run since inputs remain valid
 - Emit analytics event on full successful submission (after both steps complete)
 
-**Implementation Note**: ContactDetailsViewModel already exists as placeholder with basic coordinator integration (onReportSent closure). Implementation will add input state management, validation logic, and 2-step submission flow.
+**Implementation Note**: ContactDetailsViewModel already exists as placeholder with basic coordinator integration (onReportSent closure). Implementation will add input state management, validation logic, and 2-step submission flow. The isSubmitting state should be observed by ContactDetailsView to disable both Continue and back buttons during submission.
 
 ### Coordinator Integration
 
@@ -298,11 +310,15 @@ All user-facing strings use L10n.tr() with keys following pattern `owners_detail
   - Email validation (RFC 5322 basic)
   - Reward character limit (120 chars)
   - submitForm() 2-step flow: announcement creation → photo upload
-  - Full success path (both steps succeed) → invoke onReportSent closure
-  - Failure path (either step fails) → show generic error popup
-  - Retry logic: full 2-step retry from step 1
+  - Loading state management: isSubmitting = true during submission, false on completion
+  - Full success path (both steps succeed) → invoke onReportSent closure, set isSubmitting = false
+  - Failure path (either step fails) → set isSubmitting = false, show generic error popup
+  - Retry logic: full 2-step retry from step 1, set isSubmitting = true again
 - **UI Tests**: 
   - Input validation errors appear/disappear on Continue tap
+  - Continue button shows spinner and disables during submission
+  - Back button disables during submission (non-interactive state)
+  - Continue and back buttons re-enable after submission failure
   - Navigation to summary only after both submission steps succeed
   - Popup alert for submission failure with retry/cancel options
   - Retry attempts full 2-step submission
