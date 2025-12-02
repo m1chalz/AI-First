@@ -208,22 +208,11 @@ This document provides an actionable, dependency-ordered task list for implement
   - Command: `npm run lint -- src/components/AnimalDescriptionForm/gender-selector.tsx`
   - Expected: 100% tests pass, 0 lint errors
 
-#### Character Counter Component (TDD)
+#### Character Counter Component (TDD) - REMOVED
 
-- [X] T023 **[P] [US1] TDD-RED**: Write test suite for CharacterCounter at `/webApp/src/components/AnimalDescriptionForm/__tests__/character-counter.test.tsx`
-  - Test displays current/max format (e.g., "250/500 characters")
-  - Test applies "exceeded" class when over limit
-  - Expected: All tests FAIL
-
-- [X] T024 **[P] [US1] TDD-GREEN**: Implement CharacterCounter component at `/webApp/src/components/AnimalDescriptionForm/character-counter.tsx`
-  - Display "{current}/{max} characters"
-  - Apply exceeded styling when current > max
-  - Expected: All tests PASS
-
-- [X] T025 **[P] [US1] TDD-VERIFY**: Run CharacterCounter tests and lint
-  - Command: `npm test -- character-counter.test.tsx`
-  - Command: `npm run lint -- src/components/AnimalDescriptionForm/character-counter.tsx`
-  - Expected: 100% tests pass, 0 lint errors
+- [~] T023 **[P] [US1] TDD-RED**: ~~Write test suite for CharacterCounter~~ - **REMOVED** (not in Figma design)
+- [~] T024 **[P] [US1] TDD-GREEN**: ~~Implement CharacterCounter component~~ - **REMOVED** (not in Figma design)
+- [~] T025 **[P] [US1] TDD-VERIFY**: ~~Run CharacterCounter tests and lint~~ - **REMOVED** (not in Figma design)
 
 #### Main Form Component (TDD)
 
@@ -245,7 +234,7 @@ This document provides an actionable, dependency-ordered task list for implement
   - Render disabled GPS button placeholder
   - Wire all onChange handlers
   - Add all data-testid attributes per spec
-  - Integrate sub-components (SpeciesDropdown, GenderSelector, CharacterCounter)
+  - Integrate sub-components (SpeciesDropdown, GenderSelector)
   - Expected: All tests PASS
 
 - [X] T028 **[US1] TDD-VERIFY**: Run AnimalDescriptionForm tests and lint
@@ -427,7 +416,6 @@ This document provides an actionable, dependency-ordered task list for implement
   - Style toast notification
   - Style GPS button placeholder (disabled appearance)
   - Style error messages (red text)
-  - Style character counter
   - Match Figma design node 315-15837
 
 - [X] T050 **[P]** Import styles in AnimalDescriptionForm component
@@ -521,7 +509,6 @@ Phase 1 (Setup) → Phase 2 (Foundational)
 
 **Within Phase 3 (US1)**:
 - T017-T019 (SpeciesDropdown) parallel with T020-T022 (GenderSelector)
-- T020-T022 (GenderSelector) parallel with T023-T025 (CharacterCounter)
 
 **Within Phase 4 (US2)**:
 - T034-T036 (Toast) parallel with T044-T046 (Edge cases)
@@ -579,7 +566,6 @@ Phase 1 (Setup) → Phase 2 (Foundational)
 - `/webApp/src/hooks/__tests__/useAnimalDescriptionForm.test.ts` (T014)
 - `/webApp/src/components/AnimalDescriptionForm/__tests__/SpeciesDropdown.test.tsx` (T017)
 - `/webApp/src/components/AnimalDescriptionForm/__tests__/GenderSelector.test.tsx` (T020)
-- `/webApp/src/components/AnimalDescriptionForm/__tests__/CharacterCounter.test.tsx` (T023)
 - `/webApp/src/components/AnimalDescriptionForm/__tests__/AnimalDescriptionForm.test.tsx` (T026)
 - `/webApp/src/pages/ReportMissingPet/__tests__/Step3_AnimalDescription.test.tsx` (T029)
 - `/webApp/src/components/__tests__/Toast.test.tsx` (T034)

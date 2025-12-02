@@ -1,7 +1,6 @@
 import React from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
 import { GenderSelector } from './GenderSelector';
-import { CharacterCounter } from './CharacterCounter';
 import sharedStyles from '../ReportMissingPetLayout.module.css';
 import styles from './AnimalDescriptionForm.module.css';
 
@@ -149,11 +148,6 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
           maxLength={500}
           className={sharedStyles.textarea}
           data-testid="details.description.textarea"
-        />
-        <CharacterCounter
-          current={formData.description.length}
-          max={500}
-          isExceeded={formData.description.length > 500}
         />
         {formData.validationErrors.description && (
           <span role="alert" className={styles.errorMessage}>

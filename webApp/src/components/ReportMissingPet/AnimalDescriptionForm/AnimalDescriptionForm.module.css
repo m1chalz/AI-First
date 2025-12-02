@@ -108,18 +108,6 @@
   cursor: pointer;
 }
 
-/* Character counter */
-.characterCounter {
-  font-size: 14px;
-  color: #545f71;
-  text-align: right;
-  margin-top: 4px;
-}
-
-.characterCounter.exceeded {
-  color: #da1e28;
-}
-
 /* GPS Button - secondary style with blue border */
 .gpsButton {
   width: 100%;
