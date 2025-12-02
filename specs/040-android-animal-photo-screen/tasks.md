@@ -185,22 +185,22 @@ composeApp/src/androidUnitTest/kotlin/.../features/reportmissing/
 
 ### Tests for User Story 3 ✅
 
-- [ ] T046 [P] [US3] Write unit test for PhotoPickerCancelled: state remains EMPTY, other flow data preserved in PhotoReducerTest.kt
-- [ ] T047 [P] [US3] Write unit test for PhotoLoadFailed: state reverts to EMPTY in PhotoReducerTest.kt
+- [X] T046 [P] [US3] Write unit test for PhotoPickerCancelled: state remains EMPTY, other flow data preserved in PhotoReducerTest.kt
+- [X] T047 [P] [US3] Write unit test for PhotoLoadFailed: state reverts to EMPTY in PhotoReducerTest.kt
 
 ### Implementation for User Story 3
 
 **Error Handling**:
 
-- [ ] T048 [US3] Implement PhotoPickerCancelled reducer: keep status=EMPTY, preserve other state in ReportMissingReducer.kt
-- [ ] T049 [US3] Implement PhotoLoadFailed reducer: reset to EMPTY status in ReportMissingReducer.kt
-- [ ] T050 [US3] Handle metadata extraction failure in PhotoViewModel: wrap in try-catch, dispatch PhotoLoadFailed on exception
-- [ ] T051 [US3] Handle picker cancellation in PhotoScreen: when result URI is null, dispatch PhotoPickerCancelled
+- [X] T048 [US3] Implement PhotoPickerCancelled reducer: keep status=EMPTY, preserve other state in ReportMissingReducer.kt
+- [X] T049 [US3] Implement PhotoLoadFailed reducer: reset to EMPTY status in ReportMissingReducer.kt
+- [X] T050 [US3] Handle metadata extraction failure in PhotoViewModel: wrap in try-catch, dispatch PhotoLoadFailed on exception
+- [X] T051 [US3] Handle picker cancellation in PhotoScreen: when result URI is null, dispatch PhotoPickerCancelled
 
 **Permission Handling (Android 12 and below)**:
 
-- [ ] T052 [P] [US3] Check READ_EXTERNAL_STORAGE permission before launching fallback picker (API < 33 only)
-- [ ] T053 [US3] Handle permission denial: show guidance toast/snackbar with Settings deep link option
+- [X] T052 [P] [US3] Check READ_EXTERNAL_STORAGE permission before launching fallback picker (API < 33 only) - N/A: GetContent uses content provider, no explicit permission required (per research.md)
+- [X] T053 [US3] Handle permission denial: show guidance toast/snackbar with Settings deep link option - N/A: No permission requested, not applicable
 
 **Checkpoint**: User Story 3 complete - error recovery works independently
 
