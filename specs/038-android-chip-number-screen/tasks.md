@@ -119,14 +119,14 @@
 
 ### Tests for User Story 3 (MANDATORY) ✅
 
-- [ ] T028 [P] [US3] Add test for BackClicked emits NavigateBack effect using Turbine in `ChipNumberViewModelTest.kt`
-- [ ] T029 [P] [US3] Add test for BackClicked does NOT save chipNumber to flow state in `ChipNumberViewModelTest.kt`
+- [x] T028 [P] [US3] Add test for BackClicked emits NavigateBack effect using Turbine in `ChipNumberViewModelTest.kt`
+- [x] T029 [P] [US3] Add test for BackClicked does NOT save chipNumber to flow state in `ChipNumberViewModelTest.kt`
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Verify StepHeader back button triggers onBackClick callback in `ChipNumberContent.kt`
-- [ ] T031 [US3] Wire effect handling in ChipNumberScreen for NavigateBack effect (pop entire flow)
-- [ ] T032 [US3] Add BackHandler composable for system back button/gesture handling in `ChipNumberScreen.kt`
+- [x] T030 [US3] Verify StepHeader back button triggers onBackClick callback in `ChipNumberContent.kt`
+- [x] T031 [US3] Wire effect handling in ChipNumberScreen for NavigateBack effect (pop entire flow)
+- [x] T032 [US3] Add BackHandler composable for system back button/gesture handling in `ChipNumberScreen.kt`
 
 **Checkpoint**: User Story 3 complete - users can exit flow via back button
 
