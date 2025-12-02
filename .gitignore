@@ -1,6 +1,9 @@
 *.iml
 .kotlin
 .gradle
+
+# Cursor AI rules (auto-generated)
+.cursor/rules/specify-rules.mdc
 **/build/
 xcuserdata
 !src/**/build/
