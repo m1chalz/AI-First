@@ -5,19 +5,19 @@ import SwiftUI
 /// TODO: Display collected data in future iteration.
 struct SummaryView: View {
     @ObservedObject var viewModel: SummaryViewModel
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack {
                     Spacer()
                         .frame(height: 100)
-                    
+
                     // Placeholder text
                     Text("Summary Screen")
                         .font(.title)
                         .foregroundColor(.gray)
-                    
+
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -26,7 +26,7 @@ struct SummaryView: View {
             .safeAreaInset(edge: .bottom) {
                 Color.clear.frame(height: 120)
             }
-            
+
             // Close button at bottom
             VStack(spacing: 0) {
                 Button(action: viewModel.handleSubmit) {
@@ -48,4 +48,3 @@ struct SummaryView: View {
         .background(Color.white.ignoresSafeArea())
     }
 }
-
