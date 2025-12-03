@@ -40,22 +40,19 @@
 - [ ] T001 [P] Add English localization keys to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (5 new keys: report_created.title, report_created.body_paragraph_1, report_created.body_paragraph_2, report_created.code_copied, existing close button key)
 - [ ] T002 [P] Add Polish localization keys to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (5 new keys matching English)
 - [ ] T003 Run SwiftGen to regenerate `L10n.swift` from updated Localizable.strings files
-- [ ] T004 [P] Create design constants extension in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView+Constants.swift` (colors, fonts, spacing, dimensions from Figma)
+- [ ] T004 [P] Create design constants extension in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView+Constants.swift` (colors: titleColor rgba(0,0,0,0.8), bodyColor #545F71, gradientStartColor #5C33FF, gradientEndColor #F84BA1, glowColor #FB64B6 @ 20% alpha; fonts: titleFont Hind 32px, bodyFont Hind 16px, passwordFont Arial 60px; spacing: horizontalPadding 22px, verticalSpacing 24px, lineSpacing 1.4; dimensions: passwordKerning -1.5px, blurRadius 24px, containerRadius 10px)
 - [ ] T005 [P] Verify `Color+Hex` extension exists at `/iosApp/iosApp/FoundationAdditions/Color+Hex.swift` (supports 6-char RGB and 8-char ARGB formats)
 
 ---
 
-## Phase 2: Foundational (Add managementPassword Property)
+## Phase 2: Foundational (Verify managementPassword Property)
 
-**Purpose**: Add managementPassword property to flow state for confirmation screen
+**Purpose**: Verify managementPassword property exists in flow state for confirmation screen
 
-**⚠️ MERGE CONFLICT WARNING**: Branch `035-ios-owners-details-screen` already has `managementPassword` property AND uses `OwnerContactDetails` struct instead of separate `contactEmail`/`contactPhone` fields. When merging branches, resolve conflicts by:
-1. Keeping `managementPassword` property (already on 035)
-2. Accepting contact details structure from branch being merged into
-3. Ensuring `clear()` method clears managementPassword
+**⚠️ NOTE**: Branch `035-ios-owners-details-screen` already has `managementPassword` property in `ReportMissingPetFlowState`. This phase only verifies the property exists - NO new property addition needed.
 
-- [ ] T006 Add `@Published var managementPassword: String?` property to `ReportMissingPetFlowState` in `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` (add after Step 4 contact details section with MARK comment "// MARK: - Submission Result")
-- [ ] T007 Update `ReportMissingPetFlowState.clear()` method to clear managementPassword (add `managementPassword = nil` in same file)
+- [ ] T006 Verify `@Published var managementPassword: String?` property exists in `ReportMissingPetFlowState` at `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` (should be in Submission Result section)
+- [ ] T007 Verify `ReportMissingPetFlowState.clear()` method clears managementPassword (should contain `managementPassword = nil`)
 - [ ] T008 [P] Verify `ToastView` component exists at `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/ToastView.swift`
 - [ ] T009 [P] Verify `ToastScheduler` protocol and implementation exist at `/iosApp/iosApp/Features/ReportMissingPet/Services/ToastScheduler.swift`
 - [ ] T010 [P] Verify `ToastSchedulerFake` exists at `/iosApp/iosAppTests/Features/ReportMissingPet/Support/ToastSchedulerFake.swift`
@@ -97,23 +94,23 @@
 
 **ViewModel Updates**:
 
-- [ ] T020 [US1+US2] Update `SummaryViewModel` to add ToastScheduler dependency in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryViewModel.swift` (add private let toastScheduler: ToastSchedulerProtocol property)
-- [ ] T021 [US1+US2] Update `SummaryViewModel` init to accept toastScheduler parameter in same file (update init signature)
-- [ ] T022 [P] [US2] Add `@Published var showsCodeCopiedToast = false` property to `SummaryViewModel` in same file
-- [ ] T023 [P] [US2] Add `displayPassword` computed property to `SummaryViewModel` in same file (returns flowState.managementPassword ?? "")
-- [ ] T024 [US2] Implement `copyPasswordToClipboard()` method in `SummaryViewModel` in same file (copy to UIPasteboard, show toast for 2 seconds)
+- [ ] T020 [US1+US2] Update `SummaryViewModel` to add ToastScheduler dependency in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryViewModel.swift` (add private let toastScheduler: ToastSchedulerProtocol property; ViewModel observes flowState.managementPassword, does NOT own it)
+- [ ] T021 [US1+US2] Update `SummaryViewModel` init to accept toastScheduler parameter in same file (update init signature; flowState already passed in existing init)
+- [ ] T022 [P] [US2] Add `@Published var showsCodeCopiedToast = false` property to `SummaryViewModel` in same file (UI-only state for toast display)
+- [ ] T023 [P] [US2] Add `displayPassword` computed property to `SummaryViewModel` in same file (returns flowState.managementPassword ?? "" - presentation logic for nil handling)
+- [ ] T024 [US2] Implement `copyPasswordToClipboard()` method in `SummaryViewModel` in same file (copy flowState.managementPassword to UIPasteboard, show toast for 2 seconds)
 - [ ] T025 [US2] Add deinit to `SummaryViewModel` to cancel scheduled toasts in same file
 
 **View Implementation**:
 
-- [ ] T026 [US1+US2] Replace placeholder `SummaryView` implementation in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` with report confirmation UI (white background, ScrollView with VStack for content)
-- [ ] T027 [P] [US1] Add title text to `SummaryView` using `L10n.ReportCreated.title` with Constants.titleFont and titleColor
-- [ ] T028 [P] [US1] Add body paragraph 1 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph1` with Constants.bodyFont, bodyColor, and lineSpacing
-- [ ] T029 [P] [US1] Add body paragraph 2 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph2` with same styling as paragraph 1
-- [ ] T030 [US2] Create `passwordContainer` computed property in `SummaryView` with gradient background (LinearGradient from Constants.gradientStartColor to gradientEndColor, glow overlay with blur)
-- [ ] T031 [US2] Add password text display in `passwordContainer` using `viewModel.displayPassword` with Constants.passwordFont, passwordKerning, white color
+- [ ] T026 [US1+US2] Replace placeholder `SummaryView` implementation in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` with report confirmation UI (white background, ScrollView with VStack for content, use Constants.horizontalPadding=22px, Constants.verticalSpacing=24px from T004)
+- [ ] T027 [P] [US1] Add title text to `SummaryView` using `L10n.ReportCreated.title` with Constants.titleFont (Hind Regular 32px) and Constants.titleColor (rgba(0,0,0,0.8))
+- [ ] T028 [P] [US1] Add body paragraph 1 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph1` with Constants.bodyFont (Hind Regular 16px), Constants.bodyColor (#545F71), and Constants.lineSpacing (1.4)
+- [ ] T029 [P] [US1] Add body paragraph 2 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph2` with Constants.bodyFont, Constants.bodyColor, Constants.lineSpacing (same as paragraph 1)
+- [ ] T030 [US2] Create `passwordContainer` computed property in `SummaryView` with gradient background (LinearGradient from Constants.gradientStartColor to gradientEndColor, glow overlay: #FB64B6 @ 20% alpha, 24px blur radius, 96×90px size, max corner radius)
+- [ ] T031 [US2] Add password text display in `passwordContainer` using `viewModel.displayPassword` with Constants.passwordFont (Arial Regular 60px), Constants.passwordKerning (-1.5px), white color
 - [ ] T032 [US2] Wrap `passwordContainer` in Button with `viewModel.copyPasswordToClipboard` action
-- [ ] T033 [US2] Add toast display in bottom VStack when `viewModel.showsCodeCopiedToast` is true using existing `ToastView` component
+- [ ] T033 [US2] Add toast display in bottom VStack when `viewModel.showsCodeCopiedToast` is true using existing `ToastView` component with message from L10n (reuse Constants.toastDuration if defined in T004)
 - [ ] T034 [P] [US1] Add `.accessibilityIdentifier("summary.title")` to title text
 - [ ] T035 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph1")` to first body paragraph
 - [ ] T036 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph2")` to second body paragraph
@@ -151,7 +148,7 @@
 
 **View Updates**:
 
-- [ ] T043 [US3] Verify Close button exists in `SummaryView` at bottom of screen in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` (uses `L10n.ReportMissingPet.Button.close`, calls `viewModel.handleSubmit()`, styled with Constants)
+- [ ] T043 [US3] Verify Close button exists in `SummaryView` at bottom of screen in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` (uses `L10n.ReportMissingPet.Button.close`, calls `viewModel.handleSubmit()`, styled with Constants: 327px width, 52px height, 10px radius, #155DFC background, white text 18px Hind)
 - [ ] T044 [P] [US3] Add `.accessibilityIdentifier("summary.closeButton")` to Close button in same file
 
 **Checkpoint**: At this point, all 3 user stories should be fully functional and independently testable
@@ -312,5 +309,6 @@ Longest path: ~14 sequential steps (with parallelization, many tasks can overlap
 - Commit after each task or logical group
 - Stop at MVP checkpoint (Phase 3) to validate core functionality before moving to Phase 4
 - US1 and US2 are combined in implementation (same view) but tested separately (independent acceptance criteria)
-- **MERGE CONFLICT**: Branch 035 already has `managementPassword` property - when merging, accept the property from 035 and resolve contact details structure conflicts
+- **managementPassword**: Property already exists in `ReportMissingPetFlowState` on branch 035 - ViewModel only adds `displayPassword` computed property for presentation logic
+- **Toast scheduling**: Accepted exception to iOS MVVM-C pattern - ViewModel handles toast scheduling for clipboard copy confirmation (typically coordinator responsibility, but acceptable for simple transient UI feedback)
 

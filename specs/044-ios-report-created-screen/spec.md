@@ -109,7 +109,7 @@ As a user who has reviewed the confirmation, I can tap the Close button to retur
 
 ### Key Entities
 
-- **ReportConfirmationFlowState** (ViewModel property)
+- **ReportMissingPetFlowState** (ViewModel property)
   - `@Published var managementPassword: String?` - management password for the report (nil maps to empty string in UI)
 
 ## Success Criteria *(mandatory)*
