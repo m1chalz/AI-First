@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { formatFileSize } from '../../utils/format-file-size';
@@ -10,13 +10,27 @@ import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 
 export function SummaryScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { flowState, clearFlowState } = useReportMissingPetFlow();
+  const managementPassword = (location.state as { managementPassword?: string })?.managementPassword;
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
       navigate(ReportMissingPetRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.returnValue = '';
+      return '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleBack = () => {
     navigate(ReportMissingPetRoutes.contact);
@@ -35,6 +49,36 @@ export function SummaryScreen() {
       progress="4/4"
       onBack={handleBack}
     >
+      {managementPassword && (
+        <div style={{
+          backgroundColor: '#f0f8ff',
+          border: '2px solid #0066cc',
+          borderRadius: '8px',
+          padding: '20px',
+          marginBottom: '24px'
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '12px', fontSize: '16px', fontWeight: 600 }}>
+            Announcement Created Successfully!
+          </h3>
+          <p style={{ marginBottom: '12px', fontSize: '14px', color: '#333' }}>
+            Save this password! You'll need it to edit or delete your announcement.
+          </p>
+          <div style={{
+            backgroundColor: '#fff',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            padding: '12px',
+            fontFamily: 'monospace',
+            fontSize: '16px',
+            fontWeight: 600,
+            wordBreak: 'break-all'
+          }}
+          data-testid="summary.password.card">
+            <span data-testid="summary.password.text">{managementPassword}</span>
+          </div>
+        </div>
+      )}
+
       <div style={{
         backgroundColor: '#f8f9fa',
         border: '1px solid #dee2e6',

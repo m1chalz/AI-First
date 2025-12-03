@@ -3,6 +3,7 @@ import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
+import { useAnnouncementCreation } from '../../hooks/use-announcement-creation';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
@@ -24,6 +25,7 @@ export function ContactScreen() {
     handleSubmit,
   } = useContactForm();
   const { showToast } = useToast();
+  const { isCreating, error, announcementId, managementPassword, createAnnouncement } = useAnnouncementCreation();
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
@@ -31,11 +33,23 @@ export function ContactScreen() {
     }
   }, [flowState.currentStep, navigate]);
 
+  useEffect(() => {
+    if (announcementId && managementPassword) {
+      navigate(ReportMissingPetRoutes.summary, { state: { announcementId, managementPassword } });
+    }
+  }, [announcementId, managementPassword, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      showToast('Failed to create announcement. Please try again.');
+    }
+  }, [error, showToast]);
+
   const handleBack = () => {
     navigate(ReportMissingPetRoutes.details);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const success = handleSubmit();
     if (!success) {
       if (phone === '' && email === '') {
@@ -43,7 +57,7 @@ export function ContactScreen() {
       }
       return;
     }
-    navigate(ReportMissingPetRoutes.summary);
+    await createAnnouncement(flowState);
   };
 
   useBrowserBackHandler(handleBack);
@@ -126,8 +140,9 @@ export function ContactScreen() {
           onClick={handleContinue}
           className={styles.primaryButton}
           data-testid="contact.continue.button"
+          disabled={isCreating}
         >
-          Continue
+          {isCreating ? 'Creating announcement...' : 'Continue'}
         </button>
         </form>
       </div>

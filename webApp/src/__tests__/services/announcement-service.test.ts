@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AnnouncementService } from '../../services/announcement-service';
 import type { Animal } from '../../types/animal';
+import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 
 describe('AnnouncementService', () => {
 
@@ -202,6 +203,147 @@ describe('AnnouncementService', () => {
 
       // when / then
       await expect(underTest.getPetById('pet-123')).rejects.toThrow('Network error');
+    });
+  });
+
+  describe('AnnouncementService.createAnnouncement', () => {
+
+    it('should POST to /api/v1/announcements with correct payload', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: async () => ({ id: 'ann-123', managementPassword: 'pass123' })
+      } as Response);
+
+      // when
+      const result = await underTest.createAnnouncement(dto);
+
+      // then
+      expect(window.fetch).toHaveBeenCalledWith(
+        'http://localhost:3000/api/v1/announcements',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dto)
+        })
+      );
+      expect(result).toEqual({ id: 'ann-123', managementPassword: 'pass123' });
+    });
+
+    it('should return AnnouncementResponse with id and managementPassword', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'DOG',
+        sex: 'FEMALE',
+        locationLatitude: 51.5,
+        locationLongitude: 20.5,
+        lastSeenDate: '2025-12-02',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: async () => ({ id: 'ann-456', managementPassword: 'secure-pass' })
+      } as Response);
+
+      // when
+      const result = await underTest.createAnnouncement(dto);
+
+      // then
+      expect(result.id).toBe('ann-456');
+      expect(result.managementPassword).toBe('secure-pass');
+    });
+
+    it('should throw ValidationError when API returns 400', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ message: 'Missing required field' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
+    });
+
+    it('should throw DuplicateMicrochipError when API returns 409', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        microchipNumber: '123456789012345',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 409,
+        json: async () => ({ message: 'Microchip already exists' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
+    });
+
+    it('should throw ServerError when API returns 500', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({ message: 'Internal server error' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
+    });
+
+    it('should throw NetworkError when fetch fails', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockRejectedValueOnce(new Error('Network error'));
+
+      // when / then
+      await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
     });
   });
 });
