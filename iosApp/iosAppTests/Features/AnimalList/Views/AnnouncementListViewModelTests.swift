@@ -7,7 +7,7 @@ import XCTest
  * Follows Given-When-Then structure per project constitution.
  */
 @MainActor
-final class AnimalListViewModelTests: XCTestCase {
+final class AnnouncementListViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
@@ -320,3 +320,4 @@ final class AnimalListViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.cardViewModels.isEmpty)
     }
 }
+

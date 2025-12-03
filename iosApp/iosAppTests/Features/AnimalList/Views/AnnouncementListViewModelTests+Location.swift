@@ -8,7 +8,7 @@ import XCTest
  * Follows Given-When-Then structure per constitution.
  */
 @MainActor
-final class AnimalListViewModelLocationTests: XCTestCase {
+final class AnnouncementListViewModelLocationTests: XCTestCase {
     
     // MARK: - Test Doubles
     
