@@ -21,20 +21,3 @@ export interface ServerError {
   message: string;
   statusCode: number;
 }
-
-export function isValidationError(error: ApiError): error is ValidationError {
-  return error.type === 'validation';
-}
-
-export function isDuplicateMicrochipError(error: ApiError): error is DuplicateMicrochipError {
-  return error.type === 'duplicate-microchip';
-}
-
-export function isNetworkError(error: ApiError): error is NetworkError {
-  return error.type === 'network';
-}
-
-export function isServerError(error: ApiError): error is ServerError {
-  return error.type === 'server';
-}
-
