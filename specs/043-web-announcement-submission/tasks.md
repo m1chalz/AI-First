@@ -317,32 +317,32 @@
 
 **Purpose**: Ensure all requirements met, no regressions, code quality maintained
 
-- [ ] T179 Run full test suite: `cd webApp && npm test -- --coverage`
-- [ ] T180 Verify 80% coverage achieved for all new code (services, hooks, components)
-- [ ] T181 Review coverage report at `/webApp/coverage/index.html`, identify gaps
-- [ ] T182 Add missing tests if coverage below 80%
-- [ ] T183 Run ESLint on all modified files: `npm run lint`
-- [ ] T184 Fix all ESLint violations
-- [ ] T185 Run TypeScript type check: `npm run type-check` or `tsc --noEmit`
-- [ ] T186 Fix any TypeScript errors
-- [ ] T187 Verify all test identifiers follow convention: `{screen}.{element}.{action}`
-- [ ] T188 Review ContactScreen: Verify data-testid on Continue button and loading states
-- [ ] T189 Review SummaryScreen: Verify data-testid on all elements per Figma design
-- [ ] T190 Verify all async code uses async/await (no Promise chains)
-- [ ] T191 Verify error handling is comprehensive (network, validation, duplicate, server errors)
-- [ ] T192 Run manual acceptance test for US1 Part A: Create announcement without photo, verify success
-- [ ] T193 Run manual acceptance test for US1 Part B: Complete full flow with photo, verify photo upload
-- [ ] T194 Run manual acceptance test for US2: Test error scenarios, verify error handling
-- [ ] T195 Run manual acceptance test for US3: Verify summary screen matches Figma design pixel-perfect
-- [ ] T196 Verify success criteria SC-001: Submission completes in < 10 seconds
-- [ ] T197 Verify success criteria SC-005: Error messages appear in < 2 seconds
-- [ ] T198 Verify success criteria SC-007: 100% of successful submissions display password
-- [ ] T199 Review all modified files for code quality and best practices
-- [ ] T200 Remove any console.log statements or debug code
-- [ ] T201 Verify no TODO comments left in code
-- [ ] T202 Run full E2E test suite one final time
-- [ ] T203 Create summary of changes in commit message format
-- [ ] T204 Prepare feature for PR: ensure all tests pass, linting clean, coverage ≥80%
+- [x] T179 Run full test suite: `cd webApp && npm test -- --coverage`
+- [x] T180 Verify 80% coverage achieved for all new code (services, hooks, components)
+- [x] T181 Review coverage report at `/webApp/coverage/index.html`, identify gaps
+- [x] T182 Add missing tests if coverage below 80%
+- [x] T183 Run ESLint on all modified files: `npm run lint`
+- [x] T184 Fix all ESLint violations
+- [x] T185 Run TypeScript type check: `npm run type-check` or `tsc --noEmit`
+- [x] T186 Fix any TypeScript errors
+- [x] T187 Verify all test identifiers follow convention: `{screen}.{element}.{action}`
+- [x] T188 Review ContactScreen: Verify data-testid on Continue button and loading states
+- [x] T189 Review SummaryScreen: Verify data-testid on all elements per Figma design
+- [x] T190 Verify all async code uses async/await (no Promise chains)
+- [x] T191 Verify error handling is comprehensive (network, validation, duplicate, server errors)
+- [x] T192 Run manual acceptance test for US1 Part A: Create announcement without photo, verify success
+- [x] T193 Run manual acceptance test for US1 Part B: Complete full flow with photo, verify photo upload
+- [x] T194 Run manual acceptance test for US2: Test error scenarios, verify error handling
+- [x] T195 Run manual acceptance test for US3: Verify summary screen matches Figma design pixel-perfect
+- [x] T196 Verify success criteria SC-001: Submission completes in < 10 seconds
+- [x] T197 Verify success criteria SC-005: Error messages appear in < 2 seconds
+- [x] T198 Verify success criteria SC-007: 100% of successful submissions display password
+- [x] T199 Review all modified files for code quality and best practices
+- [x] T200 Remove any console.log statements or debug code
+- [x] T201 Verify no TODO comments left in code
+- [x] T202 Run full E2E test suite one final time
+- [x] T203 Create summary of changes in commit message format
+- [x] T204 Prepare feature for PR: ensure all tests pass, linting clean, coverage ≥80%
 
 **Checkpoint**: Feature complete, tested, and ready for code review
 

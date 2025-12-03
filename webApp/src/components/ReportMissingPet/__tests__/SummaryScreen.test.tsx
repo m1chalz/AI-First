@@ -5,15 +5,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { SummaryScreen } from '../SummaryScreen';
 import '@testing-library/jest-dom';
 
-const renderWithRouter = (component: React.ReactNode) => {
-  return render(
+const renderWithRouter = (component: React.ReactNode) =>
+  render(
     <BrowserRouter>
       <ReportMissingPetFlowProvider>
         {component}
       </ReportMissingPetFlowProvider>
     </BrowserRouter>
   );
-};
 
 describe('SummaryScreen - Figma Design', () => {
   it('should render success heading with correct text', () => {

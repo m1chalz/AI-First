@@ -23,11 +23,16 @@ export interface AnnouncementResponse {
 }
 
 export function mapFlowStateToDto(flowState: ReportMissingPetFlowState): AnnouncementSubmissionDto {
+  // required fields are guaranteed by form validation
+  if (!flowState.species || !flowState.sex || flowState.latitude === null || flowState.longitude === null) {
+    throw new Error('Required fields are missing');
+  }
+
   const dto: AnnouncementSubmissionDto = {
-    species: flowState.species!,
-    sex: flowState.sex!,
-    locationLatitude: flowState.latitude!,
-    locationLongitude: flowState.longitude!,
+    species: flowState.species,
+    sex: flowState.sex,
+    locationLatitude: flowState.latitude,
+    locationLongitude: flowState.longitude,
     lastSeenDate: flowState.lastSeenDate,
     status: 'MISSING'
   };

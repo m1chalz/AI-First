@@ -275,7 +275,9 @@ describe('useAnnouncementSubmission - Error Flow', () => {
     // then
     expect(result.current.error).toBeDefined();
     expect(result.current.error?.type).toBe('server');
-    expect((result.current.error as any).statusCode).toBe(500);
+    if (result.current.error?.type === 'server') {
+      expect(result.current.error.statusCode).toBe(500);
+    }
     expect(result.current.announcementId).toBeNull();
   });
 

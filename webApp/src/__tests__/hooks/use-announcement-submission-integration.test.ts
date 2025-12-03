@@ -3,6 +3,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import * as announcementServiceModule from '../../services/announcement-service';
 import type { ReportMissingPetFlowState, PhotoAttachment } from '../../models/ReportMissingPetFlow';
+import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
 
 vi.mock('../../services/announcement-service', () => ({
@@ -45,7 +46,7 @@ describe('useAnnouncementSubmission - Integration', () => {
       reward: '1000 PLN'
     };
 
-    let capturedDto: any = null;
+    let capturedDto: AnnouncementSubmissionDto | null = null;
     vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockImplementation((dto) => {
       capturedDto = dto;
       return Promise.resolve({
@@ -69,19 +70,20 @@ describe('useAnnouncementSubmission - Integration', () => {
 
     // then - verify all fields are sent
     expect(capturedDto).toBeDefined();
-    expect(capturedDto.species).toBe('RABBIT');
-    expect(capturedDto.sex).toBe('MALE');
-    expect(capturedDto.breed).toBe('Holland Lop');
-    expect(capturedDto.age).toBe(2);
-    expect(capturedDto.description).toBe('White rabbit with black spots');
-    expect(capturedDto.microchipNumber).toBe('123456789012345');
-    expect(capturedDto.locationLatitude).toBe(22.0);
-    expect(capturedDto.locationLongitude).toBe(22.0);
-    expect(capturedDto.email).toBe('owner@example.com');
-    expect(capturedDto.phone).toBe('+48987654321');
-    expect(capturedDto.reward).toBe('1000 PLN');
-    expect(capturedDto.lastSeenDate).toBe('2025-12-03');
-    expect(capturedDto.status).toBe('MISSING');
+    const dto = capturedDto as unknown as AnnouncementSubmissionDto;
+    expect(dto.species).toBe('RABBIT');
+    expect(dto.sex).toBe('MALE');
+    expect(dto.breed).toBe('Holland Lop');
+    expect(dto.age).toBe(2);
+    expect(dto.description).toBe('White rabbit with black spots');
+    expect(dto.microchipNumber).toBe('123456789012345');
+    expect(dto.locationLatitude).toBe(22.0);
+    expect(dto.locationLongitude).toBe(22.0);
+    expect(dto.email).toBe('owner@example.com');
+    expect(dto.phone).toBe('+48987654321');
+    expect(dto.reward).toBe('1000 PLN');
+    expect(dto.lastSeenDate).toBe('2025-12-03');
+    expect(dto.status).toBe('MISSING');
   });
 
   it('should send minimal fields when only required fields are provided', async () => {
@@ -103,7 +105,7 @@ describe('useAnnouncementSubmission - Integration', () => {
       reward: ''
     };
 
-    let capturedDto: any = null;
+    let capturedDto: AnnouncementSubmissionDto | null = null;
     vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockImplementation((dto) => {
       capturedDto = dto;
       return Promise.resolve({
@@ -125,21 +127,22 @@ describe('useAnnouncementSubmission - Integration', () => {
 
     // then - verify required fields are present, optional are absent
     expect(capturedDto).toBeDefined();
-    expect(capturedDto.species).toBe('DOG');
-    expect(capturedDto.sex).toBe('FEMALE');
-    expect(capturedDto.locationLatitude).toBe(52.0);
-    expect(capturedDto.locationLongitude).toBe(21.0);
-    expect(capturedDto.email).toBe('test@example.com');
-    expect(capturedDto.lastSeenDate).toBe('2025-12-03');
-    expect(capturedDto.status).toBe('MISSING');
+    const dto2 = capturedDto as unknown as AnnouncementSubmissionDto;
+    expect(dto2.species).toBe('DOG');
+    expect(dto2.sex).toBe('FEMALE');
+    expect(dto2.locationLatitude).toBe(52.0);
+    expect(dto2.locationLongitude).toBe(21.0);
+    expect(dto2.email).toBe('test@example.com');
+    expect(dto2.lastSeenDate).toBe('2025-12-03');
+    expect(dto2.status).toBe('MISSING');
 
     // Optional fields should not be in DTO
-    expect(capturedDto.breed).toBeUndefined();
-    expect(capturedDto.microchipNumber).toBeUndefined();
-    expect(capturedDto.phone).toBeUndefined();
-    expect(capturedDto.reward).toBeUndefined();
-    expect(capturedDto.age).toBeUndefined();
-    expect(capturedDto.description).toBeUndefined();
+    expect(dto2.breed).toBeUndefined();
+    expect(dto2.microchipNumber).toBeUndefined();
+    expect(dto2.phone).toBeUndefined();
+    expect(dto2.reward).toBeUndefined();
+    expect(dto2.age).toBeUndefined();
+    expect(dto2.description).toBeUndefined();
   });
 
   it('should verify JSON stringification includes all fields', async () => {
@@ -161,7 +164,7 @@ describe('useAnnouncementSubmission - Integration', () => {
       reward: '500 PLN'
     };
 
-    let capturedDto: any = null;
+    let capturedDto: AnnouncementSubmissionDto | null = null;
     vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockImplementation((dto) => {
       capturedDto = dto;
       return Promise.resolve({
@@ -182,7 +185,9 @@ describe('useAnnouncementSubmission - Integration', () => {
     });
 
     // then - JSON string should contain all values
-    const jsonString = JSON.stringify(capturedDto);
+    expect(capturedDto).toBeDefined();
+    const dto3 = capturedDto as unknown as AnnouncementSubmissionDto;
+    const jsonString = JSON.stringify(dto3);
     expect(jsonString).toContain('111112222233333');
     expect(jsonString).toContain('breed');
     expect(jsonString).toContain('13');
