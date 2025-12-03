@@ -3,32 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Missing Animals";
+"announcementList.navigationTitle" = "Missing Animals";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Report a Missing Animal";
-"animalList.button.reportFound" = "Report Found Animal";
+"announcementList.button.reportMissing" = "Report a Missing Animal";
+"announcementList.button.reportFound" = "Report Found Animal";
 
 // Empty state
-"animalList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
+"announcementList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
 
 // Loading state
-"animalList.loading.message" = "Loading animals...";
+"announcementList.loading.message" = "Loading animals...";
 
 // Error messages
-"animalList.error.title" = "Error";
-"animalList.error.prefix" = "Error: %@";
-"animalList.error.generic" = "Something went wrong. Please try again.";
-"animalList.error.loadingFailed" = "Failed to load announcements. Please try again.";
-"animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
+"announcementList.error.title" = "Error";
+"announcementList.error.prefix" = "Error: %@";
+"announcementList.error.generic" = "Something went wrong. Please try again.";
+"announcementList.error.loadingFailed" = "Failed to load announcements. Please try again.";
+"announcementList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 
@@ -67,11 +67,11 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
-/* MARK: - Animal Status */
+/* MARK: - Announcement Status */
 
-"animalStatus.active" = "MISSING";
-"animalStatus.found" = "FOUND";
-"animalStatus.closed" = "CLOSED";
+"announcementStatus.active" = "MISSING";
+"announcementStatus.found" = "FOUND";
+"announcementStatus.closed" = "CLOSED";
 
 /* MARK: - Animal Species */
 
@@ -95,7 +95,7 @@
 "reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
 "reportMissingPet.description.title" = "Animal description";
-"reportMissingPet.contactDetails.title" = "Contact Details";
+"reportMissingPet.contactDetails.title" = "Owner's details";
 "reportMissingPet.summary.title" = "Summary";
 
 // Progress indicator
@@ -104,6 +104,7 @@
 // Buttons
 "reportMissingPet.button.continue" = "Continue";
 "reportMissingPet.button.submit" = "Submit";
+"reportMissingPet.button.close" = "Close";
 
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
@@ -200,4 +201,28 @@
 
 // Toast messages
 "animalDescription.toast.validationErrors" = "Please correct the highlighted fields";
+
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Owner's details";
+"owners_details.main_title" = "Your contact info";
+"owners_details.subtitle" = "Add your contact information and potential reward.";
+"owners_details.phone.label" = "Phone number";
+"owners_details.phone.placeholder" = "Enter phone number...";
+"owners_details.phone.error" = "Enter at least 7 digits";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Enter email address";
+"owners_details.email.error" = "Enter a valid email address";
+"owners_details.reward.label" = "Reward for the finder (optional)";
+"owners_details.reward.placeholder" = "Describe reward...";
+"owners_details.continue.button" = "Continue";
+"owners_details.back.button" = "Back";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "No connection";
+"owners_details.error.no_connection.message" = "Please check your network and try again.";
+"owners_details.error.generic.title" = "Something went wrong";
+"owners_details.error.generic.message" = "Please try again later.";
+"owners_details.alert.try_again" = "Try Again";
+"owners_details.alert.cancel" = "Cancel";
 

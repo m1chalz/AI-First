@@ -10,14 +10,6 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 public enum L10n {
-  public enum AnimalCard {
-    public enum Location {
-      /// MARK: - Animal Card
-      public static func format(_ p1: Any, _ p2: Int) -> String {
-        return L10n.tr("Localizable", "animalCard.location.format", String(describing: p1), p2, fallback: "%@, +%dkm")
-      }
-    }
-  }
   public enum AnimalDescription {
     /// Animal age (optional)
     public static let ageLabel = L10n.tr("Localizable", "animalDescription.ageLabel", fallback: "Animal age (optional)")
@@ -98,38 +90,6 @@ public enum L10n {
     /// Unknown
     public static let unknown = L10n.tr("Localizable", "animalGender.unknown", fallback: "Unknown")
   }
-  public enum AnimalList {
-    /// MARK: - Animal List Screen
-    public static let navigationTitle = L10n.tr("Localizable", "animalList.navigationTitle", fallback: "Missing Animals")
-    public enum Button {
-      /// Report Found Animal
-      public static let reportFound = L10n.tr("Localizable", "animalList.button.reportFound", fallback: "Report Found Animal")
-      /// Report a Missing Animal
-      public static let reportMissing = L10n.tr("Localizable", "animalList.button.reportMissing", fallback: "Report a Missing Animal")
-    }
-    public enum EmptyState {
-      /// No animals reported yet. Tap 'Report a Missing Animal' to add the first one.
-      public static let message = L10n.tr("Localizable", "animalList.emptyState.message", fallback: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.")
-    }
-    public enum Error {
-      /// Something went wrong. Please try again.
-      public static let generic = L10n.tr("Localizable", "animalList.error.generic", fallback: "Something went wrong. Please try again.")
-      /// Failed to load announcements. Please try again.
-      public static let loadingFailed = L10n.tr("Localizable", "animalList.error.loadingFailed", fallback: "Failed to load announcements. Please try again.")
-      /// No internet connection. Please check your network settings.
-      public static let networkUnavailable = L10n.tr("Localizable", "animalList.error.networkUnavailable", fallback: "No internet connection. Please check your network settings.")
-      /// Error: %@
-      public static func `prefix`(_ p1: Any) -> String {
-        return L10n.tr("Localizable", "animalList.error.prefix", String(describing: p1), fallback: "Error: %@")
-      }
-      /// Error
-      public static let title = L10n.tr("Localizable", "animalList.error.title", fallback: "Error")
-    }
-    public enum Loading {
-      /// Loading animals...
-      public static let message = L10n.tr("Localizable", "animalList.loading.message", fallback: "Loading animals...")
-    }
-  }
   public enum AnimalPhoto {
     /// MARK: - Animal Photo Screen
     public static let title = L10n.tr("Localizable", "animalPhoto.title", fallback: "Your pet's photo")
@@ -190,13 +150,53 @@ public enum L10n {
     /// Rodent
     public static let rodent = L10n.tr("Localizable", "animalSpecies.rodent", fallback: "Rodent")
   }
-  public enum AnimalStatus {
-    /// MARK: - Animal Status
-    public static let active = L10n.tr("Localizable", "animalStatus.active", fallback: "MISSING")
+  public enum AnnouncementCard {
+    public enum Location {
+      /// MARK: - Announcement Card
+      public static func format(_ p1: Any, _ p2: Int) -> String {
+        return L10n.tr("Localizable", "announcementCard.location.format", String(describing: p1), p2, fallback: "%@, +%dkm")
+      }
+    }
+  }
+  public enum AnnouncementList {
+    /// MARK: - Announcement List Screen
+    public static let navigationTitle = L10n.tr("Localizable", "announcementList.navigationTitle", fallback: "Missing Animals")
+    public enum Button {
+      /// Report Found Animal
+      public static let reportFound = L10n.tr("Localizable", "announcementList.button.reportFound", fallback: "Report Found Animal")
+      /// Report a Missing Animal
+      public static let reportMissing = L10n.tr("Localizable", "announcementList.button.reportMissing", fallback: "Report a Missing Animal")
+    }
+    public enum EmptyState {
+      /// No animals reported yet. Tap 'Report a Missing Animal' to add the first one.
+      public static let message = L10n.tr("Localizable", "announcementList.emptyState.message", fallback: "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.")
+    }
+    public enum Error {
+      /// Something went wrong. Please try again.
+      public static let generic = L10n.tr("Localizable", "announcementList.error.generic", fallback: "Something went wrong. Please try again.")
+      /// Failed to load announcements. Please try again.
+      public static let loadingFailed = L10n.tr("Localizable", "announcementList.error.loadingFailed", fallback: "Failed to load announcements. Please try again.")
+      /// No internet connection. Please check your network settings.
+      public static let networkUnavailable = L10n.tr("Localizable", "announcementList.error.networkUnavailable", fallback: "No internet connection. Please check your network settings.")
+      /// Error: %@
+      public static func `prefix`(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "announcementList.error.prefix", String(describing: p1), fallback: "Error: %@")
+      }
+      /// Error
+      public static let title = L10n.tr("Localizable", "announcementList.error.title", fallback: "Error")
+    }
+    public enum Loading {
+      /// Loading animals...
+      public static let message = L10n.tr("Localizable", "announcementList.loading.message", fallback: "Loading animals...")
+    }
+  }
+  public enum AnnouncementStatus {
+    /// MARK: - Announcement Status
+    public static let active = L10n.tr("Localizable", "announcementStatus.active", fallback: "MISSING")
     /// CLOSED
-    public static let closed = L10n.tr("Localizable", "animalStatus.closed", fallback: "CLOSED")
+    public static let closed = L10n.tr("Localizable", "announcementStatus.closed", fallback: "CLOSED")
     /// FOUND
-    public static let found = L10n.tr("Localizable", "animalStatus.found", fallback: "FOUND")
+    public static let found = L10n.tr("Localizable", "announcementStatus.found", fallback: "FOUND")
   }
   public enum Common {
     /// Back
@@ -247,6 +247,64 @@ public enum L10n {
     public static let progress = L10n.tr("Localizable", "microchipNumber.progress", fallback: "1/4")
     /// MARK: - Microchip Number Screen
     public static let title = L10n.tr("Localizable", "microchipNumber.title", fallback: "Microchip number")
+  }
+  public enum OwnersDetails {
+    /// Your contact info
+    public static let mainTitle = L10n.tr("Localizable", "owners_details.main_title", fallback: "Your contact info")
+    /// MARK: - Owner's Details Screen
+    public static let screenTitle = L10n.tr("Localizable", "owners_details.screen_title", fallback: "Owner's details")
+    /// Add your contact information and potential reward.
+    public static let subtitle = L10n.tr("Localizable", "owners_details.subtitle", fallback: "Add your contact information and potential reward.")
+    public enum Alert {
+      /// Cancel
+      public static let cancel = L10n.tr("Localizable", "owners_details.alert.cancel", fallback: "Cancel")
+      /// Try Again
+      public static let tryAgain = L10n.tr("Localizable", "owners_details.alert.try_again", fallback: "Try Again")
+    }
+    public enum Back {
+      /// Back
+      public static let button = L10n.tr("Localizable", "owners_details.back.button", fallback: "Back")
+    }
+    public enum Continue {
+      /// Continue
+      public static let button = L10n.tr("Localizable", "owners_details.continue.button", fallback: "Continue")
+    }
+    public enum Email {
+      /// Enter a valid email address
+      public static let error = L10n.tr("Localizable", "owners_details.email.error", fallback: "Enter a valid email address")
+      /// Email
+      public static let label = L10n.tr("Localizable", "owners_details.email.label", fallback: "Email")
+      /// Enter email address
+      public static let placeholder = L10n.tr("Localizable", "owners_details.email.placeholder", fallback: "Enter email address")
+    }
+    public enum Error {
+      public enum Generic {
+        /// Please try again later.
+        public static let message = L10n.tr("Localizable", "owners_details.error.generic.message", fallback: "Please try again later.")
+        /// Something went wrong
+        public static let title = L10n.tr("Localizable", "owners_details.error.generic.title", fallback: "Something went wrong")
+      }
+      public enum NoConnection {
+        /// Please check your network and try again.
+        public static let message = L10n.tr("Localizable", "owners_details.error.no_connection.message", fallback: "Please check your network and try again.")
+        /// No connection
+        public static let title = L10n.tr("Localizable", "owners_details.error.no_connection.title", fallback: "No connection")
+      }
+    }
+    public enum Phone {
+      /// Enter at least 7 digits
+      public static let error = L10n.tr("Localizable", "owners_details.phone.error", fallback: "Enter at least 7 digits")
+      /// Phone number
+      public static let label = L10n.tr("Localizable", "owners_details.phone.label", fallback: "Phone number")
+      /// Enter phone number...
+      public static let placeholder = L10n.tr("Localizable", "owners_details.phone.placeholder", fallback: "Enter phone number...")
+    }
+    public enum Reward {
+      /// Reward for the finder (optional)
+      public static let label = L10n.tr("Localizable", "owners_details.reward.label", fallback: "Reward for the finder (optional)")
+      /// Describe reward...
+      public static let placeholder = L10n.tr("Localizable", "owners_details.reward.placeholder", fallback: "Describe reward...")
+    }
   }
   public enum PetDetails {
     public enum Button {
@@ -310,6 +368,8 @@ public enum L10n {
   }
   public enum ReportMissingPet {
     public enum Button {
+      /// Close
+      public static let close = L10n.tr("Localizable", "reportMissingPet.button.close", fallback: "Close")
       /// Continue
       public static let `continue` = L10n.tr("Localizable", "reportMissingPet.button.continue", fallback: "Continue")
       /// Submit
@@ -322,8 +382,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "reportMissingPet.chipNumber.title", fallback: "Microchip number")
     }
     public enum ContactDetails {
-      /// Contact Details
-      public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Contact Details")
+      /// Owner's details
+      public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Owner's details")
     }
     public enum Description {
       /// Animal description

@@ -30,14 +30,14 @@ final class PetDetailsMapperTests: XCTestCase {
         let dto = PetDetailsDTO(
             id: "test-id",
             petName: "Max",
-            species: "DOG",
-            status: "ACTIVE",
+            species: .dog,
+            status: .missing,
             photoUrl: "/images/max.jpg",
             lastSeenDate: "2024-12-01",
             locationLatitude: 52.2297,
             locationLongitude: 21.0122,
             breed: "Labrador",
-            sex: "MALE",
+            sex: .male,
             age: 3,
             microchipNumber: "123456789012345",
             email: "owner@example.com",
@@ -66,7 +66,7 @@ final class PetDetailsMapperTests: XCTestCase {
     
     func test_map_whenMISSINGStatus_shouldMapToACTIVE() {
         // Given - DTO with MISSING status
-        let dto = makeTestDTO(status: "MISSING")
+        let dto = makeTestDTO(status: .missing)
         
         // When
         let petDetails = sut.map(dto)
@@ -111,47 +111,51 @@ final class PetDetailsMapperTests: XCTestCase {
         XCTAssertNotNil(petDetails?.phone) // phone is required
     }
     
+    func test_map_whenNullDescription_shouldBeNil() {
+        // Given - DTO with null description
+        let dto = makeTestDTO(description: nil)
+        
+        // When
+        let petDetails = sut.map(dto)
+        
+        // Then
+        XCTAssertNotNil(petDetails)
+        XCTAssertNil(petDetails?.description)
+    }
+    
+    func test_map_whenNullPetName_shouldBeNil() {
+        // Given - DTO with null petName
+        let dto = makeTestDTO(petName: nil)
+        
+        // When
+        let petDetails = sut.map(dto)
+        
+        // Then
+        XCTAssertNotNil(petDetails)
+        XCTAssertNil(petDetails?.petName)
+    }
+    
     // MARK: - Failure Cases
-    
-    func test_map_whenInvalidSpecies_shouldReturnNil() {
-        // Given - DTO with invalid species
-        let dto = makeTestDTO(species: "INVALID")
-        
-        // When
-        let petDetails = sut.map(dto)
-        
-        // Then
-        XCTAssertNil(petDetails)
-    }
-    
-    func test_map_whenInvalidStatus_shouldReturnNil() {
-        // Given - DTO with invalid status
-        let dto = makeTestDTO(status: "INVALID")
-        
-        // When
-        let petDetails = sut.map(dto)
-        
-        // Then
-        XCTAssertNil(petDetails)
-    }
     
     // MARK: - Helper Methods
     
     private func makeTestDTO(
         id: String = "test-id",
-        species: String = "CAT",
-        status: String = "FOUND",
+        species: AnimalSpeciesDTO = .cat,
+        status: AnnouncementStatusDTO = .found,
         photoUrl: String = "/images/test.jpg",
         breed: String? = "Persian",
-        sex: String? = "FEMALE",
+        sex: AnimalGenderDTO? = .female,
         age: Int? = 2,
         microchipNumber: String? = "123456789012345",
         email: String? = "test@example.com",
-        reward: String? = "100 PLN"
+        reward: String? = "100 PLN",
+        description: String? = "Test description",
+        petName: String? = "TestPet"
     ) -> PetDetailsDTO {
         return PetDetailsDTO(
             id: id,
-            petName: "TestPet",
+            petName: petName,
             species: species,
             status: status,
             photoUrl: photoUrl,
@@ -165,7 +169,7 @@ final class PetDetailsMapperTests: XCTestCase {
             email: email,
             phone: "+48123456789",
             reward: reward,
-            description: "Test description",
+            description: description,
             createdAt: "2024-11-15T10:30:00Z",
             updatedAt: "2024-11-20T14:45:00Z"
         )

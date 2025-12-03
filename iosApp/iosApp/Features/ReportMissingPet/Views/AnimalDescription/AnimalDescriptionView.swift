@@ -9,15 +9,15 @@ struct AnimalDescriptionView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                // Heading
-                Text(L10n.AnimalDescription.heading)
-                    .font(.custom("Inter-Regular", size: 32))
-                    .foregroundColor(Color(hex: "#2D2D2D"))
-                
-                // Subheading
-                Text(L10n.AnimalDescription.subheading)
-                    .font(.custom("Inter-Regular", size: 16))
-                    .foregroundColor(Color(hex: "#545F71"))
+                    // Heading
+                    Text(L10n.AnimalDescription.heading)
+                        .font(.custom("Inter-Regular", size: 32))
+                        .foregroundColor(Color(hex: "#2D2D2D"))
+                    
+                    // Subheading
+                    Text(L10n.AnimalDescription.subheading)
+                        .font(.custom("Inter-Regular", size: 16))
+                        .foregroundColor(Color(hex: "#545F71"))
                 
                 // Date input
                 DateInputView(
@@ -84,16 +84,18 @@ struct AnimalDescriptionView: View {
                     longitude: $viewModel.longitude
                 )
                 
-                // Description text area (optional - US3)
-                TextAreaView(
-                    model: viewModel.descriptionTextAreaModel,
-                    text: $viewModel.additionalDescription
-                )
-            }
-            .padding()
-            .padding(.bottom, 120) // Extra bottom padding for button section
+                    // Description text area (optional - US3)
+                    TextAreaView(
+                        model: viewModel.descriptionTextAreaModel,
+                        text: $viewModel.additionalDescription
+                    )
+                }
+                .padding()
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
             // Bottom section with toast and button (outside ScrollView)
             VStack(spacing: 12) {
@@ -111,21 +113,12 @@ struct AnimalDescriptionView: View {
                         .background(Color(hex: "#155DFC"))
                         .cornerRadius(10)
                 }
-                .background(Color.white)  // White background only for button
                 .accessibilityIdentifier("animalDescription.continueButton.tap")
             }
             .padding(.horizontal, 22)
             .padding(.vertical, 24)
             .frame(maxWidth: .infinity)
-            .background(
-                // White background only at the bottom for button area
-                VStack {
-                    Spacer()
-                    Color.white
-                        .frame(height: 100)
-                        .ignoresSafeArea(edges: .bottom)
-                }
-            )
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .scrollDismissesKeyboard(.interactively)
         .animation(.easeInOut(duration: 0.3), value: viewModel.showToast)

@@ -91,7 +91,7 @@ struct PetDetailsView: View {
                     HStack(spacing: 12) {
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalName,
-                            value: petDetails.petName
+                            value: viewModel.formattedPetName
                         ))
                         .accessibilityIdentifier("petDetails.name.field")
                         
@@ -183,7 +183,7 @@ struct PetDetailsView: View {
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#6a7282"))
                         
-                        Text(petDetails.description)
+                        Text(viewModel.formattedDescription)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#101828"))
                             .fixedSize(horizontal: false, vertical: true)
@@ -210,21 +210,4 @@ struct PetDetailsView: View {
         .background(Color.white)
     }
     
-    // MARK: - Formatting Helpers
 }
-
-// MARK: - Previews
-
-#if DEBUG
-struct PetDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let repository = FakeAnimalRepository()
-        let viewModel = PetDetailsViewModel(repository: repository, petId: "preview-id")
-        
-        return NavigationView {
-            PetDetailsView(viewModel: viewModel)
-                .navigationBarHidden(true)
-        }
-    }
-}
-#endif

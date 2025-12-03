@@ -23,7 +23,7 @@ class PetDetailsViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let repository: AnimalRepositoryProtocol
+    private let repository: AnnouncementRepositoryProtocol
     private let petId: String
     
     // MARK: - Coordinator Communication
@@ -37,7 +37,7 @@ class PetDetailsViewModel: ObservableObject {
     /// - Parameters:
     ///   - repository: Repository for fetching pet data
     ///   - petId: ID of the pet to display
-    init(repository: AnimalRepositoryProtocol, petId: String) {
+    init(repository: AnnouncementRepositoryProtocol, petId: String) {
         self.repository = repository
         self.petId = petId
     }
@@ -94,6 +94,18 @@ class PetDetailsViewModel: ObservableObject {
         guard case .loaded(let petDetails) = state else { return "—" }
         guard let age = petDetails.approximateAge else { return "—" }
         return L10n.PetDetails.Format.yearsOld(age)
+    }
+    
+    /// Returns formatted pet name (or "—" if nil)
+    var formattedPetName: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        return petDetails.petName ?? "—"
+    }
+    
+    /// Returns formatted description (or "—" if nil)
+    var formattedDescription: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        return petDetails.description ?? "—"
     }
     
     /// Creates PetPhotoWithBadgesView.Model with pet details

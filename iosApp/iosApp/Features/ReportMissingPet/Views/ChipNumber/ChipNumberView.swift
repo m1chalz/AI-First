@@ -28,17 +28,19 @@ struct ChipNumberView: View {
                 }
                 .padding(.horizontal, Layout.horizontalPadding)
                 .padding(.top, Layout.contentTopPadding)
-                .padding(.bottom, Layout.contentBottomPadding)
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
-            continueButton
-                .padding(.horizontal, Layout.horizontalPadding)
-                .padding(.bottom, Layout.buttonBottomPadding)
-                .background(
-                    Color.white
-                        .ignoresSafeArea(edges: .bottom)
-                )
+            VStack(spacing: 0) {
+                continueButton
+            }
+            .padding(.horizontal, Layout.horizontalPadding)
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .background(Color.white.ignoresSafeArea())
     }

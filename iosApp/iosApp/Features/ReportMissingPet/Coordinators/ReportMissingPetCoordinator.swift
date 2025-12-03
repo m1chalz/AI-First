@@ -160,15 +160,16 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = ContactDetailsViewModel(flowState: flowState)
+        let submissionService = ServiceContainer.shared.announcementSubmissionService
+        let viewModel = ContactDetailsViewModel(
+            submissionService: submissionService,
+            flowState: flowState
+        )
         
-        // User Story 3 (T066): Chain callback to parent coordinator when report is sent
-        viewModel.onReportSent = { [weak self] in
-            self?.onReportSent?()
-        }
-        
-        viewModel.onNext = { [weak self] in
-            self?.navigateToSummary()
+        // Callback invoked on successful submission with managementPassword
+        viewModel.onReportSent = { [weak self] managementPassword in
+            self?.onReportSent?() // Notify parent coordinator for list refresh
+            self?.navigateToSummary(managementPassword: managementPassword)
         }
         
         viewModel.onBack = { [weak self] in
@@ -191,9 +192,12 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     }
     
     /// Navigate to summary screen (Step 5 - No Progress Indicator).
-    private func navigateToSummary() {
+    private func navigateToSummary(managementPassword: String) {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
+        
+        // Store managementPassword in FlowState for summary display
+        flowState.managementPassword = managementPassword
         
         let viewModel = SummaryViewModel(flowState: flowState)
         

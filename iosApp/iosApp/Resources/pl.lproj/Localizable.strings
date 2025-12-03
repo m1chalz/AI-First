@@ -3,32 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Zaginione zwierzęta";
+"announcementList.navigationTitle" = "Zaginione zwierzęta";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Zgłoś zagubione zwierzę";
-"animalList.button.reportFound" = "Zgłoś znalezienie";
+"announcementList.button.reportMissing" = "Zgłoś zagubione zwierzę";
+"announcementList.button.reportFound" = "Zgłoś znalezienie";
 
 // Empty state
-"animalList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
+"announcementList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
 
 // Loading state
-"animalList.loading.message" = "Ładowanie listy zwierząt...";
+"announcementList.loading.message" = "Ładowanie listy zwierząt...";
 
 // Error messages
-"animalList.error.title" = "Błąd";
-"animalList.error.prefix" = "Błąd: %@";
-"animalList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
-"animalList.error.loadingFailed" = "Nie udało się załadować ogłoszeń. Spróbuj ponownie.";
-"animalList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
+"announcementList.error.title" = "Błąd";
+"announcementList.error.prefix" = "Błąd: %@";
+"announcementList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
+"announcementList.error.loadingFailed" = "Nie udało się załadować ogłoszeń. Spróbuj ponownie.";
+"announcementList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 
@@ -67,11 +67,11 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
-/* MARK: - Animal Status */
+/* MARK: - Announcement Status */
 
-"animalStatus.active" = "ZAGINIONE";
-"animalStatus.found" = "ZNALEZIONE";
-"animalStatus.closed" = "ZAMKNIĘTE";
+"announcementStatus.active" = "ZAGINIONE";
+"announcementStatus.found" = "ZNALEZIONE";
+"announcementStatus.closed" = "ZAMKNIĘTE";
 
 /* MARK: - Animal Species */
 
@@ -93,7 +93,7 @@
 "reportMissingPet.chipNumber.title" = "Numer mikroczipu";
 "reportMissingPet.photo.title" = "Zdjęcie zwierzęcia";
 "reportMissingPet.description.title" = "Opis zwierzęcia";
-"reportMissingPet.contactDetails.title" = "Dane kontaktowe";
+"reportMissingPet.contactDetails.title" = "Dane właściciela";
 "reportMissingPet.summary.title" = "Podsumowanie";
 
 // Progress indicator
@@ -102,6 +102,7 @@
 // Buttons
 "reportMissingPet.button.continue" = "Dalej";
 "reportMissingPet.button.submit" = "Wyślij";
+"reportMissingPet.button.close" = "Zamknij";
 
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
@@ -191,4 +192,28 @@
 
 // Toast messages
 "animalDescription.toast.validationErrors" = "Proszę poprawić podświetlone pola";
+
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Dane właściciela";
+"owners_details.main_title" = "Twoje dane kontaktowe";
+"owners_details.subtitle" = "Dodaj swoje dane kontaktowe i ewentualną nagrodę.";
+"owners_details.phone.label" = "Numer telefonu";
+"owners_details.phone.placeholder" = "Wpisz numer telefonu...";
+"owners_details.phone.error" = "Wpisz co najmniej 7 cyfr";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Wpisz adres email";
+"owners_details.email.error" = "Wpisz poprawny adres email";
+"owners_details.reward.label" = "Nagroda dla znalazcy (opcjonalnie)";
+"owners_details.reward.placeholder" = "Opisz nagrodę...";
+"owners_details.continue.button" = "Dalej";
+"owners_details.back.button" = "Wstecz";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "Brak połączenia";
+"owners_details.error.no_connection.message" = "Sprawdź połączenie i spróbuj ponownie.";
+"owners_details.error.generic.title" = "Coś poszło nie tak";
+"owners_details.error.generic.message" = "Spróbuj ponownie później.";
+"owners_details.alert.try_again" = "Spróbuj ponownie";
+"owners_details.alert.cancel" = "Anuluj";
 

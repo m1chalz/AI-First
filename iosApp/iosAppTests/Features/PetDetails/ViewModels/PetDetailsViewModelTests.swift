@@ -8,35 +8,37 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
-    // Uses FakeAnimalRepository from main app for testing
+    // Uses FakeAnnouncementRepository from main app for testing
     
     // MARK: - Helper Methods
     
     private func makeSUT(
         petId: String = "test-id"
-    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnimalRepository) {
-        let fakeRepo = FakeAnimalRepository()
+    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnnouncementRepository) {
+        let fakeRepo = FakeAnnouncementRepository()
         let viewModel = PetDetailsViewModel(repository: fakeRepo, petId: petId)
         return (viewModel, fakeRepo)
     }
     
     private func makeMockPetDetails(
         id: String = "test-id",
+        petName: String? = "Test Pet",
         photoUrl: String? = "https://example.com/photo.jpg",
-        status: AnimalStatus = .active,
+        status: AnnouncementStatus = .active,
         latitude: Double = 52.2297,
         longitude: Double = 21.0122,
-        reward: String? = "100 PLN"
+        reward: String? = "100 PLN",
+        description: String? = "Test description"
     ) -> PetDetails {
         return PetDetails(
             id: id,
-            petName: "Test Pet",
+            petName: petName,
             photoUrl: photoUrl,
             status: status,
             lastSeenDate: "2025-11-20",
             species: .dog,
             gender: .male,
-            description: "Test description",
+            description: description,
             phone: "+48 123 456 789",
             email: "test@example.com",
             breed: "Test Breed",
@@ -575,7 +577,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertNotNil(result)
         if let model = result {
             XCTAssertEqual(model.imageUrl, "https://example.com/photo.jpg")
-            XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.active)
+            XCTAssertEqual(model.statusDisplayText, L10n.AnnouncementStatus.active)
             XCTAssertEqual(model.rewardText, "$500")
         }
     }
@@ -689,6 +691,88 @@ final class PetDetailsViewModelTests: XCTestCase {
     /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
     
     /// T046: Test PetDetailsViewModel with network error should set appropriate error state
+    
+    // MARK: - Formatted PetName Tests
+    
+    func testFormattedPetName_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedPetName_whenPetNameIsNil_shouldReturnDash() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(petName: nil)
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedPetName_whenPetNameHasValue_shouldReturnName() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(petName: "Buddy")
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "Buddy")
+    }
+    
+    // MARK: - Formatted Description Tests
+    
+    func testFormattedDescription_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedDescription_whenDescriptionIsNil_shouldReturnDash() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(description: nil)
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedDescription_whenDescriptionHasValue_shouldReturnDescription() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(description: "Friendly dog with brown spots")
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "Friendly dog with brown spots")
+    }
     
 }
 

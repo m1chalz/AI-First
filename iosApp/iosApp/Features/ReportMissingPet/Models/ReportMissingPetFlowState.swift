@@ -49,11 +49,13 @@ final class ReportMissingPetFlowState: ObservableObject {
     
     // MARK: - Step 4: Contact Details
     
-    /// Owner's email address (optional)
-    @Published var contactEmail: String?
+    /// Owner's contact details (phone, email, reward)
+    @Published var contactDetails: OwnerContactDetails?
     
-    /// Owner's phone number (optional)
-    @Published var contactPhone: String?
+    // MARK: - Submission Result
+    
+    /// Management password received from successful announcement creation
+    @Published var managementPassword: String?
     
     // MARK: - Initialization
     
@@ -76,8 +78,8 @@ final class ReportMissingPetFlowState: ObservableObject {
         animalLatitude = nil
         animalLongitude = nil
         animalAdditionalDescription = nil
-        contactEmail = nil
-        contactPhone = nil
+        contactDetails = nil
+        managementPassword = nil
         
         try? await photoAttachmentCache.clearCurrent()
     }
