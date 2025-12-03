@@ -6,26 +6,23 @@ struct ContactDetailsView: View {
     @ObservedObject var viewModel: ContactDetailsViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Title + Subtitle
-            VStack(alignment: .leading, spacing: 8) {
-                Text(L10n.OwnersDetails.screenTitle)
-                    .font(.title2)
-                    .bold()
-                    .accessibilityIdentifier("ownersDetails.title")
-                
-                Text(L10n.OwnersDetails.subtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .accessibilityIdentifier("ownersDetails.subtitle")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            
-            // Form fields
+        ZStack(alignment: .bottom) {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Title + Subtitle
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(L10n.OwnersDetails.screenTitle)
+                            .font(.title2)
+                            .bold()
+                            .accessibilityIdentifier("ownersDetails.title")
+                        
+                        Text(L10n.OwnersDetails.subtitle)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .accessibilityIdentifier("ownersDetails.subtitle")
+                    }
+                    
+                    // Form fields
                     ValidatedTextField(
                         model: viewModel.phoneTextFieldModel,
                         text: $viewModel.phone
@@ -42,35 +39,40 @@ struct ContactDetailsView: View {
                     )
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 120)
             }
+            .background(Color.white)
             
             // Continue button
-            Button(action: {
-                Task {
-                    await viewModel.submitForm()
+            VStack(spacing: 0) {
+                Button(action: {
+                    Task {
+                        await viewModel.submitForm()
+                    }
+                }) {
+                    if viewModel.isSubmitting {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    } else {
+                        Text(L10n.OwnersDetails.Continue.button)
+                            .font(.system(size: 16, weight: .semibold))
+                    }
                 }
-            }) {
-                if viewModel.isSubmitting {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                } else {
-                    Text(L10n.OwnersDetails.Continue.button)
-                        .font(.system(size: 16, weight: .semibold))
-                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(Color(hex: "#155DFC"))
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .disabled(viewModel.isSubmitting)
+                .accessibilityIdentifier("ownersDetails.continueButton")
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 50)
-            .background(Color(hex: "#155DFC"))
-            .foregroundColor(.white)
-            .cornerRadius(10)
             .padding(.horizontal, 16)
-            .padding(.bottom, 16)
-            .disabled(viewModel.isSubmitting)
-            .accessibilityIdentifier("ownersDetails.continueButton")
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
-        .background(Color.white)
-        .edgesIgnoringSafeArea(.bottom)
+        .background(Color.white.ignoresSafeArea())
         .alert(isPresented: $viewModel.showAlert) {
             Alert(
                 title: Text(viewModel.alertMessage ?? ""),

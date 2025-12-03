@@ -32,13 +32,13 @@ struct ChipNumberView: View {
             }
             .background(Color.white)
             
-            continueButton
-                .padding(.horizontal, Layout.horizontalPadding)
-                .padding(.bottom, Layout.buttonBottomPadding)
-                .background(
-                    Color.white
-                        .ignoresSafeArea(edges: .bottom)
-                )
+            VStack(spacing: 0) {
+                continueButton
+            }
+            .padding(.horizontal, Layout.horizontalPadding)
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .background(Color.white.ignoresSafeArea())
     }

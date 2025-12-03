@@ -111,21 +111,12 @@ struct AnimalDescriptionView: View {
                         .background(Color(hex: "#155DFC"))
                         .cornerRadius(10)
                 }
-                .background(Color.white)  // White background only for button
                 .accessibilityIdentifier("animalDescription.continueButton.tap")
             }
             .padding(.horizontal, 22)
             .padding(.vertical, 24)
             .frame(maxWidth: .infinity)
-            .background(
-                // White background only at the bottom for button area
-                VStack {
-                    Spacer()
-                    Color.white
-                        .frame(height: 100)
-                        .ignoresSafeArea(edges: .bottom)
-                }
-            )
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .scrollDismissesKeyboard(.interactively)
         .animation(.easeInOut(duration: 0.3), value: viewModel.showToast)
