@@ -6,17 +6,20 @@ final class SummaryViewModelTests: XCTestCase {
     
     var flowState: ReportMissingPetFlowState!
     var cache: PhotoAttachmentCacheFake!
+    var toastScheduler: ToastSchedulerFake!
     var sut: SummaryViewModel!
     
     override func setUp() {
         super.setUp()
         cache = PhotoAttachmentCacheFake()
+        toastScheduler = ToastSchedulerFake()
         flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
-        sut = SummaryViewModel(flowState: flowState)
+        sut = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
     }
     
     override func tearDown() {
         sut = nil
+        toastScheduler = nil
         cache = nil
         flowState = nil
         super.tearDown()
@@ -89,6 +92,67 @@ final class SummaryViewModelTests: XCTestCase {
         
         // Then: Should navigate back to contact details screen (step 4)
         XCTAssertTrue(navigatedBack, "Tapping back on summary should navigate to step 4")
+    }
+    
+    // MARK: - Management Password Display Tests
+    
+    func testDisplayPassword_whenPasswordIsNil_shouldReturnEmptyString() {
+        // Given: FlowState with nil password
+        flowState.managementPassword = nil
+        
+        // When: displayPassword is accessed
+        let result = sut.displayPassword
+        
+        // Then: Returns empty string
+        XCTAssertEqual(result, "")
+    }
+    
+    func testDisplayPassword_whenPasswordExists_shouldReturnPassword() {
+        // Given: FlowState with password
+        let expectedPassword = "5216577"
+        flowState.managementPassword = expectedPassword
+        
+        // When: displayPassword is accessed
+        let result = sut.displayPassword
+        
+        // Then: Returns password
+        XCTAssertEqual(result, expectedPassword)
+    }
+    
+    // MARK: - Copy Password Tests
+    
+    func testCopyPasswordToClipboard_whenPasswordExists_shouldCopyAndShowToast() {
+        // Given: FlowState with password
+        let expectedPassword = "5216577"
+        flowState.managementPassword = expectedPassword
+        
+        // When: copyPasswordToClipboard is called
+        sut.copyPasswordToClipboard()
+        
+        // Then: Password is copied to clipboard
+        XCTAssertEqual(UIPasteboard.general.string, expectedPassword)
+        
+        // And: Toast is shown
+        XCTAssertTrue(sut.showsCodeCopiedToast)
+        
+        // And: Toast is scheduled to hide after 2 seconds
+        XCTAssertEqual(toastScheduler.scheduledDurations.last, 2.0)
+    }
+    
+    func testCopyPasswordToClipboard_whenPasswordIsNil_shouldNotCopy() {
+        // Given: FlowState with nil password
+        flowState.managementPassword = nil
+        let previousClipboard = "previous content"
+        UIPasteboard.general.string = previousClipboard
+        
+        // When: copyPasswordToClipboard is called
+        sut.copyPasswordToClipboard()
+        
+        // Then: Clipboard is unchanged
+        XCTAssertEqual(UIPasteboard.general.string, previousClipboard)
+        
+        // And: Toast is not shown
+        XCTAssertFalse(sut.showsCodeCopiedToast)
     }
 }
 

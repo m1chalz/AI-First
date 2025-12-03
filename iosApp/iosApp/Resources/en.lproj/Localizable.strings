@@ -106,6 +106,12 @@
 "reportMissingPet.button.submit" = "Submit";
 "reportMissingPet.button.close" = "Close";
 
+// Report Created Screen (Summary Step 5)
+"report_created.title" = "Report created";
+"report_created.body_paragraph_1" = "Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.";
+"report_created.body_paragraph_2" = "If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address";
+"report_created.code_copied" = "Code copied to clipboard";
+
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
 

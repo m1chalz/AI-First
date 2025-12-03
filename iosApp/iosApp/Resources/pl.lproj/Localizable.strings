@@ -104,6 +104,12 @@
 "reportMissingPet.button.submit" = "Wyślij";
 "reportMissingPet.button.close" = "Zamknij";
 
+// Report Created Screen (Summary Step 5)
+"report_created.title" = "Raport utworzony";
+"report_created.body_paragraph_1" = "Twój raport został utworzony, a Twoje zagubione zwierzę zostało dodane do bazy danych. Jeśli Twój pupil zostanie odnaleziony, natychmiast otrzymasz powiadomienie.";
+"report_created.body_paragraph_2" = "Jeśli chcesz usunąć swój raport z bazy danych, użyj kodu podanego poniżej w formularzu usuwania. Ten kod został również wysłany na Twój adres e-mail";
+"report_created.code_copied" = "Skopiowano kod do schowka";
+
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
 

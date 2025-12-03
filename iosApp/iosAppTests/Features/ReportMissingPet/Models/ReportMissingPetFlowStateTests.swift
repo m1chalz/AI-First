@@ -38,6 +38,31 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactDetails)
+        XCTAssertNil(sut.managementPassword)
+    }
+    
+    // MARK: - Management Password Tests
+    
+    func testManagementPassword_whenSetToValue_shouldRetainValue() {
+        // Given: Flow state with management password
+        let expectedPassword = "5216577"
+        
+        // When: Property is set
+        sut.managementPassword = expectedPassword
+        
+        // Then: Password is retained
+        XCTAssertEqual(sut.managementPassword, expectedPassword)
+    }
+    
+    func testManagementPassword_whenSetToNil_shouldBeNil() {
+        // Given: Flow state with password
+        sut.managementPassword = "5216577"
+        
+        // When: Property is set to nil
+        sut.managementPassword = nil
+        
+        // Then: Password is nil
+        XCTAssertNil(sut.managementPassword)
     }
     
     // MARK: - clear() Method Tests
@@ -70,6 +95,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
             email: "test@example.com",
             rewardDescription: nil
         )
+        sut.managementPassword = "5216577"
         
         // When: clear() is called
         await sut.clear()
@@ -87,6 +113,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactDetails)
+        XCTAssertNil(sut.managementPassword)
         XCTAssertEqual(cache.clearCallCount, 1)
     }
     
@@ -109,6 +136,7 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.animalLongitude)
         XCTAssertNil(sut.animalAdditionalDescription)
         XCTAssertNil(sut.contactDetails)
+        XCTAssertNil(sut.managementPassword)
         XCTAssertEqual(cache.clearCallCount, 1)
     }
 }

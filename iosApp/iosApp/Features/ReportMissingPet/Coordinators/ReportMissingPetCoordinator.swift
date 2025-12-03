@@ -95,7 +95,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let viewModel = PhotoViewModel(
             flowState: flowState,
             photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
-            toastScheduler: ServiceContainer.shared.toastScheduler
+            toastScheduler: ServiceContainer.shared.toastScheduler // [FIXIT][2] nie potrzebujemy w ServiceContainer toast schedulera, niech bedzie tworzony tutaj na miejscu
         )
         
         viewModel.onNext = { [weak self] in
@@ -130,6 +130,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
             locationHandler: ServiceContainer.shared.locationPermissionHandler
+            //[FIXIT][3] też ma toasta, a nie używa ToastScheduler() a powinien
         )
         
         viewModel.onContinue = { [weak self] in
@@ -190,16 +191,17 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         modalNavController.pushViewController(hostingController, animated: true)
     }
-    
-    /// Navigate to summary screen (Step 5 - No Progress Indicator).
+
+    /// Navigate to summary screen (Step 5 - Report Created Confirmation).
     private func navigateToSummary(managementPassword: String) {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
-        
+
         // Store managementPassword in FlowState for summary display
         flowState.managementPassword = managementPassword
-        
-        let viewModel = SummaryViewModel(flowState: flowState)
+
+        let toastScheduler = ToastScheduler() // [FIXIT][1] to z DI, zobacz jak jest w
+        let viewModel = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
         
         viewModel.onSubmit = { [weak self] in
             self?.exitFlow()
