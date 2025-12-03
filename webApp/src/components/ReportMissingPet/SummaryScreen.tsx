@@ -1,6 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
-import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { formatFileSize } from '../../utils/format-file-size';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
@@ -40,8 +39,6 @@ export function SummaryScreen() {
     clearFlowState();
     navigate('/');
   };
-
-  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout

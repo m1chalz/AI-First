@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
-import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
@@ -62,8 +61,6 @@ export function ContactScreen() {
     updateFlowState({ email, phone, reward });
     await submitAnnouncement(updatedFlowState);
   };
-
-  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout
