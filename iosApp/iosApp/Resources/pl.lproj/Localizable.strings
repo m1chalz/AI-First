@@ -102,6 +102,7 @@
 // Buttons
 "reportMissingPet.button.continue" = "Dalej";
 "reportMissingPet.button.submit" = "Wyślij";
+"reportMissingPet.button.close" = "Zamknij";
 
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";

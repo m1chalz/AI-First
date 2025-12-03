@@ -368,6 +368,8 @@ public enum L10n {
   }
   public enum ReportMissingPet {
     public enum Button {
+      /// Close
+      public static let close = L10n.tr("Localizable", "reportMissingPet.button.close", fallback: "Close")
       /// Continue
       public static let `continue` = L10n.tr("Localizable", "reportMissingPet.button.continue", fallback: "Continue")
       /// Submit
