@@ -95,7 +95,7 @@
 "reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
 "reportMissingPet.description.title" = "Animal description";
-"reportMissingPet.contactDetails.title" = "Contact Details";
+"reportMissingPet.contactDetails.title" = "Owner's details";
 "reportMissingPet.summary.title" = "Summary";
 
 // Progress indicator
@@ -205,15 +205,16 @@
 /* MARK: - Owner's Details Screen */
 
 "owners_details.screen_title" = "Owner's details";
+"owners_details.main_title" = "Your contact info";
 "owners_details.subtitle" = "Add your contact information and potential reward.";
 "owners_details.phone.label" = "Phone number";
-"owners_details.phone.placeholder" = "Enter phone number";
+"owners_details.phone.placeholder" = "Enter phone number...";
 "owners_details.phone.error" = "Enter at least 7 digits";
 "owners_details.email.label" = "Email";
 "owners_details.email.placeholder" = "Enter email address";
 "owners_details.email.error" = "Enter a valid email address";
-"owners_details.reward.label" = "Reward (optional)";
-"owners_details.reward.placeholder" = "Describe reward";
+"owners_details.reward.label" = "Reward for the finder (optional)";
+"owners_details.reward.placeholder" = "Describe reward...";
 "owners_details.continue.button" = "Continue";
 "owners_details.back.button" = "Back";
 

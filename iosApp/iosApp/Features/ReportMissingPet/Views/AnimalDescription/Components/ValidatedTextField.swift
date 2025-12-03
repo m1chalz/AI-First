@@ -23,7 +23,10 @@ struct ValidatedTextField: View {
                 .background(model.isDisabled ? Color(hex: "#F9F9FA").opacity(0.5) : Color.white)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+                        .stroke(
+                            model.errorMessage != nil ? Color(hex: "#FB2C36") : Color(hex: "#D1D5DC"),
+                            lineWidth: 0.667
+                        )
                 )
                 .keyboardType(model.keyboardType)
                 .disabled(model.isDisabled)
@@ -39,7 +42,7 @@ struct ValidatedTextField: View {
             if let error = model.errorMessage {
                 Text(error)
                     .font(.custom("Hind-Regular", size: 12))
-                    .foregroundColor(.red)
+                    .foregroundColor(Color(hex: "#FB2C36"))
             }
         }
     }

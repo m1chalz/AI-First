@@ -93,7 +93,7 @@
 "reportMissingPet.chipNumber.title" = "Numer mikroczipu";
 "reportMissingPet.photo.title" = "Zdjęcie zwierzęcia";
 "reportMissingPet.description.title" = "Opis zwierzęcia";
-"reportMissingPet.contactDetails.title" = "Dane kontaktowe";
+"reportMissingPet.contactDetails.title" = "Dane właściciela";
 "reportMissingPet.summary.title" = "Podsumowanie";
 
 // Progress indicator
@@ -196,15 +196,16 @@
 /* MARK: - Owner's Details Screen */
 
 "owners_details.screen_title" = "Dane właściciela";
+"owners_details.main_title" = "Twoje dane kontaktowe";
 "owners_details.subtitle" = "Dodaj swoje dane kontaktowe i ewentualną nagrodę.";
 "owners_details.phone.label" = "Numer telefonu";
-"owners_details.phone.placeholder" = "Wpisz numer telefonu";
+"owners_details.phone.placeholder" = "Wpisz numer telefonu...";
 "owners_details.phone.error" = "Wpisz co najmniej 7 cyfr";
 "owners_details.email.label" = "Email";
 "owners_details.email.placeholder" = "Wpisz adres email";
 "owners_details.email.error" = "Wpisz poprawny adres email";
-"owners_details.reward.label" = "Nagroda (opcjonalnie)";
-"owners_details.reward.placeholder" = "Opisz nagrodę";
+"owners_details.reward.label" = "Nagroda dla znalazcy (opcjonalnie)";
+"owners_details.reward.placeholder" = "Opisz nagrodę...";
 "owners_details.continue.button" = "Dalej";
 "owners_details.back.button" = "Wstecz";
 

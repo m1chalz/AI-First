@@ -11,7 +11,7 @@ struct ContactDetailsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // Title + Subtitle
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(L10n.OwnersDetails.screenTitle)
+                        Text(L10n.OwnersDetails.mainTitle)
                             .font(.title2)
                             .bold()
                             .accessibilityIdentifier("ownersDetails.title")

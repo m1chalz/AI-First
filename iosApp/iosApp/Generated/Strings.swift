@@ -249,6 +249,8 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "microchipNumber.title", fallback: "Microchip number")
   }
   public enum OwnersDetails {
+    /// Your contact info
+    public static let mainTitle = L10n.tr("Localizable", "owners_details.main_title", fallback: "Your contact info")
     /// MARK: - Owner's Details Screen
     public static let screenTitle = L10n.tr("Localizable", "owners_details.screen_title", fallback: "Owner's details")
     /// Add your contact information and potential reward.
@@ -294,14 +296,14 @@ public enum L10n {
       public static let error = L10n.tr("Localizable", "owners_details.phone.error", fallback: "Enter at least 7 digits")
       /// Phone number
       public static let label = L10n.tr("Localizable", "owners_details.phone.label", fallback: "Phone number")
-      /// Enter phone number
-      public static let placeholder = L10n.tr("Localizable", "owners_details.phone.placeholder", fallback: "Enter phone number")
+      /// Enter phone number...
+      public static let placeholder = L10n.tr("Localizable", "owners_details.phone.placeholder", fallback: "Enter phone number...")
     }
     public enum Reward {
-      /// Reward (optional)
-      public static let label = L10n.tr("Localizable", "owners_details.reward.label", fallback: "Reward (optional)")
-      /// Describe reward
-      public static let placeholder = L10n.tr("Localizable", "owners_details.reward.placeholder", fallback: "Describe reward")
+      /// Reward for the finder (optional)
+      public static let label = L10n.tr("Localizable", "owners_details.reward.label", fallback: "Reward for the finder (optional)")
+      /// Describe reward...
+      public static let placeholder = L10n.tr("Localizable", "owners_details.reward.placeholder", fallback: "Describe reward...")
     }
   }
   public enum PetDetails {
@@ -380,8 +382,8 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "reportMissingPet.chipNumber.title", fallback: "Microchip number")
     }
     public enum ContactDetails {
-      /// Contact Details
-      public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Contact Details")
+      /// Owner's details
+      public static let title = L10n.tr("Localizable", "reportMissingPet.contactDetails.title", fallback: "Owner's details")
     }
     public enum Description {
       /// Animal description
