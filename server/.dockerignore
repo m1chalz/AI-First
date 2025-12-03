@@ -1,0 +1,11 @@
+node_modules/
+.git/
+coverage/
+*.test.ts
+__test__/
+.env*
+dist/
+build/
+*.log
+.DS_Store
+
