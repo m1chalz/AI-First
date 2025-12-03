@@ -94,31 +94,6 @@ final class AnnouncementListViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
     }
 
-    // MARK: - Test loadAnimals Failure
-    
-    /**
-     * Tests that loadAnimals sets errorMessage on failure.
-     */
-//    func testLoadAnimals_whenRepositoryFails_shouldSetErrorMessage() async {
-//        // Given - Repository configured to fail with default error
-//        let fakeRepository = FakeAnnouncementRepository(
-//            animalCount: 0,
-//            shouldFail: true,
-//            exception: KotlinException(message: "Network error")
-//        )
-//        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-//        let viewModel = AnnouncementListViewModel(getAnimalsUseCase: getAnimalsUseCase)
-//        
-//        // When - loadAnimals is called
-//        await viewModel.loadAnimals()
-//        
-//        // Then - errorMessage should be set, isLoading false, cardViewModels empty
-//        XCTAssertFalse(viewModel.isLoading, "Should not be loading")
-//        XCTAssertNotNil(viewModel.errorMessage, "Should have error message")
-//        XCTAssertTrue(viewModel.cardViewModels.isEmpty, "Should have no card ViewModels on error")
-//        XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when error present")
-//    }
-    
     // MARK: - Test isEmpty Property
     
     /**

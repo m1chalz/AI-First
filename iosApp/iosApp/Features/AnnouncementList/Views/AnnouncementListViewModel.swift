@@ -189,7 +189,7 @@ class AnnouncementListViewModel: ObservableObject {
             
             // Query announcements with optional location (nil = no filtering, graceful fallback per FR-009)
             // Non-blocking: query executes regardless of permission outcome (FR-007, SC-001)
-            let announcements = try await repository.getAnimals(near: result.location)
+            let announcements = try await repository.getAnnouncements(near: result.location)
             
             // Check for cancellation before updating UI state
             try Task.checkCancellation()
@@ -320,7 +320,7 @@ class AnnouncementListViewModel: ObservableObject {
         
         do {
             // Query without location (fallback mode)
-            let announcements = try await repository.getAnimals(near: nil)
+            let announcements = try await repository.getAnnouncements(near: nil)
             updateCardViewModels(with: announcements)
         } catch {
             self.errorMessage = L10n.AnnouncementList.Error.loadingFailed

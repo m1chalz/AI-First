@@ -34,7 +34,7 @@ class AnnouncementRepository: AnnouncementRepositoryProtocol {
     /// - Parameter location: Optional coordinate for location-based filtering (nil = all announcements)
     /// - Returns: Array of valid Announcement models
     /// - Throws: RepositoryError if network or parsing fails
-    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Announcement] {
+    func getAnnouncements(near location: Coordinate?, range: Int = 100) async throws -> [Announcement] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
         
         // Add location query parameters if provided

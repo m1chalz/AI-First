@@ -23,10 +23,10 @@ final class AnnouncementRepositoryTests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: - getAnimals Tests
+    // MARK: - getAnnouncements Tests
     
-    /// T009: Test getAnimals with valid JSON response should return parsed Animal array
-    func testGetAnimals_whenServerReturnsValidData_shouldReturnAnimals() async throws {
+    /// T009: Test getAnnouncements with valid JSON response should return parsed Animal array
+    func testGetAnnouncements_whenServerReturnsValidData_shouldReturnAnimals() async throws {
         // Given - valid JSON response
         let jsonData = """
         {
@@ -62,7 +62,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - verify parsed correctly
         XCTAssertEqual(announcements.count, 1)
@@ -74,8 +74,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         XCTAssertEqual(announcements[0].coordinate.longitude, 21.0122, accuracy: 0.0001)
     }
     
-    /// T010: Test getAnimals with location parameters should include lat/lng query params in URL
-    func testGetAnimals_withLocationParameters_shouldIncludeQueryParams() async throws {
+    /// T010: Test getAnnouncements with location parameters should include lat/lng query params in URL
+    func testGetAnnouncements_withLocationParameters_shouldIncludeQueryParams() async throws {
         // Given - location parameters
         let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         var capturedRequest: URLRequest?
@@ -95,7 +95,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch with location (uses default range=100)
-        _ = try await sut.getAnimals(near: userLocation)
+        _ = try await sut.getAnnouncements(near: userLocation)
         
         // Then - verify query parameters in URL
         let url = capturedRequest?.url
@@ -113,8 +113,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }) ?? false)
     }
     
-    /// T011: Test getAnimals with HTTP 500 error should throw RepositoryError.httpError
-    func testGetAnimals_whenServerReturns500_shouldThrowHttpError() async {
+    /// T011: Test getAnnouncements with HTTP 500 error should throw RepositoryError.httpError
+    func testGetAnnouncements_whenServerReturns500_shouldThrowHttpError() async {
         // Given - server error response
         MockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(
@@ -128,7 +128,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         
         // When/Then - should throw error
         do {
-            _ = try await sut.getAnimals(near: nil)
+            _ = try await sut.getAnnouncements(near: nil)
             XCTFail("Expected error to be thrown")
         } catch let error as RepositoryError {
             if case .httpError(let statusCode) = error {
@@ -141,8 +141,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
     }
     
-    /// T012: Test getAnimals with invalid JSON should throw RepositoryError.decodingFailed
-    func testGetAnimals_whenResponseHasInvalidJSON_shouldThrowDecodingError() async {
+    /// T012: Test getAnnouncements with invalid JSON should throw RepositoryError.decodingFailed
+    func testGetAnnouncements_whenResponseHasInvalidJSON_shouldThrowDecodingError() async {
         // Given - invalid JSON
         let invalidJSON = "{ invalid json }".data(using: .utf8)!
         
@@ -158,7 +158,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         
         // When/Then - should throw decoding error
         do {
-            _ = try await sut.getAnimals(near: nil)
+            _ = try await sut.getAnnouncements(near: nil)
             XCTFail("Expected error to be thrown")
         } catch let error as RepositoryError {
             if case .decodingFailed = error {
@@ -171,8 +171,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
     }
     
-    /// T013: Test getAnimals with invalid species enum should skip invalid items (compactMap behavior)
-    func testGetAnimals_whenItemHasUnknownSpecies_shouldMapToOther() async throws {
+    /// T013: Test getAnnouncements with invalid species enum should skip invalid items (compactMap behavior)
+    func testGetAnnouncements_whenItemHasUnknownSpecies_shouldMapToOther() async throws {
         // Given - JSON with one known and one unknown species (graceful degradation)
         let jsonData = """
         {
@@ -224,7 +224,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - both items returned, unknown species mapped to .other (order preserved from JSON)
         XCTAssertEqual(announcements.count, 2, "Should return both items with graceful species handling")
@@ -234,8 +234,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         XCTAssertEqual(announcements[1].species, .other, "Unknown species should map to .other")
     }
     
-    /// T014: Test getAnimals with duplicate IDs should deduplicate and log warning
-    func testGetAnimals_whenListHasDuplicateIds_shouldDeduplicateAndKeepFirst() async throws {
+    /// T014: Test getAnnouncements with duplicate IDs should deduplicate and log warning
+    func testGetAnnouncements_whenListHasDuplicateIds_shouldDeduplicateAndKeepFirst() async throws {
         // Given - JSON with duplicate IDs
         let jsonData = """
         {
@@ -287,15 +287,15 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - only one item returned (first occurrence kept)
         XCTAssertEqual(announcements.count, 1)
         XCTAssertEqual(announcements[0].name, "First Max")
     }
     
-    /// T015: Test getAnimals with empty list should return empty array
-    func testGetAnimals_whenServerReturnsEmptyList_shouldReturnEmptyArray() async throws {
+    /// T015: Test getAnnouncements with empty list should return empty array
+    func testGetAnnouncements_whenServerReturnsEmptyList_shouldReturnEmptyArray() async throws {
         // Given - empty data array
         let jsonData = """
         {
@@ -314,14 +314,14 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - empty array returned
         XCTAssertEqual(announcements.count, 0)
     }
     
-    /// Test: getAnimals with null phone should parse successfully (optional field)
-    func testGetAnimals_whenPhoneIsNull_shouldParseSuccessfully() async throws {
+    /// Test: getAnnouncements with null phone should parse successfully (optional field)
+    func testGetAnnouncements_whenPhoneIsNull_shouldParseSuccessfully() async throws {
         // Given - JSON with null phone
         let jsonData = """
         {
@@ -357,7 +357,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - animal parsed successfully with nil phone
         XCTAssertEqual(announcements.count, 1)
@@ -366,8 +366,8 @@ final class AnnouncementRepositoryTests: XCTestCase {
         XCTAssertEqual(announcements[0].email, "owner@example.com")
     }
     
-    /// Test: getAnimals with null breed should parse successfully (optional field)
-    func testGetAnimals_whenBreedIsNull_shouldParseSuccessfully() async throws {
+    /// Test: getAnnouncements with null breed should parse successfully (optional field)
+    func testGetAnnouncements_whenBreedIsNull_shouldParseSuccessfully() async throws {
         // Given - JSON with null breed
         let jsonData = """
         {
@@ -403,7 +403,7 @@ final class AnnouncementRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let announcements = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnnouncements(near: nil)
         
         // Then - animal parsed successfully with nil breed
         XCTAssertEqual(announcements.count, 1)

@@ -5,19 +5,19 @@ import Foundation
 /// Supports testing of both announcement list loading and announcement creation.
 ///
 /// Allows controlling success/failure scenarios:
-/// - getAnimals: Returns mock announcements or throws error
+/// - getAnnouncements: Returns mock announcements or throws error
 /// - getPetDetails: Returns mock pet details or throws error
 /// - createAnnouncement: Tracks calls and returns mock result
 /// - uploadPhoto: Tracks calls and throws on demand
 class FakeAnnouncementRepository: AnnouncementRepositoryProtocol {
-    // MARK: - getAnimals Configuration
+    // MARK: - getAnnouncements Configuration
     
     let animalCount: Int
     var shouldFail: Bool
     let error: Error
     
-    /// Tracks how many times getAnimals was called (for test assertions)
-    private(set) var getAnimalsCallCount = 0
+    /// Tracks how many times getAnnouncements was called (for test assertions)
+    private(set) var getAnnouncementsCallCount = 0
     
     /// For location testing - tracks location parameter passed
     var lastLocationParameter: Coordinate?
@@ -83,8 +83,8 @@ class FakeAnnouncementRepository: AnnouncementRepositoryProtocol {
     
     // MARK: - AnnouncementRepositoryProtocol Implementation
     
-    func getAnimals(near location: Coordinate?, range: Int) async throws -> [Announcement] {
-        getAnimalsCallCount += 1
+    func getAnnouncements(near location: Coordinate?, range: Int) async throws -> [Announcement] {
+        getAnnouncementsCallCount += 1
         lastLocationParameter = location
         
         // Simulate network delay if configured (for testing task cancellation)

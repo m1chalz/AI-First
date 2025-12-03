@@ -18,7 +18,7 @@ protocol AnnouncementRepositoryProtocol {
     /// - Parameter range: Search radius in kilometers
     /// - Returns: Array of announcements (may be empty if no announcements found)
     /// - Throws: Error if data fetch fails
-    func getAnimals(near location: Coordinate?, range: Int) async throws -> [Announcement]
+    func getAnnouncements(near location: Coordinate?, range: Int) async throws -> [Announcement]
     
     /// Retrieves detailed information for a specific pet by ID.
     /// Mock implementation returns hardcoded pet details.
@@ -52,8 +52,8 @@ protocol AnnouncementRepositoryProtocol {
 extension AnnouncementRepositoryProtocol {
     /// Convenience method with default range value (100km).
     /// Calls full method with default range parameter.
-    func getAnimals(near location: Coordinate?) async throws -> [Announcement] {
-        return try await getAnimals(near: location, range: 100)
+    func getAnnouncements(near location: Coordinate?) async throws -> [Announcement] {
+        return try await getAnnouncements(near: location, range: 100)
     }
 }
 
