@@ -36,6 +36,7 @@ Key visual specifications adapted to Android:
 - Q: What is the GPS location request timeout? → A: No explicit timeout (assumes fast response)
 - Q: When should field validation occur? → A: On submit (when Continue button tapped)
 - Q: How long should session data persist? → A: Until flow completion or cancellation (in-memory flow state via NavGraph-scoped ViewModel using Koin)
+- Q: How should the UI behave while fetching GPS coordinates? → A: Replace the Request GPS button label with a spinner + “Requesting…” state, disable the button until the call completes, keep the rest of the form usable
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -65,7 +66,7 @@ Caregivers using the Android app may not remember the precise latitude/longitude
 **Acceptance Scenarios**:
 
 1. **Given** the user is on Step 3 in the Android app, **When** they tap "Request GPS position" and grant permission, **Then** the app fetches the device location once, populates both Lat and Long fields, confirms success with helper text, and keeps the fields editable.  
-2. **Given** the user edits coordinates manually, **When** they enter a value outside valid latitude (−90 to 90) or longitude (−180 to 180) ranges, **Then** inline errors appear under the offending field and Continue stays disabled until both values are valid or cleared.
+2. **Given** the user edits coordinates manually, **When** they enter a value outside valid latitude (−90 to 90) or longitude (−180 to 180) ranges, **Then** inline errors appear under the offending field, Continue stays enabled, and tapping it keeps the user on Step 3 while re-running validation until both values are valid or cleared.
 
 ---
 
@@ -105,16 +106,17 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 - **FR-002**: The TopAppBar navigation icon (back arrow) MUST always navigate to Step 2 with state persistence; the progress indicator MUST update when re-entering Step 3.  
 - **FR-003**: The "Date of disappearance" field MUST default to today's date (or the last saved value) and open the Android DatePickerDialog configured so users MAY pick any past date (including today) but future dates are disabled and cannot be selected.  
 - **FR-004**: Selecting a date MUST update the Android Missing Pet flow state so the value persists across navigation, app backgrounding, and device rotation until the flow completes or is canceled.  
-- **FR-005**: The "Animal species" dropdown MUST use a fixed curated list of species bundled with the app (no runtime taxonomy service), display a clear placeholder (e.g., "Select an option"), and require a selection before Continue becomes available.  
+- **FR-005**: The "Animal species" dropdown MUST use a fixed curated list of species bundled with the app (no runtime taxonomy service), display a clear placeholder (e.g., "Select an option"), and be validated as a required field when Continue is tapped.  
 - **FR-006**: The "Animal race" field MUST be implemented as an OutlinedTextField that stays disabled until a species is chosen; when the user changes species, any previously entered race text MUST be cleared, and once enabled the race field is required for Continue.  
-- **FR-007**: The gender selector MUST present two selectable cards (Female, Male) behaving as mutually exclusive options with testTag modifiers for testing; at least one option MUST be selected before Continue activates.  
+- **FR-007**: The gender selector MUST present two selectable cards (Female, Male) behaving as mutually exclusive options with testTag modifiers for testing; selection is validated as required when Continue is tapped.  
 - **FR-008**: "Animal age (optional)" MUST accept numeric input from 0–40 with validation preventing negative values or decimals; empty state is valid. Use numeric keyboard type.  
 - **FR-009**: Tapping "Request GPS position" MUST trigger the Android location permission flow (if needed); upon success the Lat and Long fields auto-populate with decimal degrees to 5 decimal places.  
-- **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors (Material error state) and block Continue, regardless of whether the values came from GPS or were entered manually.  
+- **FR-009a**: While a GPS request is in progress, the "Request GPS position" button MUST disable itself and swap its label with a small inline progress indicator plus "Requesting…" text, while all other inputs remain interactive.
+- **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors (Material error state) when Continue is tapped and block navigation to Step 4 until corrected, regardless of whether the values came from GPS or were entered manually.  
 - **FR-011**: "Animal additional description (optional)" MUST provide a multi-line OutlinedTextField supporting exactly 500 characters with a live counter; the component MUST enforce a hard limit by preventing further input when 500 characters are reached and truncating pasted text that exceeds the limit.  
 - **FR-012**: The Continue Button MUST match the primary button style from the Figma design (filled button, primary blue color) and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender), it MUST validate all fields on submit, show a Snackbar message, and highlight the specific fields with inline helper text (Material error state) while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while updating the flow state with all animal description data.  
 - **FR-013**: All inputs MUST persist within the in-memory Android Missing Pet flow state (NavGraph-scoped ViewModel via Koin) so that navigating backward/forward, locking the device, or experiencing temporary offline states does not wipe Step 3 data; flow state is retained until flow completion or explicit cancellation.  
-- **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances (Snackbar with Settings action) without crashing; Continue remains disabled only when location-related validation rules require it (e.g., invalid coordinate ranges), and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
+- **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances (Snackbar with Settings action) without crashing; even when location-related validation rules fail (e.g., invalid coordinate ranges), the Continue button remains enabled but tapping it MUST keep the user on Step 3, show inline errors, and block navigation until the coordinates are valid, and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
 - **FR-015**: When GPS capture fails or is skipped, only the latitude/longitude inputs serve as the manual fallback; helper text MUST clarify that no additional textual location details are collected in this step.
 - **FR-016**: All interactive Composables MUST have Modifier.testTag() attributes following the `{screen}.{element}` naming convention for automated testing (e.g., `animalDescription.speciesDropdown`, `animalDescription.continueButton`).
 - **FR-017**: ViewModel MUST follow MVI pattern with single StateFlow<UiState>, sealed UserIntent, and SharedFlow<UiEffect> as mandated by project architecture.
