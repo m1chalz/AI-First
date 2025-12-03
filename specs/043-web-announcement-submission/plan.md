@@ -141,9 +141,11 @@ specs/043-web-announcement-submission/
 │   └── __tests__/
 │       └── announcement-service.test.ts # RENAMED from animal-repository.test.ts - Add POST tests
 ├── hooks/
-│   ├── use-announcement-submission.ts   # NEW - Hook managing submission state and logic
+│   ├── use-announcement-submission.ts   # NEW - Hook managing submission state and logic (evolved from use-announcement-creation)
+│   │                                    # Phase 3: Created as use-announcement-creation.ts (announcement only)
+│   │                                    # Phase 4: Renamed to use-announcement-submission.ts (announcement + photo)
 │   └── __tests__/
-│       └── use-announcement-submission.test.ts # NEW - Unit tests for submission hook
+│       └── use-announcement-submission.test.ts # NEW - Unit tests for submission hook (evolved naming)
 ├── models/
 │   ├── announcement-submission.ts       # NEW - DTOs for announcement creation
 │   └── api-error.ts                     # NEW - Error types for API responses
@@ -210,7 +212,25 @@ No violations - all constitution checks passed.
    - Loading indicator: Display during POST /announcements and POST /photos (sequential)
    - Alternatives considered: Global loading context (rejected - overkill for single feature), no loading state (rejected - poor UX)
 
-6. **Exit Confirmation on Summary Screen**
+6. **Hook Architecture Evolution Strategy**
+   - Decision: Implement submission in two phases with progressive hook evolution
+   - **Phase 1 (Announcement Creation)**: `use-announcement-creation.ts` hook
+     - Scope: Create announcement via POST /api/v1/announcements (without photo upload)
+     - State: `isCreating`, `error`, `announcementId`, `managementPassword`
+     - Purpose: Enable independent testing of announcement creation before photo upload complexity
+   - **Phase 2 (Full Submission)**: Rename to `use-announcement-submission.ts` hook
+     - Scope: Extends to include photo upload via POST /api/v1/announcements/:id/photos
+     - State: `isSubmitting`, `error`, `managementPassword` (combines creation + upload)
+     - Purpose: Complete end-to-end submission with sequential API calls
+   - Rationale: Two-phase approach enables:
+     1. Independent testing of announcement creation (Phase 3 checkpoint)
+     2. Clear separation of concerns (create vs upload)
+     3. Easier debugging if photo upload has issues
+     4. Incremental complexity (simpler hook first, then extend)
+   - Implementation note: Hook is created as `use-announcement-creation` in Phase 3, then renamed and extended in Phase 4
+   - Alternatives considered: Single hook from start (rejected - harder to test incrementally), separate hooks maintained (rejected - duplication of state management)
+
+7. **Exit Confirmation on Summary Screen**
    - Decision: Use browser `beforeunload` event for navigation away warning (per User Story 3, Acceptance Scenario 3)
    - Rationale: Standard browser API, covers all navigation (back button, close tab, URL change)
    - Implementation: `useEffect` with `window.addEventListener('beforeunload', handler)`

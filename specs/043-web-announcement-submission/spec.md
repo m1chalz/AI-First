@@ -3,7 +3,7 @@
 **Feature Branch**: `043-web-announcement-submission`  
 **Created**: 2025-12-03  
 **Status**: Draft  
-**Input**: User description: "integracja formularza w aplikacji webowej z backendem. po kliknięiu continue na ekranie z danymi kontaktowymi, aplikacja ma utworzyć ogłoszenie przez wywołanie endpointu POST /api/v1/announcements a następnie zuploadowć zdjęcie przez POST /api/v1/announcements/:id/photo. Po wszystkim przechodzimy do ekranu z podsumowaniem i wyświeltamy użytkownikowi management password."
+**Input**: User description: "integracja formularza w aplikacji webowej z backendem. po kliknięiu continue na ekranie z danymi kontaktowymi, aplikacja ma utworzyć ogłoszenie przez wywołanie endpointu POST /api/v1/announcements a następnie zuploadowć zdjęcie przez POST /api/v1/announcements/:id/photos. Po wszystkim przechodzimy do ekranu z podsumowaniem i wyświeltamy użytkownikowi management password."
 
 ## Clarifications
 
