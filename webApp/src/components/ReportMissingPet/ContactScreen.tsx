@@ -52,9 +52,6 @@ export function ContactScreen() {
   const handleContinue = async () => {
     const success = handleSubmit();
     if (!success) {
-      if (phone === '' && email === '') {
-        showToast('Please provide at least one contact method');
-      }
       return;
     }
     const updatedFlowState = { ...flowState, email, phone, reward };
