@@ -6,7 +6,7 @@ export enum FlowStep {
   Photo = 'photo',
   Details = 'details',
   Contact = 'contact',
-  Completed = 'completed',
+  Summary = 'summary',
 }
 
 export interface PhotoAttachment {
@@ -29,6 +29,9 @@ export interface ReportMissingPetFlowState {
   description: string;
   latitude: number | null;
   longitude: number | null;
+  phone: string;
+  email: string;
+  reward: string;
 }
 
 export const initialFlowState: ReportMissingPetFlowState = {
@@ -43,6 +46,9 @@ export const initialFlowState: ReportMissingPetFlowState = {
   description: '',
   latitude: null,
   longitude: null,
+  phone: '',
+  email: '',
+  reward: '',
 };
 
 export interface ReportMissingPetFlowContextValue {

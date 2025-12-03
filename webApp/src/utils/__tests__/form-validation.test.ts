@@ -9,7 +9,10 @@ import {
   validateLongitude,
   validateAllFields,
   isFormValid,
-  VALIDATION_MESSAGES
+  VALIDATION_MESSAGES,
+  validatePhoneNumber,
+  validateEmailAddress,
+  validateContactForm,
 } from '../form-validation';
 
 describe('validateLastSeenDate', () => {
@@ -227,6 +230,74 @@ describe('isFormValid', () => {
     ],
   ])('should return correct result when %s', (_, formData, result) => {
     expect(isFormValid(formData)).toBe(result);
+  });
+});
+
+// Contact form validation tests
+describe('validatePhoneNumber', () => {
+  it.each([
+    { phone: '1234567', expectedError: null },
+    { phone: '+1 234 567 890', expectedError: null },
+    { phone: 'abc1234567def', expectedError: null },
+    { phone: '(123) 456-7890', expectedError: null },
+    { phone: '', expectedError: null },
+    { phone: '123', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: 'abc', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: '+++', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: '123456', expectedError: 'Phone number must have at least 7 digits' },
+  ])('should validate phone "$phone" with error "$expectedError"', ({ phone, expectedError }) => {
+    expect(validatePhoneNumber(phone)).toBe(expectedError);
+  });
+});
+
+describe('validateEmailAddress', () => {
+  it.each([
+    { email: 'user@example.com', expectedError: null },
+    { email: 'user+tag@domain.co.uk', expectedError: null },
+    { email: 'test.user@sub.domain.com', expectedError: null },
+    { email: '', expectedError: null },
+    { email: 'invalid@', expectedError: 'Enter a valid email address' },
+    { email: '@example.com', expectedError: 'Enter a valid email address' },
+    { email: 'owner', expectedError: 'Enter a valid email address' },
+    { email: 'owner @example.com', expectedError: 'Enter a valid email address' },
+  ])('should validate email "$email" with error "$expectedError"', ({ email, expectedError }) => {
+    expect(validateEmailAddress(email)).toBe(expectedError);
+  });
+});
+
+describe('validateContactForm', () => {
+  it.each([
+    { phone: '1234567', email: '', isValid: true },
+    { phone: '', email: 'user@example.com', isValid: true },
+    { phone: '1234567', email: 'user@example.com', isValid: true },
+    { phone: '', email: '', isValid: false },
+    { phone: 'abc', email: '', isValid: false },
+    { phone: '', email: 'invalid@', isValid: false },
+    { phone: '123', email: 'invalid', isValid: false },
+    { phone: 'abc', email: 'invalid@', isValid: false },
+  ])('phone="$phone" email="$email" should isValid=$isValid', ({ phone, email, isValid }) => {
+    const result = validateContactForm({ phone, email });
+    expect(result.isValid).toBe(isValid);
+  });
+
+  it('should return appropriate error messages', () => {
+    const result = validateContactForm({ phone: 'abc', email: 'invalid@' });
+    expect(result.phoneError).toBe('Phone number must have at least 7 digits');
+    expect(result.emailError).toBe('Enter a valid email address');
+  });
+
+  it('should return empty errors for valid inputs', () => {
+    const result = validateContactForm({ phone: '1234567', email: '' });
+    expect(result.phoneError).toBe('');
+    expect(result.emailError).toBe('');
+    expect(result.isValid).toBe(true);
+  });
+
+  it('should return error message when both fields are empty', () => {
+    const result = validateContactForm({ phone: '', email: '' });
+    expect(result.phoneError).toBe('Phone number or email is required');
+    expect(result.emailError).toBe('Phone number or email is required');
+    expect(result.isValid).toBe(false);
   });
 });
 
