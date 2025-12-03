@@ -8,7 +8,12 @@
 This feature defines the **Android Animal Description screen** (Step 3/4 of the Missing Pet flow defined in specification 018 for Android).  
 The Android UI MUST match Figma node `297-8209` from the [PetSpot wireframes design](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-8209), adapted to Android Material Design patterns and Jetpack Compose implementation.
 
-**Design Reference**: See `figma-design-context.md` (from iOS spec 031) for design tokens. Key visual specifications adapted to Android:
+**Design References**:
+- **Main screen**: Figma node `297-8209` - [PetSpot wireframes](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-8209)
+- **Error states**: Figma node `297-11850` - [Input field error states](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=297-11850)
+- See `figma-design-context.md` (from iOS spec 031) for design tokens
+
+Key visual specifications adapted to Android:
 - Primary blue: `#155dfc` (buttons, borders)
 - Typography: Adapt Inter Regular 32px (title), Hind Regular 16px (labels/inputs) to closest Material equivalents
 - Input height: Standard OutlinedTextField sizing
@@ -26,7 +31,7 @@ The Android UI MUST match Figma node `297-8209` from the [PetSpot wireframes des
 
 ### Session 2025-12-03 (Android-specific clarifications)
 
-- Q: What is the minimum Android SDK version for this feature? → A: API 26+ (Android 8.0 Oreo, ~95% device coverage)
+- Q: What is the minimum Android SDK version for this feature? → A: API 24 (Android 7.0 Nougat) minimum, targeting API 36 (latest)
 - Q: What accessibility requirements apply to this screen? → A: Only testTag modifiers for automated testing (no TalkBack/accessibility announcements in scope)
 - Q: What is the GPS location request timeout? → A: No explicit timeout (assumes fast response)
 - Q: When should field validation occur? → A: On submit (when Continue button tapped)
@@ -111,7 +116,7 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 - **FR-013**: All inputs MUST persist within the in-memory Android Missing Pet flow state (NavGraph-scoped ViewModel via Koin) so that navigating backward/forward, locking the device, or experiencing temporary offline states does not wipe Step 3 data; flow state is retained until flow completion or explicit cancellation.  
 - **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances (Snackbar with Settings action) without crashing; Continue remains disabled only when location-related validation rules require it (e.g., invalid coordinate ranges), and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
 - **FR-015**: When GPS capture fails or is skipped, only the latitude/longitude inputs serve as the manual fallback; helper text MUST clarify that no additional textual location details are collected in this step.
-- **FR-016**: All interactive Composables MUST have Modifier.testTag() attributes following the `{screen}.{element}.{action}` naming convention for automated testing.
+- **FR-016**: All interactive Composables MUST have Modifier.testTag() attributes following the `{screen}.{element}` naming convention for automated testing (e.g., `animalDescription.speciesDropdown`, `animalDescription.continueButton`).
 - **FR-017**: ViewModel MUST follow MVI pattern with single StateFlow<UiState>, sealed UserIntent, and SharedFlow<UiEffect> as mandated by project architecture.
 - **FR-018**: Flow state MUST be shared via NavGraph-scoped ViewModel using Koin's navigation scope, consistent with spec 038 (Chip Number Screen) pattern.
 
@@ -134,7 +139,7 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 ## Assumptions
 
-- This feature targets Android API 26+ (Android 8.0 Oreo) as the minimum supported version (~95% device coverage).
+- This feature targets Android API 24 (Android 7.0 Nougat) as minimum, targeting API 36 (latest), consistent with project-wide configuration.
 - Curated species list and copy for helper/error text are provided by product and bundled statically with the Android app; no runtime taxonomy service or remote lookup is used on this screen.  
 - Lat/Long inputs are optional but encouraged; omission does not block Continue as long as other required fields are valid.  
 - Gender options remain binary for this release, matching the provided design; future inclusivity updates will be handled separately.  
