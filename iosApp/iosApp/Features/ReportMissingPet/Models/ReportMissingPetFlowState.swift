@@ -82,7 +82,7 @@ final class ReportMissingPetFlowState: ObservableObject {
         animalAdditionalDescription = nil
         contactDetails = nil
         managementPassword = nil
-        
+
         try? await photoAttachmentCache.clearCurrent()
     }
 }

@@ -200,9 +200,9 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Store managementPassword in FlowState for summary display
         flowState.managementPassword = managementPassword
 
-        let toastScheduler = ToastScheduler() // [FIXIT][1] to z DI, zobacz jak jest w
+        let toastScheduler = ToastScheduler()
         let viewModel = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
-        
+
         viewModel.onSubmit = { [weak self] in
             self?.exitFlow()
         }

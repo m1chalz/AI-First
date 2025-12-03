@@ -37,11 +37,11 @@
 
 **Purpose**: Add localized strings and create design constants extension for Figma specs
 
-- [X] T001 [P] Add English localization keys to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (5 new keys: report_created.title, report_created.body_paragraph_1, report_created.body_paragraph_2, report_created.code_copied, existing close button key)
-- [X] T002 [P] Add Polish localization keys to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (5 new keys matching English)
-- [X] T003 Run SwiftGen to regenerate `L10n.swift` from updated Localizable.strings files
-- [X] T004 [P] Create design constants extension in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView+Constants.swift` (colors: titleColor rgba(0,0,0,0.8), bodyColor #545F71, gradientStartColor #5C33FF, gradientEndColor #F84BA1, glowColor #FB64B6 @ 20% alpha; fonts: titleFont Hind 32px, bodyFont Hind 16px, passwordFont Arial 60px; spacing: horizontalPadding 22px, verticalSpacing 24px, lineSpacing 1.4; dimensions: passwordKerning -1.5px, blurRadius 24px, containerRadius 10px)
-- [X] T005 [P] Verify `Color+Hex` extension exists at `/iosApp/iosApp/FoundationAdditions/Color+Hex.swift` (supports 6-char RGB and 8-char ARGB formats)
+- [ ] T001 [P] Add English localization keys to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (5 new keys: report_created.title, report_created.body_paragraph_1, report_created.body_paragraph_2, report_created.code_copied, existing close button key)
+- [ ] T002 [P] Add Polish localization keys to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (5 new keys matching English)
+- [ ] T003 Run SwiftGen to regenerate `L10n.swift` from updated Localizable.strings files
+- [ ] T004 [P] Create design constants extension in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView+Constants.swift` (colors: titleColor rgba(0,0,0,0.8), bodyColor #545F71, gradientStartColor #5C33FF, gradientEndColor #F84BA1, glowColor #FB64B6 @ 20% alpha; fonts: titleFont Hind 32px, bodyFont Hind 16px, passwordFont Arial 60px; spacing: horizontalPadding 22px, verticalSpacing 24px, lineSpacing 1.4; dimensions: passwordKerning -1.5px, blurRadius 24px, containerRadius 10px)
+- [ ] T005 [P] Verify `Color+Hex` extension exists at `/iosApp/iosApp/FoundationAdditions/Color+Hex.swift` (supports 6-char RGB and 8-char ARGB formats)
 
 ---
 
@@ -49,13 +49,13 @@
 
 **Purpose**: Verify managementPassword property exists in flow state for confirmation screen
 
-**⚠️ NOTE**: Property did not exist, added in this implementation.
+**⚠️ NOTE**: Branch `035-ios-owners-details-screen` already has `managementPassword` property in `ReportMissingPetFlowState`. This phase only verifies the property exists - NO new property addition needed.
 
-- [X] T006 Verify `@Published var managementPassword: String?` property exists in `ReportMissingPetFlowState` at `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` (should be in Submission Result section)
-- [X] T007 Verify `ReportMissingPetFlowState.clear()` method clears managementPassword (should contain `managementPassword = nil`)
-- [X] T008 [P] Verify `ToastView` component exists at `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/ToastView.swift`
-- [X] T009 [P] Verify `ToastScheduler` protocol and implementation exist at `/iosApp/iosApp/Features/ReportMissingPet/Services/ToastScheduler.swift`
-- [X] T010 [P] Verify `ToastSchedulerFake` exists at `/iosApp/iosAppTests/Features/ReportMissingPet/Support/ToastSchedulerFake.swift`
+- [ ] T006 Verify `@Published var managementPassword: String?` property exists in `ReportMissingPetFlowState` at `/iosApp/iosApp/Features/ReportMissingPet/Models/ReportMissingPetFlowState.swift` (should be in Submission Result section)
+- [ ] T007 Verify `ReportMissingPetFlowState.clear()` method clears managementPassword (should contain `managementPassword = nil`)
+- [ ] T008 [P] Verify `ToastView` component exists at `/iosApp/iosApp/Features/ReportMissingPet/Views/Components/ToastView.swift`
+- [ ] T009 [P] Verify `ToastScheduler` protocol and implementation exist at `/iosApp/iosApp/Features/ReportMissingPet/Services/ToastScheduler.swift`
+- [ ] T010 [P] Verify `ToastSchedulerFake` exists at `/iosApp/iosAppTests/Features/ReportMissingPet/Support/ToastSchedulerFake.swift`
 
 **Checkpoint**: Foundation ready - User Story implementation can now begin
 
@@ -77,50 +77,50 @@
 
 **iOS Unit Tests**:
 
-- [X] T011 [P] [US1] Unit test for `ReportMissingPetFlowState` managementPassword property in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/ReportMissingPetFlowStateTests.swift` (test property exists, clear() sets to nil)
-- [X] T012 [P] [US2] Unit test for `SummaryViewModel.displayPassword` when password is nil in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (expect empty string)
-- [X] T013 [P] [US2] Unit test for `SummaryViewModel.displayPassword` when password exists in same file (expect password value returned)
-- [X] T014 [P] [US2] Unit test for `SummaryViewModel.copyPasswordToClipboard()` when password exists in same file (expect UIPasteboard contains password, showsCodeCopiedToast is true, toast scheduled for 2 seconds)
-- [X] T015 [P] [US2] Unit test for `SummaryViewModel.copyPasswordToClipboard()` when password is nil in same file (expect clipboard unchanged, showsCodeCopiedToast remains false)
+- [ ] T011 [P] [US1] Unit test for `ReportMissingPetFlowState` managementPassword property in `/iosApp/iosAppTests/Features/ReportMissingPet/Models/ReportMissingPetFlowStateTests.swift` (test property exists, clear() sets to nil)
+- [ ] T012 [P] [US2] Unit test for `SummaryViewModel.displayPassword` when password is nil in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (expect empty string)
+- [ ] T013 [P] [US2] Unit test for `SummaryViewModel.displayPassword` when password exists in same file (expect password value returned)
+- [ ] T014 [P] [US2] Unit test for `SummaryViewModel.copyPasswordToClipboard()` when password exists in same file (expect UIPasteboard contains password, showsCodeCopiedToast is true, toast scheduled for 2 seconds)
+- [ ] T015 [P] [US2] Unit test for `SummaryViewModel.copyPasswordToClipboard()` when password is nil in same file (expect clipboard unchanged, showsCodeCopiedToast remains false)
 
 **End-to-End Tests**:
 
-- [X] T016 [P] [US1] Update `SummaryScreen` page object with selectors in `/e2e-tests/mobile/screens/SummaryScreen.ts` (title, bodyParagraph1, bodyParagraph2, password, toast, closeButton)
-- [X] T017 [P] [US1] Create E2E test for confirmation messaging in `/e2e-tests/mobile/specs/report-created-confirmation.spec.ts` (verify title "Report created" and both paragraphs display)
-- [X] T018 [P] [US2] Create E2E test for password display in same spec file (verify password is visible and non-empty)
-- [X] T019 [P] [US2] Create E2E test for clipboard copy in same spec file (tap password, verify toast appears with "Code copied to clipboard" message)
+- [ ] T016 [P] [US1] Update `SummaryScreen` page object with selectors in `/e2e-tests/mobile/screens/SummaryScreen.ts` (title, bodyParagraph1, bodyParagraph2, password, toast, closeButton)
+- [ ] T017 [P] [US1] Create E2E test for confirmation messaging in `/e2e-tests/mobile/specs/report-created-confirmation.spec.ts` (verify title "Report created" and both paragraphs display)
+- [ ] T018 [P] [US2] Create E2E test for password display in same spec file (verify password is visible and non-empty)
+- [ ] T019 [P] [US2] Create E2E test for clipboard copy in same spec file (tap password, verify toast appears with "Code copied to clipboard" message)
 
 ### Implementation for User Stories 1 & 2
 
 **ViewModel Updates**:
 
-- [X] T020 [US1+US2] Update `SummaryViewModel` to add ToastScheduler dependency in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryViewModel.swift` (add private let toastScheduler: ToastSchedulerProtocol property; ViewModel observes flowState.managementPassword, does NOT own it)
-- [X] T021 [US1+US2] Update `SummaryViewModel` init to accept toastScheduler parameter in same file (update init signature; flowState already passed in existing init)
-- [X] T022 [P] [US2] Add `@Published var showsCodeCopiedToast = false` property to `SummaryViewModel` in same file (UI-only state for toast display)
-- [X] T023 [P] [US2] Add `displayPassword` computed property to `SummaryViewModel` in same file (returns flowState.managementPassword ?? "" - presentation logic for nil handling)
-- [X] T024 [US2] Implement `copyPasswordToClipboard()` method in `SummaryViewModel` in same file (copy flowState.managementPassword to UIPasteboard, show toast for 2 seconds)
-- [X] T025 [US2] Add deinit to `SummaryViewModel` to cancel scheduled toasts in same file
+- [ ] T020 [US1+US2] Update `SummaryViewModel` to add ToastScheduler dependency in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryViewModel.swift` (add private let toastScheduler: ToastSchedulerProtocol property; ViewModel observes flowState.managementPassword, does NOT own it)
+- [ ] T021 [US1+US2] Update `SummaryViewModel` init to accept toastScheduler parameter in same file (update init signature; flowState already passed in existing init)
+- [ ] T022 [P] [US2] Add `@Published var showsCodeCopiedToast = false` property to `SummaryViewModel` in same file (UI-only state for toast display)
+- [ ] T023 [P] [US2] Add `displayPassword` computed property to `SummaryViewModel` in same file (returns flowState.managementPassword ?? "" - presentation logic for nil handling)
+- [ ] T024 [US2] Implement `copyPasswordToClipboard()` method in `SummaryViewModel` in same file (copy flowState.managementPassword to UIPasteboard, show toast for 2 seconds)
+- [ ] T025 [US2] Add deinit to `SummaryViewModel` to cancel scheduled toasts in same file
 
 **View Implementation**:
 
-- [X] T026 [US1+US2] Replace placeholder `SummaryView` implementation in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` with report confirmation UI (white background, ScrollView with VStack for content, use Constants.horizontalPadding=22px, Constants.verticalSpacing=24px from T004)
-- [X] T027 [P] [US1] Add title text to `SummaryView` using `L10n.ReportCreated.title` with Constants.titleFont (Hind Regular 32px) and Constants.titleColor (rgba(0,0,0,0.8))
-- [X] T028 [P] [US1] Add body paragraph 1 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph1` with Constants.bodyFont (Hind Regular 16px), Constants.bodyColor (#545F71), and Constants.lineSpacing (1.4)
-- [X] T029 [P] [US1] Add body paragraph 2 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph2` with Constants.bodyFont, Constants.bodyColor, Constants.lineSpacing (same as paragraph 1)
-- [X] T030 [US2] Create `passwordContainer` computed property in `SummaryView` with gradient background (LinearGradient from Constants.gradientStartColor to gradientEndColor, glow overlay: #FB64B6 @ 20% alpha, 24px blur radius, 96×90px size, max corner radius)
-- [X] T031 [US2] Add password text display in `passwordContainer` using `viewModel.displayPassword` with Constants.passwordFont (Arial Regular 60px), Constants.passwordKerning (-1.5px), white color
-- [X] T032 [US2] Wrap `passwordContainer` in Button with `viewModel.copyPasswordToClipboard` action
-- [X] T033 [US2] Add toast display in bottom VStack when `viewModel.showsCodeCopiedToast` is true using existing `ToastView` component with message from L10n (reuse Constants.toastDuration if defined in T004)
-- [X] T034 [P] [US1] Add `.accessibilityIdentifier("summary.title")` to title text
-- [X] T035 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph1")` to first body paragraph
-- [X] T036 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph2")` to second body paragraph
-- [X] T037 [P] [US2] Add `.accessibilityIdentifier("summary.password")` to password text
-- [X] T038 [P] [US2] Add `.accessibilityIdentifier("summary.toast")` to toast view
-- [X] T039 [P] [US1+US2] Add SwiftUI preview for `SummaryView` with mock data (one with password "5216577", one with nil password)
+- [ ] T026 [US1+US2] Replace placeholder `SummaryView` implementation in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` with report confirmation UI (white background, ScrollView with VStack for content, use Constants.horizontalPadding=22px, Constants.verticalSpacing=24px from T004)
+- [ ] T027 [P] [US1] Add title text to `SummaryView` using `L10n.ReportCreated.title` with Constants.titleFont (Hind Regular 32px) and Constants.titleColor (rgba(0,0,0,0.8))
+- [ ] T028 [P] [US1] Add body paragraph 1 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph1` with Constants.bodyFont (Hind Regular 16px), Constants.bodyColor (#545F71), and Constants.lineSpacing (1.4)
+- [ ] T029 [P] [US1] Add body paragraph 2 text to `SummaryView` using `L10n.ReportCreated.bodyParagraph2` with Constants.bodyFont, Constants.bodyColor, Constants.lineSpacing (same as paragraph 1)
+- [ ] T030 [US2] Create `passwordContainer` computed property in `SummaryView` with gradient background (LinearGradient from Constants.gradientStartColor to gradientEndColor, glow overlay: #FB64B6 @ 20% alpha, 24px blur radius, 96×90px size, max corner radius)
+- [ ] T031 [US2] Add password text display in `passwordContainer` using `viewModel.displayPassword` with Constants.passwordFont (Arial Regular 60px), Constants.passwordKerning (-1.5px), white color
+- [ ] T032 [US2] Wrap `passwordContainer` in Button with `viewModel.copyPasswordToClipboard` action
+- [ ] T033 [US2] Add toast display in bottom VStack when `viewModel.showsCodeCopiedToast` is true using existing `ToastView` component with message from L10n (reuse Constants.toastDuration if defined in T004)
+- [ ] T034 [P] [US1] Add `.accessibilityIdentifier("summary.title")` to title text
+- [ ] T035 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph1")` to first body paragraph
+- [ ] T036 [P] [US1] Add `.accessibilityIdentifier("summary.bodyParagraph2")` to second body paragraph
+- [ ] T037 [P] [US2] Add `.accessibilityIdentifier("summary.password")` to password text
+- [ ] T038 [P] [US2] Add `.accessibilityIdentifier("summary.toast")` to toast view
+- [ ] T039 [P] [US1+US2] Add SwiftUI preview for `SummaryView` with mock data (one with password "5216577", one with nil password)
 
 **Integration**:
 
-- [X] T040 [US1+US2] Update `ReportMissingPetCoordinator` to pass ToastScheduler to SummaryViewModel init in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` (only change: add toastScheduler parameter to existing SummaryViewModel init call)
+- [ ] T040 [US1+US2] Update `ReportMissingPetCoordinator` to pass ToastScheduler to SummaryViewModel init in `/iosApp/iosApp/Features/ReportMissingPet/Coordinators/ReportMissingPetCoordinator.swift` (only change: add toastScheduler parameter to existing SummaryViewModel init call)
 
 **Checkpoint**: At this point, User Stories 1 and 2 should be fully functional - confirmation screen displays with title, body text, and copyable password
 
@@ -138,18 +138,18 @@
 
 **iOS Unit Tests**:
 
-- [X] T041 [P] [US3] Unit test for `SummaryViewModel.handleSubmit()` in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (verify onSubmit closure is called)
+- [ ] T041 [P] [US3] Unit test for `SummaryViewModel.handleSubmit()` in `/iosApp/iosAppTests/Features/ReportMissingPet/Views/SummaryViewModelTests.swift` (verify onSubmit closure is called)
 
 **End-to-End Tests**:
 
-- [X] T042 [P] [US3] Create E2E test for Close button in `/e2e-tests/mobile/specs/report-created-confirmation.spec.ts` (tap Close, verify flow dismissed and home/dashboard displayed)
+- [ ] T042 [P] [US3] Create E2E test for Close button in `/e2e-tests/mobile/specs/report-created-confirmation.spec.ts` (tap Close, verify flow dismissed and home/dashboard displayed)
 
 ### Implementation for User Story 3
 
 **View Updates**:
 
-- [X] T043 [US3] Verify Close button exists in `SummaryView` at bottom of screen in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` (uses `L10n.ReportMissingPet.Button.close`, calls `viewModel.handleSubmit()`, styled with Constants: 327px width, 52px height, 10px radius, #155DFC background, white text 18px Hind)
-- [X] T044 [P] [US3] Add `.accessibilityIdentifier("summary.closeButton")` to Close button in same file
+- [ ] T043 [US3] Verify Close button exists in `SummaryView` at bottom of screen in `/iosApp/iosApp/Features/ReportMissingPet/Views/Summary/SummaryView.swift` (uses `L10n.ReportMissingPet.Button.close`, calls `viewModel.handleSubmit()`, styled with Constants: 327px width, 52px height, 10px radius, #155DFC background, white text 18px Hind)
+- [ ] T044 [P] [US3] Add `.accessibilityIdentifier("summary.closeButton")` to Close button in same file
 
 **Checkpoint**: At this point, all 3 user stories should be fully functional and independently testable
 
