@@ -68,13 +68,6 @@
     </issue>
 
     <issue
-        id="ObsoleteSdkInt"
-        message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 24. Merge all the resources in this folder into `drawable`.">
-        <location
-            file="src/androidMain/res/drawable-v24"/>
-    </issue>
-
-    <issue
         id="MonochromeLauncherIcon"
         message="The application adaptive icon is missing a monochrome tag"
         errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
@@ -105,61 +98,6 @@
             file="src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalCard.kt"
             line="125"
             column="35"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): java.time.format.DateTimeFormatter#ofPattern"
-        errorLine1="    private val inputFormatter = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;, Locale.US)"
-        errorLine2="                                                   ~~~~~~~~~">
-        <location
-            file="src/androidMain/kotlin/com/intive/aifirst/petspot/lib/DateFormatter.kt"
-            line="13"
-            column="51"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): java.time.format.DateTimeFormatter#ofPattern"
-        errorLine1="    private val outputFormatter = DateTimeFormatter.ofPattern(&quot;MMM dd, yyyy&quot;, Locale.US)"
-        errorLine2="                                                    ~~~~~~~~~">
-        <location
-            file="src/androidMain/kotlin/com/intive/aifirst/petspot/lib/DateFormatter.kt"
-            line="14"
-            column="52"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): java.time.LocalDate#parse"
-        errorLine1="            val date = LocalDate.parse(dateString, inputFormatter)"
-        errorLine2="                                 ~~~~~">
-        <location
-            file="src/androidMain/kotlin/com/intive/aifirst/petspot/lib/DateFormatter.kt"
-            line="26"
-            column="34"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): java.time.LocalDate#format"
-        errorLine1="            date.format(outputFormatter)"
-        errorLine2="                 ~~~~~~">
-        <location
-            file="src/androidMain/kotlin/com/intive/aifirst/petspot/lib/DateFormatter.kt"
-            line="27"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Exception requires API level 26, or core library desugaring (current min is 24): java.time.format.DateTimeParseException"
-        errorLine1="        } catch (e: DateTimeParseException) {"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/androidMain/kotlin/com/intive/aifirst/petspot/lib/DateFormatter.kt"
-            line="28"
-            column="20"/>
     </issue>
 
 </issues>
