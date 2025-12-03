@@ -79,8 +79,6 @@
 "animalSpecies.cat" = "Cat";
 "animalSpecies.bird" = "Bird";
 "animalSpecies.rabbit" = "Rabbit";
-"animalSpecies.rodent" = "Rodent";
-"animalSpecies.reptile" = "Reptile";
 "animalSpecies.other" = "Other";
 
 /* MARK: - Animal Gender */

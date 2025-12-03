@@ -7,8 +7,6 @@ enum AnimalSpeciesDTO: String, Codable {
     case cat = "CAT"
     case bird = "BIRD"
     case rabbit = "RABBIT"
-    case rodent = "RODENT"
-    case reptile = "REPTILE"
     case other = "OTHER"
     
     /// Custom decoder that defaults to .other for unknown species values
@@ -26,8 +24,6 @@ enum AnimalSpeciesDTO: String, Codable {
         case .cat: self = .cat
         case .bird: self = .bird
         case .rabbit: self = .rabbit
-        case .rodent: self = .rodent
-        case .reptile: self = .reptile
         case .other: self = .other
         }
     }
@@ -39,8 +35,6 @@ enum AnimalSpeciesDTO: String, Codable {
         case .cat: return .cat
         case .bird: return .bird
         case .rabbit: return .rabbit
-        case .rodent: return .rodent
-        case .reptile: return .reptile
         case .other: return .other
         }
     }

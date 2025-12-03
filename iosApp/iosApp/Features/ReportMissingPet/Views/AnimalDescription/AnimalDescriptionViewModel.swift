@@ -415,12 +415,3 @@ class AnimalDescriptionViewModel: ObservableObject {
         print("deinit AnimalDescriptionViewModel")
     }
 }
-
-// MARK: - AnimalSpecies CaseIterable Extension
-
-extension AnimalSpecies: CaseIterable {
-    public static var allCases: [AnimalSpecies] {
-        return [.dog, .cat, .bird, .rabbit, .rodent, .reptile, .other]
-    }
-}
-
