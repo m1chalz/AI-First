@@ -32,9 +32,9 @@
 
 **Purpose**: Project verification and domain model creation
 
-- [ ] T001 Verify prerequisites exist: `ReportMissingPetFlowState` contract (`ReportMissingFlowState.kt`), `DescriptionScreen.kt` placeholder, `LocationRepository.kt`, `GetCurrentLocationUseCase.kt`
-- [ ] T002 [P] Create `AnimalGender` enum in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnimalGender.kt`
-- [ ] T003 [P] Create `SpeciesTaxonomy` object with bundled species list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/data/SpeciesTaxonomy.kt`
+- [X] T001 Verify prerequisites exist: `ReportMissingPetFlowState` contract (`ReportMissingFlowState.kt`), `DescriptionScreen.kt` placeholder, `LocationRepository.kt`, `GetCurrentLocationUseCase.kt`
+- [X] T002 [P] Create `AnimalGender` enum in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnimalGender.kt`
+- [X] T003 [P] Create `SpeciesTaxonomy` object with bundled species list in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/data/SpeciesTaxonomy.kt`
 
 ---
 
@@ -44,11 +44,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Extend `ReportMissingPetFlowState.FlowData` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt` with animal description fields (petName, disappearanceDate, animalSpecies, animalRace, animalGender, animalAge, latitude, longitude, additionalDescription)
-- [ ] T005 Create `AnimalDescriptionUiState` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUiState.kt`
-- [ ] T006 [P] Create `AnimalDescriptionUserIntent` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUserIntent.kt`
-- [ ] T007 [P] Create `AnimalDescriptionUiEffect` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUiEffect.kt`
-- [ ] T008 Create `AnimalDescriptionValidator` with `ValidationResult` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidator.kt`
+- [X] T004 Extend `ReportMissingPetFlowState.FlowData` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt` with animal description fields (petName, disappearanceDate, animalSpecies, animalRace, animalGender, animalAge, latitude, longitude, additionalDescription)
+- [X] T005 Create `AnimalDescriptionUiState` data class in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUiState.kt`
+- [X] T006 [P] Create `AnimalDescriptionUserIntent` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUserIntent.kt`
+- [X] T007 [P] Create `AnimalDescriptionUiEffect` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/mvi/AnimalDescriptionUiEffect.kt`
+- [X] T008 Create `AnimalDescriptionValidator` with `ValidationResult` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidator.kt`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 

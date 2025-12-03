@@ -1,9 +1,11 @@
 package com.intive.aifirst.petspot.features.reportmissing.presentation.state
 
+import com.intive.aifirst.petspot.features.reportmissing.domain.models.AnimalGender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.time.LocalDate
 
 /**
  * Shared state holder for the Report Missing Pet flow.
@@ -54,9 +56,31 @@ class ReportMissingFlowState {
         }
     }
 
-    /** Update description (Step 3/4) */
-    fun updateDescription(description: String) {
-        _data.update { it.copy(description = description) }
+    /** Update animal description fields (Step 3/4) */
+    fun updateAnimalDescription(
+        disappearanceDate: LocalDate?,
+        petName: String,
+        animalSpecies: String,
+        animalRace: String,
+        animalGender: AnimalGender?,
+        animalAge: Int?,
+        latitude: Double?,
+        longitude: Double?,
+        additionalDescription: String,
+    ) {
+        _data.update {
+            it.copy(
+                disappearanceDate = disappearanceDate,
+                petName = petName,
+                animalSpecies = animalSpecies,
+                animalRace = animalRace,
+                animalGender = animalGender,
+                animalAge = animalAge,
+                latitude = latitude,
+                longitude = longitude,
+                additionalDescription = additionalDescription,
+            )
+        }
     }
 
     /** Update contact email (Step 4/4) */
@@ -80,11 +104,24 @@ class ReportMissingFlowState {
  * Each field corresponds to a step in the flow.
  */
 data class FlowData(
+    // Step 1/4 - Chip Number
     val chipNumber: String = "",
+    // Step 2/4 - Photo
     val photoUri: String? = null,
     val photoFilename: String? = null,
     val photoSizeBytes: Long = 0,
-    val description: String = "",
+    // Step 3/4 - Animal Description
+    // Note: null means "use today's date" - ViewModel sets initial value to avoid API level issue
+    val disappearanceDate: LocalDate? = null,
+    val petName: String = "",
+    val animalSpecies: String = "",
+    val animalRace: String = "",
+    val animalGender: AnimalGender? = null,
+    val animalAge: Int? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val additionalDescription: String = "",
+    // Step 4/4 - Contact Details
     val contactEmail: String = "",
     val contactPhone: String = "",
 )
