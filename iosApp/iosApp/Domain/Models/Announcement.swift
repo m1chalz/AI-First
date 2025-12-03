@@ -1,10 +1,11 @@
 import Foundation
 
-/// Represents an animal in the PetSpot system.
+/// Represents an animal announcement in the PetSpot system.
+/// Created from AnnouncementDTO received from the backend API.
 /// Contains all information needed for list display and detail views.
 ///
 /// - Note: Translated from Kotlin Multiplatform shared module to Swift.
-struct Animal {
+struct Announcement {
     /// Unique identifier (UUID or database ID)
     let id: String
     

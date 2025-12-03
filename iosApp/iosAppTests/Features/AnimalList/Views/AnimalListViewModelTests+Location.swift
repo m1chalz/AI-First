@@ -56,7 +56,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
-        fakeRepository.stubbedAnimals = [Animal(
+        fakeRepository.stubbedAnnouncements = [Announcement(
             id: "test",
             name: "Test",
             photoUrl: "test",
@@ -88,7 +88,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         let expectedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(expectedLocation)
-        fakeRepository.stubbedAnimals = [Animal(
+        fakeRepository.stubbedAnnouncements = [Announcement(
             id: "test",
             name: "Test",
             photoUrl: "test",
@@ -125,7 +125,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(nil) // Simulate location fetch failure
-        fakeRepository.stubbedAnimals = [Animal(
+        fakeRepository.stubbedAnnouncements = [Announcement(
             id: "test",
             name: "Test",
             photoUrl: "test",
@@ -154,7 +154,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = [Animal(
+        fakeRepository.stubbedAnnouncements = [Announcement(
             id: "test",
             name: "Test",
             photoUrl: "test",
@@ -184,7 +184,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await setLocationServiceLocation(nil)
-        fakeRepository.stubbedAnimals = [Animal(
+        fakeRepository.stubbedAnnouncements = [Announcement(
             id: "test",
             name: "Test",
             photoUrl: "test",
@@ -216,7 +216,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.reset()
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -234,7 +234,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -251,7 +251,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -269,7 +269,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
         await setLocationServiceLocation(Coordinate(latitude: 52.2297, longitude: 21.0122))
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -287,7 +287,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
         let expectedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceLocation(expectedLocation)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -306,7 +306,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.denied)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -370,7 +370,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     func test_loadAnimals_whenPermissionDenied_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -385,7 +385,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     func test_loadAnimals_whenPermissionRestricted_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.restricted)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -400,7 +400,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     func test_loadAnimals_whenPopupAlreadyShown_shouldNotShowAgain() async {
         // Given
         await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         
@@ -439,7 +439,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     // T051: Unit test AnimalListViewModel.continueWithoutLocation() queries without coordinates
     func test_continueWithoutLocation_whenCalled_shouldQueryWithoutLocation() async {
         // Given
-        fakeRepository.stubbedAnimals = []
+        fakeRepository.stubbedAnnouncements = []
         
         viewModel = createViewModel()
         

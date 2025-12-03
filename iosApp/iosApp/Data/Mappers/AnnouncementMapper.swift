@@ -1,33 +1,30 @@
 import Foundation
 
-/// Mapper for converting between DTOs (Data layer) and Domain models
-class AnnouncementMapper {
+/// Mapper for converting AnnouncementDTO to Announcement domain model
+struct AnnouncementMapper {
+    private let photoURLMapper: PhotoURLMapper
     
-    /// Converts DTO from HTTP response to domain model
-    func toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult {
-        AnnouncementResult(
-            id: dto.id,
-            managementPassword: dto.managementPassword
-        )
+    init(photoURLMapper: PhotoURLMapper = PhotoURLMapper()) {
+        self.photoURLMapper = photoURLMapper
     }
     
-    /// Converts domain model to DTO for HTTP request
-    func toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate]
-        
-        return CreateAnnouncementRequestDTO(
-            species: AnimalSpeciesDTO(domain: data.species),
-            sex: AnimalGenderDTO(domain: data.sex),
-            lastSeenDate: dateFormatter.string(from: data.lastSeenDate),
-            locationLatitude: data.location.latitude,
-            locationLongitude: data.location.longitude,
-            email: data.contact.email,
-            phone: data.contact.phone,
-            status: AnimalStatusDTO(domain: .active),
-            microchipNumber: data.microchipNumber,
-            description: data.description,
-            reward: data.reward
+    /// Converts AnnouncementDTO to Announcement
+    /// - Parameter dto: DTO from backend API
+    /// - Returns: Announcement domain model, or nil if DTO contains invalid data
+    func map(_ dto: AnnouncementDTO) -> Announcement? {
+        return Announcement(
+            id: dto.id,
+            name: dto.petName ?? "<invalid>",
+            photoUrl: photoURLMapper.resolve(dto.photoUrl),
+            coordinate: Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude),
+            species: dto.species.toDomain,
+            breed: dto.breed,
+            gender: dto.sex?.toDomain ?? .unknown,
+            status: dto.status.toDomain,
+            lastSeenDate: dto.lastSeenDate,
+            description: dto.description,
+            email: dto.email,
+            phone: dto.phone
         )
     }
 }

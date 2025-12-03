@@ -2,19 +2,19 @@ import XCTest
 @testable import PetSpot
 
 /**
- * Unit tests for AnimalMapper
+ * Unit tests for AnnouncementMapper
  * Tests DTO → Domain model conversion
  * Follows Given-When-Then structure per constitution
  */
-final class AnimalMapperTests: XCTestCase {
+final class AnnouncementMapperTests: XCTestCase {
     
-    var sut: AnimalMapper!
+    var sut: AnnouncementMapper!
     var mockPhotoURLMapper: PhotoURLMapper!
     
     override func setUp() {
         super.setUp()
         mockPhotoURLMapper = PhotoURLMapper(baseURL: "http://localhost:3000")
-        sut = AnimalMapper(photoURLMapper: mockPhotoURLMapper)
+        sut = AnnouncementMapper(photoURLMapper: mockPhotoURLMapper)
     }
     
     override func tearDown() {
@@ -25,7 +25,7 @@ final class AnimalMapperTests: XCTestCase {
     
     // MARK: - Success Cases
     
-    func test_map_whenValidDTO_shouldReturnAnimal() {
+    func test_map_whenValidDTO_shouldReturnAnnouncement() {
         // Given - valid DTO
         let dto = AnnouncementDTO(
             id: "test-id",
@@ -45,19 +45,19 @@ final class AnimalMapperTests: XCTestCase {
         )
         
         // When
-        let animal = sut.map(dto)
+        let announcement = sut.map(dto)
         
         // Then
-        XCTAssertNotNil(animal)
-        XCTAssertEqual(animal?.id, "test-id")
-        XCTAssertEqual(animal?.name, "Buddy")
-        XCTAssertEqual(animal?.species, .dog)
-        XCTAssertEqual(animal?.status, .active)
-        XCTAssertEqual(animal?.photoUrl, "http://localhost:3000/images/buddy.jpg") // Resolved URL
-        XCTAssertEqual(animal?.breed, "Golden Retriever")
-        XCTAssertEqual(animal?.gender, .male)
-        XCTAssertEqual(animal?.coordinate.latitude, 52.2297)
-        XCTAssertEqual(animal?.coordinate.longitude, 21.0122)
+        XCTAssertNotNil(announcement)
+        XCTAssertEqual(announcement?.id, "test-id")
+        XCTAssertEqual(announcement?.name, "Buddy")
+        XCTAssertEqual(announcement?.species, .dog)
+        XCTAssertEqual(announcement?.status, .active)
+        XCTAssertEqual(announcement?.photoUrl, "http://localhost:3000/images/buddy.jpg") // Resolved URL
+        XCTAssertEqual(announcement?.breed, "Golden Retriever")
+        XCTAssertEqual(announcement?.gender, .male)
+        XCTAssertEqual(announcement?.coordinate.latitude, 52.2297)
+        XCTAssertEqual(announcement?.coordinate.longitude, 21.0122)
     }
     
     func test_map_whenMISSINGStatus_shouldMapToACTIVE() {
@@ -65,11 +65,11 @@ final class AnimalMapperTests: XCTestCase {
         let dto = makeTestDTO(status: .missing)
         
         // When
-        let animal = sut.map(dto)
+        let announcement = sut.map(dto)
         
         // Then
-        XCTAssertNotNil(animal)
-        XCTAssertEqual(animal?.status, .active)
+        XCTAssertNotNil(announcement)
+        XCTAssertEqual(announcement?.status, .active)
     }
     
     func test_map_whenNullSex_shouldDefaultToUnknown() {
@@ -77,11 +77,11 @@ final class AnimalMapperTests: XCTestCase {
         let dto = makeTestDTO(sex: nil)
         
         // When
-        let animal = sut.map(dto)
+        let announcement = sut.map(dto)
         
         // Then
-        XCTAssertNotNil(animal)
-        XCTAssertEqual(animal?.gender, .unknown)
+        XCTAssertNotNil(announcement)
+        XCTAssertEqual(announcement?.gender, .unknown)
     }
     
     func test_map_whenNullBreed_shouldBeNil() {
@@ -89,11 +89,11 @@ final class AnimalMapperTests: XCTestCase {
         let dto = makeTestDTO(breed: nil)
         
         // When
-        let animal = sut.map(dto)
+        let announcement = sut.map(dto)
         
         // Then
-        XCTAssertNotNil(animal)
-        XCTAssertNil(animal?.breed)
+        XCTAssertNotNil(announcement)
+        XCTAssertNil(announcement?.breed)
     }
     
     // MARK: - Failure Cases

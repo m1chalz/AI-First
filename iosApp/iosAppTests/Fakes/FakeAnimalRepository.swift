@@ -22,8 +22,8 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     /// For location testing - tracks location parameter passed
     var lastLocationParameter: Coordinate?
     
-    /// For location testing - stubbed animals to return
-    var stubbedAnimals: [Animal] = []
+    /// For location testing - stubbed announcements to return
+    var stubbedAnnouncements: [Announcement] = []
     
     /// For testing async cancellation - simulates slow network
     var delayDuration: TimeInterval = 0
@@ -68,7 +68,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     /// Creates a fake repository with configurable behavior.
     ///
     /// - Parameters:
-    ///   - animalCount: Number of mock animals to return (default: 16)
+    ///   - animalCount: Number of mock announcements to return (default: 16)
     ///   - shouldFail: Whether to throw error instead of returning data (default: false)
     ///   - error: Error to throw when shouldFail is true (default: generic error)
     init(
@@ -83,7 +83,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     
     // MARK: - AnimalRepositoryProtocol Implementation
     
-    func getAnimals(near location: Coordinate?, range: Int) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?, range: Int) async throws -> [Announcement] {
         getAnimalsCallCount += 1
         lastLocationParameter = location
         
@@ -96,11 +96,11 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             throw error
         }
         
-        if !stubbedAnimals.isEmpty {
-            return stubbedAnimals
+        if !stubbedAnnouncements.isEmpty {
+            return stubbedAnnouncements
         }
         
-        return generateMockAnimals(count: animalCount)
+        return generateMockAnnouncements(count: animalCount)
     }
     
     func getPetDetails(id: String) async throws -> PetDetails {
@@ -149,13 +149,13 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
     
     // MARK: - Mock Data Generation
     
-    /// Generates mock animal data for testing.
+    /// Generates mock announcement data for testing.
     /// Matches structure of production mock data for consistency.
-    private func generateMockAnimals(count: Int) -> [Animal] {
+    private func generateMockAnnouncements(count: Int) -> [Announcement] {
         guard count > 0 else { return [] }
         
-        let mockAnimals: [Animal] = [
-            Animal(
+        let mockAnnouncements: [Announcement] = [
+            Announcement(
                 id: "1",
                 name: "Fluffy",
                 photoUrl: "placeholder_cat",
@@ -169,7 +169,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "john.doe@example.com",
                 phone: "+48 123 456 789"
             ),
-            Animal(
+            Announcement(
                 id: "2",
                 name: "Rex",
                 photoUrl: "placeholder_dog",
@@ -183,7 +183,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "anna.smith@example.com",
                 phone: nil
             ),
-            Animal(
+            Announcement(
                 id: "3",
                 name: "Bella",
                 photoUrl: "placeholder_cat",
@@ -197,7 +197,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: nil,
                 phone: "+48 987 654 321"
             ),
-            Animal(
+            Announcement(
                 id: "4",
                 name: "Buddy",
                 photoUrl: "placeholder_dog",
@@ -211,7 +211,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "mike@example.com",
                 phone: "+48 111 222 333"
             ),
-            Animal(
+            Announcement(
                 id: "5",
                 name: "Tweety",
                 photoUrl: "placeholder_bird",
@@ -225,7 +225,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "sarah@example.com",
                 phone: nil
             ),
-            Animal(
+            Announcement(
                 id: "6",
                 name: "Snowball",
                 photoUrl: "placeholder_cat",
@@ -239,7 +239,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: nil,
                 phone: nil
             ),
-            Animal(
+            Announcement(
                 id: "7",
                 name: "Snoopy",
                 photoUrl: "placeholder_dog",
@@ -253,7 +253,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "finder@example.com",
                 phone: "+48 555 666 777"
             ),
-            Animal(
+            Announcement(
                 id: "8",
                 name: "Thumper",
                 photoUrl: "placeholder_rabbit",
@@ -267,7 +267,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "owner@example.com",
                 phone: "+48 444 333 222"
             ),
-            Animal(
+            Announcement(
                 id: "9",
                 name: "Shadow",
                 photoUrl: "placeholder_dog",
@@ -281,7 +281,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: nil,
                 phone: "+48 888 999 000"
             ),
-            Animal(
+            Announcement(
                 id: "10",
                 name: "Whiskers",
                 photoUrl: "placeholder_cat",
@@ -295,7 +295,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "cat.owner@example.com",
                 phone: nil
             ),
-            Animal(
+            Announcement(
                 id: "11",
                 name: "Luna",
                 photoUrl: "placeholder_dog",
@@ -309,7 +309,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "luna.owner@example.com",
                 phone: "+48 222 333 444"
             ),
-            Animal(
+            Announcement(
                 id: "12",
                 name: "Charlie",
                 photoUrl: "placeholder_cat",
@@ -323,7 +323,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "finder123@example.com",
                 phone: nil
             ),
-            Animal(
+            Announcement(
                 id: "13",
                 name: "Max",
                 photoUrl: "placeholder_dog",
@@ -337,7 +337,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "max.family@example.com",
                 phone: "+48 333 444 555"
             ),
-            Animal(
+            Announcement(
                 id: "14",
                 name: "Milo",
                 photoUrl: "placeholder_bird",
@@ -351,7 +351,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: nil,
                 phone: "+48 666 777 888"
             ),
-            Animal(
+            Announcement(
                 id: "15",
                 name: "Daisy",
                 photoUrl: "placeholder_cat",
@@ -365,7 +365,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
                 email: "daisy.home@example.com",
                 phone: "+48 777 888 999"
             ),
-            Animal(
+            Announcement(
                 id: "16",
                 name: "Rocky",
                 photoUrl: "placeholder_dog",
@@ -381,8 +381,8 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
             )
         ]
         
-        // Return requested number of animals (cycle through if count > mockAnimals.count)
-        return (0..<count).map { i in mockAnimals[i % mockAnimals.count] }
+        // Return requested number of announcements (cycle through if count > mockAnnouncements.count)
+        return (0..<count).map { i in mockAnnouncements[i % mockAnnouncements.count] }
     }
     
     private func generateMockPetDetails(id: String) -> PetDetails? {

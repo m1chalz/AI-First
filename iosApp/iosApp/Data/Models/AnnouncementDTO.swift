@@ -4,7 +4,7 @@ import Foundation
 /// Maps to individual announcement object in backend response
 struct AnnouncementDTO: Codable {
     let id: String
-    let petName: String
+    let petName: String?
     let species: AnimalSpeciesDTO
     let status: AnimalStatusDTO
     let photoUrl: String

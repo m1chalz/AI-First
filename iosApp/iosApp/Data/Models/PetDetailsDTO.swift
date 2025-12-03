@@ -4,7 +4,7 @@ import Foundation
 /// Maps to GET /api/v1/announcements/:id response
 struct PetDetailsDTO: Codable {
     let id: String
-    let petName: String
+    let petName: String?
     let species: AnimalSpeciesDTO
     let status: AnimalStatusDTO
     let photoUrl: String

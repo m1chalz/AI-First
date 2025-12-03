@@ -12,9 +12,9 @@ final class AnimalCardViewModelTests: XCTestCase {
     // MARK: - Helper Methods
     
     /**
-     * Creates a test Animal with default values.
+     * Creates a test Announcement with default values.
      */
-    private func makeTestAnimal(
+    private func makeTestAnnouncement(
         id: String = "test-id-123",
         name: String = "Buddy",
         breed: String? = "Golden Retriever",
@@ -23,8 +23,8 @@ final class AnimalCardViewModelTests: XCTestCase {
         species: AnimalSpecies = .dog,
         status: AnimalStatus = .active,
         lastSeenDate: String = "20/11/2024"
-    ) -> Animal {
-        return Animal(
+    ) -> Announcement {
+        return Announcement(
             id: id,
             name: name,
             photoUrl: "https://example.com/photo.jpg",
@@ -44,8 +44,8 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_speciesName_shouldReturnDisplayName() {
         // Given - ViewModel with dog species
-        let animal = makeTestAnimal(species: .dog)
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+        let announcement = makeTestAnnouncement(species: .dog)
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing speciesName
         let speciesName = viewModel.speciesName
@@ -59,8 +59,8 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_breedName_shouldReturnBreed() {
         // Given - ViewModel with Golden Retriever breed
-        let animal = makeTestAnimal(breed: "Golden Retriever")
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+        let announcement = makeTestAnnouncement(breed: "Golden Retriever")
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing breedName
         let breedName = viewModel.breedName
@@ -74,8 +74,8 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_statusText_shouldReturnStatusDisplayName() {
         // Given - ViewModel with active status
-        let animal = makeTestAnimal(status: .active)
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+        let announcement = makeTestAnnouncement(status: .active)
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing statusText
         let statusText = viewModel.statusText
@@ -89,8 +89,8 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_statusColorHex_shouldReturnBadgeColorHex() {
         // Given - ViewModel with active status
-        let animal = makeTestAnimal(status: .active)
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+        let announcement = makeTestAnnouncement(status: .active)
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing statusColorHex
         let colorHex = viewModel.statusColorHex
@@ -105,8 +105,8 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_dateText_shouldReturnLastSeenDate() {
         // Given - ViewModel with specific date
-        let animal = makeTestAnimal(lastSeenDate: "20/11/2024")
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+        let announcement = makeTestAnnouncement(lastSeenDate: "20/11/2024")
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing dateText
         let dateText = viewModel.dateText
@@ -116,18 +116,18 @@ final class AnimalCardViewModelTests: XCTestCase {
     }
     
     /**
-     * Tests that id returns animal ID.
+     * Tests that id returns announcement ID.
      */
-    func test_id_shouldReturnAnimalId() {
-        // Given - ViewModel with specific animal ID
-        let animal = makeTestAnimal(id: "test-animal-456")
-        let viewModel = AnimalCardViewModel(animal: animal, onAction: { _ in })
+    func test_id_shouldReturnAnnouncementId() {
+        // Given - ViewModel with specific announcement ID
+        let announcement = makeTestAnnouncement(id: "test-announcement-456")
+        let viewModel = AnimalCardViewModel(announcement: announcement, onAction: { _ in })
         
         // When - accessing id
         let id = viewModel.id
         
-        // Then - should return animal ID
-        XCTAssertEqual(id, "test-animal-456", "id should return animal.id")
+        // Then - should return announcement ID
+        XCTAssertEqual(id, "test-announcement-456", "id should return announcement.id")
     }
     
     // MARK: - Test handleTap Action
@@ -137,18 +137,18 @@ final class AnimalCardViewModelTests: XCTestCase {
      */
     func test_handleTap_shouldInvokeCallbackWithSelectedAction() {
         // Given - ViewModel with action callback
-        let animal = makeTestAnimal(id: "tapped-animal-789")
+        let announcement = makeTestAnnouncement(id: "tapped-announcement-789")
         var capturedAction: AnimalAction?
-        let viewModel = AnimalCardViewModel(animal: animal) { action in
+        let viewModel = AnimalCardViewModel(announcement: announcement) { action in
             capturedAction = action
         }
         
         // When - handleTap is called
         viewModel.handleTap()
         
-        // Then - should invoke callback with .selected action containing animal ID
-        if case .selected(let animalId) = capturedAction {
-            XCTAssertEqual(animalId, "tapped-animal-789", "Should invoke callback with correct animal ID")
+        // Then - should invoke callback with .selected action containing announcement ID
+        if case .selected(let announcementId) = capturedAction {
+            XCTAssertEqual(announcementId, "tapped-announcement-789", "Should invoke callback with correct announcement ID")
         } else {
             XCTFail("Expected .selected action, got \(String(describing: capturedAction))")
         }
@@ -157,33 +157,33 @@ final class AnimalCardViewModelTests: XCTestCase {
     // MARK: - Test update Method
     
     /**
-     * Tests that update changes animal and updates computed properties.
+     * Tests that update changes announcement and updates computed properties.
      */
-    func test_update_shouldUpdateAnimalAndProperties() {
-        // Given - ViewModel with initial animal
-        let initialAnimal = makeTestAnimal(
+    func test_update_shouldUpdateAnnouncementAndProperties() {
+        // Given - ViewModel with initial announcement
+        let initialAnnouncement = makeTestAnnouncement(
             id: "same-id",
             breed: "Golden Retriever",
             latitude: 52.2297,
             longitude: 21.0122,
             status: .active
         )
-        let viewModel = AnimalCardViewModel(animal: initialAnimal, onAction: { _ in })
+        let viewModel = AnimalCardViewModel(announcement: initialAnnouncement, onAction: { _ in })
         
         // Verify initial state
         XCTAssertEqual(viewModel.breedName, "Golden Retriever")
         XCTAssertEqual(viewModel.locationText, "52.2297° N, 21.0122° E")
         XCTAssertEqual(viewModel.statusText, AnimalStatus.active.displayName)
         
-        // When - update is called with modified animal
-        let updatedAnimal = makeTestAnimal(
+        // When - update is called with modified announcement
+        let updatedAnnouncement = makeTestAnnouncement(
             id: "same-id",
             breed: "Labrador",
             latitude: 50.0647,
             longitude: 19.9450,
             status: .found
         )
-        viewModel.update(with: updatedAnimal)
+        viewModel.update(with: updatedAnnouncement)
         
         // Then - computed properties should reflect new values
         XCTAssertEqual(viewModel.breedName, "Labrador", "breedName should update")
@@ -192,17 +192,17 @@ final class AnimalCardViewModelTests: XCTestCase {
     }
     
     /**
-     * Tests that isExpanded state is independent of animal updates.
+     * Tests that isExpanded state is independent of announcement updates.
      */
     func test_isExpanded_shouldRemainIndependentAfterUpdate() {
         // Given - ViewModel with isExpanded set to true
-        let initialAnimal = makeTestAnimal(id: "test-id")
-        let viewModel = AnimalCardViewModel(animal: initialAnimal, onAction: { _ in })
+        let initialAnnouncement = makeTestAnnouncement(id: "test-id")
+        let viewModel = AnimalCardViewModel(announcement: initialAnnouncement, onAction: { _ in })
         viewModel.isExpanded = true
         
-        // When - animal is updated
-        let updatedAnimal = makeTestAnimal(id: "test-id", breed: "New Breed")
-        viewModel.update(with: updatedAnimal)
+        // When - announcement is updated
+        let updatedAnnouncement = makeTestAnnouncement(id: "test-id", breed: "New Breed")
+        viewModel.update(with: updatedAnnouncement)
         
         // Then - isExpanded should remain true (local state preserved)
         XCTAssertTrue(viewModel.isExpanded, "isExpanded state should be preserved after update")

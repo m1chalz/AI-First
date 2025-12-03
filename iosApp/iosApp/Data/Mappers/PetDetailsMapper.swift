@@ -14,7 +14,7 @@ struct PetDetailsMapper {
     func map(_ dto: PetDetailsDTO) -> PetDetails? {
         return PetDetails(
             id: dto.id,
-            petName: dto.petName,
+            petName: dto.petName ?? "<invalid>",
             photoUrl: photoURLMapper.resolve(dto.photoUrl),
             status: dto.status.toDomain,
             lastSeenDate: dto.lastSeenDate,

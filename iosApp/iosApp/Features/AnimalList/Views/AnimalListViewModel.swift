@@ -187,14 +187,14 @@ class AnimalListViewModel: ObservableObject {
                 hasShownPermissionAlert = true
             }
             
-            // Query animals with optional location (nil = no filtering, graceful fallback per FR-009)
+            // Query announcements with optional location (nil = no filtering, graceful fallback per FR-009)
             // Non-blocking: query executes regardless of permission outcome (FR-007, SC-001)
-            let animals = try await repository.getAnimals(near: result.location)
+            let announcements = try await repository.getAnimals(near: result.location)
             
             // Check for cancellation before updating UI state
             try Task.checkCancellation()
             
-            updateCardViewModels(with: animals)
+            updateCardViewModels(with: announcements)
         } catch is CancellationError {
             // Task was cancelled - this is normal, don't show error to user
             // Keep loading state but don't update error message
@@ -219,39 +219,39 @@ class AnimalListViewModel: ObservableObject {
     }
     
     /**
-     * Updates card ViewModels with fresh animal data.
-     * Creates new VMs for new animals, updates existing ones, removes deleted ones.
-     * Maintains array order from animals list.
-     * Deduplicates animals by ID (keeps first occurrence).
+     * Updates card ViewModels with fresh announcement data.
+     * Creates new VMs for new announcements, updates existing ones, removes deleted ones.
+     * Maintains array order from announcements list.
+     * Deduplicates announcements by ID (keeps first occurrence).
      *
-     * - Parameter animals: Fresh list of animals from repository
+     * - Parameter announcements: Fresh list of announcements from repository
      */
-    private func updateCardViewModels(with animals: [Animal]) {
-        // Deduplicate animals by ID (keep first occurrence)
+    private func updateCardViewModels(with announcements: [Announcement]) {
+        // Deduplicate announcements by ID (keep first occurrence)
         var seenIDs = Set<String>()
-        let uniqueAnimals = animals.filter { animal in
-            seenIDs.insert(animal.id).inserted
-//            if seenIDs.contains(animal.id) {
+        let uniqueAnnouncements = announcements.filter { announcement in
+            seenIDs.insert(announcement.id).inserted
+//            if seenIDs.contains(announcement.id) {
 //                return false
 //            } else {
-//                seenIDs.insert(animal.id)
+//                seenIDs.insert(announcement.id)
 //                return true
 //            }
         }
         
         // Create dictionary of existing ViewModels by ID for fast lookup
-        let existingVMsByID = Dictionary(uniqueKeysWithValues: cardViewModels.map { ($0.animal.id, $0) })
+        let existingVMsByID = Dictionary(uniqueKeysWithValues: cardViewModels.map { ($0.announcement.id, $0) })
         
         // Build new array maintaining order, reusing or creating ViewModels
-        self.cardViewModels = uniqueAnimals.map { animal in
-            if let existingVM = existingVMsByID[animal.id] {
+        self.cardViewModels = uniqueAnnouncements.map { announcement in
+            if let existingVM = existingVMsByID[announcement.id] {
                 // Reuse and update existing ViewModel
-                existingVM.update(with: animal)
+                existingVM.update(with: announcement)
                 return existingVM
             } else {
-                // Create new ViewModel for new animal
+                // Create new ViewModel for new announcement
                 return AnimalCardViewModel(
-                    animal: animal,
+                    announcement: announcement,
                     onAction: handleAnimalAction
                 )
             }
@@ -286,16 +286,16 @@ class AnimalListViewModel: ObservableObject {
     }
     
     /**
-     * Updates a single animal in the list.
+     * Updates a single announcement in the list.
      * Useful when returning from detail screen or receiving real-time updates.
      * Finds and updates the corresponding card ViewModel.
      *
-     * - Parameter animal: Updated animal entity
+     * - Parameter announcement: Updated announcement entity
      */
-    func animalUpdated(_ animal: Animal) {
+    func announcementUpdated(_ announcement: Announcement) {
         // Find and update the card ViewModel
-        if let cardVM = cardViewModels.first(where: { $0.animal.id == animal.id }) {
-            cardVM.update(with: animal)
+        if let cardVM = cardViewModels.first(where: { $0.announcement.id == announcement.id }) {
+            cardVM.update(with: announcement)
         }
     }
     
@@ -320,8 +320,8 @@ class AnimalListViewModel: ObservableObject {
         
         do {
             // Query without location (fallback mode)
-            let animals = try await repository.getAnimals(near: nil)
-            updateCardViewModels(with: animals)
+            let announcements = try await repository.getAnimals(near: nil)
+            updateCardViewModels(with: announcements)
         } catch {
             self.errorMessage = L10n.AnimalList.Error.loadingFailed
         }

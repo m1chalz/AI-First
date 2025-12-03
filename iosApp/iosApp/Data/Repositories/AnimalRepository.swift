@@ -9,22 +9,22 @@ import Foundation
 class AnimalRepository: AnimalRepositoryProtocol {
     private let urlSession: URLSession
     private let apiDecoder: APIDecoder
-    private let animalMapper: AnimalMapper
-    private let petDetailsMapper: PetDetailsMapper
     private let announcementMapper: AnnouncementMapper
+    private let petDetailsMapper: PetDetailsMapper
+    private let createAnnouncementMapper: CreateAnnouncementMapper
     
     init(
         urlSession: URLSession = .shared,
         apiDecoder: APIDecoder = APIDecoder(),
-        animalMapper: AnimalMapper = AnimalMapper(),
+        announcementMapper: AnnouncementMapper = AnnouncementMapper(),
         petDetailsMapper: PetDetailsMapper = PetDetailsMapper(),
-        announcementMapper: AnnouncementMapper = AnnouncementMapper()
+        createAnnouncementMapper: CreateAnnouncementMapper = CreateAnnouncementMapper()
     ) {
         self.urlSession = urlSession
         self.apiDecoder = apiDecoder
-        self.animalMapper = animalMapper
-        self.petDetailsMapper = petDetailsMapper
         self.announcementMapper = announcementMapper
+        self.petDetailsMapper = petDetailsMapper
+        self.createAnnouncementMapper = createAnnouncementMapper
     }
     
     // MARK: - AnimalRepositoryProtocol Implementation
@@ -32,9 +32,9 @@ class AnimalRepository: AnimalRepositoryProtocol {
     /// Fetches animal announcements from backend API with optional location filtering.
     /// Deduplicates results and skips invalid items gracefully.
     /// - Parameter location: Optional coordinate for location-based filtering (nil = all announcements)
-    /// - Returns: Array of valid Animal models
+    /// - Returns: Array of valid Announcement models
     /// - Throws: RepositoryError if network or parsing fails
-    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Animal] {
+    func getAnimals(near location: Coordinate?, range: Int = 100) async throws -> [Announcement] {
         var urlComponents = URLComponents(string: "\(APIConfig.fullBaseURL)/announcements")!
         
         // Add location query parameters if provided
@@ -74,20 +74,21 @@ class AnimalRepository: AnimalRepositoryProtocol {
             try Task.checkCancellation()
             
             // Convert DTOs to domain models, skipping invalid items
-            let animals = listResponse.data.compactMap { dto -> Animal? in
-                return animalMapper.map(dto)
+            let announcements = listResponse.data.compactMap { dto -> Announcement? in
+                return announcementMapper.map(dto)
             }
             
-            // Deduplicate by ID (keep first occurrence)
-            let uniqueAnimals = Dictionary(
-                animals.map { ($0.id, $0) },
-                uniquingKeysWith: { first, _ in
-                    print("Warning: Duplicate announcement ID: \(first.id)")
-                    return first
+            // Deduplicate by ID (keep first occurrence, preserve order)
+            var seenIDs = Set<String>()
+            let uniqueAnnouncements = announcements.filter { announcement in
+                let isNew = seenIDs.insert(announcement.id).inserted
+                if !isNew {
+                    print("Warning: Duplicate announcement ID: \(announcement.id)")
                 }
-            ).values
+                return isNew
+            }
             
-            return Array(uniqueAnimals)
+            return uniqueAnnouncements
             
         } catch let error as DecodingError {
             print("JSON decoding error: \(error)")
@@ -160,7 +161,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
         }
         
         // Convert domain model to DTO
-        let requestDTO = announcementMapper.toDTO(data)
+        let requestDTO = createAnnouncementMapper.toDTO(data)
         
         // Encode DTO to JSON
         let encoder = JSONEncoder()
@@ -190,7 +191,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
             let responseDTO = try decoder.decode(AnnouncementResponseDTO.self, from: responseData)
             
             // Convert DTO to domain model
-            return announcementMapper.toDomain(responseDTO)
+            return createAnnouncementMapper.toDomain(responseDTO)
             
         } catch let error as DecodingError {
             print("JSON decoding error: \(error)")

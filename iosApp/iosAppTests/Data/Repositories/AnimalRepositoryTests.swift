@@ -62,16 +62,16 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
         // Then - verify parsed correctly
-        XCTAssertEqual(animals.count, 1)
-        XCTAssertEqual(animals[0].id, "550e8400-e29b-41d4-a716-446655440000")
-        XCTAssertEqual(animals[0].name, "Max")
-        XCTAssertEqual(animals[0].species, .dog)
-        XCTAssertEqual(animals[0].status, .active) // MISSING mapped to ACTIVE
-        XCTAssertEqual(animals[0].coordinate.latitude, 52.2297, accuracy: 0.0001)
-        XCTAssertEqual(animals[0].coordinate.longitude, 21.0122, accuracy: 0.0001)
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].id, "550e8400-e29b-41d4-a716-446655440000")
+        XCTAssertEqual(announcements[0].name, "Max")
+        XCTAssertEqual(announcements[0].species, .dog)
+        XCTAssertEqual(announcements[0].status, .active) // MISSING mapped to ACTIVE
+        XCTAssertEqual(announcements[0].coordinate.latitude, 52.2297, accuracy: 0.0001)
+        XCTAssertEqual(announcements[0].coordinate.longitude, 21.0122, accuracy: 0.0001)
     }
     
     /// T010: Test getAnimals with location parameters should include lat/lng query params in URL
@@ -224,14 +224,14 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
-        // Then - both items returned, unknown species mapped to .other
-        XCTAssertEqual(animals.count, 2, "Should return both items with graceful species handling")
-        XCTAssertEqual(animals[0].name, "Valid Dog")
-        XCTAssertEqual(animals[0].species, .dog)
-        XCTAssertEqual(animals[1].name, "Invalid Species")
-        XCTAssertEqual(animals[1].species, .other, "Unknown species should map to .other")
+        // Then - both items returned, unknown species mapped to .other (order preserved from JSON)
+        XCTAssertEqual(announcements.count, 2, "Should return both items with graceful species handling")
+        XCTAssertEqual(announcements[0].name, "Valid Dog")
+        XCTAssertEqual(announcements[0].species, .dog)
+        XCTAssertEqual(announcements[1].name, "Invalid Species")
+        XCTAssertEqual(announcements[1].species, .other, "Unknown species should map to .other")
     }
     
     /// T014: Test getAnimals with duplicate IDs should deduplicate and log warning
@@ -287,11 +287,11 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
         // Then - only one item returned (first occurrence kept)
-        XCTAssertEqual(animals.count, 1)
-        XCTAssertEqual(animals[0].name, "First Max")
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "First Max")
     }
     
     /// T015: Test getAnimals with empty list should return empty array
@@ -314,10 +314,10 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
         // Then - empty array returned
-        XCTAssertEqual(animals.count, 0)
+        XCTAssertEqual(announcements.count, 0)
     }
     
     /// Test: getAnimals with null phone should parse successfully (optional field)
@@ -357,13 +357,13 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
         // Then - animal parsed successfully with nil phone
-        XCTAssertEqual(animals.count, 1)
-        XCTAssertEqual(animals[0].name, "Piorun")
-        XCTAssertNil(animals[0].phone)
-        XCTAssertEqual(animals[0].email, "owner@example.com")
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Piorun")
+        XCTAssertNil(announcements[0].phone)
+        XCTAssertEqual(announcements[0].email, "owner@example.com")
     }
     
     /// Test: getAnimals with null breed should parse successfully (optional field)
@@ -403,13 +403,13 @@ final class AnimalRepositoryTests: XCTestCase {
         }
         
         // When - fetch animals
-        let animals = try await sut.getAnimals(near: nil)
+        let announcements = try await sut.getAnimals(near: nil)
         
         // Then - animal parsed successfully with nil breed
-        XCTAssertEqual(animals.count, 1)
-        XCTAssertEqual(animals[0].name, "Reksio")
-        XCTAssertNil(animals[0].breed)
-        XCTAssertEqual(animals[0].species, .dog)
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Reksio")
+        XCTAssertNil(announcements[0].breed)
+        XCTAssertEqual(announcements[0].species, .dog)
     }
     
     // MARK: - getPetDetails Tests (User Story 2)

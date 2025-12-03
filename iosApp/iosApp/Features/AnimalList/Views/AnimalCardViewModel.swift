@@ -12,7 +12,7 @@ enum AnimalAction {
 /**
  * ViewModel for a single animal card.
  * Manages card-specific state and handles user interactions.
- * Transforms raw Animal data into presentation-ready properties.
+ * Transforms raw Announcement data into presentation-ready properties.
  * Communicates with parent ViewModel via action callback.
  *
  * Note: Instance is owned and cached by AnimalListViewModel.
@@ -27,20 +27,20 @@ class AnimalCardViewModel: ObservableObject {
     
     // MARK: - Internal Properties (accessible for coordinator/parent)
     
-    /// Raw animal data (internal - views should use computed properties)
-    @Published private(set) var animal: Animal
+    /// Raw announcement data (internal - views should use computed properties)
+    @Published private(set) var announcement: Announcement
     
     // MARK: - Computed Properties (Presentation Layer)
     
     /// Photo URL
     var photoUrl: String {
-        animal.photoUrl
+        announcement.photoUrl
     }
     
     /// Formatted location text with coordinates
     var locationText: String {
-        let lat = animal.coordinate.latitude
-        let lon = animal.coordinate.longitude
+        let lat = announcement.coordinate.latitude
+        let lon = announcement.coordinate.longitude
         let latDir = lat >= 0 ? "N" : "S"
         let lonDir = lon >= 0 ? "E" : "W"
         return String(format: "%.4f° %@, %.4f° %@", abs(lat), latDir, abs(lon), lonDir)
@@ -48,34 +48,34 @@ class AnimalCardViewModel: ObservableObject {
     
     /// Species display name
     var speciesName: String {
-        animal.species.displayName
+        announcement.species.displayName
     }
     
     /// Breed name
     var breedName: String {
-        animal.breed ?? "-"
+        announcement.breed ?? "-"
     }
     
     /// Status badge text
     var statusText: String {
-        animal.status.displayName
+        announcement.status.displayName
     }
     
     /// Status badge color as hex string (e.g., "#FF6B6B")
     var statusColorHex: String {
-        animal.status.badgeColorHex
+        announcement.status.badgeColorHex
     }
     
     /// Formatted date text
     var dateText: String {
-        animal.lastSeenDate
+        announcement.lastSeenDate
         // TODO: Format properly when date format is finalized
-        // DateFormatter.shared.format(animal.lastSeenDate)
+        // DateFormatter.shared.format(announcement.lastSeenDate)
     }
     
     /// Unique identifier for SwiftUI ForEach
     var id: String {
-        animal.id
+        announcement.id
     }
     
     // MARK: - Private Properties
@@ -86,26 +86,26 @@ class AnimalCardViewModel: ObservableObject {
     // MARK: - Initialization
     
     /**
-     * Initializes card ViewModel with animal data and action callback.
+     * Initializes card ViewModel with announcement data and action callback.
      *
-     * - Parameter animal: Animal entity to display
+     * - Parameter announcement: Announcement entity to display
      * - Parameter onAction: Callback invoked when user performs actions on card
      */
-    init(animal: Animal, onAction: @escaping (AnimalAction) -> Void) {
-        self.animal = animal
+    init(announcement: Announcement, onAction: @escaping (AnimalAction) -> Void) {
+        self.announcement = announcement
         self.onAction = onAction
     }
     
     // MARK: - Public Methods
     
     /**
-     * Updates card with new animal data.
+     * Updates card with new announcement data.
      * Called by parent ViewModel when data refreshes.
      *
-     * - Parameter animal: Updated animal entity
+     * - Parameter announcement: Updated announcement entity
      */
-    func update(with animal: Animal) {
-        self.animal = animal
+    func update(with announcement: Announcement) {
+        self.announcement = announcement
     }
     
     /**
@@ -113,7 +113,7 @@ class AnimalCardViewModel: ObservableObject {
      * Notifies parent ViewModel via action callback.
      */
     func handleTap() {
-        onAction(.selected(animal.id))
+        onAction(.selected(announcement.id))
     }
 }
 
