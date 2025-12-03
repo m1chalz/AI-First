@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
 import { GenderSelector } from './GenderSelector';
+import { useGeolocation } from '../../../hooks/use-geolocation';
 import sharedStyles from '../ReportMissingPetLayout.module.css';
 import styles from './AnimalDescriptionForm.module.css';
 
@@ -26,6 +27,23 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
   onSubmit
 }) => {
   const today = new Date().toISOString().split('T')[0];
+  const { isLoading, coordinates, requestPosition, error } = useGeolocation({ autoRequest: false });
+
+  const isLocationPermissionDenied = error?.code === 1; // PERMISSION_DENIED
+
+  const handleRequestGpsPosition = () => {
+    requestPosition();
+  };
+
+  // Update form fields when coordinates are fetched
+  useEffect(() => {
+    if (coordinates && !isLoading) {
+      const lat = coordinates.lat.toFixed(4);
+      const lng = coordinates.lng.toFixed(4);
+      onFieldChange('latitude', lat);
+      onFieldChange('longitude', lng);
+    }
+  }, [coordinates, isLoading, onFieldChange]);
 
   return (
     <form className={styles.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
@@ -102,11 +120,12 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       <div>
         <button
           type="button"
-          disabled
+          onClick={handleRequestGpsPosition}
+          disabled={isLoading || isLocationPermissionDenied}
           className={styles.gpsButton}
           data-testid="details.gpsButton.click"
         >
-          Request GPS position
+          {isLocationPermissionDenied ? 'Location not available' : isLoading ? 'Locating...' : 'Request GPS position'}
         </button>
       </div>
 

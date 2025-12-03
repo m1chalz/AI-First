@@ -1,12 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Coordinates, GeolocationState } from '../types/location';
 
-export function useGeolocation(): GeolocationState {
+export interface UseGeolocationOptions {
+  /** Whether to automatically request location on mount. Default: true */
+  autoRequest?: boolean;
+  /** Timeout in milliseconds for geolocation request. Default: 3000 for auto, 10000 for on-demand */
+  timeout?: number;
+}
+
+export interface UseGeolocationResult extends GeolocationState {
+  /** Function to manually request current position, checking permissions first (useful when autoRequest is false) */
+  requestPosition: () => void;
+}
+
+export function useGeolocation(options?: UseGeolocationOptions): UseGeolocationResult {
+  const { autoRequest = true, timeout = autoRequest ? 3000 : 10000 } = options || {};
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [error, setError] = useState<GeolocationPositionError | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(autoRequest);
 
-  function fetchPosition() {
+  const fetchPosition = useCallback(() => {
+    setIsLoading(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const lat = position.coords.latitude;
@@ -21,11 +35,11 @@ export function useGeolocation(): GeolocationState {
         setError(err);
         setIsLoading(false);
       },
-      { timeout: 3000 }
+      { timeout }
     );
-  };
+  }, [timeout]);
 
-  function checkPermissionAndFetchLocation() {
+  const checkPermissionAndFetchLocation = useCallback(() => {
     navigator.permissions.query({ name: 'geolocation' }).then((status) => {
       if (status.state === 'denied') {
         setIsLoading(false);
@@ -37,16 +51,19 @@ export function useGeolocation(): GeolocationState {
       // If permissions API is not supported, just try to fetch position
       fetchPosition();
     });
-  }
+  }, [fetchPosition]);
 
   useEffect(() => {
-    checkPermissionAndFetchLocation();
-  }, []);
+    if (autoRequest) {
+      checkPermissionAndFetchLocation();
+    }
+  }, [autoRequest, checkPermissionAndFetchLocation]);
 
   return {
     coordinates,
     error,
     isLoading,
+    requestPosition: autoRequest ? fetchPosition : checkPermissionAndFetchLocation,
   };
 }
 

@@ -15,6 +15,7 @@ export class AnimalRepository {
             const params = new URLSearchParams();
             params.append('lat', coordinates.lat.toFixed(4));
             params.append('lng', coordinates.lng.toFixed(4));
+            params.append('range', '15');
             url += `?${params.toString()}`;
         }
         
