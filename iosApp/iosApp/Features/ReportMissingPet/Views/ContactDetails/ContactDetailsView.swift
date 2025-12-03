@@ -53,19 +53,21 @@ struct ContactDetailsView: View {
                         await viewModel.submitForm()
                     }
                 }) {
-                    if viewModel.isSubmitting {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    } else {
-                        Text(L10n.OwnersDetails.Continue.button)
-                            .font(.system(size: 16, weight: .semibold))
+                    Group {
+                        if viewModel.isSubmitting {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            Text(L10n.OwnersDetails.Continue.button)
+                                .font(.system(size: 16, weight: .semibold))
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color(hex: "#155DFC"))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
-                .background(Color(hex: "#155DFC"))
-                .foregroundColor(.white)
-                .cornerRadius(10)
                 .disabled(viewModel.isSubmitting)
                 .accessibilityIdentifier("ownersDetails.continueButton")
             }
