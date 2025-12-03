@@ -19,7 +19,7 @@ Uses MVI architecture with validation on submit, NavGraph-scoped flow state shar
 ## Technical Context
 
 **Language/Version**: Kotlin 2.2.20 (Android)  
-**Primary Dependencies**: Jetpack Compose, Navigation Compose, Koin, Kotlin Coroutines, FusedLocationProviderClient  
+**Primary Dependencies**: Jetpack Compose, Navigation Compose, Koin, Kotlin Coroutines  
 **Storage**: In-memory flow state (NavGraph-scoped via `ReportMissingFlowState`) - no backend persistence  
 **Testing**: JUnit 6 + Kotlin Test + Turbine (Flow testing)  
 **Target Platform**: Android (minSdk 24, targetSdk 36)
@@ -54,14 +54,15 @@ Uses MVI architecture with validation on submit, NavGraph-scoped flow state shar
   - Violation justification: _N/A - not applicable_
 
 - [x] **Interface-Based Design**: Domain logic uses interfaces for repositories (per platform)
-  - Uses existing `LocationRepository` interface from spec 026 for GPS functionality
+  - Reuses existing `GetCurrentLocationUseCase` → `LocationRepository` for GPS functionality
+  - Follows same pattern as `AnimalListViewModel` (use case injection)
   - No new repository interfaces needed - screen uses bundled static species list
-  - Violation justification: _N/A - reuses existing interfaces_
+  - Violation justification: _N/A - reuses existing interfaces and use cases_
 
 - [x] **Dependency Injection**: Plan includes DI setup for each platform
   - Android: MUST use Koin - ViewModel registered in existing `ReportMissingModule`
   - NavGraph-scoped ViewModel for flow state sharing (established in spec 018)
-  - LocationRepository injected for GPS functionality
+  - `GetCurrentLocationUseCase` injected for GPS functionality (already in Koin modules)
   - Violation justification: _N/A - compliant_
 
 - [x] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform

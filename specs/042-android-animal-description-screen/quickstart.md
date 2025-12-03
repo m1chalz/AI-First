@@ -120,7 +120,7 @@ cat composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/domain/reposito
 ```kotlin
 class AnimalDescriptionViewModel(
     private val flowState: ReportMissingFlowState,
-    private val locationRepository: LocationRepository,
+    private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
 ) : ViewModel() {
     
     private val _state = MutableStateFlow(AnimalDescriptionUiState.Initial)

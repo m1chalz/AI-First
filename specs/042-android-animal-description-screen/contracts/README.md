@@ -50,14 +50,22 @@ The `ReportMissingFlowState.FlowData` structure serves as the internal contract 
 // Final submission sends all data to backend
 ```
 
-### Location Repository Contract
+### Location Use Case Contract
 
-Reused from spec 026:
+Reused from existing codebase (same pattern as `AnimalListViewModel`):
 
 ```kotlin
+// Use case (injected into ViewModel)
+class GetCurrentLocationUseCase(
+    private val locationRepository: LocationRepository,
+) {
+    suspend operator fun invoke(): Result<LocationCoordinates?>
+}
+
+// Repository interface (abstraction over LocationManager)
 interface LocationRepository {
-    suspend fun getCurrentLocation(): Result<LocationCoordinates>
-    suspend fun checkPermissionStatus(): PermissionStatus
+    suspend fun getLastKnownLocation(): LocationCoordinates?
+    suspend fun requestFreshLocation(timeoutMs: Long = 10_000L): LocationCoordinates?
 }
 ```
 

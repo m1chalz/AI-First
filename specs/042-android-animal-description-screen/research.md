@@ -65,15 +65,31 @@ Research findings for implementing the Animal Description screen (Step 3/4) in t
 
 ### 5. GPS Location Request
 
-**Decision**: Reuse `LocationRepository` from spec 026 with loading state in button
+**Decision**: Reuse existing `GetCurrentLocationUseCase` with loading state in button
 
 **Rationale**:
-- Existing infrastructure for location permissions and fetching
+- Follows established pattern used in `AnimalListViewModel`
+- Use case provides two-stage approach: cached location first, then fresh with timeout
+- Clean architecture: ViewModel → UseCase → Repository → LocationManager
 - Button shows spinner + "Requesting…" during fetch (per spec clarification)
 - Coordinates stored as separate lat/long in flow state
 
+**Existing Infrastructure**:
+```kotlin
+// Already exists in codebase
+class GetCurrentLocationUseCase(
+    private val locationRepository: LocationRepository,
+) {
+    suspend operator fun invoke(): Result<LocationCoordinates?>
+}
+
+// Usage pattern (from AnimalListViewModel)
+private val getCurrentLocationUseCase: GetCurrentLocationUseCase
+```
+
 **Alternatives Considered**:
-- Direct FusedLocationProviderClient call - rejected: duplicates existing abstraction
+- Direct FusedLocationProviderClient call - rejected: doesn't match existing pattern
+- Create new location abstraction - rejected: duplicates existing use case
 - Map picker - rejected: out of scope per spec
 
 ### 6. Flow State Extension
