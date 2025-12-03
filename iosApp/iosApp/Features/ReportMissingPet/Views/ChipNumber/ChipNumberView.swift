@@ -28,9 +28,11 @@ struct ChipNumberView: View {
                 }
                 .padding(.horizontal, Layout.horizontalPadding)
                 .padding(.top, Layout.contentTopPadding)
-                .padding(.bottom, Layout.contentBottomPadding)
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
             VStack(spacing: 0) {
                 continueButton

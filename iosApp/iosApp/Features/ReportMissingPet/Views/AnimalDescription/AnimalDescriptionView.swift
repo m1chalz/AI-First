@@ -9,15 +9,15 @@ struct AnimalDescriptionView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                // Heading
-                Text(L10n.AnimalDescription.heading)
-                    .font(.custom("Inter-Regular", size: 32))
-                    .foregroundColor(Color(hex: "#2D2D2D"))
-                
-                // Subheading
-                Text(L10n.AnimalDescription.subheading)
-                    .font(.custom("Inter-Regular", size: 16))
-                    .foregroundColor(Color(hex: "#545F71"))
+                    // Heading
+                    Text(L10n.AnimalDescription.heading)
+                        .font(.custom("Inter-Regular", size: 32))
+                        .foregroundColor(Color(hex: "#2D2D2D"))
+                    
+                    // Subheading
+                    Text(L10n.AnimalDescription.subheading)
+                        .font(.custom("Inter-Regular", size: 16))
+                        .foregroundColor(Color(hex: "#545F71"))
                 
                 // Date input
                 DateInputView(
@@ -84,16 +84,18 @@ struct AnimalDescriptionView: View {
                     longitude: $viewModel.longitude
                 )
                 
-                // Description text area (optional - US3)
-                TextAreaView(
-                    model: viewModel.descriptionTextAreaModel,
-                    text: $viewModel.additionalDescription
-                )
-            }
-            .padding()
-            .padding(.bottom, 120) // Extra bottom padding for button section
+                    // Description text area (optional - US3)
+                    TextAreaView(
+                        model: viewModel.descriptionTextAreaModel,
+                        text: $viewModel.additionalDescription
+                    )
+                }
+                .padding()
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
             // Bottom section with toast and button (outside ScrollView)
             VStack(spacing: 12) {

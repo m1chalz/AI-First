@@ -40,9 +40,11 @@ struct ContactDetailsView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
-                .padding(.bottom, 120)
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
             // Continue button
             VStack(spacing: 0) {

@@ -28,9 +28,11 @@ struct PhotoView: View {
                 }
                 .padding(.horizontal, 22)
                 .padding(.top, 32)
-                .padding(.bottom, 180)
             }
             .background(Color.white)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 120)
+            }
             
             VStack(spacing: 12) {
                 if viewModel.showsMandatoryToast {
