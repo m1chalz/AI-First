@@ -3,17 +3,22 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAnimalList } from '../../use-animal-list';
 import * as animalRepositoryModule from '../../../services/animal-repository';
 
-vi.mock('../../services/animal-repository', () => ({
+vi.mock('../../../services/animal-repository', () => ({
     animalRepository: {
         getAnimals: vi.fn()
     }
 }));
 
-vi.mock('../../use-geolocation', () => ({
-    useGeolocation: vi.fn(() => ({
-        coordinates: null,
-        error: null,
-        isLoading: false,
+vi.mock('../../../contexts/GeolocationContext', () => ({
+    useGeolocationContext: vi.fn(() => ({
+        state: {
+            coordinates: null,
+            error: null,
+            isLoading: false,
+            permissionCheckCompleted: true,
+        },
+        requestLocation: vi.fn(),
+        clearGeolocation: vi.fn(),
     }))
 }));
 

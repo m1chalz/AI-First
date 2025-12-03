@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
 import { GenderSelector } from './GenderSelector';
-import { useGeolocation } from '../../../hooks/use-geolocation';
+import { useGeolocationContext } from '../../../contexts/GeolocationContext';
 import sharedStyles from '../ReportMissingPetLayout.module.css';
 import styles from './AnimalDescriptionForm.module.css';
 
@@ -27,12 +27,14 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
   onSubmit
 }) => {
   const today = new Date().toISOString().split('T')[0];
-  const { isLoading, coordinates, requestPosition, error } = useGeolocation({ autoRequest: false });
+  const { state, requestLocation } = useGeolocationContext();
+  const { isLoading, coordinates, error, permissionCheckCompleted } = state;
 
   const isLocationPermissionDenied = error?.code === 1; // PERMISSION_DENIED
+  const isCheckingPermission = !permissionCheckCompleted;
 
   const handleRequestGpsPosition = () => {
-    requestPosition();
+    requestLocation();
   };
 
   // Update form fields when coordinates are fetched
@@ -44,6 +46,7 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       onFieldChange('longitude', lng);
     }
   }, [coordinates, isLoading, onFieldChange]);
+
 
   return (
     <form className={styles.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
@@ -121,11 +124,11 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
         <button
           type="button"
           onClick={handleRequestGpsPosition}
-          disabled={isLoading || isLocationPermissionDenied}
+          disabled={isLoading || isLocationPermissionDenied || isCheckingPermission}
           className={styles.gpsButton}
           data-testid="details.gpsButton.click"
         >
-          {isLocationPermissionDenied ? 'Location not available' : isLoading ? 'Locating...' : 'Request GPS position'}
+          {isLocationPermissionDenied ? 'Location not available' : isCheckingPermission ? 'Checking permissions...' : isLoading ? 'Locating...' : 'Request GPS position'}
         </button>
       </div>
 

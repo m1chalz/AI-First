@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { animalRepository } from '../services/animal-repository';
-import { useGeolocation } from './use-geolocation';
+import { useGeolocationContext } from '../contexts/GeolocationContext';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
@@ -16,7 +16,7 @@ export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [isFetchingAnimals, setIsFetchingAnimals] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const geolocation = useGeolocation();
+    const { state: geolocation, requestLocation } = useGeolocationContext();
     
     // isLoading is true when either waiting for geolocation or fetching animals
     const isLoading = geolocation.isLoading || isFetchingAnimals;
@@ -36,6 +36,11 @@ export function useAnimalList(): UseAnimalListResult {
             setIsFetchingAnimals(false);
         }
     }, [geolocation.coordinates]);
+    
+    // Request location on mount
+    useEffect(() => {
+        requestLocation();
+    }, [requestLocation]);
     
     useEffect(() => {
         // Wait for geolocation to finish loading before fetching animals

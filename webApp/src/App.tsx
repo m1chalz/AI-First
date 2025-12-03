@@ -6,12 +6,14 @@ import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
 import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
 import { SummaryScreen } from './components/ReportMissingPet/SummaryScreen';
 import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
+import { GeolocationProvider } from './contexts/GeolocationContext';
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AnimalList />} />
+    <GeolocationProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AnimalList />} />
         <Route path="/report-missing" element={<ReportMissingPetFlowProvider><Navigate to="microchip" replace /></ReportMissingPetFlowProvider>} />
         <Route
           path="/report-missing/microchip"
@@ -53,8 +55,9 @@ export function App() {
             </ReportMissingPetFlowProvider>
           }
         />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </GeolocationProvider>
   );
 }
 

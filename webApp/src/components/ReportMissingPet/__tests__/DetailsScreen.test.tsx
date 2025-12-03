@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+import { GeolocationProvider } from '../../../contexts/GeolocationContext';
 import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
 
 const mockNavigate = vi.fn();
@@ -17,9 +18,11 @@ vi.mock('react-router-dom', async () => {
 });
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter>
-    <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>
-  </MemoryRouter>
+  <GeolocationProvider>
+    <MemoryRouter>
+      <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>
+    </MemoryRouter>
+  </GeolocationProvider>
 );
 
 describe('DetailsScreen', () => {
