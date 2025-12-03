@@ -12,8 +12,7 @@ class SummaryViewModel: ObservableObject {
     
     // MARK: - Coordinator Communication
     
-    var onSubmit: (() -> Void)?
-    var onBack: (() -> Void)?
+    var onClose: (() -> Void)?
     
     // MARK: - Published Properties
     
@@ -36,14 +35,9 @@ class SummaryViewModel: ObservableObject {
     
     // MARK: - Actions
     
-    /// Exits summary screen (back to app after report submission).
-    func handleSubmit() {
-        onSubmit?()
-    }
-    
-    /// Navigate back to previous screen (Contact Details).
-    func handleBack() {
-        onBack?()
+    /// Closes the summary screen and exits the entire report flow.
+    func handleClose() {
+        onClose?()
     }
     
     /// Copies management password to clipboard and shows toast confirmation

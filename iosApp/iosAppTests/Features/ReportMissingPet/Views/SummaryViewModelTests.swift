@@ -37,76 +37,39 @@ final class SummaryViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - handleSubmit() Tests (US3 - T041)
+    // MARK: - handleClose() Tests (US3 - T041)
     
-    func testHandleSubmit_shouldTriggerOnSubmitCallback() {
-        // Given: onSubmit callback is set
-        var submitCalled = false
-        sut.onSubmit = { submitCalled = true }
+    func testHandleClose_shouldTriggerOnCloseCallback() {
+        // Given: onClose callback is set
+        var closeCalled = false
+        sut.onClose = { closeCalled = true }
         
-        // When: handleSubmit() is called
-        sut.handleSubmit()
+        // When: handleClose() is called
+        sut.handleClose()
         
-        // Then: onSubmit callback should be triggered
-        XCTAssertTrue(submitCalled)
+        // Then: onClose callback should be triggered
+        XCTAssertTrue(closeCalled)
     }
     
-    func testHandleSubmit_whenOnSubmitIsNil_shouldNotCrash() {
-        // Given: onSubmit callback is nil (default)
-        sut.onSubmit = nil
+    func testHandleClose_whenOnCloseIsNil_shouldNotCrash() {
+        // Given: onClose callback is nil (default)
+        sut.onClose = nil
         
-        // When: handleSubmit() is called
+        // When: handleClose() is called
         // Then: Should not crash
-        XCTAssertNoThrow(sut.handleSubmit())
+        XCTAssertNoThrow(sut.handleClose())
     }
     
-    func testHandleSubmit_fromSummaryScreen_shouldDismissFlow() {
-        // Given: Summary screen with onSubmit callback
+    func testHandleClose_fromSummaryScreen_shouldDismissFlow() {
+        // Given: Summary screen with onClose callback
         var flowDismissed = false
-        sut.onSubmit = { flowDismissed = true }
+        sut.onClose = { flowDismissed = true }
         
-        // When: User taps Close button (handleSubmit called)
-        sut.handleSubmit()
+        // When: User taps Close button (handleClose called)
+        sut.handleClose()
         
         // Then: Flow should be dismissed
         XCTAssertTrue(flowDismissed, "Close button should dismiss entire flow")
-    }
-    
-    // MARK: - handleBack() Tests
-    
-    func testHandleBack_shouldTriggerOnBackCallback() {
-        // Given: onBack callback is set
-        var backCalled = false
-        sut.onBack = { backCalled = true }
-        
-        // When: handleBack() is called
-        sut.handleBack()
-        
-        // Then: onBack callback should be triggered
-        XCTAssertTrue(backCalled)
-    }
-    
-    func testHandleBack_whenOnBackIsNil_shouldNotCrash() {
-        // Given: onBack callback is nil (default)
-        sut.onBack = nil
-        
-        // When: handleBack() is called
-        // Then: Should not crash
-        XCTAssertNoThrow(sut.handleBack())
-    }
-    
-    // MARK: - User Story 2: Backward Navigation Tests
-    
-    func testHandleBack_fromSummary_shouldNavigateToContactDetails() {
-        // Given: onBack callback is set on summary screen
-        var navigatedBack = false
-        sut.onBack = { navigatedBack = true }
-        
-        // When: handleBack() is called from summary
-        sut.handleBack()
-        
-        // Then: Should navigate back to contact details screen (step 4)
-        XCTAssertTrue(navigatedBack, "Tapping back on summary should navigate to step 4")
     }
     
     // MARK: - Management Password Display Tests (T012-T013)

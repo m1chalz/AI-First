@@ -67,7 +67,7 @@ struct SummaryView: View {
                             .accessibilityIdentifier("summary.toast")
                     }
                     
-                    Button(action: viewModel.handleSubmit) {
+                    Button(action: viewModel.handleClose) {
                         Text(L10n.ReportMissingPet.Button.close)
                             .font(constants.buttonFont)
                             .foregroundColor(.white)

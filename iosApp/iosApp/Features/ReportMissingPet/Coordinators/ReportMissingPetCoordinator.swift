@@ -204,12 +204,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let toastScheduler = ToastScheduler()
         let viewModel = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
 
-        viewModel.onSubmit = { [weak self] in
+        viewModel.onClose = { [weak self] in
             self?.exitFlow()
-        }
-        
-        viewModel.onBack = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
         }
         
         let view = SummaryView(viewModel: viewModel)
@@ -219,10 +215,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Configure navigation bar
         hostingController.title = L10n.ReportMissingPet.Summary.title
-        // NO progress indicator on summary screen
-        configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
-        })
+        // NO progress indicator and NO back button on summary screen (final confirmation)
         
         modalNavController.pushViewController(hostingController, animated: true)
     }
