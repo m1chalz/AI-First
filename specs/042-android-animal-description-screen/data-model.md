@@ -38,17 +38,16 @@ object SpeciesTaxonomy {
         SpeciesTaxonomyOption("cat", "Cat"),
         SpeciesTaxonomyOption("bird", "Bird"),
         SpeciesTaxonomyOption("rabbit", "Rabbit"),
-        SpeciesTaxonomyOption("hamster", "Hamster"),
-        SpeciesTaxonomyOption("guinea_pig", "Guinea Pig"),
-        SpeciesTaxonomyOption("fish", "Fish"),
-        SpeciesTaxonomyOption("turtle", "Turtle"),
-        SpeciesTaxonomyOption("snake", "Snake"),
+        SpeciesTaxonomyOption("rodent", "Rodent"),
+        SpeciesTaxonomyOption("reptile", "Reptile"),
         SpeciesTaxonomyOption("other", "Other"),
     )
 }
 ```
 
-**Purpose**: Bundled static list of animal species. No network dependency.
+**Purpose**: Bundled static list of animal species aligned with iOS platform (`AnimalSpecies.swift`). No network dependency.
+
+**Note**: Web platform is missing `rodent` and `reptile` - should be addressed in a separate Web spec to maintain cross-platform consistency.
 
 ### 3. FlowData Extension (Shared State)
 
