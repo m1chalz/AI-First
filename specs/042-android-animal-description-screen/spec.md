@@ -104,7 +104,8 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 - **FR-001**: On Android, Step 3 MUST appear immediately after the Animal Photo screen and before contact details (spec 018), showing the TopAppBar with navigation icon (back arrow), title "Animal description," and progress indicator "3/4" matching the referenced Figma design adapted to Material Design 3.  
 - **FR-002**: The TopAppBar navigation icon (back arrow) MUST always navigate to Step 2 with state persistence; the progress indicator MUST update when re-entering Step 3.  
-- **FR-003**: The "Date of disappearance" field MUST default to today's date (or the last saved value) and open the Android DatePickerDialog configured so users MAY pick any past date (including today) but future dates are disabled and cannot be selected.  
+- **FR-002a**: "Pet name (optional)" MUST be the first form field displayed after the title and subtitle, implemented as an OutlinedTextField; empty state is valid and does not block Continue.
+- **FR-003**: The "Date of disappearance" field MUST be displayed after the pet name field, default to today's date (or the last saved value) and open the Android DatePickerDialog configured so users MAY pick any past date (including today) but future dates are disabled and cannot be selected.  
 - **FR-004**: Selecting a date MUST update the Android Missing Pet flow state so the value persists across navigation, app backgrounding, and device rotation until the flow completes or is canceled.  
 - **FR-005**: The "Animal species" dropdown MUST use a fixed curated list of species bundled with the app (no runtime taxonomy service), display a clear placeholder (e.g., "Select an option"), and be validated as a required field when Continue is tapped.  
 - **FR-006**: The "Animal race" field MUST be implemented as an OutlinedTextField that stays disabled until a species is chosen; when the user changes species, any previously entered race text MUST be cleared, and once enabled the race field is required for Continue.  
@@ -124,10 +125,10 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 ### Key Entities *(include if feature involves data)*
 
-- **ReportMissingPetFlowState** (existing): Flow state container (managed by NavGraph-scoped ViewModel) that will be extended with animal description fields: disappearanceDate, animalSpecies, animalRace, animalGender, animalAge, latitude, longitude, animalDescription (as flat optional properties).  
+- **ReportMissingPetFlowState** (existing): Flow state container (managed by NavGraph-scoped ViewModel) that will be extended with animal description fields: petName, disappearanceDate, animalSpecies, animalRace, animalGender, animalAge, latitude, longitude, animalDescription (as flat optional properties).  
 - **SpeciesTaxonomyOption**: Represents each selectable species from a fixed curated list bundled with the app; there is no runtime taxonomy service or online refresh in this step.  
 - **AnimalDescriptionUiState**: Immutable data class representing the current UI state of the animal description screen. Contains all form field values, validation errors, loading states, and other UI-relevant properties.
-- **AnimalDescriptionUserIntent**: Sealed class representing all possible user actions on this screen (UpdateDate, UpdateSpecies, UpdateRace, UpdateGender, UpdateAge, RequestGPSPosition, UpdateLatitude, UpdateLongitude, UpdateDescription, ContinueClicked, BackClicked).
+- **AnimalDescriptionUserIntent**: Sealed class representing all possible user actions on this screen (UpdatePetName, UpdateDate, UpdateSpecies, UpdateRace, UpdateGender, UpdateAge, RequestGPSPosition, UpdateLatitude, UpdateLongitude, UpdateDescription, ContinueClicked, BackClicked).
 - **AnimalDescriptionUiEffect**: Sealed class for one-off events (NavigateToContactDetails, NavigateBack, ShowSnackbar, OpenDatePicker, OpenSettings).
 
 ## Success Criteria *(mandatory)*

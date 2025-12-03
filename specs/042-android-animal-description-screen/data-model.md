@@ -60,6 +60,7 @@ data class FlowData(
     val photoUri: String? = null,
     
     // Step 3/4 - Animal Description (NEW)
+    val petName: String = "",              // Optional - first field after title
     val disappearanceDate: LocalDate = LocalDate.now(),
     val animalSpecies: String = "",
     val animalRace: String = "",
@@ -77,6 +78,7 @@ data class FlowData(
 
 **Changes from current**:
 - Renamed `description` to `additionalDescription` for clarity
+- Added `petName` as optional field (first in form order)
 - Added all animal description fields
 - Uses `LocalDate` for date (not String) for type safety
 
@@ -86,7 +88,8 @@ data class FlowData(
 
 ```kotlin
 data class AnimalDescriptionUiState(
-    // Form fields
+    // Form fields (in display order)
+    val petName: String = "",              // Optional - first field after title
     val disappearanceDate: LocalDate = LocalDate.now(),
     val animalSpecies: String = "",
     val animalRace: String = "",
@@ -135,6 +138,7 @@ data class AnimalDescriptionUiState(
 
 ```kotlin
 sealed interface AnimalDescriptionUserIntent {
+    data class UpdatePetName(val name: String) : AnimalDescriptionUserIntent
     data class UpdateDate(val date: LocalDate) : AnimalDescriptionUserIntent
     data class UpdateSpecies(val species: String) : AnimalDescriptionUserIntent
     data class UpdateRace(val race: String) : AnimalDescriptionUserIntent
@@ -326,6 +330,7 @@ Initial State
 
 | Field | Type | Required | Validation |
 |-------|------|----------|------------|
+| Pet name | String | No | None (optional free text) |
 | Date of disappearance | LocalDate | Yes | No future dates (enforced by picker) |
 | Animal species | String | Yes | Must be non-empty |
 | Animal race | String | Yes | Must be non-empty (after species selected) |
@@ -334,4 +339,6 @@ Initial State
 | Latitude | String (Double) | No | -90 to 90 if provided |
 | Longitude | String (Double) | No | -180 to 180 if provided |
 | Additional description | String | No | Max 500 characters |
+
+**Form field order**: Pet name → Date → Species → Race → Gender → Age → GPS Location → Additional description
 
