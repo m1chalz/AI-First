@@ -1,77 +1,71 @@
-
 package com.intive.aifirst.petspot.features.reportmissing.ui.description
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.FlowStep
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingEffect
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingIntent
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
-import com.intive.aifirst.petspot.navigation.ReportMissingRoute
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUiEffect
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUserIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 
 /**
  * State host composable for Description screen (Step 3/4).
  * Collects state from ViewModel, handles effects, and dispatches intents.
  *
- * @param viewModel Shared ViewModel for the flow (scoped to nav graph)
- * @param navController Shared NavController for navigation
+ * Following the same pattern as ChipNumberScreen and PhotoScreen (no Scaffold).
+ *
+ * @param viewModel AnimalDescriptionViewModel with hybrid pattern
  * @param modifier Modifier for the component
  */
 @Composable
 fun DescriptionScreen(
-    viewModel: ReportMissingViewModel,
-    navController: NavController,
+    viewModel: AnimalDescriptionViewModel,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    // Update ViewModel with current step
-    LaunchedEffect(Unit) {
-        viewModel.updateCurrentStep(FlowStep.DESCRIPTION)
-    }
-
-    // Handle navigation effects
+    // Handle one-off effects
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is ReportMissingEffect.NavigateToStep -> {
-                    navController.navigate(effect.step.toRoute()) {
-                        launchSingleTop = true
-                    }
+                is AnimalDescriptionUiEffect.ShowSnackbar -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
-                is ReportMissingEffect.NavigateBack -> {
-                    navController.popBackStack()
+                is AnimalDescriptionUiEffect.NavigateToContactDetails -> {
+                    // Handled by navigation callback in ViewModel
                 }
-                is ReportMissingEffect.ExitFlow -> {
-                    // Only handled by SummaryScreen
+                is AnimalDescriptionUiEffect.NavigateBack -> {
+                    // Handled by navigation callback in ViewModel
                 }
-                is ReportMissingEffect.LaunchPhotoPicker -> {
-                    // Only handled by PhotoScreen
-                }
-                is ReportMissingEffect.ShowToast -> {
-                    // Only handled by PhotoScreen
+                is AnimalDescriptionUiEffect.OpenLocationSettings -> {
+                    // GPS settings - will be implemented in Phase 4 (US2)
                 }
             }
         }
     }
 
-    DescriptionContent(
+    // Handle system back button/gesture
+    BackHandler {
+        viewModel.handleIntent(AnimalDescriptionUserIntent.BackClicked)
+    }
+
+    AnimalDescriptionContent(
         state = state,
         modifier = modifier,
-        onBackClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateBack) },
-        onContinueClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateNext) },
+        onBackClick = { viewModel.handleIntent(AnimalDescriptionUserIntent.BackClicked) },
+        onDateClick = { viewModel.handleIntent(AnimalDescriptionUserIntent.OpenDatePicker) },
+        onDateSelected = { date -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateDate(date)) },
+        onDatePickerDismiss = { viewModel.handleIntent(AnimalDescriptionUserIntent.DismissDatePicker) },
+        onPetNameChanged = { name -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdatePetName(name)) },
+        onSpeciesSelected = { species -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies(species)) },
+        onRaceChanged = { race -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace(race)) },
+        onGenderSelected = { gender -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(gender)) },
+        onAgeChanged = { age -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateAge(age)) },
+        onContinueClick = { viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked) },
     )
 }
-
-private fun FlowStep.toRoute(): ReportMissingRoute =
-    when (this) {
-        FlowStep.CHIP_NUMBER -> ReportMissingRoute.ChipNumber
-        FlowStep.PHOTO -> ReportMissingRoute.Photo
-        FlowStep.DESCRIPTION -> ReportMissingRoute.Description
-        FlowStep.CONTACT_DETAILS -> ReportMissingRoute.ContactDetails
-        FlowStep.SUMMARY -> ReportMissingRoute.Summary
-    }

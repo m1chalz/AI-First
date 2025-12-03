@@ -3,19 +3,12 @@ package com.intive.aifirst.petspot.features.reportmissing.ui.photo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -23,6 +16,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.PhotoAttachmentState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.PhotoStatus
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.ContinueButton
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.ScreenTitleSection
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
 import com.intive.aifirst.petspot.features.reportmissing.ui.photo.components.PhotoConfirmationCard
 import com.intive.aifirst.petspot.features.reportmissing.ui.photo.components.PhotoEmptyState
@@ -49,11 +44,10 @@ fun PhotoContent(
     onContinueClick: () -> Unit = {},
 ) {
     Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .testTag("reportMissing.photo.content"),
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .testTag("reportMissing.photo.content"),
     ) {
         // Header with back button, title, and progress indicator
         StepHeader(
@@ -64,25 +58,15 @@ fun PhotoContent(
 
         // Main content
         Column(
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Your pet's photo",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF2D2D2D),
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Please upload a photo of the missing animal.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF545F71),
+            ScreenTitleSection(
+                title = "Your pet's photo",
+                subtitle = "Please upload a photo of the missing animal.",
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -103,25 +87,10 @@ fun PhotoContent(
         }
 
         // Continue button
-        Button(
+        ContinueButton(
             onClick = onContinueClick,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-                    .testTag("animalPhoto.continue"),
-            shape = RoundedCornerShape(10.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF155DFC),
-                ),
-        ) {
-            Text(
-                text = "Continue",
-                modifier = Modifier.padding(vertical = 8.dp),
-            )
-        }
+            modifier = Modifier.testTag("animalPhoto.continue"),
+        )
     }
 }
 
@@ -130,35 +99,34 @@ fun PhotoContent(
  * Provides sample states for empty, loading, confirmed, and error scenarios.
  */
 class PhotoAttachmentStateProvider : PreviewParameterProvider<PhotoAttachmentState> {
-    override val values =
-        sequenceOf(
-            // Empty state
-            PhotoAttachmentState.Empty,
-            // Loading state
-            PhotoAttachmentState(
-                uri = "content://photo/1",
-                status = PhotoStatus.LOADING,
-            ),
-            // Confirmed state with photo
-            PhotoAttachmentState(
-                uri = "content://photo/1",
-                filename = "missing_dog.jpg",
-                sizeBytes = 1_534_000,
-                status = PhotoStatus.CONFIRMED,
-            ),
-            // Confirmed state with long filename
-            PhotoAttachmentState(
-                uri = "content://photo/2",
-                filename = "my_very_long_filename_photo_dog.jpg",
-                sizeBytes = 512_000,
-                status = PhotoStatus.CONFIRMED,
-            ),
-            // Error state
-            PhotoAttachmentState(
-                uri = "content://photo/error",
-                status = PhotoStatus.ERROR,
-            ),
-        )
+    override val values = sequenceOf(
+        // Empty state
+        PhotoAttachmentState.Empty,
+        // Loading state
+        PhotoAttachmentState(
+            uri = "content://photo/1",
+            status = PhotoStatus.LOADING,
+        ),
+        // Confirmed state with photo
+        PhotoAttachmentState(
+            uri = "content://photo/1",
+            filename = "missing_dog.jpg",
+            sizeBytes = 1_534_000,
+            status = PhotoStatus.CONFIRMED,
+        ),
+        // Confirmed state with long filename
+        PhotoAttachmentState(
+            uri = "content://photo/2",
+            filename = "my_very_long_filename_photo_dog.jpg",
+            sizeBytes = 512_000,
+            status = PhotoStatus.CONFIRMED,
+        ),
+        // Error state
+        PhotoAttachmentState(
+            uri = "content://photo/error",
+            status = PhotoStatus.ERROR,
+        ),
+    )
 }
 
 @Preview(name = "Photo Content", showBackground = true)

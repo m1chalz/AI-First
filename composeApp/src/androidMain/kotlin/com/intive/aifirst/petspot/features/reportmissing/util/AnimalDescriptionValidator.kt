@@ -66,14 +66,14 @@ object AnimalDescriptionValidator {
         )
     }
 
-    private fun validateSpecies(species: String): String? = if (species.isBlank()) "Please select an animal species" else null
+    private fun validateSpecies(species: String): String? = if (species.isBlank()) "This field cannot be empty" else null
 
     private fun validateRace(
         race: String,
         species: String,
-    ): String? = if (species.isNotBlank() && race.isBlank()) "Please enter the animal race" else null
+    ): String? = if (species.isNotBlank() && race.isBlank()) "This field cannot be empty" else null
 
-    private fun validateGender(gender: Any?): String? = if (gender == null) "Please select a gender" else null
+    private fun validateGender(gender: Any?): String? = if (gender == null) "This field cannot be empty" else null
 
     private fun validateAge(age: String): String? {
         if (age.isBlank()) return null

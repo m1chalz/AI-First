@@ -63,26 +63,26 @@
 ### Tests for User Story 1 (MANDATORY) ✅
 
 **Android Unit Tests**:
-- [ ] T009 [P] [US1] Unit test for `AnimalDescriptionValidator` (species, race, gender validation) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidatorTest.kt`
-- [ ] T010 [P] [US1] Unit test for `AnimalDescriptionViewModel` initial state and field updates in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModelTest.kt`
+- [X] T009 [P] [US1] Unit test for `AnimalDescriptionValidator` (species, race, gender validation) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidatorTest.kt`
+- [X] T010 [P] [US1] Unit test for `AnimalDescriptionViewModel` initial state and field updates in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T011 [P] [US1] Create `AnimalDescriptionScreen.java` Screen Object in `/e2e-tests/src/test/java/com/petspot/screens/AnimalDescriptionScreen.java`
-- [ ] T012 [P] [US1] Create `animal-description.feature` Cucumber scenarios for US1 in `/e2e-tests/src/test/resources/features/mobile/animal-description.feature`
-- [ ] T013 [P] [US1] Create `AnimalDescriptionSteps.java` step definitions in `/e2e-tests/src/test/java/com/petspot/stepsmobile/AnimalDescriptionSteps.java`
+- [X] T011 [P] [US1] Create `AnimalDescriptionScreen.java` Screen Object in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/AnimalDescriptionScreen.java`
+- [X] T012 [P] [US1] Create `animal-description.feature` Cucumber scenarios for US1 in `/e2e-tests/java/src/test/resources/features/mobile/animal-description.feature`
+- [X] T013 [P] [US1] Create `AnimalDescriptionSteps.java` step definitions in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/AnimalDescriptionSteps.java`
 
 ### Implementation for User Story 1
 
 **Android** (MVI Architecture):
-- [ ] T014 [US1] Create `AnimalDescriptionViewModel` with intent handling for UpdatePetName, UpdateDate, UpdateSpecies, UpdateRace, UpdateGender in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModel.kt`
-- [ ] T015 [US1] Register `AnimalDescriptionViewModel` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ReportMissingModule.kt`
-- [ ] T016 [P] [US1] Create `DatePickerField` composable with Material 3 DatePickerDialog (future dates disabled) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/DatePickerField.kt`
-- [ ] T017 [P] [US1] Create `SpeciesDropdown` composable with ExposedDropdownMenuBox in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/SpeciesDropdown.kt`
-- [ ] T018 [P] [US1] Create `GenderSelector` composable with two selectable cards in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/GenderSelector.kt`
-- [ ] T019 [US1] Create stateless `AnimalDescriptionContent` composable with date picker, pet name, species dropdown, race field, gender selector, age field, continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/AnimalDescriptionContent.kt`
-- [ ] T020 [US1] Update `DescriptionScreen` (state host) to wire ViewModel, collect state, and handle effects (validation Snackbars, GPS failure Snackbar, and OpenSettings deep link) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionScreen.kt`
-- [ ] T021 [US1] Create `AnimalDescriptionUiStateProvider` PreviewParameterProvider and add @Preview functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/AnimalDescriptionContent.kt`
-- [ ] T022 [US1] Add testTag modifiers to all US1 interactive composables: `animalDescription.datePickerField`, `animalDescription.petNameField`, `animalDescription.speciesDropdown`, `animalDescription.raceField`, `animalDescription.genderFemale`, `animalDescription.genderMale`, `animalDescription.ageField`, `animalDescription.continueButton`
+- [X] T014 [US1] Create `AnimalDescriptionViewModel` with intent handling for UpdatePetName, UpdateDate, UpdateSpecies, UpdateRace, UpdateGender in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModel.kt`
+- [X] T015 [US1] Register `AnimalDescriptionViewModel` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
+- [X] T016 [P] [US1] Create `DatePickerField` composable with Material 3 DatePickerDialog (future dates disabled) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/DatePickerField.kt`
+- [X] T017 [P] [US1] Create `SpeciesDropdown` composable with ExposedDropdownMenuBox in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/SpeciesDropdown.kt`
+- [X] T018 [P] [US1] Create `GenderSelector` composable with two selectable cards in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/GenderSelector.kt`
+- [X] T019 [US1] Create stateless `AnimalDescriptionContent` composable with date picker, pet name, species dropdown, race field, gender selector, age field, continue button in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/AnimalDescriptionContent.kt`
+- [X] T020 [US1] Update `DescriptionScreen` (state host) to wire ViewModel, collect state, and handle effects (validation Snackbars, GPS failure Snackbar, and OpenSettings deep link) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/DescriptionScreen.kt`
+- [X] T021 [US1] Create `AnimalDescriptionUiStateProvider` PreviewParameterProvider and add @Preview functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/AnimalDescriptionContent.kt`
+- [X] T022 [US1] Add testTag modifiers to all US1 interactive composables: `animalDescription.datePickerField`, `animalDescription.petNameField`, `animalDescription.speciesDropdown`, `animalDescription.raceField`, `animalDescription.genderFemale`, `animalDescription.genderMale`, `animalDescription.ageField`, `animalDescription.continueButton`
 
 **Checkpoint**: User Story 1 complete - required fields form working, navigation to Step 4
 
