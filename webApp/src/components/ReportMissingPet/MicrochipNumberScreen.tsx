@@ -57,7 +57,7 @@ export function MicrochipNumberScreen() {
         <input
           id="microchip-input"
           type="tel"
-          pattern="[0-9-]*"
+          pattern="[0-9]*"
           value={formattedValue}
           onChange={handleChange}
           onPaste={handlePaste}

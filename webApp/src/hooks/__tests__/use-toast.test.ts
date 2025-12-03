@@ -82,7 +82,7 @@ describe('use-toast', () => {
 
       // when
       act(() => result.current.showToast('Test message'));
-      act(() => vi.advanceTimersByTime(2999));
+      act(() => vi.advanceTimersByTime(9999));
 
       // then
       expect(result.current.message).toBe('Test message');
