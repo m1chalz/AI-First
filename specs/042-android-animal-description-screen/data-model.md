@@ -208,7 +208,7 @@ object AnimalDescriptionValidator {
         }
         
         val latitudeError = state.latitude.let { lat ->
-            if (lat.isBlank()) null
+            if (lat.isBlank()) "This field cannot be empty"
             else {
                 val latDouble = lat.toDoubleOrNull()
                 when {
@@ -220,7 +220,7 @@ object AnimalDescriptionValidator {
         }
         
         val longitudeError = state.longitude.let { lon ->
-            if (lon.isBlank()) null
+            if (lon.isBlank()) "This field cannot be empty"
             else {
                 val lonDouble = lon.toDoubleOrNull()
                 when {
@@ -336,8 +336,8 @@ Initial State
 | Animal race | String | Yes | Must be non-empty (after species selected) |
 | Gender | AnimalGender? | Yes | Must be selected |
 | Age | String (Int) | No | 0-40 if provided |
-| Latitude | String (Double) | No | -90 to 90 if provided |
-| Longitude | String (Double) | No | -180 to 180 if provided |
+| Latitude | String (Double) | Yes | -90 to 90, required by backend |
+| Longitude | String (Double) | Yes | -180 to 180, required by backend |
 | Additional description | String | No | Max 500 characters |
 
 **Form field order**: Date → Pet name → Species → Race → Gender → Age → GPS Location → Additional description

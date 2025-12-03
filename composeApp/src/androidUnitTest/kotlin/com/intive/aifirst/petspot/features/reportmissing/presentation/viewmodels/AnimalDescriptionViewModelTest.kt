@@ -1,6 +1,8 @@
 package com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels
 
 import app.cash.turbine.test
+import com.intive.aifirst.petspot.domain.usecases.GetCurrentLocationUseCase
+import com.intive.aifirst.petspot.fakes.FakeLocationRepository
 import com.intive.aifirst.petspot.features.reportmissing.domain.models.AnimalGender
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUserIntent
@@ -31,6 +33,7 @@ import kotlin.test.assertTrue
 class AnimalDescriptionViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var flowState: ReportMissingFlowState
+    private lateinit var fakeLocationRepository: FakeLocationRepository
 
     // Track callback invocations
     private var navigateToContactDetailsCalled = false
@@ -40,6 +43,7 @@ class AnimalDescriptionViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         flowState = ReportMissingFlowState()
+        fakeLocationRepository = FakeLocationRepository(cachedLocation = FakeLocationRepository.SAMPLE_WARSAW)
         navigateToContactDetailsCalled = false
         navigateBackCalled = false
     }
@@ -49,9 +53,10 @@ class AnimalDescriptionViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createViewModel() =
+    private fun createViewModel(locationRepository: FakeLocationRepository = fakeLocationRepository) =
         AnimalDescriptionViewModel(
             flowState = flowState,
+            getCurrentLocationUseCase = GetCurrentLocationUseCase(locationRepository),
             onNavigateToContactDetails = { navigateToContactDetailsCalled = true },
             onNavigateBack = { navigateBackCalled = true },
         )
@@ -408,13 +413,15 @@ class AnimalDescriptionViewModelTest {
     @Test
     fun `handleIntent ContinueClicked with valid form should save to flow state`() =
         runTest {
-            // Given - valid form
+            // Given - valid form with all required fields including lat/long
             val viewModel = createViewModel()
             advanceUntilIdle()
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies("Dog"))
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace("Labrador"))
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(AnimalGender.MALE))
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdatePetName("Buddy"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.2297"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("21.0122"))
             advanceUntilIdle()
 
             // When
@@ -427,17 +434,21 @@ class AnimalDescriptionViewModelTest {
             assertEquals("Labrador", savedData.animalRace)
             assertEquals(AnimalGender.MALE, savedData.animalGender)
             assertEquals("Buddy", savedData.petName)
+            assertEquals(52.2297, savedData.latitude)
+            assertEquals(21.0122, savedData.longitude)
         }
 
     @Test
     fun `handleIntent ContinueClicked with valid form should trigger navigation`() =
         runTest {
-            // Given - valid form
+            // Given - valid form with all required fields including lat/long
             val viewModel = createViewModel()
             advanceUntilIdle()
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies("Dog"))
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace("Labrador"))
             viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(AnimalGender.MALE))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.2297"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("21.0122"))
             advanceUntilIdle()
 
             // When
@@ -606,5 +617,301 @@ class AnimalDescriptionViewModelTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
-}
 
+    // ========================================
+    // GPS Request Tests (Phase 4 - US2)
+    // ========================================
+
+    @Test
+    fun `handleIntent RequestGpsPosition should set loading state`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+
+            // Then - should be in loading state (before coroutine completes)
+            assertTrue(viewModel.state.value.isGpsLoading, "Should be loading during GPS request")
+            advanceUntilIdle()
+        }
+
+    @Test
+    fun `handleIntent RequestGpsPosition success should populate coordinates with 5 decimal places`() =
+        runTest {
+            // Given - repository returns Warsaw coordinates
+            val repository = FakeLocationRepository(cachedLocation = FakeLocationRepository.SAMPLE_WARSAW)
+            val viewModel = createViewModel(locationRepository = repository)
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+            advanceUntilIdle()
+
+            // Then - coordinates should be populated with 5 decimal places per FR-009
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertEquals("52.22970", currentState.latitude)
+                assertEquals("21.01220", currentState.longitude)
+                assertFalse(currentState.isGpsLoading, "Should not be loading after completion")
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent RequestGpsPosition with permission denied should emit ShowSnackbar`() =
+        runTest {
+            // Given - repository throws SecurityException
+            val repository = FakeLocationRepository(shouldFailWithSecurityException = true)
+            val viewModel = createViewModel(locationRepository = repository)
+            advanceUntilIdle()
+
+            // When & Then
+            viewModel.effects.test {
+                viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+                advanceUntilIdle()
+
+                val effect = awaitItem()
+                assertTrue(effect is AnimalDescriptionUiEffect.ShowSnackbar)
+                assertTrue(
+                    (effect as AnimalDescriptionUiEffect.ShowSnackbar).message.contains(
+                        "permission",
+                        ignoreCase = true,
+                    ),
+                    "Message should mention permission",
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent RequestGpsPosition with permission denied should emit OpenLocationSettings`() =
+        runTest {
+            // Given - repository throws SecurityException
+            val repository = FakeLocationRepository(shouldFailWithSecurityException = true)
+            val viewModel = createViewModel(locationRepository = repository)
+            advanceUntilIdle()
+
+            // When & Then
+            viewModel.effects.test {
+                viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+                advanceUntilIdle()
+
+                // First effect is Snackbar, second is OpenLocationSettings
+                val snackbarEffect = awaitItem()
+                assertTrue(snackbarEffect is AnimalDescriptionUiEffect.ShowSnackbar)
+
+                val settingsEffect = awaitItem()
+                assertTrue(
+                    settingsEffect is AnimalDescriptionUiEffect.OpenLocationSettings,
+                    "Should emit OpenLocationSettings effect",
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent RequestGpsPosition with no location available should show error`() =
+        runTest {
+            // Given - repository returns null (no location available)
+            val repository = FakeLocationRepository(cachedLocation = null, freshLocation = null)
+            val viewModel = createViewModel(locationRepository = repository)
+            advanceUntilIdle()
+
+            // When & Then
+            viewModel.effects.test {
+                viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+                advanceUntilIdle()
+
+                val effect = awaitItem()
+                assertTrue(effect is AnimalDescriptionUiEffect.ShowSnackbar)
+                assertTrue(
+                    (effect as AnimalDescriptionUiEffect.ShowSnackbar).message.contains("unavailable", ignoreCase = true) ||
+                        effect.message.contains("not available", ignoreCase = true) ||
+                        effect.message.contains("could not", ignoreCase = true),
+                    "Message should indicate location unavailable",
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent RequestGpsPosition should clear loading state on failure`() =
+        runTest {
+            // Given - repository throws exception
+            val repository = FakeLocationRepository(shouldFailWithException = true)
+            val viewModel = createViewModel(locationRepository = repository)
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition)
+            advanceUntilIdle()
+
+            // Then - loading should be cleared
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertFalse(currentState.isGpsLoading, "Loading should be cleared after failure")
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    // ========================================
+    // UpdateLatitude/Longitude Tests (Phase 4 - US2)
+    // ========================================
+
+    @Test
+    fun `handleIntent UpdateLatitude should update latitude in state`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.2297"))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertEquals("52.2297", currentState.latitude)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent UpdateLatitude should limit precision to 5 decimal places`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When - input with more than 5 decimal places
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.12345678"))
+            advanceUntilIdle()
+
+            // Then - should be truncated to 5 decimal places
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertEquals("52.12345", currentState.latitude)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent UpdateLongitude should update longitude in state`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("21.0122"))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertEquals("21.0122", currentState.longitude)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent UpdateLongitude should limit precision to 5 decimal places`() =
+        runTest {
+            // Given
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            // When - input with more than 5 decimal places
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("-122.4194567890"))
+            advanceUntilIdle()
+
+            // Then - should be truncated to 5 decimal places
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertEquals("-122.41945", currentState.longitude)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent UpdateLatitude should clear latitude error`() =
+        runTest {
+            // Given - ViewModel with invalid latitude
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("invalid"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies("Dog"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace("Labrador"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(AnimalGender.MALE))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked) // Trigger validation
+            advanceUntilIdle()
+
+            // Verify error exists
+            assertTrue(viewModel.state.value.latitudeError != null)
+
+            // When - update latitude
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.2297"))
+            advanceUntilIdle()
+
+            // Then - error should be cleared
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertNull(currentState.latitudeError, "Latitude error should be cleared")
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent UpdateLongitude should clear longitude error`() =
+        runTest {
+            // Given - ViewModel with invalid longitude
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("invalid"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies("Dog"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace("Labrador"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(AnimalGender.MALE))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked) // Trigger validation
+            advanceUntilIdle()
+
+            // Verify error exists
+            assertTrue(viewModel.state.value.longitudeError != null)
+
+            // When - update longitude
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("21.0122"))
+            advanceUntilIdle()
+
+            // Then - error should be cleared
+            viewModel.state.test {
+                val currentState = awaitItem()
+                assertNull(currentState.longitudeError, "Longitude error should be cleared")
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `handleIntent ContinueClicked should save coordinates to flow state`() =
+        runTest {
+            // Given - valid form with coordinates
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateSpecies("Dog"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace("Labrador"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(AnimalGender.MALE))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude("52.2297"))
+            viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude("21.0122"))
+            advanceUntilIdle()
+
+            // When
+            viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked)
+            advanceUntilIdle()
+
+            // Then - verify coordinates were saved to flow state
+            val savedData = flowState.data.value
+            assertEquals(52.2297, savedData.latitude)
+            assertEquals(21.0122, savedData.longitude)
+        }
+}

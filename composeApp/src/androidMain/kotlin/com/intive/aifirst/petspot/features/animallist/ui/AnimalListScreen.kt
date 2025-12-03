@@ -3,9 +3,6 @@
 package com.intive.aifirst.petspot.features.animallist.ui
 
 import android.Manifest
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +16,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.intive.aifirst.petspot.core.util.openAppSettings
 import com.intive.aifirst.petspot.domain.models.RationaleDialogType
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListEffect
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
@@ -172,13 +170,7 @@ fun AnimalListScreen(
                 }
 
                 AnimalListEffect.OpenSettings -> {
-                    // Navigate to app settings via Intent.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val intent =
-                        Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.fromParts("package", context.packageName, null),
-                        )
-                    context.startActivity(intent)
+                    context.openAppSettings()
                 }
             }
         }

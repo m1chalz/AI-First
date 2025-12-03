@@ -50,6 +50,19 @@ public class AnimalDescriptionScreen {
     @iOSXCUITFindBy(id = "animalDescription.ageField")
     private WebElement ageField;
 
+    // GPS Location section
+    @AndroidFindBy(accessibility = "animalDescription.requestGpsButton")
+    @iOSXCUITFindBy(id = "animalDescription.requestGpsButton")
+    private WebElement requestGpsButton;
+
+    @AndroidFindBy(accessibility = "animalDescription.latitudeField")
+    @iOSXCUITFindBy(id = "animalDescription.latitudeField")
+    private WebElement latitudeField;
+
+    @AndroidFindBy(accessibility = "animalDescription.longitudeField")
+    @iOSXCUITFindBy(id = "animalDescription.longitudeField")
+    private WebElement longitudeField;
+
     @AndroidFindBy(accessibility = "animalDescription.continueButton")
     @iOSXCUITFindBy(id = "animalDescription.continueButton")
     private WebElement continueButton;
@@ -163,6 +176,68 @@ public class AnimalDescriptionScreen {
         waitForElement(ageField);
         String value = ageField.getAttribute("value");
         return value != null ? value : ageField.getText();
+    }
+
+    // GPS Location interactions
+    public void tapRequestGpsButton() {
+        waitForElement(requestGpsButton);
+        requestGpsButton.click();
+    }
+
+    public boolean isRequestGpsButtonDisplayed() {
+        try {
+            return requestGpsButton.isDisplayed();
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
+    public boolean isRequestGpsButtonEnabled() {
+        try {
+            waitForElement(requestGpsButton);
+            return requestGpsButton.isEnabled();
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
+    public String getRequestGpsButtonText() {
+        waitForElement(requestGpsButton);
+        return requestGpsButton.getText();
+    }
+
+    public void typeLatitude(String latitude) {
+        waitForElement(latitudeField);
+        latitudeField.clear();
+        latitudeField.sendKeys(latitude);
+    }
+
+    public String getLatitude() {
+        waitForElement(latitudeField);
+        String value = latitudeField.getAttribute("value");
+        return value != null ? value : latitudeField.getText();
+    }
+
+    public void typeLongitude(String longitude) {
+        waitForElement(longitudeField);
+        longitudeField.clear();
+        longitudeField.sendKeys(longitude);
+    }
+
+    public String getLongitude() {
+        waitForElement(longitudeField);
+        String value = longitudeField.getAttribute("value");
+        return value != null ? value : longitudeField.getText();
+    }
+
+    public boolean isLatitudeFieldPopulated() {
+        String latitude = getLatitude();
+        return latitude != null && !latitude.isEmpty() && !latitude.equals("-90 to 90");
+    }
+
+    public boolean isLongitudeFieldPopulated() {
+        String longitude = getLongitude();
+        return longitude != null && !longitude.isEmpty() && !longitude.equals("-180 to 180");
     }
 
     // Navigation interactions

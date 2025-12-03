@@ -28,7 +28,6 @@ data class AnimalDescriptionUiState(
     val longitudeError: String? = null,
     // Loading states
     val isGpsLoading: Boolean = false,
-    val gpsSuccessMessage: String? = null,
     // Date picker dialog state
     val isDatePickerVisible: Boolean = false,
 ) {

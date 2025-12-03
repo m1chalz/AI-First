@@ -62,18 +62,20 @@ fun GenderSelector(
                 label = "Female",
                 isSelected = selectedGender == AnimalGender.FEMALE,
                 onClick = { onGenderSelected(AnimalGender.FEMALE) },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("animalDescription.genderFemale"),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .testTag("animalDescription.genderFemale"),
             )
 
             GenderOption(
                 label = "Male",
                 isSelected = selectedGender == AnimalGender.MALE,
                 onClick = { onGenderSelected(AnimalGender.MALE) },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("animalDescription.genderMale"),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .testTag("animalDescription.genderMale"),
             )
         }
 
@@ -96,13 +98,14 @@ private fun GenderOption(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .height(57.dp)
-            .selectable(
-                selected = isSelected,
-                onClick = onClick,
-                role = Role.RadioButton,
-            ),
+        modifier =
+            modifier
+                .height(57.dp)
+                .selectable(
+                    selected = isSelected,
+                    onClick = onClick,
+                    role = Role.RadioButton,
+                ),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(width = 1.dp, color = BorderColor),
@@ -120,10 +123,11 @@ private fun GenderOption(
                 RadioButton(
                     selected = isSelected,
                     onClick = null, // Handled by Card's selectable
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = PrimaryBlue,
-                        unselectedColor = TextColor,
-                    ),
+                    colors =
+                        RadioButtonDefaults.colors(
+                            selectedColor = PrimaryBlue,
+                            unselectedColor = TextColor,
+                        ),
                 )
 
                 // More spacing between radio button and text
@@ -149,12 +153,13 @@ private data class GenderSelectorPreviewState(
 )
 
 private class GenderSelectorPreviewProvider : PreviewParameterProvider<GenderSelectorPreviewState> {
-    override val values = sequenceOf(
-        GenderSelectorPreviewState(selectedGender = null, errorMessage = null),
-        GenderSelectorPreviewState(selectedGender = AnimalGender.FEMALE, errorMessage = null),
-        GenderSelectorPreviewState(selectedGender = AnimalGender.MALE, errorMessage = null),
-        GenderSelectorPreviewState(selectedGender = null, errorMessage = "This field cannot be empty"),
-    )
+    override val values =
+        sequenceOf(
+            GenderSelectorPreviewState(selectedGender = null, errorMessage = null),
+            GenderSelectorPreviewState(selectedGender = AnimalGender.FEMALE, errorMessage = null),
+            GenderSelectorPreviewState(selectedGender = AnimalGender.MALE, errorMessage = null),
+            GenderSelectorPreviewState(selectedGender = null, errorMessage = "This field cannot be empty"),
+        )
 }
 
 @Preview(name = "Gender Selector", showBackground = true, backgroundColor = 0xFFFFFFFF)

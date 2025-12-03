@@ -69,20 +69,21 @@ fun StyledOutlinedTextField(
         shape = RoundedCornerShape(10.dp),
         visualTransformation = visualTransformation,
         interactionSource = interactionSource,
-        colors = OutlinedTextFieldDefaults.colors(
-            // Focused state - primary blue
-            focusedBorderColor = ReportMissingColors.PrimaryBlue,
-            cursorColor = ReportMissingColors.PrimaryBlue,
-            // Unfocused state
-            unfocusedBorderColor = ReportMissingColors.BorderColor,
-            disabledBorderColor = ReportMissingColors.BorderColor,
-            // Error state
-            errorBorderColor = ReportMissingColors.ErrorBorderColor,
-            // Container colors
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.White,
-        ),
+        colors =
+            OutlinedTextFieldDefaults.colors(
+                // Focused state - primary blue
+                focusedBorderColor = ReportMissingColors.PrimaryBlue,
+                cursorColor = ReportMissingColors.PrimaryBlue,
+                // Unfocused state
+                unfocusedBorderColor = ReportMissingColors.BorderColor,
+                disabledBorderColor = ReportMissingColors.BorderColor,
+                // Error state
+                errorBorderColor = ReportMissingColors.ErrorBorderColor,
+                // Container colors
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White,
+            ),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = modifier.fillMaxWidth(),
     )
@@ -119,48 +120,49 @@ private data class StyledOutlinedTextFieldState(
 )
 
 private class StyledOutlinedTextFieldProvider : PreviewParameterProvider<StyledOutlinedTextFieldState> {
-    override val values = sequenceOf(
-        // Empty with placeholder
-        StyledOutlinedTextFieldState(
-            value = "",
-            placeholder = "00000-00000-00000",
-            enabled = true,
-            isError = false,
-            isFocused = false,
-        ),
-        // Focused (shows primary blue border)
-        StyledOutlinedTextFieldState(
-            value = "Typing...",
-            placeholder = "-",
-            enabled = true,
-            isError = false,
-            isFocused = true,
-        ),
-        // Filled
-        StyledOutlinedTextFieldState(
-            value = "Buddy",
-            placeholder = "-",
-            enabled = true,
-            isError = false,
-            isFocused = false,
-        ),
-        // Disabled
-        StyledOutlinedTextFieldState(
-            value = "",
-            placeholder = "-",
-            enabled = false,
-            isError = false,
-            isFocused = false,
-        ),
-        // Error state
-        StyledOutlinedTextFieldState(
-            value = "",
-            placeholder = "-",
-            enabled = true,
-            isError = true,
-            isFocused = false,
-        ),
-    )
+    override val values =
+        sequenceOf(
+            // Empty with placeholder
+            StyledOutlinedTextFieldState(
+                value = "",
+                placeholder = "00000-00000-00000",
+                enabled = true,
+                isError = false,
+                isFocused = false,
+            ),
+            // Focused (shows primary blue border)
+            StyledOutlinedTextFieldState(
+                value = "Typing...",
+                placeholder = "-",
+                enabled = true,
+                isError = false,
+                isFocused = true,
+            ),
+            // Filled
+            StyledOutlinedTextFieldState(
+                value = "Buddy",
+                placeholder = "-",
+                enabled = true,
+                isError = false,
+                isFocused = false,
+            ),
+            // Disabled
+            StyledOutlinedTextFieldState(
+                value = "",
+                placeholder = "-",
+                enabled = false,
+                isError = false,
+                isFocused = false,
+            ),
+            // Error state
+            StyledOutlinedTextFieldState(
+                value = "",
+                placeholder = "-",
+                enabled = true,
+                isError = true,
+                isFocused = false,
+            ),
+        )
 }
 
 @Preview(name = "Styled Outlined TextField", showBackground = true, backgroundColor = 0xFFFFFFFF)
@@ -169,9 +171,10 @@ private fun StyledOutlinedTextFieldPreview(
     @PreviewParameter(StyledOutlinedTextFieldProvider::class) state: StyledOutlinedTextFieldState,
 ) {
     MaterialTheme {
-        val interactionSource = remember(state.isFocused) {
-            if (state.isFocused) PreviewFocusedInteractionSource() else MutableInteractionSource()
-        }
+        val interactionSource =
+            remember(state.isFocused) {
+                if (state.isFocused) PreviewFocusedInteractionSource() else MutableInteractionSource()
+            }
 
         StyledOutlinedTextField(
             value = state.value,

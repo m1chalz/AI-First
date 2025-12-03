@@ -44,10 +44,11 @@ fun ChipNumberContent(
     onContinueClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .testTag("reportMissing.chipNumber.content"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .testTag("reportMissing.chipNumber.content"),
     ) {
         // Header with back button, title, and progress indicator
         StepHeader(
@@ -58,16 +59,18 @@ fun ChipNumberContent(
 
         // Main content
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
             ScreenTitleSection(
                 title = "Identification by Microchip",
-                subtitle = "Microchip identification is the most efficient way to reunite with your pet. " +
-                    "If your pet has been microchipped and you know the microchip number, please enter it here.",
+                subtitle =
+                    "Microchip identification is the most efficient way to reunite with your pet. " +
+                        "If your pet has been microchipped and you know the microchip number, please enter it here.",
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -105,16 +108,17 @@ fun ChipNumberContent(
  * Provides sample states for empty, partial, and complete chip number entry.
  */
 class ChipNumberUiStateProvider : PreviewParameterProvider<ChipNumberUiState> {
-    override val values = sequenceOf(
-        // Empty state
-        ChipNumberUiState.Initial,
-        // Partial entry (5 digits)
-        ChipNumberUiState(chipNumber = "12345"),
-        // Partial entry (10 digits)
-        ChipNumberUiState(chipNumber = "1234567890"),
-        // Complete entry (15 digits)
-        ChipNumberUiState(chipNumber = "123456789012345"),
-    )
+    override val values =
+        sequenceOf(
+            // Empty state
+            ChipNumberUiState.Initial,
+            // Partial entry (5 digits)
+            ChipNumberUiState(chipNumber = "12345"),
+            // Partial entry (10 digits)
+            ChipNumberUiState(chipNumber = "1234567890"),
+            // Complete entry (15 digits)
+            ChipNumberUiState(chipNumber = "123456789012345"),
+        )
 }
 
 @Preview(name = "Chip Number Content", showBackground = true)

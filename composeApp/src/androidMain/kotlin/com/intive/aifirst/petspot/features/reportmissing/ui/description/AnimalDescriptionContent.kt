@@ -30,6 +30,7 @@ import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeade
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StyledOutlinedTextField
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.DatePickerField
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.GenderSelector
+import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.GpsLocationSection
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.SpeciesDropdown
 import com.intive.aifirst.petspot.ui.preview.PreviewScreenSizes
 import java.time.LocalDate
@@ -55,14 +56,18 @@ fun AnimalDescriptionContent(
     onRaceChanged: (String) -> Unit = {},
     onGenderSelected: (AnimalGender) -> Unit = {},
     onAgeChanged: (String) -> Unit = {},
+    onRequestGps: () -> Unit = {},
+    onLatitudeChanged: (String) -> Unit = {},
+    onLongitudeChanged: (String) -> Unit = {},
     onContinueClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .statusBarsPadding()
-            .testTag("animalDescription.content"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .statusBarsPadding()
+                .testTag("animalDescription.content"),
     ) {
         // Header with back button, title, and progress indicator
         StepHeader(
@@ -74,10 +79,11 @@ fun AnimalDescriptionContent(
 
         // Main content - scrollable, aligned to top
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -130,11 +136,12 @@ fun AnimalDescriptionContent(
             // Animal race (required, enabled after species selection)
             FormField(
                 label = "Animal race",
-                labelColor = if (state.isRaceFieldEnabled) {
-                    ReportMissingColors.LabelColor
-                } else {
-                    ReportMissingColors.DisabledLabelColor
-                },
+                labelColor =
+                    if (state.isRaceFieldEnabled) {
+                        ReportMissingColors.LabelColor
+                    } else {
+                        ReportMissingColors.DisabledLabelColor
+                    },
                 errorMessage = state.raceError,
             ) {
                 StyledOutlinedTextField(
@@ -172,6 +179,20 @@ fun AnimalDescriptionContent(
                     modifier = Modifier.testTag("animalDescription.ageField"),
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // GPS Location section (button + Lat/Long fields per Figma)
+            GpsLocationSection(
+                latitude = state.latitude,
+                longitude = state.longitude,
+                onRequestGps = onRequestGps,
+                onLatitudeChanged = onLatitudeChanged,
+                onLongitudeChanged = onLongitudeChanged,
+                isLoading = state.isGpsLoading,
+                latitudeError = state.latitudeError,
+                longitudeError = state.longitudeError,
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -218,26 +239,38 @@ private fun FormField(
 // ========================================
 
 class AnimalDescriptionUiStateProvider : PreviewParameterProvider<AnimalDescriptionUiState> {
-    override val values: Sequence<AnimalDescriptionUiState> = sequenceOf(
-        // Empty state
-        AnimalDescriptionUiState(disappearanceDate = LocalDate.now()),
-        // Validation error state
-        AnimalDescriptionUiState(
-            disappearanceDate = LocalDate.now(),
-            speciesError = "This field cannot be empty",
-            raceError = "This field cannot be empty",
-            genderError = "This field cannot be empty",
-        ),
-        // Filled state
-        AnimalDescriptionUiState(
-            disappearanceDate = LocalDate.of(2024, 11, 18),
-            petName = "Buddy",
-            animalSpecies = "Dog",
-            animalRace = "Labrador",
-            animalGender = AnimalGender.FEMALE,
-            animalAge = "5",
-        ),
-    )
+    override val values: Sequence<AnimalDescriptionUiState> =
+        sequenceOf(
+            // Empty state (use fixed date to avoid API level issue in previews)
+            AnimalDescriptionUiState(disappearanceDate = LocalDate.of(2024, 12, 1)),
+            // Validation error state
+            AnimalDescriptionUiState(
+                disappearanceDate = LocalDate.of(2024, 12, 1),
+                speciesError = "This field cannot be empty",
+                raceError = "This field cannot be empty",
+                genderError = "This field cannot be empty",
+            ),
+            // Filled state with GPS coordinates
+            // Filled form state (GPS success populates coordinates)
+            AnimalDescriptionUiState(
+                disappearanceDate = LocalDate.of(2024, 11, 18),
+                petName = "Buddy",
+                animalSpecies = "Dog",
+                animalRace = "Labrador",
+                animalGender = AnimalGender.FEMALE,
+                animalAge = "5",
+                latitude = "52.2297",
+                longitude = "21.0122",
+            ),
+            // GPS loading state
+            AnimalDescriptionUiState(
+                disappearanceDate = LocalDate.now(),
+                animalSpecies = "Cat",
+                animalRace = "Persian",
+                animalGender = AnimalGender.MALE,
+                isGpsLoading = true,
+            ),
+        )
 }
 
 // ========================================

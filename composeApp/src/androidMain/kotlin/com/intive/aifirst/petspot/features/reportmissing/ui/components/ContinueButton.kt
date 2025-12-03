@@ -33,14 +33,16 @@ fun ContinueButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(16.dp),
         shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = ReportMissingColors.PrimaryBlue,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = ReportMissingColors.PrimaryBlue,
+            ),
     ) {
         Text(
             text = text,
@@ -54,11 +56,12 @@ fun ContinueButton(
 // ========================================
 
 private class ContinueButtonTextProvider : PreviewParameterProvider<String> {
-    override val values = sequenceOf(
-        "Continue",
-        "Submit",
-        "Next Step",
-    )
+    override val values =
+        sequenceOf(
+            "Continue",
+            "Submit",
+            "Next Step",
+        )
 }
 
 @Preview(name = "Continue Button", showBackground = true, backgroundColor = 0xFFFFFFFF)

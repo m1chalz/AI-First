@@ -54,20 +54,21 @@ private data class ScreenTitleSectionState(
 )
 
 private class ScreenTitleSectionProvider : PreviewParameterProvider<ScreenTitleSectionState> {
-    override val values = sequenceOf(
-        ScreenTitleSectionState(
-            title = "Identification by Microchip",
-            subtitle = "Microchip identification is the most efficient way to reunite with your pet.",
-        ),
-        ScreenTitleSectionState(
-            title = "Your pet's photo",
-            subtitle = "Please upload a photo of the missing animal.",
-        ),
-        ScreenTitleSectionState(
-            title = "Your pet's details",
-            subtitle = "Fill out the details about the missing animal.",
-        ),
-    )
+    override val values =
+        sequenceOf(
+            ScreenTitleSectionState(
+                title = "Identification by Microchip",
+                subtitle = "Microchip identification is the most efficient way to reunite with your pet.",
+            ),
+            ScreenTitleSectionState(
+                title = "Your pet's photo",
+                subtitle = "Please upload a photo of the missing animal.",
+            ),
+            ScreenTitleSectionState(
+                title = "Your pet's details",
+                subtitle = "Fill out the details about the missing animal.",
+            ),
+        )
 }
 
 @Preview(name = "Screen Title Section", showBackground = true, backgroundColor = 0xFFFFFFFF)

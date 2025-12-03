@@ -38,8 +38,8 @@ object AnimalDescriptionValidator {
     /**
      * Validates all form fields and returns a comprehensive result.
      *
-     * Required fields: species, race (if species selected), gender
-     * Optional fields: age (0-40 if provided), latitude (-90 to 90), longitude (-180 to 180)
+     * Required fields: species, race (if species selected), gender, latitude, longitude
+     * Optional fields: age (0-40 if provided)
      */
     fun validate(state: AnimalDescriptionUiState): ValidationResult {
         val speciesError = validateSpecies(state.animalSpecies)
@@ -66,7 +66,8 @@ object AnimalDescriptionValidator {
         )
     }
 
-    private fun validateSpecies(species: String): String? = if (species.isBlank()) "This field cannot be empty" else null
+    private fun validateSpecies(species: String): String? =
+        if (species.isBlank()) "This field cannot be empty" else null
 
     private fun validateRace(
         race: String,
@@ -88,7 +89,7 @@ object AnimalDescriptionValidator {
     }
 
     private fun validateLatitude(latitude: String): String? {
-        if (latitude.isBlank()) return null
+        if (latitude.isBlank()) return "This field cannot be empty"
 
         val latDouble = latitude.toDoubleOrNull()
         return when {
@@ -100,7 +101,7 @@ object AnimalDescriptionValidator {
     }
 
     private fun validateLongitude(longitude: String): String? {
-        if (longitude.isBlank()) return null
+        if (longitude.isBlank()) return "This field cannot be empty"
 
         val lonDouble = longitude.toDoubleOrNull()
         return when {

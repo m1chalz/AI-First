@@ -44,10 +44,11 @@ fun PhotoContent(
     onContinueClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .testTag("reportMissing.photo.content"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .testTag("reportMissing.photo.content"),
     ) {
         // Header with back button, title, and progress indicator
         StepHeader(
@@ -58,9 +59,10 @@ fun PhotoContent(
 
         // Main content
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -99,34 +101,35 @@ fun PhotoContent(
  * Provides sample states for empty, loading, confirmed, and error scenarios.
  */
 class PhotoAttachmentStateProvider : PreviewParameterProvider<PhotoAttachmentState> {
-    override val values = sequenceOf(
-        // Empty state
-        PhotoAttachmentState.Empty,
-        // Loading state
-        PhotoAttachmentState(
-            uri = "content://photo/1",
-            status = PhotoStatus.LOADING,
-        ),
-        // Confirmed state with photo
-        PhotoAttachmentState(
-            uri = "content://photo/1",
-            filename = "missing_dog.jpg",
-            sizeBytes = 1_534_000,
-            status = PhotoStatus.CONFIRMED,
-        ),
-        // Confirmed state with long filename
-        PhotoAttachmentState(
-            uri = "content://photo/2",
-            filename = "my_very_long_filename_photo_dog.jpg",
-            sizeBytes = 512_000,
-            status = PhotoStatus.CONFIRMED,
-        ),
-        // Error state
-        PhotoAttachmentState(
-            uri = "content://photo/error",
-            status = PhotoStatus.ERROR,
-        ),
-    )
+    override val values =
+        sequenceOf(
+            // Empty state
+            PhotoAttachmentState.Empty,
+            // Loading state
+            PhotoAttachmentState(
+                uri = "content://photo/1",
+                status = PhotoStatus.LOADING,
+            ),
+            // Confirmed state with photo
+            PhotoAttachmentState(
+                uri = "content://photo/1",
+                filename = "missing_dog.jpg",
+                sizeBytes = 1_534_000,
+                status = PhotoStatus.CONFIRMED,
+            ),
+            // Confirmed state with long filename
+            PhotoAttachmentState(
+                uri = "content://photo/2",
+                filename = "my_very_long_filename_photo_dog.jpg",
+                sizeBytes = 512_000,
+                status = PhotoStatus.CONFIRMED,
+            ),
+            // Error state
+            PhotoAttachmentState(
+                uri = "content://photo/error",
+                status = PhotoStatus.ERROR,
+            ),
+        )
 }
 
 @Preview(name = "Photo Content", showBackground = true)

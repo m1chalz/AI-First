@@ -68,27 +68,30 @@ fun DatePickerField(
                 tint = TextColor,
             )
         },
-        colors = OutlinedTextFieldDefaults.colors(
-            // Focused state - primary blue (matching ChipNumberContent)
-            focusedBorderColor = PrimaryBlue,
-            cursorColor = PrimaryBlue,
-            // Unfocused/disabled state
-            disabledTextColor = TextColor,
-            disabledBorderColor = BorderColor,
-            disabledContainerColor = Color.White,
-            disabledTrailingIconColor = TextColor,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onOpenDialog)
-            .testTag("animalDescription.datePickerField"),
+        colors =
+            OutlinedTextFieldDefaults.colors(
+                // Focused state - primary blue (matching ChipNumberContent)
+                focusedBorderColor = PrimaryBlue,
+                cursorColor = PrimaryBlue,
+                // Unfocused/disabled state
+                disabledTextColor = TextColor,
+                disabledBorderColor = BorderColor,
+                disabledContainerColor = Color.White,
+                disabledTrailingIconColor = TextColor,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = onOpenDialog)
+                .testTag("animalDescription.datePickerField"),
     )
 
     if (isDialogVisible) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate?.toEpochMillis(),
-            selectableDates = PastAndTodaySelectableDates,
-        )
+        val datePickerState =
+            rememberDatePickerState(
+                initialSelectedDateMillis = selectedDate?.toEpochMillis(),
+                selectableDates = PastAndTodaySelectableDates,
+            )
 
         DatePickerDialog(
             onDismissRequest = onDismissDialog,
@@ -96,9 +99,10 @@ fun DatePickerField(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            val date = Instant.ofEpochMilli(millis)
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate()
+                            val date =
+                                Instant.ofEpochMilli(millis)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
                             onDateSelected(date)
                         }
                     },
@@ -111,29 +115,31 @@ fun DatePickerField(
                     Text("Cancel", color = PrimaryBlue)
                 }
             },
-            colors = DatePickerDefaults.colors(
-                containerColor = Color.White,
-            ),
+            colors =
+                DatePickerDefaults.colors(
+                    containerColor = Color.White,
+                ),
         ) {
             DatePicker(
                 state = datePickerState,
-                colors = DatePickerDefaults.colors(
-                    containerColor = Color.White,
-                    titleContentColor = TextColor,
-                    headlineContentColor = TextColor,
-                    weekdayContentColor = TextColor,
-                    subheadContentColor = TextColor,
-                    navigationContentColor = TextColor,
-                    yearContentColor = TextColor,
-                    currentYearContentColor = PrimaryBlue,
-                    selectedYearContentColor = Color.White,
-                    selectedYearContainerColor = PrimaryBlue,
-                    dayContentColor = TextColor,
-                    selectedDayContentColor = Color.White,
-                    selectedDayContainerColor = PrimaryBlue,
-                    todayContentColor = PrimaryBlue,
-                    todayDateBorderColor = PrimaryBlue,
-                ),
+                colors =
+                    DatePickerDefaults.colors(
+                        containerColor = Color.White,
+                        titleContentColor = TextColor,
+                        headlineContentColor = TextColor,
+                        weekdayContentColor = TextColor,
+                        subheadContentColor = TextColor,
+                        navigationContentColor = TextColor,
+                        yearContentColor = TextColor,
+                        currentYearContentColor = PrimaryBlue,
+                        selectedYearContentColor = Color.White,
+                        selectedYearContainerColor = PrimaryBlue,
+                        dayContentColor = TextColor,
+                        selectedDayContentColor = Color.White,
+                        selectedDayContainerColor = PrimaryBlue,
+                        todayContentColor = PrimaryBlue,
+                        todayDateBorderColor = PrimaryBlue,
+                    ),
             )
         }
     }
@@ -154,19 +160,19 @@ private object PastAndTodaySelectableDates : SelectableDates {
 
 private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000L
 
-private fun LocalDate.toEpochMillis(): Long =
-    this.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+private fun LocalDate.toEpochMillis(): Long = this.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
 // ========================================
 // Preview
 // ========================================
 
 private class DatePickerFieldPreviewProvider : PreviewParameterProvider<LocalDate?> {
-    override val values = sequenceOf(
-        null,
-        LocalDate.of(2024, 11, 18),
-        LocalDate.now(),
-    )
+    override val values =
+        sequenceOf(
+            null,
+            LocalDate.of(2024, 11, 18),
+            LocalDate.now(),
+        )
 }
 
 @Preview(name = "Date Picker Field", showBackground = true, backgroundColor = 0xFFFFFFFF)

@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -65,20 +64,22 @@ fun SpeciesDropdown(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            colors = OutlinedTextFieldDefaults.colors(
-                // Focused state - primary blue (matching ChipNumberContent)
-                focusedBorderColor = if (isError) ErrorBorderColor else PrimaryBlue,
-                cursorColor = PrimaryBlue,
-                // Unfocused state
-                unfocusedBorderColor = if (isError) ErrorBorderColor else BorderColor,
-                errorBorderColor = ErrorBorderColor,
-                // Container colors
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    // Focused state - primary blue (matching ChipNumberContent)
+                    focusedBorderColor = if (isError) ErrorBorderColor else PrimaryBlue,
+                    cursorColor = PrimaryBlue,
+                    // Unfocused state
+                    unfocusedBorderColor = if (isError) ErrorBorderColor else BorderColor,
+                    errorBorderColor = ErrorBorderColor,
+                    // Container colors
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         )
 
         ExposedDropdownMenu(
@@ -94,9 +95,10 @@ fun SpeciesDropdown(
                         expanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    colors = MenuDefaults.itemColors(
-                        textColor = TextColor,
-                    ),
+                    colors =
+                        MenuDefaults.itemColors(
+                            textColor = TextColor,
+                        ),
                 )
             }
         }
@@ -113,11 +115,12 @@ private data class SpeciesDropdownPreviewState(
 )
 
 private class SpeciesDropdownPreviewProvider : PreviewParameterProvider<SpeciesDropdownPreviewState> {
-    override val values = sequenceOf(
-        SpeciesDropdownPreviewState(selectedSpecies = "", isError = false),
-        SpeciesDropdownPreviewState(selectedSpecies = "Dog", isError = false),
-        SpeciesDropdownPreviewState(selectedSpecies = "", isError = true),
-    )
+    override val values =
+        sequenceOf(
+            SpeciesDropdownPreviewState(selectedSpecies = "", isError = false),
+            SpeciesDropdownPreviewState(selectedSpecies = "Dog", isError = false),
+            SpeciesDropdownPreviewState(selectedSpecies = "", isError = true),
+        )
 }
 
 @Preview(name = "Species Dropdown", showBackground = true, backgroundColor = 0xFFFFFFFF)

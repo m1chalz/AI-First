@@ -101,3 +101,56 @@ Feature: Animal Description Screen
     And the race field should display "Husky"
     And the Female card should be selected
 
+  # User Story 2: Capture last known location details (P2)
+
+  @us2 @gps
+  Scenario: User can request GPS position
+    Given location permissions are granted
+    When the user taps the "Request GPS position" button
+    Then the GPS button should show loading state
+    And the latitude field should be populated with a valid value
+    And the longitude field should be populated with a valid value
+
+  @us2 @gps @permissions
+  Scenario: GPS request shows permission denied message
+    Given location permissions are NOT granted
+    When the user taps the "Request GPS position" button
+    Then a toast message mentioning "permission" should be displayed
+    And the app settings should be opened
+
+  @us2 @gps @manual
+  Scenario: User can manually enter coordinates
+    When the user enters "52.2297" in the latitude field
+    And the user enters "21.0122" in the longitude field
+    Then the latitude field should display "52.2297"
+    And the longitude field should display "21.0122"
+
+  @us2 @gps @validation
+  Scenario: Invalid latitude shows validation error
+    Given the user has selected "Dog" as the species
+    And the user has entered "Labrador" as the race
+    And the user has selected "Male" as the gender
+    When the user enters "100" in the latitude field
+    And the user taps the Continue button
+    Then a validation error mentioning "latitude" should be displayed
+
+  @us2 @gps @validation
+  Scenario: Invalid longitude shows validation error
+    Given the user has selected "Dog" as the species
+    And the user has entered "Labrador" as the race
+    And the user has selected "Male" as the gender
+    When the user enters "200" in the longitude field
+    And the user taps the Continue button
+    Then a validation error mentioning "longitude" should be displayed
+
+  @us2 @gps @helper
+  Scenario: GPS section shows helper text for manual entry
+    Then the screen should display text "coordinates are the only location fallback"
+
+  @us2 @gps @success
+  Scenario: GPS success shows confirmation message
+    Given location permissions are granted
+    When the user taps the "Request GPS position" button
+    And the GPS request completes successfully
+    Then a success message should be displayed
+

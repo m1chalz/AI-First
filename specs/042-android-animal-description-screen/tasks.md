@@ -97,20 +97,20 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Android Unit Tests**:
-- [ ] T023 [P] [US2] Unit test for `AnimalDescriptionValidator` coordinate validation (latitude -90 to 90, longitude -180 to 180) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidatorTest.kt`
-- [ ] T024 [P] [US2] Unit test for `AnimalDescriptionViewModel` GPS request handling (success + permission denied), coordinate updates, and emitted Snackbar/OpenSettings effects in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModelTest.kt`
+- [X] T023 [P] [US2] Unit test for `AnimalDescriptionValidator` coordinate validation (latitude -90 to 90, longitude -180 to 180) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/AnimalDescriptionValidatorTest.kt`
+- [X] T024 [P] [US2] Unit test for `AnimalDescriptionViewModel` GPS request handling (success + permission denied), coordinate updates, and emitted Snackbar/OpenSettings effects in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T025 [P] [US2] Add GPS location scenarios (happy path + permission denied fallback with Snackbar + Settings action + verify helper text clarifying coordinates are the only location fallback per FR-015) to `animal-description.feature` in `/e2e-tests/src/test/resources/features/mobile/animal-description.feature`
-- [ ] T026 [P] [US2] Add GPS step definitions to `AnimalDescriptionSteps.java` in `/e2e-tests/src/test/java/com/petspot/stepsmobile/AnimalDescriptionSteps.java`, covering the permission denied Snackbar and Settings deep link flow
+- [X] T025 [P] [US2] Add GPS location scenarios (happy path + permission denied fallback with Snackbar + Settings action + verify helper text clarifying coordinates are the only location fallback per FR-015) to `animal-description.feature` in `/e2e-tests/java/src/test/resources/features/mobile/animal-description.feature`
+- [X] T026 [P] [US2] Add GPS step definitions to `AnimalDescriptionSteps.java` in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/AnimalDescriptionSteps.java`, covering the permission denied Snackbar and Settings deep link flow
 
 ### Implementation for User Story 2
 
 **Android** (MVI Architecture):
-- [ ] T027 [US2] Extend `AnimalDescriptionViewModel` with RequestGpsPosition, UpdateLatitude, UpdateLongitude intent handling (inject `GetCurrentLocationUseCase`), including error states that emit `ShowSnackbar` + `OpenSettings` effects when permissions fail
-- [ ] T028 [P] [US2] Create `GpsLocationSection` composable with Request GPS button (loading state), latitude/longitude fields, and inline helper copy explaining that coordinates are the only location fallback in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/GpsLocationSection.kt`
-- [ ] T029 [US2] Integrate `GpsLocationSection` into `AnimalDescriptionContent` with proper callbacks, helper text display, and state binding for success and failure cases
-- [ ] T030 [US2] Add testTag modifiers for GPS elements: `animalDescription.requestGpsButton`, `animalDescription.latitudeField`, `animalDescription.longitudeField`
+- [X] T027 [US2] Extend `AnimalDescriptionViewModel` with RequestGpsPosition, UpdateLatitude, UpdateLongitude intent handling (inject `GetCurrentLocationUseCase`), including error states that emit `ShowSnackbar` + `OpenSettings` effects when permissions fail
+- [X] T028 [P] [US2] Create `GpsLocationSection` composable with Request GPS button (loading state), latitude/longitude fields, and inline helper copy explaining that coordinates are the only location fallback in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/GpsLocationSection.kt`
+- [X] T029 [US2] Integrate `GpsLocationSection` into `AnimalDescriptionContent` with proper callbacks, helper text display, and state binding for success and failure cases
+- [X] T030 [US2] Add testTag modifiers for GPS elements: `animalDescription.requestGpsButton`, `animalDescription.latitudeField`, `animalDescription.longitudeField`
 
 **Checkpoint**: User Story 2 complete - GPS request and manual coordinate entry working
 

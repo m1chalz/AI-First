@@ -65,11 +65,12 @@ val viewModelModule =
             )
         }
 
-        // AnimalDescriptionViewModel: Hybrid pattern with FlowState + navigation callbacks
+        // AnimalDescriptionViewModel: Hybrid pattern with use case + FlowState + navigation callbacks
         // Parameters: flowState, onNavigateToContactDetails, onNavigateBack
         viewModel { params ->
             AnimalDescriptionViewModel(
                 flowState = params.get(),
+                getCurrentLocationUseCase = get(),
                 onNavigateToContactDetails = params.get(),
                 onNavigateBack = params.get(),
             )

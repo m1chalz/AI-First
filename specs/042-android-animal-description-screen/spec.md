@@ -51,7 +51,7 @@ Reporters using the Android Missing Pet flow who arrive from the Animal Photo sc
 **Acceptance Scenarios**:
 
 1. **Given** the user just completed Step 2 on Android, **When** Step 3 loads, **Then** the TopAppBar shows title "Animal description" and progress indicator "3/4", the date defaults to today, and species/race/gender inputs appear exactly as designed in Figma.  
-2. **Given** the user filled all required fields (date, species, race, gender), **When** they tap Continue, **Then** Step 4 (contact details) opens with all Step 3 values persisted in the Android Missing Pet flow state described in spec 018.
+2. **Given** the user filled all required fields (date, species, race, gender, latitude, longitude), **When** they tap Continue, **Then** Step 4 (contact details) opens with all Step 3 values persisted in the Android Missing Pet flow state described in spec 018.
 
 ---
 
@@ -80,14 +80,14 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 **Acceptance Scenarios**:
 
-1. **Given** the user clears a required field (species, race, or gender), **When** they tap Continue, **Then** a Snackbar message explains that some information must be corrected, the specific invalid or missing fields are visually marked with inline helper text (Material error state), and navigation to Step 4 does not occur until the fields are corrected.  
+1. **Given** the user clears a required field (species, race, gender, latitude, or longitude), **When** they tap Continue, **Then** a Snackbar message explains that some information must be corrected, the specific invalid or missing fields are visually marked with inline helper text (Material error state), and navigation to Step 4 does not occur until the fields are corrected.  
 2. **Given** the user presses the back button in the TopAppBar, **When** they return to Step 2 and then forward again to Step 3, **Then** all previously entered Step 3 data re-populates on Android and the progress indicator updates correctly (2/4 then 3/4).
 
 ---
 
 ### Edge Cases
 
-- **Location permission denied or previously blocked**: the Request GPS button shows a Snackbar with an action to open Android Settings so users can change location permissions; users may manually enter or leave latitude/longitude blank.  
+- **Location permission denied or previously blocked**: the Request GPS button shows a Snackbar with an action to open Android Settings so users can change location permissions; users MUST manually enter latitude/longitude values as they are required fields.  
 - **Future "Date of disappearance"**: the date picker defaults to today and proactively blocks selection of any future dates (user can only choose today or a past date), so no separate error state is shown for future dates.  
 - **Species list source**: species options always come from the fixed curated list bundled with the app; no external taxonomy service or runtime loading is attempted on this screen.  
 - **Race input before species selection**: the race input is a disabled OutlinedTextField until a species is selected; when the user changes species, any previously entered race text is cleared, and the field remains required once enabled.  
@@ -113,9 +113,9 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 - **FR-008**: "Animal age (optional)" MUST accept numeric input from 0–40 with validation preventing negative values or decimals; empty state is valid. Use numeric keyboard type.  
 - **FR-009**: Tapping "Request GPS position" MUST trigger the Android location permission flow (if needed); upon success the Lat and Long fields auto-populate with decimal degrees to 5 decimal places.  
 - **FR-009a**: While a GPS request is in progress, the "Request GPS position" button MUST disable itself and swap its label with a small inline progress indicator plus "Requesting…" text, while all other inputs remain interactive.
-- **FR-010**: Lat and Long inputs MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges, and allow clearing both fields; invalid entries MUST show inline errors (Material error state) when Continue is tapped and block navigation to Step 4 until corrected, regardless of whether the values came from GPS or were entered manually.  
+- **FR-010**: Lat and Long inputs are required fields that MUST accept manual editing, enforce latitude (−90 to 90) and longitude (−180 to 180) ranges; empty or invalid entries MUST show inline errors (Material error state) when Continue is tapped and block navigation to Step 4 until corrected, regardless of whether the values came from GPS or were entered manually.  
 - **FR-011**: "Animal additional description (optional)" MUST provide a multi-line OutlinedTextField supporting exactly 500 characters with a live counter; the component MUST enforce a hard limit by preventing further input when 500 characters are reached and truncating pasted text that exceeds the limit.  
-- **FR-012**: The Continue Button MUST match the primary button style from the Figma design (filled button, primary blue color) and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender), it MUST validate all fields on submit, show a Snackbar message, and highlight the specific fields with inline helper text (Material error state) while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while updating the flow state with all animal description data.  
+- **FR-012**: The Continue Button MUST match the primary button style from the Figma design (filled button, primary blue color) and remain enabled at all times; when tapped with invalid or missing required fields (date, species, race, gender, latitude, longitude), it MUST validate all fields on submit, show a Snackbar message, and highlight the specific fields with inline helper text (Material error state) while keeping the user on Step 3, and only when all required fields are valid MAY it navigate to Step 4 while updating the flow state with all animal description data.  
 - **FR-013**: Step 3 MUST read and write all animal description fields through the existing NavGraph-scoped `ReportMissingPetFlowState` provided via Koin’s navigation scope so that this screen shares the same data contract as the other steps in the flow.  
 - **FR-014**: If location permissions fail, the screen MUST surface inline guidance plus retry affordances (Snackbar with Settings action) without crashing; even when location-related validation rules fail (e.g., invalid coordinate ranges), the Continue button remains enabled but tapping it MUST keep the user on Step 3, show inline errors, and block navigation until the coordinates are valid, and the app must remain usable without a taxonomy service because species are loaded from a static bundled list.  
 - **FR-015**: When GPS capture fails or is skipped, only the latitude/longitude inputs serve as the manual fallback; helper text MUST clarify that no additional textual location details are collected in this step.
@@ -134,7 +134,7 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 ### Measurable Outcomes
 
-- **SC-001**: 0% of QA test cases on Android allow future dates, missing species/race, or missing gender to pass validation into Step 4.  
+- **SC-001**: 0% of QA test cases on Android allow future dates, missing species/race, missing gender, or missing latitude/longitude to pass validation into Step 4.  
 - **SC-002**: 95% of Android sessions preserve all Step 3 entries when the user navigates away and returns within the same reporting session (per analytics).
 - **SC-003**: Unit tests for ViewModel achieve 80% line and branch coverage (mandated by project rules).
 - **SC-004**: Screen layout adapts correctly to common Android device sizes and orientations without content clipping or overlap.
@@ -143,7 +143,7 @@ Reporters on Android might step away or return to previous steps; Step 3 must pr
 
 - This feature targets Android API 24 (Android 7.0 Nougat) as minimum, targeting API 36 (latest), consistent with project-wide configuration.
 - Curated species list and copy for helper/error text are provided by product and bundled statically with the Android app; no runtime taxonomy service or remote lookup is used on this screen.  
-- Lat/Long inputs are optional but encouraged; omission does not block Continue as long as other required fields are valid.  
+- Lat/Long inputs are required; empty values block Continue and show validation errors (backend requires location data).  
 - Gender options remain binary for this release, matching the provided design; future inclusivity updates will be handled separately.  
 - The age field collects whole years; if the age is unknown the reporter can leave it blank or enter "0".  
 - The Request GPS action uses Android location services and respects system privacy settings.

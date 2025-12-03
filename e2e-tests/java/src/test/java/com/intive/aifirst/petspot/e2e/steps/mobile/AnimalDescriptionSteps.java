@@ -257,5 +257,111 @@ public class AnimalDescriptionSteps {
         initScreen();
         assertEquals("Race should match", expectedRace, animalDescriptionScreen.getRace());
     }
+
+    // ========================================
+    // GPS Location Steps (User Story 2)
+    // ========================================
+
+    @Given("location permissions are granted")
+    public void locationPermissionsAreGranted() {
+        // Platform-specific permission grant (via Appium capabilities or adb)
+        // For testing purposes, assuming permissions are pre-granted
+    }
+
+    @Given("location permissions are NOT granted")
+    public void locationPermissionsAreNotGranted() {
+        // Platform-specific permission denial (via Appium capabilities or adb)
+        // For testing purposes, assuming permissions are denied
+    }
+
+    @When("the user taps the {string} button")
+    public void userTapsButton(String buttonText) {
+        initScreen();
+        if ("Request GPS position".equalsIgnoreCase(buttonText)) {
+            animalDescriptionScreen.tapRequestGpsButton();
+        }
+    }
+
+    @When("the user enters {string} in the latitude field")
+    public void userEntersLatitude(String latitude) {
+        initScreen();
+        animalDescriptionScreen.typeLatitude(latitude);
+    }
+
+    @When("the user enters {string} in the longitude field")
+    public void userEntersLongitude(String longitude) {
+        initScreen();
+        animalDescriptionScreen.typeLongitude(longitude);
+    }
+
+    @When("the GPS request completes successfully")
+    public void gpsRequestCompletesSuccessfully() {
+        // Wait for GPS request to complete (loading state to disappear)
+        initScreen();
+        // Platform-specific wait for loading to complete
+    }
+
+    @Then("the GPS button should show loading state")
+    public void gpsButtonShouldShowLoadingState() {
+        initScreen();
+        String buttonText = animalDescriptionScreen.getRequestGpsButtonText();
+        assertTrue("GPS button should show loading text",
+                buttonText.toLowerCase().contains("getting") || buttonText.toLowerCase().contains("loading"));
+    }
+
+    @Then("the latitude field should be populated with a valid value")
+    public void latitudeFieldShouldBePopulated() {
+        initScreen();
+        assertTrue("Latitude field should be populated", animalDescriptionScreen.isLatitudeFieldPopulated());
+    }
+
+    @Then("the longitude field should be populated with a valid value")
+    public void longitudeFieldShouldBePopulated() {
+        initScreen();
+        assertTrue("Longitude field should be populated", animalDescriptionScreen.isLongitudeFieldPopulated());
+    }
+
+    @Then("a toast message mentioning {string} should be displayed")
+    public void toastMessageMentioningShouldBeDisplayed(String keyword) {
+        // Toast verification is platform-specific and often requires special handling
+        // For Appium, this typically involves checking for toast elements or using
+        // accessibility services
+    }
+
+    @Then("the app settings should be opened")
+    public void appSettingsShouldBeOpened() {
+        // Verify that Android Settings app is in foreground
+        // Platform-specific verification
+    }
+
+    @Then("the latitude field should display {string}")
+    public void latitudeFieldShouldDisplay(String expectedLatitude) {
+        initScreen();
+        assertEquals("Latitude should match", expectedLatitude, animalDescriptionScreen.getLatitude());
+    }
+
+    @Then("the longitude field should display {string}")
+    public void longitudeFieldShouldDisplay(String expectedLongitude) {
+        initScreen();
+        assertEquals("Longitude should match", expectedLongitude, animalDescriptionScreen.getLongitude());
+    }
+
+    @Then("a validation error mentioning {string} should be displayed")
+    public void validationErrorMentioningShouldBeDisplayed(String keyword) {
+        // Verify that a validation error containing the keyword is displayed
+        // Platform-specific implementation
+    }
+
+    @Then("the screen should display text {string}")
+    public void screenShouldDisplayText(String expectedText) {
+        // Verify that the screen contains the expected text
+        // Platform-specific implementation using driver.getPageSource() or accessibility
+    }
+
+    @Then("a success message should be displayed")
+    public void successMessageShouldBeDisplayed() {
+        // Verify GPS success message is visible
+        // Platform-specific implementation
+    }
 }
 

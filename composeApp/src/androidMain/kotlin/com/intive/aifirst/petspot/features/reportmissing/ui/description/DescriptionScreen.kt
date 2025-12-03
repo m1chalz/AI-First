@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.intive.aifirst.petspot.core.util.openAppSettings
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUserIntent
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
@@ -43,7 +44,7 @@ fun DescriptionScreen(
                     // Handled by navigation callback in ViewModel
                 }
                 is AnimalDescriptionUiEffect.OpenLocationSettings -> {
-                    // GPS settings - will be implemented in Phase 4 (US2)
+                    context.openAppSettings()
                 }
             }
         }
@@ -66,6 +67,9 @@ fun DescriptionScreen(
         onRaceChanged = { race -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateRace(race)) },
         onGenderSelected = { gender -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateGender(gender)) },
         onAgeChanged = { age -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateAge(age)) },
+        onRequestGps = { viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition) },
+        onLatitudeChanged = { lat -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude(lat)) },
+        onLongitudeChanged = { lon -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude(lon)) },
         onContinueClick = { viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked) },
     )
 }

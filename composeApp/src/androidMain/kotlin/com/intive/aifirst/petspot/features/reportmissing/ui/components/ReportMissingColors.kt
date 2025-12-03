@@ -34,4 +34,3 @@ object ReportMissingColors {
     /** Error text color */
     val ErrorTextColor = Color(0xFFE7000B)
 }
-

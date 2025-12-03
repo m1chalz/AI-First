@@ -54,10 +54,11 @@ fun ReportMissingScreenLayout(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .statusBarsPadding(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .statusBarsPadding(),
     ) {
         // Header with back button, title, and progress indicator
         StepHeader(
@@ -67,16 +68,17 @@ fun ReportMissingScreenLayout(
         )
 
         // Main content area
-        val contentModifier = if (scrollable) {
-            Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        } else {
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-        }
+        val contentModifier =
+            if (scrollable) {
+                Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+            } else {
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
+            }
 
         Column(modifier = contentModifier) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -111,26 +113,27 @@ private data class ReportMissingScreenLayoutState(
 )
 
 private class ReportMissingScreenLayoutProvider : PreviewParameterProvider<ReportMissingScreenLayoutState> {
-    override val values = sequenceOf(
-        ReportMissingScreenLayoutState(
-            headerTitle = "Microchip number",
-            currentStep = 1,
-            title = "Identification by Microchip",
-            subtitle = "Microchip identification is the most efficient way to reunite with your pet.",
-        ),
-        ReportMissingScreenLayoutState(
-            headerTitle = "Animal photo",
-            currentStep = 2,
-            title = "Your pet's photo",
-            subtitle = "Please upload a photo of the missing animal.",
-        ),
-        ReportMissingScreenLayoutState(
-            headerTitle = "Animal description",
-            currentStep = 3,
-            title = "Your pet's details",
-            subtitle = "Fill out the details about the missing animal.",
-        ),
-    )
+    override val values =
+        sequenceOf(
+            ReportMissingScreenLayoutState(
+                headerTitle = "Microchip number",
+                currentStep = 1,
+                title = "Identification by Microchip",
+                subtitle = "Microchip identification is the most efficient way to reunite with your pet.",
+            ),
+            ReportMissingScreenLayoutState(
+                headerTitle = "Animal photo",
+                currentStep = 2,
+                title = "Your pet's photo",
+                subtitle = "Please upload a photo of the missing animal.",
+            ),
+            ReportMissingScreenLayoutState(
+                headerTitle = "Animal description",
+                currentStep = 3,
+                title = "Your pet's details",
+                subtitle = "Fill out the details about the missing animal.",
+            ),
+        )
 }
 
 @Preview(name = "Report Missing Screen Layout", showBackground = true)
