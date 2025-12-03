@@ -20,6 +20,7 @@ const mockFlowState: ReportMissingPetFlowState = {
   breed: '',
   sex: 'MALE',
   age: null,
+  petName: 'Whiskers',
   description: '',
   latitude: 52.0,
   longitude: 21.0,
@@ -143,6 +144,34 @@ describe('useAnnouncementCreation', () => {
     // then
     expect(successResult.current.announcementId).toBe('ann-789');
     expect(successResult.current.managementPassword).toBe('pass789');
+  });
+
+  it('should include petName in the announcement DTO when provided', async () => {
+    // given
+    const createAnnouncementSpy = vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockResolvedValue({
+      id: 'ann-with-name',
+      managementPassword: 'pass-with-name'
+    });
+
+    const { result } = renderHook(() => useAnnouncementCreation());
+
+    // when
+    act(() => {
+      result.current.createAnnouncement(mockFlowState);
+    });
+
+    await waitFor(() => {
+      expect(result.current.isCreating).toBe(false);
+    });
+
+    // then
+    expect(createAnnouncementSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        petName: 'Whiskers',
+        species: 'CAT',
+        sex: 'MALE'
+      })
+    );
   });
 });
 

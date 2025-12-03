@@ -37,6 +37,7 @@ export function mapFlowStateToDto(flowState: ReportMissingPetFlowState): Announc
     status: 'MISSING'
   };
 
+  if (flowState.petName) dto.petName = flowState.petName;
   if (flowState.breed) dto.breed = flowState.breed;
   if (flowState.age) dto.age = flowState.age;
   if (flowState.description) dto.description = flowState.description;
