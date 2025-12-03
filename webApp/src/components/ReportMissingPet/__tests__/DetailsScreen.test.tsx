@@ -28,6 +28,30 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 describe('DetailsScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock navigator.geolocation with auto-callback for successful location
+    (navigator as any).geolocation = {
+      getCurrentPosition: vi.fn((success) => {
+        // Simulate successful geolocation fetch
+        setTimeout(() => {
+          success({
+            coords: {
+              latitude: 52.2297,
+              longitude: 21.0122,
+              accuracy: 10,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+            },
+          } as GeolocationPosition);
+        }, 0);
+      }),
+      watchPosition: vi.fn(),
+      clearWatch: vi.fn(),
+    };
+    (navigator as any).permissions = {
+      query: vi.fn(() => Promise.resolve({ state: 'granted' })),
+    };
   });
 
   afterEach(() => {

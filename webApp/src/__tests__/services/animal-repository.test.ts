@@ -130,9 +130,9 @@ describe('AnimalRepository', () => {
       // when: getAnimals is called
       const result = await underTest.getAnimals({ lat, lng });
 
-      // then: URL contains exact values
+      // then: URL contains exact values and range parameter
       expect(result).toEqual(mockAnimals);
-      expect(window.fetch).toHaveBeenCalledWith(`http://localhost:3000/api/v1/announcements?lat=${lat}&lng=${lng}`);
+      expect(window.fetch).toHaveBeenCalledWith(`http://localhost:3000/api/v1/announcements?lat=${lat}&lng=${lng}&range=15`);
     });
   });
 

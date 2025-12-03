@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import type { GeolocationState } from '../types/location';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { Coordinates } from '../types/location';
 
 class GeolocationError extends Error {
   constructor(public code: number, message: string) {
@@ -8,127 +8,94 @@ class GeolocationError extends Error {
   }
 }
 
-export interface CachedGeolocationState extends GeolocationState {
+interface GeolocationState {
+  coordinates: Coordinates | null;
+  error: GeolocationPositionError | null;
+  isLoading: boolean;
   permissionCheckCompleted: boolean;
 }
 
 export interface GeolocationContextValue {
-  state: CachedGeolocationState;
-  requestLocation: () => void;
-  clearGeolocation: () => void;
+  state: GeolocationState;
 }
 
 const GeolocationContext = createContext<GeolocationContextValue | null>(null);
 
 export function GeolocationProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<CachedGeolocationState>({
+  const [state, setState] = useState<GeolocationState>({
     coordinates: null,
     error: null,
     isLoading: false,
     permissionCheckCompleted: false,
   });
 
-  // Check permission on mount (without requesting location)
+  const fetchPosition = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setState(prev => ({
+          ...prev,
+          coordinates: { lat, lng },
+          error: null,
+          isLoading: false,
+        }));
+      },
+      (err) => {
+        setState(prev => ({
+          ...prev,
+          error: err,
+          isLoading: false,
+        }));
+      },
+      { timeout: 10000 }
+    );
+  };
+
+  // Auto-fetch location on mount after permission check
   useEffect(() => {
-    const checkPermissionOnMount = async () => {
+    const fetchLocationOnMount = async () => {
+      setState(prev => ({ ...prev, isLoading: true }));
+
       if (navigator.permissions) {
         try {
           const status = await navigator.permissions.query({ name: 'geolocation' });
+          setState(prev => ({ ...prev, permissionCheckCompleted: true }));
+
           if (status.state === 'denied') {
             const error = new GeolocationError(1, 'User denied geolocation');
             setState(prev => ({
               ...prev,
               error: error as any,
-              permissionCheckCompleted: true,
+              isLoading: false,
             }));
-          } else {
-            setState(prev => ({
-              ...prev,
-              permissionCheckCompleted: true,
-            }));
+            return;
           }
+
+          fetchPosition();
         } catch {
-          // If permissions API is not supported, just mark check as completed
+          // If permissions API is not supported, just try to fetch position
           setState(prev => ({
             ...prev,
             permissionCheckCompleted: true,
           }));
+          fetchPosition();
         }
       } else {
+        // No permissions API available, just fetch position
         setState(prev => ({
           ...prev,
           permissionCheckCompleted: true,
         }));
+        fetchPosition();
       }
     };
 
-    checkPermissionOnMount();
-  }, []);
-
-  const handleGeolocationSuccess = useCallback((position: GeolocationPosition) => {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-    setState(prev => ({
-      ...prev,
-      coordinates: { lat, lng },
-      error: null,
-      isLoading: false,
-    }));
-  }, []);
-
-  const handleGeolocationError = useCallback((err: GeolocationPositionError) => {
-    setState(prev => ({
-      ...prev,
-      error: err,
-      isLoading: false,
-    }));
-  }, []);
-
-  const fetchCurrentPosition = useCallback(() => {
-    navigator.geolocation.getCurrentPosition(
-      handleGeolocationSuccess,
-      handleGeolocationError,
-      { timeout: 10000 }
-    );
-  }, [handleGeolocationSuccess, handleGeolocationError]);
-
-  const requestLocation = useCallback(() => {
-    setState(prev => ({ ...prev, isLoading: true }));
-
-    if (navigator.permissions) {
-      navigator.permissions.query({ name: 'geolocation' }).then((status) => {
-        if (status.state === 'denied') {
-          const error = new GeolocationError(1, 'User denied geolocation');
-          setState(prev => ({
-            ...prev,
-            error: error as any,
-            isLoading: false,
-          }));
-          return;
-        }
-
-        fetchCurrentPosition();
-      }).catch(() => {
-        // If permissions API is not supported, just try to fetch position
-        fetchCurrentPosition();
-      });
-    } else {
-      // If permissions API is not available, try to fetch position directly
-      fetchCurrentPosition();
-    }
-  }, [fetchCurrentPosition]);
-
-  const clearGeolocation = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      coordinates: null,
-      error: null,
-      isLoading: false,
-    }));
+    fetchLocationOnMount();
   }, []);
 
   return (
-    <GeolocationContext.Provider value={{ state, requestLocation, clearGeolocation }}>
+    <GeolocationContext.Provider value={{ state }}>
       {children}
     </GeolocationContext.Provider>
   );
@@ -143,4 +110,3 @@ export function useGeolocationContext(): GeolocationContextValue {
 
   return context;
 }
-

@@ -7,9 +7,24 @@ import { GeolocationProvider } from '../../../../contexts/GeolocationContext';
 describe('AnimalDescriptionForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock navigator.geolocation
+    // Mock navigator.geolocation with auto-callback for successful location
     (navigator as any).geolocation = {
-      getCurrentPosition: vi.fn(),
+      getCurrentPosition: vi.fn((success) => {
+        // Simulate successful geolocation fetch
+        setTimeout(() => {
+          success({
+            coords: {
+              latitude: 52.2297,
+              longitude: 21.0122,
+              accuracy: 10,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+            },
+          } as GeolocationPosition);
+        }, 0);
+      }),
       watchPosition: vi.fn(),
       clearWatch: vi.fn(),
     };
@@ -223,95 +238,19 @@ describe('AnimalDescriptionForm', () => {
     });
   });
 
-  it('should show "Locating..." while GPS is being requested', async () => {
-    // given
-    const mockGetCurrentPosition = vi.fn(() => {
-      // Intentionally not calling success to simulate loading state
-    });
-    (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
-    // Mock permissions query to return 'granted' so it skips permission check
-    (navigator.permissions.query as any) = vi.fn(() => Promise.resolve({ state: 'granted' }));
-
-    // when
-    render(
-      <AnimalDescriptionForm
-        formData={defaultFormData}
-        onFieldChange={vi.fn()}
-        onSubmit={mockOnSubmit}
-      />,
-      { wrapper }
-    );
-
-    const gpsButton = screen.getByTestId('details.gpsButton.click') as HTMLButtonElement;
-    
-    // Wait for permission check to complete first
-    await waitFor(() => {
-      expect(gpsButton.textContent).toBe('Request GPS position');
-    }, { timeout: 3000 });
-    
-    fireEvent.click(gpsButton);
-
-    // then
-    await waitFor(() => {
-      expect(gpsButton.textContent).toBe('Locating...');
-      expect(gpsButton.disabled).toBe(true);
-    });
-  });
-
-  it('should show "Location not available" when permission is denied after clicking the button', async () => {
-    // given - geolocation will return permission denied error
-    const mockGetCurrentPosition = vi.fn((_, errorCallback) => {
-      errorCallback({
-        code: 1, // PERMISSION_DENIED
-        message: 'User denied geolocation',
-        PERMISSION_DENIED: 1,
-        POSITION_UNAVAILABLE: 2,
-        TIMEOUT: 3,
-      } as GeolocationPositionError);
-    });
-    (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
-    (navigator as any).permissions = {
-      query: vi.fn(() => Promise.resolve({ state: 'prompt' })),
-    };
-
-    const mockOnFieldChange = vi.fn();
-
-    // when
-    render(
-      <AnimalDescriptionForm
-        formData={defaultFormData}
-        onFieldChange={mockOnFieldChange}
-        onSubmit={mockOnSubmit}
-      />,
-      { wrapper }
-    );
-
-    const gpsButton = screen.getByTestId('details.gpsButton.click') as HTMLButtonElement;
-    
-    // Wait for permission check to complete first
-    await waitFor(() => {
-      expect(gpsButton.textContent).toBe('Request GPS position');
-    }, { timeout: 3000 });
-    
-    fireEvent.click(gpsButton);
-
-    // then
-    await waitFor(() => {
-      expect(gpsButton.textContent).toBe('Location not available');
-      expect(gpsButton.disabled).toBe(true);
-    });
-  });
 
   it('should show "Location not available" when geolocation returns permission denied error', async () => {
-    // given
-    const mockGetCurrentPosition = vi.fn((_, errorCallback) => {
-      errorCallback({
-        code: 1, // PERMISSION_DENIED
-        message: 'User denied geolocation',
-        PERMISSION_DENIED: 1,
-        POSITION_UNAVAILABLE: 2,
-        TIMEOUT: 3,
-      } as GeolocationPositionError);
+    // given - geolocation returns PERMISSION_DENIED error on mount
+    const mockGetCurrentPosition = vi.fn((successCallback, errorCallback) => {
+      setTimeout(() => {
+        errorCallback({
+          code: 1, // PERMISSION_DENIED
+          message: 'User denied geolocation',
+          PERMISSION_DENIED: 1,
+          POSITION_UNAVAILABLE: 2,
+          TIMEOUT: 3,
+        } as GeolocationPositionError);
+      }, 0);
     });
     (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
     (navigator.permissions.query as any) = vi.fn(() => Promise.resolve({ state: 'prompt' }));
@@ -329,14 +268,7 @@ describe('AnimalDescriptionForm', () => {
 
     const gpsButton = screen.getByTestId('details.gpsButton.click') as HTMLButtonElement;
     
-    // Wait for permission check to complete first
-    await waitFor(() => {
-      expect(gpsButton.textContent).toBe('Request GPS position');
-    }, { timeout: 3000 });
-    
-    fireEvent.click(gpsButton);
-
-    // then
+    // then - button should show "Location not available" after auto-fetch fails
     await waitFor(() => {
       expect(gpsButton.textContent).toBe('Location not available');
       expect(gpsButton.disabled).toBe(true);

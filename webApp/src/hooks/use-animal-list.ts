@@ -16,11 +16,9 @@ export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [isFetchingAnimals, setIsFetchingAnimals] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { state: geolocation, requestLocation } = useGeolocationContext();
+    const { state: geolocation } = useGeolocationContext();
     
-    // isLoading is true when either waiting for geolocation or fetching animals
     const isLoading = geolocation.isLoading || isFetchingAnimals;
-    
     const isEmpty = animals.length === 0 && !isLoading && error === null;
     
     const loadAnimals = useCallback(async () => {
@@ -37,17 +35,12 @@ export function useAnimalList(): UseAnimalListResult {
         }
     }, [geolocation.coordinates]);
     
-    // Request location on mount
+    // Load animals when geolocation finishes loading
     useEffect(() => {
-        requestLocation();
-    }, [requestLocation]);
-    
-    useEffect(() => {
-        // Wait for geolocation to finish loading before fetching animals
-        if (!geolocation.isLoading) {
+        if (!geolocation.isLoading && geolocation.permissionCheckCompleted) {
             loadAnimals();
         }
-    }, [loadAnimals, geolocation.isLoading]);
+    }, [loadAnimals, geolocation.isLoading, geolocation.permissionCheckCompleted]);
     
     return {
         animals,
@@ -55,7 +48,7 @@ export function useAnimalList(): UseAnimalListResult {
         error,
         isEmpty,
         loadAnimals,
-        geolocationError: geolocation.error
+        geolocationError: null
     };
 }
 

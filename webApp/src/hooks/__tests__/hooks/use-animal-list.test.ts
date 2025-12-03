@@ -17,8 +17,6 @@ vi.mock('../../../contexts/GeolocationContext', () => ({
             isLoading: false,
             permissionCheckCompleted: true,
         },
-        requestLocation: vi.fn(),
-        clearGeolocation: vi.fn(),
     }))
 }));
 

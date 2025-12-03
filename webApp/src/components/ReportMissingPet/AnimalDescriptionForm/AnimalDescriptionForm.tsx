@@ -27,26 +27,17 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
   onSubmit
 }) => {
   const today = new Date().toISOString().split('T')[0];
-  const { state, requestLocation } = useGeolocationContext();
+  const { state } = useGeolocationContext();
   const { isLoading, coordinates, error, permissionCheckCompleted } = state;
 
-  const isLocationPermissionDenied = error?.code === 1; // PERMISSION_DENIED
-  const isCheckingPermission = !permissionCheckCompleted;
+  const isLocationPermissionDenied = error?.code === 1;
 
   const handleRequestGpsPosition = () => {
-    requestLocation();
-  };
-
-  // Update form fields when coordinates are fetched
-  useEffect(() => {
-    if (coordinates && !isLoading) {
-      const lat = coordinates.lat.toFixed(4);
-      const lng = coordinates.lng.toFixed(4);
-      onFieldChange('latitude', lat);
-      onFieldChange('longitude', lng);
+    if (coordinates) {
+      onFieldChange('latitude', coordinates.lat.toFixed(4));
+      onFieldChange('longitude', coordinates.lng.toFixed(4));
     }
-  }, [coordinates, isLoading, onFieldChange]);
-
+  };
 
   return (
     <form className={styles.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
@@ -124,11 +115,11 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
         <button
           type="button"
           onClick={handleRequestGpsPosition}
-          disabled={isLoading || isLocationPermissionDenied || isCheckingPermission}
+          disabled={isLoading || isLocationPermissionDenied || !permissionCheckCompleted}
           className={styles.gpsButton}
           data-testid="details.gpsButton.click"
         >
-          {isLocationPermissionDenied ? 'Location not available' : isCheckingPermission ? 'Checking permissions...' : isLoading ? 'Locating...' : 'Request GPS position'}
+          {isLocationPermissionDenied ? 'Location not available' : !permissionCheckCompleted ? 'Checking permissions...' : isLoading ? 'Locating...' : 'Request GPS position'}
         </button>
       </div>
 
