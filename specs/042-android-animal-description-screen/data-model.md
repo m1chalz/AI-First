@@ -60,8 +60,8 @@ data class FlowData(
     val photoUri: String? = null,
     
     // Step 3/4 - Animal Description (NEW)
-    val petName: String = "",              // Optional - first field after title
     val disappearanceDate: LocalDate = LocalDate.now(),
+    val petName: String = "",              // Optional - second field (after date)
     val animalSpecies: String = "",
     val animalRace: String = "",
     val animalGender: AnimalGender? = null,
@@ -78,7 +78,7 @@ data class FlowData(
 
 **Changes from current**:
 - Renamed `description` to `additionalDescription` for clarity
-- Added `petName` as optional field (first in form order)
+- Added `petName` as optional field (second in form order, after date)
 - Added all animal description fields
 - Uses `LocalDate` for date (not String) for type safety
 
@@ -89,8 +89,8 @@ data class FlowData(
 ```kotlin
 data class AnimalDescriptionUiState(
     // Form fields (in display order)
-    val petName: String = "",              // Optional - first field after title
     val disappearanceDate: LocalDate = LocalDate.now(),
+    val petName: String = "",              // Optional - second field (after date)
     val animalSpecies: String = "",
     val animalRace: String = "",
     val animalGender: AnimalGender? = null,
@@ -340,5 +340,5 @@ Initial State
 | Longitude | String (Double) | No | -180 to 180 if provided |
 | Additional description | String | No | Max 500 characters |
 
-**Form field order**: Pet name → Date → Species → Race → Gender → Age → GPS Location → Additional description
+**Form field order**: Date → Pet name → Species → Race → Gender → Age → GPS Location → Additional description
 

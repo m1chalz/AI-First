@@ -101,7 +101,7 @@
 - [ ] T024 [P] [US2] Unit test for `AnimalDescriptionViewModel` GPS request handling (success + permission denied), coordinate updates, and emitted Snackbar/OpenSettings effects in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/viewmodels/AnimalDescriptionViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T025 [P] [US2] Add GPS location scenarios (happy path + permission denied fallback with Snackbar + Settings action + helper text) to `animal-description.feature` in `/e2e-tests/src/test/resources/features/mobile/animal-description.feature`
+- [ ] T025 [P] [US2] Add GPS location scenarios (happy path + permission denied fallback with Snackbar + Settings action + verify helper text clarifying coordinates are the only location fallback per FR-015) to `animal-description.feature` in `/e2e-tests/src/test/resources/features/mobile/animal-description.feature`
 - [ ] T026 [P] [US2] Add GPS step definitions to `AnimalDescriptionSteps.java` in `/e2e-tests/src/test/java/com/petspot/stepsmobile/AnimalDescriptionSteps.java`, covering the permission denied Snackbar and Settings deep link flow
 
 ### Implementation for User Story 2
@@ -137,10 +137,10 @@
 **Android** (MVI Architecture):
 - [ ] T035 [US3] Implement `AnimalDescriptionViewModel` ContinueClicked with full validation, Snackbar effect, and NavigateToContactDetails effect
 - [ ] T036 [US3] Implement `AnimalDescriptionViewModel` BackClicked with state save and NavigateBack effect
-- [ ] T037 [US3] Implement `AnimalDescriptionViewModel` initialization from `ReportMissingPetFlowState` (restore previous values)
+- [ ] T037 [US3] Implement `AnimalDescriptionViewModel` initialization from `ReportMissingPetFlowState` (restore previous values including date persistence per FR-004)
 - [ ] T038 [P] [US3] Create `CharacterCounterTextField` composable with 500 char limit and live counter in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/ui/description/components/CharacterCounterTextField.kt`
 - [ ] T039 [US3] Add additional description field to `AnimalDescriptionContent` using `CharacterCounterTextField`
-- [ ] T040 [US3] Add Snackbar host and effect handling in `DescriptionScreen` for validation error messages
+- [ ] T040 [US3] Add Snackbar host and effect handling in `DescriptionScreen` for validation error messages (extends T020 initial effect wiring with US3-specific validation Snackbar logic)
 - [ ] T041 [US3] Wire up BackClicked intent to TopAppBar back arrow in `DescriptionScreen`
 - [ ] T042 [US3] Add testTag for description field: `animalDescription.descriptionField`
 

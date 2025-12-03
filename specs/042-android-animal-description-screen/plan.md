@@ -20,7 +20,7 @@ Uses MVI architecture with validation on submit, NavGraph-scoped flow state shar
 
 **Language/Version**: Kotlin 2.2.20 (Android)  
 **Primary Dependencies**: Jetpack Compose, Navigation Compose, Koin, Kotlin Coroutines  
-**Storage**: In-memory flow state (NavGraph-scoped via `ReportMissingFlowState`) - no backend persistence  
+**Storage**: In-memory flow state (NavGraph-scoped via `ReportMissingPetFlowState`) - no backend persistence  
 **Testing**: JUnit 6 + Kotlin Test + Turbine (Flow testing)  
 **Target Platform**: Android (minSdk 24, targetSdk 36)
 **Project Type**: Mobile (Android)  
@@ -42,7 +42,7 @@ Uses MVI architecture with validation on submit, NavGraph-scoped flow state shar
 
 - [x] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
   - Single `StateFlow<AnimalDescriptionUiState>` source of truth with immutable data class
-  - Sealed `AnimalDescriptionUserIntent` for all user actions (UpdateDate, UpdateSpecies, UpdateRace, UpdateGender, UpdateAge, RequestGPS, UpdateLatitude, UpdateLongitude, UpdateDescription, Continue, Back)
+  - Sealed `AnimalDescriptionUserIntent` for all user actions (UpdatePetName, UpdateDate, UpdateSpecies, UpdateRace, UpdateGender, UpdateAge, RequestGPS, UpdateLatitude, UpdateLongitude, UpdateDescription, Continue, Back)
   - Sealed `AnimalDescriptionUiEffect` for navigation and one-off events (NavigateToContactDetails, NavigateBack, ShowSnackbar, OpenDatePicker, OpenSettings)
   - Navigation via Jetpack Navigation Component (nested NavGraph from spec 018)
   - Two-layer Composable pattern: `DescriptionScreen` (state host) + `AnimalDescriptionContent` (stateless)
