@@ -402,6 +402,16 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "reportMissingPet.summary.title", fallback: "Summary")
     }
   }
+  public enum ReportCreated {
+    /// Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.
+    public static let bodyParagraph1 = L10n.tr("Localizable", "report_created.body_paragraph_1", fallback: "Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.")
+    /// If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address
+    public static let bodyParagraph2 = L10n.tr("Localizable", "report_created.body_paragraph_2", fallback: "If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address")
+    /// Code copied to clipboard
+    public static let codeCopied = L10n.tr("Localizable", "report_created.code_copied", fallback: "Code copied to clipboard")
+    /// MARK: - Report Created Screen (Summary Step 5)
+    public static let title = L10n.tr("Localizable", "report_created.title", fallback: "Report created")
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

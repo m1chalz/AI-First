@@ -41,30 +41,6 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.managementPassword)
     }
     
-    // MARK: - Management Password Tests
-    
-    func testManagementPassword_whenSetToValue_shouldRetainValue() {
-        // Given: Flow state with management password
-        let expectedPassword = "5216577"
-        
-        // When: Property is set
-        sut.managementPassword = expectedPassword
-        
-        // Then: Password is retained
-        XCTAssertEqual(sut.managementPassword, expectedPassword)
-    }
-    
-    func testManagementPassword_whenSetToNil_shouldBeNil() {
-        // Given: Flow state with password
-        sut.managementPassword = "5216577"
-        
-        // When: Property is set to nil
-        sut.managementPassword = nil
-        
-        // Then: Password is nil
-        XCTAssertNil(sut.managementPassword)
-    }
-    
     // MARK: - clear() Method Tests
     
     func testClear_whenPropertiesHaveValues_shouldResetAllToNil() async {
@@ -138,6 +114,30 @@ final class ReportMissingPetFlowStateTests: XCTestCase {
         XCTAssertNil(sut.contactDetails)
         XCTAssertNil(sut.managementPassword)
         XCTAssertEqual(cache.clearCallCount, 1)
+    }
+    
+    // MARK: - Management Password Tests (T011)
+    
+    func testManagementPassword_whenSet_shouldRetainValue() {
+        // Given: Fresh flow state
+        let expectedPassword = "5216577"
+        
+        // When: managementPassword is set
+        sut.managementPassword = expectedPassword
+        
+        // Then: Property should contain the value
+        XCTAssertEqual(sut.managementPassword, expectedPassword)
+    }
+    
+    func testClear_whenManagementPasswordSet_shouldClearToNil() async {
+        // Given: Flow state with managementPassword
+        sut.managementPassword = "5216577"
+        
+        // When: clear() is called
+        await sut.clear()
+        
+        // Then: managementPassword should be nil
+        XCTAssertNil(sut.managementPassword)
     }
 }
 
