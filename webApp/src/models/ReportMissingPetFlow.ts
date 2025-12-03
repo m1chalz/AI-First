@@ -26,6 +26,7 @@ export interface ReportMissingPetFlowState {
   breed: string;
   sex: AnimalSex | null;
   age: number | null;
+  petName: string;
   description: string;
   latitude: number | null;
   longitude: number | null;
@@ -43,6 +44,7 @@ export const initialFlowState: ReportMissingPetFlowState = {
   breed: '',
   sex: null,
   age: null,
+  petName: '',
   description: '',
   latitude: null,
   longitude: null,

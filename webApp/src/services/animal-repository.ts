@@ -8,7 +8,7 @@ interface BackendAnnouncementsResponse {
 
 export class AnimalRepository {
     
-    async getAnimals(coordinates: Coordinates | null): Promise<Animal[]> {
+    async getAnimals(coordinates: Coordinates | null = null): Promise<Animal[]> {
         let url = `${config.apiBaseUrl}/api/v1/announcements`;
         
         if (coordinates) {

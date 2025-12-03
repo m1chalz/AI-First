@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
 import { GenderSelector } from './GenderSelector';
 import { useGeolocationContext } from '../../../contexts/GeolocationContext';
@@ -12,6 +12,7 @@ export interface AnimalDescriptionFormProps {
     breed: string;
     sex: string;
     age: string;
+    petName: string;
     description: string;
     latitude: string;
     longitude: string;
@@ -59,6 +60,18 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
             {formData.validationErrors.lastSeenDate}
           </span>
         )}
+      </div>
+
+      <div className={sharedStyles.inputGroup}>
+        <label htmlFor="petName" className={sharedStyles.label}>Animal name (optional)</label>
+        <input
+          id="petName"
+          type="text"
+          value={formData.petName}
+          onChange={(e) => onFieldChange('petName', e.target.value)}
+          className={sharedStyles.input}
+          data-testid="details.petName.input"
+        />
       </div>
 
       <div className={sharedStyles.inputGroup}>

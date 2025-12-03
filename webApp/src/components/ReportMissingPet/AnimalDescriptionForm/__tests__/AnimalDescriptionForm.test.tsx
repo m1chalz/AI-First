@@ -40,6 +40,7 @@ describe('AnimalDescriptionForm', () => {
     breed: '',
     sex: '',
     age: '',
+    petName: '',
     description: '',
     latitude: '',
     longitude: '',
@@ -120,6 +121,21 @@ describe('AnimalDescriptionForm', () => {
     const ageInput = screen.getByTestId('details.age.input');
     expect(ageInput).toBeDefined();
     expect(ageInput.getAttribute('type')).toBe('number');
+  });
+
+  it('should render pet name input field', () => {
+    render(
+      <AnimalDescriptionForm
+        formData={defaultFormData}
+        onFieldChange={vi.fn()}
+        onSubmit={mockOnSubmit}
+      />,
+      { wrapper }
+    );
+    
+    const petNameInput = screen.getByTestId('details.petName.input');
+    expect(petNameInput).toBeDefined();
+    expect(petNameInput.getAttribute('type')).toBe('text');
   });
 
   it('should render description textarea', () => {
@@ -241,7 +257,7 @@ describe('AnimalDescriptionForm', () => {
 
   it('should show "Location not available" when geolocation returns permission denied error', async () => {
     // given - geolocation returns PERMISSION_DENIED error on mount
-    const mockGetCurrentPosition = vi.fn((successCallback, errorCallback) => {
+    const mockGetCurrentPosition = vi.fn((_successCallback, errorCallback) => {
       setTimeout(() => {
         errorCallback({
           code: 1, // PERMISSION_DENIED
@@ -374,5 +390,26 @@ describe('AnimalDescriptionForm', () => {
     fireEvent.click(continueButton);
     
     expect(mockOnSubmit).toHaveBeenCalled();
+  });
+
+  it('should call onFieldChange when pet name changes', () => {
+    // given
+    const mockOnFieldChange = vi.fn();
+    
+    // when
+    render(
+      <AnimalDescriptionForm
+        formData={defaultFormData}
+        onFieldChange={mockOnFieldChange}
+        onSubmit={mockOnSubmit}
+      />,
+      { wrapper }
+    );
+    
+    const petNameInput = screen.getByTestId('details.petName.input') as HTMLInputElement;
+    fireEvent.change(petNameInput, { target: { value: 'Fluffy' } });
+    
+    // then
+    expect(mockOnFieldChange).toHaveBeenCalledWith('petName', 'Fluffy');
   });
 });

@@ -10,6 +10,7 @@ export interface DetailsFormData {
   breed: string;
   sex: string;
   age: string;
+  petName: string;
   description: string;
   latitude: string;
   longitude: string;
@@ -32,6 +33,7 @@ export function useDetailsForm(): UseDetailsFormReturn {
     breed: flowState.breed || '',
     sex: flowState.sex || '',
     age: flowState.age !== null ? String(flowState.age) : '',
+    petName: flowState.petName || '',
     description: flowState.description || '',
     latitude: flowState.latitude !== null ? String(flowState.latitude) : '',
     longitude: flowState.longitude !== null ? String(flowState.longitude) : '',
@@ -85,6 +87,7 @@ export function useDetailsForm(): UseDetailsFormReturn {
       breed: formData.breed,
       sex: formData.sex as AnimalSex,
       age: formData.age ? Number(formData.age) : null,
+      petName: formData.petName,
       description: formData.description,
       latitude: formData.latitude ? Number(formData.latitude) : null,
       longitude: formData.longitude ? Number(formData.longitude) : null,
