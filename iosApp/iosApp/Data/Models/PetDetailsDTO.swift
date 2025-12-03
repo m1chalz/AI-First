@@ -18,7 +18,7 @@ struct PetDetailsDTO: Codable {
     let email: String?
     let phone: String
     let reward: String?
-    let description: String
+    let description: String?
     let createdAt: String
     let updatedAt: String
 }

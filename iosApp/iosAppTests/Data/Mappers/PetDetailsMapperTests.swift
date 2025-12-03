@@ -111,6 +111,18 @@ final class PetDetailsMapperTests: XCTestCase {
         XCTAssertNotNil(petDetails?.phone) // phone is required
     }
     
+    func test_map_whenNullDescription_shouldDefaultToEmptyString() {
+        // Given - DTO with null description
+        let dto = makeTestDTO(description: nil)
+        
+        // When
+        let petDetails = sut.map(dto)
+        
+        // Then
+        XCTAssertNotNil(petDetails)
+        XCTAssertEqual(petDetails?.description, "")
+    }
+    
     // MARK: - Failure Cases
     
     // MARK: - Helper Methods
@@ -125,7 +137,8 @@ final class PetDetailsMapperTests: XCTestCase {
         age: Int? = 2,
         microchipNumber: String? = "123456789012345",
         email: String? = "test@example.com",
-        reward: String? = "100 PLN"
+        reward: String? = "100 PLN",
+        description: String? = "Test description"
     ) -> PetDetailsDTO {
         return PetDetailsDTO(
             id: id,
@@ -143,7 +156,7 @@ final class PetDetailsMapperTests: XCTestCase {
             email: email,
             phone: "+48123456789",
             reward: reward,
-            description: "Test description",
+            description: description,
             createdAt: "2024-11-15T10:30:00Z",
             updatedAt: "2024-11-20T14:45:00Z"
         )

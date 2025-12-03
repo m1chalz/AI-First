@@ -14,7 +14,7 @@ struct AnnouncementMapper {
     func map(_ dto: AnnouncementDTO) -> Announcement? {
         return Announcement(
             id: dto.id,
-            name: dto.petName ?? "<invalid>",
+            name: dto.petName ?? "",
             photoUrl: photoURLMapper.resolve(dto.photoUrl),
             coordinate: Coordinate(latitude: dto.locationLatitude, longitude: dto.locationLongitude),
             species: dto.species.toDomain,
@@ -22,7 +22,7 @@ struct AnnouncementMapper {
             gender: dto.sex?.toDomain ?? .unknown,
             status: dto.status.toDomain,
             lastSeenDate: dto.lastSeenDate,
-            description: dto.description,
+            description: dto.description ?? "",
             email: dto.email,
             phone: dto.phone
         )

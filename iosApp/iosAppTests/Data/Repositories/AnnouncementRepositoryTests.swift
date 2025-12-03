@@ -366,6 +366,51 @@ final class AnnouncementRepositoryTests: XCTestCase {
         XCTAssertEqual(announcements[0].email, "owner@example.com")
     }
     
+    /// Test: getAnnouncements with null description should parse successfully (optional field, defaults to empty string)
+    func testGetAnnouncements_whenDescriptionIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null description
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Azor",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/azor.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Labrador",
+                    "sex": "MALE",
+                    "age": 3,
+                    "description": null,
+                    "phone": "+48123456789",
+                    "email": "owner@example.com"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - animal parsed successfully with empty string description
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Azor")
+        XCTAssertEqual(announcements[0].description, "")
+    }
+    
     /// Test: getAnnouncements with null breed should parse successfully (optional field)
     func testGetAnnouncements_whenBreedIsNull_shouldParseSuccessfully() async throws {
         // Given - JSON with null breed
@@ -641,6 +686,50 @@ final class AnnouncementRepositoryTests: XCTestCase {
         XCTAssertNil(details.reward)
         XCTAssertNil(details.approximateAge)
         XCTAssertEqual(details.petName, "Max")
+    }
+    
+    /// Test: getPetDetails with null description should parse successfully (optional field, defaults to empty string)
+    func testGetPetDetails_whenDescriptionIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null description
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Rex",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/rex.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "German Shepherd",
+            "sex": "MALE",
+            "age": 4,
+            "microchipNumber": "123456789012345",
+            "email": "owner@example.com",
+            "phone": "+48123456789",
+            "reward": "1000 PLN",
+            "description": null,
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "550e8400-e29b-41d4-a716-446655440000")
+        
+        // Then - pet details parsed successfully with empty string description
+        XCTAssertEqual(details.petName, "Rex")
+        XCTAssertEqual(details.description, "")
     }
     
     /// T043a: Test getPetDetails with updatedAt in custom format should parse correctly

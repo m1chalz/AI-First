@@ -14,7 +14,7 @@ struct AnnouncementDTO: Codable {
     let breed: String?
     let sex: AnimalGenderDTO?
     let age: Int?
-    let description: String
+    let description: String?
     let phone: String?
     let email: String?
 }
