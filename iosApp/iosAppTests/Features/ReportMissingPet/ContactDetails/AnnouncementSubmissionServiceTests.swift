@@ -5,13 +5,13 @@ import XCTest
 @MainActor
 final class AnnouncementSubmissionServiceTests: XCTestCase {
     var sut: AnnouncementSubmissionService!
-    var fakeRepository: FakeAnimalRepository!
+    var fakeRepository: FakeAnnouncementRepository!
     var flowState: ReportMissingPetFlowState!
     var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
         try await super.setUp()
-        fakeRepository = FakeAnimalRepository()
+        fakeRepository = FakeAnnouncementRepository()
         fakePhotoCache = PhotoAttachmentCacheFake()
         sut = AnnouncementSubmissionService(repository: fakeRepository)
         flowState = ReportMissingPetFlowState(photoAttachmentCache: fakePhotoCache)

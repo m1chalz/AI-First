@@ -23,7 +23,7 @@ class PetDetailsViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let repository: AnimalRepositoryProtocol
+    private let repository: AnnouncementRepositoryProtocol
     private let petId: String
     
     // MARK: - Coordinator Communication
@@ -37,7 +37,7 @@ class PetDetailsViewModel: ObservableObject {
     /// - Parameters:
     ///   - repository: Repository for fetching pet data
     ///   - petId: ID of the pet to display
-    init(repository: AnimalRepositoryProtocol, petId: String) {
+    init(repository: AnnouncementRepositoryProtocol, petId: String) {
         self.repository = repository
         self.petId = petId
     }

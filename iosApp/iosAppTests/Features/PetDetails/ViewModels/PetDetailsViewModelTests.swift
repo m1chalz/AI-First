@@ -8,14 +8,14 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
-    // Uses FakeAnimalRepository from main app for testing
+    // Uses FakeAnnouncementRepository from main app for testing
     
     // MARK: - Helper Methods
     
     private func makeSUT(
         petId: String = "test-id"
-    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnimalRepository) {
-        let fakeRepo = FakeAnimalRepository()
+    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnnouncementRepository) {
+        let fakeRepo = FakeAnnouncementRepository()
         let viewModel = PetDetailsViewModel(repository: fakeRepo, petId: petId)
         return (viewModel, fakeRepo)
     }

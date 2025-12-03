@@ -71,7 +71,7 @@ class AnimalListViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let repository: AnimalRepositoryProtocol
+    private let repository: AnnouncementRepositoryProtocol
     private let locationHandler: LocationPermissionHandler
     
     // MARK: - Session State (User Story 3)
@@ -93,7 +93,7 @@ class AnimalListViewModel: ObservableObject {
      * - Parameter locationHandler: Handler for location permission logic (injected)
      */
     init(
-        repository: AnimalRepositoryProtocol,
+        repository: AnnouncementRepositoryProtocol,
         locationHandler: LocationPermissionHandler
     ) {
         self.repository = repository

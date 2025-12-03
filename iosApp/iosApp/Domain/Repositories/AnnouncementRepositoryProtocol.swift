@@ -1,7 +1,7 @@
 import Foundation
 
-/// Repository protocol for animal data operations.
-/// Defines contract for fetching animal data from various sources.
+/// Repository protocol for announcement data operations.
+/// Defines contract for fetching announcement data from various sources.
 ///
 /// Platform-specific implementations:
 /// - Mock implementation: Returns hardcoded test data (current phase)
@@ -9,9 +9,9 @@ import Foundation
 ///
 /// All operations are async functions using Swift Concurrency.
 /// Throws errors on failure for natural error handling.
-protocol AnimalRepositoryProtocol {
-    /// Retrieves all animals from the data source with optional location-based filtering.
-    /// Mock implementation returns fixed list of animals (location parameter ignored).
+protocol AnnouncementRepositoryProtocol {
+    /// Retrieves all announcements from the data source with optional location-based filtering.
+    /// Mock implementation returns fixed list of announcements (location parameter ignored).
     /// Real implementation will support pagination and filtering by proximity when location provided.
     ///
     /// - Parameter location: Optional user location for proximity filtering (nil = no filtering)
@@ -49,7 +49,7 @@ protocol AnimalRepositoryProtocol {
 
 // MARK: - Protocol Extension (Default Values)
 
-extension AnimalRepositoryProtocol {
+extension AnnouncementRepositoryProtocol {
     /// Convenience method with default range value (100km).
     /// Calls full method with default range parameter.
     func getAnimals(near location: Coordinate?) async throws -> [Announcement] {

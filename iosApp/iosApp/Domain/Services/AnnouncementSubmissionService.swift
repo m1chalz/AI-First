@@ -12,9 +12,9 @@ protocol AnnouncementSubmissionServiceProtocol {
 
 /// Orchestrates 2-step announcement submission (create + photo upload)
 class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
-    private let repository: AnimalRepositoryProtocol
+    private let repository: AnnouncementRepositoryProtocol
     
-    init(repository: AnimalRepositoryProtocol) {
+    init(repository: AnnouncementRepositoryProtocol) {
         self.repository = repository
     }
     

@@ -2,11 +2,11 @@ import Foundation
 
 // MARK: - HTTP Repository Implementation
 
-/// HTTP-based implementation of AnimalRepositoryProtocol
+/// HTTP-based implementation of AnnouncementRepositoryProtocol
 /// Consumes backend REST API endpoints:
 /// - GET /api/v1/announcements (with optional lat/lng query params)
 /// - GET /api/v1/announcements/:id
-class AnimalRepository: AnimalRepositoryProtocol {
+class AnnouncementRepository: AnnouncementRepositoryProtocol {
     private let urlSession: URLSession
     private let apiDecoder: APIDecoder
     private let announcementMapper: AnnouncementMapper
@@ -27,7 +27,7 @@ class AnimalRepository: AnimalRepositoryProtocol {
         self.createAnnouncementMapper = createAnnouncementMapper
     }
     
-    // MARK: - AnimalRepositoryProtocol Implementation
+    // MARK: - AnnouncementRepositoryProtocol Implementation
     
     /// Fetches animal announcements from backend API with optional location filtering.
     /// Deduplicates results and skips invalid items gracefully.

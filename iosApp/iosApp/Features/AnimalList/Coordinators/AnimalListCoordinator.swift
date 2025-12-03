@@ -40,7 +40,7 @@ class AnimalListCoordinator: CoordinatorInterface {
         
         // Get dependencies from DI container
         let container = ServiceContainer.shared
-        let repository = container.animalRepository
+        let repository = container.announcementRepository
         let locationHandler = container.locationPermissionHandler
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
@@ -100,7 +100,7 @@ class AnimalListCoordinator: CoordinatorInterface {
         // Future: detailCoordinator.start()
         
         // Create repository (should use DI container in future)
-        let repository = AnimalRepository()
+        let repository = AnnouncementRepository()
 
         let coordinator = PetDetailsCoordinator(
             navigationController: navigationController,

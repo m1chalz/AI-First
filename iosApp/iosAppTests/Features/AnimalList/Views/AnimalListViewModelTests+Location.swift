@@ -4,7 +4,7 @@ import XCTest
 /**
  * Unit tests for AnimalListViewModel location permission and fetching logic.
  * Tests User Story 1: Location-Aware Content for Authorized Users.
- * Uses FakeLocationService and FakeAnimalRepository for isolation.
+ * Uses FakeLocationService and FakeAnnouncementRepository for isolation.
  * Follows Given-When-Then structure per constitution.
  */
 @MainActor
@@ -13,7 +13,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     // MARK: - Test Doubles
     
     private var fakeLocationService: FakeLocationService!
-    private var fakeRepository: FakeAnimalRepository!
+    private var fakeRepository: FakeAnnouncementRepository!
     private var locationHandler: LocationPermissionHandler!
     private var viewModel: AnimalListViewModel!
     
@@ -22,7 +22,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         fakeLocationService = FakeLocationService()
-        fakeRepository = FakeAnimalRepository()
+        fakeRepository = FakeAnnouncementRepository()
     }
     
     override func tearDown() async throws {

@@ -1,15 +1,15 @@
 import Foundation
 @testable import PetSpot
 
-/// Fake implementation of AnimalRepositoryProtocol for unit testing.
-/// Supports testing of both animal list loading and announcement creation.
+/// Fake implementation of AnnouncementRepositoryProtocol for unit testing.
+/// Supports testing of both announcement list loading and announcement creation.
 ///
 /// Allows controlling success/failure scenarios:
-/// - getAnimals: Returns mock animals or throws error
+/// - getAnimals: Returns mock announcements or throws error
 /// - getPetDetails: Returns mock pet details or throws error
 /// - createAnnouncement: Tracks calls and returns mock result
 /// - uploadPhoto: Tracks calls and throws on demand
-class FakeAnimalRepository: AnimalRepositoryProtocol {
+class FakeAnnouncementRepository: AnnouncementRepositoryProtocol {
     // MARK: - getAnimals Configuration
     
     let animalCount: Int
@@ -81,7 +81,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         self.error = error
     }
     
-    // MARK: - AnimalRepositoryProtocol Implementation
+    // MARK: - AnnouncementRepositoryProtocol Implementation
     
     func getAnimals(near location: Coordinate?, range: Int) async throws -> [Announcement] {
         getAnimalsCallCount += 1
@@ -116,7 +116,7 @@ class FakeAnimalRepository: AnimalRepositoryProtocol {
         
         guard let petDetails = generateMockPetDetails(id: id) else {
             throw NSError(
-                domain: "FakeAnimalRepository",
+                domain: "FakeAnnouncementRepository",
                 code: 404,
                 userInfo: [NSLocalizedDescriptionKey: "Pet not found"]
             )

@@ -1,10 +1,10 @@
 import XCTest
 @testable import PetSpot
 
-/// Unit tests for HTTP-based AnimalRepository implementation
+/// Unit tests for HTTP-based AnnouncementRepository implementation
 /// Tests network operations, JSON decoding, error handling, and data transformation
-final class AnimalRepositoryTests: XCTestCase {
-    var sut: AnimalRepository!
+final class AnnouncementRepositoryTests: XCTestCase {
+    var sut: AnnouncementRepository!
     var mockURLSession: URLSession!
     
     override func setUp() {
@@ -13,7 +13,7 @@ final class AnimalRepositoryTests: XCTestCase {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [MockURLProtocol.self]
         mockURLSession = URLSession(configuration: configuration)
-        sut = AnimalRepository(urlSession: mockURLSession)
+        sut = AnnouncementRepository(urlSession: mockURLSession)
     }
     
     override func tearDown() {

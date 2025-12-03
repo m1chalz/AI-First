@@ -31,7 +31,7 @@ final class AnimalListViewModelTests: XCTestCase {
     // MARK: - Helper Methods
     
     private func createViewModel(
-        repository: AnimalRepositoryProtocol,
+        repository: AnnouncementRepositoryProtocol,
         locationStatus: LocationPermissionStatus = .authorizedWhenInUse,
         location: Coordinate? = nil
     ) -> AnimalListViewModel {
@@ -57,7 +57,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func testLoadAnimals_whenRepositorySucceeds_shouldUpdateCardViewModels() async {
         // Given - ViewModel with fake repository returning animals
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 16,
             shouldFail: false
         )
@@ -78,7 +78,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func testLoadAnimals_whenRepositorySucceeds_shouldNotCrashIfIdsRepeatButIgnoreDuplicates() async {
         // Given - ViewModel with fake repository returning animals
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 20,
             shouldFail: false
         )
@@ -101,7 +101,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
 //    func testLoadAnimals_whenRepositoryFails_shouldSetErrorMessage() async {
 //        // Given - Repository configured to fail with default error
-//        let fakeRepository = FakeAnimalRepository(
+//        let fakeRepository = FakeAnnouncementRepository(
 //            animalCount: 0,
 //            shouldFail: true,
 //            exception: KotlinException(message: "Network error")
@@ -126,7 +126,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func test_isEmpty_whenNoCardViewModelsAndNotLoadingAndNoError_shouldReturnTrue() {
         // Given - ViewModel with empty cardViewModels list
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 0,
             shouldFail: false
         )
@@ -149,7 +149,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func test_isEmpty_whenCardViewModelsPresent_shouldReturnFalse() async {
         // Given - ViewModel with card ViewModels loaded
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 16,
             shouldFail: false
         )
@@ -169,7 +169,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func testSelectAnimal_shouldInvokeOnAnimalSelectedClosure() {
         // Given - ViewModel with callback closure
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 0,
             shouldFail: false
         )
@@ -194,7 +194,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func testReportMissing_shouldInvokeOnReportMissingClosure() {
         // Given - ViewModel with callback closure
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 0,
             shouldFail: false
         )
@@ -220,7 +220,7 @@ final class AnimalListViewModelTests: XCTestCase {
      */
     func testReportFound_shouldInvokeOnReportFoundClosure() {
         // Given - ViewModel with callback closure
-        let fakeRepository = FakeAnimalRepository(
+        let fakeRepository = FakeAnnouncementRepository(
             animalCount: 0,
             shouldFail: false
         )
@@ -244,7 +244,7 @@ final class AnimalListViewModelTests: XCTestCase {
     func testLoadAnimals_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
         // Given - ViewModel with repository that returns API-like data
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
-        let fakeRepository = FakeAnimalRepository(animalCount: 3, shouldFail: false)
+        let fakeRepository = FakeAnnouncementRepository(animalCount: 3, shouldFail: false)
         let viewModel = createViewModel(
             repository: fakeRepository,
             locationStatus: .authorizedWhenInUse,
@@ -265,7 +265,7 @@ final class AnimalListViewModelTests: XCTestCase {
     func testLoadAnimals_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
         // Given - ViewModel with authorized location
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
-        let fakeRepository = FakeAnimalRepository(animalCount: 5, shouldFail: false)
+        let fakeRepository = FakeAnnouncementRepository(animalCount: 5, shouldFail: false)
         let viewModel = createViewModel(
             repository: fakeRepository,
             locationStatus: .authorizedWhenInUse,
@@ -288,7 +288,7 @@ final class AnimalListViewModelTests: XCTestCase {
     /// T018: Test AnimalListViewModel without location permissions should call repository without coordinates
     func testLoadAnimals_withoutLocationPermissions_shouldCallRepositoryWithoutCoordinates() async {
         // Given - ViewModel with denied location permissions
-        let fakeRepository = FakeAnimalRepository(animalCount: 10, shouldFail: false)
+        let fakeRepository = FakeAnnouncementRepository(animalCount: 10, shouldFail: false)
         let viewModel = createViewModel(
             repository: fakeRepository,
             locationStatus: .denied,
@@ -308,7 +308,7 @@ final class AnimalListViewModelTests: XCTestCase {
     /// T019: Test AnimalListViewModel with repository error should set error state
     func testLoadAnimals_whenRepositoryThrowsError_shouldSetErrorState() async {
         // Given - ViewModel with repository that fails
-        let fakeRepository = FakeAnimalRepository(animalCount: 0, shouldFail: true)
+        let fakeRepository = FakeAnnouncementRepository(animalCount: 0, shouldFail: true)
         let viewModel = createViewModel(repository: fakeRepository)
         
         // When - loadAnimals is called

@@ -31,11 +31,11 @@ class ServiceContainer {
     
     /// Announcement submission service for 2-step submission orchestration
     lazy var announcementSubmissionService: AnnouncementSubmissionServiceProtocol =
-        AnnouncementSubmissionService(repository: animalRepository)
+        AnnouncementSubmissionService(repository: announcementRepository)
 
     // MARK: - Repositories
     
-    /// Animal repository for fetching animal data
-    lazy var animalRepository: AnimalRepositoryProtocol = AnimalRepository()
+    /// Announcement repository for fetching announcement data
+    lazy var announcementRepository: AnnouncementRepositoryProtocol = AnnouncementRepository()
 }
 
