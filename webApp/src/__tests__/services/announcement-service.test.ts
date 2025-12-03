@@ -346,4 +346,79 @@ describe('AnnouncementService', () => {
       await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
     });
   });
+
+  describe('AnnouncementService.uploadPhoto', () => {
+
+    it('should POST to /api/v1/announcements/:id/photos with FormData and Basic Auth header', async () => {
+      // given
+      const announcementId = 'ann-123';
+      const managementPassword = 'pass123';
+      const file = new File(['photo content'], 'pet.jpg', { type: 'image/jpeg' });
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true })
+      } as Response);
+
+      // when
+      await underTest.uploadPhoto(announcementId, managementPassword, file);
+
+      // then
+      expect(window.fetch).toHaveBeenCalledWith(
+        'http://localhost:3000/api/v1/announcements/ann-123/photos',
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            Authorization: `Basic ${btoa(`${announcementId}:${managementPassword}`)}`
+          }),
+          body: expect.any(FormData)
+        })
+      );
+    });
+
+    it('should handle 401 Unauthorized error', async () => {
+      // given
+      const announcementId = 'ann-123';
+      const managementPassword = 'wrong-pass';
+      const file = new File(['photo content'], 'pet.jpg', { type: 'image/jpeg' });
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: async () => ({ message: 'Unauthorized' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.uploadPhoto(announcementId, managementPassword, file)).rejects.toThrow();
+    });
+
+    it('should handle 404 Not Found error', async () => {
+      // given
+      const announcementId = 'ann-invalid';
+      const managementPassword = 'pass123';
+      const file = new File(['photo content'], 'pet.jpg', { type: 'image/jpeg' });
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        json: async () => ({ message: 'Not found' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.uploadPhoto(announcementId, managementPassword, file)).rejects.toThrow();
+    });
+
+    it('should throw error when photo upload fails', async () => {
+      // given
+      const announcementId = 'ann-123';
+      const managementPassword = 'pass123';
+      const file = new File(['photo content'], 'pet.jpg', { type: 'image/jpeg' });
+
+      fetchMock.mockRejectedValueOnce(new Error('Upload failed'));
+
+      // when / then
+      await expect(underTest.uploadPhoto(announcementId, managementPassword, file)).rejects.toThrow();
+    });
+  });
 });

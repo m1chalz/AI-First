@@ -96,6 +96,36 @@ export class AnnouncementService {
         Object.assign(err, { type: 'network' });
         throw err;
     }
+
+    async uploadPhoto(announcementId: string, managementPassword: string, file: File): Promise<void> {
+        try {
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            const authHeader = `Basic ${btoa(`${announcementId}:${managementPassword}`)}`;
+
+            const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements/${announcementId}/photos`, {
+                method: 'POST',
+                headers: { Authorization: authHeader },
+                body: formData
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw this.createNetworkError();
+                } else if (response.status === 404) {
+                    throw this.createNetworkError();
+                } else {
+                    throw this.createServerError(response.status);
+                }
+            }
+        } catch (error) {
+            if (error instanceof Error && (error.message.includes('Network') || error.message.includes('Server'))) {
+                throw error;
+            }
+            throw this.createNetworkError();
+        }
+    }
 }
 
 export const announcementService = new AnnouncementService();

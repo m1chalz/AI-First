@@ -3,7 +3,7 @@ import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow
 import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
-import { useAnnouncementCreation } from '../../hooks/use-announcement-creation';
+import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import styles from './ReportMissingPetLayout.module.css';
@@ -25,7 +25,7 @@ export function ContactScreen() {
     handleSubmit,
   } = useContactForm();
   const { showToast } = useToast();
-  const { isCreating, error, announcementId, managementPassword, createAnnouncement } = useAnnouncementCreation();
+  const { isSubmitting, error, announcementId, managementPassword, submitAnnouncement } = useAnnouncementSubmission();
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
@@ -41,7 +41,7 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (error) {
-      showToast('Failed to create announcement. Please try again.');
+      showToast('Failed to submit announcement. Please try again.');
     }
   }, [error, showToast]);
 
@@ -57,7 +57,7 @@ export function ContactScreen() {
       }
       return;
     }
-    await createAnnouncement(flowState);
+    await submitAnnouncement(flowState);
   };
 
   useBrowserBackHandler(handleBack);
@@ -140,9 +140,9 @@ export function ContactScreen() {
           onClick={handleContinue}
           className={styles.primaryButton}
           data-testid="contact.continue.button"
-          disabled={isCreating}
+          disabled={isSubmitting}
         >
-          {isCreating ? 'Creating announcement...' : 'Continue'}
+          {isSubmitting ? 'Submitting...' : 'Continue'}
         </button>
         </form>
       </div>
