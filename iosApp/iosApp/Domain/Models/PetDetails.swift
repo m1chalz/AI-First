@@ -8,7 +8,7 @@ struct PetDetails: Identifiable {
     let id: String
     
     /// Name of the pet (from backend, not displayed in current UI design)
-    let petName: String
+    let petName: String?
     
     /// URL string for the pet's photo (nullable, show fallback if nil)
     let photoUrl: String?
@@ -26,8 +26,8 @@ struct PetDetails: Identifiable {
     /// Sex of the pet (MALE, FEMALE, or UNKNOWN)
     let gender: AnimalGender
     
-    /// Additional description text (required in backend, multi-line)
-    let description: String
+    /// Additional description text (optional)
+    let description: String?
     
     /// Owner's phone number (required in backend)
     let phone: String

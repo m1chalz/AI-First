@@ -10,7 +10,7 @@ struct Announcement {
     let id: String
     
     /// Name of the animal (e.g., "Buddy", "Mittens")
-    let name: String
+    let name: String?
     
     /// URL or placeholder identifier for animal photo
     let photoUrl: String
@@ -34,8 +34,8 @@ struct Announcement {
     /// Format: DD/MM/YYYY
     let lastSeenDate: String
     
-    /// Detailed text description (visible on web, truncated on mobile)
-    let description: String
+    /// Detailed text description (optional)
+    let description: String?
     
     /// Contact email of the person who reported/owns the animal (optional)
     let email: String?

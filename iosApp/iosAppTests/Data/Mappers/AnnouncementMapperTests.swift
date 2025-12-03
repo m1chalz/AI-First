@@ -96,7 +96,7 @@ final class AnnouncementMapperTests: XCTestCase {
         XCTAssertNil(announcement?.breed)
     }
     
-    func test_map_whenNullDescription_shouldDefaultToEmptyString() {
+    func test_map_whenNullDescription_shouldBeNil() {
         // Given - DTO with null description
         let dto = makeTestDTO(description: nil)
         
@@ -105,7 +105,19 @@ final class AnnouncementMapperTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(announcement)
-        XCTAssertEqual(announcement?.description, "")
+        XCTAssertNil(announcement?.description)
+    }
+    
+    func test_map_whenNullPetName_shouldBeNil() {
+        // Given - DTO with null petName
+        let dto = makeTestDTO(petName: nil)
+        
+        // When
+        let announcement = sut.map(dto)
+        
+        // Then
+        XCTAssertNotNil(announcement)
+        XCTAssertNil(announcement?.name)
     }
     
     // MARK: - Failure Cases
@@ -119,11 +131,12 @@ final class AnnouncementMapperTests: XCTestCase {
         photoUrl: String = "/images/test.jpg",
         breed: String? = "Test Breed",
         sex: AnimalGenderDTO? = .male,
-        description: String? = "Test description"
+        description: String? = "Test description",
+        petName: String? = "TestPet"
     ) -> AnnouncementDTO {
         return AnnouncementDTO(
             id: id,
-            petName: "TestPet",
+            petName: petName,
             species: species,
             status: status,
             photoUrl: photoUrl,

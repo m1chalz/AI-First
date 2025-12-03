@@ -96,6 +96,18 @@ class PetDetailsViewModel: ObservableObject {
         return L10n.PetDetails.Format.yearsOld(age)
     }
     
+    /// Returns formatted pet name (or "—" if nil)
+    var formattedPetName: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        return petDetails.petName ?? "—"
+    }
+    
+    /// Returns formatted description (or "—" if nil)
+    var formattedDescription: String {
+        guard case .loaded(let petDetails) = state else { return "—" }
+        return petDetails.description ?? "—"
+    }
+    
     /// Creates PetPhotoWithBadgesView.Model with pet details
     var photoWithBadgesModel: PetPhotoWithBadgesView.Model? {
         guard case .loaded(let petDetails) = state else { return nil }

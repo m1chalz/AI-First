@@ -14,13 +14,13 @@ struct PetDetailsMapper {
     func map(_ dto: PetDetailsDTO) -> PetDetails? {
         return PetDetails(
             id: dto.id,
-            petName: dto.petName ?? "",
+            petName: dto.petName,
             photoUrl: photoURLMapper.resolve(dto.photoUrl),
             status: dto.status.toDomain,
             lastSeenDate: dto.lastSeenDate,
             species: dto.species.toDomain,
             gender: dto.sex?.toDomain ?? .unknown,
-            description: dto.description ?? "",
+            description: dto.description,
             phone: dto.phone,
             email: dto.email,
             breed: dto.breed,

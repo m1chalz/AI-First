@@ -405,10 +405,10 @@ final class AnnouncementRepositoryTests: XCTestCase {
         // When - fetch animals
         let announcements = try await sut.getAnnouncements(near: nil)
         
-        // Then - animal parsed successfully with empty string description
+        // Then - animal parsed successfully with nil description
         XCTAssertEqual(announcements.count, 1)
         XCTAssertEqual(announcements[0].name, "Azor")
-        XCTAssertEqual(announcements[0].description, "")
+        XCTAssertNil(announcements[0].description)
     }
     
     /// Test: getAnnouncements with null breed should parse successfully (optional field)
@@ -727,9 +727,9 @@ final class AnnouncementRepositoryTests: XCTestCase {
         // When - fetch pet details
         let details = try await sut.getPetDetails(id: "550e8400-e29b-41d4-a716-446655440000")
         
-        // Then - pet details parsed successfully with empty string description
+        // Then - pet details parsed successfully with nil description
         XCTAssertEqual(details.petName, "Rex")
-        XCTAssertEqual(details.description, "")
+        XCTAssertNil(details.description)
     }
     
     /// T043a: Test getPetDetails with updatedAt in custom format should parse correctly
