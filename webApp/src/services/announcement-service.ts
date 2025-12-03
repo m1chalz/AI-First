@@ -6,7 +6,7 @@ interface BackendAnnouncementsResponse {
     data: Animal[];
 }
 
-export class AnimalRepository {
+export class AnnouncementService {
     
     async getAnimals(coordinates: Coordinates | null = null): Promise<Animal[]> {
         let url = `${config.apiBaseUrl}/api/v1/announcements`;
@@ -43,5 +43,4 @@ export class AnimalRepository {
     }
 }
 
-export const animalRepository = new AnimalRepository();
-
+export const announcementService = new AnnouncementService();

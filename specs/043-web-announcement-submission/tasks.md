@@ -35,11 +35,11 @@
 
 **Purpose**: Prepare project structure for announcement submission feature
 
-- [ ] T001 Verify Node.js v24 (LTS) and npm are installed
-- [ ] T002 Verify backend server is set up and can run on http://localhost:3000
-- [ ] T003 Verify web app dependencies are installed (`cd webApp && npm install`)
-- [ ] T004 Verify Vitest test infrastructure is working (`cd webApp && npm test`)
-- [ ] T005 Verify E2E test infrastructure is set up (Maven, Selenium, Cucumber)
+- [x] T001 Verify Node.js v24 (LTS) and npm are installed
+- [x] T002 Verify backend server is set up and can run on http://localhost:3000
+- [x] T003 Verify web app dependencies are installed (`cd webApp && npm install`)
+- [x] T004 Verify Vitest test infrastructure is working (`cd webApp && npm test`)
+- [x] T005 Verify E2E test infrastructure is set up (Maven, Selenium, Cucumber)
 
 ---
 
@@ -49,18 +49,18 @@
 
 **⚠️ CRITICAL**: Complete this phase before ANY user story implementation
 
-- [ ] T006 Rename `/webApp/src/services/animal-repository.ts` → `announcement-service.ts`
-- [ ] T007 Rename `/webApp/src/__tests__/services/animal-repository.test.ts` → `announcement-service.test.ts`
-- [ ] T008 In `announcement-service.ts`: Rename class `AnimalRepository` → `AnnouncementService`
-- [ ] T009 In `announcement-service.ts`: Rename export `animalRepository` → `announcementService`
-- [ ] T010 In `announcement-service.test.ts`: Update imports and class references to `AnnouncementService`
-- [ ] T011 In `announcement-service.test.ts`: Update describe blocks from `AnimalRepository` → `AnnouncementService`
-- [ ] T012 Update import in `/webApp/src/hooks/use-animal-list.ts`: Change `animalRepository` → `announcementService`
-- [ ] T013 Update import in `/webApp/src/hooks/use-pet-details.ts`: Change `animalRepository` → `announcementService`
-- [ ] T014 Update import in `/webApp/src/hooks/__tests__/hooks/use-animal-list.test.ts`: Update mock path and variable names
-- [ ] T015 Update import in `/webApp/src/hooks/__tests__/use-pet-details.test.ts`: Update mock path and variable names
-- [ ] T016 Run `npm test` to verify all existing tests still pass after rename
-- [ ] T017 Run `npm run type-check` (if available) or `tsc --noEmit` to verify TypeScript compilation
+- [x] T006 Rename `/webApp/src/services/animal-repository.ts` → `announcement-service.ts`
+- [x] T007 Rename `/webApp/src/__tests__/services/animal-repository.test.ts` → `announcement-service.test.ts`
+- [x] T008 In `announcement-service.ts`: Rename class `AnimalRepository` → `AnnouncementService`
+- [x] T009 In `announcement-service.ts`: Rename export `animalRepository` → `announcementService`
+- [x] T010 In `announcement-service.test.ts`: Update imports and class references to `AnnouncementService`
+- [x] T011 In `announcement-service.test.ts`: Update describe blocks from `AnimalRepository` → `AnnouncementService`
+- [x] T012 Update import in `/webApp/src/hooks/use-animal-list.ts`: Change `animalRepository` → `announcementService`
+- [x] T013 Update import in `/webApp/src/hooks/use-pet-details.ts`: Change `animalRepository` → `announcementService`
+- [x] T014 Update import in `/webApp/src/hooks/__tests__/hooks/use-animal-list.test.ts`: Update mock path and variable names
+- [x] T015 Update import in `/webApp/src/hooks/__tests__/use-pet-details.test.ts`: Update mock path and variable names
+- [x] T016 Run `npm test` to verify all existing tests still pass after rename
+- [x] T017 Run `npm run type-check` (if available) or `tsc --noEmit` to verify TypeScript compilation
 
 **Checkpoint**: Service renamed, all existing tests pass - ready for user story implementation
 
