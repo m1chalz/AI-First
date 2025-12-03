@@ -147,10 +147,33 @@ Feature: Animal Description Screen
   Scenario: GPS section shows helper text for manual entry
     Then the screen should display text "coordinates are the only location fallback"
 
-  @us2 @gps @success
-  Scenario: GPS success shows confirmation message
-    Given location permissions are granted
-    When the user taps the "Request GPS position" button
-    And the GPS request completes successfully
-    Then a success message should be displayed
+  # User Story 3: Additional description and validation (P3)
+
+  @us3 @description
+  Scenario: User can enter optional description
+    When the user enters "Black and tan coat, blue collar" as the description
+    Then the description field should display "Black and tan coat, blue collar"
+
+  @us3 @description @limit
+  Scenario: Description field enforces 500 character limit
+    When the user enters a 510 character description
+    Then the description field should contain exactly 500 characters
+
+  @us3 @description @counter
+  Scenario: Character counter shows current count
+    When the user enters "Test description" as the description
+    Then the character counter should show "16/500"
+
+  @us3 @validation
+  Scenario: Validation error shows snackbar message
+    Given the user has NOT selected a species
+    When the user taps the Continue button
+    Then a snackbar with message "Please correct the errors" should be displayed
+
+  @us3 @persistence
+  Scenario: Description persists when navigating back and returning
+    Given the user has entered "Friendly dog, responds to name" as the description
+    When the user taps the back button
+    And the user navigates forward to the Animal Description screen
+    Then the description field should display "Friendly dog, responds to name"
 

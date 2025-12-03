@@ -63,6 +63,11 @@ public class AnimalDescriptionScreen {
     @iOSXCUITFindBy(id = "animalDescription.longitudeField")
     private WebElement longitudeField;
 
+    // Description field
+    @AndroidFindBy(accessibility = "animalDescription.descriptionField")
+    @iOSXCUITFindBy(id = "animalDescription.descriptionField")
+    private WebElement descriptionField;
+
     @AndroidFindBy(accessibility = "animalDescription.continueButton")
     @iOSXCUITFindBy(id = "animalDescription.continueButton")
     private WebElement continueButton;
@@ -238,6 +243,19 @@ public class AnimalDescriptionScreen {
     public boolean isLongitudeFieldPopulated() {
         String longitude = getLongitude();
         return longitude != null && !longitude.isEmpty() && !longitude.equals("-180 to 180");
+    }
+
+    // Description field interactions
+    public void typeDescription(String description) {
+        waitForElement(descriptionField);
+        descriptionField.clear();
+        descriptionField.sendKeys(description);
+    }
+
+    public String getDescription() {
+        waitForElement(descriptionField);
+        String value = descriptionField.getAttribute("value");
+        return value != null ? value : descriptionField.getText();
     }
 
     // Navigation interactions

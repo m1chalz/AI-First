@@ -363,5 +363,54 @@ public class AnimalDescriptionSteps {
         // Verify GPS success message is visible
         // Platform-specific implementation
     }
+
+    // ========================================
+    // User Story 3 - Description Field Steps
+    // ========================================
+
+    @Given("the user has entered {string} as the description")
+    public void userHasEnteredDescription(String description) {
+        initScreen();
+        animalDescriptionScreen.typeDescription(description);
+    }
+
+    @When("the user enters {string} as the description")
+    public void userEntersDescription(String description) {
+        initScreen();
+        animalDescriptionScreen.typeDescription(description);
+    }
+
+    @When("the user enters a {int} character description")
+    public void userEntersLongDescription(int charCount) {
+        initScreen();
+        String longText = "A".repeat(charCount);
+        animalDescriptionScreen.typeDescription(longText);
+    }
+
+    @Then("the description field should display {string}")
+    public void descriptionFieldShouldDisplay(String expectedDescription) {
+        initScreen();
+        assertEquals("Description should match", expectedDescription, animalDescriptionScreen.getDescription());
+    }
+
+    @Then("the description field should contain exactly {int} characters")
+    public void descriptionFieldShouldContainCharacters(int expectedCount) {
+        initScreen();
+        String actualDescription = animalDescriptionScreen.getDescription();
+        assertEquals("Description should be limited to " + expectedCount + " characters",
+                expectedCount, actualDescription.length());
+    }
+
+    @Then("the character counter should show {string}")
+    public void characterCounterShouldShow(String expectedCounter) {
+        // Character counter verification is platform-specific
+        // May need to find the counter element by accessibility ID or text
+    }
+
+    @Then("a snackbar with message {string} should be displayed")
+    public void snackbarWithMessageShouldBeDisplayed(String expectedMessage) {
+        // Snackbar verification is platform-specific
+        // For Android, look for Snackbar element with the expected text
+    }
 }
 

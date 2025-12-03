@@ -28,6 +28,7 @@ import com.intive.aifirst.petspot.features.reportmissing.ui.components.ReportMis
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.ScreenTitleSection
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StyledOutlinedTextField
+import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.CharacterCounterTextField
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.DatePickerField
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.GenderSelector
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.components.GpsLocationSection
@@ -59,6 +60,7 @@ fun AnimalDescriptionContent(
     onRequestGps: () -> Unit = {},
     onLatitudeChanged: (String) -> Unit = {},
     onLongitudeChanged: (String) -> Unit = {},
+    onDescriptionChanged: (String) -> Unit = {},
     onContinueClick: () -> Unit = {},
 ) {
     Column(
@@ -194,6 +196,19 @@ fun AnimalDescriptionContent(
                 longitudeError = state.longitudeError,
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Additional description (optional, 500 char limit per FR-011)
+            FormField(label = "Animal additional description (optional)") {
+                CharacterCounterTextField(
+                    value = state.additionalDescription,
+                    onValueChange = onDescriptionChanged,
+                    maxChars = state.descriptionMaxChars,
+                    placeholder = "Describe any distinguishing features...",
+                    modifier = Modifier.testTag("animalDescription.descriptionField"),
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
         }
 
@@ -264,11 +279,23 @@ class AnimalDescriptionUiStateProvider : PreviewParameterProvider<AnimalDescript
             ),
             // GPS loading state
             AnimalDescriptionUiState(
-                disappearanceDate = LocalDate.now(),
+                disappearanceDate = LocalDate.of(2024, 12, 1),
                 animalSpecies = "Cat",
                 animalRace = "Persian",
                 animalGender = AnimalGender.MALE,
                 isGpsLoading = true,
+            ),
+            // With description filled
+            AnimalDescriptionUiState(
+                disappearanceDate = LocalDate.of(2024, 11, 20),
+                petName = "Max",
+                animalSpecies = "Dog",
+                animalRace = "German Shepherd",
+                animalGender = AnimalGender.MALE,
+                animalAge = "3",
+                latitude = "52.2297",
+                longitude = "21.0122",
+                additionalDescription = "Black and tan coat, blue collar with silver tag. Very friendly, responds to 'Max'. Last seen near Central Park.",
             ),
         )
 }

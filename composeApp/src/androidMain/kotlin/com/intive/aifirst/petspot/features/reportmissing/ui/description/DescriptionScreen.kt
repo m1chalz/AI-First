@@ -70,6 +70,7 @@ fun DescriptionScreen(
         onRequestGps = { viewModel.handleIntent(AnimalDescriptionUserIntent.RequestGpsPosition) },
         onLatitudeChanged = { lat -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLatitude(lat)) },
         onLongitudeChanged = { lon -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateLongitude(lon)) },
+        onDescriptionChanged = { desc -> viewModel.handleIntent(AnimalDescriptionUserIntent.UpdateDescription(desc)) },
         onContinueClick = { viewModel.handleIntent(AnimalDescriptionUserIntent.ContinueClicked) },
     )
 }
