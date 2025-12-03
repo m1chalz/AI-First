@@ -5,6 +5,6 @@
     <string name="photo_empty_title">Upload animal photo</string>
     <string name="photo_empty_subtitle">JPEG, PNG, GIF • Max 10MB</string>
     <string name="photo_browse_button">Browse</string>
-    <string name="report_missing_photo_mandatory">Please select a photo to continue</string>
+    <string name="report_missing_photo_mandatory">Photo is mandatory</string>
     <string name="report_missing_photo_metadata_failed">Failed to load photo. Please try again.</string>
 </resources>
