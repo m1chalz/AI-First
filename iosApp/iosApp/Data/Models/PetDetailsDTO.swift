@@ -6,7 +6,7 @@ struct PetDetailsDTO: Codable {
     let id: String
     let petName: String?
     let species: AnimalSpeciesDTO
-    let status: AnimalStatusDTO
+    let status: AnnouncementStatusDTO
     let photoUrl: String
     let lastSeenDate: String
     let locationLatitude: Double

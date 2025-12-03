@@ -1,12 +1,12 @@
 import Foundation
 
-extension AnimalStatus {
+extension AnnouncementStatus {
     /// Human-readable status label for UI display
     var displayName: String {
         switch self {
-        case .active: return L10n.AnimalStatus.active
-        case .found: return L10n.AnimalStatus.found
-        case .closed: return L10n.AnimalStatus.closed
+        case .active: return L10n.AnnouncementStatus.active
+        case .found: return L10n.AnnouncementStatus.found
+        case .closed: return L10n.AnnouncementStatus.closed
         }
     }
     

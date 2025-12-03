@@ -24,7 +24,7 @@ class CreateAnnouncementMapper {
             locationLongitude: data.location.longitude,
             email: data.contact.email,
             phone: data.contact.phone,
-            status: AnimalStatusDTO(domain: .active),
+            status: AnnouncementStatusDTO(domain: .active),
             microchipNumber: data.microchipNumber,
             description: data.description,
             reward: data.reward

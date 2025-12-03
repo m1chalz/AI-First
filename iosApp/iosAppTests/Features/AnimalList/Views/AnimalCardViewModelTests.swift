@@ -21,7 +21,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         latitude: Double = 52.2297,
         longitude: Double = 21.0122,
         species: AnimalSpecies = .dog,
-        status: AnimalStatus = .active,
+        status: AnnouncementStatus = .active,
         lastSeenDate: String = "20/11/2024"
     ) -> Announcement {
         return Announcement(
@@ -81,7 +81,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         let statusText = viewModel.statusText
         
         // Then - should return status display name
-        XCTAssertEqual(statusText, AnimalStatus.active.displayName, "statusText should return status displayName")
+        XCTAssertEqual(statusText, AnnouncementStatus.active.displayName, "statusText should return status displayName")
     }
     
     /**
@@ -96,7 +96,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         let colorHex = viewModel.statusColorHex
         
         // Then - should return hex color string
-        XCTAssertEqual(colorHex, AnimalStatus.active.badgeColorHex, "statusColorHex should return badge color hex")
+        XCTAssertEqual(colorHex, AnnouncementStatus.active.badgeColorHex, "statusColorHex should return badge color hex")
         XCTAssertTrue(colorHex.hasPrefix("#"), "statusColorHex should be hex format starting with #")
     }
     
@@ -173,7 +173,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         // Verify initial state
         XCTAssertEqual(viewModel.breedName, "Golden Retriever")
         XCTAssertEqual(viewModel.locationText, "52.2297° N, 21.0122° E")
-        XCTAssertEqual(viewModel.statusText, AnimalStatus.active.displayName)
+        XCTAssertEqual(viewModel.statusText, AnnouncementStatus.active.displayName)
         
         // When - update is called with modified announcement
         let updatedAnnouncement = makeTestAnnouncement(
@@ -188,7 +188,7 @@ final class AnimalCardViewModelTests: XCTestCase {
         // Then - computed properties should reflect new values
         XCTAssertEqual(viewModel.breedName, "Labrador", "breedName should update")
         XCTAssertEqual(viewModel.locationText, "50.0647° N, 19.9450° E", "locationText should update")
-        XCTAssertEqual(viewModel.statusText, AnimalStatus.found.displayName, "statusText should update")
+        XCTAssertEqual(viewModel.statusText, AnnouncementStatus.found.displayName, "statusText should update")
     }
     
     /**

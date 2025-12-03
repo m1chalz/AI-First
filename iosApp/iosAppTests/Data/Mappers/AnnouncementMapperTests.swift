@@ -103,7 +103,7 @@ final class AnnouncementMapperTests: XCTestCase {
     private func makeTestDTO(
         id: String = "test-id",
         species: AnimalSpeciesDTO = .dog,
-        status: AnimalStatusDTO = .missing,
+        status: AnnouncementStatusDTO = .missing,
         photoUrl: String = "/images/test.jpg",
         breed: String? = "Test Breed",
         sex: AnimalGenderDTO? = .male

@@ -28,7 +28,7 @@ struct Announcement {
     let gender: AnimalGender
     
     /// Current status (Active, Found, Closed)
-    let status: AnimalStatus
+    let status: AnnouncementStatus
     
     /// Date when animal was last seen (for Active status) or found (for Found status)
     /// Format: DD/MM/YYYY

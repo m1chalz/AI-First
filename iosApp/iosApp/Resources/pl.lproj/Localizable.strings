@@ -67,11 +67,11 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
-/* MARK: - Animal Status */
+/* MARK: - Announcement Status */
 
-"animalStatus.active" = "ZAGINIONE";
-"animalStatus.found" = "ZNALEZIONE";
-"animalStatus.closed" = "ZAMKNIĘTE";
+"announcementStatus.active" = "ZAGINIONE";
+"announcementStatus.found" = "ZNALEZIONE";
+"announcementStatus.closed" = "ZAMKNIĘTE";
 
 /* MARK: - Animal Species */
 

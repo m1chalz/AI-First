@@ -118,7 +118,7 @@ final class PetDetailsMapperTests: XCTestCase {
     private func makeTestDTO(
         id: String = "test-id",
         species: AnimalSpeciesDTO = .cat,
-        status: AnimalStatusDTO = .found,
+        status: AnnouncementStatusDTO = .found,
         photoUrl: String = "/images/test.jpg",
         breed: String? = "Persian",
         sex: AnimalGenderDTO? = .female,

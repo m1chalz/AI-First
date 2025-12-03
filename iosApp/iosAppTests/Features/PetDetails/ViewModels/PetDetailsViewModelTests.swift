@@ -23,7 +23,7 @@ final class PetDetailsViewModelTests: XCTestCase {
     private func makeMockPetDetails(
         id: String = "test-id",
         photoUrl: String? = "https://example.com/photo.jpg",
-        status: AnimalStatus = .active,
+        status: AnnouncementStatus = .active,
         latitude: Double = 52.2297,
         longitude: Double = 21.0122,
         reward: String? = "100 PLN"
@@ -575,7 +575,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertNotNil(result)
         if let model = result {
             XCTAssertEqual(model.imageUrl, "https://example.com/photo.jpg")
-            XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.active)
+            XCTAssertEqual(model.statusDisplayText, L10n.AnnouncementStatus.active)
             XCTAssertEqual(model.rewardText, "$500")
         }
     }

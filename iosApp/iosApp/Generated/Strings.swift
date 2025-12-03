@@ -190,13 +190,13 @@ public enum L10n {
     /// Rodent
     public static let rodent = L10n.tr("Localizable", "animalSpecies.rodent", fallback: "Rodent")
   }
-  public enum AnimalStatus {
-    /// MARK: - Animal Status
-    public static let active = L10n.tr("Localizable", "animalStatus.active", fallback: "MISSING")
+  public enum AnnouncementStatus {
+    /// MARK: - Announcement Status
+    public static let active = L10n.tr("Localizable", "announcementStatus.active", fallback: "MISSING")
     /// CLOSED
-    public static let closed = L10n.tr("Localizable", "animalStatus.closed", fallback: "CLOSED")
+    public static let closed = L10n.tr("Localizable", "announcementStatus.closed", fallback: "CLOSED")
     /// FOUND
-    public static let found = L10n.tr("Localizable", "animalStatus.found", fallback: "FOUND")
+    public static let found = L10n.tr("Localizable", "announcementStatus.found", fallback: "FOUND")
   }
   public enum Common {
     /// Back
