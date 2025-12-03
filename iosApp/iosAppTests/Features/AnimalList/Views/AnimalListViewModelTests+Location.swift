@@ -2,7 +2,7 @@ import XCTest
 @testable import PetSpot
 
 /**
- * Unit tests for AnimalListViewModel location permission and fetching logic.
+ * Unit tests for AnnouncementListViewModel location permission and fetching logic.
  * Tests User Story 1: Location-Aware Content for Authorized Users.
  * Uses FakeLocationService and FakeAnnouncementRepository for isolation.
  * Follows Given-When-Then structure per constitution.
@@ -15,7 +15,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     private var fakeLocationService: FakeLocationService!
     private var fakeRepository: FakeAnnouncementRepository!
     private var locationHandler: LocationPermissionHandler!
-    private var viewModel: AnimalListViewModel!
+    private var viewModel: AnnouncementListViewModel!
     
     // MARK: - Setup / Teardown
     
@@ -37,13 +37,13 @@ final class AnimalListViewModelLocationTests: XCTestCase {
     
     /// Creates AnimalListViewModel with LocationPermissionHandler wrapping FakeLocationService.
     /// Uses isolated NotificationCenter for test isolation.
-    private func createViewModel() -> AnimalListViewModel {
+    private func createViewModel() -> AnnouncementListViewModel {
         locationHandler = LocationPermissionHandler(
             locationService: fakeLocationService,
             notificationCenter: NotificationCenter()  // Isolated instance
         )
         
-        return AnimalListViewModel(
+        return AnnouncementListViewModel(
             repository: fakeRepository,
             locationHandler: locationHandler
         )
@@ -263,7 +263,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertFalse(requestCalled, "Should not request authorization when already denied")
     }
     
-    // T036: Unit test AnimalListViewModel.loadAnimals requests permission when notDetermined
+    // T036: Unit test AnnouncementListViewModel.loadAnimals requests permission when notDetermined
     func test_loadAnimals_whenNotDetermined_shouldUpdatePermissionStatusAfterRequest() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
@@ -280,7 +280,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update permission status after user grants permission")
     }
     
-    // T037: Unit test AnimalListViewModel handles user granting permission in alert
+    // T037: Unit test AnnouncementListViewModel handles user granting permission in alert
     func test_loadAnimals_whenUserGrantsPermission_shouldFetchLocationAndQueryWithCoordinates() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
@@ -301,7 +301,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertNotNil(passedLocation, "Should query with coordinates after permission granted")
     }
     
-    // T038: Unit test AnimalListViewModel handles user denying permission in alert
+    // T038: Unit test AnnouncementListViewModel handles user denying permission in alert
     func test_loadAnimals_whenUserDeniesPermission_shouldQueryWithoutCoordinates() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
@@ -366,7 +366,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertFalse(result, "NotDetermined status should not show custom popup")
     }
     
-    // T047: Unit test AnimalListViewModel shows custom popup for denied status
+    // T047: Unit test AnnouncementListViewModel shows custom popup for denied status
     func test_loadAnimals_whenPermissionDenied_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.denied)
@@ -381,7 +381,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission denied")
     }
     
-    // T048: Unit test AnimalListViewModel shows custom popup for restricted status
+    // T048: Unit test AnnouncementListViewModel shows custom popup for restricted status
     func test_loadAnimals_whenPermissionRestricted_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.restricted)
@@ -396,7 +396,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission restricted")
     }
     
-    // T049: Unit test AnimalListViewModel.hasShownPermissionAlert prevents repeated popups in session
+    // T049: Unit test AnnouncementListViewModel.hasShownPermissionAlert prevents repeated popups in session
     func test_loadAnimals_whenPopupAlreadyShown_shouldNotShowAgain() async {
         // Given
         await setLocationServiceStatus(.denied)
@@ -420,7 +420,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertFalse(secondCallShown, "Should not show popup again in same session")
     }
     
-    // T050: Unit test AnimalListViewModel.openSettings() calls coordinator callback
+    // T050: Unit test AnnouncementListViewModel.openSettings() calls coordinator callback
     func test_openSettings_whenCalled_shouldInvokeCoordinatorCallback() async {
         // Given
         var callbackInvoked = false
@@ -436,7 +436,7 @@ final class AnimalListViewModelLocationTests: XCTestCase {
         XCTAssertTrue(callbackInvoked, "Should invoke coordinator callback when openSettings called")
     }
     
-    // T051: Unit test AnimalListViewModel.continueWithoutLocation() queries without coordinates
+    // T051: Unit test AnnouncementListViewModel.continueWithoutLocation() queries without coordinates
     func test_continueWithoutLocation_whenCalled_shouldQueryWithoutLocation() async {
         // Given
         fakeRepository.stubbedAnnouncements = []

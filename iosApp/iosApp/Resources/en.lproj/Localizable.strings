@@ -3,32 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Missing Animals";
+"announcementList.navigationTitle" = "Missing Animals";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Report a Missing Animal";
-"animalList.button.reportFound" = "Report Found Animal";
+"announcementList.button.reportMissing" = "Report a Missing Animal";
+"announcementList.button.reportFound" = "Report Found Animal";
 
 // Empty state
-"animalList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
+"announcementList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
 
 // Loading state
-"animalList.loading.message" = "Loading animals...";
+"announcementList.loading.message" = "Loading animals...";
 
 // Error messages
-"animalList.error.title" = "Error";
-"animalList.error.prefix" = "Error: %@";
-"animalList.error.generic" = "Something went wrong. Please try again.";
-"animalList.error.loadingFailed" = "Failed to load announcements. Please try again.";
-"animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
+"announcementList.error.title" = "Error";
+"announcementList.error.prefix" = "Error: %@";
+"announcementList.error.generic" = "Something went wrong. Please try again.";
+"announcementList.error.loadingFailed" = "Failed to load announcements. Please try again.";
+"announcementList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 

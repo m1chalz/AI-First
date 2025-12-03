@@ -2,23 +2,23 @@ import UIKit
 import SwiftUI
 
 /**
- * Coordinator for Animal List flow following MVVM-C architecture.
+ * Coordinator for Announcement List flow following MVVM-C architecture.
  * Manages navigation and creates UIHostingController for SwiftUI views.
  *
  * Responsibilities:
- * - Creates and configures AnimalListViewModel
+ * - Creates and configures AnnouncementListViewModel
  * - Sets up coordinator closures for navigation
  * - Creates UIHostingController with SwiftUI view
  * - Handles navigation to child screens (details, report forms)
  */
-class AnimalListCoordinator: CoordinatorInterface {
+class AnnouncementListCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?
     var childCoordinators: [CoordinatorInterface] = []
     
-    /// Animal List ViewModel reference for triggering refresh after report sent (User Story 3: T066)
+    /// Announcement List ViewModel reference for triggering refresh after report sent (User Story 3: T066)
     /// Weak to avoid keeping ViewModel in memory when screen is not visible
     /// UIHostingController/SwiftUI holds the strong reference
-    private weak var animalListViewModel: AnimalListViewModel?
+    private weak var announcementListViewModel: AnnouncementListViewModel?
     
     /**
      * Initializes coordinator with navigation controller.
@@ -44,40 +44,40 @@ class AnimalListCoordinator: CoordinatorInterface {
         let locationHandler = container.locationPermissionHandler
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
-        let animalListViewModel = AnimalListViewModel(
+        let announcementListViewModel = AnnouncementListViewModel(
             repository: repository,
             locationHandler: locationHandler
         )
         
         // Store weak reference for refresh triggering after report sent (User Story 3: T066)
-        self.animalListViewModel = animalListViewModel
+        self.announcementListViewModel = announcementListViewModel
         
         // Set up coordinator closures for navigation
-        animalListViewModel.onAnimalSelected = { [weak self] animalId in
+        announcementListViewModel.onAnimalSelected = { [weak self] animalId in
             self?.showAnimalDetails(animalId: animalId)
         }
         
-        animalListViewModel.onReportMissing = { [weak self] in
+        announcementListViewModel.onReportMissing = { [weak self] in
             self?.showReportMissing()
         }
         
-        animalListViewModel.onReportFound = { [weak self] in
+        announcementListViewModel.onReportFound = { [weak self] in
             self?.showReportFound()
         }
         
         // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
-        animalListViewModel.onOpenAppSettings = { [weak self] in
+        announcementListViewModel.onOpenAppSettings = { [weak self] in
             self?.openAppSettings()
         }
         
         // Create SwiftUI view with ViewModel
-        let view = AnimalListView(viewModel: animalListViewModel)
+        let view = AnnouncementListView(viewModel: announcementListViewModel)
         
         // Wrap in UIHostingController for UIKit navigation
         let hostingController = UIHostingController(rootView: view)
         
         // Configure navigation bar
-        hostingController.title = L10n.AnimalList.navigationTitle
+        hostingController.title = L10n.AnnouncementList.navigationTitle
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
         // Show navigation bar and replace splash screen with animal list
@@ -133,7 +133,7 @@ class AnimalListCoordinator: CoordinatorInterface {
         // User Story 3 (T066): Set callback to refresh list when user sends report
         // Coordinator -> ViewModel communication via public method
         reportCoordinator.onReportSent = { [weak self] in
-            self?.animalListViewModel?.requestToRefreshData()
+            self?.announcementListViewModel?.requestToRefreshData()
         }
         
         childCoordinators.append(reportCoordinator)

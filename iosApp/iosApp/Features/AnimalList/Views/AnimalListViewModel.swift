@@ -18,18 +18,18 @@ extension LocationPermissionStatus {
 }
 
 /**
- * ViewModel for Animal List screen following MVVM-C architecture.
+ * ViewModel for Announcement List screen following MVVM-C architecture.
  * Manages state using @Published properties for SwiftUI observation.
  * Communicates with coordinator via closures for navigation.
  *
  * State updates happen on main actor to ensure UI thread safety.
  */
 @MainActor
-class AnimalListViewModel: ObservableObject {
+class AnnouncementListViewModel: ObservableObject {
     // MARK: - Published Properties (State)
     
-    /// List of animal card ViewModels (single source of truth)
-    @Published var cardViewModels: [AnimalCardViewModel] = []
+    /// List of announcement card ViewModels (single source of truth)
+    @Published var cardViewModels: [AnnouncementCardViewModel] = []
     
     /// Loading state indicator
     @Published var isLoading: Bool = false
@@ -199,7 +199,7 @@ class AnimalListViewModel: ObservableObject {
             // Task was cancelled - this is normal, don't show error to user
             // Keep loading state but don't update error message
         } catch {
-            self.errorMessage = L10n.AnimalList.Error.loadingFailed
+            self.errorMessage = L10n.AnnouncementList.Error.loadingFailed
         }
         
         isLoading = false
@@ -211,7 +211,7 @@ class AnimalListViewModel: ObservableObject {
      *
      * - Parameter action: Action performed on card
      */
-    private func handleAnimalAction(_ action: AnimalAction) {
+    private func handleAnnouncementAction(_ action: AnnouncementAction) {
         switch action {
         case .selected(let id):
             selectAnimal(id: id)
@@ -250,9 +250,9 @@ class AnimalListViewModel: ObservableObject {
                 return existingVM
             } else {
                 // Create new ViewModel for new announcement
-                return AnimalCardViewModel(
+                return AnnouncementCardViewModel(
                     announcement: announcement,
-                    onAction: handleAnimalAction
+                    onAction: handleAnnouncementAction
                 )
             }
         }
@@ -323,7 +323,7 @@ class AnimalListViewModel: ObservableObject {
             let announcements = try await repository.getAnimals(near: nil)
             updateCardViewModels(with: announcements)
         } catch {
-            self.errorMessage = L10n.AnimalList.Error.loadingFailed
+            self.errorMessage = L10n.AnnouncementList.Error.loadingFailed
         }
     }
     

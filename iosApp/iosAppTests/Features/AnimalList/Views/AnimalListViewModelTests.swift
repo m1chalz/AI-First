@@ -2,7 +2,7 @@ import XCTest
 @testable import PetSpot
 
 /**
- * Unit tests for AnimalListViewModel.
+ * Unit tests for AnnouncementListViewModel.
  * Tests @Published property updates and coordinator callback invocations.
  * Follows Given-When-Then structure per project constitution.
  */
@@ -34,7 +34,7 @@ final class AnimalListViewModelTests: XCTestCase {
         repository: AnnouncementRepositoryProtocol,
         locationStatus: LocationPermissionStatus = .authorizedWhenInUse,
         location: Coordinate? = nil
-    ) -> AnimalListViewModel {
+    ) -> AnnouncementListViewModel {
         let fakeLocationService = FakeLocationService()
         fakeLocationService.stubbedAuthorizationStatus = locationStatus
         fakeLocationService.stubbedLocation = location
@@ -44,7 +44,7 @@ final class AnimalListViewModelTests: XCTestCase {
             notificationCenter: NotificationCenter()  // Isolated instance
         )
         
-        return AnimalListViewModel(
+        return AnnouncementListViewModel(
             repository: repository,
             locationHandler: locationHandler
         )
@@ -107,7 +107,7 @@ final class AnimalListViewModelTests: XCTestCase {
 //            exception: KotlinException(message: "Network error")
 //        )
 //        let getAnimalsUseCase = GetAnimalsUseCase(repository: fakeRepository)
-//        let viewModel = AnimalListViewModel(getAnimalsUseCase: getAnimalsUseCase)
+//        let viewModel = AnnouncementListViewModel(getAnimalsUseCase: getAnimalsUseCase)
 //        
 //        // When - loadAnimals is called
 //        await viewModel.loadAnimals()
@@ -240,7 +240,7 @@ final class AnimalListViewModelTests: XCTestCase {
     
     // MARK: - API Integration Tests (User Story 1)
     
-    /// T016: Test AnimalListViewModel loadAnimals should update animals publisher with API data
+    /// T016: Test AnnouncementListViewModel loadAnimals should update announcements publisher with API data
     func testLoadAnimals_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
         // Given - ViewModel with repository that returns API-like data
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
@@ -261,7 +261,7 @@ final class AnimalListViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.currentLocation)
     }
     
-    /// T017: Test AnimalListViewModel with location permissions should pass coordinates to repository
+    /// T017: Test AnnouncementListViewModel with location permissions should pass coordinates to repository
     func testLoadAnimals_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
         // Given - ViewModel with authorized location
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
@@ -285,7 +285,7 @@ final class AnimalListViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isLoading)
     }
     
-    /// T018: Test AnimalListViewModel without location permissions should call repository without coordinates
+    /// T018: Test AnnouncementListViewModel without location permissions should call repository without coordinates
     func testLoadAnimals_withoutLocationPermissions_shouldCallRepositoryWithoutCoordinates() async {
         // Given - ViewModel with denied location permissions
         let fakeRepository = FakeAnnouncementRepository(animalCount: 10, shouldFail: false)
@@ -305,7 +305,7 @@ final class AnimalListViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
     }
     
-    /// T019: Test AnimalListViewModel with repository error should set error state
+    /// T019: Test AnnouncementListViewModel with repository error should set error state
     func testLoadAnimals_whenRepositoryThrowsError_shouldSetErrorState() async {
         // Given - ViewModel with repository that fails
         let fakeRepository = FakeAnnouncementRepository(animalCount: 0, shouldFail: true)

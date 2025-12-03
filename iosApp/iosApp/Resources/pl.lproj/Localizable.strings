@@ -3,32 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Zaginione zwierzęta";
+"announcementList.navigationTitle" = "Zaginione zwierzęta";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Zgłoś zagubione zwierzę";
-"animalList.button.reportFound" = "Zgłoś znalezienie";
+"announcementList.button.reportMissing" = "Zgłoś zagubione zwierzę";
+"announcementList.button.reportFound" = "Zgłoś znalezienie";
 
 // Empty state
-"animalList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
+"announcementList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
 
 // Loading state
-"animalList.loading.message" = "Ładowanie listy zwierząt...";
+"announcementList.loading.message" = "Ładowanie listy zwierząt...";
 
 // Error messages
-"animalList.error.title" = "Błąd";
-"animalList.error.prefix" = "Błąd: %@";
-"animalList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
-"animalList.error.loadingFailed" = "Nie udało się załadować ogłoszeń. Spróbuj ponownie.";
-"animalList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
+"announcementList.error.title" = "Błąd";
+"announcementList.error.prefix" = "Błąd: %@";
+"announcementList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
+"announcementList.error.loadingFailed" = "Nie udało się załadować ogłoszeń. Spróbuj ponownie.";
+"announcementList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 

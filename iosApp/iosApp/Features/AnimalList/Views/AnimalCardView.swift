@@ -1,7 +1,7 @@
 import SwiftUI
 
 /**
- * SwiftUI view for displaying a single animal card in the list.
+ * SwiftUI view for displaying a single announcement card in the list.
  * Layout: [Image] [Location + Species|Breed] [Status Badge + Date]
  *
  * Design matches Figma specifications (node 52:6541):
@@ -16,14 +16,14 @@ import SwiftUI
  * - Date: 13pt text (#545F71)
  *
  * Note: Uses @ObservedObject (not @StateObject) because ViewModel lifecycle
- * is managed by parent AnimalListViewModel for performance and data consistency.
+ * is managed by parent AnnouncementListViewModel for performance and data consistency.
  * View consumes presentation-ready properties from ViewModel (locationText, statusColor, etc.)
- * and does not access raw Animal model directly.
+ * and does not access raw Announcement model directly.
  *
  * - Parameter viewModel: Card ViewModel injected by parent
  */
-struct AnimalCardView: View {
-    @ObservedObject var viewModel: AnimalCardViewModel
+struct AnnouncementCardView: View {
+    @ObservedObject var viewModel: AnnouncementCardViewModel
     
     var body: some View {
         HStack(alignment: .center, spacing: 10) {

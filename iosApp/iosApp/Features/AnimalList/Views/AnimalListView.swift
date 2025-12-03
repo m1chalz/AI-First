@@ -1,11 +1,11 @@
 import SwiftUI
 
 /**
- * Main SwiftUI view for displaying list of animals.
+ * Main SwiftUI view for displaying list of announcements.
  * Follows MVVM-C architecture with ViewModel managing state.
  *
  * Features:
- * - Scrollable list of animal cards (LazyVStack for performance)
+ * - Scrollable list of announcement cards (LazyVStack for performance)
  * - Loading indicator
  * - Error message display
  * - Empty state message
@@ -16,8 +16,8 @@ import SwiftUI
  *
  * - Parameter viewModel: ViewModel injected by coordinator
  */
-struct AnimalListView: View {
-    @ObservedObject var viewModel: AnimalListViewModel
+struct AnnouncementListView: View {
+    @ObservedObject var viewModel: AnnouncementListViewModel
     
     var body: some View {
         ZStack {
@@ -28,14 +28,14 @@ struct AnimalListView: View {
             if viewModel.isLoading {
                 // Loading indicator
                 LoadingView(model: .init(
-                    message: L10n.AnimalList.Loading.message,
+                    message: L10n.AnnouncementList.Loading.message,
                     accessibilityIdentifier: "animalList.loading"
                 ))
             } else if let errorMessage = viewModel.errorMessage {
                 // Error message
                 ErrorView(model: .init(
-                    title: L10n.AnimalList.Error.title,
-                    message: L10n.AnimalList.Error.prefix(errorMessage),
+                    title: L10n.AnnouncementList.Error.title,
+                    message: L10n.AnnouncementList.Error.prefix(errorMessage),
                     onRetry: {
                         Task {
                             await viewModel.loadAnimals()
@@ -56,7 +56,7 @@ struct AnimalListView: View {
                         
                         // Animal cards
                         ForEach(viewModel.cardViewModels, id: \.id) { cardViewModel in
-                            AnimalCardView(viewModel: cardViewModel)
+                            AnnouncementCardView(viewModel: cardViewModel)
                         }
                         
                         // Bottom spacing for floating buttons
@@ -110,7 +110,7 @@ struct AnimalListView: View {
             /*
             FloatingActionButton(
                 model: FloatingActionButtonModel(
-                    title: L10n.AnimalList.Button.reportFound,
+                    title: L10n.AnnouncementList.Button.reportFound,
                     style: .secondary
                 ),
                 action: { viewModel.reportFound() }
@@ -121,7 +121,7 @@ struct AnimalListView: View {
             // Report a Missing Animal button (primary action)
             FloatingActionButton(
                 model: FloatingActionButtonModel(
-                    title: L10n.AnimalList.Button.reportMissing,
+                    title: L10n.AnnouncementList.Button.reportMissing,
                     style: .primary,
                     icon: "ic_report_missing_animal"
                 ),

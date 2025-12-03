@@ -1,25 +1,25 @@
 import Foundation
 
 /**
- * Actions that can be performed on an animal card.
+ * Actions that can be performed on an announcement card.
  * Used for communication between card ViewModel and parent ViewModel.
  */
-enum AnimalAction {
+enum AnnouncementAction {
     case selected(String)
     // Future actions can be added here (e.g., toggleFavorite, share)
 }
 
 /**
- * ViewModel for a single animal card.
+ * ViewModel for a single announcement card.
  * Manages card-specific state and handles user interactions.
  * Transforms raw Announcement data into presentation-ready properties.
  * Communicates with parent ViewModel via action callback.
  *
- * Note: Instance is owned and cached by AnimalListViewModel.
+ * Note: Instance is owned and cached by AnnouncementListViewModel.
  * Uses @ObservedObject in view (not @StateObject) since lifecycle is managed externally.
  */
 @MainActor
-class AnimalCardViewModel: ObservableObject {
+class AnnouncementCardViewModel: ObservableObject {
     // MARK: - Published Properties
     
     /// Card-specific UI state (e.g., for future animations, expanded state)
@@ -81,7 +81,7 @@ class AnimalCardViewModel: ObservableObject {
     // MARK: - Private Properties
     
     /// Callback to communicate actions to parent ViewModel
-    private let onAction: (AnimalAction) -> Void
+    private let onAction: (AnnouncementAction) -> Void
     
     // MARK: - Initialization
     
@@ -91,7 +91,7 @@ class AnimalCardViewModel: ObservableObject {
      * - Parameter announcement: Announcement entity to display
      * - Parameter onAction: Callback invoked when user performs actions on card
      */
-    init(announcement: Announcement, onAction: @escaping (AnimalAction) -> Void) {
+    init(announcement: Announcement, onAction: @escaping (AnnouncementAction) -> Void) {
         self.announcement = announcement
         self.onAction = onAction
     }

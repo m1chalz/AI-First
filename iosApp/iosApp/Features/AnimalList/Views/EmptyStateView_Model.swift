@@ -14,7 +14,7 @@ extension EmptyStateView {
         
         /// Default empty state message per FR-009
         static let `default` = Model(
-            message: L10n.AnimalList.EmptyState.message
+            message: L10n.AnnouncementList.EmptyState.message
         )
     }
 }
