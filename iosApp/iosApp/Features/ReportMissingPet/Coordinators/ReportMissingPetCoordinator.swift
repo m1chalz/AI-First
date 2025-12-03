@@ -92,10 +92,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
+        let toastScheduler = ToastScheduler()
         let viewModel = PhotoViewModel(
             flowState: flowState,
             photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
-            toastScheduler: ServiceContainer.shared.toastScheduler // [FIXIT][2] nie potrzebujemy w ServiceContainer toast schedulera, niech bedzie tworzony tutaj na miejscu
+            toastScheduler: toastScheduler
         )
         
         viewModel.onNext = { [weak self] in
@@ -126,11 +127,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        // Create AnimalDescriptionViewModel with flow state and location handler
+        let toastScheduler = ToastScheduler()
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: ServiceContainer.shared.locationPermissionHandler
-            //[FIXIT][3] też ma toasta, a nie używa ToastScheduler() a powinien
+            locationHandler: ServiceContainer.shared.locationPermissionHandler,
+            toastScheduler: toastScheduler
         )
         
         viewModel.onContinue = { [weak self] in

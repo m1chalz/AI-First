@@ -85,6 +85,7 @@ struct SummaryView: View {
             }
         }
         .background(Color.white.ignoresSafeArea())
+        .animation(.easeInOut(duration: 0.3), value: viewModel.showsCodeCopiedToast)
     }
     
     // MARK: - Subviews

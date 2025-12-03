@@ -9,6 +9,7 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
     private var flowState: ReportMissingPetFlowState!
     private var fakeLocationService: FakeLocationService!
     private var locationHandler: LocationPermissionHandler!
+    private var toastSchedulerFake: ToastSchedulerFake!
     private var viewModel: AnimalDescriptionViewModel!
     
     // MARK: - Setup / Teardown
@@ -25,14 +26,18 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
             notificationCenter: NotificationCenter()  // Isolated instance
         )
         
+        toastSchedulerFake = ToastSchedulerFake()
+        
         viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            toastScheduler: toastSchedulerFake
         )
     }
     
     override func tearDown() async throws {
         viewModel = nil
+        toastSchedulerFake = nil
         locationHandler = nil
         fakeLocationService = nil
         flowState = nil
@@ -70,7 +75,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // When - create ViewModel
         let vm = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            toastScheduler: ToastSchedulerFake()
         )
         
         // Then - loads existing data
@@ -174,6 +180,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertFalse(continueCallbackInvoked)
         XCTAssertTrue(viewModel.showToast)
         XCTAssertNotNil(viewModel.speciesErrorMessage)
+        // Verify ToastScheduler was called with 3 second duration
+        XCTAssertEqual(toastSchedulerFake.scheduledDurations, [3.0])
     }
     
     func testOnContinueTapped_whenMissingGender_shouldShowToastAndError() {
