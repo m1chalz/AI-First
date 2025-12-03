@@ -38,7 +38,7 @@ struct AnnouncementListView: View {
                     message: L10n.AnnouncementList.Error.prefix(errorMessage),
                     onRetry: {
                         Task {
-                            await viewModel.loadAnimals()
+                            await viewModel.loadAnnouncements()
                         }
                     },
                     accessibilityIdentifier: "animalList.error"

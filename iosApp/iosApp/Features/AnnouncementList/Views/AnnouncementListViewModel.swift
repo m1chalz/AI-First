@@ -80,7 +80,7 @@ class AnnouncementListViewModel: ObservableObject {
     private var hasShownPermissionAlert = false
     
     /// Active load task for cancellation support (User Story 3: T065)
-    /// Stores current loadAnimals task to enable cancellation when new load starts
+    /// Stores current loadAnnouncements task to enable cancellation when new load starts
     private var loadTask: Task<Void, Never>?
 
     // MARK: - Initialization
@@ -109,14 +109,14 @@ class AnnouncementListViewModel: ObservableObject {
                 // Cancel previous task before starting new one
                 self.loadTask?.cancel()
                 self.loadTask = Task {
-                    await self.loadAnimals()
+                    await self.loadAnnouncements()
                 }
             }
         }
         
         // Load animals on initialization
         loadTask = Task {
-            await loadAnimals()
+            await loadAnnouncements()
         }
     }
     
@@ -131,13 +131,13 @@ class AnnouncementListViewModel: ObservableObject {
     /**
      * Requests data refresh from external source (e.g., coordinator after report sent).
      * User Story 3 (T066): Called by coordinator when user successfully submits announcement.
-     * Encapsulates refresh logic without exposing internal loadAnimals() implementation.
+     * Encapsulates refresh logic without exposing internal loadAnnouncements() implementation.
      */
     func requestToRefreshData() {
         // User Story 3 (T065): Cancel previous load task before starting new one
         loadTask?.cancel()
         loadTask = Task { @MainActor in
-            await loadAnimals()
+            await loadAnnouncements()
         }
     }
     
@@ -165,7 +165,7 @@ class AnnouncementListViewModel: ObservableObject {
      *
      * Note: Calls repository directly per iOS MVVM-C architecture (no use case layer).
      */
-    func loadAnimals() async {
+    func loadAnnouncements() async {
         isLoading = true
         errorMessage = nil
         

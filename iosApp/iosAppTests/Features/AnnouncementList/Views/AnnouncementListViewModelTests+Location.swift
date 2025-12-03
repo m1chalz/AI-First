@@ -49,9 +49,9 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         )
     }
     
-    // MARK: - T019: loadAnimals fetches location when authorized
+    // MARK: - T019: loadAnnouncements fetches location when authorized
     
-    func test_loadAnimals_whenLocationPermissionGranted_shouldFetchLocation() async {
+    func test_loadAnnouncements_whenLocationPermissionGranted_shouldFetchLocation() async {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
@@ -74,16 +74,16 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let locationCalled = await fakeLocationService.requestLocationCalled
         XCTAssertTrue(locationCalled, "Should request location when permission granted")
     }
     
-    // MARK: - T020: loadAnimals queries with coordinates when location available
+    // MARK: - T020: loadAnnouncements queries with coordinates when location available
     
-    func test_loadAnimals_whenLocationAvailable_shouldQueryWithCoordinates() async {
+    func test_loadAnnouncements_whenLocationAvailable_shouldQueryWithCoordinates() async {
         // Given
         let expectedLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         await setLocationServiceStatus(.authorizedWhenInUse)
@@ -106,7 +106,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let passedLocation = fakeRepository.lastLocationParameter
@@ -119,9 +119,9 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         XCTAssertEqual(location.longitude, expectedLocation.longitude, accuracy: 0.0001)
     }
     
-    // MARK: - T021: loadAnimals queries without coordinates when location fetch fails
+    // MARK: - T021: loadAnnouncements queries without coordinates when location fetch fails
     
-    func test_loadAnimals_whenLocationFetchFails_shouldQueryWithoutCoordinates() async {
+    func test_loadAnnouncements_whenLocationFetchFails_shouldQueryWithoutCoordinates() async {
         // Given
         await setLocationServiceStatus(.authorizedWhenInUse)
         await setLocationServiceLocation(nil) // Simulate location fetch failure
@@ -143,14 +143,14 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let passedLocation = fakeRepository.lastLocationParameter
         XCTAssertNil(passedLocation, "Should pass nil location when fetch fails")
     }
     
-    func test_loadAnimals_whenPermissionDenied_shouldNotFetchLocation() async {
+    func test_loadAnnouncements_whenPermissionDenied_shouldNotFetchLocation() async {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.denied)
@@ -172,7 +172,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let locationCalled = await fakeLocationService.requestLocationCalled
@@ -180,7 +180,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         XCTAssertNil(fakeRepository.lastLocationParameter, "Should query without location when denied")
     }
     
-    func test_loadAnimals_whenPermissionNotDetermined_shouldQueryWithoutLocation() async {
+    func test_loadAnnouncements_whenPermissionNotDetermined_shouldQueryWithoutLocation() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await setLocationServiceLocation(nil)
@@ -202,7 +202,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertNil(fakeRepository.lastLocationParameter, "Should query without location when status notDetermined")
@@ -211,7 +211,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
     // MARK: - User Story 2 Tests: First-Time Permission Request
     
     // T033: Unit test LocationService.requestWhenInUseAuthorization with notDetermined status
-    func test_loadAnimals_whenPermissionNotDetermined_shouldRequestAuthorization() async {
+    func test_loadAnnouncements_whenPermissionNotDetermined_shouldRequestAuthorization() async {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.notDetermined)
@@ -221,7 +221,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let requestCalled = await fakeLocationService.requestAuthorizationCalled
@@ -229,7 +229,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
     }
     
     // T034: Unit test LocationService.requestWhenInUseAuthorization returns immediately when already authorized
-    func test_loadAnimals_whenAlreadyAuthorized_shouldNotRequestAuthorizationAgain() async {
+    func test_loadAnnouncements_whenAlreadyAuthorized_shouldNotRequestAuthorizationAgain() async {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.authorizedWhenInUse)
@@ -239,7 +239,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let requestCalled = await fakeLocationService.requestAuthorizationCalled
@@ -247,7 +247,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
     }
     
     // T035: Unit test LocationService.requestWhenInUseAuthorization returns immediately when already denied
-    func test_loadAnimals_whenAlreadyDenied_shouldNotRequestAuthorization() async {
+    func test_loadAnnouncements_whenAlreadyDenied_shouldNotRequestAuthorization() async {
         // Given
         await fakeLocationService.reset()
         await setLocationServiceStatus(.denied)
@@ -256,15 +256,15 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         let requestCalled = await fakeLocationService.requestAuthorizationCalled
         XCTAssertFalse(requestCalled, "Should not request authorization when already denied")
     }
     
-    // T036: Unit test AnnouncementListViewModel.loadAnimals requests permission when notDetermined
-    func test_loadAnimals_whenNotDetermined_shouldUpdatePermissionStatusAfterRequest() async {
+    // T036: Unit test AnnouncementListViewModel.loadAnnouncements requests permission when notDetermined
+    func test_loadAnnouncements_whenNotDetermined_shouldUpdatePermissionStatusAfterRequest() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
@@ -274,14 +274,14 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update permission status after user grants permission")
     }
     
     // T037: Unit test AnnouncementListViewModel handles user granting permission in alert
-    func test_loadAnimals_whenUserGrantsPermission_shouldFetchLocationAndQueryWithCoordinates() async {
+    func test_loadAnnouncements_whenUserGrantsPermission_shouldFetchLocationAndQueryWithCoordinates() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.authorizedWhenInUse)
@@ -292,7 +292,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update status to authorized")
@@ -302,7 +302,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
     }
     
     // T038: Unit test AnnouncementListViewModel handles user denying permission in alert
-    func test_loadAnimals_whenUserDeniesPermission_shouldQueryWithoutCoordinates() async {
+    func test_loadAnnouncements_whenUserDeniesPermission_shouldQueryWithoutCoordinates() async {
         // Given
         await setLocationServiceStatus(.notDetermined)
         await fakeLocationService.setAuthorizationAfterRequest(.denied)
@@ -311,7 +311,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertEqual(viewModel.locationPermissionStatus, .denied, "Should update status to denied")
@@ -367,7 +367,7 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
     }
     
     // T047: Unit test AnnouncementListViewModel shows custom popup for denied status
-    func test_loadAnimals_whenPermissionDenied_shouldShowCustomPopup() async {
+    func test_loadAnnouncements_whenPermissionDenied_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.denied)
         fakeRepository.stubbedAnnouncements = []
@@ -375,14 +375,14 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission denied")
     }
     
     // T048: Unit test AnnouncementListViewModel shows custom popup for restricted status
-    func test_loadAnimals_whenPermissionRestricted_shouldShowCustomPopup() async {
+    func test_loadAnnouncements_whenPermissionRestricted_shouldShowCustomPopup() async {
         // Given
         await setLocationServiceStatus(.restricted)
         fakeRepository.stubbedAnnouncements = []
@@ -390,14 +390,14 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then
         XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission restricted")
     }
     
     // T049: Unit test AnnouncementListViewModel.hasShownPermissionAlert prevents repeated popups in session
-    func test_loadAnimals_whenPopupAlreadyShown_shouldNotShowAgain() async {
+    func test_loadAnnouncements_whenPopupAlreadyShown_shouldNotShowAgain() async {
         // Given
         await setLocationServiceStatus(.denied)
         fakeRepository.stubbedAnnouncements = []
@@ -405,14 +405,14 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         viewModel = createViewModel()
         
         // When - First call
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         let firstCallShown = viewModel.showPermissionDeniedAlert
         
         // Reset alert state but keep session flag
         viewModel.showPermissionDeniedAlert = false
         
         // Second call
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         let secondCallShown = viewModel.showPermissionDeniedAlert
         
         // Then

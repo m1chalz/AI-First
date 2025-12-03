@@ -50,12 +50,12 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
     }
     
-    // MARK: - Test loadAnimals Success
+    // MARK: - Test loadAnnouncements Success
     
     /**
-     * Tests that loadAnimals updates @Published cardViewModels property on success.
+     * Tests that loadAnnouncements updates @Published cardViewModels property on success.
      */
-    func testLoadAnimals_whenRepositorySucceeds_shouldUpdateCardViewModels() async {
+    func testLoadAnnouncements_whenRepositorySucceeds_shouldUpdateCardViewModels() async {
         // Given - ViewModel with fake repository returning animals
         let fakeRepository = FakeAnnouncementRepository(
             animalCount: 16,
@@ -63,8 +63,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
 
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
 
         // Then - cardViewModels should be populated and state updated
         XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
@@ -74,9 +74,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
     }
 
     /**
-     * Tests that loadAnimals handles incorrect data with duplicated animal ids with no crash.
+     * Tests that loadAnnouncements handles incorrect data with duplicated animal ids with no crash.
      */
-    func testLoadAnimals_whenRepositorySucceeds_shouldNotCrashIfIdsRepeatButIgnoreDuplicates() async {
+    func testLoadAnnouncements_whenRepositorySucceeds_shouldNotCrashIfIdsRepeatButIgnoreDuplicates() async {
         // Given - ViewModel with fake repository returning animals
         let fakeRepository = FakeAnnouncementRepository(
             animalCount: 20,
@@ -84,8 +84,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
 
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
 
         // Then - cardViewModels should be populated and state updated
         XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
@@ -107,7 +107,7 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
         
-        // Manually set state to empty (before loadAnimals runs)
+        // Manually set state to empty (before loadAnnouncements runs)
         viewModel.cardViewModels = []
         viewModel.isLoading = false
         viewModel.errorMessage = nil
@@ -131,7 +131,7 @@ final class AnnouncementListViewModelTests: XCTestCase {
         let viewModel = createViewModel(repository: fakeRepository)
         
         // When - card ViewModels are loaded
-        await viewModel.loadAnimals()
+        await viewModel.loadAnnouncements()
         
         // Then - isEmpty should be false
         XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
@@ -215,8 +215,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
     
     // MARK: - API Integration Tests (User Story 1)
     
-    /// T016: Test AnnouncementListViewModel loadAnimals should update announcements publisher with API data
-    func testLoadAnimals_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
+    /// T016: Test AnnouncementListViewModel loadAnnouncements should update announcements publisher with API data
+    func testLoadAnnouncements_whenRepositoryReturnsApiData_shouldUpdateCardViewModels() async {
         // Given - ViewModel with repository that returns API-like data
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         let fakeRepository = FakeAnnouncementRepository(animalCount: 3, shouldFail: false)
@@ -226,8 +226,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: testLocation
         )
         
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
         
         // Then - cardViewModels should be populated with API data
         XCTAssertEqual(viewModel.cardViewModels.count, 3)
@@ -237,7 +237,7 @@ final class AnnouncementListViewModelTests: XCTestCase {
     }
     
     /// T017: Test AnnouncementListViewModel with location permissions should pass coordinates to repository
-    func testLoadAnimals_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
+    func testLoadAnnouncements_withLocationPermissionsGranted_shouldPassCoordinatesToRepository() async {
         // Given - ViewModel with authorized location
         let testLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
         let fakeRepository = FakeAnnouncementRepository(animalCount: 5, shouldFail: false)
@@ -247,8 +247,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: testLocation
         )
         
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
         
         // Then - currentLocation should be set
         XCTAssertNotNil(viewModel.currentLocation, "currentLocation should not be nil")
@@ -261,7 +261,7 @@ final class AnnouncementListViewModelTests: XCTestCase {
     }
     
     /// T018: Test AnnouncementListViewModel without location permissions should call repository without coordinates
-    func testLoadAnimals_withoutLocationPermissions_shouldCallRepositoryWithoutCoordinates() async {
+    func testLoadAnnouncements_withoutLocationPermissions_shouldCallRepositoryWithoutCoordinates() async {
         // Given - ViewModel with denied location permissions
         let fakeRepository = FakeAnnouncementRepository(animalCount: 10, shouldFail: false)
         let viewModel = createViewModel(
@@ -270,8 +270,8 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: nil
         )
         
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
         
         // Then - currentLocation should be nil, but animals still loaded
         XCTAssertNil(viewModel.currentLocation)
@@ -281,13 +281,13 @@ final class AnnouncementListViewModelTests: XCTestCase {
     }
     
     /// T019: Test AnnouncementListViewModel with repository error should set error state
-    func testLoadAnimals_whenRepositoryThrowsError_shouldSetErrorState() async {
+    func testLoadAnnouncements_whenRepositoryThrowsError_shouldSetErrorState() async {
         // Given - ViewModel with repository that fails
         let fakeRepository = FakeAnnouncementRepository(animalCount: 0, shouldFail: true)
         let viewModel = createViewModel(repository: fakeRepository)
         
-        // When - loadAnimals is called
-        await viewModel.loadAnimals()
+        // When - loadAnnouncements is called
+        await viewModel.loadAnnouncements()
         
         // Then - error state should be set
         XCTAssertNotNil(viewModel.errorMessage)
