@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { animalRepository } from '../services/animal-repository';
+import { useGeolocationContext } from '../contexts/GeolocationContext';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
@@ -8,32 +9,38 @@ interface UseAnimalListResult {
     error: string | null;
     isEmpty: boolean;
     loadAnimals: () => Promise<void>;
+    geolocationError: GeolocationPositionError | null;
 }
 
 export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingAnimals, setIsFetchingAnimals] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { state: geolocation } = useGeolocationContext();
     
+    const isLoading = geolocation.isLoading || isFetchingAnimals;
     const isEmpty = animals.length === 0 && !isLoading && error === null;
     
-    const loadAnimals = async () => {
-        setIsLoading(true);
+    const loadAnimals = useCallback(async () => {
+        setIsFetchingAnimals(true);
         setError(null);
         
         try {
-            const result = await animalRepository.getAnimals();
+            const result = await animalRepository.getAnimals(geolocation.coordinates);
             setAnimals(result);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
-            setIsLoading(false);
+            setIsFetchingAnimals(false);
         }
-    };
+    }, [geolocation.coordinates]);
     
+    // Load animals when geolocation finishes loading
     useEffect(() => {
-        loadAnimals();
-    }, []);
+        if (!geolocation.isLoading && geolocation.permissionCheckCompleted) {
+            loadAnimals();
+        }
+    }, [loadAnimals, geolocation.isLoading, geolocation.permissionCheckCompleted]);
     
     return {
         animals,
@@ -41,6 +48,7 @@ export function useAnimalList(): UseAnimalListResult {
         error,
         isEmpty,
         loadAnimals,
+        geolocationError: null
     };
 }
 

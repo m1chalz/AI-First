@@ -114,6 +114,26 @@ describe('AnimalRepository', () => {
       // Then: Should propagate network error
       await expect(underTest.getAnimals()).rejects.toThrow('Network error');
     });
+
+    it.each([
+      { lat: 52.2297, lng: 21.0122, description: 'positive coordinates' },
+      { lat: -33.8688, lng: 151.2093, description: 'negative coordinates' }
+    ])('should construct URL with $description', async ({ lat, lng }) => {
+      const mockAnimals: Animal[] = [];
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: mockAnimals })
+      } as Response);
+
+      // given: coordinates
+      // when: getAnimals is called
+      const result = await underTest.getAnimals({ lat, lng });
+
+      // then: URL contains exact values and range parameter
+      expect(result).toEqual(mockAnimals);
+      expect(window.fetch).toHaveBeenCalledWith(`http://localhost:3000/api/v1/announcements?lat=${lat}&lng=${lng}&range=15`);
+    });
   });
 
   describe('AnimalRepository.getPetById', () => {

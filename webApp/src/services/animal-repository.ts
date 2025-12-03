@@ -1,5 +1,6 @@
 import config from '../config/config';
 import type { Animal } from '../types/animal';
+import type { Coordinates } from '../types/location';
 
 interface BackendAnnouncementsResponse {
     data: Animal[];
@@ -7,8 +8,18 @@ interface BackendAnnouncementsResponse {
 
 export class AnimalRepository {
     
-    async getAnimals(): Promise<Animal[]> {
-        const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements`);
+    async getAnimals(coordinates: Coordinates | null = null): Promise<Animal[]> {
+        let url = `${config.apiBaseUrl}/api/v1/announcements`;
+        
+        if (coordinates) {
+            const params = new URLSearchParams();
+            params.append('lat', coordinates.lat.toFixed(4));
+            params.append('lng', coordinates.lng.toFixed(4));
+            params.append('range', '15');
+            url += `?${params.toString()}`;
+        }
+        
+        const response = await fetch(url);
         
         if (!response.ok) {
             throw new Error(`Failed to fetch animals: ${response.status} ${response.statusText}`);

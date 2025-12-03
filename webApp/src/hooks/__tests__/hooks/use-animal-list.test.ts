@@ -3,10 +3,21 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAnimalList } from '../../use-animal-list';
 import * as animalRepositoryModule from '../../../services/animal-repository';
 
-vi.mock('../../services/animal-repository', () => ({
+vi.mock('../../../services/animal-repository', () => ({
     animalRepository: {
         getAnimals: vi.fn()
     }
+}));
+
+vi.mock('../../../contexts/GeolocationContext', () => ({
+    useGeolocationContext: vi.fn(() => ({
+        state: {
+            coordinates: null,
+            error: null,
+            isLoading: false,
+            permissionCheckCompleted: true,
+        },
+    }))
 }));
 
 describe('useAnimalList', () => {
@@ -16,14 +27,14 @@ describe('useAnimalList', () => {
     });
     
     it('should initialize with empty state', () => {
-        // Given
+        // given
         const mockGetAnimals = vi.fn().mockResolvedValue([]);
         vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         expect(result.current.isLoading).toBe(true);
         expect(result.current.animals).toEqual([]);
         expect(result.current.error).toBeNull();
@@ -31,7 +42,7 @@ describe('useAnimalList', () => {
     });
     
     it('should update animals state when loadAnimals succeeds', async () => {
-        // Given
+        // given
         const mockAnimals = [
             { id: '1', petName: 'Fluffy', species: 'CAT', breed: 'Maine Coon', locationLatitude: 52.0, locationLongitude: 21.0, sex: 'MALE', status: 'MISSING', lastSeenDate: '2025-11-18', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
             { id: '2', petName: 'Rex', species: 'DOG', breed: 'German Shepherd', locationLatitude: 52.2, locationLongitude: 21.0, sex: 'FEMALE', status: 'MISSING', lastSeenDate: '2025-11-17', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
@@ -41,10 +52,10 @@ describe('useAnimalList', () => {
         const mockGetAnimals = vi.fn().mockResolvedValue(mockAnimals);
         vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
@@ -56,15 +67,15 @@ describe('useAnimalList', () => {
     });
     
     it('should set error state when loadAnimals fails', async () => {
-        // Given
+        // given
         const mockError = new Error('Network error');
         const mockGetAnimals = vi.fn().mockRejectedValue(mockError);
         vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
@@ -75,14 +86,14 @@ describe('useAnimalList', () => {
     });
     
     it('should return isEmpty true when no animals and no error', async () => {
-        // Given
+        // given
         const mockGetAnimals = vi.fn().mockResolvedValue([]);
         vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
@@ -91,4 +102,5 @@ describe('useAnimalList', () => {
         expect(result.current.animals).toEqual([]);
         expect(result.current.error).toBeNull();
     });
+
 });

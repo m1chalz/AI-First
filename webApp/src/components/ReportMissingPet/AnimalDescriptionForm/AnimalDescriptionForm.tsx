@@ -1,6 +1,7 @@
 import React from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
 import { GenderSelector } from './GenderSelector';
+import { useGeolocationContext } from '../../../contexts/GeolocationContext';
 import sharedStyles from '../ReportMissingPetLayout.module.css';
 import styles from './AnimalDescriptionForm.module.css';
 
@@ -11,6 +12,7 @@ export interface AnimalDescriptionFormProps {
     breed: string;
     sex: string;
     age: string;
+    petName: string;
     description: string;
     latitude: string;
     longitude: string;
@@ -26,6 +28,17 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
   onSubmit
 }) => {
   const today = new Date().toISOString().split('T')[0];
+  const { state } = useGeolocationContext();
+  const { isLoading, coordinates, error, permissionCheckCompleted } = state;
+
+  const isLocationPermissionDenied = error?.code === 1;
+
+  const handleRequestGpsPosition = () => {
+    if (coordinates) {
+      onFieldChange('latitude', coordinates.lat.toFixed(4));
+      onFieldChange('longitude', coordinates.lng.toFixed(4));
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
@@ -47,6 +60,18 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
             {formData.validationErrors.lastSeenDate}
           </span>
         )}
+      </div>
+
+      <div className={sharedStyles.inputGroup}>
+        <label htmlFor="petName" className={sharedStyles.label}>Animal name (optional)</label>
+        <input
+          id="petName"
+          type="text"
+          value={formData.petName}
+          onChange={(e) => onFieldChange('petName', e.target.value)}
+          className={sharedStyles.input}
+          data-testid="details.petName.input"
+        />
       </div>
 
       <div className={sharedStyles.inputGroup}>
@@ -102,11 +127,12 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       <div>
         <button
           type="button"
-          disabled
+          onClick={handleRequestGpsPosition}
+          disabled={isLoading || isLocationPermissionDenied || !permissionCheckCompleted}
           className={styles.gpsButton}
           data-testid="details.gpsButton.click"
         >
-          Request GPS position
+          {isLocationPermissionDenied ? 'Location not available' : !permissionCheckCompleted ? 'Checking permissions...' : isLoading ? 'Locating...' : 'Request GPS position'}
         </button>
       </div>
 
