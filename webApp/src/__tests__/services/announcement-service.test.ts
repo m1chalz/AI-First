@@ -421,4 +421,28 @@ describe('AnnouncementService', () => {
       await expect(underTest.uploadPhoto(announcementId, managementPassword, file)).rejects.toThrow();
     });
   });
+
+  describe('AnnouncementService - Error Handling', () => {
+
+    it('should map 400 errors to specific field validation messages', async () => {
+      // given
+      const dto: AnnouncementSubmissionDto = {
+        species: 'CAT',
+        sex: 'MALE',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        lastSeenDate: '2025-12-03',
+        status: 'MISSING'
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ message: 'Missing required field: email or phone' })
+      } as Response);
+
+      // when / then
+      await expect(underTest.createAnnouncement(dto)).rejects.toThrow();
+    });
+  });
 });

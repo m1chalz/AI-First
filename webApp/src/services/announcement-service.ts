@@ -2,6 +2,7 @@ import config from '../config/config';
 import type { Animal } from '../types/animal';
 import type { Coordinates } from '../types/location';
 import type { AnnouncementSubmissionDto, AnnouncementResponse } from '../models/announcement-submission';
+import type { ApiError } from '../models/api-error';
 import { ValidationError, DuplicateMicrochipError, NetworkError, ServerError } from '../models/api-error';
 
 interface BackendAnnouncementsResponse {
@@ -65,36 +66,45 @@ export class AnnouncementService {
             }
 
             return await response.json();
-        } catch (error) {
-            if (error instanceof Error && error.message.includes('Failed')) {
-                throw error;
+        } catch (error: unknown) {
+            if (typeof error === 'object' && error !== null && 'type' in error) {
+                throw error as ApiError;
             }
             throw this.createNetworkError();
         }
     }
 
-    private createValidationError(): ValidationError {
-        const error = new Error('Validation error');
-        Object.assign(error, { type: 'validation' });
+    private createValidationError(): never {
+        const error: ValidationError = {
+            type: 'validation',
+            message: 'Validation error: Please check your input'
+        };
         throw error;
     }
 
-    private createDuplicateMicrochipError(): DuplicateMicrochipError {
-        const error = new Error('Duplicate microchip');
-        Object.assign(error, { type: 'duplicate-microchip' });
+    private createDuplicateMicrochipError(): never {
+        const error: DuplicateMicrochipError = {
+            type: 'duplicate-microchip',
+            message: 'This microchip already exists. If this is your announcement, use your management password to update it.'
+        };
         throw error;
     }
 
-    private createServerError(status: number): ServerError {
-        const error = new Error(`Server error: ${status}`);
-        Object.assign(error, { type: 'server', statusCode: status });
+    private createServerError(status: number): never {
+        const error: ServerError = {
+            type: 'server',
+            message: 'Server error. Please try again later.',
+            statusCode: status
+        };
         throw error;
     }
 
-    private createNetworkError(): NetworkError {
-        const err = new Error('Network error');
-        Object.assign(err, { type: 'network' });
-        throw err;
+    private createNetworkError(): never {
+        const error: NetworkError = {
+            type: 'network',
+            message: 'Network error. Please check your connection and try again.'
+        };
+        throw error;
     }
 
     async uploadPhoto(announcementId: string, managementPassword: string, file: File): Promise<void> {

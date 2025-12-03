@@ -6,6 +6,7 @@ import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import { Toast } from '../Toast/Toast';
 import styles from './ReportMissingPetLayout.module.css';
 import { useEffect } from 'react';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
@@ -24,7 +25,7 @@ export function ContactScreen() {
     handleRewardChange,
     handleSubmit,
   } = useContactForm();
-  const { showToast } = useToast();
+  const { message, showToast } = useToast();
   const { isSubmitting, error, announcementId, managementPassword, submitAnnouncement } = useAnnouncementSubmission();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (error) {
-      showToast('Failed to submit announcement. Please try again.');
+      showToast(error.message || 'An error occurred. Please try again.');
     }
   }, [error, showToast]);
 
@@ -148,6 +149,8 @@ export function ContactScreen() {
         </button>
         </form>
       </div>
+
+      <Toast message={message} />
     </ReportMissingPetLayout>
   );
 }

@@ -29,14 +29,20 @@ export function useAnnouncementSubmission(): UseAnnouncementSubmissionResult {
       setManagementPassword(response.managementPassword);
 
       try {
-        await announcementService.uploadPhoto(response.id, response.managementPassword, flowState.photo!.file);
+        await announcementService.uploadPhoto(response.id, response.managementPassword, flowState.photo!.file); // photo is never null at this step
       } catch (uploadErr: unknown) {
-        const apiError = uploadErr as ApiError;
-        setError(apiError);
+        if (typeof uploadErr === 'object' && uploadErr !== null && 'type' in uploadErr) {
+          setError(uploadErr as ApiError);
+        } else {
+          setError({ type: 'network', message: 'Photo upload failed' });
+        }
       }
     } catch (err: unknown) {
-      const apiError = err as ApiError;
-      setError(apiError);
+      if (typeof err === 'object' && err !== null && 'type' in err) {
+        setError(err as ApiError);
+      } else {
+        setError({ type: 'network', message: 'Submission failed' });
+      }
       setAnnouncementId(null);
       setManagementPassword(null);
     } finally {
