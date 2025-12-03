@@ -242,42 +242,42 @@
 
 **Step 1: Analyze Figma Design and Create Tests**
 
-- [ ] T128 [P] [US3] RED: Add test to `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx`: `should render success icon/illustration as per Figma`
-- [ ] T129 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display success heading with correct text and styling`
-- [ ] T130 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display management password in styled card matching Figma design`
-- [ ] T131 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display copy password button/icon as per Figma`
-- [ ] T132 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display warning/info message about password importance`
-- [ ] T133 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display action buttons (e.g., "View Announcement", "Go to Homepage") as per Figma`
-- [ ] T134 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should have correct spacing and layout matching Figma specs`
-- [ ] T135 [US3] Run tests and verify new tests FAIL
+- [x] T128 [P] [US3] RED: Add test to `/webApp/src/components/ReportMissingPet/__tests__/SummaryScreen.test.tsx`: `should render success icon/illustration as per Figma`
+- [x] T129 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display success heading with correct text and styling`
+- [x] T130 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display management password in styled card matching Figma design`
+- [x] T131 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display copy password button/icon as per Figma`
+- [x] T132 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display warning/info message about password importance`
+- [x] T133 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should display action buttons (e.g., "View Announcement", "Go to Homepage") as per Figma`
+- [x] T134 [P] [US3] RED: Add test to `SummaryScreen.test.tsx`: `should have correct spacing and layout matching Figma specs`
+- [x] T135 [US3] Run tests and verify new tests FAIL
 
 **Step 2: Implement Figma Design (GREEN)**
 
-- [ ] T136 [US3] GREEN: Create `/webApp/src/components/ReportMissingPet/SummaryScreen.module.css` with styles matching Figma design
-- [ ] T137 [US3] GREEN: Update `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx`: Import CSS module
-- [ ] T138 [US3] GREEN: Add success icon/illustration component (check Figma for exact asset or icon)
-- [ ] T139 [US3] GREEN: Add success heading (e.g., "Announcement Created Successfully!") with Figma typography
-- [ ] T140 [US3] GREEN: Create password card component with Figma styling (background, border, border-radius, padding, shadow)
-- [ ] T141 [US3] GREEN: Style password text with monospace font, size, weight, and color from Figma
-- [ ] T142 [US3] GREEN: Add copy password button/functionality with icon (match Figma interaction)
-- [ ] T143 [US3] GREEN: Add warning/info message box with icon (⚠️ or ℹ️) and styled text from Figma
-- [ ] T144 [US3] GREEN: Add action buttons ("View Announcement", "Go to Homepage", etc.) with Figma button styles
-- [ ] T145 [US3] GREEN: Apply Figma spacing (margins, paddings) and layout (flexbox/grid) to match design
-- [ ] T146 [US3] GREEN: Ensure responsive design matches Figma breakpoints (mobile, tablet, desktop)
-- [ ] T147 [US3] Run SummaryScreen tests and verify ALL tests PASS
+- [x] T136 [US3] GREEN: Create `/webApp/src/components/ReportMissingPet/SummaryScreen.module.css` with styles matching Figma design
+- [x] T137 [US3] GREEN: Update `/webApp/src/components/ReportMissingPet/SummaryScreen.tsx`: Import CSS module
+- [x] T138 [US3] GREEN: Add success icon/illustration component (check Figma for exact asset or icon)
+- [x] T139 [US3] GREEN: Add success heading (e.g., "Announcement Created Successfully!") with Figma typography
+- [x] T140 [US3] GREEN: Create password card component with Figma styling (background, border, border-radius, padding, shadow)
+- [x] T141 [US3] GREEN: Style password text with monospace font, size, weight, and color from Figma
+- [x] T142 [US3] GREEN: Add copy password button/functionality with icon (match Figma interaction)
+- [x] T143 [US3] GREEN: Add warning/info message box with icon (⚠️ or ℹ️) and styled text from Figma
+- [x] T144 [US3] GREEN: Add action buttons ("View Announcement", "Go to Homepage", etc.) with Figma button styles
+- [x] T145 [US3] GREEN: Apply Figma spacing (margins, paddings) and layout (flexbox/grid) to match design
+- [x] T146 [US3] GREEN: Ensure responsive design matches Figma breakpoints (mobile, tablet, desktop)
+- [x] T147 [US3] Run SummaryScreen tests and verify ALL tests PASS
 
 **Step 3: Visual Verification and Polish**
 
-- [ ] T148 [US3] Run `npm test -- --coverage` to verify coverage maintained
-- [ ] T149 [US3] Run ESLint and fix any violations
-- [ ] T150 [US3] Manual test: Create announcement, compare summary screen side-by-side with Figma design
-- [ ] T151 [US3] Manual test: Verify typography (font family, sizes, weights, colors) matches Figma
-- [ ] T152 [US3] Manual test: Verify colors (backgrounds, borders, text) match Figma color palette
-- [ ] T153 [US3] Manual test: Verify spacing (margins, padding) matches Figma measurements
-- [ ] T154 [US3] Manual test: Verify copy password button works correctly
-- [ ] T155 [US3] Manual test: Test responsive design on mobile, tablet, and desktop viewports
-- [ ] T156 [US3] Manual test: Verify exit confirmation still works (beforeunload event)
-- [ ] T157 [US3] Take screenshot and compare pixel-perfect alignment with Figma export
+- [x] T148 [US3] Run `npm test -- --coverage` to verify coverage maintained
+- [x] T149 [US3] Run ESLint and fix any violations
+- [x] T150 [US3] Manual test: Create announcement, compare summary screen side-by-side with Figma design
+- [x] T151 [US3] Manual test: Verify typography (font family, sizes, weights, colors) matches Figma
+- [x] T152 [US3] Manual test: Verify colors (backgrounds, borders, text) match Figma color palette
+- [x] T153 [US3] Manual test: Verify spacing (margins, padding) matches Figma measurements
+- [x] T154 [US3] Manual test: Verify copy password button works correctly
+- [x] T155 [US3] Manual test: Test responsive design on mobile, tablet, and desktop viewports
+- [x] T156 [US3] Manual test: Verify exit confirmation still works (beforeunload event)
+- [x] T157 [US3] Take screenshot and compare pixel-perfect alignment with Figma export
 
 **Checkpoint**: User Story 3 complete - Summary screen matches Figma design specifications
 
