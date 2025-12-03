@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen
@@ -33,57 +34,93 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
     ) {
         composable<ReportMissingRoute.ChipNumber> { backStackEntry ->
             // Get parent entry for NavGraph-scoped state
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<NavRoute.ReportMissing>()
-            }
+            val parentEntry =
+                remember(backStackEntry) {
+                    navController.getBackStackEntry<NavRoute.ReportMissing>()
+                }
 
             // Shared flow state (NavGraph-scoped via parent ViewModel's SavedStateHandle alternative)
             // For now, get from Koin - scoped to parent entry
-            val flowState: ReportMissingFlowState = koinViewModel<FlowStateHolder>(
-                viewModelStoreOwner = parentEntry
-            ).flowState
+            val flowState: ReportMissingFlowState =
+                koinViewModel<FlowStateHolder>(
+                    viewModelStoreOwner = parentEntry,
+                ).flowState
 
             // Screen ViewModel with hybrid pattern: state holder + navigation callbacks
-            val viewModel: ChipNumberViewModel = koinViewModel {
-                parametersOf(
-                    flowState,
-                    { navController.navigate(ReportMissingRoute.Photo) { launchSingleTop = true } },  // onNavigateToPhoto
-                    { navController.popBackStack() },  // onExitFlow
-                )
-            }
+            val viewModel: ChipNumberViewModel =
+                koinViewModel {
+                    parametersOf(
+                        flowState,
+                        // onNavigateToPhoto
+                        {
+                            navController.navigate(
+                                ReportMissingRoute.Photo,
+                            ) { launchSingleTop = true }
+                        },
+                        // onExitFlow
+                        { navController.popBackStack() },
+                    )
+                }
 
             ChipNumberScreen(viewModel = viewModel)
         }
 
-        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
         composable<ReportMissingRoute.Photo> { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<NavRoute.ReportMissing>()
-            }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            PhotoScreen(viewModel = viewModel, navController = navController)
+            // Get parent entry for NavGraph-scoped state
+            val parentEntry =
+                remember(backStackEntry) {
+                    navController.getBackStackEntry<NavRoute.ReportMissing>()
+                }
+
+            // Shared flow state (NavGraph-scoped)
+            val flowState: ReportMissingFlowState =
+                koinViewModel<FlowStateHolder>(
+                    viewModelStoreOwner = parentEntry,
+                ).flowState
+
+            // Screen ViewModel with hybrid pattern: repository + state holder + navigation callbacks
+            val viewModel: PhotoViewModel =
+                koinViewModel {
+                    parametersOf(
+                        flowState,
+                        // onNavigateToDescription
+                        {
+                            navController.navigate(
+                                ReportMissingRoute.Description,
+                            ) { launchSingleTop = true }
+                        },
+                        // onNavigateBack
+                        { navController.popBackStack() },
+                    )
+                }
+
+            PhotoScreen(viewModel = viewModel)
         }
 
+        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
         composable<ReportMissingRoute.Description> { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<NavRoute.ReportMissing>()
-            }
+            val parentEntry =
+                remember(backStackEntry) {
+                    navController.getBackStackEntry<NavRoute.ReportMissing>()
+                }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
             DescriptionScreen(viewModel = viewModel, navController = navController)
         }
 
         composable<ReportMissingRoute.ContactDetails> { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<NavRoute.ReportMissing>()
-            }
+            val parentEntry =
+                remember(backStackEntry) {
+                    navController.getBackStackEntry<NavRoute.ReportMissing>()
+                }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
             ContactDetailsScreen(viewModel = viewModel, navController = navController)
         }
 
         composable<ReportMissingRoute.Summary> { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<NavRoute.ReportMissing>()
-            }
+            val parentEntry =
+                remember(backStackEntry) {
+                    navController.getBackStackEntry<NavRoute.ReportMissing>()
+                }
             val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
             SummaryScreen(viewModel = viewModel, navController = navController)
         }

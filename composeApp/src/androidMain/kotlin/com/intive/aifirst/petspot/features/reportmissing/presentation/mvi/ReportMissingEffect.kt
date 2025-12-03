@@ -21,4 +21,19 @@ sealed interface ReportMissingEffect {
      * Only handled by SummaryScreen after submission.
      */
     data object ExitFlow : ReportMissingEffect
+
+    /**
+     * Launch photo picker activity.
+     * Only handled by PhotoScreen.
+     */
+    data object LaunchPhotoPicker : ReportMissingEffect
+
+    /**
+     * Show toast message.
+     * Only handled by PhotoScreen for validation errors.
+     */
+    data class ShowToast(
+        val messageResId: Int,
+        val duration: Int,
+    ) : ReportMissingEffect
 }

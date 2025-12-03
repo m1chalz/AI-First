@@ -24,7 +24,6 @@ class ChipNumberViewModel(
     private val onNavigateToPhoto: () -> Unit,
     private val onExitFlow: () -> Unit,
 ) : ViewModel() {
-
     // Screen-specific state
     private val _state = MutableStateFlow(ChipNumberUiState.Initial)
     val state: StateFlow<ChipNumberUiState> = _state.asStateFlow()
@@ -53,8 +52,9 @@ class ChipNumberViewModel(
      * Does NOT save to shared state until Continue is clicked.
      */
     private fun handleUpdateChipNumber(value: String) {
-        val digits = MicrochipNumberFormatter.extractDigits(value)
-            .take(MicrochipNumberFormatter.MAX_DIGITS)
+        val digits =
+            MicrochipNumberFormatter.extractDigits(value)
+                .take(MicrochipNumberFormatter.MAX_DIGITS)
         _state.value = _state.value.copy(chipNumber = digits)
     }
 

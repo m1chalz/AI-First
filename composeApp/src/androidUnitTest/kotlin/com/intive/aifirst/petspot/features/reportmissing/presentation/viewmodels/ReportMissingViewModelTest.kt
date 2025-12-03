@@ -73,7 +73,7 @@ class ReportMissingViewModelTest {
                 val currentState = awaitItem()
                 assertEquals(
                     "content://photo/1",
-                    currentState.photoUri,
+                    currentState.photoAttachment.uri,
                     "Photo URI should be updated",
                 )
                 cancelAndIgnoreRemainingEvents()

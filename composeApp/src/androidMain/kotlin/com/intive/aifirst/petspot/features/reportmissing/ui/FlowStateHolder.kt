@@ -5,7 +5,7 @@ import com.intive.aifirst.petspot.features.reportmissing.presentation.state.Repo
 
 /**
  * Simple ViewModel wrapper to scope ReportMissingFlowState to the NavGraph.
- * 
+ *
  * This ViewModel exists solely to provide NavGraph lifecycle scoping for the flow state.
  * It doesn't contain any business logic - that's handled by screen-specific ViewModels.
  *
@@ -14,4 +14,3 @@ import com.intive.aifirst.petspot.features.reportmissing.presentation.state.Repo
 class FlowStateHolder : ViewModel() {
     val flowState = ReportMissingFlowState()
 }
-

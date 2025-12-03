@@ -10,7 +10,6 @@ import androidx.compose.ui.text.input.VisualTransformation
  * Format: 00000-00000-00000 (hyphens at positions 6 and 12)
  */
 object MicrochipNumberFormatter {
-
     const val MAX_DIGITS = 15
 
     /**
@@ -46,12 +45,11 @@ object MicrochipNumberFormatter {
  * Raw digits stored in state; formatted display shown to user.
  */
 class MicrochipVisualTransformation : VisualTransformation {
-
     override fun filter(text: AnnotatedString): TransformedText {
         val formatted = MicrochipNumberFormatter.format(text.text)
         return TransformedText(
             AnnotatedString(formatted),
-            MicrochipOffsetMapping(text.text.length)
+            MicrochipOffsetMapping(text.text.length),
         )
     }
 }
@@ -61,13 +59,12 @@ class MicrochipVisualTransformation : VisualTransformation {
  * Handles hyphen insertion at positions 5 and 10.
  */
 private class MicrochipOffsetMapping(private val originalLength: Int) : OffsetMapping {
-
     override fun originalToTransformed(offset: Int): Int {
         // Add 1 for each hyphen before this position
         return when {
             offset <= 5 -> offset
-            offset <= 10 -> offset + 1  // After first hyphen
-            else -> offset + 2           // After second hyphen
+            offset <= 10 -> offset + 1 // After first hyphen
+            else -> offset + 2 // After second hyphen
         }
     }
 
@@ -75,9 +72,8 @@ private class MicrochipOffsetMapping(private val originalLength: Int) : OffsetMa
         // Subtract hyphens from position
         return when {
             offset <= 5 -> offset
-            offset <= 11 -> offset - 1   // Account for first hyphen
-            else -> offset - 2            // Account for both hyphens
+            offset <= 11 -> offset - 1 // Account for first hyphen
+            else -> offset - 2 // Account for both hyphens
         }.coerceIn(0, originalLength)
     }
 }
-

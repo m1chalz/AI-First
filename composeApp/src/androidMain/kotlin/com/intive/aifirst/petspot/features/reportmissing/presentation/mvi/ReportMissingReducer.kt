@@ -23,7 +23,43 @@ object ReportMissingReducer {
                 currentState.copy(chipNumber = intent.value)
 
             is ReportMissingIntent.UpdatePhotoUri ->
-                currentState.copy(photoUri = intent.uri)
+                currentState.copy(
+                    photoAttachment =
+                        currentState.photoAttachment.copy(
+                            uri = intent.uri,
+                            status = if (intent.uri != null) PhotoStatus.CONFIRMED else PhotoStatus.EMPTY,
+                        ),
+                )
+
+            // Photo intents
+            is ReportMissingIntent.PhotoSelected ->
+                currentState.copy(
+                    photoAttachment =
+                        currentState.photoAttachment.copy(
+                            uri = intent.uri,
+                            status = PhotoStatus.LOADING,
+                        ),
+                )
+
+            is ReportMissingIntent.PhotoMetadataLoaded ->
+                currentState.copy(
+                    photoAttachment =
+                        PhotoAttachmentState(
+                            uri = intent.uri,
+                            filename = intent.filename,
+                            sizeBytes = intent.sizeBytes,
+                            status = PhotoStatus.CONFIRMED,
+                        ),
+                )
+
+            is ReportMissingIntent.PhotoLoadFailed ->
+                currentState.copy(photoAttachment = PhotoAttachmentState.Empty)
+
+            is ReportMissingIntent.RemovePhoto ->
+                currentState.copy(photoAttachment = PhotoAttachmentState.Empty)
+
+            is ReportMissingIntent.PhotoPickerCancelled ->
+                currentState // Keep current state
 
             is ReportMissingIntent.UpdateDescription ->
                 currentState.copy(description = intent.value)
@@ -34,10 +70,11 @@ object ReportMissingReducer {
             is ReportMissingIntent.UpdateContactPhone ->
                 currentState.copy(contactPhone = intent.value)
 
-            // Navigation intents don't modify state - they emit effects
+            // Navigation and side-effect intents don't modify state
             is ReportMissingIntent.NavigateNext,
             is ReportMissingIntent.NavigateBack,
             is ReportMissingIntent.Submit,
+            is ReportMissingIntent.OpenPhotoPicker,
             -> currentState
         }
     }

@@ -90,10 +90,10 @@ fun ChipNumberContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Colors matching Figma design
-            val primaryBlue = Color(0xFF155DFC)       // Button and focused state
-            val borderGray = Color(0xFFD1D5DC)        // Unfocused border per Figma
-            val placeholderGray = Color(0xFF9CA3AF)   // Placeholder text
-            val labelGray = Color(0xFF364153)         // Label text
+            val primaryBlue = Color(0xFF155DFC) // Button and focused state
+            val borderGray = Color(0xFFD1D5DC) // Unfocused border per Figma
+            val placeholderGray = Color(0xFF9CA3AF) // Placeholder text
+            val labelGray = Color(0xFF364153) // Label text
 
             // Label above field (matching Figma - static, not floating)
             Text(
@@ -116,13 +116,14 @@ fun ChipNumberContent(
                 visualTransformation = MicrochipVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    // Focused state - primary blue
-                    focusedBorderColor = primaryBlue,
-                    cursorColor = primaryBlue,
-                    // Unfocused state - gray per Figma
-                    unfocusedBorderColor = borderGray,
-                ),
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        // Focused state - primary blue
+                        focusedBorderColor = primaryBlue,
+                        cursorColor = primaryBlue,
+                        // Unfocused state - gray per Figma
+                        unfocusedBorderColor = borderGray,
+                    ),
             )
         }
 

@@ -88,38 +88,59 @@ public class ReportMissingPetScreen {
     // ========================================
     
     /**
-     * Browse button that opens SwiftUI PhotosPicker.
+     * Browse button that opens photo picker.
+     * Android: testTag("animalPhoto.browseButton")
+     * iOS: accessibilityIdentifier("animalPhoto.browseButton")
      */
-    @AndroidFindBy(accessibility = "animalPhoto.browse")
-    @iOSXCUITFindBy(id = "animalPhoto.browse")
+    @AndroidFindBy(accessibility = "animalPhoto.browseButton")
+    @iOSXCUITFindBy(id = "animalPhoto.browseButton")
     private WebElement photoBrowseButton;
     
     /**
      * Continue button on photo screen (enabled once attachment confirmed).
+     * Android: testTag("animalPhoto.continue")
+     * iOS: accessibilityIdentifier("animalPhoto.continue")
      */
     @AndroidFindBy(accessibility = "animalPhoto.continue")
     @iOSXCUITFindBy(id = "animalPhoto.continue")
     private WebElement photoContinueButton;
     
-    @AndroidFindBy(accessibility = "animalPhoto.remove")
-    @iOSXCUITFindBy(id = "animalPhoto.remove")
+    /**
+     * Remove button (X) to clear selected photo.
+     * Android: testTag("animalPhoto.removeButton")
+     * iOS: accessibilityIdentifier("animalPhoto.removeButton")
+     */
+    @AndroidFindBy(accessibility = "animalPhoto.removeButton")
+    @iOSXCUITFindBy(id = "animalPhoto.removeButton")
     private WebElement photoRemoveButton;
     
-    @AndroidFindBy(accessibility = "animalPhoto.confirmationCard")
-    @iOSXCUITFindBy(id = "animalPhoto.confirmationCard")
-    private WebElement confirmationCard;
+    /**
+     * Photo thumbnail image in confirmation card.
+     * Android: testTag("animalPhoto.thumbnail")
+     * iOS: accessibilityIdentifier("animalPhoto.thumbnail")
+     */
+    @AndroidFindBy(accessibility = "animalPhoto.thumbnail")
+    @iOSXCUITFindBy(id = "animalPhoto.thumbnail")
+    private WebElement photoThumbnail;
     
-    @AndroidFindBy(accessibility = "animalPhoto.toast")
-    @iOSXCUITFindBy(id = "animalPhoto.toast")
-    private WebElement mandatoryToast;
+    /**
+     * Filename text in confirmation card.
+     * Android: testTag("animalPhoto.filename")
+     * iOS: accessibilityIdentifier("animalPhoto.filename")
+     */
+    @AndroidFindBy(accessibility = "animalPhoto.filename")
+    @iOSXCUITFindBy(id = "animalPhoto.filename")
+    private WebElement photoFilename;
     
-    @AndroidFindBy(accessibility = "animalPhoto.debug.cancel")
-    @iOSXCUITFindBy(id = "animalPhoto.debug.cancel")
-    private WebElement debugCancelButton;
+    /**
+     * File size text in confirmation card.
+     * Android: testTag("animalPhoto.fileSize")
+     * iOS: accessibilityIdentifier("animalPhoto.fileSize")
+     */
+    @AndroidFindBy(accessibility = "animalPhoto.fileSize")
+    @iOSXCUITFindBy(id = "animalPhoto.fileSize")
+    private WebElement photoFileSize;
     
-    @AndroidFindBy(accessibility = "animalPhoto.debug.fail")
-    @iOSXCUITFindBy(id = "animalPhoto.debug.fail")
-    private WebElement debugFailButton;
     
     // ========================================
     // STEP 3: DESCRIPTION SCREEN (3/4)
@@ -324,56 +345,101 @@ public class ReportMissingPetScreen {
         photoBrowseButton.click();
     }
     
+    /**
+     * Select the first photo from the photo picker.
+     * Platform-specific implementation:
+     * - iOS: Selects first cell from Photos picker
+     * - Android: Selects first image from Photo Picker or GetContent
+     */
     public void selectFirstPhotoFromPicker() {
-        if (!isIosPlatform()) {
-            return;
-        }
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_WAIT_TIMEOUT));
-        WebElement firstCell = wait.until(
-            ExpectedConditions.elementToBeClickable(MobileBy.iOSClassChain("**/XCUIElementTypeCell[1]"))
-        );
-        firstCell.click();
-        waitForElement(confirmationCard);
+        
+        if (isIosPlatform()) {
+            // iOS: Select first cell from PHPicker
+            WebElement firstCell = wait.until(
+                ExpectedConditions.elementToBeClickable(MobileBy.iOSClassChain("**/XCUIElementTypeCell[1]"))
+            );
+            firstCell.click();
+        } else {
+            // Android: Select first image from Photo Picker
+            // Photo Picker shows images in a grid - select first available
+            try {
+                WebElement firstImage = wait.until(
+                    ExpectedConditions.elementToBeClickable(
+                        By.xpath("//android.widget.ImageView[contains(@content-desc, 'Photo') or @clickable='true'][1]"))
+                );
+                firstImage.click();
+            } catch (Exception e) {
+                // Fallback for GetContent picker
+                WebElement firstItem = wait.until(
+                    ExpectedConditions.elementToBeClickable(
+                        By.xpath("//android.widget.FrameLayout[@clickable='true'][1]"))
+                );
+                firstItem.click();
+            }
+        }
+        
+        // Wait for confirmation card to appear
+        waitForElement(photoThumbnail);
     }
     
+    /**
+     * Check if confirmation card is displayed by verifying thumbnail is visible.
+     */
     public boolean isConfirmationCardDisplayed() {
         try {
-            return confirmationCard.isDisplayed();
+            return photoThumbnail.isDisplayed();
         } catch (Exception e) {
             return false;
         }
     }
     
+    /**
+     * Get filename text from confirmation card.
+     */
     public String getConfirmationCardText() {
         try {
-            waitForElement(confirmationCard);
-            return confirmationCard.getText();
+            waitForElement(photoFilename);
+            return photoFilename.getText();
         } catch (Exception e) {
             return "";
         }
     }
     
+    /**
+     * Get file size text from confirmation card.
+     */
+    public String getFileSizeText() {
+        try {
+            waitForElement(photoFileSize);
+            return photoFileSize.getText();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+    /**
+     * Tap remove button to clear selected photo.
+     */
     public void tapRemovePhotoButton() {
         waitForElement(photoRemoveButton);
         photoRemoveButton.click();
     }
     
+    /**
+     * Check if mandatory toast is visible (via platform-specific toast detection).
+     * Note: Android toasts are system-level and may require special handling.
+     */
     public boolean isMandatoryToastVisible() {
         try {
-            return mandatoryToast.isDisplayed();
+            // For Android, toasts are system-level - use XPath to find toast container
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+            WebElement toast = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[contains(@text, 'Photo') or contains(@text, 'photo')]")));
+            return toast != null;
         } catch (Exception e) {
             return false;
         }
-    }
-    
-    public void tapDebugCancelButton() {
-        waitForElement(debugCancelButton);
-        debugCancelButton.click();
-    }
-    
-    public void tapDebugFailButton() {
-        waitForElement(debugFailButton);
-        debugFailButton.click();
     }
     
     /**

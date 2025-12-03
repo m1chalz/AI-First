@@ -5,7 +5,6 @@ package com.intive.aifirst.petspot.features.reportmissing.presentation.mvi
  * Represents all possible user actions on this screen.
  */
 sealed interface ChipNumberUserIntent {
-
     /**
      * User typed/edited the microchip number field.
      * @param value Raw input from TextField (may contain non-digits)
@@ -24,4 +23,3 @@ sealed interface ChipNumberUserIntent {
      */
     data object BackClicked : ChipNumberUserIntent
 }
-
