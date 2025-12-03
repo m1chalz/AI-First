@@ -12,7 +12,7 @@ import { FlowStep } from '../../models/ReportMissingPetFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();
-  const { flowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useReportMissingPetFlow();
   const {
     phone,
     email,
@@ -57,7 +57,9 @@ export function ContactScreen() {
       }
       return;
     }
-    await submitAnnouncement(flowState);
+    const updatedFlowState = { ...flowState, email, phone, reward };
+    updateFlowState({ email, phone, reward });
+    await submitAnnouncement(updatedFlowState);
   };
 
   useBrowserBackHandler(handleBack);
