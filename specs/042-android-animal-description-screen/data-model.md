@@ -34,20 +34,18 @@ data class SpeciesTaxonomyOption(
 
 object SpeciesTaxonomy {
     val species: List<SpeciesTaxonomyOption> = listOf(
-        SpeciesTaxonomyOption("dog", "Dog"),
-        SpeciesTaxonomyOption("cat", "Cat"),
-        SpeciesTaxonomyOption("bird", "Bird"),
-        SpeciesTaxonomyOption("rabbit", "Rabbit"),
-        SpeciesTaxonomyOption("rodent", "Rodent"),
-        SpeciesTaxonomyOption("reptile", "Reptile"),
-        SpeciesTaxonomyOption("other", "Other"),
+        SpeciesTaxonomyOption("DOG", "Dog"),
+        SpeciesTaxonomyOption("CAT", "Cat"),
+        SpeciesTaxonomyOption("BIRD", "Bird"),
+        SpeciesTaxonomyOption("RABBIT", "Rabbit"),
+        SpeciesTaxonomyOption("OTHER", "Other"),
     )
 }
 ```
 
-**Purpose**: Bundled static list of animal species aligned with iOS platform (`AnimalSpecies.swift`). No network dependency.
+**Purpose**: Bundled static list of animal species aligned with Web platform (`types/animal.ts`). No network dependency.
 
-**Note**: Web platform is missing `rodent` and `reptile` - should be addressed in a separate Web spec to maintain cross-platform consistency.
+**Cross-platform alignment**: Uses uppercase IDs to match Web's `ANIMAL_SPECIES` constant and backend API format.
 
 ### 3. FlowData Extension (Shared State)
 
