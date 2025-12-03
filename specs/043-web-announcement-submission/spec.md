@@ -5,6 +5,14 @@
 **Status**: Draft  
 **Input**: User description: "integracja formularza w aplikacji webowej z backendem. po kliknięiu continue na ekranie z danymi kontaktowymi, aplikacja ma utworzyć ogłoszenie przez wywołanie endpointu POST /api/v1/announcements a następnie zuploadowć zdjęcie przez POST /api/v1/announcements/:id/photo. Po wszystkim przechodzimy do ekranu z podsumowaniem i wyświeltamy użytkownikowi management password."
 
+## Clarifications
+
+### Session 2025-12-03
+
+- Q: When a user tries to submit an announcement with a microchip number that already exists in the system, how should the application respond? → A: Block submission with error message and guidance: "This microchip already exists. If this is your announcement, use your management password to update it."
+- Q: When a user closes their browser (or tab) while the announcement submission is in progress, what should happen when they return? → A: Submission is lost; user must start the entire flow from the beginning
+- Q: When a user provides only email OR only phone (but not both), should the system accept this or require both? → A: Accept submission with only one contact method (either email or phone is sufficient)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Submit Missing Pet Announcement (Priority: P1)
@@ -58,11 +66,9 @@ After successfully creating an announcement, users receive their management pass
 
 ### Edge Cases
 
-- How does the system handle duplicate microchip numbers (if the backend enforces uniqueness)?
-- What happens if the user closes their browser during submission?
-- How does the system handle very large photo files that might timeout during upload?
-- What happens if the user tries to submit without required location data (latitude/longitude)?
-- How does the system handle submissions with only email or only phone (at least one contact method required)?
+- **Duplicate microchip numbers**: System blocks submission and displays error message: "This microchip already exists. If this is your announcement, use your management password to update it."
+- **Browser closure during submission**: If user closes browser/tab during submission, all progress is lost and they must restart the flow from the beginning.
+- **Single contact method**: System accepts submissions with only email OR only phone (at least one is required, both are not mandatory).
 
 ## Requirements *(mandatory)*
 
@@ -82,6 +88,7 @@ After successfully creating an announcement, users receive their management pass
 - **FR-012**: System MUST validate that at least one contact method (phone or email) is provided before allowing submission
 - **FR-013**: System MUST validate that location coordinates (latitude/longitude) are available before allowing submission
 - **FR-014**: System MUST include the announcement ID returned from the creation endpoint when uploading the photo
+- **FR-015**: System MUST block submission and display an error message when backend returns duplicate microchip number error, instructing user to use their management password if this is their announcement
 
 ### Key Entities
 
