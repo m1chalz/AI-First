@@ -1,6 +1,7 @@
 package com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -40,6 +45,7 @@ private const val MAX_PHONE_DIGITS = 11
  * - navigationBarsPadding() on Continue button
  *
  * @param state Current UI state
+ * @param snackbarHostState State for displaying Snackbar messages (optional for previews)
  * @param modifier Modifier for the component
  * @param onPhoneChange Callback when phone changes
  * @param onEmailChange Callback when email changes
@@ -50,6 +56,7 @@ private const val MAX_PHONE_DIGITS = 11
 @Composable
 fun ContactDetailsContent(
     state: OwnerDetailsUiState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     modifier: Modifier = Modifier,
     onPhoneChange: (String) -> Unit = {},
     onEmailChange: (String) -> Unit = {},
@@ -57,114 +64,127 @@ fun ContactDetailsContent(
     onBackClick: () -> Unit = {},
     onContinueClick: () -> Unit = {},
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            .statusBarsPadding()
             .testTag("ownersDetails.content"),
     ) {
-        // Header with back button, title, and progress indicator
-        StepHeader(
-            title = "Owner's details",
-            currentStep = 4,
-            onBackClick = if (state.isSubmitting) { {} } else onBackClick,
-        )
-
-        // Scrollable content
         Column(
             modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .fillMaxSize()
+                .statusBarsPadding(),
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Your contact info",
-                style = MaterialTheme.typography.headlineSmall,
-                color = ReportMissingColors.TitleColor,
-                modifier = Modifier.testTag("ownersDetails.title"),
+            // Header with back button, title, and progress indicator
+            StepHeader(
+                title = "Owner's details",
+                currentStep = 4,
+                onBackClick = if (state.isSubmitting) { {} } else onBackClick,
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Scrollable content
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Add your contact information's and potential reward.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = ReportMissingColors.SubtitleColor,
-                modifier = Modifier.testTag("ownersDetails.subtitle"),
+                Text(
+                    text = "Your contact info",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = ReportMissingColors.TitleColor,
+                    modifier = Modifier.testTag("ownersDetails.title"),
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Add your contact information's and potential reward.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = ReportMissingColors.SubtitleColor,
+                    modifier = Modifier.testTag("ownersDetails.subtitle"),
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Phone field with input filtering
+                FormField(
+                    label = "Phone number",
+                    errorMessage = state.phoneError,
+                    modifier = Modifier.testTag("ownersDetails.phoneInput"),
+                ) {
+                    StyledOutlinedTextField(
+                        value = state.phone,
+                        onValueChange = { newValue ->
+                            // Filter to only allow valid phone characters: digits, +, spaces, dashes, parentheses
+                            val filtered = newValue.filter { it.isDigit() || it in "+- ()" }
+                            // Count digits only (excluding formatting characters)
+                            val digitCount = filtered.count { it.isDigit() }
+                            // Allow change only if digit count <= 11
+                            if (digitCount <= MAX_PHONE_DIGITS) {
+                                onPhoneChange(filtered)
+                            }
+                        },
+                        placeholder = "Enter phone number...",
+                        isError = state.phoneError != null,
+                        enabled = !state.isSubmitting,
+                        keyboardType = KeyboardType.Phone,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Email field
+                FormField(
+                    label = "Email",
+                    errorMessage = state.emailError,
+                    modifier = Modifier.testTag("ownersDetails.emailInput"),
+                ) {
+                    StyledOutlinedTextField(
+                        value = state.email,
+                        onValueChange = onEmailChange,
+                        placeholder = "username@example.com",
+                        isError = state.emailError != null,
+                        enabled = !state.isSubmitting,
+                        keyboardType = KeyboardType.Email,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Reward field (optional)
+                FormField(
+                    label = "Reward for the finder (optional)",
+                    modifier = Modifier.testTag("ownersDetails.rewardInput"),
+                ) {
+                    StyledOutlinedTextField(
+                        value = state.reward,
+                        onValueChange = onRewardChange,
+                        placeholder = "Enter amount...",
+                        enabled = !state.isSubmitting,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Continue button (shared component with loading state support)
+            ContinueButton(
+                onClick = onContinueClick,
+                enabled = state.canSubmit,
+                isLoading = state.isSubmitting,
+                testTag = "ownersDetails.continueButton",
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Phone field with input filtering
-            FormField(
-                label = "Phone number",
-                errorMessage = state.phoneError,
-                modifier = Modifier.testTag("ownersDetails.phoneInput"),
-            ) {
-                StyledOutlinedTextField(
-                    value = state.phone,
-                    onValueChange = { newValue ->
-                        // Filter to only allow valid phone characters: digits, +, spaces, dashes, parentheses
-                        val filtered = newValue.filter { it.isDigit() || it in "+- ()" }
-                        // Count digits only (excluding formatting characters)
-                        val digitCount = filtered.count { it.isDigit() }
-                        // Allow change only if digit count <= 11
-                        if (digitCount <= MAX_PHONE_DIGITS) {
-                            onPhoneChange(filtered)
-                        }
-                    },
-                    placeholder = "Enter phone number...",
-                    isError = state.phoneError != null,
-                    enabled = !state.isSubmitting,
-                    keyboardType = KeyboardType.Phone,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Email field
-            FormField(
-                label = "Email",
-                errorMessage = state.emailError,
-                modifier = Modifier.testTag("ownersDetails.emailInput"),
-            ) {
-                StyledOutlinedTextField(
-                    value = state.email,
-                    onValueChange = onEmailChange,
-                    placeholder = "username@example.com",
-                    isError = state.emailError != null,
-                    enabled = !state.isSubmitting,
-                    keyboardType = KeyboardType.Email,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Reward field (optional)
-            FormField(
-                label = "Reward for the finder (optional)",
-                modifier = Modifier.testTag("ownersDetails.rewardInput"),
-            ) {
-                StyledOutlinedTextField(
-                    value = state.reward,
-                    onValueChange = onRewardChange,
-                    placeholder = "Enter amount...",
-                    enabled = !state.isSubmitting,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
 
-        // Continue button (shared component with loading state support)
-        ContinueButton(
-            onClick = onContinueClick,
-            enabled = state.canSubmit,
-            isLoading = state.isSubmitting,
-            testTag = "ownersDetails.continueButton",
+        // Snackbar for error messages with Retry action
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .testTag("ownersDetails.snackbar"),
         )
     }
 }
