@@ -21,7 +21,7 @@ describe('SummaryScreen - Figma Design', () => {
 
     // then
     const heading = screen.getByText('Report created');
-    expect(heading).toBeInTheDocument();
+    expect(heading).toBeDefined();
   });
 
   it('should display description text about report creation', () => {
@@ -29,8 +29,8 @@ describe('SummaryScreen - Figma Design', () => {
     renderWithRouter(<SummaryScreen />);
 
     // then
-    expect(screen.getByText(/Your report has been created/i)).toBeInTheDocument();
-    expect(screen.getByText(/missing animal has been added to the database/i)).toBeInTheDocument();
+    expect(screen.getByText(/Your report has been created/i)).toBeDefined();
+    expect(screen.getByText(/missing animal has been added to the database/i)).toBeDefined();
   });
 
   it('should display Close button', () => {
@@ -39,7 +39,7 @@ describe('SummaryScreen - Figma Design', () => {
 
     // then
     const closeButton = screen.getByRole('button', { name: /Close/i });
-    expect(closeButton).toBeInTheDocument();
+    expect(closeButton).toBeDefined();
   });
 
   it('should have correct layout with proper spacing', () => {
@@ -48,9 +48,9 @@ describe('SummaryScreen - Figma Design', () => {
 
     // then
     const heading = screen.getByText('Report created');
-    expect(heading).toBeInTheDocument();
+    expect(heading).toBeDefined();
     const closeButton = screen.getByRole('button', { name: /Close/i });
-    expect(closeButton).toBeInTheDocument();
+    expect(closeButton).toBeDefined();
   });
 
   it('should display message about code being sent to email', () => {
@@ -58,7 +58,7 @@ describe('SummaryScreen - Figma Design', () => {
     renderWithRouter(<SummaryScreen />);
 
     // then
-    expect(screen.getByText(/This code has also been sent to your email address/i)).toBeInTheDocument();
+    expect(screen.getByText(/This code has also been sent to your email address/i)).toBeDefined();
   });
 
   it('should not render password card when managementPassword is missing', () => {
@@ -66,6 +66,6 @@ describe('SummaryScreen - Figma Design', () => {
     renderWithRouter(<SummaryScreen />);
 
     // then - password text should not be in document when state is not passed
-    expect(screen.queryByTestId('summary.password.text')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('summary.password.text')).toBeNull();
   });
 });
