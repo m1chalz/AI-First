@@ -12,6 +12,11 @@ export class AnimalDescriptionScreen {
         return $('~animalDescription.datePicker.tap');
     }
     
+    // Pet name text field (optional - US1: 046-ios-pet-name-field)
+    get petNameTextField() {
+        return $('~animalDescription.petNameTextField.input');
+    }
+    
     // Species dropdown
     get speciesDropdown() {
         return $('~animalDescription.speciesDropdown.tap');
@@ -65,6 +70,14 @@ export class AnimalDescriptionScreen {
     async selectDate(date: Date): Promise<void> {
         await this.datePicker.click();
         // Platform-specific date selection logic will be added in E2E test implementation
+    }
+    
+    async enterPetName(petName: string): Promise<void> {
+        await this.petNameTextField.setValue(petName);
+    }
+    
+    async getPetNameValue(): Promise<string> {
+        return await this.petNameTextField.getValue();
     }
     
     async selectSpecies(species: string): Promise<void> {

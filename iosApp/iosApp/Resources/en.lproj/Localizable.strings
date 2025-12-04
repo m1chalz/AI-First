@@ -159,6 +159,7 @@
 
 // Labels
 "animalDescription.dateLabel" = "Date of disappearance";
+"animalDescription.petNameLabel" = "Animal name";
 "animalDescription.speciesLabel" = "Animal species";
 "animalDescription.raceLabel" = "Animal race (optional)";
 "animalDescription.genderLabel" = "Gender";
@@ -168,6 +169,7 @@
 "animalDescription.descriptionLabel" = "Animal additional description (optional)";
 
 // Placeholders
+"animalDescription.petNamePlaceholder" = "Animal name (optional)";
 "animalDescription.speciesPlaceholder" = "Select an option";
 "animalDescription.racePlaceholder" = "e.g., Golden Retriever";
 "animalDescription.agePlaceholder" = "e.g., 5";

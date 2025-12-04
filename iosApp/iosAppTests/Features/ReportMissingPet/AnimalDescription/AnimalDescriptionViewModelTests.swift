@@ -638,5 +638,87 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.showToast)
         XCTAssertFalse(viewModel.toastMessage.isEmpty)
     }
+    
+    // MARK: - Pet Name Tests
+    
+    func test_petName_whenUserEntersText_shouldUpdatePublishedProperty() {
+        // Given - fresh ViewModel
+        
+        // When - user types in pet name field
+        viewModel.petName = "Max"
+        
+        // Then - property updates
+        XCTAssertEqual(viewModel.petName, "Max")
+    }
+    
+    func test_petName_whenFlowStateHasPetName_shouldInitializeProperty() {
+        // Given - flow state with existing pet name
+        flowState.petName = "Buddy"
+        
+        // When - create new ViewModel
+        let vm = AnimalDescriptionViewModel(
+            flowState: flowState,
+            locationHandler: locationHandler,
+            toastScheduler: ToastSchedulerFake()
+        )
+        
+        // Then - pet name loaded from flow state
+        XCTAssertEqual(vm.petName, "Buddy")
+    }
+    
+    func test_petName_whenFlowStateHasNoPetName_shouldInitializeToEmptyString() {
+        // Given - flow state without pet name (nil)
+        XCTAssertNil(flowState.petName)
+        
+        // When - create new ViewModel (already created in setUp)
+        
+        // Then - pet name initializes to empty string
+        XCTAssertEqual(viewModel.petName, "")
+    }
+    
+    func test_onContinueTapped_whenPetNameHasText_shouldStoreTrimmedValue() {
+        // Given - all required fields + pet name with whitespace
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = "  Max  "
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state updated with trimmed pet name
+        XCTAssertEqual(flowState.petName, "Max")
+    }
+    
+    func test_onContinueTapped_whenPetNameIsEmpty_shouldStoreNil() {
+        // Given - all required fields + empty pet name
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state pet name is nil
+        XCTAssertNil(flowState.petName)
+    }
+    
+    func test_onContinueTapped_whenPetNameIsWhitespaceOnly_shouldStoreNil() {
+        // Given - all required fields + whitespace-only pet name
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = "   "
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state pet name is nil (whitespace trimmed away)
+        XCTAssertNil(flowState.petName)
+    }
 }
 

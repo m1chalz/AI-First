@@ -41,6 +41,10 @@ public enum L10n {
     public static let latitudePlaceholder = L10n.tr("Localizable", "animalDescription.latitudePlaceholder", fallback: "e.g., 52.2297")
     /// e.g., 21.0122
     public static let longitudePlaceholder = L10n.tr("Localizable", "animalDescription.longitudePlaceholder", fallback: "e.g., 21.0122")
+    /// Animal name
+    public static let petNameLabel = L10n.tr("Localizable", "animalDescription.petNameLabel", fallback: "Animal name")
+    /// Animal name (optional)
+    public static let petNamePlaceholder = L10n.tr("Localizable", "animalDescription.petNamePlaceholder", fallback: "Animal name (optional)")
     /// Animal race (optional)
     public static let raceLabel = L10n.tr("Localizable", "animalDescription.raceLabel", fallback: "Animal race (optional)")
     /// e.g., Golden Retriever
@@ -145,10 +149,6 @@ public enum L10n {
     public static let other = L10n.tr("Localizable", "animalSpecies.other", fallback: "Other")
     /// Rabbit
     public static let rabbit = L10n.tr("Localizable", "animalSpecies.rabbit", fallback: "Rabbit")
-    /// Reptile
-    public static let reptile = L10n.tr("Localizable", "animalSpecies.reptile", fallback: "Reptile")
-    /// Rodent
-    public static let rodent = L10n.tr("Localizable", "animalSpecies.rodent", fallback: "Rodent")
   }
   public enum AnnouncementCard {
     public enum Location {
