@@ -1,4 +1,3 @@
-@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
 
 package com.intive.aifirst.petspot.features.animallist.ui
 
@@ -37,15 +36,17 @@ import androidx.compose.ui.unit.sp
 import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
+import com.intive.aifirst.petspot.domain.models.LocationCoordinates
+import com.intive.aifirst.petspot.domain.models.PermissionStatus
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListUiState
 import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 
 /**
  * Stateless UI for the animal list screen.
  * Receives all state and actions via parameters to enable previews and testing.
+ * Extended with location loading indicator and status display.
  *
  * Design matches Figma specifications ("Missing animals list app" node-id=297-7556):
  * - Title: "PetSpot" left-aligned, Hind 32sp, color rgba(0,0,0,0.8)
@@ -90,7 +91,17 @@ fun AnimalListContent(
                         .fillMaxWidth(),
             ) {
                 when {
-                    state.isLoading -> FullScreenLoading(testTag = "animalList.loading")
+                    // Show loading for either data loading or location loading
+                    state.isLoading || state.isLocationLoading ->
+                        FullScreenLoading(
+                            testTag =
+                                if (state.isLocationLoading) {
+                                    "animalList.loadingIndicator"
+                                } else {
+                                    "animalList.loading"
+                                },
+                        )
+
                     state.error != null ->
                         ErrorState(
                             message = state.error,
@@ -204,8 +215,8 @@ private fun AnimalList(
 
 private class AnimalListStatePreviewProvider :
     PreviewParameterProvider<AnimalListUiState> {
-    private val warsaw = Location(city = "Central Park", radiusKm = 2)
-    private val krakow = Location(city = "Market Square", radiusKm = 3)
+    private val warsaw = Location(latitude = 52.2297, longitude = 21.0122)
+    private val krakow = Location(latitude = 50.0647, longitude = 19.9450)
 
     private val animals =
         listOf(
@@ -214,7 +225,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Luna",
                 photoUrl = "",
                 location = warsaw,
-                species = AnimalSpecies.DOG,
+                species = "Dog",
                 breed = "Golden Retriever",
                 gender = AnimalGender.FEMALE,
                 status = AnimalStatus.MISSING,
@@ -228,7 +239,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Milo",
                 photoUrl = "",
                 location = krakow,
-                species = AnimalSpecies.CAT,
+                species = "Cat",
                 breed = "Siamese",
                 gender = AnimalGender.MALE,
                 status = AnimalStatus.FOUND,
@@ -242,7 +253,7 @@ private class AnimalListStatePreviewProvider :
                 name = "Max",
                 photoUrl = "",
                 location = warsaw,
-                species = AnimalSpecies.DOG,
+                species = "Dog",
                 breed = "German Shepherd",
                 gender = AnimalGender.MALE,
                 status = AnimalStatus.MISSING,
@@ -255,10 +266,26 @@ private class AnimalListStatePreviewProvider :
 
     override val values: Sequence<AnimalListUiState> =
         sequenceOf(
+            // Basic states
             AnimalListUiState(isLoading = true),
             AnimalListUiState(animals = emptyList()),
             AnimalListUiState(error = "Failed to load animals"),
             AnimalListUiState(animals = animals),
+            // Location permission states
+            AnimalListUiState(
+                animals = animals,
+                isLocationLoading = true,
+                permissionStatus = PermissionStatus.Granted(fineLocation = true, coarseLocation = true),
+            ),
+            AnimalListUiState(
+                animals = animals,
+                location = LocationCoordinates(52.2297, 21.0122),
+                permissionStatus = PermissionStatus.Granted(fineLocation = true, coarseLocation = true),
+            ),
+            AnimalListUiState(
+                animals = animals,
+                permissionStatus = PermissionStatus.Denied(shouldShowRationale = false),
+            ),
         )
 }
 

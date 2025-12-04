@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: PetSpot Announcements API - Location Query
+  description: API specification for location-based filtering of pet announcements
+  version: 1.1.0
+  contact:
+    name: PetSpot API Team
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.petspot.com
+    description: Production server
+
+paths:
+  /api/v1/announcements:
+    get:
+      summary: Get announcements with optional location filtering
+      description: |
+        Retrieves a list of pet announcements, optionally filtered by geographic location.
+        
+        **Filtering Behavior**:
+        - No parameters: Returns all announcements (backward compatible)
+        - `lat` + `lng` without `range`: Filters announcements within 5km (default)
+        - `lat` + `lng` + `range`: Filters announcements within specified radius
+        - `range` without `lat`/`lng`: Ignored, returns all announcements
+        
+        **Validation Rules**:
+        - `lat` and `lng` must be provided together (both or neither)
+        - `lat` must be between -90 and 90
+        - `lng` must be between -180 and 180
+        - `range` must be greater than 0
+      operationId: getAnnouncements
+      tags:
+        - Announcements
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude of the search origin (-90 to 90)
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: -90
+            maximum: 90
+          example: 50.0614
+
+        - name: lng
+          in: query
+          description: Longitude of the search origin (-180 to 180)
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: -180
+            maximum: 180
+          example: 19.9383
+
+        - name: range
+          in: query
+          description: Search radius in kilometers (must be positive, default 5km)
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            exclusiveMinimum: true
+            default: 5
+          example: 10
+
+      responses:
+        '200':
+          description: Successful response with announcements list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementsResponse'
+              examples:
+                allAnnouncements:
+                  summary: All announcements (no filtering)
+                  value:
+                    announcements:
+                      - id: 1
+                        petName: Max
+                        species: dog
+                        description: Friendly golden retriever
+                        lat: 50.0614
+                        lng: 19.9383
+                        status: active
+                        createdAt: '2025-11-20T10:30:00Z'
+                      - id: 2
+                        petName: Luna
+                        species: cat
+                        description: Black cat with white paws
+                        lat: 52.2297
+                        lng: 21.0122
+                        status: active
+                        createdAt: '2025-11-19T14:45:00Z'
+                    total: 2
+
+                filteredByLocation:
+                  summary: Filtered by location (5km radius)
+                  value:
+                    announcements:
+                      - id: 1
+                        petName: Max
+                        species: dog
+                        description: Friendly golden retriever
+                        lat: 50.0614
+                        lng: 19.9383
+                        status: active
+                        createdAt: '2025-11-20T10:30:00Z'
+                    total: 1
+
+                emptyResults:
+                  summary: No announcements in range
+                  value:
+                    announcements: []
+                    total: 0
+
+        '400':
+          description: Bad request - invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingLng:
+                  summary: Missing lng when lat provided
+                  value:
+                    error: "Parameter 'lng' is required when 'lat' is provided"
+
+                missingLat:
+                  summary: Missing lat when lng provided
+                  value:
+                    error: "Parameter 'lat' is required when 'lng' is provided"
+
+                invalidLatRange:
+                  summary: Latitude out of range
+                  value:
+                    error: "Parameter 'lat' must be between -90 and 90"
+
+                invalidLngRange:
+                  summary: Longitude out of range
+                  value:
+                    error: "Parameter 'lng' must be between -180 and 180"
+
+                invalidRange:
+                  summary: Range must be positive
+                  value:
+                    error: "Parameter 'range' must be greater than zero"
+
+                invalidLatType:
+                  summary: Non-numeric latitude
+                  value:
+                    error: "Parameter 'lat' must be a valid number"
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Internal server error
+                details: An unexpected error occurred while processing the request
+
+components:
+  schemas:
+    AnnouncementsResponse:
+      type: object
+      required:
+        - announcements
+        - total
+      properties:
+        announcements:
+          type: array
+          description: List of announcements matching the query
+          items:
+            $ref: '#/components/schemas/Announcement'
+        total:
+          type: integer
+          description: Total number of announcements returned
+          example: 15
+
+    Announcement:
+      type: object
+      required:
+        - id
+        - petName
+        - species
+        - lat
+        - lng
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+          description: Unique announcement identifier
+          example: 1
+        petName:
+          type: string
+          description: Name of the pet
+          example: Max
+        species:
+          type: string
+          description: Type of animal
+          example: dog
+        description:
+          type: string
+          description: Additional details about the pet
+          example: Friendly golden retriever, last seen near the park
+        lat:
+          type: number
+          format: float
+          description: Latitude coordinate of the announcement location
+          minimum: -90
+          maximum: 90
+          example: 50.0614
+        lng:
+          type: number
+          format: float
+          description: Longitude coordinate of the announcement location
+          minimum: -180
+          maximum: 180
+          example: 19.9383
+        status:
+          type: string
+          description: Current status of the announcement
+          enum:
+            - active
+            - resolved
+            - expired
+          example: active
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the announcement was created
+          example: '2025-11-20T10:30:00Z'
+        # Additional fields may exist (photos, contact info, etc.)
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+          example: "Parameter 'lat' must be between -90 and 90"
+        details:
+          type: string
+          description: Optional additional error context
+          example: Provided value was 95.5
+
+  examples:
+    LocationQueryDefault:
+      summary: Filter with default 5km radius
+      description: Using default range when lat/lng provided without range parameter
+      value:
+        lat: 50.0614
+        lng: 19.9383
+
+    LocationQueryCustomRange:
+      summary: Filter with custom 10km radius
+      description: Specifying custom search radius
+      value:
+        lat: 50.0614
+        lng: 19.9383
+        range: 10
+
+    LocationQueryLargeRange:
+      summary: Filter with large 100km radius
+      description: No maximum limit on range parameter
+      value:
+        lat: 50.0614
+        lng: 19.9383
+        range: 100
+
+tags:
+  - name: Announcements
+    description: Pet announcement operations with location-based filtering
+

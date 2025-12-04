@@ -1,6 +1,9 @@
 *.iml
 .kotlin
 .gradle
+
+# Cursor AI rules (auto-generated)
+.cursor/rules/specify-rules.mdc
 **/build/
 xcuserdata
 !src/**/build/
@@ -10,6 +13,10 @@ local.properties
 captures
 .externalNativeBuild
 .cxx
+DerivedData/
+.build/
+.swiftpm/
+Packages/
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
@@ -20,6 +27,10 @@ node_modules/
 dist/
 *.log
 .env*
+.build/
+DerivedData/
+*.swiftpm/
+Packages/
 *.db
 coverage/
 

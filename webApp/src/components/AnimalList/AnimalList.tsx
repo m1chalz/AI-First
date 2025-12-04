@@ -1,45 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAnimalList } from '../../hooks/use-animal-list';
+import { useModal } from '../../hooks/use-modal';
 import { AnimalCard } from './AnimalCard';
 import { EmptyState } from './EmptyState';
+import { LocationBanner } from '../LocationBanner/LocationBanner';
+import { PetDetailsModal } from '../PetDetailsModal/PetDetailsModal';
 import styles from './AnimalList.module.css';
 
 export const AnimalList: React.FC = () => {
+    const navigate = useNavigate();
     const {
         animals,
         isLoading,
         error,
         isEmpty,
-        selectAnimal,
-        reportMissing,
-        reportFound
+        geolocationError
     } = useAnimalList();
+    
+    const { isOpen, selectedPetId, openModal, closeModal } = useModal();
+    const [isBannerDismissed, setIsBannerDismissed] = useState(false);
+    
+    const showLocationBanner = geolocationError?.code === 1 && !isBannerDismissed;
     
     return (
         <div className={styles.container}>
             <div className={styles.mainContent}>
                 <header className={styles.header}>
-                    <h1 className={styles.title}>Missing animals list</h1>
+                    <h1 className={styles.title}>PetSpot</h1>
                     
                     <div className={styles.headerButtons}>
                         <button
                             className={styles.primaryButton}
-                            onClick={reportMissing}
+                            onClick={() => navigate('/report-missing/microchip')}
                             data-testid="animalList.reportMissingButton"
                         >
                             Report a Missing Animal
-                        </button>
-                        <button
-                            className={styles.secondaryButton}
-                            onClick={reportFound}
-                            data-testid="animalList.reportFoundButton"
-                        >
-                            Report Found Animal
                         </button>
                     </div>
                 </header>
                 
                 <div className={styles.content}>
+                
+                    {showLocationBanner && (
+                        <LocationBanner onClose={() => setIsBannerDismissed(true)} />
+                    )}
                     {isLoading ? (
                         <div className={styles.loading} data-testid="animalList.loading">
                             <div className={styles.spinner}></div>
@@ -57,13 +62,19 @@ export const AnimalList: React.FC = () => {
                                 <AnimalCard
                                     key={animal.id}
                                     animal={animal}
-                                    onClick={() => selectAnimal(animal.id)}
+                                    onDetailsClick={() => openModal(animal.id)}
                                 />
                             ))}
                         </div>
                     )}
                 </div>
             </div>
+            
+            <PetDetailsModal
+                isOpen={isOpen}
+                selectedPetId={selectedPetId}
+                onClose={closeModal}
+            />
         </div>
     );
 };

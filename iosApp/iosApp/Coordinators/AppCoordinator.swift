@@ -27,9 +27,9 @@ class AppCoordinator: CoordinatorInterface {
     func start(animated: Bool) async {
         guard let navigationController = navigationController else { return }
         
-        let animalListCoordinator = AnimalListCoordinator(navigationController: navigationController)
-        childCoordinators.append(animalListCoordinator)
-        await animalListCoordinator.start(animated: animated)
+        let annoouncementListCoordinator = AnnouncementListCoordinator(navigationController: navigationController)
+        childCoordinators.append(annoouncementListCoordinator)
+        await annoouncementListCoordinator.start(animated: animated)
     }
 }
 

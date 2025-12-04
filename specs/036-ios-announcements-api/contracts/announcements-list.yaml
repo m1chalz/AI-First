@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+  title: PetSpot Announcements List API
+  description: API endpoint for fetching list of pet announcements with optional location filtering
+  version: 1.0.0
+  contact:
+    name: PetSpot Backend Team
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /api/v1/announcements:
+    get:
+      summary: Get list of pet announcements
+      description: |
+        Retrieves a list of all pet announcements. Supports optional location-based filtering
+        when latitude and longitude query parameters are provided. When location parameters
+        are present, backend filters announcements by proximity (exact filtering logic
+        determined by backend implementation).
+      operationId: getAnnouncements
+      tags:
+        - Announcements
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          description: User's current latitude for location-based filtering (-90 to 90)
+          schema:
+            type: number
+            format: double
+            minimum: -90
+            maximum: 90
+          example: 52.2297
+        - name: lng
+          in: query
+          required: false
+          description: User's current longitude for location-based filtering (-180 to 180)
+          schema:
+            type: number
+            format: double
+            minimum: -180
+            maximum: 180
+          example: 21.0122
+      responses:
+        '200':
+          description: Successfully retrieved announcements list
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Announcement'
+              examples:
+                withLocation:
+                  summary: Response with location filtering
+                  value:
+                    data:
+                      - id: "550e8400-e29b-41d4-a716-446655440000"
+                        petName: Max
+                        species: dog
+                        status: missing
+                        photoUrl: http://localhost:3000/images/max.jpg
+                        lastSeenDate: "2024-11-15"
+                        latitude: 52.2297
+                        longitude: 21.0122
+                        breed: Golden Retriever
+                        description: Friendly golden retriever, responds to Max
+                        contactPhone: "+48123456789"
+                      - id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                        petName: Luna
+                        species: cat
+                        status: found
+                        photoUrl: http://localhost:3000/images/luna.jpg
+                        lastSeenDate: "2024-11-20"
+                        latitude: 52.2300
+                        longitude: 21.0130
+                        breed: null
+                        description: Gray tabby cat, very shy
+                        contactPhone: "+48987654321"
+                emptyList:
+                  summary: Empty announcements list
+                  value:
+                    data: []
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Internal server error
+                message: Database connection failed
+
+components:
+  schemas:
+    Announcement:
+      type: object
+      required:
+        - id
+        - petName
+        - species
+        - status
+        - photoUrl
+        - lastSeenDate
+        - latitude
+        - longitude
+        - description
+        - contactPhone
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique announcement identifier (UUID v4)
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        petName:
+          type: string
+          description: Name of the pet
+          minLength: 1
+          example: Max
+        species:
+          type: string
+          description: Species of the pet
+          enum: [dog, cat, bird, other]
+          example: dog
+        status:
+          type: string
+          description: Current status of the announcement
+          enum: [missing, found]
+          example: missing
+        photoUrl:
+          type: string
+          format: uri
+          description: URL to pet photo (relative or absolute)
+          example: http://localhost:3000/images/max.jpg
+        lastSeenDate:
+          type: string
+          format: date
+          description: Date when pet was last seen (ISO 8601 date format YYYY-MM-DD)
+          example: "2024-11-15"
+        latitude:
+          type: number
+          format: double
+          description: Latitude of last seen location
+          minimum: -90
+          maximum: 90
+          example: 52.2297
+        longitude:
+          type: number
+          format: double
+          description: Longitude of last seen location
+          minimum: -180
+          maximum: 180
+          example: 21.0122
+        breed:
+          type: string
+          nullable: true
+          description: Breed of the pet (optional)
+          example: Golden Retriever
+        description:
+          type: string
+          description: Detailed description of the pet
+          minLength: 1
+          example: Friendly golden retriever, responds to Max
+        contactPhone:
+          type: string
+          description: Contact phone number for this announcement
+          minLength: 1
+          example: "+48123456789"
+    
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error type or code
+          example: Internal server error
+        message:
+          type: string
+          description: Human-readable error message
+          example: Database connection failed
+

@@ -1,0 +1,813 @@
+import XCTest
+@testable import PetSpot
+
+/// Unit tests for HTTP-based AnnouncementRepository implementation
+/// Tests network operations, JSON decoding, error handling, and data transformation
+final class AnnouncementRepositoryTests: XCTestCase {
+    var sut: AnnouncementRepository!
+    var mockURLSession: URLSession!
+    
+    override func setUp() {
+        super.setUp()
+        // Use URLProtocol mocking for URLSession
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        mockURLSession = URLSession(configuration: configuration)
+        sut = AnnouncementRepository(urlSession: mockURLSession)
+    }
+    
+    override func tearDown() {
+        sut = nil
+        mockURLSession = nil
+        MockURLProtocol.requestHandler = nil
+        super.tearDown()
+    }
+    
+    // MARK: - getAnnouncements Tests
+    
+    /// T009: Test getAnnouncements with valid JSON response should return parsed Animal array
+    func testGetAnnouncements_whenServerReturnsValidData_shouldReturnAnimals() async throws {
+        // Given - valid JSON response
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Max",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/max.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Golden Retriever",
+                    "sex": "MALE",
+                    "age": 5,
+                    "description": "Friendly dog",
+                    "phone": "+48123456789",
+                    "email": "owner@example.com"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - verify parsed correctly
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].id, "550e8400-e29b-41d4-a716-446655440000")
+        XCTAssertEqual(announcements[0].name, "Max")
+        XCTAssertEqual(announcements[0].species, .dog)
+        XCTAssertEqual(announcements[0].status, .active) // MISSING mapped to ACTIVE
+        XCTAssertEqual(announcements[0].coordinate.latitude, 52.2297, accuracy: 0.0001)
+        XCTAssertEqual(announcements[0].coordinate.longitude, 21.0122, accuracy: 0.0001)
+    }
+    
+    /// T010: Test getAnnouncements with location parameters should include lat/lng query params in URL
+    func testGetAnnouncements_withLocationParameters_shouldIncludeQueryParams() async throws {
+        // Given - location parameters
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        var capturedRequest: URLRequest?
+        
+        MockURLProtocol.requestHandler = { request in
+            capturedRequest = request
+            let jsonData = """
+            {"data": []}
+            """.data(using: .utf8)!
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch with location (uses default range=100)
+        _ = try await sut.getAnnouncements(near: userLocation)
+        
+        // Then - verify query parameters in URL
+        let url = capturedRequest?.url
+        XCTAssertNotNil(url)
+        let components = URLComponents(url: url!, resolvingAgainstBaseURL: false)
+        XCTAssertEqual(components?.queryItems?.count, 3)
+        XCTAssertTrue(components?.queryItems?.contains(where: {
+            $0.name == "lat" && $0.value == "52.2297"
+        }) ?? false)
+        XCTAssertTrue(components?.queryItems?.contains(where: {
+            $0.name == "lng" && $0.value == "21.0122"
+        }) ?? false)
+        XCTAssertTrue(components?.queryItems?.contains(where: {
+            $0.name == "range" && $0.value == "100"
+        }) ?? false)
+    }
+    
+    /// T011: Test getAnnouncements with HTTP 500 error should throw RepositoryError.httpError
+    func testGetAnnouncements_whenServerReturns500_shouldThrowHttpError() async {
+        // Given - server error response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 500,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, Data())
+        }
+        
+        // When/Then - should throw error
+        do {
+            _ = try await sut.getAnnouncements(near: nil)
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .httpError(let statusCode) = error {
+                XCTAssertEqual(statusCode, 500)
+            } else {
+                XCTFail("Expected httpError, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T012: Test getAnnouncements with invalid JSON should throw RepositoryError.decodingFailed
+    func testGetAnnouncements_whenResponseHasInvalidJSON_shouldThrowDecodingError() async {
+        // Given - invalid JSON
+        let invalidJSON = "{ invalid json }".data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, invalidJSON)
+        }
+        
+        // When/Then - should throw decoding error
+        do {
+            _ = try await sut.getAnnouncements(near: nil)
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .decodingFailed = error {
+                // Expected error
+            } else {
+                XCTFail("Expected decodingFailed, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T013: Test getAnnouncements with invalid species enum should skip invalid items (compactMap behavior)
+    func testGetAnnouncements_whenItemHasUnknownSpecies_shouldMapToOther() async throws {
+        // Given - JSON with one known and one unknown species (graceful degradation)
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "1",
+                    "petName": "Valid Dog",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/1.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Golden Retriever",
+                    "sex": "MALE",
+                    "age": 5,
+                    "description": "Valid",
+                    "phone": "+48123456789",
+                    "email": null
+                },
+                {
+                    "id": "2",
+                    "petName": "Invalid Species",
+                    "species": "DINOSAUR",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/2.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": null,
+                    "sex": "MALE",
+                    "age": 5,
+                    "description": "Invalid",
+                    "phone": "+48123456789",
+                    "email": null
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - both items returned, unknown species mapped to .other (order preserved from JSON)
+        XCTAssertEqual(announcements.count, 2, "Should return both items with graceful species handling")
+        XCTAssertEqual(announcements[0].name, "Valid Dog")
+        XCTAssertEqual(announcements[0].species, .dog)
+        XCTAssertEqual(announcements[1].name, "Invalid Species")
+        XCTAssertEqual(announcements[1].species, .other, "Unknown species should map to .other")
+    }
+    
+    /// T014: Test getAnnouncements with duplicate IDs should deduplicate and log warning
+    func testGetAnnouncements_whenListHasDuplicateIds_shouldDeduplicateAndKeepFirst() async throws {
+        // Given - JSON with duplicate IDs
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "duplicate-id",
+                    "petName": "First Max",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/1.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Golden Retriever",
+                    "sex": "MALE",
+                    "age": 5,
+                    "description": "First",
+                    "phone": "+48123456789",
+                    "email": null
+                },
+                {
+                    "id": "duplicate-id",
+                    "petName": "Second Max",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/2.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Labrador",
+                    "sex": "MALE",
+                    "age": 3,
+                    "description": "Second",
+                    "phone": "+48987654321",
+                    "email": null
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - only one item returned (first occurrence kept)
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "First Max")
+    }
+    
+    /// T015: Test getAnnouncements with empty list should return empty array
+    func testGetAnnouncements_whenServerReturnsEmptyList_shouldReturnEmptyArray() async throws {
+        // Given - empty data array
+        let jsonData = """
+        {
+            "data": []
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - empty array returned
+        XCTAssertEqual(announcements.count, 0)
+    }
+    
+    /// Test: getAnnouncements with null phone should parse successfully (optional field)
+    func testGetAnnouncements_whenPhoneIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null phone
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Piorun",
+                    "species": "BIRD",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/piorun.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Papużka falista",
+                    "sex": "UNKNOWN",
+                    "age": null,
+                    "description": "Yellow parrot",
+                    "phone": null,
+                    "email": "owner@example.com"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - animal parsed successfully with nil phone
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Piorun")
+        XCTAssertNil(announcements[0].phone)
+        XCTAssertEqual(announcements[0].email, "owner@example.com")
+    }
+    
+    /// Test: getAnnouncements with null description should parse successfully (optional field, defaults to empty string)
+    func testGetAnnouncements_whenDescriptionIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null description
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Azor",
+                    "species": "DOG",
+                    "status": "MISSING",
+                    "photoUrl": "http://localhost:3000/images/azor.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": "Labrador",
+                    "sex": "MALE",
+                    "age": 3,
+                    "description": null,
+                    "phone": "+48123456789",
+                    "email": "owner@example.com"
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - animal parsed successfully with nil description
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Azor")
+        XCTAssertNil(announcements[0].description)
+    }
+    
+    /// Test: getAnnouncements with null breed should parse successfully (optional field)
+    func testGetAnnouncements_whenBreedIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null breed
+        let jsonData = """
+        {
+            "data": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "petName": "Reksio",
+                    "species": "DOG",
+                    "status": "FOUND",
+                    "photoUrl": "http://localhost:3000/images/reksio.jpg",
+                    "lastSeenDate": "2024-11-15",
+                    "locationLatitude": 52.2297,
+                    "locationLongitude": 21.0122,
+                    "breed": null,
+                    "sex": "MALE",
+                    "age": 8,
+                    "description": "Small mixed breed dog",
+                    "phone": "+48123456789",
+                    "email": null
+                }
+            ]
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch animals
+        let announcements = try await sut.getAnnouncements(near: nil)
+        
+        // Then - animal parsed successfully with nil breed
+        XCTAssertEqual(announcements.count, 1)
+        XCTAssertEqual(announcements[0].name, "Reksio")
+        XCTAssertNil(announcements[0].breed)
+        XCTAssertEqual(announcements[0].species, .dog)
+    }
+    
+    // MARK: - getPetDetails Tests (User Story 2)
+    
+    /// T037: Test getPetDetails with valid JSON response should return PetDetails with all fields
+    func testGetPetDetails_whenServerReturnsValidData_shouldReturnPetDetails() async throws {
+        // Given - valid pet details JSON
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": "123456789012345",
+            "email": "owner@example.com",
+            "phone": "+48123456789",
+            "reward": "500 PLN",
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "550e8400-e29b-41d4-a716-446655440000")
+        
+        // Then - verify all fields
+        XCTAssertEqual(details.id, "550e8400-e29b-41d4-a716-446655440000")
+        XCTAssertEqual(details.petName, "Max")
+        XCTAssertEqual(details.species, .dog)
+        XCTAssertEqual(details.status, .active) // MISSING mapped to ACTIVE
+        XCTAssertEqual(details.breed, "Golden Retriever")
+        XCTAssertEqual(details.microchipNumber, "123456789012345")
+        XCTAssertEqual(details.email, "owner@example.com")
+        XCTAssertEqual(details.reward, "500 PLN")
+    }
+    
+    /// T038: Test getPetDetails with HTTP 404 error should throw RepositoryError.notFound
+    func testGetPetDetails_whenServerReturns404_shouldThrowNotFoundError() async {
+        // Given - 404 response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 404,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, Data())
+        }
+        
+        // When/Then - should throw not found error
+        do {
+            _ = try await sut.getPetDetails(id: "non-existent-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .notFound = error {
+                // Expected error
+            } else {
+                XCTFail("Expected notFound, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T039: Test getPetDetails with HTTP 500 error should throw RepositoryError.httpError
+    func testGetPetDetails_whenServerReturns500_shouldThrowHttpError() async {
+        // Given - server error response
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 500,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, Data())
+        }
+        
+        // When/Then - should throw http error
+        do {
+            _ = try await sut.getPetDetails(id: "some-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .httpError(let statusCode) = error {
+                XCTAssertEqual(statusCode, 500)
+            } else {
+                XCTFail("Expected httpError, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T040: Test getPetDetails with invalid JSON should throw RepositoryError.decodingFailed
+    func testGetPetDetails_whenResponseHasInvalidJSON_shouldThrowDecodingError() async {
+        // Given - invalid JSON
+        let invalidJSON = "{ invalid json }".data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, invalidJSON)
+        }
+        
+        // When/Then - should throw decoding error
+        do {
+            _ = try await sut.getPetDetails(id: "some-id")
+            XCTFail("Expected error to be thrown")
+        } catch let error as RepositoryError {
+            if case .decodingFailed = error {
+                // Expected error
+            } else {
+                XCTFail("Expected decodingFailed, got \(error)")
+            }
+        } catch {
+            XCTFail("Expected RepositoryError, got \(error)")
+        }
+    }
+    
+    /// T041: Test getPetDetails with unknown species should map to .other
+    func testGetPetDetails_whenResponseHasUnknownSpecies_shouldMapToOther() async throws {
+        // Given - JSON with unknown species (graceful degradation)
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DINOSAUR",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let petDetails = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - should successfully map unknown species to .other
+        XCTAssertEqual(petDetails.species, .other, "Unknown species should map to .other")
+        XCTAssertEqual(petDetails.petName, "Max")
+        XCTAssertEqual(petDetails.status, .active, "MISSING status should map to .active")
+    }
+    
+    /// T042: Test getPetDetails with missing optional fields should return PetDetails with nil values
+    func testGetPetDetails_whenOptionalFieldsMissing_shouldReturnDetailsWithNilValues() async throws {
+        // Given - JSON with nil optional fields
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": null,
+            "sex": "MALE",
+            "age": null,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - optional fields should be nil
+        XCTAssertNil(details.breed)
+        XCTAssertNil(details.microchipNumber)
+        XCTAssertNil(details.email)
+        XCTAssertNil(details.reward)
+        XCTAssertNil(details.approximateAge)
+        XCTAssertEqual(details.petName, "Max")
+    }
+    
+    /// Test: getPetDetails with null description should parse successfully (optional field, defaults to empty string)
+    func testGetPetDetails_whenDescriptionIsNull_shouldParseSuccessfully() async throws {
+        // Given - JSON with null description
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Rex",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/rex.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "German Shepherd",
+            "sex": "MALE",
+            "age": 4,
+            "microchipNumber": "123456789012345",
+            "email": "owner@example.com",
+            "phone": "+48123456789",
+            "reward": "1000 PLN",
+            "description": null,
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2024-11-20T10:30:00.000Z"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "550e8400-e29b-41d4-a716-446655440000")
+        
+        // Then - pet details parsed successfully with nil description
+        XCTAssertEqual(details.petName, "Rex")
+        XCTAssertNil(details.description)
+    }
+    
+    /// T043a: Test getPetDetails with updatedAt in custom format should parse correctly
+    func testGetPetDetails_whenUpdatedAtInCustomFormat_shouldParseCorrectly() async throws {
+        // Given - JSON with updatedAt in "YYYY-MM-DD HH:MM:SS" format (backend inconsistency)
+        let jsonData = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "petName": "Max",
+            "species": "DOG",
+            "status": "MISSING",
+            "photoUrl": "http://localhost:3000/images/max.jpg",
+            "lastSeenDate": "2024-11-15",
+            "locationLatitude": 52.2297,
+            "locationLongitude": 21.0122,
+            "breed": "Golden Retriever",
+            "sex": "MALE",
+            "age": 5,
+            "microchipNumber": null,
+            "email": null,
+            "phone": "+48123456789",
+            "reward": null,
+            "description": "Friendly dog",
+            "createdAt": "2024-11-20T10:30:00.000Z",
+            "updatedAt": "2025-12-01 14:24:13"
+        }
+        """.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )!
+            return (response, jsonData)
+        }
+        
+        // When - fetch pet details
+        let details = try await sut.getPetDetails(id: "some-id")
+        
+        // Then - updatedAt should be parsed successfully (no crash/error)
+        XCTAssertEqual(details.petName, "Max")
+        XCTAssertEqual(details.updatedAt, "2025-12-01 14:24:13")
+    }
+}
+
+// MARK: - Mock URLProtocol
+
+/// Mock URLProtocol for testing URLSession without real network calls
+class MockURLProtocol: URLProtocol {
+    static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
+    
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
+    }
+    
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    
+    override func startLoading() {
+        guard let handler = MockURLProtocol.requestHandler else {
+            fatalError("Request handler not set")
+        }
+        
+        do {
+            let (response, data) = try handler(request)
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
+        } catch {
+            client?.urlProtocol(self, didFailWithError: error)
+        }
+    }
+    
+    override func stopLoading() {
+        // No-op
+    }
+}
+

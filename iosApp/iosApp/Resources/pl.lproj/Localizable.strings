@@ -3,31 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Zaginione zwierzęta";
+"announcementList.navigationTitle" = "Zaginione zwierzęta";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Zgłoś zagubione zwierzę";
-"animalList.button.reportFound" = "Zgłoś znalezienie";
+"announcementList.button.reportMissing" = "Zgłoś zagubione zwierzę";
+"announcementList.button.reportFound" = "Zgłoś znalezienie";
 
 // Empty state
-"animalList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
+"announcementList.emptyState.message" = "Nie zgłoszono jeszcze żadnych zwierząt. Kliknij 'Zgłoś zagubione zwierzę', aby dodać pierwsze.";
 
 // Loading state
-"animalList.loading.message" = "Ładowanie listy zwierząt...";
+"announcementList.loading.message" = "Ładowanie listy zwierząt...";
 
 // Error messages
-"animalList.error.title" = "Błąd";
-"animalList.error.prefix" = "Błąd: %@";
-"animalList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
-"animalList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
+"announcementList.error.title" = "Błąd";
+"announcementList.error.prefix" = "Błąd: %@";
+"announcementList.error.generic" = "Coś poszło nie tak. Spróbuj ponownie.";
+"announcementList.error.loadingFailed" = "Nie udało się załadować ogłoszeń. Spróbuj ponownie.";
+"announcementList.error.networkUnavailable" = "Brak połączenia z internetem. Sprawdź ustawienia sieci.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 
@@ -36,6 +37,7 @@
 
 // Error state
 "petDetails.error.title" = "Nie udało się załadować szczegółów zwierzęcia";
+"petDetails.error.loadingFailed" = "Nie udało się załadować szczegółów zwierzęcia. Spróbuj ponownie.";
 
 // Labels
 "petDetails.label.dateOfDisappearance" = "Data zaginięcia";
@@ -48,6 +50,9 @@
 "petDetails.label.animalAge" = "Przybliżony wiek zwierzęcia";
 "petDetails.label.placeOfDisappearance" = "Szer. / Dł.";
 "petDetails.label.additionalDescription" = "Dodatkowy opis zwierzęcia";
+
+// Format
+"petDetails.format.yearsOld" = "%d lat";
 
 // Buttons
 "petDetails.button.showOnMap" = "Pokaż na mapie";
@@ -62,11 +67,11 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
-/* MARK: - Animal Status */
+/* MARK: - Announcement Status */
 
-"animalStatus.active" = "ZAGINIONE";
-"animalStatus.found" = "ZNALEZIONE";
-"animalStatus.closed" = "ZAMKNIĘTE";
+"announcementStatus.active" = "ZAGINIONE";
+"announcementStatus.found" = "ZNALEZIONE";
+"announcementStatus.closed" = "ZAMKNIĘTE";
 
 /* MARK: - Animal Species */
 
@@ -87,8 +92,8 @@
 // Navigation titles
 "reportMissingPet.chipNumber.title" = "Numer mikroczipu";
 "reportMissingPet.photo.title" = "Zdjęcie zwierzęcia";
-"reportMissingPet.description.title" = "Opis";
-"reportMissingPet.contactDetails.title" = "Dane kontaktowe";
+"reportMissingPet.description.title" = "Opis zwierzęcia";
+"reportMissingPet.contactDetails.title" = "Dane właściciela";
 "reportMissingPet.summary.title" = "Podsumowanie";
 
 // Progress indicator
@@ -97,9 +102,37 @@
 // Buttons
 "reportMissingPet.button.continue" = "Dalej";
 "reportMissingPet.button.submit" = "Wyślij";
+"reportMissingPet.button.close" = "Zamknij";
 
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
+
+/* MARK: - Microchip Number Screen */
+
+"microchipNumber.title" = "Numer mikroczipu";
+"microchipNumber.progress" = "1/4";
+"microchipNumber.heading" = "Numer mikroczipu";
+"microchipNumber.description" = "Identyfikacja mikroczipem to najskuteczniejszy sposób na odnalezienie zwierzęcia. Jeśli Twój pupil ma wszczepiony mikroczip i znasz jego numer, wprowadź go tutaj.";
+"microchipNumber.fieldLabel" = "Numer mikroczipu (opcjonalnie)";
+"microchipNumber.fieldPlaceholder" = "00000-00000-00000";
+"microchipNumber.continueButton" = "Dalej";
+
+/* MARK: - Animal Photo Screen */
+
+"animalPhoto.title" = "Zdjęcie Twojego pupila";
+"animalPhoto.helper.required" = "Prześlij zdjęcie zaginionego zwierzęcia.";
+"animalPhoto.helper.pickerCancelled" = "Wybierz zdjęcie, aby kontynuować – możesz przeglądać ponownie w każdej chwili.";
+"animalPhoto.helper.loading" = "Pobieranie z iCloud…";
+"animalPhoto.alert.missing.title" = "Wymagane zdjęcie";
+"animalPhoto.alert.missing.message" = "Dołącz plik JPG, PNG, HEIC, GIF lub WEBP przed kontynuacją.";
+"animalPhoto.button.browse" = "Przeglądaj";
+"animalPhoto.button.remove" = "Usuń";
+"animalPhoto.button.continue" = "Kontynuuj";
+"animalPhoto.banner.settings" = "Otwórz ustawienia";
+"animalPhoto.banner.retry" = "Spróbuj ponownie";
+"animalPhoto.toast.mandatory" = "Zdjęcie jest obowiązkowe";
+"animalPhoto.tile.title" = "Dodaj zdjęcie zwierzęcia";
+"animalPhoto.tile.subtitle" = "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB";
 
 /* MARK: - Common */
 
@@ -107,6 +140,91 @@
 "common.retry" = "Ponów";
 "common.cancel" = "Anuluj";
 "common.ok" = "OK";
+"common.done" = "Gotowe";
 "common.continue" = "Dalej";
 "common.back" = "Wstecz";
 
+/* MARK: - Animal Description Screen */
+
+// Headings
+"animalDescription.heading" = "Szczegóły Twojego pupila";
+"animalDescription.subheading" = "Wypełnij szczegóły dotyczące zaginionego zwierzęcia.";
+
+// Labels
+"animalDescription.dateLabel" = "Data zaginięcia";
+"animalDescription.speciesLabel" = "Gatunek zwierzęcia";
+"animalDescription.raceLabel" = "Rasa zwierzęcia (opcjonalnie)";
+"animalDescription.genderLabel" = "Płeć";
+"animalDescription.ageLabel" = "Wiek zwierzęcia (opcjonalnie)";
+"animalDescription.coordinatesLabel" = "Szer. / Dł. geogr.";
+"animalDescription.coordinatePlaceholder" = "00000";
+"animalDescription.descriptionLabel" = "Dodatkowy opis zwierzęcia (opcjonalnie)";
+
+// Placeholders
+"animalDescription.speciesPlaceholder" = "Wybierz opcję";
+"animalDescription.racePlaceholder" = "np. Golden Retriever";
+"animalDescription.agePlaceholder" = "np. 5";
+"animalDescription.latitudePlaceholder" = "np. 52.2297";
+"animalDescription.longitudePlaceholder" = "np. 21.0122";
+"animalDescription.descriptionPlaceholder" = "Opisz cechy charakterystyczne...";
+
+// Buttons
+"animalDescription.requestGPSButton" = "Pobierz pozycję GPS";
+"animalDescription.continueButton" = "Dalej";
+
+// Date picker
+"animalDescription.datePicker.title" = "Wybierz datę";
+"animalDescription.datePicker.done" = "Gotowe";
+
+// Helper text
+"animalDescription.gpsHelperText" = "Lokalizacja pobrana pomyślnie";
+"animalDescription.characterCount" = "%d/%d";
+
+// Error messages
+"animalDescription.error.missingDate" = "Proszę wybrać datę";
+"animalDescription.error.missingSpecies" = "Proszę wybrać gatunek";
+"animalDescription.error.missingRace" = "Proszę wprowadzić rasę";
+"animalDescription.error.missingGender" = "Proszę wybrać płeć";
+"animalDescription.error.invalidAge" = "Wiek musi być między 0 a 40";
+"animalDescription.error.invalidLatitude" = "Szerokość geograficzna musi być między -90 a 90";
+"animalDescription.error.invalidLongitude" = "Długość geograficzna musi być między -180 a 180";
+"animalDescription.error.invalidCoordinateFormat" = "Nieprawidłowy format współrzędnych";
+
+// Toast messages
+"animalDescription.toast.validationErrors" = "Proszę poprawić podświetlone pola";
+
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Dane właściciela";
+"owners_details.main_title" = "Twoje dane kontaktowe";
+"owners_details.subtitle" = "Dodaj swoje dane kontaktowe i ewentualną nagrodę.";
+"owners_details.phone.label" = "Numer telefonu";
+"owners_details.phone.placeholder" = "Wpisz numer telefonu...";
+"owners_details.phone.error" = "Wpisz co najmniej 7 cyfr";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Wpisz adres email";
+"owners_details.email.error" = "Wpisz poprawny adres email";
+"owners_details.reward.label" = "Nagroda dla znalazcy (opcjonalnie)";
+"owners_details.reward.placeholder" = "Opisz nagrodę...";
+"owners_details.continue.button" = "Dalej";
+"owners_details.back.button" = "Wstecz";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "Brak połączenia";
+"owners_details.error.no_connection.message" = "Sprawdź połączenie i spróbuj ponownie.";
+"owners_details.error.generic.title" = "Coś poszło nie tak";
+"owners_details.error.generic.message" = "Spróbuj ponownie później.";
+"owners_details.alert.try_again" = "Spróbuj ponownie";
+"owners_details.alert.cancel" = "Anuluj";
+
+/* MARK: - Report Created Screen (Summary Step 5) */
+
+// Headings
+"report_created.title" = "Raport utworzony";
+
+// Body paragraphs
+"report_created.body_paragraph_1" = "Twój raport został utworzony, a Twoje zagubione zwierzę zostało dodane do bazy danych. Jeśli Twój pupil zostanie odnaleziony, natychmiast otrzymasz powiadomienie.";
+"report_created.body_paragraph_2" = "Jeśli chcesz usunąć swój raport z bazy danych, użyj kodu podanego poniżej w formularzu usuwania. Ten kod został również wysłany na Twój adres e-mail";
+
+// Toast message
+"report_created.code_copied" = "Skopiowano kod do schowka";

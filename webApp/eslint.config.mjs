@@ -11,5 +11,15 @@ export default defineConfig(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   reactPlugin.configs.flat.recommended,
-  reactPlugin.configs.flat['jsx-runtime']
+  reactPlugin.configs.flat['jsx-runtime'],
+  {
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    rules: {
+      'arrow-body-style': ['error', 'as-needed'],
+    },
+  }
 );

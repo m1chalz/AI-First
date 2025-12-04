@@ -91,7 +91,7 @@ struct PetDetailsView: View {
                     HStack(spacing: 12) {
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalName,
-                            value: petDetails.petName
+                            value: viewModel.formattedPetName
                         ))
                         .accessibilityIdentifier("petDetails.name.field")
                         
@@ -139,7 +139,7 @@ struct PetDetailsView: View {
                         
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalAge,
-                            value: petDetails.approximateAge ?? "—"
+                            value: viewModel.formattedAge
                         ))
                         .accessibilityIdentifier("petDetails.age.field")
                     }
@@ -183,7 +183,7 @@ struct PetDetailsView: View {
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#6a7282"))
                         
-                        Text(petDetails.description)
+                        Text(viewModel.formattedDescription)
                             .font(.system(size: 16))
                             .foregroundColor(Color(hex: "#101828"))
                             .fixedSize(horizontal: false, vertical: true)
@@ -210,50 +210,4 @@ struct PetDetailsView: View {
         .background(Color.white)
     }
     
-    // MARK: - Formatting Helpers
 }
-
-// MARK: - Previews
-
-#if DEBUG
-struct PetDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Mock repository for preview
-        class MockRepository: AnimalRepositoryProtocol {
-            func getAnimals() async throws -> [Animal] {
-                return []
-            }
-            
-            func getPetDetails(id: String) async throws -> PetDetails {
-                return PetDetails(
-                    id: "preview-id",
-                    petName: "Max",
-                    photoUrl: "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1010.jpg",
-                    status: .active,
-                    lastSeenDate: "2025-11-20",
-                    species: .dog,
-                    gender: .male,
-                    description: "Friendly and energetic golden retriever looking for a loving home. Great with kids and other pets.",
-                    phone: "+48 123 456 789",
-                    email: "test@example.com",
-                    breed: "Doberman",
-                    latitude: 52.2297,
-                    longitude: 21.0122,
-                    microchipNumber: "000-000-000-000",
-                    approximateAge: "3 years",
-                    reward: "500 PLN",
-                    createdAt: "2025-11-20T10:00:00Z",
-                    updatedAt: "2025-11-20T10:00:00Z"
-                )
-            }
-        }
-        
-        let viewModel = PetDetailsViewModel(repository: MockRepository(), petId: "preview-id")
-        
-        return NavigationView {
-            PetDetailsView(viewModel: viewModel)
-                .navigationBarHidden(true)
-        }
-    }
-}
-#endif

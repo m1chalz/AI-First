@@ -25,7 +25,7 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow: hidden;
     margin: 0;
-    padding: 0;
+    padding: 0 32px 24px;
 }
 
 /* Main content wrapper - per Figma layout */
@@ -45,7 +45,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 32px 24px;
+    padding-top: 20px;
     margin-bottom: 44px;
 }
 
@@ -63,48 +63,39 @@
     gap: 16px;
 }
 
-/* Buttons - per Figma web design (327px x 48px) */
-.primaryButton,
-.secondaryButton {
+/* Primary Button - per Figma design (Blue) */
+.primaryButton {
     width: 327px;
     height: 48px;
     padding: 12px 16px;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 0;
+    font-weight: 600;
+    line-height: 24px;
     border: none;
-    border-radius: 2px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: opacity 0.2s, background-color 0.2s;
+    transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
     font-family: 'Inter', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.primaryButton {
     color: #FFFFFF;
-    background-color: #2D2D2D;
+    background-color: #155DFC;
 }
 
 .primaryButton:hover {
-    opacity: 0.9;
+    background-color: #0d47a1;
+    transform: translateY(-2px);
 }
 
-.secondaryButton {
-    color: #2D2D2D;
-    background-color: #E5E9EC;
-}
-
-.secondaryButton:hover {
-    background-color: #D5D9DC;
+.primaryButton:active {
+    transform: translateY(0);
 }
 
 /* Content area */
 .content {
     flex: 1;
-    padding: 0;
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -120,34 +111,36 @@
 .animalList {
     display: flex;
     flex-direction: column;
-    gap: 3.25px; /* Gap per Figma web design (155.25px / 8 cards ≈ 3.25px between each) */
-    padding: 0 32px 20px;
+    gap: 16px; /* 16px gap between cards for better spacing */
 }
 
-/* Animal card - Horizontal layout matching Figma */
+/* Animal card - Horizontal layout with image on left edge */
 .animalCard {
     display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 16px;
-    min-height: 95.25px;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-height: 140px;
     background-color: white;
-    border-radius: 4px;
+    border-radius: 8px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
     cursor: pointer;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, transform 0.2s;
+    overflow: hidden;
 }
 
 .animalCard:hover {
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
-/* Photo placeholder - Circular, 162px container per Figma */
+/* Photo placeholder - Square (1:1), stuck to left edge, full height */
 .photoPlaceholder {
-    width: 162px;
-    min-width: 162px;
-    height: 63px;
-    border-radius: 105px;
+    width: 140px;
+    min-width: 140px;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 0;
     background-color: #EEEEEE;
     display: flex;
     align-items: center;
@@ -157,25 +150,25 @@
 }
 
 .photoIcon {
-    font-size: 29.75px;
+    font-size: 40px;
     color: #93A2B4;
 }
 
 .photoImage {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 105px;
+    object-fit: cover;  /* Przycinanie aby wypełnić całą przestrzeń */
+    border-radius: 0;
 }
 
 /* Left section: Basic animal info (location + species/breed) */
 .animalBasicInfo {
-    width: 197px;
-    min-width: 197px;
+    width: 200px;
+    min-width: 200px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 16.625px 24px;
+    gap: 12px;
+    padding: 16px 16px 16px 24px;
 }
 
 .locationRow {
@@ -188,6 +181,7 @@
     width: 24px;
     height: 24px;
     flex-shrink: 0;
+    color: #616161;
 }
 
 .locationText {
@@ -231,27 +225,36 @@
 /* Center section: Description */
 .animalDescription {
     flex: 1;
-    min-height: 48px;
     font-size: 13px;
     font-weight: 400;
     color: #545F71;
-    line-height: normal;
+    line-height: 1.4;
     font-family: 'Inter', sans-serif;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 16px 16px;
+    max-height: 54px;
 }
 
-/* Right section: Status badge and date */
+/* Right section: Status and date (left column) + Details button (right column) */
 .animalStatusSection {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-start;
-    padding: 8px 0;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    padding: 16px 16px;
     min-width: fit-content;
+}
+
+/* Status and date grouped in left column */
+.statusDateGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .statusBadge {
@@ -272,6 +275,35 @@
     font-weight: 400;
     color: #545F71;
     font-family: 'Inter', sans-serif;
+}
+
+.detailsButton {
+    width: 127px;
+    height: 44px;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #155DFC;
+    background-color: transparent;
+    border: 1px solid #155DFC;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.detailsButton:hover {
+    background-color: #155DFC;
+    color: white;
+}
+
+.detailsButton:focus {
+    outline: 2px solid #155DFC;
+    outline-offset: 2px;
 }
 
 /* Loading state */

@@ -1,0 +1,37 @@
+import Foundation
+
+/// Mapper for creating announcements - converts between domain models and DTOs for announcement creation flow
+class CreateAnnouncementMapper {
+    
+    /// Converts DTO from HTTP response to domain model
+    func toDomain(_ dto: AnnouncementResponseDTO) -> AnnouncementResult {
+        AnnouncementResult(
+            id: dto.id,
+            managementPassword: dto.managementPassword
+        )
+    }
+    
+    /// Converts domain model to DTO for HTTP request
+    func toDTO(_ data: CreateAnnouncementData) -> CreateAnnouncementRequestDTO {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withFullDate]
+        
+        return CreateAnnouncementRequestDTO(
+            species: AnimalSpeciesDTO(domain: data.species),
+            breed: data.breed,
+            sex: AnimalGenderDTO(domain: data.sex),
+            age: data.age,
+            lastSeenDate: dateFormatter.string(from: data.lastSeenDate),
+            locationLatitude: data.location.latitude,
+            locationLongitude: data.location.longitude,
+            email: data.contact.email,
+            phone: data.contact.phone,
+            status: AnnouncementStatusDTO(domain: .active),
+            microchipNumber: data.microchipNumber,
+            petName: data.petName,
+            description: data.description,
+            reward: data.reward
+        )
+    }
+}
+

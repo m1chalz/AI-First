@@ -11,7 +11,7 @@ class PetDetailsCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?
 
     private let petId: String
-    private let repository: AnimalRepositoryProtocol
+    private let repository: AnnouncementRepositoryProtocol
     
     // MARK: - Initialization
     
@@ -23,7 +23,7 @@ class PetDetailsCoordinator: CoordinatorInterface {
     init(
         navigationController: UINavigationController?,
         petId: String,
-        repository: AnimalRepositoryProtocol
+        repository: AnnouncementRepositoryProtocol
     ) {
         self.navigationController = navigationController
         self.petId = petId

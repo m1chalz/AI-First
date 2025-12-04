@@ -11,6 +11,10 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     var childCoordinators: [CoordinatorInterface] = []
     var navigationController: UINavigationController? // Modal nav controller
     
+    /// Callback triggered when user successfully sends report (User Story 3: T066)
+    /// Set by parent coordinator (AnimalListCoordinator) to trigger list refresh
+    var onReportSent: (() -> Void)?
+    
     private let parentNavigationController: UINavigationController
     private var flowState: ReportMissingPetFlowState?
     
@@ -37,7 +41,9 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Create FlowState as coordinator property (owned by coordinator lifecycle)
         // This state object will be injected into all ViewModels
-        let flowState = ReportMissingPetFlowState()
+        let flowState = ReportMissingPetFlowState(
+            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache
+        )
         self.flowState = flowState
         
         // Navigate to chip number screen (step 1/4) - entry point
@@ -86,7 +92,12 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = PhotoViewModel(flowState: flowState)
+        let toastScheduler = ToastScheduler()
+        let viewModel = PhotoViewModel(
+            flowState: flowState,
+            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
+            toastScheduler: toastScheduler
+        )
         
         viewModel.onNext = { [weak self] in
             self?.navigateToDescription()
@@ -116,9 +127,14 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = DescriptionViewModel(flowState: flowState)
+        let toastScheduler = ToastScheduler()
+        let viewModel = AnimalDescriptionViewModel(
+            flowState: flowState,
+            locationHandler: ServiceContainer.shared.locationPermissionHandler,
+            toastScheduler: toastScheduler
+        )
         
-        viewModel.onNext = { [weak self] in
+        viewModel.onContinue = { [weak self] in
             self?.navigateToContactDetails()
         }
         
@@ -126,7 +142,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
             self?.navigationController?.popViewController(animated: true)
         }
         
-        let view = DescriptionView(viewModel: viewModel)
+        let view = AnimalDescriptionView(viewModel: viewModel)
         let hostingController = UIHostingController(
             rootView: NavigationBackHiding { view }
         )
@@ -135,7 +151,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         hostingController.title = L10n.ReportMissingPet.Description.title
         configureProgressIndicator(hostingController: hostingController, step: 3, total: 4)
         configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
+            viewModel?.onBackTapped()
         })
         
         modalNavController.pushViewController(hostingController, animated: true)
@@ -146,10 +162,16 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let viewModel = ContactDetailsViewModel(flowState: flowState)
+        let submissionService = ServiceContainer.shared.announcementSubmissionService
+        let viewModel = ContactDetailsViewModel(
+            submissionService: submissionService,
+            flowState: flowState
+        )
         
-        viewModel.onNext = { [weak self] in
-            self?.navigateToSummary()
+        // Callback invoked on successful submission with managementPassword
+        viewModel.onReportSent = { [weak self] managementPassword in
+            self?.onReportSent?() // Notify parent coordinator for list refresh
+            self?.navigateToSummary(managementPassword: managementPassword)
         }
         
         viewModel.onBack = { [weak self] in
@@ -170,20 +192,20 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         modalNavController.pushViewController(hostingController, animated: true)
     }
-    
-    /// Navigate to summary screen (Step 5 - No Progress Indicator).
-    private func navigateToSummary() {
+
+    /// Navigate to summary screen (Step 5 - Report Created Confirmation).
+    private func navigateToSummary(managementPassword: String) {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
-        
-        let viewModel = SummaryViewModel(flowState: flowState)
-        
-        viewModel.onSubmit = { [weak self] in
-            self?.exitFlow() // Placeholder - no backend submission yet
-        }
-        
-        viewModel.onBack = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+
+        // Store managementPassword in FlowState for summary display
+        flowState.managementPassword = managementPassword
+
+        let toastScheduler = ToastScheduler()
+        let viewModel = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
+
+        viewModel.onClose = { [weak self] in
+            self?.exitFlow()
         }
         
         let view = SummaryView(viewModel: viewModel)
@@ -193,10 +215,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Configure navigation bar
         hostingController.title = L10n.ReportMissingPet.Summary.title
-        // NO progress indicator on summary screen
-        configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
-        })
+        // NO progress indicator and NO back button on summary screen (final confirmation)
         
         modalNavController.pushViewController(hostingController, animated: true)
     }
@@ -205,8 +224,12 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     /// Called when user taps back on step 1 or completes submission.
     func exitFlow() {
         // Clear all form data from flow state before dismissing
-        flowState?.clear()
+        let currentFlowState = flowState
         flowState = nil
+        
+        Task {
+            await currentFlowState?.clear()
+        }
         
         // Dismiss modal UINavigationController
         navigationController?.dismiss(animated: true) { [weak self] in
@@ -299,7 +322,7 @@ private extension ReportMissingPetCoordinator {
         hostingController.navigationItem.leftBarButtonItem = dismissBarButtonItem
         
         // Test identifier for E2E tests
-        dismissButton.accessibilityIdentifier = "reportMissingPet.dismissButton"
+        dismissButton.accessibilityIdentifier = "missingPet.microchip.backButton"
     }
 }
 

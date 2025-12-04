@@ -27,6 +27,8 @@ const defaultMockRepository: IAnnouncementRepository = {
   findById: async () => null,
   existsByMicrochip: async () => false,
   create: async () => MOCK_ANNOUNCEMENT,
+  updatePhotoUrl: async () => undefined,
+  delete: async () => undefined,
 };
 
 const VALID_CREATE_DATA: CreateAnnouncementDto = {
@@ -34,7 +36,6 @@ const VALID_CREATE_DATA: CreateAnnouncementDto = {
   sex: 'MALE',
   locationLatitude: 40.7128,
   locationLongitude: -74.0060,
-  photoUrl: 'https://example.com/photo.jpg',
   lastSeenDate: '2025-11-19',
   status: 'MISSING',
   email: 'test@example.com',
@@ -43,15 +44,17 @@ const VALID_CREATE_DATA: CreateAnnouncementDto = {
 describe('AnnouncementService', () => {
   const mockValidator = vi.fn();
   const mockSanitizer = vi.fn((input: string) => input);
+  const mockLocationValidator = vi.fn();
 
-  const createService = (repository: IAnnouncementRepository, validator = mockValidator, sanitizer = mockSanitizer) => {
-    return new AnnouncementService(repository, validator, sanitizer);
+  const createService = (repository: IAnnouncementRepository, validator = mockValidator, sanitizer = mockSanitizer, locationValidator = mockLocationValidator) => {
+    return new AnnouncementService(repository, validator, sanitizer, locationValidator);
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockValidator.mockClear();
     mockSanitizer.mockImplementation((input: string) => input);
+    mockLocationValidator.mockClear();
   });
 
   describe('getAllAnnouncements', () => {
@@ -59,7 +62,7 @@ describe('AnnouncementService', () => {
       { announcements: [MOCK_ANNOUNCEMENT], expectedLength: 1 },
       { announcements: [], expectedLength: 0 },
     ])('should return $expectedLength announcements when repository returns $expectedLength items', async ({ announcements, expectedLength }) => {
-      // Given: Repository returns specified announcements
+      // given
       const fakeRepository = {
         ...defaultMockRepository,
         findAll: async () => announcements,
@@ -67,12 +70,76 @@ describe('AnnouncementService', () => {
       
       const service = createService(fakeRepository);
       
-      // When: Service retrieves all announcements
+      // when
       const result = await service.getAllAnnouncements();
       
-      // Then: Returns expected announcements from repository
+      // then
       expect(result).toEqual(announcements);
       expect(result.length).toBe(expectedLength);
+    });
+
+    it('should pass location parameters to validator and construct filter for repository', async () => {
+      // given
+      const lat = 50.0614;
+      const lng = 19.9383;
+      const range = 10;
+      const expectedFilter = { lat, lng, range };
+      
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const locationValidatorSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository, mockValidator, mockSanitizer, locationValidatorSpy);
+      
+      // when
+      await service.getAllAnnouncements(lat, lng, range);
+      
+      // then
+      expect(locationValidatorSpy).toHaveBeenCalledWith(lat, lng, range);
+      expect(locationValidatorSpy).toHaveBeenCalledTimes(1);
+      expect(findAllSpy).toHaveBeenCalledWith(expectedFilter);
+      expect(findAllSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use default range when not provided', async () => {
+      // given
+      const lat = 50.0614;
+      const lng = 19.9383;
+      const expectedFilter = { lat, lng, range: 5 };
+      
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository);
+      
+      // when
+      await service.getAllAnnouncements(lat, lng, undefined);
+      
+      // then
+      expect(findAllSpy).toHaveBeenCalledWith(expectedFilter);
+    });
+
+    it('should pass undefined filter when coordinates are not provided', async () => {
+      // given
+      const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findAll: findAllSpy,
+      };
+      
+      const service = createService(fakeRepository);
+      
+      // when
+      await service.getAllAnnouncements(undefined, undefined, undefined);
+      
+      // then
+      expect(findAllSpy).toHaveBeenCalledWith(undefined);
     });
   });
 
@@ -396,6 +463,139 @@ describe('AnnouncementService', () => {
         managementPassword: expect.stringMatching(/^\d{6}$/),
       });
       expect(fakeRepository.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteAnnouncement', () => {
+    it('should delete announcement when it exists', async () => {
+      // Given: Repository with existing announcement and mock delete
+      const deleteSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: deleteSpy,
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Delete method is called with correct ID
+      expect(deleteSpy).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.id);
+      expect(deleteSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError when announcement does not exist', async () => {
+      // Given: Repository with no announcement found
+      const deleteSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => null,
+        delete: deleteSpy,
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes non-existent announcement
+      // Then: NotFoundError is thrown
+      await expect(service.deleteAnnouncement('non-existent-id')).rejects.toThrow(NotFoundError);
+
+      // Delete should not be called
+      expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
+    it('should propagate delete errors from repository', async () => {
+      // Given: Repository that throws an error during delete
+      const deleteError = new Error('Database connection failed');
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: async () => {
+          throw deleteError;
+        },
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service tries to delete and repository fails
+      // Then: Error is propagated
+      await expect(service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id)).rejects.toThrow('Database connection failed');
+    });
+
+    it('should delete photos when photoUploadService is provided', async () => {
+      // Given: Mock photo upload service and repository
+      const deletePhotosSpy = vi.fn();
+      const mockPhotoUploadService = {
+        uploadPhoto: vi.fn(),
+        deletePhotos: deletePhotosSpy,
+      };
+
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = new AnnouncementService(
+        fakeRepository,
+        mockValidator,
+        mockSanitizer,
+        mockLocationValidator,
+        mockPhotoUploadService as any
+      );
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Photos are deleted using photoUrl before announcement
+      expect(deletePhotosSpy).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.photoUrl);
+      expect(deletePhotosSpy).toHaveBeenCalledTimes(1);
+      expect(fakeRepository.delete).toHaveBeenCalled();
+    });
+
+    it('should delete announcement even if photo deletion fails', async () => {
+      // Given: Mock photo upload service that fails
+      const mockPhotoUploadService = {
+        uploadPhoto: vi.fn(),
+        deletePhotos: vi.fn().mockRejectedValue(new Error('Photo deletion failed')),
+      };
+
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = new AnnouncementService(
+        fakeRepository,
+        mockValidator,
+        mockSanitizer,
+        mockLocationValidator,
+        mockPhotoUploadService as any
+      );
+
+      // When: Service tries to delete announcement
+      // Then: Error from photo deletion is propagated
+      await expect(service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id)).rejects.toThrow('Photo deletion failed');
+      expect(fakeRepository.delete).not.toHaveBeenCalled();
+    });
+
+    it('should not delete photos when photoUploadService is not provided', async () => {
+      // Given: Service without photo upload service
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Only announcement is deleted, no photo service call
+      expect(fakeRepository.delete).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.id);
     });
   });
 });

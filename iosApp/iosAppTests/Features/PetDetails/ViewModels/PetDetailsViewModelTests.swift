@@ -8,76 +8,44 @@ final class PetDetailsViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
-    /// Fake repository for testing
-    private class FakeAnimalRepository: AnimalRepositoryProtocol {
-        var shouldThrowError = false
-        var mockPetDetails: PetDetails?
-        var getAnimalsCallCount = 0
-        var getPetDetailsCallCount = 0
-        
-        func getAnimals() async throws -> [Animal] {
-            getAnimalsCallCount += 1
-            return []
-        }
-        
-        func getPetDetails(id: String) async throws -> PetDetails {
-            getPetDetailsCallCount += 1
-            
-            if shouldThrowError {
-                throw NSError(
-                    domain: "FakeRepository",
-                    code: 500,
-                    userInfo: [NSLocalizedDescriptionKey: "Mock error"]
-                )
-            }
-            
-            guard let petDetails = mockPetDetails else {
-                throw NSError(
-                    domain: "FakeRepository",
-                    code: 404,
-                    userInfo: [NSLocalizedDescriptionKey: "Pet not found"]
-                )
-            }
-            
-            return petDetails
-        }
-    }
+    // Uses FakeAnnouncementRepository from main app for testing
     
     // MARK: - Helper Methods
     
     private func makeSUT(
-        repository: AnimalRepositoryProtocol? = nil,
         petId: String = "test-id"
-    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnimalRepository) {
-        let fakeRepo = (repository as? FakeAnimalRepository) ?? FakeAnimalRepository()
+    ) -> (viewModel: PetDetailsViewModel, repository: FakeAnnouncementRepository) {
+        let fakeRepo = FakeAnnouncementRepository()
         let viewModel = PetDetailsViewModel(repository: fakeRepo, petId: petId)
         return (viewModel, fakeRepo)
     }
     
     private func makeMockPetDetails(
         id: String = "test-id",
+        petName: String? = "Test Pet",
         photoUrl: String? = "https://example.com/photo.jpg",
-        status: AnimalStatus = .active,
+        status: AnnouncementStatus = .active,
         latitude: Double = 52.2297,
         longitude: Double = 21.0122,
-        reward: String? = "100 PLN"
+        reward: String? = "100 PLN",
+        description: String? = "Test description"
     ) -> PetDetails {
         return PetDetails(
             id: id,
-            petName: "Test Pet",
+            petName: petName,
             photoUrl: photoUrl,
             status: status,
             lastSeenDate: "2025-11-20",
             species: .dog,
             gender: .male,
-            description: "Test description",
+            description: description,
             phone: "+48 123 456 789",
             email: "test@example.com",
             breed: "Test Breed",
             latitude: latitude,
             longitude: longitude,
             microchipNumber: "123-456-789",
-            approximateAge: "2 years",
+            approximateAge: 2,
             reward: reward,
             createdAt: "2025-11-20T10:00:00.000Z",
             updatedAt: "2025-11-20T10:00:00.000Z"
@@ -119,7 +87,7 @@ final class PetDetailsViewModelTests: XCTestCase {
     func testLoadPetDetails_whenRepositoryFails_shouldUpdateStateToError() async {
         // Given
         let (sut, repository) = makeSUT()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         
         // When
         await sut.loadPetDetails()
@@ -129,7 +97,8 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertFalse(message.isEmpty)
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
         XCTAssertEqual(repository.getPetDetailsCallCount, 1)
     }
     
@@ -146,13 +115,14 @@ final class PetDetailsViewModelTests: XCTestCase {
             XCTFail("Expected error state, got \(sut.state)")
             return
         }
-        XCTAssertTrue(message.contains("not found") || message.contains("Not found"))
+        // ViewModel returns generic L10n error message for all errors
+        XCTAssertEqual(message, L10n.PetDetails.Error.loadingFailed)
     }
     
     func testRetry_whenInErrorState_shouldTransitionToLoading() async {
         // Given
         let (sut, repository) = makeSUT()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         await sut.loadPetDetails()
         
         guard case .error = sut.state else {
@@ -161,7 +131,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         }
         
         // When
-        repository.shouldThrowError = false
+        repository.shouldFail = false
         repository.mockPetDetails = makeMockPetDetails()
         sut.retry()
         
@@ -198,7 +168,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         
         // Set initial state to error
         await sut.loadPetDetails()
-        repository.shouldThrowError = true
+        repository.shouldFail = true
         await sut.loadPetDetails()
         
         guard case .error = sut.state else {
@@ -207,7 +177,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         }
         
         // When
-        repository.shouldThrowError = false
+        repository.shouldFail = false
         let loadTask = Task {
             await sut.loadPetDetails()
         }
@@ -607,7 +577,7 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertNotNil(result)
         if let model = result {
             XCTAssertEqual(model.imageUrl, "https://example.com/photo.jpg")
-            XCTAssertEqual(model.statusDisplayText, L10n.AnimalStatus.active)
+            XCTAssertEqual(model.statusDisplayText, L10n.AnnouncementStatus.active)
             XCTAssertEqual(model.rewardText, "$500")
         }
     }
@@ -691,6 +661,117 @@ final class PetDetailsViewModelTests: XCTestCase {
         
         // Then
         XCTAssertEqual(result, "34.6037° S, 58.3816° W")
+    }
+    
+    // MARK: - API Integration Tests (User Story 2)
+    
+    /// T044: Test PetDetailsViewModel loadDetails should update petDetails publisher with API data
+    func testLoadPetDetails_whenRepositoryReturnsApiData_shouldUpdateState() async {
+        // Given - ViewModel with repository that returns API-like data
+        let (sut, repository) = makeSUT(petId: "api-test-id")
+        let apiPetDetails = makeMockPetDetails(
+            id: "api-test-id",
+            photoUrl: "http://localhost:3000/images/test.jpg"
+        )
+        repository.mockPetDetails = apiPetDetails
+        
+        // When - loadPetDetails is called
+        await sut.loadPetDetails()
+        
+        // Then - state should be loaded with API data
+        guard case .loaded(let details) = sut.state else {
+            XCTFail("Expected loaded state, got \(sut.state)")
+            return
+        }
+        XCTAssertEqual(details.id, "api-test-id")
+        XCTAssertEqual(details.petName, "Test Pet")
+        XCTAssertEqual(repository.getPetDetailsCallCount, 1)
+    }
+    
+    /// T045: Test PetDetailsViewModel with 404 error should set appropriate error state
+    
+    /// T046: Test PetDetailsViewModel with network error should set appropriate error state
+    
+    // MARK: - Formatted PetName Tests
+    
+    func testFormattedPetName_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedPetName_whenPetNameIsNil_shouldReturnDash() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(petName: nil)
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedPetName_whenPetNameHasValue_shouldReturnName() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(petName: "Buddy")
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedPetName
+        
+        // Then
+        XCTAssertEqual(result, "Buddy")
+    }
+    
+    // MARK: - Formatted Description Tests
+    
+    func testFormattedDescription_whenStateIsLoading_shouldReturnDash() {
+        // Given
+        let (sut, _) = makeSUT()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedDescription_whenDescriptionIsNil_shouldReturnDash() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(description: nil)
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "—")
+    }
+    
+    func testFormattedDescription_whenDescriptionHasValue_shouldReturnDescription() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let petDetails = makeMockPetDetails(description: "Friendly dog with brown spots")
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        // When
+        let result = sut.formattedDescription
+        
+        // Then
+        XCTAssertEqual(result, "Friendly dog with brown spots")
     }
     
 }

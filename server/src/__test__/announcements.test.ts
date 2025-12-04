@@ -93,6 +93,21 @@ describe('GET /api/v1/announcements', () => {
     });
   });
 
+  it('should filter out the announcements without photoUrl', async () => {
+    // Given: Database has 2 test announcements
+    await db('announcement').insert({
+      ...TEST_ANNOUNCEMENT_1,
+      photo_url: null,
+    });
+    
+    // When: Client requests all announcements
+    const response = await request(server).get('/api/v1/announcements');
+    
+    // Then: Returns HTTP 200 with JSON array containing announcements
+    expect(response.status).toBe(200);
+    expect(response.body.data).toHaveLength(0);
+  });
+
   it('should return 200 with empty array when database is empty', async () => {
     // Given: Database has no announcements (cleaned in beforeEach)
     
@@ -158,6 +173,7 @@ describe('GET /api/v1/announcements/:id', () => {
     // Then: Error response returned
     expect(response.body).toEqual({
       error: {
+        requestId: expect.any(String),
         code: 'NOT_FOUND',
         message: 'Resource not found'
       }
@@ -191,7 +207,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Golden Retriever',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -227,7 +242,6 @@ describe('POST /api/v1/announcements', () => {
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       email: 'john@example.com',
       phone: '+1 555 123 4567',
@@ -255,7 +269,7 @@ describe('POST /api/v1/announcements', () => {
     expect(response.body.locationLatitude).toBe(data.locationLatitude);
     expect(response.body.locationLongitude).toBe(data.locationLongitude);
     expect(response.body.lastSeenDate).toBe(data.lastSeenDate);
-    expect(response.body.photoUrl).toBe(data.photoUrl);
+    expect(response.body.photoUrl).toBeNull();
     expect(response.body.status).toBe(data.status);
     expect(response.body.email).toBe(data.email);
     expect(response.body.phone).toBe(data.phone);
@@ -270,7 +284,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Siamese Cat',
       sex: 'FEMALE',
       lastSeenDate: '2025-11-19',
-      photoUrl: 'https://example.com/cat.jpg',
       status: 'FOUND' as const,
       locationLatitude: 51.5074,
       locationLongitude: -0.1278,
@@ -295,7 +308,6 @@ describe('POST /api/v1/announcements', () => {
     const data = {
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -310,6 +322,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_VALUE',
       field: 'species'
     });
@@ -321,7 +334,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Dog',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285
@@ -335,6 +347,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'MISSING_CONTACT',
       field: 'contact'
     });
@@ -348,7 +361,6 @@ describe('POST /api/v1/announcements', () => {
       description: '<img src=x onerror=alert(1)>Test<div>content</div>',
       petName: '<div>Buddy</div>',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -375,7 +387,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Dog',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo.jpg',
       status: 'MISSING',
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -391,6 +402,7 @@ describe('POST /api/v1/announcements', () => {
     
     // then
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'INVALID_FIELD',
       field: 'unknownField'
     });
@@ -402,7 +414,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Golden Retriever',
       sex: 'MALE',
       lastSeenDate: '2025-11-20',
-      photoUrl: 'https://example.com/photo1.jpg',
       status: 'MISSING' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -420,7 +431,6 @@ describe('POST /api/v1/announcements', () => {
       species: 'Labrador',
       sex: 'FEMALE',
       lastSeenDate: '2025-11-21',
-      photoUrl: 'https://example.com/photo2.jpg',
       status: 'FOUND' as const,
       locationLatitude: 40.785091,
       locationLongitude: -73.968285,
@@ -435,9 +445,405 @@ describe('POST /api/v1/announcements', () => {
     
     // then: Returns HTTP 409 with CONFLICT error
     expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
       code: 'CONFLICT',
       message: 'An entity with this value already exists',
       field: 'microchipNumber'
     });
+  });
+});
+
+describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => {
+  const KRAKOW = { lat: 50.0614, lng: 19.9383 };
+  const NEARBY_2KM = { lat: 50.0700, lng: 19.9500 };
+  const WARSAW = { lat: 52.2297, lng: 21.0122 };
+
+  const ANNOUNCEMENT_KRAKOW = {
+    id: '11111111-1111-1111-1111-111111111111',
+    pet_name: 'Max',
+    species: 'DOG',
+    breed: 'Golden Retriever',
+    sex: 'MALE',
+    age: 3,
+    description: 'Friendly dog in Krakow',
+    microchip_number: null,
+    location_latitude: KRAKOW.lat,
+    location_longitude: KRAKOW.lng,
+    last_seen_date: '2025-11-20',
+    email: 'krakow@example.com',
+    phone: null,
+    photo_url: 'url',
+    status: 'MISSING',
+    reward: null,
+    management_password_hash: 'hash1',
+    created_at: '2025-11-20T10:00:00.000Z',
+    updated_at: '2025-11-20T10:00:00.000Z',
+  };
+
+  const ANNOUNCEMENT_NEARBY = {
+    id: '22222222-2222-2222-2222-222222222222',
+    pet_name: 'Luna',
+    species: 'CAT',
+    breed: null,
+    sex: 'FEMALE',
+    age: 2,
+    description: 'Cat near Krakow',
+    microchip_number: null,
+    location_latitude: NEARBY_2KM.lat,
+    location_longitude: NEARBY_2KM.lng,
+    last_seen_date: '2025-11-21',
+    email: 'nearby@example.com',
+    phone: null,
+    photo_url: 'url',
+    status: 'MISSING',
+    reward: null,
+    management_password_hash: 'hash2',
+    created_at: '2025-11-21T10:00:00.000Z',
+    updated_at: '2025-11-21T10:00:00.000Z',
+  };
+
+  const ANNOUNCEMENT_WARSAW = {
+    id: '33333333-3333-3333-3333-333333333333',
+    pet_name: 'Buddy',
+    species: 'DOG',
+    breed: 'Beagle',
+    sex: 'MALE',
+    age: 5,
+    description: 'Dog in Warsaw',
+    microchip_number: null,
+    location_latitude: WARSAW.lat,
+    location_longitude: WARSAW.lng,
+    last_seen_date: '2025-11-22',
+    email: 'warsaw@example.com',
+    phone: null,
+    photo_url: 'url',
+    status: 'MISSING',
+    reward: null,
+    management_password_hash: 'hash3',
+    created_at: '2025-11-22T10:00:00.000Z',
+    updated_at: '2025-11-22T10:00:00.000Z',
+  };
+
+  beforeEach(async () => {
+    await db('announcement').del();
+    await db('announcement').insert([
+      ANNOUNCEMENT_KRAKOW,
+      ANNOUNCEMENT_NEARBY,
+      ANNOUNCEMENT_WARSAW,
+    ]);
+  });
+
+  it('should filter announcements within custom radius (10km)', async () => {
+    // given
+    const searchLat = KRAKOW.lat;
+    const searchLng = KRAKOW.lng;
+    const range = 10;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng, range: range })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(2);
+    const ids = response.body.data.map((a: { id: string }) => a.id);
+    expect(ids).toContain(ANNOUNCEMENT_KRAKOW.id);
+    expect(ids).toContain(ANNOUNCEMENT_NEARBY.id);
+    expect(ids).not.toContain(ANNOUNCEMENT_WARSAW.id);
+  });
+
+  it('should return empty array when no announcements in radius', async () => {
+    // given
+    const searchLat = 0.0;
+    const searchLng = 0.0;
+    const range = 10;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng, range: range })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toEqual([]);
+  });
+
+  it('should return all announcements within large radius (300km)', async () => {
+    // given
+    const searchLat = KRAKOW.lat;
+    const searchLng = KRAKOW.lng;
+    const range = 300;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng, range: range })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(3);
+  });
+
+  it('should verify distance calculation accuracy (known coordinates)', async () => {
+    // given
+    const searchLat = KRAKOW.lat;
+    const searchLng = KRAKOW.lng;
+    const range = 5;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng, range: range })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(2);
+    const ids = response.body.data.map((a: { id: string }) => a.id);
+    expect(ids).toContain(ANNOUNCEMENT_KRAKOW.id);
+    expect(ids).toContain(ANNOUNCEMENT_NEARBY.id);
+    expect(ids).not.toContain(ANNOUNCEMENT_WARSAW.id);
+  });
+
+  it('should filter with 5km default when lat/lng provided without range', async () => {
+    // given
+    const searchLat = KRAKOW.lat;
+    const searchLng = KRAKOW.lng;
+
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ lat: searchLat, lng: searchLng })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(2);
+    const ids = response.body.data.map((a: { id: string }) => a.id);
+    expect(ids).toContain(ANNOUNCEMENT_KRAKOW.id);
+    expect(ids).toContain(ANNOUNCEMENT_NEARBY.id);
+    expect(ids).not.toContain(ANNOUNCEMENT_WARSAW.id);
+  });
+
+  it('should return HTTP 400 when only lat provided', async () => {
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements?lat=50.0614')
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: 'Parameter \'lng\' is required when \'lat\' is provided',
+    });
+  });
+
+  it('should return HTTP 400 when only lng provided', async () => {
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements?lng=19.9383')
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: 'Parameter \'lat\' is required when \'lng\' is provided',
+    });
+  });
+
+  it('should return all announcements when neither lat nor lng provided', async () => {
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(3);
+  });
+
+  it('should ignore range parameter when lat/lng not provided', async () => {
+    // when
+    const response = await request(server)
+      .get('/api/v1/announcements')
+      .query({ range: 10 })
+      .expect(200);
+
+    // then
+    expect(response.body.data).toHaveLength(3);
+  });
+
+  it.each([
+    { lat: 91, lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be between -90 and 90' },
+    { lat: -91, lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be between -90 and 90' },
+  ])('should return HTTP 400 when lat out of range: $lat', async ({ lat, lng, expectedMessage }) => {
+    // when
+    const response = await request(server)
+      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: expectedMessage,
+    });
+  });
+
+  it.each([
+    { lat: 50.0614, lng: 181, expectedMessage: 'Parameter \'lng\' must be between -180 and 180' },
+    { lat: 50.0614, lng: -181, expectedMessage: 'Parameter \'lng\' must be between -180 and 180' },
+  ])('should return HTTP 400 when lng out of range: $lng', async ({ lat, lng, expectedMessage }) => {
+    // when
+    const response = await request(server)
+      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: expectedMessage,
+    });
+  });
+
+  it.each([
+    { lat: 'abc', lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be a valid number' },
+    { lat: 50.0614, lng: 'xyz', expectedMessage: 'Parameter \'lng\' must be a valid number' },
+  ])('should return HTTP 400 when coordinates are not numbers', async ({ lat, lng, expectedMessage }) => {
+    // when
+    const response = await request(server)
+      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: expectedMessage,
+    });
+  });
+
+  it.each([
+    { lat: 50.0614, lng: 19.9383, range: 0.5, expectedMessage: 'Parameter \'range\' must be an integer' },
+    { lat: 50.0614, lng: 19.9383, range: 10.5, expectedMessage: 'Parameter \'range\' must be an integer' },
+  ])('should return HTTP 400 when range is not an integer: $range', async ({ lat, lng, range, expectedMessage }) => {
+    // when
+    const response = await request(server)
+      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}&range=${range}`)
+      .expect(400);
+
+    // then
+    expect(response.body.error).toMatchObject({
+      code: 'INVALID_PARAMETER',
+      message: expectedMessage,
+    });
+  });
+});
+
+describe('DELETE /api/admin/v1/announcements/:id', () => {
+  beforeEach(async () => {
+    await db('announcement').del();
+  });
+
+  it('should delete announcement and return 204 when valid admin token provided', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+    const adminToken = 'tajnehasloadmina';
+
+    // When: Admin sends DELETE request with valid token
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', adminToken)
+      .expect(204);
+
+    // Then: Announcement is deleted
+    expect(response.body).toEqual({});
+    const deletedAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(deletedAnnouncement).toBeUndefined();
+  });
+
+  it('should return 401 when Authorization header is missing', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+
+    // When: Client sends DELETE request without Authorization header
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .expect(401);
+
+    // Then: Returns 401 Unauthenticated error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'UNAUTHENTICATED',
+    });
+
+    // Announcement should still exist
+    const announcement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(announcement).toBeDefined();
+  });
+
+  it('should return 401 when invalid admin token provided', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+
+    // When: Client sends DELETE request with invalid token
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', 'wrongtoken')
+      .expect(401);
+
+    // Then: Returns 401 Unauthenticated error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'UNAUTHENTICATED',
+    });
+
+    // Announcement should still exist
+    const announcement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(announcement).toBeDefined();
+  });
+
+  it('should return 404 when announcement does not exist', async () => {
+    // Given: Database is empty
+    const adminToken = 'tajnehasloadmina';
+    const nonExistentId = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+
+    // When: Admin sends DELETE request for non-existent announcement
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${nonExistentId}`)
+      .set('Authorization', adminToken)
+      .expect(404);
+
+    // Then: Returns 404 Not Found error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'NOT_FOUND',
+    });
+  });
+
+  it('should delete only the specified announcement when multiple exist', async () => {
+    // Given: Database has 2 test announcements
+    await db('announcement').insert([TEST_ANNOUNCEMENT_1, TEST_ANNOUNCEMENT_2]);
+    const adminToken = 'tajnehasloadmina';
+
+    // When: Admin deletes first announcement
+    await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', adminToken)
+      .expect(204);
+
+    // Then: Only first announcement is deleted, second still exists
+    const deletedAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(deletedAnnouncement).toBeUndefined();
+
+    const remainingAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_2.id)
+      .first();
+    expect(remainingAnnouncement).toBeDefined();
+    expect(remainingAnnouncement.pet_name).toBe(TEST_ANNOUNCEMENT_2.pet_name);
   });
 });

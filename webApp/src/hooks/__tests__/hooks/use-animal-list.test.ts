@@ -1,12 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useAnimalList } from '../../use-animal-list';
-import * as animalRepositoryModule from '../../../services/animal-repository';
+import * as announcementServiceModule from '../../../services/announcement-service';
 
-vi.mock('../../services/animal-repository', () => ({
-    animalRepository: {
+vi.mock('../../../services/announcement-service', () => ({
+    announcementService: {
         getAnimals: vi.fn()
     }
+}));
+
+vi.mock('../../../contexts/GeolocationContext', () => ({
+    useGeolocationContext: vi.fn(() => ({
+        state: {
+            coordinates: null,
+            error: null,
+            isLoading: false,
+            permissionCheckCompleted: true,
+        },
+    }))
 }));
 
 describe('useAnimalList', () => {
@@ -16,14 +27,14 @@ describe('useAnimalList', () => {
     });
     
     it('should initialize with empty state', () => {
-        // Given
+        // given
         const mockGetAnimals = vi.fn().mockResolvedValue([]);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
+        vi.spyOn(announcementServiceModule.announcementService, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         expect(result.current.isLoading).toBe(true);
         expect(result.current.animals).toEqual([]);
         expect(result.current.error).toBeNull();
@@ -31,115 +42,68 @@ describe('useAnimalList', () => {
     });
     
     it('should update animals state when loadAnimals succeeds', async () => {
-        // Given
+        // given
         const mockAnimals = [
-            { id: '1', name: 'Fluffy', species: 'CAT' as any, breed: 'Maine Coon', location: { city: 'Pruszkow', radiusKm: 5 }, gender: 'MALE' as any, status: 'ACTIVE' as any, lastSeenDate: '18/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' },
-            { id: '2', name: 'Rex', species: 'DOG' as any, breed: 'German Shepherd', location: { city: 'Warsaw', radiusKm: 10 }, gender: 'FEMALE' as any, status: 'ACTIVE' as any, lastSeenDate: '17/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' },
-            { id: '3', name: 'Bella', species: 'CAT' as any, breed: 'Siamese', location: { city: 'Krakow', radiusKm: 3 }, gender: 'FEMALE' as any, status: 'FOUND' as any, lastSeenDate: '19/11/2025', description: 'Test', email: null, phone: null, photoUrl: 'placeholder' }
+            { id: '1', petName: 'Fluffy', species: 'CAT', breed: 'Maine Coon', locationLatitude: 52.0, locationLongitude: 21.0, sex: 'MALE', status: 'MISSING', lastSeenDate: '2025-11-18', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
+            { id: '2', petName: 'Rex', species: 'DOG', breed: 'German Shepherd', locationLatitude: 52.2, locationLongitude: 21.0, sex: 'FEMALE', status: 'MISSING', lastSeenDate: '2025-11-17', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
+            { id: '3', petName: 'Bella', species: 'CAT', breed: 'Siamese', locationLatitude: 50.0, locationLongitude: 19.9, sex: 'FEMALE', status: 'FOUND', lastSeenDate: '2025-11-19', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null }
         ];
         
         const mockGetAnimals = vi.fn().mockResolvedValue(mockAnimals);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
+        vi.spyOn(announcementServiceModule.announcementService, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
         
+        // then
         expect(result.current.animals).toHaveLength(3);
-        expect(result.current.animals[0].name).toBe('Fluffy');
+        expect(result.current.animals[0].petName).toBe('Fluffy');
         expect(result.current.error).toBeNull();
         expect(result.current.isEmpty).toBe(false);
     });
     
     it('should set error state when loadAnimals fails', async () => {
-        // Given
+        // given
         const mockError = new Error('Network error');
         const mockGetAnimals = vi.fn().mockRejectedValue(mockError);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
+        vi.spyOn(announcementServiceModule.announcementService, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
         
+        // then
         expect(result.current.animals).toEqual([]);
         expect(result.current.error).toBe('Network error');
         expect(result.current.isEmpty).toBe(false);
     });
     
     it('should return isEmpty true when no animals and no error', async () => {
-        // Given
+        // given
         const mockGetAnimals = vi.fn().mockResolvedValue([]);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
+        vi.spyOn(announcementServiceModule.announcementService, 'getAnimals').mockImplementation(mockGetAnimals);
         
-        // When
+        // when
         const { result } = renderHook(() => useAnimalList());
         
-        // Then
+        // then
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
         
+        // then
         expect(result.current.isEmpty).toBe(true);
         expect(result.current.animals).toEqual([]);
         expect(result.current.error).toBeNull();
     });
-    
-    it('should call console.log when selectAnimal is invoked', () => {
-        // Given
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-        const mockGetAnimals = vi.fn().mockResolvedValue([]);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
-        
-        const { result } = renderHook(() => useAnimalList());
-        
-        // When
-        result.current.selectAnimal('animal-123');
-        
-        // Then
-        expect(consoleSpy).toHaveBeenCalledWith('Navigate to animal details:', 'animal-123');
-        
-        consoleSpy.mockRestore();
-    });
-    
-    it('should call console.log when reportMissing is invoked', () => {
-        // Given
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-        const mockGetAnimals = vi.fn().mockResolvedValue([]);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
-        
-        const { result } = renderHook(() => useAnimalList());
-        
-        // When
-        result.current.reportMissing();
-        
-        // Then
-        expect(consoleSpy).toHaveBeenCalledWith('Navigate to report missing form');
-        
-        consoleSpy.mockRestore();
-    });
-    
-    it('should call console.log when reportFound is invoked', () => {
-        // Given
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-        const mockGetAnimals = vi.fn().mockResolvedValue([]);
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getAnimals').mockImplementation(mockGetAnimals);
-        
-        const { result } = renderHook(() => useAnimalList());
-        
-        // When
-        result.current.reportFound();
-        
-        // Then
-        expect(consoleSpy).toHaveBeenCalledWith('Navigate to report found form');
-        
-        consoleSpy.mockRestore();
-    });
+
 });

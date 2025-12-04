@@ -1,5 +1,11 @@
 export type AnnouncementStatus = 'MISSING' | 'FOUND';
 
+export interface LocationFilter {
+  lat: number;
+  lng: number;
+  range: number;
+}
+
 export interface CreateAnnouncementDto {
   petName?: string;
   species: string;
@@ -12,24 +18,13 @@ export interface CreateAnnouncementDto {
   locationLongitude: number;
   email?: string;
   phone?: string;
-  photoUrl: string;
   lastSeenDate: string;
   status: AnnouncementStatus;
   reward?: string;
 }
 
-export interface AnnouncementDto extends Omit<CreateAnnouncementDto, 'petName' | 'breed' | 'age' | 'description' | 'microchipNumber' | 'email' | 'phone' | 'reward'> {
-  id: string;
-  createdAt: string;
-  managementPassword?: string;
-  petName?: string | null;
-  breed?: string | null;
-  age?: number | null;
-  description?: string | null;
-  microchipNumber?: string | null;
-  email?: string | null;
-  phone?: string | null;
-  reward?: string | null;
+export interface AnnouncementWithManagementPassword extends Announcement {
+  managementPassword: string;
 }
 
 export interface Announcement {
@@ -45,7 +40,7 @@ export interface Announcement {
   locationLongitude: number;
   email?: string | null;
   phone?: string | null;
-  photoUrl: string;
+  photoUrl: string | null;
   lastSeenDate: string;
   status: AnnouncementStatus;
   reward?: string | null;
@@ -66,7 +61,7 @@ export interface AnnouncementRow {
   location_longitude: number;
   email: string | null;
   phone: string | null;
-  photo_url: string;
+  photo_url: string | null;
   last_seen_date: string;
   status: AnnouncementStatus;
   reward: string | null;

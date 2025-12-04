@@ -3,31 +3,32 @@
  * PetSpot iOS App
  */
 
-/* MARK: - Animal List Screen */
+/* MARK: - Announcement List Screen */
 
 // Navigation
-"animalList.navigationTitle" = "Missing Animals";
+"announcementList.navigationTitle" = "Missing Animals";
 
 // Floating action buttons
-"animalList.button.reportMissing" = "Report a Missing Animal";
-"animalList.button.reportFound" = "Report Found Animal";
+"announcementList.button.reportMissing" = "Report a Missing Animal";
+"announcementList.button.reportFound" = "Report Found Animal";
 
 // Empty state
-"animalList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
+"announcementList.emptyState.message" = "No animals reported yet. Tap 'Report a Missing Animal' to add the first one.";
 
 // Loading state
-"animalList.loading.message" = "Loading animals...";
+"announcementList.loading.message" = "Loading animals...";
 
 // Error messages
-"animalList.error.title" = "Error";
-"animalList.error.prefix" = "Error: %@";
-"animalList.error.generic" = "Something went wrong. Please try again.";
-"animalList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
+"announcementList.error.title" = "Error";
+"announcementList.error.prefix" = "Error: %@";
+"announcementList.error.generic" = "Something went wrong. Please try again.";
+"announcementList.error.loadingFailed" = "Failed to load announcements. Please try again.";
+"announcementList.error.networkUnavailable" = "No internet connection. Please check your network settings.";
 
-/* MARK: - Animal Card */
+/* MARK: - Announcement Card */
 
 // Location format
-"animalCard.location.format" = "%@, +%dkm";
+"announcementCard.location.format" = "%@, +%dkm";
 
 /* MARK: - Pet Details Screen */
 
@@ -36,6 +37,7 @@
 
 // Error state
 "petDetails.error.title" = "Failed to load pet details";
+"petDetails.error.loadingFailed" = "Failed to load pet details. Please try again.";
 
 // Labels
 "petDetails.label.dateOfDisappearance" = "Date of Disappearance";
@@ -48,6 +50,9 @@
 "petDetails.label.animalAge" = "Animal Approx. Age";
 "petDetails.label.placeOfDisappearance" = "Lat / Long";
 "petDetails.label.additionalDescription" = "Animal Additional Description";
+
+// Format
+"petDetails.format.yearsOld" = "%d years";
 
 // Buttons
 "petDetails.button.showOnMap" = "Show on the map";
@@ -62,11 +67,11 @@
 // Formats
 "petDetails.location.radiusFormat" = "±%d km";
 
-/* MARK: - Animal Status */
+/* MARK: - Announcement Status */
 
-"animalStatus.active" = "MISSING";
-"animalStatus.found" = "FOUND";
-"animalStatus.closed" = "CLOSED";
+"announcementStatus.active" = "MISSING";
+"announcementStatus.found" = "FOUND";
+"announcementStatus.closed" = "CLOSED";
 
 /* MARK: - Animal Species */
 
@@ -85,10 +90,10 @@
 /* MARK: - Report Missing Pet Flow */
 
 // Navigation titles
-"reportMissingPet.chipNumber.title" = "Microchip Number";
+"reportMissingPet.chipNumber.title" = "Microchip number";
 "reportMissingPet.photo.title" = "Pet Photo";
-"reportMissingPet.description.title" = "Description";
-"reportMissingPet.contactDetails.title" = "Contact Details";
+"reportMissingPet.description.title" = "Animal description";
+"reportMissingPet.contactDetails.title" = "Owner's details";
 "reportMissingPet.summary.title" = "Summary";
 
 // Progress indicator
@@ -97,9 +102,37 @@
 // Buttons
 "reportMissingPet.button.continue" = "Continue";
 "reportMissingPet.button.submit" = "Submit";
+"reportMissingPet.button.close" = "Close";
 
 // Placeholders (for future use)
 "reportMissingPet.chipNumber.placeholder" = "00000-00000-00000";
+
+/* MARK: - Microchip Number Screen */
+
+"microchipNumber.title" = "Microchip number";
+"microchipNumber.progress" = "1/4";
+"microchipNumber.heading" = "Microchip number";
+"microchipNumber.description" = "Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.";
+"microchipNumber.fieldLabel" = "Microchip number (optional)";
+"microchipNumber.fieldPlaceholder" = "00000-00000-00000";
+"microchipNumber.continueButton" = "Continue";
+
+/* MARK: - Animal Photo Screen */
+
+"animalPhoto.title" = "Your pet's photo";
+"animalPhoto.helper.required" = "Please upload a photo of the missing animal.";
+"animalPhoto.helper.pickerCancelled" = "Select a photo to continue – you can browse again anytime.";
+"animalPhoto.helper.loading" = "Downloading from iCloud…";
+"animalPhoto.alert.missing.title" = "Photo required";
+"animalPhoto.alert.missing.message" = "Attach a JPG, PNG, HEIC, GIF or WEBP file before continuing.";
+"animalPhoto.button.browse" = "Browse";
+"animalPhoto.button.remove" = "Remove";
+"animalPhoto.button.continue" = "Continue";
+"animalPhoto.banner.settings" = "Open Settings";
+"animalPhoto.banner.retry" = "Try again";
+"animalPhoto.toast.mandatory" = "Photo is mandatory";
+"animalPhoto.tile.title" = "Upload animal photo";
+"animalPhoto.tile.subtitle" = "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB";
 
 /* MARK: - Common */
 
@@ -107,6 +140,100 @@
 "common.retry" = "Retry";
 "common.cancel" = "Cancel";
 "common.ok" = "OK";
+"common.done" = "Done";
 "common.continue" = "Continue";
 "common.back" = "Back";
 
+/* MARK: - Location Permission Popup */
+
+"location.permission.popup.title" = "Location Access Needed";
+"location.permission.popup.message" = "Enable location access in Settings to see nearby pets.";
+"location.permission.popup.settings.button" = "Go to Settings";
+"location.permission.popup.cancel.button" = "Cancel";
+
+/* MARK: - Animal Description Screen */
+
+// Headings
+"animalDescription.heading" = "Your pet's details";
+"animalDescription.subheading" = "Fill out the details about the missing animal.";
+
+// Labels
+"animalDescription.dateLabel" = "Date of disappearance";
+"animalDescription.petNameLabel" = "Animal name";
+"animalDescription.speciesLabel" = "Animal species";
+"animalDescription.raceLabel" = "Animal race (optional)";
+"animalDescription.genderLabel" = "Gender";
+"animalDescription.ageLabel" = "Animal age (optional)";
+"animalDescription.coordinatesLabel" = "Lat / Long";
+"animalDescription.coordinatePlaceholder" = "00000";
+"animalDescription.descriptionLabel" = "Animal additional description (optional)";
+
+// Placeholders
+"animalDescription.petNamePlaceholder" = "Animal name (optional)";
+"animalDescription.speciesPlaceholder" = "Select an option";
+"animalDescription.racePlaceholder" = "e.g., Golden Retriever";
+"animalDescription.agePlaceholder" = "e.g., 5";
+"animalDescription.latitudePlaceholder" = "e.g., 52.2297";
+"animalDescription.longitudePlaceholder" = "e.g., 21.0122";
+"animalDescription.descriptionPlaceholder" = "Describe distinguishing features...";
+
+// Buttons
+"animalDescription.requestGPSButton" = "Request GPS position";
+"animalDescription.continueButton" = "Continue";
+
+// Date picker
+"animalDescription.datePicker.title" = "Select Date";
+"animalDescription.datePicker.done" = "Done";
+
+// Helper text
+"animalDescription.gpsHelperText" = "Location captured successfully";
+"animalDescription.characterCount" = "%d/%d";
+
+// Error messages
+"animalDescription.error.missingDate" = "Please select a date";
+"animalDescription.error.missingSpecies" = "Please select a species";
+"animalDescription.error.missingRace" = "Please enter the breed or race";
+"animalDescription.error.missingGender" = "Please select a gender";
+"animalDescription.error.invalidAge" = "Age must be between 0 and 40";
+"animalDescription.error.invalidLatitude" = "Latitude must be between -90 and 90";
+"animalDescription.error.invalidLongitude" = "Longitude must be between -180 and 180";
+"animalDescription.error.invalidCoordinateFormat" = "Invalid coordinate format";
+
+// Toast messages
+"animalDescription.toast.validationErrors" = "Please correct the highlighted fields";
+
+/* MARK: - Owner's Details Screen */
+
+"owners_details.screen_title" = "Owner's details";
+"owners_details.main_title" = "Your contact info";
+"owners_details.subtitle" = "Add your contact information and potential reward.";
+"owners_details.phone.label" = "Phone number";
+"owners_details.phone.placeholder" = "Enter phone number...";
+"owners_details.phone.error" = "Enter at least 7 digits";
+"owners_details.email.label" = "Email";
+"owners_details.email.placeholder" = "Enter email address";
+"owners_details.email.error" = "Enter a valid email address";
+"owners_details.reward.label" = "Reward for the finder (optional)";
+"owners_details.reward.placeholder" = "Describe reward...";
+"owners_details.continue.button" = "Continue";
+"owners_details.back.button" = "Back";
+
+// Error Alerts
+"owners_details.error.no_connection.title" = "No connection";
+"owners_details.error.no_connection.message" = "Please check your network and try again.";
+"owners_details.error.generic.title" = "Something went wrong";
+"owners_details.error.generic.message" = "Please try again later.";
+"owners_details.alert.try_again" = "Try Again";
+"owners_details.alert.cancel" = "Cancel";
+
+/* MARK: - Report Created Screen (Summary Step 5) */
+
+// Headings
+"report_created.title" = "Report created";
+
+// Body paragraphs
+"report_created.body_paragraph_1" = "Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.";
+"report_created.body_paragraph_2" = "If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address";
+
+// Toast message
+"report_created.code_copied" = "Code copied to clipboard";

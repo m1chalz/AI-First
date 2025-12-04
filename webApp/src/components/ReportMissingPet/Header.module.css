@@ -1,0 +1,56 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  background: white;
+  width: 100%;
+}
+
+.backButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 0.667px solid #e5e9ec;
+  border-radius: 112px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #2d2d2d;
+  flex-shrink: 0;
+  order: 1;
+}
+
+.backButton:hover {
+  background-color: #f8f9fa;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2d2d2d;
+  text-align: center;
+  letter-spacing: -0.28px;
+  line-height: 22px;
+  order: 2;
+}
+
+.progress {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.667px;
+  font-weight: 700;
+  color: #2d2d2d;
+  background: white;
+  border: 0.667px solid #e5e9ec;
+  border-radius: 832.5px;
+  flex-shrink: 0;
+  order: 3;
+}

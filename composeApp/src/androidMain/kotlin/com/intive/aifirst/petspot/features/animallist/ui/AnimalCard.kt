@@ -1,14 +1,13 @@
-@file:Suppress("ktlint:standard:function-naming") // Composable functions use PascalCase
 
 package com.intive.aifirst.petspot.features.animallist.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,12 +33,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
 import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalSpecies
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
+import com.intive.aifirst.petspot.lib.LocationFormatter
 
 /**
  * Composable for displaying a single animal card in the list.
@@ -64,7 +65,7 @@ fun AnimalCard(
 ) {
     val placeholderInitial =
         animal.name.firstOrNull()?.uppercaseChar()?.toString()
-            ?: animal.species.displayName.firstOrNull()?.uppercaseChar()?.toString()
+            ?: animal.species.firstOrNull()?.uppercaseChar()?.toString()
             ?: "?"
 
     Card(
@@ -87,7 +88,7 @@ fun AnimalCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // LEFT: Photo placeholder (64dp circular)
+            // LEFT: Photo (64dp circular) - loads from URL with placeholder fallback
             Box(
                 modifier =
                     Modifier
@@ -96,9 +97,13 @@ fun AnimalCard(
                         .background(Color(0xFFEEEEEE)),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_list_image_default),
-                    contentDescription = "",
+                AsyncImage(
+                    model = animal.photoUrl,
+                    contentDescription = "Photo of ${animal.name}",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_list_image_default),
+                    error = painterResource(R.drawable.ic_list_image_default),
                 )
             }
 
@@ -118,19 +123,7 @@ fun AnimalCard(
                         fontSize = 13.sp,
                     )
                     Text(
-                        text = animal.location.city,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF4A5565),
-                    )
-                    Text(
-                        text = "•",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF4A5565),
-                    )
-                    Text(
-                        text = "+${animal.location.radiusKm}km",
+                        text = LocationFormatter.formatCoordinates(animal.location),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color(0xFF4A5565),
@@ -144,7 +137,7 @@ fun AnimalCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = animal.species.displayName,
+                        text = animal.species,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color(0xFF101828),
@@ -202,8 +195,8 @@ private object AnimalCardPreviewData {
             id = "preview-1",
             name = "Luna",
             photoUrl = "",
-            location = Location(city = "Warsaw", radiusKm = 15),
-            species = AnimalSpecies.DOG,
+            location = Location(latitude = 52.2297, longitude = 21.0122),
+            species = "Dog",
             breed = "Border Collie",
             gender = AnimalGender.FEMALE,
             status = AnimalStatus.MISSING,

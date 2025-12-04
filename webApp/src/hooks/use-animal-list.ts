@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { animalRepository } from '../services/animal-repository';
+import { useState, useEffect, useCallback } from 'react';
+import { useGeolocationContext } from '../contexts/GeolocationContext';
+import { announcementService } from '../services/announcement-service';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
@@ -8,47 +9,38 @@ interface UseAnimalListResult {
     error: string | null;
     isEmpty: boolean;
     loadAnimals: () => Promise<void>;
-    selectAnimal: (id: string) => void;
-    reportMissing: () => void;
-    reportFound: () => void;
+    geolocationError: GeolocationPositionError | null;
 }
 
 export function useAnimalList(): UseAnimalListResult {
     const [animals, setAnimals] = useState<Animal[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingAnimals, setIsFetchingAnimals] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { state: geolocation } = useGeolocationContext();
     
+    const isLoading = geolocation.isLoading || isFetchingAnimals;
     const isEmpty = animals.length === 0 && !isLoading && error === null;
     
-    const loadAnimals = async () => {
-        setIsLoading(true);
+    const loadAnimals = useCallback(async () => {
+        setIsFetchingAnimals(true);
         setError(null);
         
         try {
-            const result = await animalRepository.getAnimals();
+            const result = await announcementService.getAnimals(geolocation.coordinates);
             setAnimals(result);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
-            setIsLoading(false);
+            setIsFetchingAnimals(false);
         }
-    };
+    }, [geolocation.coordinates]);
     
-    const selectAnimal = (id: string) => {
-        console.log('Navigate to animal details:', id);
-    };
-    
-    const reportMissing = () => {
-        console.log('Navigate to report missing form');
-    };
-    
-    const reportFound = () => {
-        console.log('Navigate to report found form');
-    };
-    
+    // Load animals when geolocation finishes loading
     useEffect(() => {
-        loadAnimals();
-    }, []);
+        if (!geolocation.isLoading && geolocation.permissionCheckCompleted) {
+            loadAnimals();
+        }
+    }, [loadAnimals, geolocation.isLoading, geolocation.permissionCheckCompleted]);
     
     return {
         animals,
@@ -56,9 +48,7 @@ export function useAnimalList(): UseAnimalListResult {
         error,
         isEmpty,
         loadAnimals,
-        selectAnimal,
-        reportMissing,
-        reportFound
+        geolocationError: null
     };
 }
 
