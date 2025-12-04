@@ -29,7 +29,7 @@ export async function givenUserIsOnPetDetailsScreen(
     // 3. Wait for Pet Details screen to appear
     const petDetailsScreen = new PetDetailsScreen();
     await driver.pause(1000); // Small pause for navigation animation
-    await waitForElementDisplayed(driver, petDetailsScreen.testIds.detailsView);
+    await waitForElementDisplayed(driver, petDetailsScreen.testIds.content);
     
     return petDetailsScreen;
 }
@@ -44,7 +44,7 @@ export async function whenUserWaitsForDetails(screen: PetDetailsScreen): Promise
     // Wait for loading state to finish (loading spinner disappears)
     await driver.waitUntil(
         async () => {
-            const loadingExists = await screen.loadingSpinner.isDisplayed().catch(() => false);
+            const loadingExists = await screen.loading.isDisplayed().catch(() => false);
             return !loadingExists;
         },
         {
@@ -54,7 +54,7 @@ export async function whenUserWaitsForDetails(screen: PetDetailsScreen): Promise
     );
     
     // Wait for details view to be displayed
-    await screen.detailsView.waitForDisplayed({ timeout: 2000 });
+    await screen.content.waitForDisplayed({ timeout: 2000 });
 }
 
 /**
@@ -65,13 +65,13 @@ export async function whenUserWaitsForDetails(screen: PetDetailsScreen): Promise
  */
 export async function thenDetailsAreVisible(screen: PetDetailsScreen): Promise<void> {
     // Photo should be visible
-    await expect(screen.photoImage).toBeDisplayed();
+    await expect(screen.photo).toBeDisplayed();
     
     // Status badge should be visible
     await expect(screen.statusBadge).toBeDisplayed();
     
     // At least one identification field should be visible
-    await expect(screen.speciesField).toBeDisplayed();
+    await expect(screen.species).toBeDisplayed();
 }
 
 /**
@@ -82,7 +82,7 @@ export async function thenDetailsAreVisible(screen: PetDetailsScreen): Promise<v
  */
 export async function thenLoadingIsVisible(screen: PetDetailsScreen): Promise<void> {
     // Check if loading spinner exists and is displayed
-    const isDisplayed = await screen.loadingSpinner.isDisplayed().catch(() => false);
+    const isDisplayed = await screen.loading.isDisplayed().catch(() => false);
     
     // If not immediately visible, it might have been too fast
     // This is acceptable as loading is transient
@@ -91,7 +91,7 @@ export async function thenLoadingIsVisible(screen: PetDetailsScreen): Promise<vo
         return;
     }
     
-    await expect(screen.loadingSpinner).toBeDisplayed();
+    await expect(screen.loading).toBeDisplayed();
 }
 
 /**
@@ -123,8 +123,8 @@ export async function whenUserTapsRetry(screen: PetDetailsScreen): Promise<void>
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsPhone(screen: PetDetailsScreen): Promise<void> {
-    await screen.phoneField.waitForDisplayed({ timeout: 2000 });
-    await screen.phoneField.click();
+    await screen.phone.waitForDisplayed({ timeout: 2000 });
+    await screen.phone.click();
 }
 
 /**
@@ -134,8 +134,8 @@ export async function whenUserTapsPhone(screen: PetDetailsScreen): Promise<void>
  * @param screen - PetDetailsScreen instance
  */
 export async function whenUserTapsEmail(screen: PetDetailsScreen): Promise<void> {
-    await screen.emailField.waitForDisplayed({ timeout: 2000 });
-    await screen.emailField.click();
+    await screen.email.waitForDisplayed({ timeout: 2000 });
+    await screen.email.click();
 }
 
 /**
@@ -147,17 +147,6 @@ export async function whenUserTapsEmail(screen: PetDetailsScreen): Promise<void>
 export async function whenUserTapsShowMap(screen: PetDetailsScreen): Promise<void> {
     await screen.showMapButton.waitForDisplayed({ timeout: 2000 });
     await screen.showMapButton.click();
-}
-
-/**
- * When: User taps the Remove Report button.
- * Simulates tap action on remove report button.
- * 
- * @param screen - PetDetailsScreen instance
- */
-export async function whenUserTapsRemoveReport(screen: PetDetailsScreen): Promise<void> {
-    await screen.removeReportButton.waitForDisplayed({ timeout: 2000 });
-    await screen.removeReportButton.click();
 }
 
 

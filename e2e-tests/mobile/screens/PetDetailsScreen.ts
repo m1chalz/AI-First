@@ -8,59 +8,56 @@ export class PetDetailsScreen {
      */
     readonly testIds = {
         // Main screen elements
-        view: 'petDetails.view',
+        content: 'petDetails.content',
         loading: 'petDetails.loading',
         error: 'petDetails.error',
         errorMessage: 'petDetails.error.message',
-        retryButton: 'petDetails.error.retry.button',
+        retryButton: 'petDetails.retryButton',
         
         // Pet photo section
-        photoImage: 'petDetails.photo.image',
-        statusBadge: 'petDetails.status.badge',
-        rewardBadge: 'petDetails.reward.badge',
+        photo: 'petDetails.photo',
+        statusBadge: 'petDetails.statusBadge',
+        rewardBadge: 'petDetails.rewardBadge',
         
         // Pet info section
-        name: 'petDetails.name.field',
-        species: 'petDetails.species.field',
-        breed: 'petDetails.breed.field',
-        sex: 'petDetails.sex.field',
-        age: 'petDetails.age.field',
-        microchip: 'petDetails.microchip.field',
-        disappearanceDate: 'petDetails.date.field',
+        name: 'petDetails.name',
+        species: 'petDetails.species',
+        breed: 'petDetails.breed',
+        sex: 'petDetails.sex',
+        age: 'petDetails.age',
+        microchip: 'petDetails.microchip',
+        disappearanceDate: 'petDetails.disappearanceDate',
         
         // Location section
-        location: 'petDetails.location.field',
-        showMapButton: 'petDetails.showMap.button',
+        location: 'petDetails.location',
+        showMapButton: 'petDetails.showMapButton',
         
         // Contact section
-        phone: 'petDetails.phone.tap',
-        email: 'petDetails.email.tap',
+        phone: 'petDetails.phone',
+        email: 'petDetails.email',
         
         // Description section
-        description: 'petDetails.description.text',
-        
-        // Actions
-        removeReportButton: 'petDetails.removeReport.button',
+        description: 'petDetails.description',
     };
 
     /**
-     * Returns the main details view container.
+     * Returns the main content container.
      */
-    get detailsView() {
-        return $(`~${this.testIds.view}`);
+    get content() {
+        return $(`~${this.testIds.content}`);
     }
 
     /**
      * Returns the loading indicator element.
      */
-    get loadingSpinner() {
+    get loading() {
         return $(`~${this.testIds.loading}`);
     }
 
     /**
      * Returns the error container element.
      */
-    get errorView() {
+    get error() {
         return $(`~${this.testIds.error}`);
     }
 
@@ -79,10 +76,10 @@ export class PetDetailsScreen {
     }
 
     /**
-     * Returns the pet photo image element.
+     * Returns the pet photo element.
      */
-    get photoImage() {
-        return $(`~${this.testIds.photoImage}`);
+    get photo() {
+        return $(`~${this.testIds.photo}`);
     }
 
     /**
@@ -100,58 +97,58 @@ export class PetDetailsScreen {
     }
 
     /**
-     * Returns the pet name field element.
+     * Returns the pet name element.
      */
-    get nameField() {
+    get name() {
         return $(`~${this.testIds.name}`);
     }
 
     /**
-     * Returns the species field element.
+     * Returns the species element.
      */
-    get speciesField() {
+    get species() {
         return $(`~${this.testIds.species}`);
     }
 
     /**
-     * Returns the breed field element.
+     * Returns the breed element.
      */
-    get breedField() {
+    get breed() {
         return $(`~${this.testIds.breed}`);
     }
 
     /**
-     * Returns the sex field element.
+     * Returns the sex element.
      */
-    get sexField() {
+    get sex() {
         return $(`~${this.testIds.sex}`);
     }
 
     /**
-     * Returns the age field element.
+     * Returns the age element.
      */
-    get ageField() {
+    get age() {
         return $(`~${this.testIds.age}`);
     }
 
     /**
-     * Returns the microchip field element.
+     * Returns the microchip element.
      */
-    get microchipField() {
+    get microchip() {
         return $(`~${this.testIds.microchip}`);
     }
 
     /**
-     * Returns the disappearance date field element.
+     * Returns the disappearance date element.
      */
-    get disappearanceDateField() {
+    get disappearanceDate() {
         return $(`~${this.testIds.disappearanceDate}`);
     }
 
     /**
-     * Returns the location field element.
+     * Returns the location element.
      */
-    get locationField() {
+    get location() {
         return $(`~${this.testIds.location}`);
     }
 
@@ -163,31 +160,24 @@ export class PetDetailsScreen {
     }
 
     /**
-     * Returns the phone field element (tappable).
+     * Returns the phone element.
      */
-    get phoneField() {
+    get phone() {
         return $(`~${this.testIds.phone}`);
     }
 
     /**
-     * Returns the email field element (tappable).
+     * Returns the email element.
      */
-    get emailField() {
+    get email() {
         return $(`~${this.testIds.email}`);
     }
 
     /**
-     * Returns the description text element.
+     * Returns the description element.
      */
-    get descriptionText() {
+    get description() {
         return $(`~${this.testIds.description}`);
-    }
-
-    /**
-     * Returns the remove report button element.
-     */
-    get removeReportButton() {
-        return $(`~${this.testIds.removeReportButton}`);
     }
 }
 

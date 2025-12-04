@@ -8,8 +8,7 @@ import {
     whenUserTapsRetry,
     whenUserTapsPhone,
     whenUserTapsEmail,
-    whenUserTapsShowMap,
-    whenUserTapsRemoveReport
+    whenUserTapsShowMap
 } from '../steps/petDetailsSteps';
 import { waitForElementDisplayed } from '../steps/elementSteps';
 
@@ -26,8 +25,8 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
         const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
         
         // Then - pet details screen should be displayed
-        await waitForElementDisplayed(driver, screen.testIds.detailsView);
-        await expect(screen.detailsView).toBeDisplayed();
+        await waitForElementDisplayed(driver, screen.testIds.content);
+        await expect(screen.content).toBeDisplayed();
     });
     
     it('should display loading state while fetching pet data', async () => {
@@ -47,7 +46,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
         await whenUserWaitsForDetails(screen);
         
         // Then - pet photo should be visible
-        await expect(screen.photoImage).toBeDisplayed();
+        await expect(screen.photo).toBeDisplayed();
     });
     
     it('should display pet details after successful load', async () => {
@@ -104,7 +103,7 @@ describe('Pet Details Screen - User Story 1: View Pet Details', () => {
         await whenUserWaitsForDetails(screen);
         
         // Then - fallback "Image not available" should be displayed
-        await expect(screen.photoImage).toBeDisplayed();
+        await expect(screen.photo).toBeDisplayed();
         // Note: Could check for specific fallback text/image if implemented
     });
 });
@@ -187,35 +186,6 @@ describe('Pet Details Screen - User Story 3: Contact Information', () => {
     });
 });
 
-describe('Pet Details Screen - User Story 7: Remove Report', () => {
-    
-    it('should display Remove Report button', async () => {
-        // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
-        await whenUserWaitsForDetails(screen);
-        
-        // When - scrolling to bottom of screen where button is located
-        // iOS native scroll: swipe up to reveal bottom content
-        await driver.execute('mobile: scroll', { direction: 'down' });
-        await driver.pause(500); // Wait for scroll animation
-        
-        // Then - Remove Report button should be visible
-        await expect(screen.removeReportButton).toBeDisplayed();
-    });
-    
-    it('should handle Remove Report button tap', async () => {
-        // Given - user is viewing pet details
-        const screen = await givenUserIsOnPetDetailsScreen(driver, '1');
-        await whenUserWaitsForDetails(screen);
-        
-        // When - scrolling to button and tapping it
-        // iOS native scroll: swipe up to reveal bottom content
-        await driver.execute('mobile: scroll', { direction: 'down' });
-        await driver.pause(500); // Wait for scroll animation
-        await whenUserTapsRemoveReport(screen);
-        
-        // Then - action is logged to console (placeholder)
-        // Note: Actual report removal not implemented yet
-    });
-});
+// NOTE: User Story 7: Remove Report functionality not implemented yet
+// Tests skipped until feature is available on both platforms
 
