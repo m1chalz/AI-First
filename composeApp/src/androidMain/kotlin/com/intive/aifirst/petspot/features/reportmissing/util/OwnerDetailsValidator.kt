@@ -14,7 +14,9 @@ sealed interface OwnerDetailsValidationResult {
  */
 object OwnerDetailsValidator {
     private const val MIN_PHONE_DIGITS = 7
-    private const val MAX_PHONE_DIGITS = 11
+
+    /** Maximum digits allowed in phone number (used by UI for input filtering). */
+    const val MAX_PHONE_DIGITS = 11
 
     /**
      * Validates phone number.

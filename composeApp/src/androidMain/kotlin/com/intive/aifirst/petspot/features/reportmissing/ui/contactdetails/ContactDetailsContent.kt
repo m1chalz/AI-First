@@ -3,8 +3,10 @@ package com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -31,10 +33,8 @@ import com.intive.aifirst.petspot.features.reportmissing.ui.components.FormField
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.ReportMissingColors
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StyledOutlinedTextField
+import com.intive.aifirst.petspot.features.reportmissing.util.OwnerDetailsValidator
 import com.intive.aifirst.petspot.ui.preview.PreviewScreenSizes
-
-/** Maximum digits allowed in phone number (matches validator) */
-private const val MAX_PHONE_DIGITS = 11
 
 /**
  * Stateless content composable for Contact Details screen (Step 4/4).
@@ -123,7 +123,7 @@ fun ContactDetailsContent(
                             // Count digits only (excluding formatting characters)
                             val digitCount = filtered.count { it.isDigit() }
                             // Allow change only if digit count <= 11
-                            if (digitCount <= MAX_PHONE_DIGITS) {
+                            if (digitCount <= OwnerDetailsValidator.MAX_PHONE_DIGITS) {
                                 onPhoneChange(filtered)
                             }
                         },
@@ -154,17 +154,35 @@ fun ContactDetailsContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Reward field (optional)
+                // Reward field (optional) with character counter
                 FormField(
                     label = "Reward for the finder (optional)",
                     modifier = Modifier.testTag("ownersDetails.rewardInput"),
                 ) {
-                    StyledOutlinedTextField(
-                        value = state.reward,
-                        onValueChange = onRewardChange,
-                        placeholder = "Enter amount...",
-                        enabled = !state.isSubmitting,
-                    )
+                    Column {
+                        StyledOutlinedTextField(
+                            value = state.reward,
+                            onValueChange = onRewardChange,
+                            placeholder = "Enter amount...",
+                            enabled = !state.isSubmitting,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = "${state.rewardCharacterCount}/${state.rewardMaxLength}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (state.rewardCharacterCount >= state.rewardMaxLength) {
+                                    ReportMissingColors.ErrorTextColor
+                                } else {
+                                    ReportMissingColors.LabelColor
+                                },
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                                    .testTag("ownersDetails.rewardCounter"),
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
