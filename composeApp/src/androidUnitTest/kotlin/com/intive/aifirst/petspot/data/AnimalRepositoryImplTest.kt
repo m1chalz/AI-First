@@ -324,7 +324,7 @@ class AnimalRepositoryImplTest {
                 }
             }
         val apiClient = AnnouncementApiClient(httpClient, baseUrl)
-        return AnimalRepositoryImpl(apiClient)
+        return AnimalRepositoryImpl(apiClient, baseUrl)
     }
 
     // endregion

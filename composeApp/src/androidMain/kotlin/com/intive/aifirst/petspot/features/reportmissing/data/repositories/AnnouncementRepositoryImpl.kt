@@ -1,7 +1,6 @@
 package com.intive.aifirst.petspot.features.reportmissing.data.repositories
 
 import android.content.ContentResolver
-import android.net.Uri
 import android.util.Base64
 import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
 import com.intive.aifirst.petspot.features.reportmissing.data.mappers.toDto
@@ -10,6 +9,7 @@ import com.intive.aifirst.petspot.features.reportmissing.domain.models.CreateAnn
 import com.intive.aifirst.petspot.features.reportmissing.domain.models.CreatedAnnouncement
 import com.intive.aifirst.petspot.features.reportmissing.domain.repositories.AnnouncementRepository
 import java.io.IOException
+import androidx.core.net.toUri
 
 /**
  * Implementation of AnnouncementRepository using AnnouncementApiClient.
@@ -44,7 +44,7 @@ class AnnouncementRepositoryImpl(
                     )
 
             // Read photo from URI using injected ContentResolver
-            val uri = Uri.parse(photoUri)
+            val uri = photoUri.toUri()
             val inputStream =
                 contentResolver.openInputStream(uri)
                     ?: return Result.failure(IOException("Cannot open photo URI"))

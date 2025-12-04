@@ -2,6 +2,7 @@ package com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.intive.aifirst.petspot.features.reportmissing.domain.usecases.SubmitAnnouncementUseCase
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUiState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUserIntent
@@ -23,11 +24,13 @@ import kotlinx.coroutines.launch
  * Responsibilities:
  * - Manages UI state (phone, email, reward, validation errors, submission state)
  * - Validates inputs on ContinueClicked
+ * - Orchestrates 2-step submission via SubmitAnnouncementUseCase
  * - Syncs data with ReportMissingFlowState for cross-screen persistence
  * - Emits one-off effects (navigation, snackbars)
  */
 class OwnerDetailsViewModel(
     private val flowState: ReportMissingFlowState,
+    private val submitAnnouncementUseCase: SubmitAnnouncementUseCase? = null,
 ) : ViewModel() {
     // State
     private val _state = MutableStateFlow(OwnerDetailsUiState())
@@ -83,6 +86,9 @@ class OwnerDetailsViewModel(
     }
 
     private fun handleContinueClicked() {
+        // Prevent double submission
+        if (_state.value.isSubmitting) return
+
         // Validate inputs
         val phoneResult = OwnerDetailsValidator.validatePhone(_state.value.phone)
         val emailResult = OwnerDetailsValidator.validateEmail(_state.value.email)
@@ -110,11 +116,34 @@ class OwnerDetailsViewModel(
             return
         }
 
-        // Validation passed - Phase 4 will add submission logic here
-        // For now, just emit navigation effect (placeholder for Phase 4)
+        // Validation passed - start submission
+        submitAnnouncement()
+    }
+
+    private fun submitAnnouncement() {
+        // Guard: no use case means we're in test mode without submission
+        val useCase = submitAnnouncementUseCase ?: return
+
+        _state.update { it.copy(isSubmitting = true) }
+
         viewModelScope.launch {
-            // TODO: Phase 4 will add: call SubmitAnnouncementUseCase here
-            // For Phase 3, we just validate - submission will be added in Phase 4
+            val result = useCase(flowState.data.value)
+
+            _state.update { it.copy(isSubmitting = false) }
+
+            result.fold(
+                onSuccess = { managementPassword ->
+                    _effects.emit(OwnerDetailsUiEffect.NavigateToSummary(managementPassword))
+                },
+                onFailure = {
+                    _effects.emit(
+                        OwnerDetailsUiEffect.ShowSnackbar(
+                            message = "Something went wrong. Please try again.",
+                            actionLabel = "Retry",
+                        ),
+                    )
+                },
+            )
         }
     }
 
@@ -125,8 +154,8 @@ class OwnerDetailsViewModel(
     }
 
     private fun handleRetryClicked() {
-        // Phase 5 will implement retry logic
-        handleContinueClicked()
+        // Retry submission directly (validation already passed)
+        submitAnnouncement()
     }
 }
 

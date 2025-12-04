@@ -77,11 +77,12 @@ val viewModelModule =
             )
         }
 
-        // OwnerDetailsViewModel: MVI pattern with FlowState for cross-screen persistence
+        // OwnerDetailsViewModel: MVI pattern with FlowState + UseCase for submission
         // Parameters: flowState
         viewModel { params ->
             OwnerDetailsViewModel(
                 flowState = params.get(),
+                submitAnnouncementUseCase = get(),
             )
         }
     }

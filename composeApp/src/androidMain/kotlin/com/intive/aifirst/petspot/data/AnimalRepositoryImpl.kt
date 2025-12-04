@@ -9,9 +9,11 @@ import com.intive.aifirst.petspot.data.mappers.toDomain
  * Repository implementation that fetches pet announcements from the backend API.
  *
  * @property apiClient HTTP client for backend API communication
+ * @property baseUrl Base URL for constructing full image URLs from relative paths
  */
 class AnimalRepositoryImpl(
     private val apiClient: AnnouncementApiClient,
+    private val baseUrl: String,
 ) : AnimalRepository {
     /**
      * Retrieves all pet announcements from the backend API.
@@ -21,7 +23,7 @@ class AnimalRepositoryImpl(
      */
     override suspend fun getAnimals(): List<Animal> {
         val response = apiClient.getAnnouncements()
-        return response.data.map { it.toDomain() }
+        return response.data.map { it.toDomain(baseUrl) }
     }
 
     /**
@@ -35,6 +37,6 @@ class AnimalRepositoryImpl(
      */
     override suspend fun getAnimalById(id: String): Animal {
         val response = apiClient.getAnnouncementById(id)
-        return response.toDomain()
+        return response.toDomain(baseUrl)
     }
 }

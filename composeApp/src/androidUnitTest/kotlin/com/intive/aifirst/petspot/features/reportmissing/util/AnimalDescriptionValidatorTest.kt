@@ -76,36 +76,39 @@ class AnimalDescriptionValidatorTest {
     }
 
     // ========================================
-    // Race Validation Tests
+    // Race Validation Tests (Race is OPTIONAL)
     // ========================================
 
     @Test
-    fun `validate should return race error when species selected but race is empty`() {
-        // Given
+    fun `validate should NOT return race error when race is empty`() {
+        // Given - race is optional, so empty is OK
         val state =
             AnimalDescriptionUiState(
                 animalSpecies = "Dog",
                 animalRace = "",
                 animalGender = AnimalGender.MALE,
+                latitude = "52.2297",
+                longitude = "21.0122",
             )
 
         // When
         val result = AnimalDescriptionValidator.validate(state)
 
         // Then
-        assertFalse(result.isValid, "Should be invalid when race is empty")
-        assertNotNull(result.raceError, "Should have race error")
-        assertEquals("This field cannot be empty", result.raceError)
+        assertTrue(result.isValid, "Should be valid when race is empty (optional field)")
+        assertNull(result.raceError, "Should NOT have race error - race is optional")
     }
 
     @Test
-    fun `validate should NOT return race error when species is empty`() {
-        // Given - species not selected yet, race empty is OK
+    fun `validate should accept race when provided`() {
+        // Given - race provided
         val state =
             AnimalDescriptionUiState(
-                animalSpecies = "",
-                animalRace = "",
+                animalSpecies = "Dog",
+                animalRace = "Golden Retriever",
                 animalGender = AnimalGender.MALE,
+                latitude = "52.2297",
+                longitude = "21.0122",
             )
 
         // When
