@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * 
  * <h2>Example Gherkin Mapping:</h2>
  * <pre>
- * Gherkin:  "When I tap on the search input"
- * Method:   tapSearchInput()
+ * Gherkin:  "When I view the pet list"
+ * Method:   viewPetList()
  * 
  * Gherkin:  "Then I should see at least one pet announcement"
  * Method:   shouldSeeAtLeastOnePet()
@@ -104,37 +104,6 @@ public class PetListMobileSteps {
     }
     
     /**
-     * Taps on the search input field.
-     * 
-     * <p>Maps to Gherkin: "When I tap on the search input"
-     */
-    @When("I tap on the search input")
-    public void tapSearchInput() {
-        petListScreen.tapSearchInput();
-        System.out.println("Tapped search input");
-    }
-    
-    /**
-     * Enters text into the search field.
-     * 
-     * <p>Maps to Gherkin: "And I enter {string} in the search field"
-     * 
-     * @param searchText Text to search for (e.g., "dog", "cat")
-     */
-    @When("I enter {string} in the search field")
-    public void enterSearchText(String searchText) {
-        petListScreen.enterSearchText(searchText);
-        System.out.println("Entered search text: " + searchText);
-        
-        // Wait a moment for search results to update
-        try {
-            Thread.sleep(1000); // Simple wait - in production, use explicit wait
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-    
-    /**
      * Taps on the first pet in the list.
      * 
      * <p>Maps to Gherkin: "When I tap on the first pet in the list"
@@ -188,24 +157,6 @@ public class PetListMobileSteps {
         System.out.println("Verified: All pets have complete information");
     }
     
-    /**
-     * Verifies that only pets of specified species are displayed.
-     * 
-     * <p>Maps to Gherkin: "Then I should see only dog announcements"
-     * and "Then I should see only cat announcements"
-     * 
-     * @param species Expected species name
-     */
-    @Then("I should see only {word} announcements")
-    public void shouldSeeOnlySpecificSpecies(String species) {
-        assertTrue(petListScreen.hasAnyPets(),
-            "Search results should not be empty");
-        assertTrue(petListScreen.allPetsMatchSpecies(species),
-            "All visible pets should be " + species + " species");
-        
-        int count = petListScreen.getPetCount();
-        System.out.println("Verified: All " + count + " pet(s) are " + species + " species");
-    }
     
     /**
      * Verifies that the Android keyboard is hidden.
@@ -260,14 +211,14 @@ public class PetListMobileSteps {
     }
     
     /**
-     * Verifies that no pets are displayed (empty results).
+     * Verifies that no pets are displayed (empty state).
      * 
      * <p>Maps to Gherkin: "Then I should see no pet announcements"
      */
     @Then("I should see no pet announcements")
     public void shouldSeeNoPets() {
         assertFalse(petListScreen.hasAnyPets(),
-            "No pets should be visible for empty search results");
+            "No pets should be visible");
         
         int count = petListScreen.getPetCount();
         assertEquals(0, count, "Pet count should be zero");

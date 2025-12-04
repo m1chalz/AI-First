@@ -43,23 +43,7 @@ QA engineers need complete Java/Cucumber/Appium test coverage for the iOS Pet De
 
 ---
 
-### User Story 3 - Mobile Animal List Button Coverage (Priority: P2)
-
-QA engineers need Java/Cucumber test coverage for Report Missing Animal button behavior (Spec 005 User Story 2) which is currently missing from mobile tests (3 scenarios).
-
-**Why this priority**: Button visibility and interaction are critical UX requirements from Spec 005. While Android/iOS apps have this implemented, Java tests don't verify button behavior (visibility, scroll persistence, tap action), creating a gap in mobile test coverage.
-
-**Independent Test**: Can be fully tested by adding 3 button scenarios to `pet-list.feature`, implementing button interaction step definitions, running `mvn test -Dcucumber.filter.tags="@android @ios"`, and verifying button remains visible during scroll and triggers proper actions.
-
-**Acceptance Scenarios**:
-
-1. **Given** Animal List mobile tests lack button coverage, **When** developer adds 3 scenarios to `pet-list.feature` (button visible, button visible during scroll, button tap action), **Then** User Story 2 from Spec 005 is fully covered
-2. **Given** button scenarios exist, **When** developer implements step definitions checking button visibility and tap behavior, **Then** tests verify button is always accessible regardless of list scroll position
-3. **Given** mobile tests execute, **When** user scrolls animal list up and down, **Then** test verifies "Report a Missing Animal" button remains visible and tappable
-
----
-
-### User Story 4 - Remove Invalid Mobile Search Tests (Priority: P2)
+### User Story 3 - Remove Invalid Mobile Search Tests (Priority: P2)
 
 QA engineers need to remove or disable 4 search-related scenarios from mobile `pet-list.feature` that test non-existent functionality, causing tests to fail and create confusion.
 
@@ -115,18 +99,15 @@ QA engineers need to remove or disable 4 search-related scenarios from mobile `p
 
 **Mobile Platform (Appium/Java) - Animal List Updates**:
 
-- **FR-012**: Mobile `pet-list.feature` MUST add 3 scenarios for Report Missing Animal button: button visible, button visible during scroll, button tap action
-- **FR-013**: Mobile `pet-list.feature` MUST comment out or remove 4 search scenarios (lines 32-44, 72-84) with TODO markers explaining search is not yet implemented per Spec 005
-- **FR-014**: `PetListScreen.java` Screen Object Model MUST include methods for button visibility checks and tap interactions
-- **FR-015**: Mobile Animal List step definitions MUST implement button-related Gherkin steps
+- **FR-012**: Mobile `pet-list.feature` MUST comment out or remove 4 search scenarios (lines 32-44, 72-84) with TODO markers explaining search is not yet implemented per Spec 005
 
 **General Requirements**:
 
-- **FR-016**: All new scenarios MUST follow Given-When-Then (Arrange-Act-Assert) structure per project conventions
-- **FR-017**: All Screen Object Model and Page Object Model classes MUST use appropriate locator strategies (XPath for web, accessibility identifiers for mobile)
-- **FR-018**: All step definitions MUST provide clear assertion messages when tests fail
-- **FR-019**: Maven build MUST generate separate HTML reports for web, Android, and iOS platforms
-- **FR-020**: All implemented tests MUST pass when executed in local development environment before being merged
+- **FR-013**: All new scenarios MUST follow Given-When-Then (Arrange-Act-Assert) structure per project conventions
+- **FR-014**: All Screen Object Model and Page Object Model classes MUST use appropriate locator strategies (XPath for web, accessibility identifiers for mobile)
+- **FR-015**: All step definitions MUST provide clear assertion messages when tests fail
+- **FR-016**: Maven build MUST generate separate HTML reports for web, Android, and iOS platforms
+- **FR-017**: All implemented tests MUST pass when executed in local development environment before being merged
 
 ### Key Entities
 
@@ -144,10 +125,9 @@ QA engineers need to remove or disable 4 search-related scenarios from mobile `p
 - **SC-002**: Java/Cucumber mobile test coverage for Pet Details increases from 0% to 35-40% (10-12/30 scenarios) for Spec 012
 - **SC-003**: All implemented Java test scenarios pass when executed via Maven commands without manual intervention
 - **SC-004**: Maven generates HTML reports for all platforms (web, iOS, Android when applicable) showing passing test results
-- **SC-005**: Mobile Animal List test coverage increases from 60% to 90% (9/10 scenarios) for Spec 005 after adding button tests
-- **SC-006**: All invalid search-related scenarios are removed from mobile test suite (4 scenarios testing non-existent functionality)
-- **SC-007**: QA engineers can verify feature completeness by reviewing Maven HTML reports without needing to run TypeScript test stack
-- **SC-008**: Development team confirms Java test stack provides equivalent or better coverage than TypeScript stack for implemented features
+- **SC-005**: All invalid search-related scenarios are removed from mobile test suite (4 scenarios testing non-existent functionality)
+- **SC-006**: QA engineers can verify feature completeness by reviewing Maven HTML reports without needing to run TypeScript test stack
+- **SC-007**: Development team confirms Java test stack provides equivalent or better coverage than TypeScript stack for implemented features
 
 ## Dependencies & Assumptions
 

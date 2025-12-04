@@ -163,9 +163,8 @@ public class Hooks {
      */
     private WebDriver getWebDriverSafely() {
         try {
-            // WebDriverManager returns null if driver not initialized (ThreadLocal.get())
-            // We need to check without triggering initialization
-            return WebDriverManager.getDriver();
+            // Use hasDriver() to check without triggering initialization
+            return WebDriverManager.hasDriver() ? WebDriverManager.getDriver() : null;
         } catch (Exception e) {
             return null;
         }

@@ -58,37 +58,14 @@ This directory contains contract definitions for the E2E test implementation. Th
 
 ---
 
-### 3. mobile-pet-list-updates.md
-**Purpose**: Instructions for modifying existing mobile Pet List feature file
-
-**Content**:
-- Add 3 button interaction scenarios
-- Comment out 4 invalid search scenarios with TODO markers
-- Step definition requirements for new scenarios
-- Screen Object method requirements
-
-**Changes**:
-1. **Add**: Button visible at bottom
-2. **Add**: Button remains visible during scroll
-3. **Add**: Button tap triggers action
-4. **Comment Out**: Search for specific species (Android)
-5. **Comment Out**: Search for specific species (iOS)
-6. **Comment Out**: Clear search results
-7. **Comment Out**: Search with no results
-
-**Implementation**: Modify `/e2e-tests/java/src/test/resources/features/mobile/pet-list.feature`
-
----
-
 ## Contract Summary
 
 | Contract | Type | Target File | Action | Scenarios |
 |----------|------|-------------|--------|-----------|
 | web-pet-list.feature | Feature File | `/features/web/pet-list.feature` | Extend | Add 8 |
 | mobile-pet-details.feature | Feature File | `/features/mobile/pet-details.feature` | Create | Create 12 |
-| mobile-pet-list-updates.md | Instructions | `/features/mobile/pet-list.feature` | Modify | Add 3, Comment 4 |
 
-**Total New Scenarios**: 23 (8 web + 12 mobile Pet Details + 3 mobile button)  
+**Total New Scenarios**: 20 (8 web + 12 mobile Pet Details)  
 **Total Modified Scenarios**: 4 (commented out search scenarios)
 
 ---
@@ -107,12 +84,10 @@ This directory contains contract definitions for the E2E test implementation. Th
 3. Create `PetDetailsMobileSteps.java` with step definitions
 4. Test: `mvn test -Dcucumber.filter.tags="@ios" -Dcucumber.features="**/pet-details.feature"`
 
-**Phase 3**: Mobile Animal List Updates (3 new, 4 commented)
-1. Add 3 button methods to `PetListScreen.java`
-2. Modify existing `/features/mobile/pet-list.feature` per instructions
-3. Add button step definitions to `PetListMobileSteps.java`
-4. Comment out search step definitions with TODO markers
-5. Test: `mvn test -Dcucumber.filter.tags="@ios" -Dcucumber.features="**/pet-list.feature"`
+**Phase 3**: Mobile Animal List Cleanup (search scenarios)
+1. Comment out invalid search scenarios in `/features/mobile/pet-list.feature` with TODO markers
+2. Add TODO / @Ignore annotations to related step definitions
+3. Test: `mvn test -Dcucumber.filter.tags="@ios" -Dcucumber.features="**/pet-list.feature"`
 
 ---
 
@@ -122,7 +97,7 @@ After implementation, verify:
 
 - [ ] Web coverage: 10/10 scenarios passing (100%)
 - [ ] Mobile Pet Details coverage: 12/12 scenarios passing (35-40%)
-- [ ] Mobile Animal List coverage: 9/10 scenarios passing (90%)
+- [ ] Mobile Animal List coverage: 6/6 active scenarios passing (search scenarios disabled)
 - [ ] No search-related test failures
 - [ ] HTML reports generated for each platform
 - [ ] Test execution time under 5 minutes per platform

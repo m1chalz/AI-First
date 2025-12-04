@@ -215,7 +215,7 @@ mvn test -Dcucumber.filter.tags="@ios and @smoke"
 
 **ID Format Examples**:
 - `animalList.item.${id}` - Animal card in list
-- `animalList.reportButton` - Report Missing button
+- `animalList.reportButton` - Report Missing button *(deferred for Java mobile tests until feature ships)*
 - `petDetails.view` - Pet Details screen
 - `petDetails.phone.tap` - Phone number tap target
 - `petDetails.status.badge` - Status badge

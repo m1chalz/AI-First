@@ -5,7 +5,7 @@
 
 ## Summary
 
-This feature completes the Java/Maven/Cucumber E2E test infrastructure (initiated in Spec 016) by implementing missing test scenarios across web and mobile platforms. Current coverage gaps include: web Animal List (20% → target 90-100%), mobile Pet Details (0% → target 35-40%), and mobile Animal List button behaviors (60% → target 90%). Additionally, 4 invalid search scenarios testing non-existent functionality will be removed from the mobile test suite. The implementation focuses solely on test code (Gherkin scenarios, Page/Screen Objects, step definitions) without modifying application code.
+This feature completes the Java/Maven/Cucumber E2E test infrastructure (initiated in Spec 016) by implementing missing test scenarios across web and mobile platforms. Current coverage gaps include: web Animal List (20% → target 90-100%), mobile Pet Details (0% → target 35-40%), and mobile Animal List button behaviors (60% → target 90%). Additionally, 4 invalid search scenarios testing non-existent functionality will be commented out (with TODO markers) in the mobile test suite. The implementation focuses solely on test code (Gherkin scenarios, Page/Screen Objects, step definitions) without modifying application code.
 
 ## Technical Context
 
@@ -67,10 +67,10 @@ This feature completes the Java/Maven/Cucumber E2E test infrastructure (initiate
 
 - [x] **Documentation Requirements**: Test scenarios serve as executable documentation
   - Gherkin feature files provide human-readable test documentation
-  - Step definitions include clear assertion messages per FR-018
+  - Step definitions include clear assertion messages per FR-015
   - README updates not required (test execution documented in constitution)
 
-- [x] **Test Conventions**: Follows Given-When-Then (Arrange-Act-Assert) structure per FR-016
+- [x] **Test Conventions**: Follows Given-When-Then (Arrange-Act-Assert) structure per FR-013
   - All new scenarios use Gherkin Given-When-Then format
   - Cucumber step definitions implement AAA pattern
 
@@ -256,7 +256,7 @@ FAILING → (fix) → PASSING
 - Belongs to one Step Definition Class
 
 **Validation Rules**:
-- Must include clear assertion messages (FR-018)
+- Must include clear assertion messages (FR-015)
 - Must use Page/Screen Object methods (no direct WebDriver calls)
 - Pattern must uniquely match Gherkin text
 
@@ -630,12 +630,17 @@ mvn clean test
 
 **Run Web Tests Only**:
 ```bash
-mvn test -Dcucumber.filter.tags="@web"
+mvn test -Dtest=WebTestRunner
 ```
 
 **Run iOS Tests Only**:
 ```bash
-mvn test -Dcucumber.filter.tags="@ios"
+mvn test -Dtest=IosTestRunner
+```
+
+**Run Android Tests Only**:
+```bash
+mvn test -Dtest=AndroidTestRunner
 ```
 
 **Run Smoke Tests (Fast Subset)**:

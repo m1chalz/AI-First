@@ -101,7 +101,7 @@ mvn test -Dcucumber.filter.tags="@ios" -Dcucumber.features="**/pet-details.featu
 **Mobile** (Animal List):
 ```bash
 mvn test -Dcucumber.filter.tags="@ios" -Dcucumber.features="**/pet-list.feature"
-# Expected: 9/10 scenarios passing (90% coverage, search tests commented out)
+# Expected: 6/6 active scenarios passing (search scenarios commented out until feature ships)
 ```
 
 ## Development Workflow
@@ -217,22 +217,6 @@ In `/src/test/resources/features/mobile/pet-list.feature`:
 #   And I enter "dog" in the search field
 #   Then I should see only dog announcements
 #   And the Android keyboard should be hidden
-```
-
-**Adding Button Scenarios**:
-
-In `/src/test/resources/features/mobile/pet-list.feature`:
-```gherkin
-@android @ios
-Scenario: Report button visible at bottom
-  Given I am on the pet list screen
-  Then the "Report a Missing Animal" button should be visible
-
-@android @ios
-Scenario: Report button remains visible during scroll
-  Given I am on the pet list screen
-  When I scroll down the pet list
-  Then the "Report a Missing Animal" button should remain visible
 ```
 
 ## Troubleshooting

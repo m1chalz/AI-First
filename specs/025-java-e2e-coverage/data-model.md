@@ -152,7 +152,7 @@ public class PetListPage {
 - Belongs to one Step Definition Class (composition)
 
 **Validation Rules**:
-- Must include clear assertion messages per FR-018
+- Must include clear assertion messages per FR-015
 - Must use Page/Screen Object methods (no direct WebDriver calls in step body)
 - Pattern must uniquely match Gherkin text (no ambiguous steps)
 - @Given methods must not perform actions (only setup)
@@ -358,7 +358,7 @@ Test Report (1) ──> Test Scenario Result (N)
 
 **Mobile Animal List (Spec 005)**:
 - `animalList.item.${id}` - Animal card
-- `animalList.reportButton` - Report Missing button
+- `animalList.reportButton` - Report Missing button *(deferred; feature not covered in SPEC 025 Java tests)*
 
 **Mobile Pet Details (Spec 012)**:
 - `petDetails.view` - Main details view
