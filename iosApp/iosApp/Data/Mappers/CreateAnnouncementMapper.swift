@@ -18,7 +18,9 @@ class CreateAnnouncementMapper {
         
         return CreateAnnouncementRequestDTO(
             species: AnimalSpeciesDTO(domain: data.species),
+            breed: data.breed,
             sex: AnimalGenderDTO(domain: data.sex),
+            age: data.age,
             lastSeenDate: dateFormatter.string(from: data.lastSeenDate),
             locationLatitude: data.location.latitude,
             locationLongitude: data.location.longitude,

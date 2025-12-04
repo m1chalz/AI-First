@@ -68,7 +68,9 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
         
         return CreateAnnouncementData(
             species: species,
+            breed: flowState.animalRace,
             sex: gender,
+            age: flowState.animalAge,
             lastSeenDate: disappearanceDate,
             location: (
                 latitude: flowState.animalLatitude ?? 0.0,

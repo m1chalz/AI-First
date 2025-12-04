@@ -4,7 +4,9 @@ import Foundation
 /// Maps to camelCase JSON format used by backend API
 struct CreateAnnouncementRequestDTO: Codable {
     let species: AnimalSpeciesDTO
+    let breed: String?
     let sex: AnimalGenderDTO
+    let age: Int?
     let lastSeenDate: String
     let locationLatitude: Double
     let locationLongitude: Double
@@ -18,7 +20,9 @@ struct CreateAnnouncementRequestDTO: Codable {
     
     enum CodingKeys: String, CodingKey {
         case species
+        case breed
         case sex
+        case age
         case lastSeenDate
         case locationLatitude
         case locationLongitude
