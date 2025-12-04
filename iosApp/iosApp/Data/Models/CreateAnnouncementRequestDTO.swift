@@ -12,6 +12,7 @@ struct CreateAnnouncementRequestDTO: Codable {
     let phone: String
     let status: AnnouncementStatusDTO
     let microchipNumber: String?
+    let petName: String?
     let description: String?
     let reward: String?
     
@@ -25,6 +26,7 @@ struct CreateAnnouncementRequestDTO: Codable {
         case phone
         case status
         case microchipNumber
+        case petName
         case description
         case reward
     }

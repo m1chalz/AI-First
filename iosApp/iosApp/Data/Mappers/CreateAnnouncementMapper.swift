@@ -26,6 +26,7 @@ class CreateAnnouncementMapper {
             phone: data.contact.phone,
             status: AnnouncementStatusDTO(domain: .active),
             microchipNumber: data.microchipNumber,
+            petName: data.petName,
             description: data.description,
             reward: data.reward
         )

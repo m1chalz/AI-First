@@ -9,6 +9,7 @@ struct CreateAnnouncementData {
     let location: (latitude: Double, longitude: Double)
     let contact: (email: String, phone: String)
     let microchipNumber: String?
+    let petName: String?
     let description: String?
     let reward: String?
 }

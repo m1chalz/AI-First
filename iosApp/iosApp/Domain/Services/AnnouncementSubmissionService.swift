@@ -79,6 +79,7 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
                 phone: contactDetails.phone.filter { $0.isNumber || $0 == "+" }
             ),
             microchipNumber: flowState.chipNumber,
+            petName: flowState.petName,
             description: flowState.animalAdditionalDescription,
             reward: contactDetails.rewardDescription
         )
