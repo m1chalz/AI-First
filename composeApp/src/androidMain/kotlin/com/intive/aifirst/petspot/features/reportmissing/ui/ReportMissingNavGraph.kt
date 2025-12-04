@@ -9,6 +9,7 @@ import com.intive.aifirst.petspot.features.reportmissing.presentation.state.Repo
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen
@@ -130,14 +131,25 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
             DescriptionScreen(viewModel = viewModel)
         }
 
-        // Other screens still use ReportMissingViewModel (legacy, to be migrated)
-
         composable<ReportMissingRoute.ContactDetails> { backStackEntry ->
+            // Get parent entry for NavGraph-scoped state
             val parentEntry =
                 remember(backStackEntry) {
                     navController.getBackStackEntry<NavRoute.ReportMissing>()
                 }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
+
+            // Shared flow state (NavGraph-scoped)
+            val flowState: ReportMissingFlowState =
+                koinViewModel<FlowStateHolder>(
+                    viewModelStoreOwner = parentEntry,
+                ).flowState
+
+            // Screen ViewModel with MVI pattern
+            val viewModel: OwnerDetailsViewModel =
+                koinViewModel {
+                    parametersOf(flowState)
+                }
+
             ContactDetailsScreen(viewModel = viewModel, navController = navController)
         }
 

@@ -93,6 +93,11 @@ class ReportMissingFlowState {
         _data.update { it.copy(contactPhone = phone) }
     }
 
+    /** Update reward description (Step 4/4) */
+    fun updateRewardDescription(reward: String) {
+        _data.update { it.copy(rewardDescription = reward) }
+    }
+
     /** Clear all flow data (when flow is exited or completed) */
     fun clear() {
         _data.value = FlowData()
@@ -124,4 +129,5 @@ data class FlowData(
     // Step 4/4 - Contact Details
     val contactEmail: String = "",
     val contactPhone: String = "",
+    val rewardDescription: String = "",
 )
