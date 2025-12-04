@@ -25,6 +25,12 @@ struct AnimalDescriptionView: View {
                     date: $viewModel.disappearanceDate
                 )
                 
+                // Pet name text field (optional - US1: 046-ios-pet-name-field)
+                ValidatedTextField(
+                    model: viewModel.petNameTextFieldModel,
+                    text: $viewModel.petName
+                )
+                
                 // Species dropdown
                 DropdownView(
                     model: viewModel.speciesDropdownModel,

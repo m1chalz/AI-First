@@ -38,6 +38,9 @@ final class ReportMissingPetFlowState: ObservableObject {
     /// Animal age in years (optional, 0-40 range)
     @Published var animalAge: Int?
     
+    /// Pet name (optional, trimmed before API submission)
+    @Published var petName: String?
+    
     /// Last known latitude (optional, -90 to 90 range)
     @Published var animalLatitude: Double?
     
@@ -77,6 +80,7 @@ final class ReportMissingPetFlowState: ObservableObject {
         animalRace = nil
         animalGender = nil
         animalAge = nil
+        petName = nil
         animalLatitude = nil
         animalLongitude = nil
         animalAdditionalDescription = nil

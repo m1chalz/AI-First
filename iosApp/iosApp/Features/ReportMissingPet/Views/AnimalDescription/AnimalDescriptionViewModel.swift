@@ -31,6 +31,9 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Additional description text (optional, max 500 characters)
     @Published var additionalDescription: String = ""
     
+    /// Pet name (optional, two-way binding for TextField)
+    @Published var petName: String = ""
+    
     // MARK: - Published Properties (Validation Errors)
     
     @Published var speciesErrorMessage: String?
@@ -102,6 +105,10 @@ class AnimalDescriptionViewModel: ObservableObject {
         if let existingDesc = flowState.animalAdditionalDescription {
             self.additionalDescription = existingDesc
         }
+        
+        if let existingPetName = flowState.petName {
+            self.petName = existingPetName
+        }
     }
     
     // MARK: - Computed Properties (Component Models)
@@ -161,6 +168,18 @@ class AnimalDescriptionViewModel: ObservableObject {
             isDisabled: false,
             keyboardType: .numberPad,
             accessibilityID: "animalDescription.ageTextField.input"
+        )
+    }
+    
+    /// Model for pet name text field (optional, default keyboard)
+    var petNameTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.AnimalDescription.petNameLabel,
+            placeholder: L10n.AnimalDescription.petNamePlaceholder,
+            errorMessage: nil,  // Pet name has no validation errors
+            isDisabled: false,
+            keyboardType: .default,
+            accessibilityID: "animalDescription.petNameTextField.input"
         )
     }
     
@@ -408,6 +427,10 @@ class AnimalDescriptionViewModel: ObservableObject {
         flowState.animalLatitude = latitude.isEmpty ? nil : Double(latitude)
         flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
         flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
+        
+        // Pet name (US1 - 046-ios-pet-name-field)
+        let trimmedPetName = petName.trimmingCharacters(in: .whitespacesAndNewlines)
+        flowState.petName = trimmedPetName.isEmpty ? nil : trimmedPetName
     }
 
     deinit {
