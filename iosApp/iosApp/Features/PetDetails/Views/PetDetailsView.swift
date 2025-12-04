@@ -189,18 +189,6 @@ struct PetDetailsView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .accessibilityIdentifier("petDetails.description.text")
-                    
-                    // Remove Report button (full width, red)
-                    Button(action: viewModel.handleRemoveReport) {
-                        Text(L10n.PetDetails.Button.removeReport)
-                            .font(.system(size: 16))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color(hex: "#fb2c36"))
-                            .cornerRadius(10)
-                    }
-                    .accessibilityIdentifier("petDetails.removeReport.button")
                 }
                 .padding(.horizontal, 23)
                 .padding(.top, 20)

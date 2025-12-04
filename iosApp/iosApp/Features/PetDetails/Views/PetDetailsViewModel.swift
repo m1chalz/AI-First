@@ -135,12 +135,6 @@ class PetDetailsViewModel: ObservableObject {
     
     // MARK: - Action Handlers
     
-    /// Handles remove report action (placeholder for future feature)
-    func handleRemoveReport() {
-        print("Remove Report button tapped (placeholder)")
-        // TODO: Implement report removal in future feature
-    }
-    
     /// Handles show on map action
     func handleShowMap() {
         guard case .loaded(let petDetails) = state else { return }
