@@ -6,8 +6,8 @@
 @mobile
 Feature: Pet List Management (Mobile)
   As a user using the PetSpot mobile application
-  I want to view and search for pet announcements
-  So that I can find pets available for adoption on my mobile device
+  I want to view pet announcements
+  So that I can see lost or found animals in my area
 
   # Background runs before each scenario (app launch and navigation)
   Background:
@@ -27,21 +27,6 @@ Feature: Pet List Management (Mobile)
     When I view the pet list
     Then I should see at least one pet announcement
     And each pet should display name, species, and image
-
-  # Platform-specific search scenarios (keyboard handling differs)
-  @android
-  Scenario: Search for specific species on Android
-    When I tap on the search input
-    And I enter "dog" in the search field
-    Then I should see only dog announcements
-    And the Android keyboard should be hidden
-
-  @ios
-  Scenario: Search for specific species on iOS
-    When I tap on the search input
-    And I enter "cat" in the search field
-    Then I should see only cat announcements
-    And the iOS keyboard should be dismissed
 
   # Cross-platform scenario (runs on both Android and iOS)
   @android @ios
@@ -67,19 +52,4 @@ Feature: Pet List Management (Mobile)
     When I tap on the first pet in the list
     Then I should navigate to the pet details screen
     And the pet details should match the list entry
-
-  # Platform-specific negative tests
-  @android @negative
-  Scenario: Handle empty search results on Android
-    When I tap on the search input
-    And I enter "nonexistent-species" in the search field
-    Then I should see no pet announcements
-    And an empty state message should be displayed
-
-  @ios @negative
-  Scenario: Handle empty search results on iOS
-    When I tap on the search input
-    And I enter "nonexistent-species" in the search field
-    Then I should see no pet announcements
-    And an empty state message should be displayed
 

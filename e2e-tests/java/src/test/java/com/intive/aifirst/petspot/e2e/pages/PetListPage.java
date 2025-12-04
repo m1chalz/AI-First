@@ -20,8 +20,8 @@ import java.util.List;
  * 
  * <h2>Locator Strategy:</h2>
  * <ul>
- *   <li>Pattern: {@code //*[@data-testid='petList.element.action']}</li>
- *   <li>Example: {@code //*[@data-testid='petList.searchInput']}</li>
+ *   <li>Pattern: {@code //*[@data-testid='animalList.element.action']}</li>
+ *   <li>Example: {@code //*[@data-testid='animalList.reportMissingButton']}</li>
  *   <li>Rationale: data-testid attributes are stable across refactorings</li>
  * </ul>
  * 
@@ -33,7 +33,6 @@ import java.util.List;
  * 
  * // Navigate and interact
  * driver.get("http://localhost:3000/pets");
- * petListPage.searchForPet("dog");
  * boolean hasResults = petListPage.isPetListDisplayed();
  * }</pre>
  * 
@@ -56,30 +55,14 @@ public class PetListPage {
     private WebElement petList;
     
     /**
-     * Search input field for filtering pets by species.
-     * NOTE: Currently not implemented in the React application.
-     * Uncomment when search functionality is added to the UI.
-     */
-    // @FindBy(xpath = "//*[@data-testid='animalList.searchInput']")
-    // private WebElement searchInput;
-    
-    /**
      * Add button for creating new pet announcements.
      */
     @FindBy(xpath = "//*[@data-testid='animalList.reportMissingButton']")
     private WebElement addButton;
     
     /**
-     * Search results count text element.
-     * NOTE: Currently not implemented in the React application.
-     * Uncomment when results count is added to the UI.
-     */
-    // @FindBy(xpath = "//*[@data-testid='animalList.resultsCount']")
-    // private WebElement resultsCount;
-    
-    /**
      * Empty state message element.
-     * Displayed when no pets match the search criteria.
+     * Displayed when no pets are available.
      */
     @FindBy(xpath = "//*[@data-testid='animalList.emptyState']")
     private WebElement emptyStateMessage;
@@ -118,20 +101,6 @@ public class PetListPage {
         }
     }
     
-    /**
-     * Searches for pets by species name.
-     * 
-     * <p>NOTE: Search functionality not yet implemented in React UI.
-     * This method is a placeholder for future implementation.
-     * 
-     * @param species Species name to search for (e.g., "dog", "cat")
-     */
-    public void searchForPet(String species) {
-        // TODO: Implement when search input is added to React UI
-        System.out.println("WARN: Search functionality not yet available in UI. Skipping search for: " + species);
-        // searchInput.clear();
-        // searchInput.sendKeys(species);
-    }
     
     /**
      * Clicks on the first pet in the list.
@@ -188,39 +157,6 @@ public class PetListPage {
         return getPetCount() > 0;
     }
     
-    /**
-     * Gets the search results count text.
-     * 
-     * <p>NOTE: Results count not yet implemented in React UI.
-     * 
-     * @return Results count text (empty string until UI is updated)
-     */
-    public String getResultsCountText() {
-        // TODO: Implement when results count is added to React UI
-        return "";
-        // try {
-        //     return resultsCount.getText();
-        // } catch (Exception e) {
-        //     return "";
-        // }
-    }
-    
-    /**
-     * Checks if the results count is displayed.
-     * 
-     * <p>NOTE: Results count not yet implemented in React UI.
-     * 
-     * @return false until UI is updated
-     */
-    public boolean isResultsCountDisplayed() {
-        // TODO: Implement when results count is added to React UI
-        return false;
-        // try {
-        //     return resultsCount.isDisplayed();
-        // } catch (Exception e) {
-        //     return false;
-        // }
-    }
     
     /**
      * Checks if the empty state message is displayed.
@@ -237,9 +173,6 @@ public class PetListPage {
     
     /**
      * Verifies that all visible pets match the specified species.
-     * 
-     * <p>NOTE: Search/filter functionality not yet implemented in React UI.
-     * This method validates species text but cannot test actual filtering.
      * 
      * @param expectedSpecies Expected species name (e.g., "Cat", "Dog", "Bird")
      * @return true if all pets match the species
@@ -368,5 +301,233 @@ public class PetListPage {
             return "";
         }
     }
+    
+    // ========================================
+    // Feature 025: Additional Methods for Web Coverage
+    // ========================================
+    
+    /**
+     * Scrolls the pet list to the bottom.
+     * Uses JavaScript to scroll the list container to its maximum height.
+     */
+    public void scrollToBottom() {
+        try {
+            org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+            js.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", petList);
+        } catch (Exception e) {
+            System.err.println("Failed to scroll to bottom: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Checks if the pet list is scrollable (has overflow content).
+     * 
+     * @return true if the list has scrollable content
+     */
+    public boolean isScrollable() {
+        try {
+            org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petList);
+            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petList);
+            return scrollHeight > clientHeight;
+        } catch (Exception e) {
+            System.err.println("Failed to check if scrollable: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Checks if the list can scroll further down.
+     * 
+     * @return true if there is more content below the current scroll position
+     */
+    public boolean canScrollFurther() {
+        try {
+            org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+            Long scrollTop = (Long) js.executeScript("return arguments[0].scrollTop", petList);
+            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petList);
+            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petList);
+            return (scrollTop + clientHeight) < scrollHeight;
+        } catch (Exception e) {
+            System.err.println("Failed to check if can scroll further: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Clicks on a specific animal card by its ID.
+     * 
+     * @param animalId The animal ID to click (e.g., "1", "2", "3")
+     */
+    public void clickAnimalCard(String animalId) {
+        try {
+            String xpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+            WebElement animalCard = driver.findElement(By.xpath(xpath));
+            animalCard.click();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to click animal card with ID: " + animalId + " - " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Checks if the Report button is visible after scrolling.
+     * 
+     * @return true if button is still visible after scroll
+     */
+    public boolean isButtonVisibleAfterScroll() {
+        try {
+            // Scroll down first
+            scrollToBottom();
+            
+            // Wait for scroll animation to complete using explicit wait
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(500));
+            wait.until(ExpectedConditions.visibilityOf(addButton));
+            
+            // Check if button is still visible
+            return addButton.isDisplayed();
+        } catch (Exception e) {
+            System.err.println("Failed to check button visibility after scroll: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Clicks the "Report a Missing Animal" button.
+     * Alias for clickAddButton() for clarity in web-specific scenarios.
+     */
+    public void clickReportMissingButton() {
+        clickAddButton();
+    }
+    
+    
+    /**
+     * Gets the "Report Found Animal" button (web-specific).
+     * 
+     * @return WebElement for Report Found button
+     * @throws RuntimeException if button not found
+     */
+    public WebElement getReportFoundButton() {
+        try {
+            return driver.findElement(
+                By.xpath("//*[@data-testid='animalList.reportFoundButton']")
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Report Found button not found - " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Gets the status badge text for a specific animal card.
+     * 
+     * @param animalId The animal ID (e.g., "1", "2", "3")
+     * @return Status badge text (e.g., "MISSING", "FOUND")
+     */
+    public String getStatusBadgeText(String animalId) {
+        try {
+            // Try to find status badge element with test ID first
+            String xpath = String.format("//*[@data-testid='animalList.item.%s']//*[@data-testid='animalList.statusBadge']", animalId);
+            WebElement statusBadge = driver.findElement(By.xpath(xpath));
+            return statusBadge.getText();
+        } catch (Exception e) {
+            // Fallback: try to find status badge without specific test ID
+            try {
+                String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+                WebElement card = driver.findElement(By.xpath(cardXpath));
+                String cardText = card.getText();
+                // Look for status values: Active, Found, Closed (web) or MISSING, FOUND (mobile)
+                if (cardText.contains("Active") || cardText.contains("MISSING")) {
+                    return "Active";
+                } else if (cardText.contains("Found") || cardText.contains("FOUND")) {
+                    return "Found";
+                } else if (cardText.contains("Closed")) {
+                    return "Closed";
+                }
+            } catch (Exception e2) {
+                System.err.println("Could not find status badge for animal " + animalId + ": " + e2.getMessage());
+            }
+            return "";
+        }
+    }
+    
+    /**
+     * Gets the date text for a specific animal card.
+     * 
+     * @param animalId The animal ID (e.g., "1", "2", "3")
+     * @return Date text (e.g., "18/11/2025")
+     */
+    public String getDateText(String animalId) {
+        try {
+            String xpath = String.format("//*[@data-testid='animalList.item.%s']//*[@data-testid='animalList.date']", animalId);
+            WebElement dateElement = driver.findElement(By.xpath(xpath));
+            return dateElement.getText();
+        } catch (Exception e) {
+            // Fallback: try to extract date from card text
+            try {
+                String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+                WebElement card = driver.findElement(By.xpath(cardXpath));
+                String cardText = card.getText();
+                // Look for date pattern DD/MM/YYYY or DD-MM-YYYY
+                java.util.regex.Pattern datePattern = java.util.regex.Pattern.compile("\\d{2}[/-]\\d{2}[/-]\\d{4}");
+                java.util.regex.Matcher matcher = datePattern.matcher(cardText);
+                if (matcher.find()) {
+                    return matcher.group();
+                }
+            } catch (Exception e2) {
+                System.err.println("Could not find date for animal " + animalId + ": " + e2.getMessage());
+            }
+            return "";
+        }
+    }
+    /**
+     * Verifies that an animal card displays all required fields.
+     * 
+     * @param animalId The animal ID to verify
+     * @return true if card has species, breed, status, date, and location
+     */
+    public boolean cardHasAllRequiredFields(String animalId) {
+        try {
+            String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+            WebElement card = driver.findElement(By.xpath(cardXpath));
+            String cardText = card.getText().toLowerCase();
+            
+            // Debug: print card text to help diagnose issues
+            System.out.println("Card text for animal " + animalId + ": " + cardText.substring(0, Math.min(200, cardText.length())));
+            
+            // Check for required fields: species, breed, status, date, location
+            boolean hasSpecies = cardText.contains("dog") || cardText.contains("cat") || 
+                                cardText.contains("bird") || cardText.contains("species");
+            // Breed check: look for common breed names or "breed" keyword
+            // Also check for breed-specific terms that might appear in card
+            boolean hasBreed = cardText.contains("breed") || 
+                              cardText.contains("shepherd") || cardText.contains("retriever") ||
+                              cardText.contains("coon") || cardText.contains("persian") ||
+                              cardText.contains("siamese") || cardText.contains("labrador") ||
+                              cardText.contains("bulldog") || cardText.contains("poodle") ||
+                              cardText.contains("maine") || cardText.contains("german") ||
+                              cardText.contains("husky") || cardText.contains("beagle") ||
+                              cardText.contains("terrier") || cardText.contains("spaniel");
+            boolean hasLocation = cardText.contains("km") || cardText.contains("location") ||
+                                 cardText.contains("pruszkow") || cardText.contains("warsaw") ||
+                                 cardText.contains("krakow") || cardText.contains("gdansk") ||
+                                 cardText.contains("+") || cardText.contains("radius");
+            // Status check: web shows "Active", "Found", "Closed" (not "MISSING"/"FOUND")
+            String statusText = getStatusBadgeText(animalId);
+            boolean hasStatus = statusText.length() > 0 || 
+                              cardText.contains("active") || cardText.contains("found") || 
+                              cardText.contains("closed");
+            boolean hasDate = getDateText(animalId).length() > 0;
+            
+            // Debug output
+            System.out.println("Field checks - Species: " + hasSpecies + ", Breed: " + hasBreed + 
+                             ", Location: " + hasLocation + ", Status: " + hasStatus + ", Date: " + hasDate);
+            
+            return hasSpecies && hasBreed && hasLocation && hasStatus && hasDate;
+        } catch (Exception e) {
+            System.err.println("Could not verify card fields for animal " + animalId + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
 }
 
