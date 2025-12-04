@@ -84,8 +84,8 @@ public class WebDriverManager {
         options.addArguments("--start-maximized");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
+        options.addArguments("--disable-dev-shm-usage");  // Overcome limited resource problems
         options.addArguments("--remote-allow-origins=*");  // Allow remote connections
-        // Note: --no-sandbox removed - causes crashes on macOS with Chrome 142+
         
         // Initialize ChromeDriver
         WebDriver webDriver = new ChromeDriver(options);

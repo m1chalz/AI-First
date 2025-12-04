@@ -103,16 +103,8 @@ public class PetListMobileSteps {
         System.out.println("Viewing pet list (already loaded)");
     }
     
-    /**
-     * Taps on the first pet in the list.
-     * 
-     * <p>Maps to Gherkin: "When I tap on the first pet in the list"
-     */
-    @When("I tap on the first pet in the list")
-    public void tapFirstPet() {
-        petListScreen.tapFirstPet();
-        System.out.println("Tapped first pet in the list");
-    }
+    // NOTE: "I tap on the first pet in the list" step moved to PetDetailsMobileSteps
+    // to avoid duplicate step definition and provide proper PetDetailsScreen initialization
     
     /**
      * Scrolls down the pet list.
@@ -237,18 +229,7 @@ public class PetListMobileSteps {
         System.out.println("Verified: Empty state message is displayed");
     }
     
-    /**
-     * Verifies navigation to pet details screen.
-     * 
-     * <p>Maps to Gherkin: "Then I should navigate to the pet details screen"
-     */
-    @Then("I should navigate to the pet details screen")
-    public void shouldNavigateToPetDetailsScreen() {
-        // In a real app, we'd verify a new screen is displayed
-        // For now, just log success (screen verification would use Screen Object)
-        System.out.println("Verified: Navigated to pet details screen");
-        // TODO: Implement PetDetailsScreen verification
-    }
+    // Note: "I should navigate to the pet details screen" step is defined in PetDetailsMobileSteps
     
     /**
      * Verifies that pet details match the list entry (placeholder).

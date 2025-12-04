@@ -55,9 +55,10 @@ public class AppiumDriverManager {
     private static final ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
     
     /** Appium server URL (default local server, overridable via system/env property) */
+    // Note: Appium 2.x doesn't use /wd/hub suffix anymore
     private static final String APPIUM_SERVER_URL = System.getProperty(
         "APPIUM_SERVER_URL",
-        System.getenv().getOrDefault("APPIUM_SERVER_URL", "http://127.0.0.1:4723/wd/hub")
+        System.getenv().getOrDefault("APPIUM_SERVER_URL", "http://127.0.0.1:4723")
     );
     
     /** Default implicit wait timeout in seconds */
@@ -162,10 +163,12 @@ public class AppiumDriverManager {
      */
     private static IOSDriver initializeIOSDriver(URL serverUrl) {
         XCUITestOptions options = new XCUITestOptions();
+        // Note: Device name must match an available simulator (run: xcrun simctl list devices)
         String iosDeviceName = System.getProperty(
             "IOS_DEVICE_NAME",
-            System.getenv().getOrDefault("IOS_DEVICE_NAME", "iPhone 17 Pro")
+            System.getenv().getOrDefault("IOS_DEVICE_NAME", "iPhone 15")
         );
+        // Note: Platform version must match an available runtime (run: xcrun simctl list runtimes)
         String iosPlatformVersion = System.getProperty(
             "IOS_PLATFORM_VERSION",
             System.getenv().getOrDefault("IOS_PLATFORM_VERSION", "18.1")

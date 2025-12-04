@@ -13,8 +13,9 @@
 - Run Android tests: `./gradlew :composeApp:testDebugUnitTest`
 - Run Android ViewModel tests with coverage: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` (view at composeApp/build/reports/kover/html/index.html)
 - Run web tests with coverage: `npm test -- --coverage` (run from webApp/, view at webApp/coverage/index.html)
-- Run E2E web tests: `npx playwright test` (from repo root)
-- Run E2E mobile tests: `npm run test:mobile:android` or `npm run test:mobile:ios` (from repo root)
+- Run E2E web tests: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
+- Run E2E Android tests: `mvn test -Dtest=AndroidTestRunner` (from e2e-tests/java/)
+- Run E2E iOS tests: `mvn test -Dtest=IosTestRunner` (from e2e-tests/java/)
 
 ## Project Structure
 - `/shared` - Kotlin Multiplatform shared code (Android, iOS, JS targets)
@@ -30,13 +31,13 @@
 - `/iosApp` - iOS Swift app with SwiftUI + ViewModels
     - `iosApp/DI/` - Koin initialization
     - `iosAppTests/ViewModels/` - ViewModel unit tests (MUST achieve 80% coverage)
-- `/e2e-tests` - End-to-end tests (TypeScript)
-    - `web/` - Playwright tests for web platform
-        - `specs/` - Test specifications
-        - `pages/` - Page Object Model
-    - `mobile/` - Appium tests for Android/iOS
-        - `specs/` - Test specifications
-        - `screens/` - Screen Object Model
+- `/e2e-tests/java` - End-to-end tests (Java 21 + Maven + Cucumber)
+    - `pom.xml` - Maven configuration
+    - `src/test/resources/features/` - Gherkin feature files
+    - `src/test/java/.../pages/` - Web Page Objects (Selenium)
+    - `src/test/java/.../screens/` - Mobile Screen Objects (Appium)
+    - `src/test/java/.../steps/` - Cucumber step definitions
+    - `src/test/java/.../runners/` - Test runners (WebTestRunner, AndroidTestRunner, IosTestRunner)
 
 ## Code Style
 - Package: `com.intive.aifirst.petspot`
@@ -46,7 +47,7 @@
 - Naming: camelCase for variables/functions, PascalCase for classes/components
 - Export Kotlin to JS: Use `@OptIn(ExperimentalJsExport::class)` and `@JsExport`
 - Error handling: Use Result<T> for Kotlin shared code
-- Target JVM 11 for Android, ES2015 for JS
+- Target JVM 17 for Android, ES2015 for JS, Java 21 for E2E tests
 - DI: Use Koin for dependency injection across all platforms
 - Architecture: Repository pattern (interfaces in shared, implementations in platforms)
 - Async patterns:
@@ -72,8 +73,7 @@
 - Android ViewModels: JUnit 5 + Kotlin Test + Turbine (Flow testing)
 - iOS ViewModels: XCTest with Swift Concurrency (async/await)
 - Web hooks/state: Vitest + React Testing Library
-- Web E2E: Playwright + TypeScript
-- Mobile E2E: Appium + WebdriverIO + TypeScript
+- E2E Tests: Java 21 + Maven + Selenium/Appium + Cucumber (unified for all platforms)
 - Coverage tools: Kover (Kotlin shared + Android), Xcode Coverage (iOS), Vitest Coverage (Web)
 
 ## Dependencies
