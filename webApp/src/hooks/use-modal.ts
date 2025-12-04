@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export interface UseModalResult {
     isOpen: boolean;
@@ -8,17 +9,19 @@ export interface UseModalResult {
 }
 
 export function useModal(): UseModalResult {
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const params = useParams();
+    const announcementId = params.announcementId;
+    
+    const isOpen = !!announcementId;
+    const selectedPetId = announcementId || null;
     
     const openModal = (petId: string) => {
-        setSelectedPetId(petId);
-        setIsOpen(true);
+        navigate(`/announcement/${petId}`);
     };
     
     const closeModal = () => {
-        setIsOpen(false);
-        setSelectedPetId(null);
+        navigate('/');
     };
     
     return {
