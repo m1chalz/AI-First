@@ -4,6 +4,7 @@ import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.An
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.FlowStateHolder
@@ -73,6 +74,14 @@ val viewModelModule =
                 getCurrentLocationUseCase = get(),
                 onNavigateToContactDetails = params.get(),
                 onNavigateBack = params.get(),
+            )
+        }
+
+        // OwnerDetailsViewModel: MVI pattern with FlowState for cross-screen persistence
+        // Parameters: flowState
+        viewModel { params ->
+            OwnerDetailsViewModel(
+                flowState = params.get(),
             )
         }
     }

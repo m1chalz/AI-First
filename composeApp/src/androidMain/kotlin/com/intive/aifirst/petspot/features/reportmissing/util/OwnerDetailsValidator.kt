@@ -28,7 +28,7 @@ object OwnerDetailsValidator {
 
         // Check for letters - reject if any found
         if (trimmed.any { it.isLetter() }) {
-            return OwnerDetailsValidationResult.Invalid("Enter at least 7 digits")
+            return OwnerDetailsValidationResult.Invalid("Phone number cannot contain letters")
         }
 
         // Sanitize: remove whitespace, dashes, parentheses, dots
@@ -37,10 +37,14 @@ object OwnerDetailsValidator {
         // Extract digits only (remove leading + for counting)
         val digitsOnly = sanitized.removePrefix("+").filter { it.isDigit() }
 
-        return if (digitsOnly.length in MIN_PHONE_DIGITS..MAX_PHONE_DIGITS) {
-            OwnerDetailsValidationResult.Valid
-        } else {
-            OwnerDetailsValidationResult.Invalid("Enter at least 7 digits")
+        return when {
+            digitsOnly.length < MIN_PHONE_DIGITS -> {
+                OwnerDetailsValidationResult.Invalid("Enter at least $MIN_PHONE_DIGITS digits")
+            }
+            digitsOnly.length > MAX_PHONE_DIGITS -> {
+                OwnerDetailsValidationResult.Invalid("Enter no more than $MAX_PHONE_DIGITS digits")
+            }
+            else -> OwnerDetailsValidationResult.Valid
         }
     }
 

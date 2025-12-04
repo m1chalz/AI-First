@@ -1,77 +1,69 @@
-
 package com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.FlowStep
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingEffect
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingIntent
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUiEffect
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUserIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
 import com.intive.aifirst.petspot.navigation.ReportMissingRoute
 
 /**
  * State host composable for Contact Details screen (Step 4/4).
  * Collects state from ViewModel, handles effects, and dispatches intents.
  *
- * @param viewModel Shared ViewModel for the flow (scoped to nav graph)
+ * Following the same pattern as ChipNumberScreen and PhotoScreen (no Scaffold).
+ *
+ * @param viewModel OwnerDetailsViewModel for this screen (scoped to nav graph)
  * @param navController Shared NavController for navigation
  * @param modifier Modifier for the component
  */
 @Composable
 fun ContactDetailsScreen(
-    viewModel: ReportMissingViewModel,
+    viewModel: OwnerDetailsViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    // Update ViewModel with current step
-    LaunchedEffect(Unit) {
-        viewModel.updateCurrentStep(FlowStep.CONTACT_DETAILS)
-    }
-
-    // Handle navigation effects
+    // Handle one-off effects
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is ReportMissingEffect.NavigateToStep -> {
-                    navController.navigate(effect.step.toRoute()) {
+                is OwnerDetailsUiEffect.NavigateToSummary -> {
+                    navController.navigate(ReportMissingRoute.Summary) {
                         launchSingleTop = true
                     }
                 }
-                is ReportMissingEffect.NavigateBack -> {
+                is OwnerDetailsUiEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
-                is ReportMissingEffect.ExitFlow -> {
-                    // Only handled by SummaryScreen
-                }
-                is ReportMissingEffect.LaunchPhotoPicker -> {
-                    // Only handled by PhotoScreen
-                }
-                is ReportMissingEffect.ShowToast -> {
-                    // Only handled by PhotoScreen
+                is OwnerDetailsUiEffect.ShowSnackbar -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    // Handle system back button/gesture
+    BackHandler {
+        viewModel.dispatchIntent(OwnerDetailsUserIntent.BackClicked)
+    }
+
     ContactDetailsContent(
         state = state,
         modifier = modifier,
-        onBackClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateBack) },
-        onContinueClick = { viewModel.dispatchIntent(ReportMissingIntent.NavigateNext) },
+        onPhoneChange = { viewModel.dispatchIntent(OwnerDetailsUserIntent.UpdatePhone(it)) },
+        onEmailChange = { viewModel.dispatchIntent(OwnerDetailsUserIntent.UpdateEmail(it)) },
+        onRewardChange = { viewModel.dispatchIntent(OwnerDetailsUserIntent.UpdateReward(it)) },
+        onBackClick = { viewModel.dispatchIntent(OwnerDetailsUserIntent.BackClicked) },
+        onContinueClick = { viewModel.dispatchIntent(OwnerDetailsUserIntent.ContinueClicked) },
     )
 }
-
-private fun FlowStep.toRoute(): ReportMissingRoute =
-    when (this) {
-        FlowStep.CHIP_NUMBER -> ReportMissingRoute.ChipNumber
-        FlowStep.PHOTO -> ReportMissingRoute.Photo
-        FlowStep.DESCRIPTION -> ReportMissingRoute.Description
-        FlowStep.CONTACT_DETAILS -> ReportMissingRoute.ContactDetails
-        FlowStep.SUMMARY -> ReportMissingRoute.Summary
-    }
