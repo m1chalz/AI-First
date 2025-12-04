@@ -327,41 +327,38 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     /// Validates latitude and longitude ranges
     private func validateCoordinates() -> CoordinateValidationResult {
-        // Both empty = valid (optional field)
+        // Both required - must be filled and valid
         let latTrimmed = latitude.trimmingCharacters(in: .whitespacesAndNewlines)
         let longTrimmed = longitude.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if latTrimmed.isEmpty && longTrimmed.isEmpty {
-            return .valid
+        var latError: String?
+        var longError: String?
+        
+        // Validate latitude
+        if latTrimmed.isEmpty {
+            latError = L10n.AnimalDescription.Error.missingLatitude
+        } else if let latValue = Double(latTrimmed) {
+            if !(-90...90).contains(latValue) {
+                latError = L10n.AnimalDescription.Error.invalidLatitude
+            }
+        } else {
+            latError = L10n.AnimalDescription.Error.invalidCoordinateFormat
         }
         
-        // Parse to Double
-        guard let latValue = Double(latTrimmed), let longValue = Double(longTrimmed) else {
-            return .invalid(
-                latError: L10n.AnimalDescription.Error.invalidCoordinateFormat,
-                longError: L10n.AnimalDescription.Error.invalidCoordinateFormat
-            )
+        // Validate longitude
+        if longTrimmed.isEmpty {
+            longError = L10n.AnimalDescription.Error.missingLongitude
+        } else if let longValue = Double(longTrimmed) {
+            if !(-180...180).contains(longValue) {
+                longError = L10n.AnimalDescription.Error.invalidLongitude
+            }
+        } else {
+            longError = L10n.AnimalDescription.Error.invalidCoordinateFormat
         }
         
-        // Range validation
-        let latValid = (-90...90).contains(latValue)
-        let longValid = (-180...180).contains(longValue)
-        
-        if !latValid && !longValid {
-            return .invalid(
-                latError: L10n.AnimalDescription.Error.invalidLatitude,
-                longError: L10n.AnimalDescription.Error.invalidLongitude
-            )
-        } else if !latValid {
-            return .invalid(
-                latError: L10n.AnimalDescription.Error.invalidLatitude,
-                longError: nil
-            )
-        } else if !longValid {
-            return .invalid(
-                latError: nil,
-                longError: L10n.AnimalDescription.Error.invalidLongitude
-            )
+        // Return result
+        if latError != nil || longError != nil {
+            return .invalid(latError: latError, longError: longError)
         }
         
         return .valid
