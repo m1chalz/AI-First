@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.intive.aifirst.petspot.features.reportmissing.domain.models.AnimalGender
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.AnimalDescriptionUiState
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.ContinueButton
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.FormField
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.ReportMissingColors
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.ScreenTitleSection
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
@@ -217,35 +218,6 @@ fun AnimalDescriptionContent(
             onClick = onContinueClick,
             modifier = Modifier.testTag("animalDescription.continueButton"),
         )
-    }
-}
-
-/**
- * Form field wrapper with label above the content.
- */
-@Composable
-private fun FormField(
-    label: String,
-    labelColor: Color = ReportMissingColors.LabelColor,
-    errorMessage: String? = null,
-    content: @Composable () -> Unit,
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = labelColor,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        content()
-        if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = errorMessage,
-                style = MaterialTheme.typography.bodySmall,
-                color = ReportMissingColors.ErrorTextColor,
-            )
-        }
     }
 }
 
