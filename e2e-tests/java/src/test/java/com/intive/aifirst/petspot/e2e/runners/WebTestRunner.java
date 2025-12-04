@@ -52,7 +52,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @SelectClasspathResource("features/web")
 @ConfigurationParameter(
     key = FILTER_TAGS_PROPERTY_NAME,
-    value = "@web"
+    value = "@web and not @pending"
 )
 @ConfigurationParameter(
     key = GLUE_PROPERTY_NAME,

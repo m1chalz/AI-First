@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.e2e.utils;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -76,16 +77,31 @@ public class WebDriverManager {
      * </ul>
      */
     private static void initializeDriver() {
-        // Automatic ChromeDriver setup (no manual driver download needed)
-        io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
+        // Let Selenium 4.29+ handle driver management automatically (built-in Selenium Manager)
+        // Alternatively use bonigarcia for older setups:
+        // io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
         
         // Chrome options for stable test execution
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized");
+        // Use headless mode based on system property (default: false for local debugging)
+        String headless = System.getProperty("webdriver.chrome.headless", "false");
+        if ("true".equals(headless) || System.getenv("CI") != null) {
+            options.addArguments("--headless=new");
+            System.out.println("Running Chrome in headless mode");
+        }
+        options.addArguments("--window-size=1920,1080");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
         options.addArguments("--disable-dev-shm-usage");  // Overcome limited resource problems
         options.addArguments("--remote-allow-origins=*");  // Allow remote connections
+        options.addArguments("--no-sandbox");  // Required for some environments
+        
+        // Block geolocation - this makes the app show ALL announcements (no location filter)
+        // When CDP geolocation mock doesn't work (Chrome version mismatch), blocking is safer
+        // 1 = allow, 2 = block
+        java.util.Map<String, Object> prefs = new java.util.HashMap<>();
+        prefs.put("profile.default_content_setting_values.geolocation", 2);  // 2 = block
+        options.setExperimentalOption("prefs", prefs);
         
         // Initialize ChromeDriver
         WebDriver webDriver = new ChromeDriver(options);
@@ -110,6 +126,90 @@ public class WebDriverManager {
             driver.get().quit();
             driver.remove();  // Prevent memory leaks
         }
+    }
+    
+    /**
+     * ThreadLocal storage for mock coordinates to apply after page navigation.
+     */
+    private static final ThreadLocal<double[]> pendingMockGeolocation = new ThreadLocal<>();
+    
+    /**
+     * Sets mock geolocation coordinates using JavaScript injection.
+     * This approach works with any Chrome version (no CDP dependency).
+     * 
+     * <p>The coordinates are stored and applied when injectGeolocationMock() is called
+     * after the page starts loading but before the app requests geolocation.
+     * 
+     * @param latitude GPS latitude coordinate
+     * @param longitude GPS longitude coordinate
+     */
+    public static void setMockGeolocation(double latitude, double longitude) {
+        pendingMockGeolocation.set(new double[]{latitude, longitude});
+        System.out.println("Set pending mock geolocation: " + latitude + ", " + longitude);
+    }
+    
+    /**
+     * Injects JavaScript to override the browser's geolocation API.
+     * Must be called after page navigation but before the app requests location.
+     */
+    public static void injectGeolocationMock() {
+        double[] coords = pendingMockGeolocation.get();
+        if (coords == null) {
+            System.out.println("No mock geolocation set, skipping injection");
+            return;
+        }
+        
+        WebDriver webDriver = getDriver();
+        if (webDriver instanceof JavascriptExecutor js) {
+            try {
+                String script = String.format("""
+                    window.navigator.geolocation.getCurrentPosition = function(success, error, options) {
+                        success({
+                            coords: {
+                                latitude: %f,
+                                longitude: %f,
+                                accuracy: 100,
+                                altitude: null,
+                                altitudeAccuracy: null,
+                                heading: null,
+                                speed: null
+                            },
+                            timestamp: Date.now()
+                        });
+                    };
+                    window.navigator.geolocation.watchPosition = function(success, error, options) {
+                        success({
+                            coords: {
+                                latitude: %f,
+                                longitude: %f,
+                                accuracy: 100,
+                                altitude: null,
+                                altitudeAccuracy: null,
+                                heading: null,
+                                speed: null
+                            },
+                            timestamp: Date.now()
+                        });
+                        return 1;
+                    };
+                    window.__geolocationMocked = true;
+                    console.log('Geolocation API mocked: %f, %f');
+                    """, coords[0], coords[1], coords[0], coords[1], coords[0], coords[1]);
+                
+                js.executeScript(script);
+                System.out.println("Injected geolocation mock via JavaScript: " + coords[0] + ", " + coords[1]);
+            } catch (Exception e) {
+                System.err.println("Warning: JavaScript geolocation mock failed: " + e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Clears mock geolocation settings.
+     */
+    public static void clearMockGeolocation() {
+        pendingMockGeolocation.remove();
+        System.out.println("Cleared mock geolocation");
     }
 }
 

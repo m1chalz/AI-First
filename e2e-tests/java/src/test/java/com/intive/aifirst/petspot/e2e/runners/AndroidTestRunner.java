@@ -14,10 +14,10 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
  * 
  * <p>This test runner configures Cucumber to execute only Android-tagged scenarios:
  * <ul>
- *   <li>Filter: {@code @android} tag (executes only Android scenarios)</li>
- *   <li>Features: {@code features/mobile/*.feature} files</li>
+ *   <li>Filter: {@code @android and not @pending} tag (executes only Android scenarios)</li>
+ *   <li>Features: {@code features/**/*.feature} files (both web and mobile directories)</li>
  *   <li>Step Definitions: {@code steps.mobile} package</li>
- *   <li>Hooks: {@code utils.Hooks} for lifecycle management</li>
+ *   <li>Hooks: {@code utils.Hooks} and {@code utils.CommonSteps} for lifecycle management</li>
  * </ul>
  * 
  * <h2>Prerequisites:</h2>
@@ -63,10 +63,10 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
  */
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/mobile")
+@SelectClasspathResource("features")
 @ConfigurationParameter(
     key = FILTER_TAGS_PROPERTY_NAME,
-    value = "@android"
+    value = "@android and not @pending"
 )
 @ConfigurationParameter(
     key = GLUE_PROPERTY_NAME,

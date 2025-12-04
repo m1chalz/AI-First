@@ -3,10 +3,18 @@ package com.intive.aifirst.petspot.e2e.steps.web;
 import com.intive.aifirst.petspot.e2e.pages.PetListPage;
 import com.intive.aifirst.petspot.e2e.utils.TestConfig;
 import com.intive.aifirst.petspot.e2e.utils.WebDriverManager;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,8 +71,8 @@ public class PetListWebSteps {
     @Given("I am on the pet list page")
     public void navigateToPetListPage() {
         String baseUrl = TestConfig.getWebBaseUrl();
-        driver.get(baseUrl + "/pets");
-        System.out.println("Navigated to: " + baseUrl + "/pets");
+        driver.get(baseUrl);
+        System.out.println("Navigated to: " + baseUrl);
     }
     
     /**
@@ -352,6 +360,316 @@ public class PetListWebSteps {
                 "Date should be in format DD/MM/YYYY but was '" + dateText + "'");
         }
         System.out.println("Verified: Date format correct (" + dateText + ")");
+    }
+    
+    // ========================================
+    // Spec 050: Unified Animal List Steps
+    // ========================================
+    
+    @Given("the application is running")
+    public void theApplicationIsRunning() {
+        // Web driver should already be initialized by Hooks
+        assertNotNull(driver, "WebDriver should be initialized");
+        System.out.println("Application is running (WebDriver ready)");
+    }
+    
+    @When("I navigate to the pet list page")
+    public void iNavigateToThePetListPage() {
+        String baseUrl = TestConfig.getWebBaseUrl();
+        driver.get(baseUrl);
+        System.out.println("Navigated to: " + baseUrl);
+        
+        // Wait for page to load
+        petListPage.waitForPetListVisible(10);
+    }
+    
+    @When("I navigate to the pet list page with location {string} {string}")
+    public void iNavigateToThePetListPageWithLocation(String lat, String lng) {
+        double latitude = Double.parseDouble(lat);
+        double longitude = Double.parseDouble(lng);
+        String baseUrl = TestConfig.getWebBaseUrl();
+        
+        // Navigate to about:blank first to inject geolocation mock
+        driver.get("about:blank");
+        
+        // Inject geolocation mock via JavaScript before page loads
+        String script = String.format("""
+            // Store mock coordinates in window object
+            window.__mockGeoLat = %f;
+            window.__mockGeoLng = %f;
+            
+            // Override getCurrentPosition
+            navigator.geolocation.getCurrentPosition = function(success, error, options) {
+                setTimeout(function() {
+                    success({
+                        coords: {
+                            latitude: window.__mockGeoLat,
+                            longitude: window.__mockGeoLng,
+                            accuracy: 100,
+                            altitude: null,
+                            altitudeAccuracy: null,
+                            heading: null,
+                            speed: null
+                        },
+                        timestamp: Date.now()
+                    });
+                }, 10);
+            };
+            
+            // Override watchPosition
+            navigator.geolocation.watchPosition = function(success, error, options) {
+                setTimeout(function() {
+                    success({
+                        coords: {
+                            latitude: window.__mockGeoLat,
+                            longitude: window.__mockGeoLng,
+                            accuracy: 100,
+                            altitude: null,
+                            altitudeAccuracy: null,
+                            heading: null,
+                            speed: null
+                        },
+                        timestamp: Date.now()
+                    });
+                }, 10);
+                return 1;
+            };
+            
+            // Override Permissions API to return 'granted'
+            if (navigator.permissions) {
+                const originalQuery = navigator.permissions.query.bind(navigator.permissions);
+                navigator.permissions.query = function(desc) {
+                    if (desc.name === 'geolocation') {
+                        return Promise.resolve({ state: 'granted', onchange: null });
+                    }
+                    return originalQuery(desc);
+                };
+            }
+            
+            console.log('Geolocation mock injected: ' + window.__mockGeoLat + ', ' + window.__mockGeoLng);
+            """, latitude, longitude);
+        
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(script);
+        System.out.println("Injected geolocation mock: " + lat + ", " + lng);
+        
+        // Now navigate to the actual page - the mock should persist
+        driver.get(baseUrl);
+        System.out.println("Navigated to: " + baseUrl + " with mock geolocation: " + lat + ", " + lng);
+        
+        // Wait for page to load
+        petListPage.waitForPetListVisible(10);
+    }
+    
+    @Then("the page should load successfully")
+    public void thePageShouldLoadSuccessfully() {
+        boolean loaded = petListPage.waitForPetListVisible(10);
+        assertTrue(loaded, "Pet list page should load successfully");
+        System.out.println("Page loaded successfully");
+    }
+    
+    @And("I should see the announcement for {string}")
+    public void iShouldSeeTheAnnouncementFor(String petName) {
+        System.out.println("Looking for announcement: " + petName);
+        
+        // Wait for data to load - need longer wait when multiple announcements are created
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        
+        // Find announcement by pet name in the list
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        
+        boolean found = false;
+        for (WebElement item : items) {
+            String text = item.getText();
+            if (text.contains(petName)) {
+                found = true;
+                System.out.println("Found announcement for: " + petName);
+                break;
+            }
+        }
+        
+        assertTrue(found, "Should find announcement for " + petName + " in the list");
+    }
+    
+    @And("I should NOT see the announcement for {string}")
+    public void iShouldNotSeeTheAnnouncementFor(String petName) {
+        System.out.println("Verifying announcement NOT visible: " + petName);
+        
+        // Wait a bit for data to load
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Find announcement by pet name in the list
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        
+        boolean found = false;
+        for (WebElement item : items) {
+            String text = item.getText();
+            if (text.contains(petName)) {
+                found = true;
+                break;
+            }
+        }
+        
+        assertFalse(found, "Should NOT find announcement for " + petName + " in the list");
+        System.out.println("Verified: Announcement for " + petName + " is NOT visible");
+    }
+    
+    @When("I tap on the announcement for {string}")
+    public void iTapOnTheAnnouncementFor(String petName) {
+        System.out.println("Tapping on announcement: " + petName);
+        
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        
+        for (WebElement item : items) {
+            String text = item.getText();
+            if (text.contains(petName)) {
+                item.click();
+                System.out.println("Tapped announcement for: " + petName);
+                return;
+            }
+        }
+        
+        throw new RuntimeException("Could not find announcement for: " + petName);
+    }
+    
+    @Then("I should see the pet details")
+    public void iShouldSeeThePetDetails() {
+        System.out.println("Verifying pet details modal is visible...");
+        
+        // Wait for pet details modal
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        
+        try {
+            // Look for modal with data-testid="petDetails.modal"
+            wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@data-testid='petDetails.modal']")
+            ));
+            System.out.println("Pet details modal is visible");
+        } catch (Exception e) {
+            // Try alternative: any visible modal
+            try {
+                WebElement modal = driver.findElement(By.xpath("//*[@data-testid='petDetails.modal']"));
+                assertTrue(modal.isDisplayed(), "Pet details modal should be visible");
+            } catch (Exception e2) {
+                throw new AssertionError("Pet details modal not found");
+            }
+        }
+    }
+    
+    @When("I go back from pet details")
+    public void iGoBackFromPetDetails() {
+        System.out.println("Closing pet details modal...");
+        
+        // Try to find close button for modal (data-testid="petDetails.closeButton.click")
+        try {
+            WebElement closeButton = driver.findElement(By.xpath("//*[@data-testid='petDetails.closeButton.click']"));
+            closeButton.click();
+            System.out.println("Closed pet details modal via close button");
+        } catch (Exception e) {
+            // Try clicking backdrop to close
+            try {
+                WebElement backdrop = driver.findElement(By.xpath("//*[@data-testid='petDetails.backdrop']"));
+                backdrop.click();
+                System.out.println("Closed pet details modal via backdrop");
+            } catch (Exception e2) {
+                // Use Escape key
+                driver.findElement(By.tagName("body")).sendKeys(org.openqa.selenium.Keys.ESCAPE);
+                System.out.println("Closed pet details modal via Escape key");
+            }
+        }
+        
+        // Wait for modal to disappear and list to be visible
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        petListPage.waitForPetListVisible(5);
+    }
+    
+    @And("I should see the {string} button")
+    public void iShouldSeeTheButton(String buttonText) {
+        System.out.println("Looking for button: " + buttonText);
+        
+        if (buttonText.contains("Report")) {
+            assertTrue(petListPage.isAddButtonVisible(), 
+                "Should see '" + buttonText + "' button");
+            System.out.println("Found button: " + buttonText);
+        } else {
+            // Generic button search
+            List<WebElement> buttons = driver.findElements(By.tagName("button"));
+            boolean found = buttons.stream().anyMatch(b -> b.getText().contains(buttonText));
+            assertTrue(found, "Should see button with text: " + buttonText);
+        }
+    }
+    
+    @When("I tap the {string} button")
+    public void iTapTheButton(String buttonText) {
+        System.out.println("Tapping button: " + buttonText);
+        
+        if (buttonText.contains("Report")) {
+            petListPage.clickReportMissingButton();
+        } else {
+            List<WebElement> buttons = driver.findElements(By.tagName("button"));
+            for (WebElement button : buttons) {
+                if (button.getText().contains(buttonText)) {
+                    button.click();
+                    System.out.println("Tapped button: " + buttonText);
+                    return;
+                }
+            }
+            throw new RuntimeException("Could not find button: " + buttonText);
+        }
+    }
+    
+    @Then("I should see the microchip screen")
+    public void iShouldSeeTheMicrochipScreen() {
+        System.out.println("Verifying microchip screen is visible...");
+        
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        
+        // Look for microchip input or URL change
+        try {
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@data-testid='microchip.input']")),
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder, 'microchip')]")),
+                ExpectedConditions.urlContains("/report"),
+                ExpectedConditions.urlContains("/microchip")
+            ));
+            System.out.println("Microchip screen is visible");
+        } catch (Exception e) {
+            String currentUrl = driver.getCurrentUrl();
+            assertTrue(currentUrl.contains("report") || currentUrl.contains("microchip"),
+                "Should be on microchip screen (URL: " + currentUrl + ")");
+        }
+    }
+    
+    @Then("the announcement {string} should appear before {string}")
+    public void theAnnouncementShouldAppearBefore(String firstPetName, String secondPetName) {
+        System.out.println("Verifying order: " + firstPetName + " before " + secondPetName);
+        
+        // Wait for data to load - need longer wait when multiple announcements are created
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        
+        // Get all announcement items in order
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        
+        int firstIndex = -1;
+        int secondIndex = -1;
+        
+        for (int i = 0; i < items.size(); i++) {
+            String text = items.get(i).getText();
+            if (text.contains(firstPetName) && firstIndex == -1) {
+                firstIndex = i;
+            }
+            if (text.contains(secondPetName) && secondIndex == -1) {
+                secondIndex = i;
+            }
+        }
+        
+        assertTrue(firstIndex != -1, "Should find announcement for " + firstPetName);
+        assertTrue(secondIndex != -1, "Should find announcement for " + secondPetName);
+        assertTrue(firstIndex < secondIndex, 
+            firstPetName + " (index " + firstIndex + ") should appear before " + 
+            secondPetName + " (index " + secondIndex + ")");
+        
+        System.out.println("Verified order: " + firstPetName + " at " + firstIndex + 
+                          " before " + secondPetName + " at " + secondIndex);
     }
 }
 

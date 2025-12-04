@@ -125,6 +125,9 @@ public class Hooks {
             }
             
         } finally {
+            // Cleanup test data created via API (ensures cleanup even on failure)
+            cleanupTestData();
+            
             // Always quit drivers to prevent resource leaks
             quitAllDrivers(scenario);
             
@@ -132,6 +135,19 @@ public class Hooks {
             System.out.println("Finished scenario: " + scenario.getName());
             System.out.println("Status: " + scenario.getStatus());
             System.out.println("========================================");
+        }
+    }
+    
+    /**
+     * Cleans up any test data created during the scenario via API.
+     * This ensures announcements created for testing are deleted even if the test fails.
+     */
+    private void cleanupTestData() {
+        try {
+            TestDataApiHelper.cleanupAllCreatedAnnouncements();
+        } catch (Exception e) {
+            System.err.println("Failed to cleanup test data: " + e.getMessage());
+            // Don't throw - cleanup failure should not mask original test failure
         }
     }
     
