@@ -158,20 +158,46 @@ val basicAuth = "Basic " + Base64.encodeToString(
 
 ## Android Implementation
 
-### Ktor Client Usage
+### Architecture Pattern
 
-The project uses Ktor HTTP client with OkHttp engine. Repository implementations call Ktor directly.
+The project follows a layered architecture:
+
+```
+API Client → Repository → Use Case → ViewModel
+```
+
+- **API Client** (`AnnouncementApiClient`): HTTP layer - makes Ktor calls
+- **Repository** (`AnnouncementRepositoryImpl`): Data layer - uses API client + handles file I/O
+- **Use Case** (`SubmitAnnouncementUseCase`): Business logic - orchestrates 2-step submission
+
+### API Client Implementation
 
 ```kotlin
-// Existing HttpClient configured in DI module
-val httpClient = HttpClient(OkHttp) {
-    install(ContentNegotiation) {
-        json(Json { ignoreUnknownKeys = true })
-    }
-    install(Logging) { level = LogLevel.BODY }
-    defaultRequest {
-        url(BuildConfig.API_BASE_URL)
-        contentType(ContentType.Application.Json)
+// AnnouncementApiClient (handles all HTTP calls)
+class AnnouncementApiClient(
+    private val httpClient: HttpClient,
+    private val baseUrl: String,
+) {
+    suspend fun createAnnouncement(request: AnnouncementCreateRequest): AnnouncementResponse =
+        httpClient.post("$baseUrl/api/v1/announcements") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+
+    suspend fun uploadPhoto(
+        announcementId: String,
+        authHeader: String,
+        photoBytes: ByteArray,
+    ) {
+        httpClient.post("$baseUrl/api/v1/announcements/$announcementId/photos") {
+            header(HttpHeaders.Authorization, authHeader)
+            setBody(MultiPartFormDataContent(formData {
+                append("photo", photoBytes, Headers.build {
+                    append(HttpHeaders.ContentType, "image/*")
+                    append(HttpHeaders.ContentDisposition, "filename=\"pet.jpg\"")
+                })
+            }))
+        }
     }
 }
 ```
@@ -179,68 +205,52 @@ val httpClient = HttpClient(OkHttp) {
 ### Repository Implementation
 
 ```kotlin
+// AnnouncementRepositoryImpl (uses API client + handles file I/O)
 class AnnouncementRepositoryImpl(
-    private val httpClient: HttpClient,
-    private val contentResolver: ContentResolver  // Inject ContentResolver, NOT Context
+    private val apiClient: AnnouncementApiClient,  // Uses API client, NOT httpClient directly
+    private val contentResolver: ContentResolver   // Inject ContentResolver, NOT Context
 ) : AnnouncementRepository {
     
     override suspend fun createAnnouncement(
         request: AnnouncementCreateRequest
-    ): Result<AnnouncementResponse> {
-        return try {
-            val response: AnnouncementResponse = httpClient.post("/api/v1/announcements") {
-                setBody(request)
-            }.body()
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    ): Result<AnnouncementResponse> = try {
+        val response = apiClient.createAnnouncement(request)
+        Result.success(response)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
     
     override suspend fun uploadPhoto(
         announcementId: String,
         managementPassword: String,
         photoUri: String
-    ): Result<Unit> {
-        return try {
-            // Build Basic auth header
-            val credentials = "$announcementId:$managementPassword"
-            val basicAuth = "Basic " + Base64.encodeToString(
-                credentials.toByteArray(),
-                Base64.NO_WRAP
-            )
-            
-            // Read photo from URI using injected ContentResolver
-            val uri = Uri.parse(photoUri)
-            val inputStream = contentResolver.openInputStream(uri)
-                ?: return Result.failure(IOException("Cannot open photo URI"))
-            val bytes = inputStream.readBytes()
-            inputStream.close()
-            
-            // Upload as multipart form
-            httpClient.post("/api/v1/announcements/$announcementId/photos") {
-                header(HttpHeaders.Authorization, basicAuth)
-                setBody(
-                    MultiPartFormDataContent(
-                        formData {
-                            append("photo", bytes, Headers.build {
-                                append(HttpHeaders.ContentType, "image/*")
-                                append(HttpHeaders.ContentDisposition, "filename=\"pet.jpg\"")
-                            })
-                        }
-                    )
-                )
-            }
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    ): Result<Unit> = try {
+        // Build Basic auth header
+        val credentials = "$announcementId:$managementPassword"
+        val basicAuth = "Basic " + Base64.encodeToString(
+            credentials.toByteArray(),
+            Base64.NO_WRAP
+        )
+        
+        // Read photo from URI using injected ContentResolver
+        val uri = Uri.parse(photoUri)
+        val inputStream = contentResolver.openInputStream(uri)
+            ?: return Result.failure(IOException("Cannot open photo URI"))
+        val bytes = inputStream.readBytes()
+        inputStream.close()
+        
+        // Delegate HTTP call to API client
+        apiClient.uploadPhoto(announcementId, basicAuth, bytes)
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }
 
 // DI registration (in Koin module):
-// single { get<Context>().contentResolver }
-// single<AnnouncementRepository> { AnnouncementRepositoryImpl(get(), get()) }
+// single { AnnouncementApiClient(get(), BuildConfig.API_BASE_URL) }
+// single { androidApplication().contentResolver }
+// single<AnnouncementRepository> { AnnouncementRepositoryImpl(apiClient = get(), contentResolver = get()) }
 ```
 
 ---

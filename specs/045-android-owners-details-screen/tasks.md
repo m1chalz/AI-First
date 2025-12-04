@@ -40,32 +40,32 @@
 
 ### Domain Models & DTOs
 
-- [ ] T001 [P] Create `AnnouncementCreateRequest` DTO in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnnouncementModels.kt`
-- [ ] T002 [P] Create `AnnouncementResponse` DTO in same file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnnouncementModels.kt`
+- [x] T001 [P] Create `AnnouncementCreateRequest` DTO in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnnouncementModels.kt` *(pre-existing)*
+- [x] T002 [P] Create `AnnouncementResponse` DTO in same file `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/models/AnnouncementModels.kt` *(pre-existing)*
 
 ### Repository Interface
 
-- [ ] T003 Create `AnnouncementRepository` interface with `createAnnouncement()` and `uploadPhoto()` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/repositories/AnnouncementRepository.kt`
+- [x] T003 Create `AnnouncementRepository` interface with `createAnnouncement()` and `uploadPhoto()` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/repositories/AnnouncementRepository.kt` *(pre-existing)*
 
 ### Repository Implementation
 
-- [ ] T004 Implement `AnnouncementRepositoryImpl` with Ktor client in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/data/repositories/AnnouncementRepositoryImpl.kt`
+- [x] T004 Implement `AnnouncementRepositoryImpl` with Ktor client in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/data/repositories/AnnouncementRepositoryImpl.kt` *(pre-existing)*
 
 ### Use Case
 
-- [ ] T005 Create `SubmitAnnouncementUseCase` orchestrating 2-step submission (announcement + photo) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/usecases/SubmitAnnouncementUseCase.kt`
+- [x] T005 Create `SubmitAnnouncementUseCase` orchestrating 2-step submission (announcement + photo) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/domain/usecases/SubmitAnnouncementUseCase.kt` *(pre-existing)*
 
 ### Validator Utility
 
-- [ ] T006 Create `OwnerDetailsValidator` with `validatePhone()` (sanitize whitespace/dashes, count 7-11 digits) and `validateEmail()` pure functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidator.kt`
+- [x] T006 Create `OwnerDetailsValidator` with `validatePhone()` (sanitize whitespace/dashes, count 7-11 digits) and `validateEmail()` pure functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidator.kt` *(pre-existing)*
 
 ### Flow State Extension
 
-- [ ] T007 Add `rewardDescription` field and `updateRewardDescription()` method to `ReportMissingFlowState.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt`
+- [x] T007 Add `rewardDescription` field and `updateRewardDescription()` method to `ReportMissingFlowState.kt` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/presentation/state/ReportMissingFlowState.kt` *(pre-existing)*
 
 ### DI Registration
 
-- [ ] T008 Register `ContentResolver`, `AnnouncementRepository`, and `SubmitAnnouncementUseCase` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ReportMissingModule.kt`
+- [x] T008 Register `ContentResolver`, `AnnouncementRepository`, and `SubmitAnnouncementUseCase` in Koin module `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DataModule.kt` and `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DomainModule.kt` *(pre-existing)*
 
 **Checkpoint**: Foundation ready - MVI and UI implementation can now begin.
 

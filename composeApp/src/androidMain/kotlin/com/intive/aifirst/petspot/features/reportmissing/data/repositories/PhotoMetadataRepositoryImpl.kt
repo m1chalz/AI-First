@@ -1,6 +1,6 @@
 package com.intive.aifirst.petspot.features.reportmissing.data.repositories
 
-import android.app.Application
+import android.content.ContentResolver
 import android.provider.OpenableColumns
 import androidx.core.net.toUri
 import com.intive.aifirst.petspot.features.reportmissing.domain.repositories.PhotoMetadataRepository
@@ -8,14 +8,14 @@ import com.intive.aifirst.petspot.features.reportmissing.domain.repositories.Pho
 /**
  * Implementation of PhotoMetadataRepository using Android ContentResolver.
  *
- * @param application Application context for ContentResolver access (safe to hold)
+ * @param contentResolver ContentResolver for querying photo metadata (inject directly, NOT Context)
  */
 class PhotoMetadataRepositoryImpl(
-    private val application: Application,
+    private val contentResolver: ContentResolver,
 ) : PhotoMetadataRepository {
     override suspend fun extractMetadata(uri: String): Pair<String, Long> {
         val contentUri = uri.toUri()
-        application.contentResolver.query(
+        contentResolver.query(
             contentUri,
             arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE),
             null,
