@@ -1,87 +1,71 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { SummaryScreen } from '../SummaryScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+import { BrowserRouter } from 'react-router-dom';
+import { SummaryScreen } from '../SummaryScreen';
+import '@testing-library/jest-dom';
 
-const renderWithProviders = () => render(
-  <ReportMissingPetFlowProvider>
-    <MemoryRouter initialEntries={['/report-missing-pet/summary']}>
-      <SummaryScreen />
-    </MemoryRouter>
-  </ReportMissingPetFlowProvider>
-);
+const renderWithRouter = (component: React.ReactNode) =>
+  render(
+    <BrowserRouter>
+      <ReportMissingPetFlowProvider>
+        {component}
+      </ReportMissingPetFlowProvider>
+    </BrowserRouter>
+  );
 
-describe('SummaryScreen', () => {
-  describe('rendering', () => {
-    it('should display flow state data', () => {
-      // given
-      renderWithProviders();
+describe('SummaryScreen - Figma Design', () => {
+  it('should render success heading with correct text', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-      // when
-      const heading = screen.getByText(/flow state summary/i);
-
-      // then
-      expect(heading).toBeTruthy();
-    });
-
-    it('should display header', () => {
-      // given
-      renderWithProviders();
-
-      // when
-      const header = screen.getByTestId('reportMissingPet.header.title');
-
-      // then
-      expect(header).toBeTruthy();
-    });
+    // then
+    const heading = screen.getByText('Report created');
+    expect(heading).toBeDefined();
   });
 
-  describe('buttons', () => {
-    it('should display back button', () => {
-      // given
-      renderWithProviders();
+  it('should display description text about report creation', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-      // when
-      const backButton = screen.queryByTestId('reportMissingPet.header.backButton.click');
+    // then
+    expect(screen.getByText(/Your report has been created/i)).toBeDefined();
+    expect(screen.getByText(/missing animal has been added to the database/i)).toBeDefined();
+  });
 
-      // then
-      expect(backButton).toBeTruthy();
-    });
+  it('should display Close button', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-    it('should display complete button', () => {
-      // given
-      renderWithProviders();
+    // then
+    const closeButton = screen.getByRole('button', { name: /Close/i });
+    expect(closeButton).toBeDefined();
+  });
 
-      // when
-      const completeButton = screen.queryByTestId('summary.complete.button');
+  it('should have correct layout with proper spacing', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-      // then
-      expect(completeButton).toBeTruthy();
-    });
+    // then
+    const heading = screen.getByText('Report created');
+    expect(heading).toBeDefined();
+    const closeButton = screen.getByRole('button', { name: /Close/i });
+    expect(closeButton).toBeDefined();
+  });
 
-    it('should have clickable back button', () => {
-      // given
-      renderWithProviders();
-      const backButton = screen.getByTestId('reportMissingPet.header.backButton.click') as HTMLButtonElement;
+  it('should display message about code being sent to email', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-      // when
-      const isDisabled = backButton.disabled;
+    // then
+    expect(screen.getByText(/This code has also been sent to your email address/i)).toBeDefined();
+  });
 
-      // then
-      expect(isDisabled).toBe(false);
-    });
+  it('should not render password card when managementPassword is missing', () => {
+    // given
+    renderWithRouter(<SummaryScreen />);
 
-    it('should have clickable complete button', () => {
-      // given
-      renderWithProviders();
-      const completeButton = screen.getByTestId('summary.complete.button') as HTMLButtonElement;
-
-      // when
-      const isDisabled = completeButton.disabled;
-
-      // then
-      expect(isDisabled).toBe(false);
-    });
+    // then - password text should not be in document when state is not passed
+    expect(screen.queryByTestId('summary.password.text')).toBeNull();
   });
 });

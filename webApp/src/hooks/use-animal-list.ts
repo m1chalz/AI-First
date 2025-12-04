@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { animalRepository } from '../services/animal-repository';
 import { useGeolocationContext } from '../contexts/GeolocationContext';
+import { announcementService } from '../services/announcement-service';
 import type { Animal } from '../types/animal';
 
 interface UseAnimalListResult {
@@ -26,7 +26,7 @@ export function useAnimalList(): UseAnimalListResult {
         setError(null);
         
         try {
-            const result = await animalRepository.getAnimals(geolocation.coordinates);
+            const result = await announcementService.getAnimals(geolocation.coordinates);
             setAnimals(result);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');

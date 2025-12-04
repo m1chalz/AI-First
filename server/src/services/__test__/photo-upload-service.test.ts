@@ -182,4 +182,100 @@ describe('PhotoUploadService', () => {
       expect(writeFileMock).not.toHaveBeenCalled();
     });
   });
+
+  describe('deletePhotos', () => {
+    it('should delete photo file using photoUrl', async () => {
+      // Given: Mock fs.unlink for deletion
+      const photoUrl = '/images/announce-delete-123.jpeg';
+      const unlinkMock = vi.fn().mockResolvedValue(undefined);
+      mockFs.unlink = unlinkMock;
+
+      // When: Service deletes photo
+      await service.deletePhotos(photoUrl);
+
+      // Then: Should delete the specific file at correct absolute path
+      expect(unlinkMock).toHaveBeenCalledTimes(1);
+      expect(unlinkMock).toHaveBeenCalledWith(
+        path.join(process.cwd(), 'public', 'images', 'announce-delete-123.jpeg')
+      );
+    });
+
+    it('should handle non-existent photo file gracefully', async () => {
+      // Given: Mock fs.unlink that fails
+      const photoUrl = '/images/non-existent.png';
+      const unlinkMock = vi.fn().mockRejectedValue(new Error('ENOENT: no such file'));
+      mockFs.unlink = unlinkMock;
+
+      // When: Service tries to delete non-existent photo
+      // Then: Should not throw error
+      await expect(service.deletePhotos(photoUrl)).resolves.not.toThrow();
+      expect(unlinkMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle permission errors gracefully', async () => {
+      // Given: Mock fs.unlink that fails with permission error
+      const photoUrl = '/images/protected.jpg';
+      const unlinkMock = vi.fn().mockRejectedValue(new Error('Permission denied'));
+      mockFs.unlink = unlinkMock;
+
+      // When: Service tries to delete file without permissions
+      // Then: Should not throw error
+      await expect(service.deletePhotos(photoUrl)).resolves.not.toThrow();
+      expect(unlinkMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should construct correct absolute path from photoUrl', async () => {
+      // Given: Mock fs.unlink
+      const photoUrl = '/images/my-announcement-id.webp';
+      const unlinkMock = vi.fn().mockResolvedValue(undefined);
+      mockFs.unlink = unlinkMock;
+
+      // When: Service deletes photo
+      await service.deletePhotos(photoUrl);
+
+      // Then: Should use correct absolute path
+      expect(unlinkMock).toHaveBeenCalledWith(
+        path.join(process.cwd(), 'public', 'images', 'my-announcement-id.webp')
+      );
+    });
+
+    it('should skip deletion when photoUrl is null', async () => {
+      // Given: Mock fs.unlink
+      const unlinkMock = vi.fn();
+      mockFs.unlink = unlinkMock;
+
+      // When: Service tries to delete with null photoUrl
+      await service.deletePhotos(null);
+
+      // Then: Should not attempt to delete anything
+      expect(unlinkMock).not.toHaveBeenCalled();
+    });
+
+    it('should skip deletion when photoUrl is empty string', async () => {
+      // Given: Mock fs.unlink
+      const unlinkMock = vi.fn();
+      mockFs.unlink = unlinkMock;
+
+      // When: Service tries to delete with empty photoUrl
+      await service.deletePhotos('');
+
+      // Then: Should not attempt to delete anything
+      expect(unlinkMock).not.toHaveBeenCalled();
+    });
+
+    it('should handle photoUrl without leading slash', async () => {
+      // Given: Mock fs.unlink
+      const photoUrl = 'images/announce-123.jpeg';
+      const unlinkMock = vi.fn().mockResolvedValue(undefined);
+      mockFs.unlink = unlinkMock;
+
+      // When: Service deletes photo with photoUrl without leading slash
+      await service.deletePhotos(photoUrl);
+
+      // Then: Should still construct correct path
+      expect(unlinkMock).toHaveBeenCalledWith(
+        path.join(process.cwd(), 'public', 'images', 'announce-123.jpeg')
+      );
+    });
+  });
 });

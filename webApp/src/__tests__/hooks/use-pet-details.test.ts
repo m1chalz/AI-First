@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { usePetDetails } from '../../hooks/use-pet-details';
-import * as animalRepositoryModule from '../../services/animal-repository';
+import * as announcementServiceModule from '../../services/announcement-service';
 import type { Animal } from '../../types/animal';
 
-vi.mock('../../services/animal-repository', () => ({
-    animalRepository: {
+vi.mock('../../services/announcement-service', () => ({
+    announcementService: {
         getPetById: vi.fn()
     }
 }));
@@ -16,7 +16,7 @@ describe('usePetDetails', () => {
     });
     
     it('should initialize with loading state when pet ID is provided', () => {
-        // Given: Mock repository returns a pet
+        // given
         const mockPet: Animal = {
             id: 'pet-123',
             petName: 'Fluffy',
@@ -37,19 +37,19 @@ describe('usePetDetails', () => {
             createdAt: null,
             updatedAt: null
         };
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getPetById').mockResolvedValue(mockPet);
+        vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockResolvedValue(mockPet);
         
-        // When: Hook is initialized with pet ID
+        // when
         const { result } = renderHook(() => usePetDetails('pet-123'));
         
-        // Then: Should be in loading state initially
+        // then
         expect(result.current.isLoading).toBe(true);
         expect(result.current.pet).toBeNull();
         expect(result.current.error).toBeNull();
     });
     
     it('should load pet details successfully when repository returns data', async () => {
-        // Given: Mock repository returns a pet
+        // given
         const mockPet: Animal = {
             id: 'pet-123',
             petName: 'Fluffy',
@@ -70,39 +70,39 @@ describe('usePetDetails', () => {
             createdAt: null,
             updatedAt: null
         };
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getPetById').mockResolvedValue(mockPet);
+        vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockResolvedValue(mockPet);
         
-        // When: Hook fetches pet details
+        // when
         const { result } = renderHook(() => usePetDetails('pet-123'));
         
-        // Then: Should load pet details successfully
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
         
+        // then
         expect(result.current.pet).toEqual(mockPet);
         expect(result.current.error).toBeNull();
     });
     
     it('should handle error state when repository throws error', async () => {
-        // Given: Mock repository throws an error
+        // given
         const mockError = new Error('Pet not found');
-        vi.spyOn(animalRepositoryModule.animalRepository, 'getPetById').mockRejectedValue(mockError);
+        vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockRejectedValue(mockError);
         
-        // When: Hook fetches pet details
+        // when
         const { result } = renderHook(() => usePetDetails('pet-123'));
         
-        // Then: Should handle error state
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false);
         });
         
+        // then
         expect(result.current.pet).toBeNull();
         expect(result.current.error).toBe('Failed to load pet details');
     });
     
     it('should retry loading pet details when retry is called', async () => {
-        // Given: Mock repository fails first, then succeeds
+        // given
         const mockPet: Animal = {
             id: 'pet-123',
             petName: 'Fluffy',
@@ -123,11 +123,11 @@ describe('usePetDetails', () => {
             createdAt: null,
             updatedAt: null
         };
-        const getPetByIdSpy = vi.spyOn(animalRepositoryModule.animalRepository, 'getPetById')
+        const getPetByIdSpy = vi.spyOn(announcementServiceModule.announcementService, 'getPetById')
             .mockRejectedValueOnce(new Error('Network error'))
             .mockResolvedValueOnce(mockPet);
         
-        // When: Hook fetches pet details, fails, then retries
+        // when
         const { result } = renderHook(() => usePetDetails('pet-123'));
         
         await waitFor(() => {
@@ -136,7 +136,6 @@ describe('usePetDetails', () => {
         
         expect(result.current.error).toBe('Failed to load pet details');
         
-        // When: Retry is called
         act(() => {
             result.current.retry();
         });
@@ -145,7 +144,7 @@ describe('usePetDetails', () => {
             expect(result.current.isLoading).toBe(false);
         }, { timeout: 3000 });
         
-        // Then: Should retry and succeed
+        // then
         expect(result.current.pet).toEqual(mockPet);
         expect(result.current.error).toBeNull();
         expect(getPetByIdSpy).toHaveBeenCalledTimes(2);

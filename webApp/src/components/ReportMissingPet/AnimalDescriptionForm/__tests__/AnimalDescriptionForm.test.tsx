@@ -8,7 +8,7 @@ describe('AnimalDescriptionForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock navigator.geolocation with auto-callback for successful location
-    (navigator as any).geolocation = {
+    (navigator as { geolocation?: Partial<Geolocation> }).geolocation = {
       getCurrentPosition: vi.fn((success) => {
         // Simulate successful geolocation fetch
         setTimeout(() => {
@@ -28,7 +28,7 @@ describe('AnimalDescriptionForm', () => {
       watchPosition: vi.fn(),
       clearWatch: vi.fn(),
     };
-    (navigator as any).permissions = {
+    (navigator as { permissions?: { query?: (p: object) => Promise<{ state: string }> } }).permissions = {
       query: vi.fn(() => Promise.resolve({ state: 'granted' })),
     };
   });
@@ -183,7 +183,7 @@ describe('AnimalDescriptionForm', () => {
         },
       } as GeolocationPosition);
     });
-    (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
+    (navigator.geolocation.getCurrentPosition as unknown as typeof navigator.geolocation.getCurrentPosition) = mockGetCurrentPosition;
 
     const mockOnFieldChange = vi.fn();
 
@@ -224,7 +224,7 @@ describe('AnimalDescriptionForm', () => {
         },
       } as GeolocationPosition);
     });
-    (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
+    (navigator.geolocation.getCurrentPosition as unknown as typeof navigator.geolocation.getCurrentPosition) = mockGetCurrentPosition;
 
     const mockOnFieldChange = vi.fn();
 
@@ -268,8 +268,8 @@ describe('AnimalDescriptionForm', () => {
         } as GeolocationPositionError);
       }, 0);
     });
-    (navigator.geolocation.getCurrentPosition as any) = mockGetCurrentPosition;
-    (navigator.permissions.query as any) = vi.fn(() => Promise.resolve({ state: 'prompt' }));
+    (navigator.geolocation.getCurrentPosition as unknown as typeof navigator.geolocation.getCurrentPosition) = mockGetCurrentPosition;
+    (navigator.permissions.query as unknown as typeof navigator.permissions.query) = vi.fn(() => Promise.resolve({ state: 'prompt' } as PermissionStatus));
 
     // when
     const mockOnFieldChange = vi.fn();

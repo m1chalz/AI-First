@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
-import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
@@ -61,8 +60,6 @@ export function PhotoScreen() {
       handleFileSelect(file);
     }
   };
-
-  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout

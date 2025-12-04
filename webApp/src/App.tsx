@@ -14,6 +14,7 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AnimalList />} />
+          <Route path="/announcement/:announcementId" element={<AnimalList />} />
         <Route path="/report-missing" element={<ReportMissingPetFlowProvider><Navigate to="microchip" replace /></ReportMissingPetFlowProvider>} />
         <Route
           path="/report-missing/microchip"

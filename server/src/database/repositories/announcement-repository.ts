@@ -9,6 +9,7 @@ export interface IAnnouncementRepository {
   existsByMicrochip(microchipNumber: string): Promise<boolean>;
   create(data: CreateAnnouncementDto, managementPassword: string): Promise<Announcement>;
   updatePhotoUrl(trx: Knex.Transaction, id: string, photoUrl: string): Promise<void>;
+  delete(id: string): Promise<void>;
 }
 
 export class AnnouncementRepository implements IAnnouncementRepository {
@@ -104,6 +105,10 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         photo_url: photoUrl,
         updated_at: new Date().toISOString(),
       });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.db('announcement').where('id', id).delete();
   }
 
   private mapRowToAnnouncement(row: AnnouncementRow): Announcement {

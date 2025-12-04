@@ -267,8 +267,8 @@ describe('validateEmailAddress', () => {
 
 describe('validateContactForm', () => {
   it.each([
-    { phone: '1234567', email: '', isValid: true },
-    { phone: '', email: 'user@example.com', isValid: true },
+    { phone: '1234567', email: '', isValid: false },
+    { phone: '', email: 'user@example.com', isValid: false },
     { phone: '1234567', email: 'user@example.com', isValid: true },
     { phone: '', email: '', isValid: false },
     { phone: 'abc', email: '', isValid: false },
@@ -280,23 +280,37 @@ describe('validateContactForm', () => {
     expect(result.isValid).toBe(isValid);
   });
 
-  it('should return appropriate error messages', () => {
+  it('should return appropriate error messages for invalid values', () => {
     const result = validateContactForm({ phone: 'abc', email: 'invalid@' });
     expect(result.phoneError).toBe('Phone number must have at least 7 digits');
     expect(result.emailError).toBe('Enter a valid email address');
   });
 
   it('should return empty errors for valid inputs', () => {
-    const result = validateContactForm({ phone: '1234567', email: '' });
+    const result = validateContactForm({ phone: '1234567', email: 'user@example.com' });
     expect(result.phoneError).toBe('');
     expect(result.emailError).toBe('');
     expect(result.isValid).toBe(true);
   });
 
-  it('should return error message when both fields are empty', () => {
+  it('should require both phone and email', () => {
     const result = validateContactForm({ phone: '', email: '' });
-    expect(result.phoneError).toBe('Phone number or email is required');
-    expect(result.emailError).toBe('Phone number or email is required');
+    expect(result.phoneError).toBe('Phone number is required');
+    expect(result.emailError).toBe('Email is required');
+    expect(result.isValid).toBe(false);
+  });
+
+  it('should require phone when only email is provided', () => {
+    const result = validateContactForm({ phone: '', email: 'user@example.com' });
+    expect(result.phoneError).toBe('Phone number is required');
+    expect(result.emailError).toBe('');
+    expect(result.isValid).toBe(false);
+  });
+
+  it('should require email when only phone is provided', () => {
+    const result = validateContactForm({ phone: '1234567', email: '' });
+    expect(result.phoneError).toBe('');
+    expect(result.emailError).toBe('Email is required');
     expect(result.isValid).toBe(false);
   });
 });
