@@ -1,122 +1,248 @@
-
 package com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.FlowStep
-import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.ReportMissingUiState
+import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUiState
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.ContinueButton
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.FormField
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.ReportMissingColors
 import com.intive.aifirst.petspot.features.reportmissing.ui.components.StepHeader
+import com.intive.aifirst.petspot.features.reportmissing.ui.components.StyledOutlinedTextField
+import com.intive.aifirst.petspot.features.reportmissing.util.OwnerDetailsValidator
 import com.intive.aifirst.petspot.ui.preview.PreviewScreenSizes
 
 /**
  * Stateless content composable for Contact Details screen (Step 4/4).
- * Displays header with progress indicator, placeholder content, and continue button.
+ * Displays phone, email, and optional reward fields with validation errors.
+ *
+ * Follows the same edge-to-edge pattern as ChipNumberContent and PhotoContent:
+ * - statusBarsPadding() on main Column
+ * - navigationBarsPadding() on Continue button
  *
  * @param state Current UI state
+ * @param snackbarHostState State for displaying Snackbar messages (optional for previews)
  * @param modifier Modifier for the component
+ * @param onPhoneChange Callback when phone changes
+ * @param onEmailChange Callback when email changes
+ * @param onRewardChange Callback when reward changes
  * @param onBackClick Callback when back button is clicked
  * @param onContinueClick Callback when continue button is clicked
  */
 @Composable
 fun ContactDetailsContent(
-    state: ReportMissingUiState,
+    state: OwnerDetailsUiState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     modifier: Modifier = Modifier,
+    onPhoneChange: (String) -> Unit = {},
+    onEmailChange: (String) -> Unit = {},
+    onRewardChange: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
     onContinueClick: () -> Unit = {},
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .testTag("reportMissing.contactDetails.content"),
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .testTag("ownersDetails.content"),
     ) {
-        // Header with back button, title, and progress indicator
-        StepHeader(
-            title = "Owner's details",
-            currentStep = state.progressStepNumber,
-            onBackClick = onBackClick,
-        )
-
-        // Placeholder content
         Column(
-            modifier =
-                Modifier
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding(),
+        ) {
+            // Header with back button, title, and progress indicator
+            StepHeader(
+                title = "Owner's details",
+                currentStep = 4,
+                onBackClick = if (state.isSubmitting) { {} } else onBackClick,
+            )
+
+            // Scrollable content
+            Column(
+                modifier = Modifier
                     .weight(1f)
+                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp),
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Your contact info",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF2D2D2D),
-            )
+                Text(
+                    text = "Your contact info",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = ReportMissingColors.TitleColor,
+                    modifier = Modifier.testTag("ownersDetails.title"),
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "Add your contact information's and potential reward.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF545F71),
-            )
+                Text(
+                    text = "Add your contact information's and potential reward.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = ReportMissingColors.SubtitleColor,
+                    modifier = Modifier.testTag("ownersDetails.subtitle"),
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Placeholder for contact details form (future implementation)
-            Text(
-                text = "Contact Details Screen",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF9CA3AF),
-                modifier = Modifier.testTag("reportMissing.contactDetails.placeholder"),
+                // Phone field with input filtering
+                FormField(
+                    label = "Phone number",
+                    errorMessage = state.phoneError,
+                    modifier = Modifier.testTag("ownersDetails.phoneInput"),
+                ) {
+                    StyledOutlinedTextField(
+                        value = state.phone,
+                        onValueChange = { newValue ->
+                            // Filter to only allow valid phone characters: digits, +, spaces, dashes, parentheses
+                            val filtered = newValue.filter { it.isDigit() || it in "+- ()" }
+                            // Count digits only (excluding formatting characters)
+                            val digitCount = filtered.count { it.isDigit() }
+                            // Allow change only if digit count <= 11
+                            if (digitCount <= OwnerDetailsValidator.MAX_PHONE_DIGITS) {
+                                onPhoneChange(filtered)
+                            }
+                        },
+                        placeholder = "Enter phone number...",
+                        isError = state.phoneError != null,
+                        enabled = !state.isSubmitting,
+                        keyboardType = KeyboardType.Phone,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Email field
+                FormField(
+                    label = "Email",
+                    errorMessage = state.emailError,
+                    modifier = Modifier.testTag("ownersDetails.emailInput"),
+                ) {
+                    StyledOutlinedTextField(
+                        value = state.email,
+                        onValueChange = onEmailChange,
+                        placeholder = "username@example.com",
+                        isError = state.emailError != null,
+                        enabled = !state.isSubmitting,
+                        keyboardType = KeyboardType.Email,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Reward field (optional) with character counter
+                FormField(
+                    label = "Reward for the finder (optional)",
+                    modifier = Modifier.testTag("ownersDetails.rewardInput"),
+                ) {
+                    Column {
+                        StyledOutlinedTextField(
+                            value = state.reward,
+                            onValueChange = onRewardChange,
+                            placeholder = "Enter amount...",
+                            enabled = !state.isSubmitting,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = "${state.rewardCharacterCount}/${state.rewardMaxLength}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (state.rewardCharacterCount >= state.rewardMaxLength) {
+                                    ReportMissingColors.ErrorTextColor
+                                } else {
+                                    ReportMissingColors.LabelColor
+                                },
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                                    .testTag("ownersDetails.rewardCounter"),
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Continue button (shared component with loading state support)
+            ContinueButton(
+                onClick = onContinueClick,
+                enabled = state.canSubmit,
+                isLoading = state.isSubmitting,
+                testTag = "ownersDetails.continueButton",
             )
         }
 
-        // Continue button
-        Button(
-            onClick = onContinueClick,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-                    .testTag("contactDetails.continueButton"),
-            shape = RoundedCornerShape(10.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF155DFC),
-                ),
-        ) {
-            Text(
-                text = "Continue",
-                modifier = Modifier.padding(vertical = 8.dp),
-            )
-        }
+        // Snackbar for error messages with Retry action
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .testTag("ownersDetails.snackbar"),
+        )
     }
+}
+
+/**
+ * Preview parameter provider for ContactDetailsContent.
+ */
+class OwnerDetailsUiStateProvider : PreviewParameterProvider<OwnerDetailsUiState> {
+    override val values = sequenceOf(
+        // Initial state
+        OwnerDetailsUiState(),
+        // With values entered
+        OwnerDetailsUiState(
+            phone = "+48 123 456 789",
+            email = "owner@example.com",
+            reward = "$250 gift card",
+        ),
+        // With validation errors
+        OwnerDetailsUiState(
+            phone = "123",
+            email = "invalid",
+            phoneError = "Enter at least 7 digits",
+            emailError = "Enter a valid email address",
+        ),
+        // Loading state
+        OwnerDetailsUiState(
+            phone = "+48 123 456 789",
+            email = "owner@example.com",
+            isSubmitting = true,
+        ),
+    )
 }
 
 @Preview(name = "Contact Details Content", showBackground = true)
 @PreviewScreenSizes
 @Composable
-private fun ContactDetailsContentPreview() {
+private fun ContactDetailsContentPreview(
+    @PreviewParameter(OwnerDetailsUiStateProvider::class) state: OwnerDetailsUiState,
+) {
     MaterialTheme {
-        ContactDetailsContent(state = ReportMissingUiState(currentStep = FlowStep.CONTACT_DETAILS))
+        ContactDetailsContent(state = state)
     }
 }

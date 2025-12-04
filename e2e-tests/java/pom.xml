@@ -20,12 +20,12 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Dependency versions (latest stable as of Nov 2025) -->
-        <selenium.version>4.15.0</selenium.version>
-        <appium.version>9.0.0</appium.version>
-        <cucumber.version>7.14.0</cucumber.version>
-        <junit.version>5.10.1</junit.version>
-        <webdrivermanager.version>5.6.2</webdrivermanager.version>
+        <!-- Dependency versions (updated Dec 2025 for Chrome 142+) -->
+        <selenium.version>4.27.0</selenium.version>
+        <appium.version>9.3.0</appium.version>
+        <cucumber.version>7.20.1</cucumber.version>
+        <junit.version>5.11.3</junit.version>
+        <webdrivermanager.version>5.9.2</webdrivermanager.version>
 
         <!-- Plugin versions -->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>

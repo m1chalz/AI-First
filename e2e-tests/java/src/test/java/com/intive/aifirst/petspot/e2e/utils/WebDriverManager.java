@@ -38,8 +38,17 @@ public class WebDriverManager {
     /** ThreadLocal storage for WebDriver instances (one per thread for parallel execution) */
     private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     
-    /** Default implicit wait timeout in seconds */
-    private static final int DEFAULT_IMPLICIT_WAIT_SECONDS = 10;
+    /** Default implicit wait timeout in seconds - reduced from 10s for faster test execution */
+    private static final int DEFAULT_IMPLICIT_WAIT_SECONDS = 3;
+    
+    /**
+     * Checks if a WebDriver instance exists for the current thread without initializing one.
+     * 
+     * @return true if driver exists, false otherwise
+     */
+    public static boolean hasDriver() {
+        return driver.get() != null;
+    }
     
     /**
      * Gets the WebDriver instance for the current thread.
@@ -76,7 +85,7 @@ public class WebDriverManager {
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
         options.addArguments("--disable-dev-shm-usage");  // Overcome limited resource problems
-        options.addArguments("--no-sandbox");              // Bypass OS security model (for CI/CD)
+        options.addArguments("--remote-allow-origins=*");  // Allow remote connections
         
         // Initialize ChromeDriver
         WebDriver webDriver = new ChromeDriver(options);

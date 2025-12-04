@@ -1,13 +1,8 @@
-# PetSpot E2E Tests - Dual Test Stack
+# PetSpot E2E Tests - Java/Maven/Cucumber Stack
 
-**Status**: DUAL STACK COEXISTENCE - Both TypeScript and Java test stacks are fully operational
+**Status**: JAVA ONLY - TypeScript E2E tests have been removed (Spec 025)
 
-This directory contains **two independent E2E testing infrastructures** for PetSpot:
-
-1. **TypeScript Stack** (existing): Playwright (web) + Appium+WebdriverIO (mobile)
-2. **Java Stack** (new): Selenium (web) + Appium+Cucumber (mobile)
-
-**Migration Strategy**: Gradual, organic migration as developers work on feature branches. **No forced timeline** - both stacks will coexist indefinitely until all active branches migrate to Java.
+This directory contains the **unified E2E testing infrastructure** for PetSpot using Java/Maven/Cucumber.
 
 ---
 
@@ -15,244 +10,493 @@ This directory contains **two independent E2E testing infrastructures** for PetS
 
 ```
 /e2e-tests/
-├── java/                           # NEW: Java/Maven/Selenium/Appium/Cucumber stack
+├── java/                           # Java/Maven/Selenium/Appium/Cucumber stack
 │   ├── pom.xml                     # Maven project configuration
+│   ├── apps/                       # Mobile app files for testing (.apk, .app)
+│   │   ├── petspot-android.apk     # Android APK (copy from composeApp/build/outputs/apk/debug/)
+│   │   └── petspot-ios.app         # iOS App (copy from iosApp/build/)
 │   └── src/test/
-│       ├── java/                   # Java test code (Page/Screen Objects, Steps, Runners)
-│       └── resources/              # Gherkin feature files (.feature)
+│       ├── java/                   # Java test code
+│       │   └── com/intive/aifirst/petspot/e2e/
+│       │       ├── pages/          # Web Page Objects (Selenium)
+│       │       ├── screens/        # Mobile Screen Objects (Appium)
+│       │       ├── steps/          # Cucumber Step Definitions
+│       │       │   ├── web/        # Web-specific steps
+│       │       │   └── mobile/     # Mobile-specific steps
+│       │       ├── runners/        # JUnit Test Runners
+│       │       └── utils/          # Utilities (drivers, helpers)
+│       └── resources/
+│           └── features/           # Gherkin feature files (.feature)
+│               ├── web/            # Web test scenarios
+│               └── mobile/         # Mobile test scenarios
 │
-├── web/                            # EXISTING: TypeScript Playwright tests (web)
-│   ├── specs/                      # Playwright test specifications
-│   ├── pages/                      # Page Object Model
-│   ├── steps/                      # Reusable step definitions
-│   └── playwright.config.ts        # Playwright configuration
-│
-├── mobile/                         # EXISTING: TypeScript Appium tests (mobile)
-│   ├── specs/                      # Mobile test specifications
-│   ├── screens/                    # Screen Object Model
-│   ├── steps/                      # Reusable step definitions
-│   └── wdio.conf.ts                # WebdriverIO configuration
-│
-├── package.json                    # npm dependencies for TypeScript tests
 └── README.md                       # This file
 ```
 
 ---
 
-## TypeScript Test Stack (Existing - PRESERVED)
+## Infrastructure Setup (COMPLETE GUIDE)
 
-### Prerequisites
+### 1. Java 21 (REQUIRED)
 
-- Node.js 18+ installed
-- npm dependencies installed: `npm install` (from `/e2e-tests/`)
-- For mobile tests: Android SDK and/or Xcode configured
+E2E tests require **Java 21 LTS**.
 
-### Run Commands
-
-**Web Tests** (Playwright):
 ```bash
-# Run all web E2E tests
-npm run test:web
+# macOS (Homebrew)
+brew install openjdk@21
 
-# Run with UI mode (interactive)
-npm run test:web:ui
+# Verify installation
+java -version
+# Expected: openjdk version "21.x.x"
+
+# If Maven uses wrong Java version, check:
+mvn -version
+# Look for "Java version: 21.x.x"
 ```
 
-**Mobile Tests** (Appium + WebdriverIO):
+**Note**: Maven may use a different Java than your shell. If `mvn -version` shows wrong Java:
 ```bash
-# Start Appium server (prerequisite for mobile tests)
-npm run appium:start
-
-# Run Android tests
-npm run test:mobile:android
-
-# Run iOS tests
-npm run test:mobile:ios
-
-# Stop Appium server
-npm run clean:appium
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 ```
 
-### Test Locations
+### 2. Maven 3.9+ (REQUIRED)
 
-- **Web**: `/e2e-tests/web/specs/*.spec.ts`
-- **Mobile**: `/e2e-tests/mobile/specs/*.spec.ts`
+```bash
+# macOS (Homebrew)
+brew install maven
 
-### Reports
+# Verify
+mvn -version
+```
 
-- **Playwright**: `playwright-report/index.html` (auto-generated)
-- **WebdriverIO**: Console output + `test-results/` directory
+### 3. Web Tests Setup (Selenium)
 
----
+Web tests use **Selenium WebDriver** with Chrome. ChromeDriver is auto-managed by WebDriverManager.
 
-## Java Test Stack (New - INFRASTRUCTURE ENABLED)
+**Requirements:**
+- Google Chrome browser installed
+- Backend server running: `cd server && npm run dev` (port 3000)
+- Web app running: `cd webApp && npm run start` (port 8080)
 
-### Prerequisites
-
-- Java JDK 21 installed
-- Maven 3.6+ installed
-- For mobile tests: Android SDK and/or Xcode configured + Appium server running
-
-### Run Commands
-
-**Build Project**:
+**Run Web Tests:**
 ```bash
 cd e2e-tests/java
-mvn clean install
+mvn test -Dtest=WebTestRunner
 ```
 
-**Web Tests** (Selenium):
-```bash
-# Run all web E2E tests (tag: @web)
-mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@web"
+**Troubleshooting Chrome Issues:**
+- If Chrome crashes on startup, update dependencies in `pom.xml` to latest Selenium version
+- Current working versions (Dec 2025): Selenium 4.27.0, WebDriverManager 5.9.2
 
-# View HTML report
-open e2e-tests/java/target/cucumber-reports/web/index.html
+### 4. Android Tests Setup (Appium + UiAutomator2)
+
+#### 4.1 Install Android SDK
+
+```bash
+# macOS - Android Studio installs SDK automatically
+# Default location: ~/Library/Android/sdk
+
+# Set environment variables (add to ~/.zshrc or ~/.bash_profile)
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH
 ```
 
-**Mobile Tests** (Appium):
+#### 4.2 Install Appium 2.x
+
 ```bash
-# Prerequisite: Start Appium server (use npm script from root)
-cd e2e-tests && npm run appium:start
-# Server starts on http://127.0.0.1:4723 - keep this terminal running
+# Install Appium globally
+npm install -g appium
 
-# Terminal 2: Start Android Emulator (for Android tests)
-emulator -avd Android_14_Emulator
+# Install required drivers
+appium driver install uiautomator2  # Android
+appium driver install xcuitest      # iOS
 
-# Terminal 3: Run Android tests
+# Verify installation
+appium driver list
+# Should show: uiautomator2 [installed], xcuitest [installed]
+```
+
+#### 4.3 Prepare Android APK
+
+```bash
+# Build Android APK
+cd /path/to/project
+./gradlew :composeApp:assembleDebug
+
+# Copy APK to e2e-tests
+cp composeApp/build/outputs/apk/debug/composeApp-debug.apk \
+   e2e-tests/java/apps/petspot-android.apk
+```
+
+#### 4.4 Start Android Emulator
+
+```bash
+# List available emulators
+emulator -list-avds
+
+# Start emulator (replace with your AVD name)
+emulator -avd Pixel_7_API_34
+
+# Verify device is connected
+adb devices
+# Should show: emulator-5554  device
+```
+
+#### 4.5 Start Appium Server
+
+**IMPORTANT**: Appium MUST have `ANDROID_HOME` set!
+
+```bash
+# Start Appium with ANDROID_HOME
+export ANDROID_HOME=~/Library/Android/sdk
+appium
+
+# Verify Appium is running
+curl http://localhost:4723/status
+# Should return: {"value":{"ready":true,...}}
+```
+
+#### 4.6 Run Android Tests
+
+```bash
 cd e2e-tests/java
 mvn test -Dtest=AndroidTestRunner
-# OR: mvn test -Dcucumber.filter.tags="@android"
+```
 
-# Run Android smoke tests only
-mvn test -Dcucumber.filter.tags="@android and @smoke"
+### 5. iOS Tests Setup (Appium + XCUITest)
 
-# Terminal 2: Start iOS Simulator (for iOS tests, macOS only)
+#### 5.1 Requirements (macOS only)
+- Xcode installed with Command Line Tools
+- iOS Simulator available
+
+#### 5.2 Prepare iOS App
+
+```bash
+# Build iOS app in Xcode or via command line
+# Copy .app bundle to e2e-tests
+cp -r iosApp/build/Debug-iphonesimulator/iosApp.app \
+   e2e-tests/java/apps/petspot-ios.app
+```
+
+#### 5.3 Start iOS Simulator
+
+```bash
 open -a Simulator
+# Or use specific device:
 xcrun simctl boot "iPhone 15"
+```
 
-# Terminal 3: Run iOS tests
+#### 5.4 Run iOS Tests
+
+```bash
 cd e2e-tests/java
 mvn test -Dtest=IosTestRunner
-# OR: mvn test -Dcucumber.filter.tags="@ios"
-
-# View HTML reports
-open target/cucumber-reports/android/cucumber.html
-open target/cucumber-reports/ios/cucumber.html
-
-# View failure screenshots (platform-specific filenames)
-ls -lh target/screenshots/
-# Example: Android_search_for_specific_species_2025-11-26_09-00-15.png
 ```
 
-### Test Locations
-
-- **Feature files** (Gherkin): `/e2e-tests/java/src/test/resources/features/{web|mobile}/*.feature`
-- **Java code**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/`
-
-### Reports
-
-- **Web**: `/e2e-tests/java/target/cucumber-reports/web/index.html`
-- **Android**: `/e2e-tests/java/target/cucumber-reports/android/index.html`
-- **iOS**: `/e2e-tests/java/target/cucumber-reports/ios/index.html`
-
 ---
 
-## TypeScript Test Preservation Checklist
+## Quick Start (After Setup)
 
-**Status**: ✅ VERIFIED - TypeScript tests remain functional after Java infrastructure setup
+### Build Project
 
-### Required Commands (MUST continue to work)
-
-- [x] `npm install` - Install TypeScript test dependencies
-- [x] `npm run test:web` - Run Playwright web tests
-- [x] `npm run test:web:ui` - Run Playwright UI mode
-- [x] `npm run appium:start` - Start Appium server for mobile tests
-- [x] `npm run test:mobile:android` - Run Android tests
-- [x] `npm run test:mobile:ios` - Run iOS tests
-- [x] `npm run clean:appium` - Stop Appium server
-
-### Directory Conflicts Check
-
-- [x] No conflicts between `/e2e-tests/java/` and `/e2e-tests/web/` or `/e2e-tests/mobile/`
-- [x] TypeScript configuration files (tsconfig.json, wdio.conf.ts, playwright.config.ts) remain unchanged
-- [x] npm scripts in package.json remain unchanged
-- [x] Existing test files (.spec.ts) remain accessible
-
-### Coexistence Strategy
-
-**Approach**: Subdirectory-based separation
-- **Java tests**: `/e2e-tests/java/` (Maven-managed)
-- **TypeScript tests**: `/e2e-tests/web/` and `/e2e-tests/mobile/` (npm-managed)
-- **Package files**: `/e2e-tests/package.json` (root level for TypeScript)
-- **No interference**: Both stacks operate independently
-
-### Validation Notes
-
-**Last Verified**: 2025-11-26 (during feature 016 implementation)
-
-**TypeScript Test Status**: ✅ FULLY FUNCTIONAL
-- Web tests (Playwright) location: `/e2e-tests/web/`
-- Mobile tests (Appium+WebdriverIO) location: `/e2e-tests/mobile/`
-- npm scripts operational: All test commands working
-- No directory conflicts detected
-
-**Java Test Status**: ✅ INFRASTRUCTURE ESTABLISHED
-- Maven project builds successfully (`mvn clean install`)
-- Directory structure complete
-- Dependencies resolved (Selenium, Appium, Cucumber)
-- No test implementations yet (Phase 1 complete, Phase 2+ pending)
-
----
-
-## Which Test Stack Should I Use?
-
-Choose based on your feature branch context:
-
-| Situation | Recommended Stack | Why |
-|-----------|------------------|-----|
-| **New E2E test for new feature** | Java/Cucumber | Learn new stack with fresh context, no migration burden |
-| **Updating existing E2E test** | TypeScript (current) OR Java (migrate) | Your choice - maintain consistency or take opportunity to migrate |
-| **Bug fix in E2E test** | TypeScript (current stack) | Quick fix in familiar stack, optionally migrate afterwards |
-| **Large E2E test refactor** | Java/Cucumber | Good opportunity to migrate while restructuring anyway |
-| **Working on feature branch with TypeScript tests** | TypeScript | No pressure to migrate - focus on feature development |
-
-**No forced timeline**: TypeScript tests will be removed only when all active feature branches have migrated organically.
-
----
-
-## CI/CD Integration
-
-**Current Status**: TypeScript tests run in CI/CD  
-**Planned**: Both TypeScript and Java tests will run in parallel during transition period
-
-**TypeScript Commands** (existing):
 ```bash
-# Web
-npm run test:web
-
-# Mobile
-npm run test:mobile:android
-npm run test:mobile:ios
+cd e2e-tests/java
+mvn clean compile test-compile
 ```
 
-**Java Commands** (new):
-```bash
-# Web
-mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@web"
+### Run Web Tests
 
-# Mobile
-mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@android"
-mvn -f e2e-tests/java/pom.xml test -Dcucumber.filter.tags="@ios"
+```bash
+# Ensure backend (port 3000) and webApp (port 8080) are running!
+mvn test -Dtest=WebTestRunner
+```
+
+### Run Android Tests
+
+```bash
+# 1. Start Appium with ANDROID_HOME
+export ANDROID_HOME=~/Library/Android/sdk && appium &
+
+# 2. Ensure Android emulator is running
+adb devices
+
+# 3. Run tests
+mvn test -Dtest=AndroidTestRunner
+```
+
+### Run iOS Tests
+
+```bash
+# 1. Start Appium
+appium &
+
+# 2. Ensure iOS Simulator is running
+open -a Simulator
+
+# 3. Run tests
+mvn test -Dtest=IosTestRunner
+```
+
+### Run Smoke Tests (Fast)
+
+```bash
+# All platforms, smoke only
+mvn test -Dcucumber.filter.tags="@smoke"
+
+# Web smoke tests
+mvn test -Dcucumber.filter.tags="@web and @smoke"
+
+# Mobile smoke tests
+mvn test -Dcucumber.filter.tags="@mobile and @smoke"
 ```
 
 ---
 
-## Support & Documentation
+## Test Reports
 
-- **Feature Specification**: `/specs/016-e2e-java-migration/spec.md`
-- **Implementation Plan**: `/specs/016-e2e-java-migration/plan.md`
-- **Quickstart Guide**: `/specs/016-e2e-java-migration/quickstart.md`
-- **Migration Guide**: `/specs/016-e2e-java-migration/MIGRATION_GUIDE.md` (to be created)
+Reports are generated automatically after test execution:
 
-**Questions?** Check the quickstart guide or reach out to the QA team.
+| Platform | Report Location |
+|----------|-----------------|
+| Web | `target/cucumber-reports/web/cucumber.html` |
+| Android | `target/cucumber-reports/android/cucumber.html` |
+| iOS | `target/cucumber-reports/ios/cucumber.html` |
+
+**Screenshots** (on failure): `target/screenshots/`
+
+---
+
+## E2E Testing Principles
+
+### 1. API-Driven Test Data
+Tests create their own data via backend API:
+- No dependency on seed data
+- Each test is self-contained
+- Cleanup after test (pass or fail)
+
+### 2. Test Flows, Not Atomic Features
+```gherkin
+# ❌ BAD - Atomic
+Scenario: Button is visible
+  Then I should see the button
+
+# ✅ GOOD - Flow
+Scenario: User reports missing pet
+  Given I create test data via API
+  When I complete the report flow
+  Then the announcement appears in the list
+  And I delete test data via API
+```
+
+### 3. Cross-Platform Scenarios
+Same Gherkin scenarios run on all platforms using tags:
+```gherkin
+@web @ios @android
+Scenario: View animal list
+  Given I open the animal list
+  Then I should see announcements
+```
+
+---
+
+## Cucumber Tags
+
+| Tag | Description |
+|-----|-------------|
+| `@web` | Web platform tests |
+| `@ios` | iOS platform tests |
+| `@android` | Android platform tests |
+| `@mobile` | All mobile tests (iOS + Android) |
+| `@smoke` | Smoke tests (fast, critical paths) |
+| `@animal-list` | Animal list feature tests |
+| `@pet-details` | Pet details feature tests |
+| `@report-missing` | Report missing flow tests |
+
+---
+
+## Feature Specs
+
+E2E test coverage is organized by feature:
+
+| Spec | Feature | Status |
+|------|---------|--------|
+| [050-e2e-animal-list](../specs/050-e2e-animal-list/) | Animal List + Location | Draft |
+| [051-e2e-pet-details](../specs/051-e2e-pet-details/) | Pet Details | Draft |
+| [052-e2e-report-missing](../specs/052-e2e-report-missing/) | Report Missing Flow | Draft |
+
+---
+
+## Troubleshooting
+
+### Web Tests: "Chrome instance exited"
+
+**Cause**: Chrome/ChromeDriver version mismatch or outdated Selenium.
+
+**Solution**: Update dependencies in `pom.xml`:
+```xml
+<selenium.version>4.27.0</selenium.version>
+<webdrivermanager.version>5.9.2</webdrivermanager.version>
+```
+
+Then rebuild: `mvn clean compile test-compile`
+
+### Web Tests: Element Not Found
+
+**Cause**: Hardcoded test IDs don't exist in database, or web app not running.
+
+**Solution**:
+1. Verify web app is running: `curl http://localhost:8080`
+2. Verify backend is running: `curl http://localhost:3000/api/announcements`
+3. Check test data - IDs like `11111111-1111-1111-1111-111111111111` must exist
+
+### Mobile Tests: "Response code 404"
+
+**Cause**: Appium 2.x URL changed - no longer uses `/wd/hub` suffix.
+
+**Solution**: In `AppiumDriverManager.java`, URL should be:
+```java
+// ✅ Correct (Appium 2.x)
+"http://127.0.0.1:4723"
+
+// ❌ Wrong (Appium 1.x style)
+"http://127.0.0.1:4723/wd/hub"
+```
+
+### Mobile Tests: "ANDROID_HOME not set"
+
+**Cause**: Appium server doesn't see `ANDROID_HOME` environment variable.
+
+**Solution**: Start Appium with environment variable:
+```bash
+export ANDROID_HOME=~/Library/Android/sdk && appium
+```
+
+Or add to your shell profile (`~/.zshrc`):
+```bash
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH
+```
+
+### Mobile Tests: "App launch failed"
+
+**Cause**: APK/App file missing or wrong path.
+
+**Solution**:
+1. Build the app:
+   ```bash
+   # Android
+   ./gradlew :composeApp:assembleDebug
+   
+   # iOS (in Xcode or)
+   xcodebuild -scheme iosApp -sdk iphonesimulator
+   ```
+
+2. Copy to correct location:
+   ```bash
+   # Android
+   cp composeApp/build/outputs/apk/debug/composeApp-debug.apk \
+      e2e-tests/java/apps/petspot-android.apk
+   
+   # iOS
+   cp -r iosApp/build/Debug-iphonesimulator/iosApp.app \
+      e2e-tests/java/apps/petspot-ios.app
+   ```
+
+### Mobile Tests: "ConnectException"
+
+**Cause**: Appium server not running.
+
+**Solution**:
+```bash
+# Check if Appium is running
+curl http://localhost:4723/status
+
+# If not, start it
+appium
+```
+
+### Mobile Tests: No devices found
+
+**Cause**: Emulator/Simulator not running.
+
+**Solution**:
+```bash
+# Android - check connected devices
+adb devices
+# Should show: emulator-5554  device
+
+# If empty, start emulator
+emulator -avd <your_avd_name>
+
+# iOS - open Simulator
+open -a Simulator
+```
+
+### Duplicate Step Definition Error
+
+**Cause**: Same Cucumber step pattern in multiple Java files.
+
+**Solution**: Search for duplicates and remove one:
+```bash
+grep -r "@Then.*navigate.*details" e2e-tests/java/src/
+```
+
+### iOS Tests: "Could not create simulator with name..."
+
+**Cause**: Default device name in `AppiumDriverManager.java` doesn't match available simulators.
+
+**Solution**: 
+1. List available simulators:
+   ```bash
+   xcrun simctl list devices available | grep iPhone
+   ```
+2. Update default in `AppiumDriverManager.java` or set env variable:
+   ```bash
+   export IOS_DEVICE_NAME="iPhone 15"
+   export IOS_PLATFORM_VERSION="18.1"
+   ```
+
+### iOS/Android Tests: Wrong platform used
+
+**Cause**: Platform not detected from Cucumber tags.
+
+**Solution**: The `Hooks.java` automatically detects platform from tags:
+- `@ios` tag → `PLATFORM=iOS`
+- `@android` tag → `PLATFORM=Android`
+- `@mobile` without specific platform → defaults to Android
+
+If still not working, set manually:
+```bash
+mvn test -Dtest=IosTestRunner -DPLATFORM=iOS
+```
+
+---
+
+## Key Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `pom.xml` | Maven dependencies (Selenium, Appium, Cucumber versions) |
+| `utils/WebDriverManager.java` | Chrome configuration and options |
+| `utils/AppiumDriverManager.java` | Appium URL, Android/iOS capabilities |
+| `resources/test.properties` | Test configuration (URLs, timeouts) |
+
+---
+
+## Dependency Versions (Working as of Dec 2025)
+
+```xml
+<selenium.version>4.27.0</selenium.version>
+<appium.version>9.3.0</appium.version>
+<cucumber.version>7.20.1</cucumber.version>
+<junit.version>5.11.3</junit.version>
+<webdrivermanager.version>5.9.2</webdrivermanager.version>
+```
+
+---
+
+## References
+
+- [Spec 016: E2E Java Migration](../specs/016-e2e-java-migration/) - Original Java stack setup
+- [Spec 025: Remove TypeScript E2E](../specs/025-java-e2e-coverage/) - TypeScript removal
+- [Constitution](../.specify/memory/constitution.md) - Principle XII: End-to-End Testing

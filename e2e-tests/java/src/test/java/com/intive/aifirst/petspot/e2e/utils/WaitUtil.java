@@ -33,24 +33,24 @@ import java.util.function.Function;
  * <h2>Usage Example (Web):</h2>
  * <pre>{@code
  * WebDriver driver = WebDriverManager.getDriver();
- * By locator = By.xpath("//*[@data-testid='petList.searchInput']");
+ * By locator = By.xpath("//*[@data-testid='animalList.reportMissingButton']");
  * 
  * // Wait for element to be visible
- * WebElement searchInput = WaitUtil.waitForElementVisible(driver, locator, 10);
- * searchInput.click();
+ * WebElement button = WaitUtil.waitForElementVisible(driver, locator, 10);
+ * button.click();
  * 
  * // Wait for specific text to appear
- * WaitUtil.waitForTextToAppear(driver, locator, "Search results", 5);
+ * WaitUtil.waitForTextToAppear(driver, locator, "Report a Missing Animal", 5);
  * }</pre>
  * 
  * <h2>Usage Example (Mobile):</h2>
  * <pre>{@code
  * AppiumDriver driver = AppiumDriverManager.getDriver("Android");
- * By locator = AppiumBy.accessibilityId("petList.searchInput");
+ * By locator = AppiumBy.accessibilityId("animalList.reportMissingButton");
  * 
  * // Wait for element to be clickable
- * WebElement searchInput = WaitUtil.waitForElementClickable(driver, locator, 10);
- * searchInput.click();
+ * WebElement button = WaitUtil.waitForElementClickable(driver, locator, 10);
+ * button.click();
  * 
  * // Wait for element to disappear
  * WaitUtil.waitForElementInvisible(driver, locator, 5);

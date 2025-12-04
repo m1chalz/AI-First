@@ -46,7 +46,7 @@ export const AnimalList: React.FC = () => {
                         <LocationBanner onClose={() => setIsBannerDismissed(true)} />
                     )}
                     {isLoading ? (
-                        <div className={styles.loading}>
+                        <div className={styles.loading} data-testid="animalList.loading">
                             <div className={styles.spinner}></div>
                             <p>Loading animals...</p>
                         </div>

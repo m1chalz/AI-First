@@ -5,7 +5,6 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
-import io.appium.java_client.remote.options.ProcessArguments;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,8 +54,12 @@ public class AppiumDriverManager {
     /** ThreadLocal storage for AppiumDriver instances (one per thread for parallel execution) */
     private static final ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
     
-    /** Appium server URL (default local server) */
-    private static final String APPIUM_SERVER_URL = "http://127.0.0.1:4723";
+    /** Appium server URL (default local server, overridable via system/env property) */
+    // Note: Appium 2.x doesn't use /wd/hub suffix anymore
+    private static final String APPIUM_SERVER_URL = System.getProperty(
+        "APPIUM_SERVER_URL",
+        System.getenv().getOrDefault("APPIUM_SERVER_URL", "http://127.0.0.1:4723")
+    );
     
     /** Default implicit wait timeout in seconds */
     private static final int DEFAULT_IMPLICIT_WAIT_SECONDS = 10;
@@ -106,9 +109,9 @@ public class AppiumDriverManager {
         try {
             URL serverUrl = new URL(APPIUM_SERVER_URL);
             
-            if (platform.equalsIgnoreCase("Android")) {
+            if ("android".equalsIgnoreCase(platform)) {
                 appiumDriver = initializeAndroidDriver(serverUrl);
-            } else if (platform.equalsIgnoreCase("iOS")) {
+            } else if ("ios".equalsIgnoreCase(platform)) {
                 appiumDriver = initializeIOSDriver(serverUrl);
             } else {
                 throw new IllegalArgumentException(
@@ -160,18 +163,31 @@ public class AppiumDriverManager {
      */
     private static IOSDriver initializeIOSDriver(URL serverUrl) {
         XCUITestOptions options = new XCUITestOptions();
+        // Note: Device name must match an available simulator (run: xcrun simctl list devices)
+        String iosDeviceName = System.getProperty(
+            "IOS_DEVICE_NAME",
+            System.getenv().getOrDefault("IOS_DEVICE_NAME", "iPhone 15")
+        );
+        // Note: Platform version must match an available runtime (run: xcrun simctl list runtimes)
+        String iosPlatformVersion = System.getProperty(
+            "IOS_PLATFORM_VERSION",
+            System.getenv().getOrDefault("IOS_PLATFORM_VERSION", "18.1")
+        );
+
         options.setPlatformName("iOS");
-        options.setPlatformVersion("17.0");              // iOS 17
-        options.setDeviceName("iPhone 15");
+        options.setPlatformVersion(iosPlatformVersion);
+        options.setDeviceName(iosDeviceName);
         options.setAutomationName("XCUITest");
         
         // App path (relative to project root)
-        String appPath = System.getProperty("user.dir") + "/apps/petspot-ios.app";
+        String appPath = System.getProperty(
+            "IOS_APP_PATH",
+            System.getenv().getOrDefault(
+                "IOS_APP_PATH",
+                System.getProperty("user.dir") + "/apps/petspot-ios.app"
+            )
+        );
         options.setApp(appPath);
-        
-        ProcessArguments processArguments = new ProcessArguments();
-        processArguments.withEnvironment("UITEST_SHOW_PHOTO_DEBUG", "1");
-        options.setProcessArguments(processArguments);
         
         // Optional: Auto-accept alerts to avoid blocking tests
         options.setAutoAcceptAlerts(true);

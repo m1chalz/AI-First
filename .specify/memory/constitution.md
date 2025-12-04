@@ -2,7 +2,23 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.2.0 → 2.3.0
+Version change: 2.3.0 → 2.4.0
+MINOR: Removed TypeScript E2E tests (Playwright + WebdriverIO) - Java stack is now the only E2E framework
+
+Changes (v2.4.0):
+- REMOVED: TypeScript/Playwright web E2E tests (/e2e-tests/web/)
+- REMOVED: TypeScript/WebdriverIO mobile E2E tests (/e2e-tests/mobile/)
+- REMOVED: TypeScript E2E config files (playwright.config.ts, wdio.conf.ts, package.json, tsconfig.json)
+- UPDATED: Follow-up TODOs - marked E2E migration as COMPLETED
+- ADDED: New E2E specs structure (050-animal-list, 051-pet-details, 052-report-missing)
+
+Rationale:
+- Java/Maven/Cucumber stack provides unified E2E testing for all platforms
+- Eliminates duplicate test infrastructure maintenance
+- Single test language (Java) for entire E2E suite
+- Cross-platform scenarios with Cucumber tags (@web, @ios, @android)
+
+Previous version (v2.3.0):
 MINOR: Enhanced iOS architecture patterns + Migrated E2E testing stack to Java/Maven/Selenium/Cucumber
 
 Changes (v2.3.0):
@@ -46,13 +62,13 @@ Templates requiring updates:
 - ⚠ .specify/templates/spec-template.md - Update E2E test requirements section
 
 Follow-up TODOs:
-- Migrate existing Playwright web tests to Selenium+Cucumber (if any exist)
-- Migrate existing Appium+WebdriverIO mobile tests to Appium+Cucumber (if any exist)
-- Create Maven pom.xml with Selenium, Appium, and Cucumber dependencies
-- Set up Cucumber reporting plugins in Maven configuration
-- Update CI/CD pipeline to use Maven commands with Cucumber tags
-- Create example .feature files for web and mobile in respective directories
-- Document Page Object and Screen Object patterns with annotation examples
+- ✅ COMPLETED (Spec 025): Removed TypeScript E2E tests (Playwright web + WebdriverIO mobile)
+- ✅ COMPLETED (Spec 016): Created Maven pom.xml with Selenium, Appium, and Cucumber dependencies
+- ✅ COMPLETED (Spec 016): Set up Cucumber reporting plugins in Maven configuration
+- ✅ COMPLETED (Spec 016): Created .feature files for web and mobile
+- ✅ COMPLETED (Spec 016): Documented Page Object and Screen Object patterns
+- ⏳ PENDING: Update CI/CD pipeline to use Maven commands with Cucumber tags
+- ⏳ PENDING: Implement full E2E coverage (Specs 050, 051, 052)
 
 Previous changes (v2.2.0):
 MINOR: Added Android Composable screen separation pattern for previews and testing
@@ -1469,8 +1485,9 @@ Every feature specification MUST include end-to-end tests covering all user scen
 - Report (iOS): `/e2e-tests/target/cucumber-reports/ios/index.html`
 
 **Requirements**:
+- Java 21 (LTS) REQUIRED - E2E tests target Java 21 runtime
 - Tests MUST be written in Java (Maven) using Cucumber (Gherkin) for scenarios
-- Shared `pom.xml` for dependency management
+- Shared `pom.xml` for dependency management (configured for Java 21)
 - Test scenarios defined in `.feature` files with platform-specific tags
 - Platform-specific execution controlled by tags (`@web`, `@android`, `@ios`)
 - Page Object Model pattern REQUIRED for web (XPath locators)

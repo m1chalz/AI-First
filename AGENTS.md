@@ -29,9 +29,11 @@
 - Build web app: `npm run build` (from webApp/)
 - Run web tests with coverage: `npm test -- --coverage` (run from webApp/, view at webApp/coverage/index.html)
 
-### End-to-End Tests
-- Run E2E web tests: `npx playwright test` (from repo root)
-- Run E2E mobile tests: `npm run test:mobile:android` or `npm run test:mobile:ios` (from repo root)
+### End-to-End Tests (Java 21 + Maven + Cucumber)
+- Run E2E web tests: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
+- Run E2E Android tests: `mvn test -Dtest=AndroidTestRunner` (from e2e-tests/java/)
+- Run E2E iOS tests: `mvn test -Dtest=IosTestRunner` (from e2e-tests/java/)
+- View reports: `e2e-tests/java/target/cucumber-reports/{web,android,ios}/index.html`
 
 ## Project Structure
 
@@ -77,17 +79,17 @@
   - `src/app.ts` - Express app configuration (middleware setup, route registration)
   - `src/index.ts` - Server entry point (port binding, startup)
 
-- `/e2e-tests` - End-to-end tests (TypeScript)
-  - `web/` - Playwright tests for web platform
-    - `specs/` - Test specifications
-    - `pages/` - Page Object Model
-    - `steps/` - Reusable step definitions (Given/When/Then actions)
-    - `fixtures/` - Test data fixtures
-  - `mobile/` - Appium tests for Android/iOS
-    - `specs/` - Test specifications
-    - `screens/` - Screen Object Model
-    - `steps/` - Reusable step definitions (Given/When/Then actions)
-    - `utils/` - Shared mobile utilities
+- `/e2e-tests/java` - End-to-end tests (Java 21 + Maven + Cucumber)
+  - `pom.xml` - Maven configuration (Java 21, Selenium, Appium, Cucumber dependencies)
+  - `src/test/resources/features/` - Gherkin feature files (BDD scenarios)
+    - `web/` - Web platform features
+    - `mobile/` - Mobile platform features (shared for Android/iOS)
+  - `src/test/java/.../pages/` - Page Object Model (Web - Selenium)
+  - `src/test/java/.../screens/` - Screen Object Model (Mobile - Appium, unified for iOS/Android)
+  - `src/test/java/.../steps/web/` - Web step definitions
+  - `src/test/java/.../steps/mobile/` - Mobile step definitions
+  - `src/test/java/.../runners/` - Test runners (WebTestRunner, AndroidTestRunner, IosTestRunner)
+  - `src/test/java/.../utils/` - WebDriverManager, AppiumManager, test utilities
 
 ## Architecture Principles
 
@@ -133,7 +135,7 @@
   - iOS: Swift Result type or throws
   - Web: try/catch with proper error handling
   - Backend: try/catch with proper HTTP status codes
-- Target: JVM 17 for Android, iOS 15+ for iOS, ES2015 for Web, Node.js v24 (LTS) for backend
+- Target: JVM 17 for Android, iOS 15+ for iOS, ES2015 for Web, Node.js v24 (LTS) for backend, Java 21 for E2E tests
 - DI:
   - Android: Koin (mandatory)
   - iOS: Manual DI with constructor injection (mandatory)
@@ -199,12 +201,13 @@
   - Unit tests: `/server/src/services/__test__/`, `/server/src/lib/__test__/` (80% coverage)
   - Integration tests: `/server/src/__test__/` (REST API endpoints, 80% coverage)
   - Coverage: `npm test -- --coverage` (from server/)
-- Web E2E: Playwright + TypeScript
-  - Location: `/e2e-tests/web/specs/`
-  - Run: `npx playwright test`
-- Mobile E2E: Appium + WebdriverIO + TypeScript
-  - Location: `/e2e-tests/mobile/specs/`
-  - Run: `npm run test:mobile:android` or `npm run test:mobile:ios`
+- E2E Tests: Java 21 + Maven + Selenium/Appium + Cucumber (unified stack for all platforms)
+  - Location: `/e2e-tests/java/`
+  - Features: `/e2e-tests/java/src/test/resources/features/`
+  - Run Web: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
+  - Run Android: `mvn test -Dtest=AndroidTestRunner` (from e2e-tests/java/)
+  - Run iOS: `mvn test -Dtest=IosTestRunner` (from e2e-tests/java/)
+  - Reports: `target/cucumber-reports/{web,android,ios}/index.html`
 - Test Convention: ALL tests MUST follow Given-When-Then (Arrange-Act-Assert) structure
   - Clearly separate setup (Given), action (When), verification (Then) phases
   - Use descriptive test names: Kotlin backticks, Swift camelCase_with_underscores, TypeScript strings
@@ -242,6 +245,15 @@
 - Vitest (testing framework)
 - Supertest (HTTP assertions)
 - ESLint + @typescript-eslint/eslint-plugin (code quality)
+
+### E2E Tests (Java 21)
+- Java 21 (LTS) - required runtime
+- Maven 3.9+ (build tool)
+- Selenium WebDriver 4.x (web automation)
+- Appium Java Client 9.x (mobile automation)
+- Cucumber 7.x (BDD framework with Gherkin)
+- JUnit 5 (test runner)
+- WebDriverManager (automatic browser driver management)
 
 ## 80% Test Coverage Requirement (MANDATORY)
 

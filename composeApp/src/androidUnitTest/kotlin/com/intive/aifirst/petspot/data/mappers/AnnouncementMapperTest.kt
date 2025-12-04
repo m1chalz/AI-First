@@ -8,6 +8,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class AnnouncementMapperTest {
+    private val testBaseUrl = "http://localhost:3000"
+
     // region toDomain - Full mapping tests
 
     @Test
@@ -16,11 +18,11 @@ class AnnouncementMapperTest {
         val dto = createTestDto()
 
         // When
-        val animal = dto.toDomain()
+        val animal = dto.toDomain(testBaseUrl)
 
         // Then
         assertEquals("test-id-123", animal.id)
-        assertEquals("https://example.com/photo.jpg", animal.photoUrl)
+        assertEquals("https://example.com/photo.jpg", animal.photoUrl) // Full URL passed through
         assertEquals("2025-11-20", animal.lastSeenDate)
     }
 
@@ -31,8 +33,8 @@ class AnnouncementMapperTest {
         val dtoWithNull = createTestDto(petName = null)
 
         // When
-        val animalWithName = dtoWithName.toDomain()
-        val animalWithNull = dtoWithNull.toDomain()
+        val animalWithName = dtoWithName.toDomain(testBaseUrl)
+        val animalWithNull = dtoWithNull.toDomain(testBaseUrl)
 
         // Then
         assertEquals("Buddy", animalWithName.name)
@@ -54,7 +56,7 @@ class AnnouncementMapperTest {
             )
 
         // When
-        val animal = dtoWithNulls.toDomain()
+        val animal = dtoWithNulls.toDomain(testBaseUrl)
 
         // Then
         assertEquals("", animal.breed)
@@ -81,7 +83,7 @@ class AnnouncementMapperTest {
             )
 
         // When
-        val animal = dtoWithValues.toDomain()
+        val animal = dtoWithValues.toDomain(testBaseUrl)
 
         // Then
         assertEquals("Golden Retriever", animal.breed)
@@ -99,7 +101,7 @@ class AnnouncementMapperTest {
         val dto = createTestDto(locationLatitude = 40.785091, locationLongitude = -73.968285)
 
         // When
-        val animal = dto.toDomain()
+        val animal = dto.toDomain(testBaseUrl)
 
         // Then
         assertEquals(40.785091, animal.location.latitude)
@@ -112,7 +114,7 @@ class AnnouncementMapperTest {
         val dto = createTestDto(locationLatitude = null, locationLongitude = null)
 
         // When
-        val animal = dto.toDomain()
+        val animal = dto.toDomain(testBaseUrl)
 
         // Then
         assertNull(animal.location.latitude)
@@ -127,9 +129,9 @@ class AnnouncementMapperTest {
         val dtoClosed = createTestDto(status = AnimalStatus.CLOSED)
 
         // When/Then
-        assertEquals(AnimalStatus.MISSING, dtoMissing.toDomain().status)
-        assertEquals(AnimalStatus.FOUND, dtoFound.toDomain().status)
-        assertEquals(AnimalStatus.CLOSED, dtoClosed.toDomain().status)
+        assertEquals(AnimalStatus.MISSING, dtoMissing.toDomain(testBaseUrl).status)
+        assertEquals(AnimalStatus.FOUND, dtoFound.toDomain(testBaseUrl).status)
+        assertEquals(AnimalStatus.CLOSED, dtoClosed.toDomain(testBaseUrl).status)
     }
 
     @Test
@@ -140,9 +142,9 @@ class AnnouncementMapperTest {
         val dtoUnknown = createTestDto(sex = AnimalGender.UNKNOWN)
 
         // When/Then
-        assertEquals(AnimalGender.MALE, dtoMale.toDomain().gender)
-        assertEquals(AnimalGender.FEMALE, dtoFemale.toDomain().gender)
-        assertEquals(AnimalGender.UNKNOWN, dtoUnknown.toDomain().gender)
+        assertEquals(AnimalGender.MALE, dtoMale.toDomain(testBaseUrl).gender)
+        assertEquals(AnimalGender.FEMALE, dtoFemale.toDomain(testBaseUrl).gender)
+        assertEquals(AnimalGender.UNKNOWN, dtoUnknown.toDomain(testBaseUrl).gender)
     }
 
     @Test
@@ -151,11 +153,42 @@ class AnnouncementMapperTest {
         val dto = createTestDto(species = "Golden Retriever")
 
         // When
-        val animal = dto.toDomain()
+        val animal = dto.toDomain(testBaseUrl)
 
         // Then
         assertEquals("Golden Retriever", animal.species)
     }
+
+    // region Photo URL construction tests
+
+    @Test
+    fun `toDomain should construct full URL for relative photo paths`() {
+        // Given
+        val dto = createTestDto(photoUrl = "/images/uuid-123.jpg")
+
+        // When
+        val animal = dto.toDomain(testBaseUrl)
+
+        // Then
+        assertEquals("http://localhost:3000/images/uuid-123.jpg", animal.photoUrl)
+    }
+
+    @Test
+    fun `toDomain should pass through full URLs unchanged`() {
+        // Given
+        val dtoHttps = createTestDto(photoUrl = "https://example.com/photo.jpg")
+        val dtoHttp = createTestDto(photoUrl = "http://example.com/photo.jpg")
+
+        // When
+        val animalHttps = dtoHttps.toDomain(testBaseUrl)
+        val animalHttp = dtoHttp.toDomain(testBaseUrl)
+
+        // Then
+        assertEquals("https://example.com/photo.jpg", animalHttps.photoUrl)
+        assertEquals("http://example.com/photo.jpg", animalHttp.photoUrl)
+    }
+
+    // endregion
 
     // endregion
 
