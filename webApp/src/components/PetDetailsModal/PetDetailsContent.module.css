@@ -185,10 +185,12 @@
     border: 1px solid #155DFC;
     border-radius: 10px;
     text-decoration: none;
+    text-align: center;
     font-family: Arial, sans-serif;
     transition: background-color 0.2s, color 0.2s;
     align-self: flex-start;
     white-space: nowrap;
+    width: 44%;
 }
 
 .mapButton:hover {

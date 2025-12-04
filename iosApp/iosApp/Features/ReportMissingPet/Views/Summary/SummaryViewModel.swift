@@ -1,39 +1,64 @@
 import Foundation
+import UIKit
 
-/// ViewModel for Summary screen (Step 5 - no progress indicator).
-/// Minimal implementation - only navigation callbacks (no data display logic yet).
+/// ViewModel for Summary screen (Step 5 - Report Created Confirmation).
+/// Displays confirmation messaging, management password, and handles clipboard copy.
 @MainActor
 class SummaryViewModel: ObservableObject {
     // MARK: - Dependencies
     
     private let flowState: ReportMissingPetFlowState
+    private let toastScheduler: ToastSchedulerProtocol
     
     // MARK: - Coordinator Communication
     
-    var onSubmit: (() -> Void)?
-    var onBack: (() -> Void)?
+    var onClose: (() -> Void)?
+    
+    // MARK: - Published Properties
+    
+    /// Controls toast visibility for clipboard copy confirmation
+    @Published var showsCodeCopiedToast = false
+    
+    // MARK: - Computed Properties
+    
+    /// Management password for display (empty string if nil)
+    var displayPassword: String {
+        flowState.managementPassword ?? ""
+    }
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState) {
+    init(flowState: ReportMissingPetFlowState, toastScheduler: ToastSchedulerProtocol) {
         self.flowState = flowState
+        self.toastScheduler = toastScheduler
     }
     
     // MARK: - Actions
     
-    /// Exits summary screen (back to app after report submission).
-    func handleSubmit() {
-        onSubmit?()
+    /// Closes the summary screen and exits the entire report flow.
+    func handleClose() {
+        onClose?()
     }
     
-    /// Navigate back to previous screen (Contact Details).
-    func handleBack() {
-        onBack?()
+    /// Copies management password to clipboard and shows toast confirmation
+    func copyPasswordToClipboard() {
+        let password = displayPassword
+        guard !password.isEmpty else { return }
+        
+        UIPasteboard.general.string = password
+        toastScheduler.cancel()
+        showsCodeCopiedToast = true
+        toastScheduler.schedule(duration: 2.0) { [weak self] in
+            Task { @MainActor in
+                self?.showsCodeCopiedToast = false
+            }
+        }
     }
     
     // MARK: - Deinitialization
     
     deinit {
+        toastScheduler.cancel()
         print("deinit SummaryViewModel")
     }
 }

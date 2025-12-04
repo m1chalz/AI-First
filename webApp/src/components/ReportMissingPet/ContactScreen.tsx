@@ -1,17 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
-import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
+import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import { Toast } from '../Toast/Toast';
 import styles from './ReportMissingPetLayout.module.css';
 import { useEffect } from 'react';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();
-  const { flowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useReportMissingPetFlow();
   const {
     phone,
     email,
@@ -23,7 +24,8 @@ export function ContactScreen() {
     handleRewardChange,
     handleSubmit,
   } = useContactForm();
-  const { showToast } = useToast();
+  const { message, showToast } = useToast();
+  const { isSubmitting, error, announcementId, managementPassword, submitAnnouncement } = useAnnouncementSubmission();
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
@@ -31,22 +33,31 @@ export function ContactScreen() {
     }
   }, [flowState.currentStep, navigate]);
 
+  useEffect(() => {
+    if (announcementId && managementPassword) {
+      navigate(ReportMissingPetRoutes.summary, { state: { announcementId, managementPassword } });
+    }
+  }, [announcementId, managementPassword, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      showToast(error.message || 'An error occurred. Please try again.');
+    }
+  }, [error, showToast]);
+
   const handleBack = () => {
     navigate(ReportMissingPetRoutes.details);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const success = handleSubmit();
     if (!success) {
-      if (phone === '' && email === '') {
-        showToast('Please provide at least one contact method');
-      }
       return;
     }
-    navigate(ReportMissingPetRoutes.summary);
+    const updatedFlowState = { ...flowState, email, phone, reward };
+    updateFlowState({ email, phone, reward });
+    await submitAnnouncement(updatedFlowState);
   };
-
-  useBrowserBackHandler(handleBack);
 
   return (
     <ReportMissingPetLayout
@@ -126,11 +137,14 @@ export function ContactScreen() {
           onClick={handleContinue}
           className={styles.primaryButton}
           data-testid="contact.continue.button"
+          disabled={isSubmitting}
         >
-          Continue
+          {isSubmitting ? 'Submitting...' : 'Continue'}
         </button>
         </form>
       </div>
+
+      <Toast message={message} />
     </ReportMissingPetLayout>
   );
 }

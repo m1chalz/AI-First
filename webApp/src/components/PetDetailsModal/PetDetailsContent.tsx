@@ -81,18 +81,20 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
                     </div>
                 </div>
 
-                {/* Identification Information */}
-                <div className={styles.section}>
-                    <div className={styles.fieldRow}>
-                        <span className={styles.fieldLabel}>Microchip number</span>
-                        <span className={styles.fieldValue} data-testid="petDetails.microchip.value">
-                            {pet.microchipNumber ? formatMicrochip(pet.microchipNumber) : '—'}
-                        </span>
-                    </div>
-                </div>
-
                 {/* Pet Details - 2-column grid */}
                 <div className={styles.section}>
+                    <div className={styles.gridRow}>
+                        <div className={styles.gridItem}>
+                            <span className={styles.fieldLabel}>Animal Name</span>
+                            <span className={styles.fieldValue} data-testid="petDetails.name.value">{pet.petName || '—'}</span>
+                        </div>
+                        <div className={styles.gridItem}>
+                            <span className={styles.fieldLabel}>Microchip number</span>
+                            <span className={styles.fieldValue} data-testid="petDetails.microchip.value">
+                                {pet.microchipNumber ? formatMicrochip(pet.microchipNumber) : '—'}
+                            </span>
+                        </div>
+                    </div>
                     <div className={styles.gridRow}>
                         <div className={styles.gridItem}>
                             <span className={styles.fieldLabel}>Animal Species</span>

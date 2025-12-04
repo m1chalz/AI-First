@@ -250,16 +250,21 @@ cd server
 npm test -- --coverage
 ```
 
-**End-to-End Tests** (Playwright + Appium):
+**End-to-End Tests** (Java 21 + Maven + Cucumber):
 ```shell
+cd e2e-tests/java
+
 # Web E2E tests
-npx playwright test
+mvn test -Dtest=WebTestRunner
 
 # Mobile E2E tests (Android)
-npm run test:mobile:android
+mvn test -Dtest=AndroidTestRunner
 
 # Mobile E2E tests (iOS)
-npm run test:mobile:ios
+mvn test -Dtest=IosTestRunner
+
+# View reports
+open target/cucumber-reports/web/index.html
 ```
 
 ## Architecture Principles

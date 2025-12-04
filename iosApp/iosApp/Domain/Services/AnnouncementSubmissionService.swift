@@ -68,7 +68,9 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
         
         return CreateAnnouncementData(
             species: species,
+            breed: flowState.animalRace,
             sex: gender,
+            age: flowState.animalAge,
             lastSeenDate: disappearanceDate,
             location: (
                 latitude: flowState.animalLatitude ?? 0.0,
@@ -79,6 +81,7 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
                 phone: contactDetails.phone.filter { $0.isNumber || $0 == "+" }
             ),
             microchipNumber: flowState.chipNumber,
+            petName: flowState.petName,
             description: flowState.animalAdditionalDescription,
             reward: contactDetails.rewardDescription
         )

@@ -10,8 +10,7 @@ interface LocationBannerProps {
  * Informational banner displayed when location permissions are blocked.
  * Shows benefits and instructions for enabling location access.
  */
-export const LocationBanner: React.FC<LocationBannerProps> = ({ onClose }) => {
-  return (
+export const LocationBanner: React.FC<LocationBannerProps> = ({ onClose }) => (
     <div className={styles.banner} data-testid="petList.locationBanner">
       <div className={styles.content}>
         <MdInfoOutline className={styles.icon} aria-hidden="true" />
@@ -31,4 +30,3 @@ export const LocationBanner: React.FC<LocationBannerProps> = ({ onClose }) => {
       </button>
     </div>
   );
-};

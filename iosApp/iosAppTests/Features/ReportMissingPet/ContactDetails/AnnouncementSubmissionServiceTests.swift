@@ -30,11 +30,14 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
     func testSubmitAnnouncement_whenFlowStateValid_shouldBuildCorrectData() async throws {
         // Given: Valid FlowState with all required fields
         flowState.animalSpecies = .dog
+        flowState.animalRace = "Labrador"
         flowState.animalGender = .male
+        flowState.animalAge = 5
         flowState.disappearanceDate = Date(timeIntervalSince1970: 1701388800) // 2023-12-01
         flowState.animalLatitude = 52.2297
         flowState.animalLongitude = 21.0122
         flowState.chipNumber = "123456789012345"
+        flowState.petName = "Max"
         flowState.animalAdditionalDescription = "Golden retriever, very friendly"
         flowState.contactDetails = OwnerContactDetails(
             phone: "+48123456789",
@@ -62,14 +65,62 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         let data = fakeRepository.lastCreateAnnouncementData
         XCTAssertNotNil(data)
         XCTAssertEqual(data?.species, .dog)
+        XCTAssertEqual(data?.breed, "Labrador")
         XCTAssertEqual(data?.sex, .male)
+        XCTAssertEqual(data?.age, 5)
         XCTAssertEqual(data?.location.latitude, 52.2297)
         XCTAssertEqual(data?.location.longitude, 21.0122)
         XCTAssertEqual(data?.contact.phone, "+48123456789")
         XCTAssertEqual(data?.contact.email, "owner@example.com")
         XCTAssertEqual(data?.microchipNumber, "123456789012345")
+        XCTAssertEqual(data?.petName, "Max")
         XCTAssertEqual(data?.description, "Golden retriever, very friendly")
         XCTAssertEqual(data?.reward, "$250 gift card")
+    }
+    
+    func testSubmitAnnouncement_whenOptionalFieldsEmpty_shouldBuildDataWithNils() async throws {
+        // Given: Valid FlowState with optional fields empty/nil
+        flowState.animalSpecies = .dog
+        flowState.animalRace = nil  // Optional - nil
+        flowState.animalGender = .male
+        flowState.animalAge = nil  // Optional - nil
+        flowState.disappearanceDate = Date(timeIntervalSince1970: 1701388800)
+        flowState.chipNumber = nil  // Optional - nil
+        flowState.petName = nil  // Optional - nil
+        flowState.animalAdditionalDescription = nil  // Optional - nil
+        flowState.contactDetails = OwnerContactDetails(
+            phone: "+48123456789",
+            email: "owner@example.com",
+            rewardDescription: nil  // Optional - nil
+        )
+        flowState.photoAttachment = PhotoAttachmentMetadata(
+            id: UUID(),
+            fileName: "test.jpg",
+            fileSizeBytes: 1024,
+            utiIdentifier: "public.jpeg",
+            pixelWidth: 800,
+            pixelHeight: 600,
+            assetIdentifier: nil,
+            cachedURL: URL(fileURLWithPath: "/tmp/test.jpg"),
+            savedAt: Date()
+        )
+        
+        // When: Submit announcement
+        _ = try await sut.submitAnnouncement(flowState: flowState)
+        
+        // Then: Repository called with correct data (optional fields should be nil)
+        XCTAssertTrue(fakeRepository.createAnnouncementCalled)
+        
+        let data = fakeRepository.lastCreateAnnouncementData
+        XCTAssertNotNil(data)
+        XCTAssertEqual(data?.species, .dog)
+        XCTAssertNil(data?.breed, "Breed should be nil when not provided")
+        XCTAssertEqual(data?.sex, .male)
+        XCTAssertNil(data?.age, "Age should be nil when not provided")
+        XCTAssertNil(data?.microchipNumber, "Chip number should be nil when not provided")
+        XCTAssertNil(data?.petName, "Pet name should be nil when not provided")
+        XCTAssertNil(data?.description, "Description should be nil when not provided")
+        XCTAssertNil(data?.reward, "Reward should be nil when not provided")
     }
     
     // MARK: - Test: 2-step orchestration
@@ -170,6 +221,7 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
     
     private func setupValidFlowState() {
         flowState.animalSpecies = .dog
+        flowState.animalRace = "Labrador"
         flowState.animalGender = .male
         flowState.disappearanceDate = Date()
         flowState.contactDetails = OwnerContactDetails(

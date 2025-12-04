@@ -31,6 +31,9 @@ class AnimalDescriptionViewModel: ObservableObject {
     /// Additional description text (optional, max 500 characters)
     @Published var additionalDescription: String = ""
     
+    /// Pet name (optional, two-way binding for TextField)
+    @Published var petName: String = ""
+    
     // MARK: - Published Properties (Validation Errors)
     
     @Published var speciesErrorMessage: String?
@@ -56,12 +59,18 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     private let flowState: ReportMissingPetFlowState
     private let locationHandler: LocationPermissionHandler
+    private let toastScheduler: ToastSchedulerProtocol
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState, locationHandler: LocationPermissionHandler) {
+    init(
+        flowState: ReportMissingPetFlowState,
+        locationHandler: LocationPermissionHandler,
+        toastScheduler: ToastSchedulerProtocol
+    ) {
         self.flowState = flowState
         self.locationHandler = locationHandler
+        self.toastScheduler = toastScheduler
         
         // Load existing data from flow state if present (returning from Step 4)
         if let existingDate = flowState.disappearanceDate {
@@ -95,6 +104,10 @@ class AnimalDescriptionViewModel: ObservableObject {
         
         if let existingDesc = flowState.animalAdditionalDescription {
             self.additionalDescription = existingDesc
+        }
+        
+        if let existingPetName = flowState.petName {
+            self.petName = existingPetName
         }
     }
     
@@ -155,6 +168,18 @@ class AnimalDescriptionViewModel: ObservableObject {
             isDisabled: false,
             keyboardType: .numberPad,
             accessibilityID: "animalDescription.ageTextField.input"
+        )
+    }
+    
+    /// Model for pet name text field (optional, default keyboard)
+    var petNameTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.AnimalDescription.petNameLabel,
+            placeholder: L10n.AnimalDescription.petNamePlaceholder,
+            errorMessage: nil,  // Pet name has no validation errors
+            isDisabled: false,
+            keyboardType: .default,
+            accessibilityID: "animalDescription.petNameTextField.input"
         )
     }
     
@@ -224,10 +249,7 @@ class AnimalDescriptionViewModel: ObservableObject {
             onContinue?()
         } else {
             // Show toast and inline errors with animation
-            withAnimation {
-                showToast = true
-                toastMessage = L10n.AnimalDescription.Toast.validationErrors
-            }
+            showValidationToast()
             applyValidationErrors(errors)
         }
     }
@@ -353,8 +375,22 @@ class AnimalDescriptionViewModel: ObservableObject {
         ageErrorMessage = nil
         latitudeErrorMessage = nil
         longitudeErrorMessage = nil
+        toastScheduler.cancel()
         showToast = false
         toastMessage = ""
+    }
+    
+    /// Shows validation error toast with auto-dismiss
+    private func showValidationToast() {
+        toastScheduler.cancel()
+        toastMessage = L10n.AnimalDescription.Toast.validationErrors
+        showToast = true
+        
+        toastScheduler.schedule(duration: 3.0) { [weak self] in
+            Task { @MainActor in
+                self?.showToast = false
+            }
+        }
     }
     
     /// Applies validation errors to corresponding fields
@@ -391,18 +427,14 @@ class AnimalDescriptionViewModel: ObservableObject {
         flowState.animalLatitude = latitude.isEmpty ? nil : Double(latitude)
         flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
         flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
+        
+        // Pet name (US1 - 046-ios-pet-name-field)
+        let trimmedPetName = petName.trimmingCharacters(in: .whitespacesAndNewlines)
+        flowState.petName = trimmedPetName.isEmpty ? nil : trimmedPetName
     }
 
     deinit {
+        toastScheduler.cancel()
         print("deinit AnimalDescriptionViewModel")
     }
 }
-
-// MARK: - AnimalSpecies CaseIterable Extension
-
-extension AnimalSpecies: CaseIterable {
-    public static var allCases: [AnimalSpecies] {
-        return [.dog, .cat, .bird, .rabbit, .rodent, .reptile, .other]
-    }
-}
-

@@ -113,7 +113,7 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
           value={formData.age}
           onChange={(e) => onFieldChange('age', e.target.value)}
           min="0"
-          max="40"
+          max="200"
           className={sharedStyles.input}
           data-testid="details.age.input"
         />

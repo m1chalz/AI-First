@@ -41,6 +41,10 @@ public enum L10n {
     public static let latitudePlaceholder = L10n.tr("Localizable", "animalDescription.latitudePlaceholder", fallback: "e.g., 52.2297")
     /// e.g., 21.0122
     public static let longitudePlaceholder = L10n.tr("Localizable", "animalDescription.longitudePlaceholder", fallback: "e.g., 21.0122")
+    /// Animal name
+    public static let petNameLabel = L10n.tr("Localizable", "animalDescription.petNameLabel", fallback: "Animal name")
+    /// Animal name (optional)
+    public static let petNamePlaceholder = L10n.tr("Localizable", "animalDescription.petNamePlaceholder", fallback: "Animal name (optional)")
     /// Animal race (optional)
     public static let raceLabel = L10n.tr("Localizable", "animalDescription.raceLabel", fallback: "Animal race (optional)")
     /// e.g., Golden Retriever
@@ -145,10 +149,6 @@ public enum L10n {
     public static let other = L10n.tr("Localizable", "animalSpecies.other", fallback: "Other")
     /// Rabbit
     public static let rabbit = L10n.tr("Localizable", "animalSpecies.rabbit", fallback: "Rabbit")
-    /// Reptile
-    public static let reptile = L10n.tr("Localizable", "animalSpecies.reptile", fallback: "Reptile")
-    /// Rodent
-    public static let rodent = L10n.tr("Localizable", "animalSpecies.rodent", fallback: "Rodent")
   }
   public enum AnnouncementCard {
     public enum Location {
@@ -403,6 +403,16 @@ public enum L10n {
       /// Summary
       public static let title = L10n.tr("Localizable", "reportMissingPet.summary.title", fallback: "Summary")
     }
+  }
+  public enum ReportCreated {
+    /// Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.
+    public static let bodyParagraph1 = L10n.tr("Localizable", "report_created.body_paragraph_1", fallback: "Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.")
+    /// If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address
+    public static let bodyParagraph2 = L10n.tr("Localizable", "report_created.body_paragraph_2", fallback: "If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address")
+    /// Code copied to clipboard
+    public static let codeCopied = L10n.tr("Localizable", "report_created.code_copied", fallback: "Code copied to clipboard")
+    /// MARK: - Report Created Screen (Summary Step 5)
+    public static let title = L10n.tr("Localizable", "report_created.title", fallback: "Report created")
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

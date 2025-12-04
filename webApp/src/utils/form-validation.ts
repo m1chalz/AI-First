@@ -214,14 +214,13 @@ export function validateContactForm(formData: ContactFormValidation): {
   const phoneError = validatePhoneNumber(formData.phone);
   const emailError = validateEmailAddress(formData.email);
 
-  const hasAtLeastOneContact = (formData.phone !== '' && !phoneError) || (formData.email !== '' && !emailError);
-  const allProvidedFieldsValid = !phoneError && !emailError;
-  const bothEmpty = formData.phone === '' && formData.email === '';
+  const phoneEmpty = formData.phone === '';
+  const emailEmpty = formData.email === '';
 
   return {
-    phoneError: (phoneError || (bothEmpty ? 'Phone number or email is required' : '')) || '',
-    emailError: (emailError || (bothEmpty ? 'Phone number or email is required' : '')) || '',
-    isValid: hasAtLeastOneContact && allProvidedFieldsValid,
+    phoneError: phoneError || (phoneEmpty ? 'Phone number is required' : '') || '',
+    emailError: emailError || (emailEmpty ? 'Email is required' : '') || '',
+    isValid: !phoneError && !emailError && !phoneEmpty && !emailEmpty,
   };
 }
 

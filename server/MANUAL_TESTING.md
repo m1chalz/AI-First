@@ -412,6 +412,165 @@ chmod +x scripts/get-auth-header.sh
 ./scripts/get-auth-header.sh abc123-def456 secret123
 ```
 
+---
+
+## Admin Delete Announcement Tests (DELETE /api/admin/v1/announcements/:id)
+
+**⚠️ ADMIN ONLY**: This endpoint requires admin token for internal use only.
+
+### Setup: Create an announcement to delete
+
+First, create an announcement that we'll use for deletion testing:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/announcements \
+  -H "Content-Type: application/json" \
+  -d '{
+    "species": "Golden Retriever",
+    "sex": "MALE",
+    "lastSeenDate": "2025-11-20",
+    "status": "MISSING",
+    "locationLatitude": 40.785091,
+    "locationLongitude": -73.968285,
+    "email": "john@example.com"
+  }' | jq '.id'
+```
+
+Save the returned `id` for the tests below.
+
+### T089: Test successful announcement deletion with admin token (and photos)
+
+Delete an announcement using the admin token. This will also delete any associated photo files:
+
+```bash
+ANNOUNCEMENT_ID="<id-from-above>"
+
+curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_ID}" \
+  -H "Authorization: tajnehasloadmina"
+```
+
+**Expected**: HTTP 204 (No Content - empty response body)
+
+**Verify**: Announcement and photos are deleted:
+```bash
+# Announcement should return 404
+curl -X GET "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}"
+
+# Photo files should be deleted from public/images/
+ls -la public/images/${ANNOUNCEMENT_ID}.*
+# Should return: "No such file or directory"
+```
+
+### T090: Test deletion without Authorization header (401)
+
+```bash
+ANNOUNCEMENT_ID="<id-to-delete>"
+
+curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_ID}"
+```
+
+**Expected**: HTTP 401 with error:
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "UNAUTHENTICATED",
+    "message": "Missing Authorization header"
+  }
+}
+```
+
+### T091: Test deletion with invalid admin token (401)
+
+```bash
+ANNOUNCEMENT_ID="<id-to-delete>"
+
+curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_ID}" \
+  -H "Authorization: wrongtoken"
+```
+
+**Expected**: HTTP 401 with error:
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "UNAUTHENTICATED",
+    "message": "Invalid admin token"
+  }
+}
+```
+
+### T092: Test deletion of non-existent announcement (404)
+
+```bash
+FAKE_ID="ffffffff-ffff-ffff-ffff-ffffffffffff"
+ADMIN_TOKEN="tajnehasloadmina"
+
+curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${FAKE_ID}" \
+  -H "Authorization: ${ADMIN_TOKEN}"
+```
+
+**Expected**: HTTP 404 with error:
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "NOT_FOUND",
+    "message": "Resource not found"
+  }
+}
+```
+
+### T093: Test that deletion only removes the specified announcement
+
+Create two announcements and delete only one:
+
+```bash
+# Create first announcement
+ID1=$(curl -s -X POST http://localhost:3000/api/v1/announcements \
+  -H "Content-Type: application/json" \
+  -d '{
+    "species": "Golden Retriever",
+    "sex": "MALE",
+    "lastSeenDate": "2025-11-20",
+    "status": "MISSING",
+    "locationLatitude": 40.785091,
+    "locationLongitude": -73.968285,
+    "email": "john@example.com"
+  }' | jq -r '.id')
+
+# Create second announcement
+ID2=$(curl -s -X POST http://localhost:3000/api/v1/announcements \
+  -H "Content-Type: application/json" \
+  -d '{
+    "species": "Siamese Cat",
+    "sex": "FEMALE",
+    "lastSeenDate": "2025-11-19",
+    "status": "FOUND",
+    "locationLatitude": 51.5074,
+    "locationLongitude": -0.1278,
+    "phone": "+44 20 7946 0958"
+  }' | jq -r '.id')
+
+# Delete first announcement
+ADMIN_TOKEN="tajnehasloadmina"
+curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ID1}" \
+  -H "Authorization: ${ADMIN_TOKEN}"
+
+# Verify first is deleted (404)
+echo "First announcement (should be 404):"
+curl -X GET "http://localhost:3000/api/v1/announcements/${ID1}"
+
+# Verify second still exists (200)
+echo "Second announcement (should be 200):"
+curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
+```
+
+**Expected**:
+- Delete request returns HTTP 204
+- First announcement returns HTTP 404
+- Second announcement returns HTTP 200 with data
+
 ## Verification Checklist
 
 ### Announcement Creation Tests
@@ -431,4 +590,11 @@ chmod +x scripts/get-auth-header.sh
 - [ ] T086: Missing photo field rejected (400)
 - [ ] T087: Photo replacement works correctly
 - [ ] T088: photoUrl field rejected in creation (400)
+
+### Admin Delete Announcement Tests
+- [ ] T089: Announcement deleted successfully with admin token (204)
+- [ ] T090: Missing Authorization header rejected (401)
+- [ ] T091: Invalid admin token rejected (401)
+- [ ] T092: Non-existent announcement returns 404
+- [ ] T093: Only specified announcement is deleted (others remain)
 

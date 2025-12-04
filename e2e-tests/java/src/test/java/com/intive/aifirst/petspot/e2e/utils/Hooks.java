@@ -47,7 +47,7 @@ public class Hooks {
     /**
      * Executes before each Cucumber scenario.
      * 
-     * <p>Currently a placeholder for future setup logic (e.g., logging, database reset).
+     * <p>Performs setup including platform detection from Cucumber tags.
      * Driver initialization happens lazily in step definitions via
      * {@link WebDriverManager#getDriver()} or {@link AppiumDriverManager#getDriver(String)}.
      * 
@@ -60,8 +60,42 @@ public class Hooks {
         System.out.println("Tags: " + scenario.getSourceTagNames());
         System.out.println("========================================");
         
-        // Future: Add setup logic here (e.g., test data preparation)
-        IosSimulatorMediaManager.ensurePhotoLibrarySeeded(scenario.getSourceTagNames());
+        // Detect platform from Cucumber tags and set as system property
+        detectAndSetPlatform(scenario);
+    }
+    
+    /**
+     * Detects platform (Android/iOS) from Cucumber scenario tags and sets PLATFORM system property.
+     * 
+     * <p>Priority:
+     * <ol>
+     *   <li>If @ios tag present → sets PLATFORM=iOS</li>
+     *   <li>If @android tag present → sets PLATFORM=Android</li>
+     *   <li>If @mobile tag without @ios/@android → defaults to Android</li>
+     *   <li>If @web tag → clears PLATFORM (not mobile)</li>
+     * </ol>
+     * 
+     * @param scenario Cucumber scenario with tags
+     */
+    private void detectAndSetPlatform(Scenario scenario) {
+        var tags = scenario.getSourceTagNames();
+        
+        if (tags.contains("@ios")) {
+            System.setProperty("PLATFORM", "iOS");
+            System.out.println("Platform detected from tags: iOS");
+        } else if (tags.contains("@android")) {
+            System.setProperty("PLATFORM", "Android");
+            System.out.println("Platform detected from tags: Android");
+        } else if (tags.contains("@mobile")) {
+            // Mobile but no specific platform - default to Android
+            System.setProperty("PLATFORM", "Android");
+            System.out.println("Platform defaulted to: Android (mobile tag without ios/android)");
+        } else if (tags.contains("@web")) {
+            // Web test - clear platform
+            System.clearProperty("PLATFORM");
+            System.out.println("Platform: Web (not mobile)");
+        }
+        // If none of the above, leave PLATFORM as-is (may be set externally)
     }
     
     /**
@@ -164,9 +198,8 @@ public class Hooks {
      */
     private WebDriver getWebDriverSafely() {
         try {
-            // WebDriverManager returns null if driver not initialized (ThreadLocal.get())
-            // We need to check without triggering initialization
-            return WebDriverManager.getDriver();
+            // Use hasDriver() to check without triggering initialization
+            return WebDriverManager.hasDriver() ? WebDriverManager.getDriver() : null;
         } catch (Exception e) {
             return null;
         }

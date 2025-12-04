@@ -9,6 +9,7 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
     private var flowState: ReportMissingPetFlowState!
     private var fakeLocationService: FakeLocationService!
     private var locationHandler: LocationPermissionHandler!
+    private var toastSchedulerFake: ToastSchedulerFake!
     private var viewModel: AnimalDescriptionViewModel!
     
     // MARK: - Setup / Teardown
@@ -25,14 +26,18 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
             notificationCenter: NotificationCenter()  // Isolated instance
         )
         
+        toastSchedulerFake = ToastSchedulerFake()
+        
         viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            toastScheduler: toastSchedulerFake
         )
     }
     
     override func tearDown() async throws {
         viewModel = nil
+        toastSchedulerFake = nil
         locationHandler = nil
         fakeLocationService = nil
         flowState = nil
@@ -70,7 +75,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // When - create ViewModel
         let vm = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            toastScheduler: ToastSchedulerFake()
         )
         
         // Then - loads existing data
@@ -174,6 +180,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertFalse(continueCallbackInvoked)
         XCTAssertTrue(viewModel.showToast)
         XCTAssertNotNil(viewModel.speciesErrorMessage)
+        // Verify ToastScheduler was called with 3 second duration
+        XCTAssertEqual(toastSchedulerFake.scheduledDurations, [3.0])
     }
     
     func testOnContinueTapped_whenMissingGender_shouldShowToastAndError() {
@@ -629,6 +637,88 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // Then - toast message set
         XCTAssertTrue(viewModel.showToast)
         XCTAssertFalse(viewModel.toastMessage.isEmpty)
+    }
+    
+    // MARK: - Pet Name Tests
+    
+    func test_petName_whenUserEntersText_shouldUpdatePublishedProperty() {
+        // Given - fresh ViewModel
+        
+        // When - user types in pet name field
+        viewModel.petName = "Max"
+        
+        // Then - property updates
+        XCTAssertEqual(viewModel.petName, "Max")
+    }
+    
+    func test_petName_whenFlowStateHasPetName_shouldInitializeProperty() {
+        // Given - flow state with existing pet name
+        flowState.petName = "Buddy"
+        
+        // When - create new ViewModel
+        let vm = AnimalDescriptionViewModel(
+            flowState: flowState,
+            locationHandler: locationHandler,
+            toastScheduler: ToastSchedulerFake()
+        )
+        
+        // Then - pet name loaded from flow state
+        XCTAssertEqual(vm.petName, "Buddy")
+    }
+    
+    func test_petName_whenFlowStateHasNoPetName_shouldInitializeToEmptyString() {
+        // Given - flow state without pet name (nil)
+        XCTAssertNil(flowState.petName)
+        
+        // When - create new ViewModel (already created in setUp)
+        
+        // Then - pet name initializes to empty string
+        XCTAssertEqual(viewModel.petName, "")
+    }
+    
+    func test_onContinueTapped_whenPetNameHasText_shouldStoreTrimmedValue() {
+        // Given - all required fields + pet name with whitespace
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = "  Max  "
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state updated with trimmed pet name
+        XCTAssertEqual(flowState.petName, "Max")
+    }
+    
+    func test_onContinueTapped_whenPetNameIsEmpty_shouldStoreNil() {
+        // Given - all required fields + empty pet name
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state pet name is nil
+        XCTAssertNil(flowState.petName)
+    }
+    
+    func test_onContinueTapped_whenPetNameIsWhitespaceOnly_shouldStoreNil() {
+        // Given - all required fields + whitespace-only pet name
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.petName = "   "
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - flow state pet name is nil (whitespace trimmed away)
+        XCTAssertNil(flowState.petName)
     }
 }
 

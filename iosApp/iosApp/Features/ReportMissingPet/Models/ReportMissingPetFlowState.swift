@@ -38,6 +38,9 @@ final class ReportMissingPetFlowState: ObservableObject {
     /// Animal age in years (optional, 0-40 range)
     @Published var animalAge: Int?
     
+    /// Pet name (optional, trimmed before API submission)
+    @Published var petName: String?
+    
     /// Last known latitude (optional, -90 to 90 range)
     @Published var animalLatitude: Double?
     
@@ -52,9 +55,11 @@ final class ReportMissingPetFlowState: ObservableObject {
     /// Owner's contact details (phone, email, reward)
     @Published var contactDetails: OwnerContactDetails?
     
-    // MARK: - Submission Result
+    // MARK: - Step 5: Submission Result
     
-    /// Management password received from successful announcement creation
+    /// Management password returned by backend after successful report submission.
+    /// Used for report management (edit/delete). Also sent to user's email.
+    /// Nil before submission completes.
     @Published var managementPassword: String?
     
     // MARK: - Initialization
@@ -75,12 +80,13 @@ final class ReportMissingPetFlowState: ObservableObject {
         animalRace = nil
         animalGender = nil
         animalAge = nil
+        petName = nil
         animalLatitude = nil
         animalLongitude = nil
         animalAdditionalDescription = nil
         contactDetails = nil
         managementPassword = nil
-        
+
         try? await photoAttachmentCache.clearCurrent()
     }
 }

@@ -735,3 +735,115 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     });
   });
 });
+
+describe('DELETE /api/admin/v1/announcements/:id', () => {
+  beforeEach(async () => {
+    await db('announcement').del();
+  });
+
+  it('should delete announcement and return 204 when valid admin token provided', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+    const adminToken = 'tajnehasloadmina';
+
+    // When: Admin sends DELETE request with valid token
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', adminToken)
+      .expect(204);
+
+    // Then: Announcement is deleted
+    expect(response.body).toEqual({});
+    const deletedAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(deletedAnnouncement).toBeUndefined();
+  });
+
+  it('should return 401 when Authorization header is missing', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+
+    // When: Client sends DELETE request without Authorization header
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .expect(401);
+
+    // Then: Returns 401 Unauthenticated error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'UNAUTHENTICATED',
+    });
+
+    // Announcement should still exist
+    const announcement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(announcement).toBeDefined();
+  });
+
+  it('should return 401 when invalid admin token provided', async () => {
+    // Given: Database has test announcement
+    await db('announcement').insert(TEST_ANNOUNCEMENT_1);
+
+    // When: Client sends DELETE request with invalid token
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', 'wrongtoken')
+      .expect(401);
+
+    // Then: Returns 401 Unauthenticated error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'UNAUTHENTICATED',
+    });
+
+    // Announcement should still exist
+    const announcement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(announcement).toBeDefined();
+  });
+
+  it('should return 404 when announcement does not exist', async () => {
+    // Given: Database is empty
+    const adminToken = 'tajnehasloadmina';
+    const nonExistentId = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+
+    // When: Admin sends DELETE request for non-existent announcement
+    const response = await request(server)
+      .delete(`/api/admin/v1/announcements/${nonExistentId}`)
+      .set('Authorization', adminToken)
+      .expect(404);
+
+    // Then: Returns 404 Not Found error
+    expect(response.body.error).toMatchObject({
+      requestId: expect.any(String),
+      code: 'NOT_FOUND',
+    });
+  });
+
+  it('should delete only the specified announcement when multiple exist', async () => {
+    // Given: Database has 2 test announcements
+    await db('announcement').insert([TEST_ANNOUNCEMENT_1, TEST_ANNOUNCEMENT_2]);
+    const adminToken = 'tajnehasloadmina';
+
+    // When: Admin deletes first announcement
+    await request(server)
+      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
+      .set('Authorization', adminToken)
+      .expect(204);
+
+    // Then: Only first announcement is deleted, second still exists
+    const deletedAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_1.id)
+      .first();
+    expect(deletedAnnouncement).toBeUndefined();
+
+    const remainingAnnouncement = await db('announcement')
+      .where('id', TEST_ANNOUNCEMENT_2.id)
+      .first();
+    expect(remainingAnnouncement).toBeDefined();
+    expect(remainingAnnouncement.pet_name).toBe(TEST_ANNOUNCEMENT_2.pet_name);
+  });
+});

@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
-import { useBrowserBackHandler } from '../../hooks/use-browser-back-handler';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
@@ -36,8 +35,6 @@ export function MicrochipNumberScreen() {
     navigate('/');
   };
 
-  useBrowserBackHandler(handleBack);
-
   return (
     <ReportMissingPetLayout
       title="Microchip number"
@@ -57,7 +54,7 @@ export function MicrochipNumberScreen() {
         <input
           id="microchip-input"
           type="tel"
-          pattern="[0-9-]*"
+          pattern="[0-9]*"
           value={formattedValue}
           onChange={handleChange}
           onPaste={handlePaste}

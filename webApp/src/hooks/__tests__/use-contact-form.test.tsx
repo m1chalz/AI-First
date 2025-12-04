@@ -160,7 +160,21 @@ describe('useContactForm', () => {
   });
 
   describe('submit behavior', () => {
-    it('should return true with valid phone only', () => {
+    it('should return true with both phone and email', () => {
+      // given
+      const { result } = renderHook(() => useContactForm(), { wrapper });
+
+      // when
+      act(() => {
+        result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
+      });
+
+      // then
+      expect(result.current.handleSubmit()).toBe(true);
+    });
+
+    it('should return false with valid phone only', () => {
       // given
       const { result } = renderHook(() => useContactForm(), { wrapper });
 
@@ -171,10 +185,10 @@ describe('useContactForm', () => {
       });
 
       // then
-      expect(result.current.handleSubmit()).toBe(true);
+      expect(result.current.handleSubmit()).toBe(false);
     });
 
-    it('should return true with valid email only', () => {
+    it('should return false with valid email only', () => {
       // given
       const { result } = renderHook(() => useContactForm(), { wrapper });
 
@@ -185,7 +199,7 @@ describe('useContactForm', () => {
       });
 
       // then
-      expect(result.current.handleSubmit()).toBe(true);
+      expect(result.current.handleSubmit()).toBe(false);
     });
 
     it('should return false with no contact methods', () => {
@@ -223,6 +237,7 @@ describe('useContactForm', () => {
       // when
       act(() => {
         result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
         result.current.handleRewardChange('any text @#$%');
       });
 
@@ -252,6 +267,7 @@ describe('useContactForm', () => {
       // when
       act(() => {
         result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
         result.current.handleRewardChange('');
       });
 
@@ -266,6 +282,7 @@ describe('useContactForm', () => {
       // when
       act(() => {
         result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
         result.current.handleRewardChange('$250 gift card + hugs');
         result.current.handleSubmit();
       });
@@ -281,6 +298,7 @@ describe('useContactForm', () => {
       // when
       act(() => {
         result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
         result.current.handleRewardChange('!@#$%^&*()_+-=[]{}|;:,.<>?');
       });
 
@@ -303,6 +321,7 @@ describe('useContactForm', () => {
       // when
       act(() => {
         result.current.handlePhoneChange('1234567');
+        result.current.handleEmailChange('user@example.com');
         result.current.handleRewardChange(rewardText);
       });
 

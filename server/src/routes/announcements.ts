@@ -3,6 +3,7 @@ import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import upload from '../middlewares/upload-middleware.ts';
 import basicAuthMiddleware from '../middlewares/basic-auth.ts';
 import announcementAuthMiddleware from '../middlewares/announcement-auth.ts';
+import adminAuthMiddleware from '../middlewares/admin-auth.ts';
 import type { RequestWithBasicAuth } from '../middlewares/basic-auth.ts';
 import { ValidationError } from '../lib/errors.ts';
 import path from 'path';
@@ -48,6 +49,16 @@ router.post(
     await photoUploadService.uploadPhoto(announcementId, photoBuffer, imagesDir);
 
     res.status(201).json({});
+  }
+);
+
+router.delete(
+  '/:id',
+  adminAuthMiddleware,
+  async (req, res) => {
+    const announcementId = req.params.id;
+    await announcementService.deleteAnnouncement(announcementId);
+    res.status(204).send();
   }
 );
 

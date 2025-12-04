@@ -64,7 +64,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, onDetailsClick }
             
             {/* Center section: Description */}
             <div className={styles.animalDescription}>
-                {animal.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean luctus mattis nulla nec mollis.'}
+                {animal.description}
             </div>
             
             {/* Right section: Status and date (left column) + Details button (right column) */}

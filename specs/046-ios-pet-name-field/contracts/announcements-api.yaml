@@ -1,0 +1,267 @@
+openapi: 3.0.0
+info:
+  title: PetSpot Announcements API - Pet Name Field Addition
+  version: 1.1.0
+  description: |
+    API contract for the optional petName field addition to the POST /api/announcements endpoint.
+    This contract documents the change introduced in feature 046-ios-pet-name-field.
+    
+    **Modification**: Added optional `petName` field to announcement creation request.
+    **Backend Status**: Field already supported by backend (no backend changes needed).
+    **iOS Client**: Will send petName when user provides animal name on Animal Details screen.
+
+paths:
+  /api/announcements:
+    post:
+      summary: Create a new missing pet announcement
+      description: |
+        Creates a new announcement for a missing pet. The optional `petName` field allows 
+        users to specify their pet's name to make the announcement more personal and 
+        increase identification likelihood.
+      operationId: createAnnouncement
+      tags:
+        - Announcements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - location
+                - ownerName
+                - ownerPhone
+                - species
+                - dateOfDisappearance
+              properties:
+                location:
+                  type: object
+                  required:
+                    - latitude
+                    - longitude
+                  properties:
+                    latitude:
+                      type: number
+                      format: double
+                      example: 52.2297
+                      description: GPS latitude coordinate
+                    longitude:
+                      type: number
+                      format: double
+                      example: 21.0122
+                      description: GPS longitude coordinate
+                ownerName:
+                  type: string
+                  example: "John Doe"
+                  description: Name of the pet owner
+                ownerPhone:
+                  type: string
+                  example: "+48 123 456 789"
+                  description: Contact phone number
+                species:
+                  type: string
+                  enum: [dog, cat, other]
+                  example: "dog"
+                  description: Animal species
+                breed:
+                  type: string
+                  nullable: true
+                  example: "Labrador"
+                  description: Breed of the animal (optional)
+                sex:
+                  type: string
+                  enum: [male, female, unknown]
+                  nullable: true
+                  example: "male"
+                  description: Sex of the animal (optional)
+                age:
+                  type: integer
+                  nullable: true
+                  example: 5
+                  description: Age of the animal in years (optional)
+                dateOfDisappearance:
+                  type: string
+                  format: date
+                  example: "2025-12-01"
+                  description: Date when the pet went missing (ISO 8601 format)
+                description:
+                  type: string
+                  nullable: true
+                  example: "Black Labrador, very friendly"
+                  description: Additional description of the animal (optional)
+                photo:
+                  type: string
+                  format: byte
+                  nullable: true
+                  description: Base64-encoded image data (optional)
+                petName:
+                  type: string
+                  nullable: true
+                  example: "Max"
+                  description: |
+                    **NEW FIELD** - Name of the pet (optional).
+                    
+                    - Trimmed of leading/trailing whitespace by iOS client before sending
+                    - Omitted or null if user leaves field empty or enters whitespace-only
+                    - No client-side character limit (backend validates maximum length)
+                    - Accepts all Unicode characters (emoji, special characters allowed)
+                    
+                    Introduced in: feature 046-ios-pet-name-field
+            examples:
+              withPetName:
+                summary: Announcement with pet name
+                value:
+                  location:
+                    latitude: 52.2297
+                    longitude: 21.0122
+                  ownerName: "John Doe"
+                  ownerPhone: "+48 123 456 789"
+                  species: "dog"
+                  breed: "Labrador"
+                  sex: "male"
+                  age: 5
+                  dateOfDisappearance: "2025-12-01"
+                  description: "Black Labrador, very friendly"
+                  photo: "iVBORw0KGgoAAAANSUhEUgAAAAUA..."
+                  petName: "Max"
+              withoutPetName:
+                summary: Announcement without pet name
+                value:
+                  location:
+                    latitude: 52.2297
+                    longitude: 21.0122
+                  ownerName: "John Doe"
+                  ownerPhone: "+48 123 456 789"
+                  species: "cat"
+                  breed: "Persian"
+                  sex: "female"
+                  age: 3
+                  dateOfDisappearance: "2025-12-02"
+                  description: "White Persian cat with blue eyes"
+                  photo: "iVBORw0KGgoAAAANSUhEUgAAAAUA..."
+              petNameNull:
+                summary: Announcement with explicit null petName
+                value:
+                  location:
+                    latitude: 52.2297
+                    longitude: 21.0122
+                  ownerName: "John Doe"
+                  ownerPhone: "+48 123 456 789"
+                  species: "dog"
+                  dateOfDisappearance: "2025-12-03"
+                  petName: null
+      responses:
+        '201':
+          description: Announcement created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 42
+                    description: Unique announcement ID
+                  petName:
+                    type: string
+                    nullable: true
+                    example: "Max"
+                    description: Pet name (if provided, otherwise null)
+                  # ... other response fields (not modified)
+              examples:
+                withPetName:
+                  summary: Response with pet name
+                  value:
+                    id: 42
+                    location:
+                      latitude: 52.2297
+                      longitude: 21.0122
+                    ownerName: "John Doe"
+                    ownerPhone: "+48 123 456 789"
+                    species: "dog"
+                    breed: "Labrador"
+                    sex: "male"
+                    age: 5
+                    dateOfDisappearance: "2025-12-01"
+                    description: "Black Labrador, very friendly"
+                    photo: "https://example.com/photos/42.jpg"
+                    petName: "Max"
+                    createdAt: "2025-12-04T10:30:00Z"
+                withoutPetName:
+                  summary: Response without pet name
+                  value:
+                    id: 43
+                    location:
+                      latitude: 52.2297
+                      longitude: 21.0122
+                    ownerName: "John Doe"
+                    ownerPhone: "+48 123 456 789"
+                    species: "cat"
+                    breed: "Persian"
+                    sex: "female"
+                    age: 3
+                    dateOfDisappearance: "2025-12-02"
+                    description: "White Persian cat with blue eyes"
+                    photo: "https://example.com/photos/43.jpg"
+                    petName: null
+                    createdAt: "2025-12-04T11:00:00Z"
+        '400':
+          description: Bad request (validation error)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Validation failed"
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: "petName"
+                        message:
+                          type: string
+                          example: "Pet name exceeds maximum length of 100 characters"
+              examples:
+                petNameTooLong:
+                  summary: Pet name exceeds maximum length
+                  value:
+                    error: "Validation failed"
+                    details:
+                      - field: "petName"
+                        message: "Pet name exceeds maximum length of 100 characters"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal server error"
+
+components:
+  schemas:
+    # Reusable schemas can be defined here if needed
+    Location:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+tags:
+  - name: Announcements
+    description: Operations for managing missing pet announcements
+
