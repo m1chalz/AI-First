@@ -35,6 +35,10 @@ Key visual specifications adapted to Android:
 - Q: Are both contact fields mandatory? → A: Yes. The user must provide a valid phone number and a valid email address before submission can proceed.
 - Q: How should the optional "Reward for the finder" field behave? → A: Treat it as a free-text description that can include numbers and words (e.g., "$250 gift card" or "Warm thanks"). Preserve the entered text exactly, but limit it to 120 characters and allow empty state without validation errors.
 
+### Session 2025-12-04
+
+- Q: Should Android emit analytics event (`missing_pet.step4_completed`) on successful submission like iOS? → A: No analytics events for this screen; analytics will be added in a future iteration if needed.
+
 ### Session 2025-12-03 (Android-specific clarifications)
 
 - Q: What is the minimum Android SDK version for this feature? → A: API 26 (Android 8.0 Oreo) minimum, targeting API 36 (latest), consistent with project configuration.
@@ -206,6 +210,7 @@ When either step of submission fails (network timeout, connection error, backend
 - Photo upload progress indicator (spec 021 scope).
 - TalkBack/accessibility announcements (only testTag for automated testing is in scope).
 - Localization beyond English (future iteration).
+- Analytics events (e.g., `missing_pet.step4_completed`) - deferred to future iteration.
 
 ## Technical Architecture Notes
 
