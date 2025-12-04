@@ -16,7 +16,7 @@ struct PetDetailsView: View {
                 errorView(message: message)
             }
         }
-        .accessibilityIdentifier("petDetails.view")
+        .accessibilityIdentifier("petDetails.content")
         .task {
             await viewModel.loadPetDetails()
         }
@@ -38,7 +38,8 @@ struct PetDetailsView: View {
             title: L10n.PetDetails.Error.title,
             message: message,
             onRetry: { viewModel.retry() },
-            accessibilityIdentifier: "petDetails.error"
+            accessibilityIdentifier: "petDetails.error",
+            retryButtonAccessibilityIdentifier: "petDetails.retryButton"
         ))
     }
     
@@ -61,7 +62,7 @@ struct PetDetailsView: View {
                         label: L10n.PetDetails.Label.dateOfDisappearance,
                         value: viewModel.formattedDate
                     ))
-                    .accessibilityIdentifier("petDetails.date.field")
+                    .accessibilityIdentifier("petDetails.disappearanceDate")
                     .padding(.bottom, 10.667)
                     .overlay(
                         Divider().background(Color.gray.opacity(0.2)),
@@ -73,14 +74,14 @@ struct PetDetailsView: View {
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.phone
                     ))
-                    .accessibilityIdentifier("petDetails.phone.tap")
+                    .accessibilityIdentifier("petDetails.phone")
                     
                     // Contact Owner - Email
                     LabelValueRowView(model: .init(
                         label: L10n.PetDetails.Label.contactOwner,
                         value: petDetails.email ?? "—"
                     ))
-                    .accessibilityIdentifier("petDetails.email.tap")
+                    .accessibilityIdentifier("petDetails.email")
                     .padding(.bottom, 10.667)
                     .overlay(
                         Divider().background(Color.gray.opacity(0.2)),
@@ -93,13 +94,13 @@ struct PetDetailsView: View {
                             label: L10n.PetDetails.Label.animalName,
                             value: viewModel.formattedPetName
                         ))
-                        .accessibilityIdentifier("petDetails.name.field")
+                        .accessibilityIdentifier("petDetails.name")
                         
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.microchipNumber,
                             value: viewModel.formattedMicrochip
                         ))
-                        .accessibilityIdentifier("petDetails.microchip.field")
+                        .accessibilityIdentifier("petDetails.microchip")
                     }
                     
                     // Species & Breed (2 columns)
@@ -108,13 +109,13 @@ struct PetDetailsView: View {
                             label: L10n.PetDetails.Label.animalSpecies,
                             value: viewModel.formattedSpecies
                         ))
-                        .accessibilityIdentifier("petDetails.species.field")
+                        .accessibilityIdentifier("petDetails.species")
                         
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalRace,
                             value: petDetails.breed ?? "—"
                         ))
-                        .accessibilityIdentifier("petDetails.breed.field")
+                        .accessibilityIdentifier("petDetails.breed")
                     }
                     
                     // Sex & Age (2 columns)
@@ -135,13 +136,13 @@ struct PetDetailsView: View {
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityIdentifier("petDetails.sex.field")
+                        .accessibilityIdentifier("petDetails.sex")
                         
                         LabelValueRowView(model: .init(
                             label: L10n.PetDetails.Label.animalAge,
                             value: viewModel.formattedAge
                         ))
-                        .accessibilityIdentifier("petDetails.age.field")
+                        .accessibilityIdentifier("petDetails.age")
                     }
                     
                     // Place of Disappearance / Coordinates
@@ -160,7 +161,7 @@ struct PetDetailsView: View {
                                 .foregroundColor(Color(hex: "#101828"))
                         }
                     }
-                    .accessibilityIdentifier("petDetails.location.field")
+                    .accessibilityIdentifier("petDetails.location")
                     
                     // Show on the map button (bordered, blue)
                     Button(action: viewModel.handleShowMap) {
@@ -175,7 +176,7 @@ struct PetDetailsView: View {
                                     .stroke(Color(hex: "#155dfc"), lineWidth: 2)
                             )
                     }
-                    .accessibilityIdentifier("petDetails.showMap.button")
+                    .accessibilityIdentifier("petDetails.showMapButton")
                     
                     // Animal Additional Description
                     VStack(alignment: .leading, spacing: 4) {
@@ -188,19 +189,7 @@ struct PetDetailsView: View {
                             .foregroundColor(Color(hex: "#101828"))
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .accessibilityIdentifier("petDetails.description.text")
-                    
-                    // Remove Report button (full width, red)
-                    Button(action: viewModel.handleRemoveReport) {
-                        Text(L10n.PetDetails.Button.removeReport)
-                            .font(.system(size: 16))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color(hex: "#fb2c36"))
-                            .cornerRadius(10)
-                    }
-                    .accessibilityIdentifier("petDetails.removeReport.button")
+                    .accessibilityIdentifier("petDetails.description")
                 }
                 .padding(.horizontal, 23)
                 .padding(.top, 20)

@@ -147,6 +147,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         
         var continueCallbackInvoked = false
         viewModel.onContinue = {
@@ -166,6 +168,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.disappearanceDate = Date()
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         // selectedSpecies = nil
         
         var continueCallbackInvoked = false
@@ -189,6 +193,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         // selectedGender = nil
         
         // When - tap continue
@@ -205,6 +211,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         viewModel.age = "50"  // Max is 40
         
         // When - tap continue
@@ -215,35 +223,92 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.ageErrorMessage)
     }
     
+    func testOnContinueTapped_whenBothCoordinatesEmpty_shouldShowBothErrors() {
+        // Given - all required fields except coordinates
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        // coordinates are empty
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows validation errors for both fields
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
     func testOnContinueTapped_whenInvalidLatitude_shouldShowError() {
-        // Given - all required fields + invalid latitude
+        // Given - all required fields + invalid latitude (out of range)
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
         viewModel.latitude = "100"  // Max is 90
+        viewModel.longitude = "21.0122"
         
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - shows latitude validation error
+        // Then - shows latitude validation error only
         XCTAssertTrue(viewModel.showToast)
         XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNil(viewModel.longitudeErrorMessage)
     }
     
     func testOnContinueTapped_whenInvalidLongitude_shouldShowError() {
-        // Given - all required fields + invalid longitude
+        // Given - all required fields + invalid longitude (out of range)
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
         viewModel.longitude = "200"  // Max is 180
         
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - shows longitude validation error
+        // Then - shows longitude validation error only
         XCTAssertTrue(viewModel.showToast)
+        XCTAssertNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLatitudeEmptyAndLongitudeInvalid_shouldShowBothErrors() {
+        // Given - latitude empty + longitude out of range
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = ""
+        viewModel.longitude = "200"  // Max is 180
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows both errors (missing latitude + invalid longitude)
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLatitudeInvalidAndLongitudeEmpty_shouldShowBothErrors() {
+        // Given - latitude out of range + longitude empty
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "100"  // Max is 90
+        viewModel.longitude = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows both errors (invalid latitude + missing longitude)
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
         XCTAssertNotNil(viewModel.longitudeErrorMessage)
     }
     
@@ -302,6 +367,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         
         // When - tap continue
         viewModel.onContinueTapped()
@@ -312,6 +379,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertEqual(flowState.animalSpecies, .dog)
         XCTAssertEqual(flowState.animalRace, "Labrador")
         XCTAssertEqual(flowState.animalGender, .male)
+        XCTAssertEqual(flowState.animalLatitude!, 52.2297, accuracy: 0.00001)
+        XCTAssertEqual(flowState.animalLongitude!, 21.0122, accuracy: 0.00001)
     }
     
     func testOnContinueTapped_whenValidWithOptionalFields_shouldUpdateFlowStateWithAllData() {
@@ -339,24 +408,25 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
     }
     
     func testOnContinueTapped_whenOptionalFieldsEmpty_shouldSaveNilInFlowState() {
-        // Given - only required fields filled
+        // Given - required fields filled, optional fields (age, description) empty
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         viewModel.age = ""
-        viewModel.latitude = ""
-        viewModel.longitude = ""
         viewModel.additionalDescription = ""
         
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - optional fields are nil in flow state
+        // Then - optional fields (age, description) are nil in flow state
         XCTAssertNil(flowState.animalAge)
-        XCTAssertNil(flowState.animalLatitude)
-        XCTAssertNil(flowState.animalLongitude)
         XCTAssertNil(flowState.animalAdditionalDescription)
+        // Coordinates are required so they must be present
+        XCTAssertNotNil(flowState.animalLatitude)
+        XCTAssertNotNil(flowState.animalLongitude)
     }
     
     func testOnContinueTapped_whenRaceHasWhitespace_shouldTrimInFlowState() {
@@ -365,6 +435,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "  Labrador  "
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         
         // When - tap continue
         viewModel.onContinueTapped()
@@ -442,8 +514,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.ageErrorMessage)
     }
     
-    func testOnContinueTapped_whenOnlyLatitudeFilled_shouldShowError() {
-        // Given - all required fields + only latitude
+    func testOnContinueTapped_whenOnlyLatitudeFilled_shouldShowLongitudeError() {
+        // Given - all required fields + only latitude (longitude empty)
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
@@ -454,14 +526,14 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - shows coordinate format error
+        // Then - shows error only for missing longitude
         XCTAssertTrue(viewModel.showToast)
-        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNil(viewModel.latitudeErrorMessage)
         XCTAssertNotNil(viewModel.longitudeErrorMessage)
     }
     
-    func testOnContinueTapped_whenOnlyLongitudeFilled_shouldShowError() {
-        // Given - all required fields + only longitude
+    func testOnContinueTapped_whenOnlyLongitudeFilled_shouldShowLatitudeError() {
+        // Given - all required fields + only longitude (latitude empty)
         viewModel.disappearanceDate = Date()
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
@@ -472,10 +544,10 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - shows coordinate format error
+        // Then - shows error only for missing latitude
         XCTAssertTrue(viewModel.showToast)
         XCTAssertNotNil(viewModel.latitudeErrorMessage)
-        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+        XCTAssertNil(viewModel.longitudeErrorMessage)
     }
     
     func testOnContinueTapped_whenCoordinatesNonNumeric_shouldShowError() {
@@ -490,7 +562,43 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         // When - tap continue
         viewModel.onContinueTapped()
         
-        // Then - shows coordinate format error
+        // Then - shows coordinate format error for both
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLatitudeNonNumericAndLongitudeEmpty_shouldShowBothErrors() {
+        // Given - latitude non-numeric + longitude empty
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = "abc"
+        viewModel.longitude = ""
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows both errors (invalid format + missing)
+        XCTAssertTrue(viewModel.showToast)
+        XCTAssertNotNil(viewModel.latitudeErrorMessage)
+        XCTAssertNotNil(viewModel.longitudeErrorMessage)
+    }
+    
+    func testOnContinueTapped_whenLatitudeEmptyAndLongitudeNonNumeric_shouldShowBothErrors() {
+        // Given - latitude empty + longitude non-numeric
+        viewModel.disappearanceDate = Date()
+        viewModel.selectedSpecies = .dog
+        viewModel.race = "Labrador"
+        viewModel.selectedGender = .male
+        viewModel.latitude = ""
+        viewModel.longitude = "xyz"
+        
+        // When - tap continue
+        viewModel.onContinueTapped()
+        
+        // Then - shows both errors (missing + invalid format)
         XCTAssertTrue(viewModel.showToast)
         XCTAssertNotNil(viewModel.latitudeErrorMessage)
         XCTAssertNotNil(viewModel.longitudeErrorMessage)
@@ -682,6 +790,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         viewModel.petName = "  Max  "
         
         // When - tap continue
@@ -697,6 +807,8 @@ final class AnimalDescriptionViewModelTests: XCTestCase {
         viewModel.selectedSpecies = .dog
         viewModel.race = "Labrador"
         viewModel.selectedGender = .male
+        viewModel.latitude = "52.2297"
+        viewModel.longitude = "21.0122"
         viewModel.petName = ""
         
         // When - tap continue

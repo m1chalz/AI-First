@@ -161,6 +161,64 @@ final class PetDetailsViewModelTests: XCTestCase {
         XCTAssertTrue(callbackInvoked)
     }
     
+    func testHandleShowMap_whenStateIsLoaded_shouldInvokeOnShowMapCallbackWithCoordinate() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        let expectedLatitude = 52.2297
+        let expectedLongitude = 21.0122
+        let petDetails = makeMockPetDetails(
+            latitude: expectedLatitude,
+            longitude: expectedLongitude
+        )
+        repository.mockPetDetails = petDetails
+        await sut.loadPetDetails()
+        
+        var receivedCoordinate: Coordinate?
+        sut.onShowMap = { coordinate in
+            receivedCoordinate = coordinate
+        }
+        
+        // When
+        sut.handleShowMap()
+        
+        // Then
+        XCTAssertEqual(receivedCoordinate?.latitude, expectedLatitude)
+        XCTAssertEqual(receivedCoordinate?.longitude, expectedLongitude)
+    }
+    
+    func testHandleShowMap_whenStateIsLoading_shouldNotInvokeOnShowMapCallback() {
+        // Given
+        let (sut, _) = makeSUT()
+        var callbackInvoked = false
+        sut.onShowMap = { _ in
+            callbackInvoked = true
+        }
+        
+        // When
+        sut.handleShowMap()
+        
+        // Then
+        XCTAssertFalse(callbackInvoked)
+    }
+    
+    func testHandleShowMap_whenStateIsError_shouldNotInvokeOnShowMapCallback() async {
+        // Given
+        let (sut, repository) = makeSUT()
+        repository.shouldFail = true
+        await sut.loadPetDetails()
+        
+        var callbackInvoked = false
+        sut.onShowMap = { _ in
+            callbackInvoked = true
+        }
+        
+        // When
+        sut.handleShowMap()
+        
+        // Then
+        XCTAssertFalse(callbackInvoked)
+    }
+    
     func testLoadPetDetails_shouldSetLoadingStateFirst() async {
         // Given
         let (sut, repository) = makeSUT()
