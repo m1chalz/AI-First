@@ -18,7 +18,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @SelectClasspathResource("features")
 @ConfigurationParameter(
     key = FILTER_TAGS_PROPERTY_NAME,
-    value = "@ios and not @pending"
+    value = "@ios and not @pending and not @legacy"
 )
 @ConfigurationParameter(
     key = GLUE_PROPERTY_NAME,

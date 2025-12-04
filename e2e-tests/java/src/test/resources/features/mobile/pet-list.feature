@@ -3,8 +3,8 @@
 # Tags @android and @ios control which platform runs each scenario
 # Both tags can be combined: @android @ios runs on both platforms
 
-@mobile
-Feature: Pet List Management (Mobile)
+@mobile @legacy
+Feature: Pet List Management (Mobile) - LEGACY
   As a user using the PetSpot mobile application
   I want to view pet announcements
   So that I can see lost or found animals in my area

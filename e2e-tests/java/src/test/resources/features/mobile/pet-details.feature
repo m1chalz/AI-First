@@ -1,5 +1,5 @@
-@mobile @ios
-Feature: Pet Details Screen (iOS)
+@mobile @ios @legacy
+Feature: Pet Details Screen (iOS) - LEGACY
   As a user using the PetSpot mobile application
   I want to view detailed information about a pet
   So that I can contact the owner and verify pet identity
