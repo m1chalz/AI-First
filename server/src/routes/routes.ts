@@ -8,6 +8,7 @@ router.get('/api/health', (_req, res) => {
 });
 
 router.use('/api/v1/announcements', announcementsRouter);
+router.use('/api/admin/v1/announcements', announcementsRouter);
 
 export default router;
 

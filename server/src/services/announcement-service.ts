@@ -1,5 +1,6 @@
 import type { Announcement, AnnouncementWithManagementPassword, CreateAnnouncementDto, LocationFilter } from '../types/announcement.ts';
 import type { IAnnouncementRepository } from '../database/repositories/announcement-repository.ts';
+import type { PhotoUploadService } from './photo-upload-service.ts';
 import { ConflictError, NotFoundError } from '../lib/errors.ts';
 import { generateManagementPassword } from '../lib/password-management.ts';
 
@@ -10,7 +11,8 @@ export class AnnouncementService {
     private repository: IAnnouncementRepository,
     private validator: (data: CreateAnnouncementDto) => void,
     private sanitizer: (data: string) => string,
-    private locationValidator: (lat?: number, lng?: number, range?: number) => void
+    private locationValidator: (lat?: number, lng?: number, range?: number) => void,
+    private photoUploadService?: PhotoUploadService
   ) {}
 
   async getAllAnnouncements(lat?: number, lng?: number, range?: number): Promise<Announcement[]> {
@@ -66,6 +68,21 @@ export class AnnouncementService {
       ...created,
       managementPassword,
     };
+  }
+
+  async deleteAnnouncement(id: string): Promise<void> {
+    const announcement = await this.repository.findById(id);
+    
+    if (!announcement) {
+      throw new NotFoundError();
+    }
+
+    // Delete associated photos if photoUploadService is available
+    if (this.photoUploadService) {
+      await this.photoUploadService.deletePhotos(announcement.photoUrl);
+    }
+
+    await this.repository.delete(id);
   }
 }
 

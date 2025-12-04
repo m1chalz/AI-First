@@ -55,4 +55,25 @@ export class PhotoUploadService {
     return relativePhotoUrl;
   }
 
+  /**
+   * Deletes photo file associated with an announcement using its photoUrl.
+   * Converts relative photoUrl to absolute file path and removes the file if it exists.
+   */
+  async deletePhotos(photoUrl: string | null): Promise<void> {
+    if (!photoUrl) {
+      return;
+    }
+
+    // Convert relative photoUrl (e.g., "/images/announcement-id.jpeg") to absolute file path
+    // Remove leading slash and join with project public directory
+    const relativePath = photoUrl.startsWith('/') ? photoUrl.slice(1) : photoUrl;
+    const filePath = this.path.join(process.cwd(), 'public', relativePath);
+
+    try {
+      await this.fileSystem.unlink(filePath);
+    } catch {
+      // File doesn't exist or cannot be deleted, silently ignore
+    }
+  }
+
 }

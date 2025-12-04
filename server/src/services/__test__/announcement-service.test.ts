@@ -28,6 +28,7 @@ const defaultMockRepository: IAnnouncementRepository = {
   existsByMicrochip: async () => false,
   create: async () => MOCK_ANNOUNCEMENT,
   updatePhotoUrl: async () => undefined,
+  delete: async () => undefined,
 };
 
 const VALID_CREATE_DATA: CreateAnnouncementDto = {
@@ -35,7 +36,6 @@ const VALID_CREATE_DATA: CreateAnnouncementDto = {
   sex: 'MALE',
   locationLatitude: 40.7128,
   locationLongitude: -74.0060,
-  photoUrl: 'https://example.com/photo.jpg',
   lastSeenDate: '2025-11-19',
   status: 'MISSING',
   email: 'test@example.com',
@@ -463,6 +463,139 @@ describe('AnnouncementService', () => {
         managementPassword: expect.stringMatching(/^\d{6}$/),
       });
       expect(fakeRepository.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteAnnouncement', () => {
+    it('should delete announcement when it exists', async () => {
+      // Given: Repository with existing announcement and mock delete
+      const deleteSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: deleteSpy,
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Delete method is called with correct ID
+      expect(deleteSpy).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.id);
+      expect(deleteSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError when announcement does not exist', async () => {
+      // Given: Repository with no announcement found
+      const deleteSpy = vi.fn();
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => null,
+        delete: deleteSpy,
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes non-existent announcement
+      // Then: NotFoundError is thrown
+      await expect(service.deleteAnnouncement('non-existent-id')).rejects.toThrow(NotFoundError);
+
+      // Delete should not be called
+      expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
+    it('should propagate delete errors from repository', async () => {
+      // Given: Repository that throws an error during delete
+      const deleteError = new Error('Database connection failed');
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: async () => {
+          throw deleteError;
+        },
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service tries to delete and repository fails
+      // Then: Error is propagated
+      await expect(service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id)).rejects.toThrow('Database connection failed');
+    });
+
+    it('should delete photos when photoUploadService is provided', async () => {
+      // Given: Mock photo upload service and repository
+      const deletePhotosSpy = vi.fn();
+      const mockPhotoUploadService = {
+        uploadPhoto: vi.fn(),
+        deletePhotos: deletePhotosSpy,
+      };
+
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = new AnnouncementService(
+        fakeRepository,
+        mockValidator,
+        mockSanitizer,
+        mockLocationValidator,
+        mockPhotoUploadService as any
+      );
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Photos are deleted using photoUrl before announcement
+      expect(deletePhotosSpy).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.photoUrl);
+      expect(deletePhotosSpy).toHaveBeenCalledTimes(1);
+      expect(fakeRepository.delete).toHaveBeenCalled();
+    });
+
+    it('should delete announcement even if photo deletion fails', async () => {
+      // Given: Mock photo upload service that fails
+      const mockPhotoUploadService = {
+        uploadPhoto: vi.fn(),
+        deletePhotos: vi.fn().mockRejectedValue(new Error('Photo deletion failed')),
+      };
+
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = new AnnouncementService(
+        fakeRepository,
+        mockValidator,
+        mockSanitizer,
+        mockLocationValidator,
+        mockPhotoUploadService as any
+      );
+
+      // When: Service tries to delete announcement
+      // Then: Error from photo deletion is propagated
+      await expect(service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id)).rejects.toThrow('Photo deletion failed');
+      expect(fakeRepository.delete).not.toHaveBeenCalled();
+    });
+
+    it('should not delete photos when photoUploadService is not provided', async () => {
+      // Given: Service without photo upload service
+      const fakeRepository = {
+        ...defaultMockRepository,
+        findById: async (_id: string) => MOCK_ANNOUNCEMENT,
+        delete: vi.fn(),
+      };
+
+      const service = createService(fakeRepository);
+
+      // When: Service deletes announcement
+      await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
+
+      // Then: Only announcement is deleted, no photo service call
+      expect(fakeRepository.delete).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.id);
     });
   });
 });
