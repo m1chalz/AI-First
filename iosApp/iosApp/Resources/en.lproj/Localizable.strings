@@ -79,8 +79,6 @@
 "animalSpecies.cat" = "Cat";
 "animalSpecies.bird" = "Bird";
 "animalSpecies.rabbit" = "Rabbit";
-"animalSpecies.rodent" = "Rodent";
-"animalSpecies.reptile" = "Reptile";
 "animalSpecies.other" = "Other";
 
 /* MARK: - Animal Gender */
@@ -226,3 +224,14 @@
 "owners_details.alert.try_again" = "Try Again";
 "owners_details.alert.cancel" = "Cancel";
 
+/* MARK: - Report Created Screen (Summary Step 5) */
+
+// Headings
+"report_created.title" = "Report created";
+
+// Body paragraphs
+"report_created.body_paragraph_1" = "Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.";
+"report_created.body_paragraph_2" = "If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address";
+
+// Toast message
+"report_created.code_copied" = "Code copied to clipboard";

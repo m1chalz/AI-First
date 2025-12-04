@@ -92,10 +92,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
+        let toastScheduler = ToastScheduler()
         let viewModel = PhotoViewModel(
             flowState: flowState,
             photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
-            toastScheduler: ServiceContainer.shared.toastScheduler
+            toastScheduler: toastScheduler
         )
         
         viewModel.onNext = { [weak self] in
@@ -126,10 +127,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        // Create AnimalDescriptionViewModel with flow state and location handler
+        let toastScheduler = ToastScheduler()
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: ServiceContainer.shared.locationPermissionHandler
+            locationHandler: ServiceContainer.shared.locationPermissionHandler,
+            toastScheduler: toastScheduler
         )
         
         viewModel.onContinue = { [weak self] in
@@ -190,23 +192,20 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         modalNavController.pushViewController(hostingController, animated: true)
     }
-    
-    /// Navigate to summary screen (Step 5 - No Progress Indicator).
+
+    /// Navigate to summary screen (Step 5 - Report Created Confirmation).
     private func navigateToSummary(managementPassword: String) {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
-        
+
         // Store managementPassword in FlowState for summary display
         flowState.managementPassword = managementPassword
-        
-        let viewModel = SummaryViewModel(flowState: flowState)
-        
-        viewModel.onSubmit = { [weak self] in
+
+        let toastScheduler = ToastScheduler()
+        let viewModel = SummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
+
+        viewModel.onClose = { [weak self] in
             self?.exitFlow()
-        }
-        
-        viewModel.onBack = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
         }
         
         let view = SummaryView(viewModel: viewModel)
@@ -216,10 +215,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         
         // Configure navigation bar
         hostingController.title = L10n.ReportMissingPet.Summary.title
-        // NO progress indicator on summary screen
-        configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
-        })
+        // NO progress indicator and NO back button on summary screen (final confirmation)
         
         modalNavController.pushViewController(hostingController, animated: true)
     }

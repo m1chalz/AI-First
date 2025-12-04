@@ -56,12 +56,18 @@ class AnimalDescriptionViewModel: ObservableObject {
     
     private let flowState: ReportMissingPetFlowState
     private let locationHandler: LocationPermissionHandler
+    private let toastScheduler: ToastSchedulerProtocol
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState, locationHandler: LocationPermissionHandler) {
+    init(
+        flowState: ReportMissingPetFlowState,
+        locationHandler: LocationPermissionHandler,
+        toastScheduler: ToastSchedulerProtocol
+    ) {
         self.flowState = flowState
         self.locationHandler = locationHandler
+        self.toastScheduler = toastScheduler
         
         // Load existing data from flow state if present (returning from Step 4)
         if let existingDate = flowState.disappearanceDate {
@@ -224,10 +230,7 @@ class AnimalDescriptionViewModel: ObservableObject {
             onContinue?()
         } else {
             // Show toast and inline errors with animation
-            withAnimation {
-                showToast = true
-                toastMessage = L10n.AnimalDescription.Toast.validationErrors
-            }
+            showValidationToast()
             applyValidationErrors(errors)
         }
     }
@@ -353,8 +356,22 @@ class AnimalDescriptionViewModel: ObservableObject {
         ageErrorMessage = nil
         latitudeErrorMessage = nil
         longitudeErrorMessage = nil
+        toastScheduler.cancel()
         showToast = false
         toastMessage = ""
+    }
+    
+    /// Shows validation error toast with auto-dismiss
+    private func showValidationToast() {
+        toastScheduler.cancel()
+        toastMessage = L10n.AnimalDescription.Toast.validationErrors
+        showToast = true
+        
+        toastScheduler.schedule(duration: 3.0) { [weak self] in
+            Task { @MainActor in
+                self?.showToast = false
+            }
+        }
     }
     
     /// Applies validation errors to corresponding fields
@@ -394,15 +411,7 @@ class AnimalDescriptionViewModel: ObservableObject {
     }
 
     deinit {
+        toastScheduler.cancel()
         print("deinit AnimalDescriptionViewModel")
     }
 }
-
-// MARK: - AnimalSpecies CaseIterable Extension
-
-extension AnimalSpecies: CaseIterable {
-    public static var allCases: [AnimalSpecies] {
-        return [.dog, .cat, .bird, .rabbit, .rodent, .reptile, .other]
-    }
-}
-

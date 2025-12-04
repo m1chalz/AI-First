@@ -122,16 +122,6 @@ struct AnimalDescriptionView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .animation(.easeInOut(duration: 0.3), value: viewModel.showToast)
-        .onChange(of: viewModel.showToast) { _, newValue in
-            if newValue {
-                // Auto-hide toast after 3 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    withAnimation {
-                        viewModel.showToast = false
-                    }
-                }
-            }
-        }
         .alert("Location Permission Required", isPresented: $viewModel.showPermissionDeniedAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Go to Settings") {
