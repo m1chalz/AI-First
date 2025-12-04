@@ -12,8 +12,8 @@
 | 1 | Test Infrastructure (API Helper) | P0 | ✅ |
 | 2 | Feature File | P0 | ✅ |
 | 3 | Web Implementation | P1 | ✅ |
-| 4 | iOS Implementation | P2 | ✅ |
-| 5 | Android Implementation | P2 | ✅ |
+| 4 | iOS Implementation | P2 | ⚠️ (permissions issue) |
+| 5 | Android Implementation | P2 | ⚠️ (not tested yet) |
 | 6 | Geolocation Testing (Docker Selenium) | P3 | ⏳ |
 
 ---
@@ -115,7 +115,7 @@ Then I should see the "Report a Missing Animal" button
 
 ---
 
-## Task 4: iOS Implementation ✅
+## Task 4: iOS Implementation ⚠️
 
 ### 4.1 PetListScreen.java ✅
 - **Status**: ✅ Uses existing screen with dual annotations
@@ -130,9 +130,17 @@ Then I should see the "Report a Missing Animal" button
   - `@SelectClasspathResource("features")` - reads from all feature directories
   - Filter: `@ios and not @pending`
 
+### 4.4 Known Issue: iOS Location Permissions ⚠️
+- **Issue**: When app launches, iOS redirects to Settings screen for location permissions instead of showing the app
+- **Root Cause**: PetSpot requires location permissions; iOS shows Settings instead of permission alert
+- **Workaround Options**:
+  1. Pre-grant permissions: `xcrun simctl privacy <device-id> grant location com.petspot.app`
+  2. Handle Settings screen navigation in test code
+  3. Use `appium:autoGrantPermissions` capability (iOS 16.4+)
+
 ---
 
-## Task 5: Android Implementation ✅
+## Task 5: Android Implementation ⚠️
 
 ### 5.1 PetListScreen.java ✅
 - **Status**: ✅ Uses existing screen with dual annotations
@@ -145,6 +153,10 @@ Then I should see the "Report a Missing Animal" button
 - **Changes**:
   - `@SelectClasspathResource("features")` - reads from all feature directories
   - Filter: `@android and not @pending`
+
+### 5.4 Status: Not Tested Yet ⚠️
+- Android tests have not been executed yet
+- May have similar permission issues as iOS
 
 ---
 
@@ -190,6 +202,11 @@ mvn test -Dcucumber.filter.tags="@animalList and @smoke"
 - [x] Android step definitions implemented
 - [x] Runners updated to read from both directories
 - [x] No dependency on seed data
+- [ ] iOS tests pass (blocked by location permissions issue)
+- [ ] Android tests pass (not tested yet)
 - [ ] Location filtering works (blocked by Chrome version - spec 053)
 
-**Note**: Test 2 (location filtering) is marked `@pending` until Docker Selenium infrastructure is ready.
+**Notes**:
+- Test 2 (location filtering) is marked `@pending` until Docker Selenium infrastructure is ready
+- iOS mobile tests blocked by app showing Settings screen instead of pet list (location permissions)
+- Android mobile tests not yet executed
