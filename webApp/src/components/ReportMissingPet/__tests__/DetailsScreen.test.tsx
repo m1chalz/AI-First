@@ -29,7 +29,7 @@ describe('DetailsScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock navigator.geolocation with auto-callback for successful location
-    (navigator as any).geolocation = {
+    (navigator as { geolocation?: Partial<Geolocation> }).geolocation = {
       getCurrentPosition: vi.fn((success) => {
         // Simulate successful geolocation fetch
         setTimeout(() => {
@@ -49,7 +49,7 @@ describe('DetailsScreen', () => {
       watchPosition: vi.fn(),
       clearWatch: vi.fn(),
     };
-    (navigator as any).permissions = {
+    (navigator as { permissions?: { query?: (p: object) => Promise<{ state: string }> } }).permissions = {
       query: vi.fn(() => Promise.resolve({ state: 'granted' })),
     };
   });
@@ -231,7 +231,7 @@ describe('DetailsScreen', () => {
       
       expect(ageInput.type).toBe('number');
       expect(ageInput.min).toBe('0');
-      expect(ageInput.max).toBe('40');
+      expect(ageInput.max).toBe('200');
     });
   });
 

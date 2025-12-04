@@ -66,7 +66,7 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
             const error = new GeolocationError(1, 'User denied geolocation');
             setState(prev => ({
               ...prev,
-              error: error as any,
+              error: error as unknown as GeolocationPositionError,
               isLoading: false,
             }));
             return;

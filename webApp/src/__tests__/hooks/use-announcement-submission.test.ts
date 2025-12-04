@@ -14,6 +14,7 @@ vi.mock('../../services/announcement-service', () => ({
 
 const mockFlowState: ReportMissingPetFlowState = {
   currentStep: FlowStep.Contact,
+  petName: 'Whiskers',
   microchipNumber: '',
   photo: {
     file: new File(['content'], 'pet.jpg', { type: 'image/jpeg' }),
@@ -155,6 +156,7 @@ describe('useAnnouncementSubmission - Error Flow', () => {
 
   const mockFlowStateWithDetails: ReportMissingPetFlowState = {
     currentStep: FlowStep.Contact,
+    petName: 'Buddy',
     microchipNumber: '123456789012345',
     photo: mockFlowState.photo,
     lastSeenDate: '2025-12-03',

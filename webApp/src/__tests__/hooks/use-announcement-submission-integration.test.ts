@@ -31,6 +31,7 @@ describe('useAnnouncementSubmission - Integration', () => {
 
     const completeFlowState: ReportMissingPetFlowState = {
       currentStep: FlowStep.Contact,
+      petName: 'Fluffy',
       microchipNumber: '123456789012345',
       photo,
       lastSeenDate: '2025-12-03',
@@ -90,6 +91,7 @@ describe('useAnnouncementSubmission - Integration', () => {
     // given - minimal flow state
     const minimalFlowState: ReportMissingPetFlowState = {
       currentStep: FlowStep.Contact,
+      petName: '',
       microchipNumber: '',
       photo: null,
       lastSeenDate: '2025-12-03',
@@ -149,6 +151,7 @@ describe('useAnnouncementSubmission - Integration', () => {
     // given
     const flowState: ReportMissingPetFlowState = {
       currentStep: FlowStep.Contact,
+      petName: 'Rex',
       microchipNumber: '111112222233333',
       photo: null,
       lastSeenDate: '2025-12-03',
