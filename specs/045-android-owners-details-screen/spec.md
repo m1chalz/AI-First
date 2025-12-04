@@ -142,7 +142,7 @@ When either step of submission fails (network timeout, connection error, backend
 - **FR-004**: Phone input MUST be implemented as OutlinedTextField accepting digits and leading "+", trim spaces/dashes for validation but preserve user-entered formatting in UI; validation occurs when Continue is tapped, showing supportingText "Enter at least 7 digits" with isError=true if invalid.
 - **FR-005**: Email input MUST be implemented as OutlinedTextField validating against RFC 5322-compatible pattern (basic local@domain.tld), be case-insensitive, trim whitespace; validation occurs when Continue is tapped, showing supportingText "Enter a valid email address" with isError=true if invalid.
 - **FR-006**: Reward description field MUST be implemented as OutlinedTextField with maxLength: 120, display "(optional)" label, accept up to 120 UTF-8 characters (letters, numbers, symbols, currency notation), show live character counter, allow clearing to blank without error, enforce 120 character hard limit, and store text verbatim in session.
-- **FR-007**: All inputs MUST synchronize with ReportMissingPetFlowState (spec 018 session container), survive navigation between steps, device rotation, app backgrounding (until process death), and remain editable until flow is submitted or canceled.
+- **FR-007**: All inputs MUST synchronize with ReportMissingFlowState (spec 018 session container), survive navigation between steps, device rotation, app backgrounding (until process death), and remain editable until flow is submitted or canceled.
 - **FR-008**: Inline helper text "Add your contact information and potential reward." MUST appear below screen title.
 - **FR-009**: Error states MUST use Material Design 3 error color (red) for OutlinedTextField isError state and supportingText, maintaining WCAG AA contrast; clearing the error should immediately restore the default border.
 - **FR-010**: Continue button MUST use primary blue (#155DFC), stretch full width matching design system, and expose testTag `ownersDetails.continueButton` for automation.
@@ -156,11 +156,11 @@ When either step of submission fails (network timeout, connection error, backend
 
 ### Key Entities *(include if feature involves data)*
 
-- **ReportMissingPetFlowState** (existing): Flow state container (managed by NavGraph-scoped ViewModel) extended to store contact details: phone, email, rewardDescription (as flat string properties).
+- **ReportMissingFlowState** (existing): Flow state container (managed by NavGraph-scoped ViewModel) extended to store contact details: phone, email, rewardDescription (as flat string properties).
 - **OwnerDetailsUiState**: Immutable data class representing the current UI state of the Owner's Details screen. Contains all form field values (phone, email, reward), validation error states (phoneError, emailError), isSubmitting flag, and other UI-relevant properties.
 - **OwnerDetailsUserIntent**: Sealed class representing all possible user actions on this screen (UpdatePhone, UpdateEmail, UpdateReward, ContinueClicked, BackClicked, RetryClicked, SnackbarDismissed).
 - **OwnerDetailsUiEffect**: Sealed class for one-off events (NavigateToSummary(managementPassword: String), NavigateBack, ShowSnackbar(message: String, action: SnackbarAction?)).
-- **AnnouncementCreatePayload**: DTO for step 1 (POST /api/v1/announcements): species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status ("MISSING"), microchipNumber (optional), description (optional), reward (optional).
+- **AnnouncementCreateRequest**: DTO for step 1 (POST /api/v1/announcements): species, sex, lastSeenDate, locationLatitude, locationLongitude, email, phone, status ("MISSING"), microchipNumber (optional), description (optional), reward (optional).
 - **AnnouncementResponse**: Backend HTTP 201 response containing `"id"` (UUID string), `"managementPassword"` (6-digit string), and other announcement fields. Extract `managementPassword` field for passing to summary.
 
 ## Success Criteria *(mandatory)*

@@ -57,7 +57,7 @@
 
 ### Validator Utility
 
-- [ ] T006 Create `OwnerDetailsValidator` with `validatePhone()` and `validateEmail()` pure functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidator.kt`
+- [ ] T006 Create `OwnerDetailsValidator` with `validatePhone()` (sanitize whitespace/dashes, count 7-11 digits) and `validateEmail()` pure functions in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidator.kt`
 
 ### Flow State Extension
 
@@ -81,7 +81,7 @@
 
 > **Write tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T009 [P] [US2] Create unit test for `OwnerDetailsValidator` (phone: 7-11 digits, leading +, reject letters; email: RFC 5322) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidatorTest.kt`
+- [ ] T009 [P] [US2] Create unit test for `OwnerDetailsValidator` (phone: 7-11 digits, leading +, reject letters, sanitize whitespace/dashes before counting; email: RFC 5322) in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/reportmissing/util/OwnerDetailsValidatorTest.kt`
 
 ### MVI Components (shared with US1)
 
