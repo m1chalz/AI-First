@@ -2,6 +2,7 @@ package com.intive.aifirst.petspot.di
 
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
@@ -60,6 +61,17 @@ val viewModelModule =
                 extractPhotoMetadataUseCase = get(),
                 flowState = params.get(),
                 onNavigateToDescription = params.get(),
+                onNavigateBack = params.get(),
+            )
+        }
+
+        // AnimalDescriptionViewModel: Hybrid pattern with use case + FlowState + navigation callbacks
+        // Parameters: flowState, onNavigateToContactDetails, onNavigateBack
+        viewModel { params ->
+            AnimalDescriptionViewModel(
+                flowState = params.get(),
+                getCurrentLocationUseCase = get(),
+                onNavigateToContactDetails = params.get(),
                 onNavigateBack = params.get(),
             )
         }

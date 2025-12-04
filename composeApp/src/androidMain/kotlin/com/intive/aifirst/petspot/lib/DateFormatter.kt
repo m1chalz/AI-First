@@ -7,7 +7,7 @@ import java.util.Locale
 
 /**
  * Utility object for formatting dates in the Pet Details screen.
- * Uses java.time API with core library desugaring for API 24+ support.
+ * Uses java.time API (native support since API 26).
  */
 object DateFormatter {
     private val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)
