@@ -14,6 +14,8 @@ Feature: Animal Description Screen
     When the user selects "Dog" as the species
     And the user enters "Labrador" as the race
     And the user selects "Male" as the gender
+    And the user enters "52.2297" in the latitude field
+    And the user enters "21.0122" in the longitude field
     And the user taps the Continue button
     Then the user should be on the Contact Details screen
 
@@ -85,6 +87,39 @@ Feature: Animal Description Screen
     Then a validation error should be displayed
     And the user should remain on the Animal Description screen
 
+  @us1 @validation
+  Scenario: Continue button shows validation error when latitude is empty
+    Given the user has selected "Dog" as the species
+    And the user has entered "Labrador" as the race
+    And the user has selected "Male" as the gender
+    And the user has entered "21.0122" in the longitude field
+    And the latitude field is empty
+    When the user taps the Continue button
+    Then a validation error mentioning "latitude" should be displayed
+    And the user should remain on the Animal Description screen
+
+  @us1 @validation
+  Scenario: Continue button shows validation error when longitude is empty
+    Given the user has selected "Dog" as the species
+    And the user has entered "Labrador" as the race
+    And the user has selected "Male" as the gender
+    And the user has entered "52.2297" in the latitude field
+    And the longitude field is empty
+    When the user taps the Continue button
+    Then a validation error mentioning "longitude" should be displayed
+    And the user should remain on the Animal Description screen
+
+  @us1 @validation
+  Scenario: Continue button shows validation error when both coordinates are empty
+    Given the user has selected "Dog" as the species
+    And the user has entered "Labrador" as the race
+    And the user has selected "Male" as the gender
+    And both coordinate fields are empty
+    When the user taps the Continue button
+    Then a validation error mentioning "latitude" should be displayed
+    And a validation error mentioning "longitude" should be displayed
+    And the user should remain on the Animal Description screen
+
   @us1 @navigation
   Scenario: User can navigate back to Photo screen
     When the user taps the back button
@@ -130,6 +165,7 @@ Feature: Animal Description Screen
     Given the user has selected "Dog" as the species
     And the user has entered "Labrador" as the race
     And the user has selected "Male" as the gender
+    And the user has entered "21.0122" in the longitude field
     When the user enters "100" in the latitude field
     And the user taps the Continue button
     Then a validation error mentioning "latitude" should be displayed
@@ -139,6 +175,7 @@ Feature: Animal Description Screen
     Given the user has selected "Dog" as the species
     And the user has entered "Labrador" as the race
     And the user has selected "Male" as the gender
+    And the user has entered "52.2297" in the latitude field
     When the user enters "200" in the longitude field
     And the user taps the Continue button
     Then a validation error mentioning "longitude" should be displayed

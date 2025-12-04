@@ -46,7 +46,7 @@ export class AnimalDescriptionScreen {
         return $('~animalDescription.requestGPSButton.tap');
     }
     
-    // Coordinate text fields (optional)
+    // Coordinate text fields (mandatory)
     get latitudeTextField() {
         return $('~animalDescription.latitudeTextField.input');
     }
