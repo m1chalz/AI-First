@@ -5,10 +5,12 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
+import org.openqa.selenium.remote.DriverCommand;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Map;
 
 /**
  * Manages Appium AppiumDriver instances with ThreadLocal isolation and platform detection.
@@ -54,6 +56,9 @@ public class AppiumDriverManager {
     /** ThreadLocal storage for AppiumDriver instances (one per thread for parallel execution) */
     private static final ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
     
+    /** ThreadLocal flag for location permission - set by Hooks based on @location tag */
+    private static final ThreadLocal<Boolean> grantLocationPermission = ThreadLocal.withInitial(() -> false);
+    
     /** Appium server URL (default local server, overridable via system/env property) */
     // Note: Appium 2.x doesn't use /wd/hub suffix anymore
     private static final String APPIUM_SERVER_URL = System.getProperty(
@@ -63,6 +68,12 @@ public class AppiumDriverManager {
     
     /** Default implicit wait timeout in seconds */
     private static final int DEFAULT_IMPLICIT_WAIT_SECONDS = 10;
+    
+    /** Android app package name */
+    private static final String ANDROID_APP_PACKAGE = "com.intive.aifirst.petspot";
+    
+    /** iOS app bundle ID */
+    private static final String IOS_BUNDLE_ID = "com.intive.aifirst.petspot";
     
     /**
      * Gets the AppiumDriver instance for the current thread.
@@ -135,6 +146,12 @@ public class AppiumDriverManager {
     /**
      * Initializes AndroidDriver with UiAutomator2 capabilities.
      * 
+     * <p>Location permission is controlled by {@link #setGrantLocationPermission(boolean)}:
+     * <ul>
+     *   <li>false (default): App shows full animal list (no location filtering)</li>
+     *   <li>true (@location tests): App filters by device location</li>
+     * </ul>
+     * 
      * @param serverUrl Appium server URL
      * @return Configured AndroidDriver instance
      */
@@ -149,14 +166,22 @@ public class AppiumDriverManager {
         String appPath = System.getProperty("user.dir") + "/apps/petspot-android.apk";
         options.setApp(appPath);
         
-        // Optional: Auto-grant permissions to avoid permission dialogs during tests
+        // Always grant permissions - app needs them to run
+        // Location filtering is controlled by GPS mocking, not by denying permissions
         options.setAutoGrantPermissions(true);
+        System.out.println("Android: Auto-granting ALL permissions");
         
         return new AndroidDriver(serverUrl, options);
     }
     
     /**
      * Initializes IOSDriver with XCUITest capabilities.
+     * 
+     * <p>Location permission is controlled by {@link #setGrantLocationPermission(boolean)}:
+     * <ul>
+     *   <li>false (default): App shows full animal list (no location filtering)</li>
+     *   <li>true (@location tests): App filters by device location</li>
+     * </ul>
      * 
      * @param serverUrl Appium server URL
      * @return Configured IOSDriver instance
@@ -189,8 +214,10 @@ public class AppiumDriverManager {
         );
         options.setApp(appPath);
         
-        // Optional: Auto-accept alerts to avoid blocking tests
+        // Always accept alerts - app needs permissions to run
+        // Location filtering is controlled by GPS mocking, not by denying permissions
         options.setAutoAcceptAlerts(true);
+        System.out.println("iOS: Auto-accepting alerts (permissions granted)");
         
         return new IOSDriver(serverUrl, options);
     }
@@ -218,6 +245,89 @@ public class AppiumDriverManager {
             return null;
         }
         return driver.get().getCapabilities().getPlatformName().toString();
+    }
+    
+    /**
+     * Sets whether location permission should be granted when initializing driver.
+     * Must be called BEFORE getDriver() to take effect.
+     * 
+     * @param grant true to grant location permission, false to deny (default)
+     */
+    public static void setGrantLocationPermission(boolean grant) {
+        grantLocationPermission.set(grant);
+        System.out.println("Location permission flag set to: " + grant);
+    }
+    
+    /**
+     * Resets the location permission flag to default (false).
+     * Should be called in @After hook.
+     */
+    public static void resetLocationPermission() {
+        grantLocationPermission.remove();
+    }
+    
+    /**
+     * Restarts the app by terminating and re-activating it.
+     * Useful to reload data after creating test announcements via API.
+     * 
+     * <p>This does NOT clear app data - just restarts the app process.
+     */
+    public static void restartApp() {
+        AppiumDriver appiumDriver = driver.get();
+        if (appiumDriver == null) {
+            throw new IllegalStateException("No active driver - cannot restart app");
+        }
+        
+        String platform = getCurrentPlatform();
+        String appId = "android".equalsIgnoreCase(platform) ? ANDROID_APP_PACKAGE : IOS_BUNDLE_ID;
+        
+        System.out.println("Restarting app: " + appId);
+        
+        // Cast to platform-specific driver for app lifecycle methods
+        if (appiumDriver instanceof AndroidDriver androidDriver) {
+            androidDriver.terminateApp(appId);
+            try { Thread.sleep(500); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            androidDriver.activateApp(appId);
+        } else if (appiumDriver instanceof IOSDriver iosDriver) {
+            iosDriver.terminateApp(appId);
+            try { Thread.sleep(500); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            iosDriver.activateApp(appId);
+        } else {
+            throw new IllegalStateException("Unknown driver type - cannot restart app");
+        }
+        
+        System.out.println("App restarted successfully");
+    }
+    
+    /**
+     * Sets the device's simulated GPS location.
+     * Requires location permission to be granted.
+     * 
+     * @param latitude GPS latitude
+     * @param longitude GPS longitude
+     */
+    public static void setDeviceLocation(double latitude, double longitude) {
+        AppiumDriver appiumDriver = driver.get();
+        if (appiumDriver == null) {
+            throw new IllegalStateException("No active driver - cannot set location");
+        }
+        
+        String platform = getCurrentPlatform();
+        
+        // Create location object
+        org.openqa.selenium.html5.Location location = 
+            new org.openqa.selenium.html5.Location(latitude, longitude, 0);
+        
+        // Cast to platform-specific driver for location methods
+        if (appiumDriver instanceof AndroidDriver androidDriver) {
+            androidDriver.setLocation(location);
+        } else if (appiumDriver instanceof IOSDriver iosDriver) {
+            iosDriver.setLocation(location);
+        } else {
+            throw new IllegalStateException("Unknown driver type - cannot set location");
+        }
+        
+        System.out.println("Device location set to: " + latitude + ", " + longitude);
     }
 }
 

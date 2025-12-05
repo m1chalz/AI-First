@@ -16,52 +16,82 @@ Feature: Animal List
     # Setup - Create test data via API
     Given I create a test announcement via API with name "E2E-TestDog" and species "DOG"
     
-    # Action - Navigate to animal list (without geolocation = shows all announcements)
+    # Mobile: Restart app to load fresh data
+    When I restart the app
+    
+    # Action - Navigate to animal list
     When I navigate to the pet list page
     Then the page should load successfully
     
-    # Verification - List elements and announcement visible
-    And I should see the announcement for "E2E-TestDog"
+    # Verification - Button is visible before scrolling
     And I should see the "Report a Missing Animal" button
     
-    # Verification - Button remains visible while scrolling (FR-003 from spec 005)
-    When I scroll down the page
-    Then I should see the "Report a Missing Animal" button
+    # Verification - Scroll to find announcement (tests scrolling + finds test data)
+    When I scroll until I see the announcement for "E2E-TestDog"
+    Then I should see the announcement for "E2E-TestDog"
+    
+    # Verification - Button remains visible after scrolling (FR-003 from spec 005)
+    And I should see the "Report a Missing Animal" button
     
     # Cleanup
     And I delete the test announcement via API
 
   # ========================================
   # Test 2: Location-based filtering + Empty state
-  # NOTE: Requires geolocation mocking:
-  # - Web: Selenium CDP (blocked by Chrome 142+ compatibility)
-  # - iOS: Appium GPS simulation or Simulator location settings
-  # - Android: Appium GPS mock
-  # Will be enabled with Docker Selenium Grid (spec 053)
+  # NOTE: @location tag enables location permission + GPS mocking
+  # - Mobile: Appium GPS simulation
+  # - Web: Selenium CDP (requires spec 053 for Chrome compatibility)
   # ========================================
 
-  @web @ios @android @pending
+  @ios @android @location @pending
   Scenario: User sees only nearby animals and empty state when no animals in area
-    # Setup - Create announcement ONLY in Wroclaw (51.1, 17.0)
-    # No announcement in New York area
+    # Setup - Create announcements at different locations
     Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-NearbyPet"
+    Given I create a test announcement at coordinates "40.7" "-74.0" with name "E2E-FarPet"
     
-    # Action 1 - Navigate with location FAR from Wroclaw (New York: 40.7, -74.0)
-    When I navigate to the pet list page with location "40.7" "-74.0"
+    # Restart app to load fresh data
+    When I restart the app
+    
+    # Action 1 - Set location FAR from announcement (New York area)
+    And I set device location to "40.7" "-74.0"
+    When I navigate to the pet list page
     Then the page should load successfully
     
-    # Verification 1 - No nearby animals = empty state (FR-019 from spec 032)
+    # Verification 1 - Only nearby animal visible (location filtering)
+    And I should see the announcement for "E2E-FarPet"
     And I should NOT see the announcement for "E2E-NearbyPet"
-    And I should see empty state message
     
-    # Action 2 - Navigate with location in Wroclaw (same as announcement)
-    When I navigate to the pet list page with location "51.1" "17.0"
+    # Action 2 - Set location in Wroclaw (where E2E-NearbyPet is)
+    And I set device location to "51.1" "17.0"
+    When I restart the app
+    When I navigate to the pet list page
     Then the page should load successfully
     
-    # Verification 2 - Nearby animal is visible
+    # Verification 2 - Now Wroclaw animal visible, NY not visible
     And I should see the announcement for "E2E-NearbyPet"
-    And I should see the "Report a Missing Animal" button
+    And I should NOT see the announcement for "E2E-FarPet"
     
     # Cleanup
     And I delete all test announcements via API
+    
+  # ========================================
+  # Test 3: Empty state when no animals in area
+  # ========================================
+  
+  @ios @android @location @pending
+  Scenario: User sees empty state when no animals in current location
+    # Setup - Create announcement only in Wroclaw
+    Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-OnlyInWroclaw"
+    
+    # Restart app and set location far away (middle of ocean)
+    When I restart the app
+    And I set device location to "0.0" "0.0"
+    When I navigate to the pet list page
+    Then the page should load successfully
+    
+    # Verification - No animals = empty state
+    And I should see empty state message
+    
+    # Cleanup
+    And I delete the test announcement via API
 

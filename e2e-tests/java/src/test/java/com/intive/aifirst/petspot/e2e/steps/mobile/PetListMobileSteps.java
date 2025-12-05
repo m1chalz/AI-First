@@ -313,39 +313,17 @@ public class PetListMobileSteps {
     
     @Then("I should see the announcement for {string}")
     public void iShouldSeeTheAnnouncementFor(String petName) {
-        System.out.println("Looking for announcement: " + petName);
+        System.out.println("Verifying announcement is visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
         
-        // Check if pet name is visible in the list
-        boolean found = false;
-        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        // Check page source for text (no interaction - avoids accidental clicks on mobile)
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains(petName);
         
-        if (platformName.contains("android")) {
-            // Android: Find by text content
-            try {
-                driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
-                    "new UiSelector().textContains(\"" + petName + "\")"
-                ));
-                found = true;
-            } catch (Exception e) {
-                found = false;
-            }
-        } else {
-            // iOS: Find by accessibility label or text
-            try {
-                driver.findElement(io.appium.java_client.AppiumBy.xpath(
-                    "//*[contains(@label, '" + petName + "') or contains(@value, '" + petName + "')]"
-                ));
-                found = true;
-            } catch (Exception e) {
-                found = false;
-            }
-        }
-        
-        assertTrue(found, "Should find announcement for " + petName + " in the list");
-        System.out.println("Found announcement for: " + petName);
+        assertTrue(found, "Should find announcement for " + petName + " in page source");
+        System.out.println("Verified: Announcement for " + petName + " is visible");
     }
     
     @Then("I should NOT see the announcement for {string}")
@@ -353,32 +331,13 @@ public class PetListMobileSteps {
         System.out.println("Verifying announcement NOT visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
         
-        boolean found = false;
-        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        // Check page source for text (no interaction)
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains(petName);
         
-        if (platformName.contains("android")) {
-            try {
-                driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
-                    "new UiSelector().textContains(\"" + petName + "\")"
-                ));
-                found = true;
-            } catch (Exception e) {
-                found = false;
-            }
-        } else {
-            try {
-                driver.findElement(io.appium.java_client.AppiumBy.xpath(
-                    "//*[contains(@label, '" + petName + "') or contains(@value, '" + petName + "')]"
-                ));
-                found = true;
-            } catch (Exception e) {
-                found = false;
-            }
-        }
-        
-        assertFalse(found, "Should NOT find announcement for " + petName + " in the list");
+        assertFalse(found, "Should NOT find announcement for " + petName + " in page source");
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
     }
     
@@ -473,8 +432,9 @@ public class PetListMobileSteps {
         
         if (platformName.contains("android")) {
             try {
+                // Search for any element containing "Report" text (Compose buttons are not android.widget.Button)
                 driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
-                    "new UiSelector().className(\"android.widget.Button\").textContains(\"Report\")"
+                    "new UiSelector().textContains(\"Report\")"
                 ));
                 found = true;
             } catch (Exception e) {
@@ -591,6 +551,96 @@ public class PetListMobileSteps {
         assertTrue(petListScreen.isEmptyStateDisplayed(),
             "Empty state message should be visible when no animals in area");
         System.out.println("Verified: Empty state message is displayed");
+    }
+    
+    // ========================================
+    // App Restart and Location Mocking Steps
+    // ========================================
+    
+    /**
+     * Restarts the mobile app to reload data from API.
+     * Useful after creating test data via API.
+     * 
+     * <p>Maps to Gherkin: "When I restart the app"
+     */
+    @When("I restart the app")
+    public void iRestartTheApp() {
+        System.out.println("Restarting app to reload data...");
+        AppiumDriverManager.restartApp();
+        
+        // Wait for app to fully restart
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        
+        // Re-initialize screen object
+        petListScreen = new PetListScreen(driver);
+        
+        System.out.println("App restarted successfully");
+    }
+    
+    /**
+     * Sets the device's simulated GPS location.
+     * Requires @location tag on scenario to grant location permission.
+     * 
+     * <p>Maps to Gherkin: "And I set device location to {string} {string}"
+     */
+    @When("I set device location to {string} {string}")
+    public void iSetDeviceLocationTo(String latitude, String longitude) {
+        double lat = Double.parseDouble(latitude);
+        double lng = Double.parseDouble(longitude);
+        
+        System.out.println("Setting device location to: " + lat + ", " + lng);
+        AppiumDriverManager.setDeviceLocation(lat, lng);
+        
+        // Wait for location to be set
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        System.out.println("Device location set successfully");
+    }
+    
+    /**
+     * Scrolls down the list until the specified announcement is visible.
+     * Uses direct swipe gestures which work better with Compose LazyColumn.
+     * 
+     * <p>Maps to Gherkin: "When I scroll until I see the announcement for {string}"
+     */
+    @When("I scroll until I see the announcement for {string}")
+    public void iScrollUntilISeeTheAnnouncementFor(String petName) {
+        System.out.println("Scrolling to find announcement: " + petName);
+        
+        int maxAttempts = 15;
+        boolean found = false;
+        
+        for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
+            System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
+            
+            // Check page source for text (no interaction - avoids accidental clicks)
+            String pageSource = driver.getPageSource();
+            if (pageSource.contains(petName)) {
+                found = true;
+                System.out.println("Found '" + petName + "' in page source after " + (attempt + 1) + " scroll(s)");
+                // Scroll up a bit to ensure element is not hidden behind FAB
+                petListScreen.scrollUpSmall();
+            } else {
+                // Use direct swipe gesture (works better with Compose)
+                petListScreen.scrollDown();
+                try { Thread.sleep(800); } catch (InterruptedException ie) {}
+            }
+        }
+        
+        if (!found) {
+            // Debug: print what IS visible
+            System.out.println("=== DEBUG: Page source excerpt ===");
+            String pageSource = driver.getPageSource();
+            // Print just element names/texts to see what's visible
+            if (pageSource.length() > 2000) {
+                System.out.println(pageSource.substring(0, 2000));
+            } else {
+                System.out.println(pageSource);
+            }
+            System.out.println("=== END DEBUG ===");
+        }
+        
+        assertTrue(found, "Should find announcement for '" + petName + "' after scrolling " + maxAttempts + " times");
     }
 }
 

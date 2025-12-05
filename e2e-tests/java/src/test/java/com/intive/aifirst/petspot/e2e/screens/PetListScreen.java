@@ -6,8 +6,11 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -134,10 +137,90 @@ public class PetListScreen {
     
     /**
      * Scrolls down the pet list.
-     * Uses W3C Actions API for platform-agnostic scrolling (works on both Android and iOS).
+     * Uses direct swipe gesture which works reliably with Compose LazyColumn.
      */
     public void scrollDown() {
-        performScroll("down");
+        performSwipeScroll("down");
+    }
+    
+    /**
+     * Performs scroll using direct swipe gesture (more reliable for Compose UI).
+     * 
+     * @param direction "up" or "down"
+     */
+    private void performSwipeScroll(String direction) {
+        try {
+            Dimension size = driver.manage().window().getSize();
+            int startX = size.width / 2;
+            int startY, endY;
+            
+            if ("down".equals(direction)) {
+                // Swipe from bottom to top = scroll down (content moves up)
+                startY = (int) (size.height * 0.7);
+                endY = (int) (size.height * 0.3);
+            } else {
+                // Swipe from top to bottom = scroll up (content moves down)
+                startY = (int) (size.height * 0.3);
+                endY = (int) (size.height * 0.7);
+            }
+            
+            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+            Sequence swipe = new Sequence(finger, 1);
+            swipe.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
+            swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+            swipe.addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), startX, endY));
+            swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+            
+            driver.perform(java.util.Collections.singletonList(swipe));
+            System.out.println("Performed swipe scroll " + direction);
+            
+        } catch (Exception e) {
+            System.err.println("Swipe scroll failed: " + e.getMessage());
+            // Fallback to old method
+            performScroll(direction);
+        }
+    }
+    
+    /**
+     * Scrolls up a small amount to ensure element is not hidden behind FAB button.
+     * Used after scrolling to an element to make sure it's fully visible.
+     */
+    public void scrollUpSmall() {
+        performScrollSmall("up");
+    }
+    
+    /**
+     * Performs a small scroll (1/4 of screen) in the specified direction.
+     * 
+     * @param direction "up" or "down"
+     */
+    private void performScrollSmall(String direction) {
+        try {
+            Dimension size = driver.manage().window().getSize();
+            int startX = size.width / 2;
+            int startY, endY;
+            
+            if ("up".equals(direction)) {
+                startY = size.height / 2;
+                endY = (int) (size.height * 0.65);  // Small scroll up (15% of screen)
+            } else {
+                startY = size.height / 2;
+                endY = (int) (size.height * 0.35);  // Small scroll down
+            }
+            
+            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+            Sequence scroll = new Sequence(finger, 1);
+            scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
+            scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+            scroll.addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), startX, endY));
+            scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+            
+            driver.perform(java.util.Collections.singletonList(scroll));
+            System.out.println("Performed small scroll " + direction);
+            
+        } catch (Exception e) {
+            System.err.println("Small scroll failed: " + e.getMessage());
+        }
     }
     
     /**

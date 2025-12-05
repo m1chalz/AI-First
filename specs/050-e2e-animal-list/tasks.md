@@ -12,8 +12,8 @@
 | 1 | Test Infrastructure (API Helper) | P0 | ✅ |
 | 2 | Feature File | P0 | ✅ |
 | 3 | Web Implementation | P1 | ✅ |
-| 4 | iOS Implementation | P2 | ⚠️ (permissions issue) |
-| 5 | Android Implementation | P2 | ⚠️ (not tested yet) |
+| 4 | iOS Implementation | P2 | ⚠️ (not tested) |
+| 5 | Android Implementation | P2 | ✅ |
 | 6 | Reorganize Features Folder | P1 | ✅ |
 | 7 | Update Test Runners | P1 | ✅ |
 | 8 | Geolocation Testing (Docker Selenium) | P3 | ⏳ |
@@ -51,7 +51,7 @@ And I delete all test announcements via API
 - **File**: `/e2e-tests/java/src/test/resources/features/animal-list.feature`
 - **Status**: ✅ DONE (reorganized from `features/web/`)
 
-**Content** (2 scenarios):
+**Content** (3 scenarios):
 ```gherkin
 @animalList
 Feature: Animal List
@@ -59,31 +59,28 @@ Feature: Animal List
   Background:
     Given the application is running
 
-  # Test 1: Display animal list with UI elements
+  # Test 1: Display animal list with UI elements (ACTIVE)
   @web @ios @android @smoke
   Scenario: User views animal list with all UI elements
     Given I create a test announcement via API with name "E2E-TestDog" and species "DOG"
+    When I restart the app
     When I navigate to the pet list page
     Then the page should load successfully
-    And I should see the announcement for "E2E-TestDog"
     And I should see the "Report a Missing Animal" button
-    When I scroll down the page
-    Then I should see the "Report a Missing Animal" button
+    When I scroll until I see the announcement for "E2E-TestDog"
+    Then I should see the announcement for "E2E-TestDog"
+    And I should see the "Report a Missing Animal" button
     And I delete the test announcement via API
 
-  # Test 2: Location-based filtering + Empty state (PENDING)
-  @web @ios @android @pending
+  # Test 2: Location-based filtering (PENDING - @location tag)
+  @ios @android @location @pending
   Scenario: User sees only nearby animals and empty state when no animals in area
-    Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-NearbyPet"
-    When I navigate to the pet list page with location "40.7" "-74.0"
-    Then the page should load successfully
-    And I should NOT see the announcement for "E2E-NearbyPet"
-    And I should see empty state message
-    When I navigate to the pet list page with location "51.1" "17.0"
-    Then the page should load successfully
-    And I should see the announcement for "E2E-NearbyPet"
-    And I should see the "Report a Missing Animal" button
-    And I delete all test announcements via API
+    ...
+
+  # Test 3: Empty state when no animals (PENDING - @location tag)
+  @ios @android @location @pending
+  Scenario: User sees empty state when no animals in current location
+    ...
 ```
 
 ---
@@ -131,17 +128,25 @@ Then I should see empty state message
 
 ---
 
-## Task 5: Android Implementation ⚠️
+## Task 5: Android Implementation ✅
 
 ### 5.1 PetListScreen.java ✅
 - **Status**: ✅ Uses existing screen with dual annotations
+- Added `performSwipeScroll()` for reliable Compose LazyColumn scrolling
 
 ### 5.2 PetListMobileSteps.java ✅
-- **Status**: ✅ Same as iOS - shared implementation
+- **Status**: ✅ Shared implementation with iOS
+- Uses page source for element detection (avoids accidental clicks)
+- `scrollUntilAnnouncementVisible()` with direct swipe gestures
 
-### 5.3 Status: Not Tested Yet ⚠️
-- Android tests have not been executed yet
-- May have similar permission issues as iOS
+### 5.3 AppiumDriverManager.java ✅
+- `restartApp()` - terminateApp + activateApp for fresh data reload
+- Permissions always granted (no location blocking)
+
+### 5.4 Test Results ✅
+- **Test 1 (smoke)**: ✅ PASSED
+- Uses `UiAutomator2` for Android automation
+- Scroll works reliably with direct swipe gestures
 
 ---
 
@@ -229,8 +234,8 @@ mvn test -Dcucumber.filter.tags="@smoke and not @legacy and not @pending"
 - [x] Runners updated to read from new features/ structure
 - [x] Features folder reorganized (legacy/ subfolder)
 - [x] No dependency on seed data
-- [ ] iOS tests pass (blocked by location permissions issue)
-- [ ] Android tests pass (not tested yet)
+- [x] Android tests pass (Test 1 - smoke) ✅
+- [ ] iOS tests pass (not tested yet)
 - [ ] Location filtering + empty state works (blocked by Chrome version - spec 053)
 
 ---
@@ -242,3 +247,12 @@ mvn test -Dcucumber.filter.tags="@smoke and not @legacy and not @pending"
 3. **Reorganized features folder** - unified structure with legacy subfolder
 4. **Updated all Runners** to use new features/ path and exclude @legacy
 5. **Created placeholder files** for pet-details.feature and report-missing.feature
+
+## Summary of Changes (Session 2025-12-05)
+
+1. **Android Test 1 PASSED** - smoke test working end-to-end
+2. **Fixed mobile scrolling** - direct swipe gestures instead of UiScrollable (Compose compatibility)
+3. **Fixed element detection** - page source check avoids accidental clicks on mobile cards
+4. **Added app restart** - terminateApp + activateApp ensures fresh data after API calls
+5. **Fixed breed visibility** - test data uses petName as breed for UI visibility
+6. **Platform detection fix** - runners set PLATFORM property explicitly

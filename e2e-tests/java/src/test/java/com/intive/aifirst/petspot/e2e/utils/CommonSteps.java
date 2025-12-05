@@ -45,8 +45,9 @@ public class CommonSteps {
         Map<String, String> data = new HashMap<>();
         data.put("petName", petName);
         data.put("species", species);
-        // Include petName in description so it's visible in the card
-        data.put("description", petName + " - E2E test announcement for " + petName);
+        // Use petName as breed so it's visible in the card (UI shows "SPECIES • breed")
+        data.put("breed", petName);
+        data.put("description", "E2E test announcement for " + petName);
         data.put("phone", "+48123456789");
         
         lastCreatedAnnouncementId = TestDataApiHelper.createAnnouncement(data);

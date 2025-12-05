@@ -709,5 +709,66 @@ public class PetListWebSteps {
             "Empty state message should be visible when no animals in area");
         System.out.println("Verified: Empty state message is displayed");
     }
+    
+    // ========================================
+    // App Restart Step (Web = page refresh)
+    // ========================================
+    
+    /**
+     * Refreshes the web page to reload data from API.
+     * For web, "restart app" means refreshing the page.
+     * 
+     * <p>Maps to Gherkin: "When I restart the app"
+     */
+    @When("I restart the app")
+    public void iRestartTheApp() {
+        System.out.println("Refreshing page to reload data...");
+        driver.navigate().refresh();
+        
+        // Wait for page to reload
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Re-initialize page object
+        petListPage = new PetListPage(driver);
+        petListPage.waitForPetListVisible(10);
+        
+        System.out.println("Page refreshed successfully");
+    }
+    
+    /**
+     * Scrolls down the list until the specified announcement is visible.
+     * Will scroll up to MAX_SCROLL_ATTEMPTS times before failing.
+     * 
+     * <p>Maps to Gherkin: "When I scroll until I see the announcement for {string}"
+     */
+    @When("I scroll until I see the announcement for {string}")
+    public void iScrollUntilISeeTheAnnouncementFor(String petName) {
+        System.out.println("Scrolling to find announcement: " + petName);
+        
+        int maxAttempts = 10;
+        boolean found = false;
+        
+        for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
+            System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
+            
+            // Check if announcement is visible
+            List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+            for (WebElement item : items) {
+                if (item.getText().contains(petName)) {
+                    found = true;
+                    System.out.println("Found announcement for: " + petName + " after " + (attempt + 1) + " scroll(s)");
+                    break;
+                }
+            }
+            
+            if (!found) {
+                // Scroll down
+                petListPage.scrollToBottom();
+                try { Thread.sleep(500); } catch (InterruptedException e) {}
+            }
+        }
+        
+        assertTrue(found, "Should find announcement for " + petName + " after scrolling (max " + maxAttempts + " attempts)");
+    }
 }
 

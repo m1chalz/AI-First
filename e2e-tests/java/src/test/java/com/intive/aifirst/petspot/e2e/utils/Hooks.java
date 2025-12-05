@@ -62,6 +62,30 @@ public class Hooks {
         
         // Detect platform from Cucumber tags and set as system property
         detectAndSetPlatform(scenario);
+        
+        // Detect @location tag and configure Appium permissions
+        detectLocationTag(scenario);
+    }
+    
+    /**
+     * Detects @location tag and configures Appium to grant/deny location permission.
+     * 
+     * <p>By default, location permission is DENIED so app shows full animal list.
+     * When @location tag is present, permission is GRANTED for location filtering tests.
+     * 
+     * @param scenario Cucumber scenario with tags
+     */
+    private void detectLocationTag(Scenario scenario) {
+        var tags = scenario.getSourceTagNames();
+        boolean hasLocationTag = tags.contains("@location");
+        
+        AppiumDriverManager.setGrantLocationPermission(hasLocationTag);
+        
+        if (hasLocationTag) {
+            System.out.println("@location tag detected - will grant location permission");
+        } else {
+            System.out.println("No @location tag - location permission will be denied (full list)");
+        }
     }
     
     /**
@@ -152,6 +176,9 @@ public class Hooks {
         } finally {
             // Cleanup test data created via API (ensures cleanup even on failure)
             cleanupTestData();
+            
+            // Reset location permission flag for next scenario
+            AppiumDriverManager.resetLocationPermission();
             
             // Always quit drivers to prevent resource leaks
             quitAllDrivers(scenario);

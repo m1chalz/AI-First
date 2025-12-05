@@ -137,12 +137,15 @@ Will be enabled with Docker Selenium Grid (spec 053).
 
 | # | Scenario | Web | iOS | Android | Status |
 |---|----------|-----|-----|---------|--------|
-| 1 | Display list with UI elements (announcements, report button, button visible on scroll) | ✓ | ✓ | ✓ | ✅ Active |
-| 2 | Location filtering + empty state (show nearby, hide far away, empty state when no animals in area) | ✓ | ✓ | ✓ | ⏳ @pending |
+| 1 | Display list with UI elements (announcements, report button, scroll to find, button visible on scroll) | ✅ | ⚠️ | ✅ | Active |
+| 2 | Location filtering (show nearby, hide far away) | - | ⏳ | ⏳ | @pending @location |
+| 3 | Empty state when no animals in area | - | ⏳ | ⏳ | @pending @location |
+
+**Legend**: ✅ Tested & passing, ⚠️ Not tested, ⏳ Pending implementation, - Not applicable
 
 **Note**: Date sorting removed - not a backend requirement (see spec 006, FR-017).
 
-**Total: 2 scenarios × 3 platforms = 6 test executions** (currently 1 active + 1 pending)
+**Total: 3 scenarios** (1 active on all platforms, 2 pending for mobile with @location)
 
 ---
 
