@@ -50,3 +50,7 @@ target/
 .project
 *.iws
 *.ipr
+
+# Mobile app binaries for E2E tests
+e2e-tests/java/apps/*.apk
+e2e-tests/java/apps/*.app/
