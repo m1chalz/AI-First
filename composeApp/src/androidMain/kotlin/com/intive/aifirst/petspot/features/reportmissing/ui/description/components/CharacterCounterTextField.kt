@@ -57,15 +57,17 @@ fun CharacterCounterTextField(
                 )
             },
             shape = RoundedCornerShape(10.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = ReportMissingColors.PrimaryBlue,
-                unfocusedBorderColor = ReportMissingColors.BorderColor,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-            ),
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-            ),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = ReportMissingColors.PrimaryBlue,
+                    unfocusedBorderColor = ReportMissingColors.BorderColor,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
+            keyboardOptions =
+                KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                ),
             minLines = 4,
             maxLines = 6,
             modifier = Modifier.fillMaxWidth(),
@@ -79,11 +81,12 @@ fun CharacterCounterTextField(
             Text(
                 text = "$charCount/$maxChars",
                 style = MaterialTheme.typography.bodySmall,
-                color = if (isAtLimit) {
-                    ReportMissingColors.ErrorTextColor
-                } else {
-                    ReportMissingColors.LabelColor
-                },
+                color =
+                    if (isAtLimit) {
+                        ReportMissingColors.ErrorTextColor
+                    } else {
+                        ReportMissingColors.LabelColor
+                    },
                 modifier = Modifier.padding(end = 4.dp),
             )
         }
@@ -101,22 +104,23 @@ private data class CharacterCounterTextFieldState(
 
 private class CharacterCounterTextFieldProvider :
     PreviewParameterProvider<CharacterCounterTextFieldState> {
-    override val values = sequenceOf(
-        // Empty state
-        CharacterCounterTextFieldState(value = ""),
-        // Partial fill
-        CharacterCounterTextFieldState(
-            value = "My dog Buddy went missing near the park. He's friendly and responds to his name.",
-        ),
-        // Near limit
-        CharacterCounterTextFieldState(
-            value = "A".repeat(480),
-        ),
-        // At limit
-        CharacterCounterTextFieldState(
-            value = "B".repeat(500),
-        ),
-    )
+    override val values =
+        sequenceOf(
+            // Empty state
+            CharacterCounterTextFieldState(value = ""),
+            // Partial fill
+            CharacterCounterTextFieldState(
+                value = "My dog Buddy went missing near the park. He's friendly and responds to his name.",
+            ),
+            // Near limit
+            CharacterCounterTextFieldState(
+                value = "A".repeat(480),
+            ),
+            // At limit
+            CharacterCounterTextFieldState(
+                value = "B".repeat(500),
+            ),
+        )
 }
 
 @Preview(name = "Character Counter TextField", showBackground = true, backgroundColor = 0xFFFFFFFF)
@@ -133,4 +137,3 @@ private fun CharacterCounterTextFieldPreview(
         )
     }
 }
-

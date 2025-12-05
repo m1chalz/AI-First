@@ -29,4 +29,3 @@ data class CreatedAnnouncement(
     val id: String,
     val managementPassword: String,
 )
-

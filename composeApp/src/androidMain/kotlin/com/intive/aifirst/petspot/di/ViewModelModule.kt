@@ -1,5 +1,7 @@
 package com.intive.aifirst.petspot.di
 
+import android.content.ClipboardManager
+import android.content.Context
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
@@ -7,7 +9,9 @@ import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.SummaryViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.FlowStateHolder
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -83,6 +87,15 @@ val viewModelModule =
             OwnerDetailsViewModel(
                 flowState = params.get(),
                 submitAnnouncementUseCase = get(),
+            )
+        }
+
+        // SummaryViewModel: MVI pattern with FlowState + ClipboardManager
+        // Parameters: flowState
+        viewModel { params ->
+            SummaryViewModel(
+                flowState = params.get(),
+                clipboardManager = androidContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager,
             )
         }
     }

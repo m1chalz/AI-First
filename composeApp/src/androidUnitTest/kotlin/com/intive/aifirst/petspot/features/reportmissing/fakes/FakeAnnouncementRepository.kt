@@ -52,4 +52,3 @@ class FakeAnnouncementRepository : AnnouncementRepository {
         lastUploadPhotoUri = null
     }
 }
-

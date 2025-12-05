@@ -11,12 +11,11 @@ import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalLis
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListIntent
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListReducer
 import com.intive.aifirst.petspot.features.animallist.presentation.mvi.AnimalListUiState
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -39,8 +38,10 @@ class AnimalListViewModel(
     val state: StateFlow<AnimalListUiState> = _state.asStateFlow()
 
     // Effects (one-off events)
-    private val _effects = MutableSharedFlow<AnimalListEffect>()
-    val effects: SharedFlow<AnimalListEffect> = _effects.asSharedFlow()
+    // Using Channel instead of SharedFlow ensures effects emitted before collector subscribes
+    // are buffered and delivered exactly once (fixes race condition on app restart)
+    private val _effects = Channel<AnimalListEffect>(capacity = Channel.BUFFERED)
+    val effects = _effects.receiveAsFlow()
 
     init {
         // Permission check is handled by UI (Accompanist) on first composition
@@ -74,14 +75,22 @@ class AnimalListViewModel(
 
     /**
      * Handles Refresh intent: loads animals from repository.
+     * Passes current location (if available) to filter nearby animals.
      */
     private fun handleRefresh() {
         viewModelScope.launch {
             // Set loading state
             _state.value = AnimalListReducer.loading(_state.value)
 
-            // Call use case
-            val result = runCatching { getAnimalsUseCase() }
+            // Call use case with location if available
+            val location = _state.value.location
+            val result =
+                runCatching {
+                    getAnimalsUseCase(
+                        lat = location?.latitude,
+                        lng = location?.longitude,
+                    )
+                }
 
             // Reduce result to new state
             _state.value = AnimalListReducer.reduce(_state.value, result)
@@ -93,7 +102,7 @@ class AnimalListViewModel(
      */
     private fun handleSelectAnimal(animalId: String) {
         viewModelScope.launch {
-            _effects.emit(AnimalListEffect.NavigateToDetails(animalId))
+            _effects.send(AnimalListEffect.NavigateToDetails(animalId))
         }
     }
 
@@ -102,7 +111,7 @@ class AnimalListViewModel(
      */
     private fun handleReportMissing() {
         viewModelScope.launch {
-            _effects.emit(AnimalListEffect.NavigateToReportMissing)
+            _effects.send(AnimalListEffect.NavigateToReportMissing)
         }
     }
 
@@ -111,7 +120,7 @@ class AnimalListViewModel(
      */
     private fun handleReportFound() {
         viewModelScope.launch {
-            _effects.emit(AnimalListEffect.NavigateToReportFound)
+            _effects.send(AnimalListEffect.NavigateToReportFound)
         }
     }
 
@@ -129,7 +138,7 @@ class AnimalListViewModel(
         if (permissionUseCase == null) {
             // No permission checker available, emit effect for UI to check
             viewModelScope.launch {
-                _effects.emit(AnimalListEffect.CheckPermissionStatus)
+                _effects.send(AnimalListEffect.CheckPermissionStatus)
             }
             return
         }
@@ -152,7 +161,7 @@ class AnimalListViewModel(
                 is PermissionStatus.NotRequested -> {
                     // First time - request permission
                     _state.value = AnimalListReducer.requestingPermission(_state.value)
-                    _effects.emit(AnimalListEffect.RequestPermission)
+                    _effects.send(AnimalListEffect.RequestPermission)
                 }
 
                 is PermissionStatus.Denied -> {
@@ -176,6 +185,8 @@ class AnimalListViewModel(
     /**
      * Handles PermissionResult intent: updates permission state and fetches location if granted.
      * When denied, shows appropriate rationale dialog (once per session).
+     * Per spec US2: Skip rationale when result is from system dialog callback (just load animals).
+     * Rationale dialogs (US3/US4) are for subsequent app launches, not immediate dialog responses.
      */
     private fun handlePermissionResult(intent: AnimalListIntent.PermissionResult) {
         viewModelScope.launch {
@@ -198,14 +209,15 @@ class AnimalListViewModel(
                     )
 
                 // Show appropriate rationale dialog (once per session per FR-015)
-                if (!_state.value.rationaleShownThisSession) {
+                // BUT skip if this is from system dialog callback (per US2: just load animals)
+                if (!intent.isFromSystemDialog && !_state.value.rationaleShownThisSession) {
                     val rationaleType =
                         if (intent.shouldShowRationale) {
                             RationaleDialogType.Educational
                         } else {
                             RationaleDialogType.Informational
                         }
-                    _effects.emit(AnimalListEffect.ShowRationaleDialog(rationaleType))
+                    _effects.send(AnimalListEffect.ShowRationaleDialog(rationaleType))
                     _state.value = AnimalListReducer.rationaleShown(_state.value)
                 }
 
@@ -288,7 +300,7 @@ class AnimalListViewModel(
      */
     private fun handleOpenSettingsRequested() {
         viewModelScope.launch {
-            _effects.emit(AnimalListEffect.OpenSettings)
+            _effects.send(AnimalListEffect.OpenSettings)
         }
     }
 
@@ -299,7 +311,7 @@ class AnimalListViewModel(
     private fun handleRationaleContinue() {
         viewModelScope.launch {
             _state.value = AnimalListReducer.requestingPermission(_state.value)
-            _effects.emit(AnimalListEffect.RequestPermission)
+            _effects.send(AnimalListEffect.RequestPermission)
         }
     }
 

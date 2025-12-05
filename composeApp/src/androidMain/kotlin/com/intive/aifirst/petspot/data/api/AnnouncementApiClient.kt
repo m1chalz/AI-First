@@ -30,14 +30,28 @@ class AnnouncementApiClient(
 ) {
     /**
      * Fetches all pet announcements from the API.
+     * Optionally filters by location when lat/lng are provided.
      *
+     * @param lat Optional latitude for location-based filtering
+     * @param lng Optional longitude for location-based filtering
+     * @param range Optional search radius in kilometers (backend defaults to 5km if not provided)
      * @return Response containing list of announcements
      * @throws io.ktor.client.plugins.ClientRequestException on 4xx errors
      * @throws io.ktor.client.plugins.ServerResponseException on 5xx errors
      * @throws java.io.IOException on network failures
      */
-    suspend fun getAnnouncements(): AnnouncementsResponseDto =
-        httpClient.get("$baseUrl/api/v1/announcements").body()
+    suspend fun getAnnouncements(
+        lat: Double? = null,
+        lng: Double? = null,
+        range: Int? = null,
+    ): AnnouncementsResponseDto =
+        httpClient.get("$baseUrl/api/v1/announcements") {
+            url {
+                lat?.let { parameters.append("lat", it.toString()) }
+                lng?.let { parameters.append("lng", it.toString()) }
+                range?.let { parameters.append("range", it.toString()) }
+            }
+        }.body()
 
     /**
      * Fetches a single pet announcement by ID.

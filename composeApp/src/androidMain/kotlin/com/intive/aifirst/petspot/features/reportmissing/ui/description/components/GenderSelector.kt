@@ -122,7 +122,8 @@ private fun GenderOption(
             ) {
                 RadioButton(
                     selected = isSelected,
-                    onClick = null, // Handled by Card's selectable
+                    // Handled by Card's selectable
+                    onClick = null,
                     colors =
                         RadioButtonDefaults.colors(
                             selectedColor = PrimaryBlue,

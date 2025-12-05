@@ -36,4 +36,3 @@ sealed interface OwnerDetailsUserIntent {
      */
     data object RetryClicked : OwnerDetailsUserIntent
 }
-

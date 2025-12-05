@@ -24,7 +24,11 @@ class FakeAnimalRepository(
     var getAnimalByIdCallCount = 0
         private set
 
-    override suspend fun getAnimals(): List<Animal> {
+    override suspend fun getAnimals(
+        lat: Double?,
+        lng: Double?,
+        range: Int?,
+    ): List<Animal> {
         getAnimalsCallCount++
 
         return if (shouldFail) {

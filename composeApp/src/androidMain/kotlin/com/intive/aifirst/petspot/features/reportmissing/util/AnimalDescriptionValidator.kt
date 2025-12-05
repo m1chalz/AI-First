@@ -56,7 +56,7 @@ object AnimalDescriptionValidator {
                     latitudeError == null &&
                     longitudeError == null,
             speciesError = speciesError,
-            raceError = null, // Race is optional
+            raceError = null,
             genderError = genderError,
             ageError = ageError,
             latitudeError = latitudeError,
@@ -89,6 +89,7 @@ object AnimalDescriptionValidator {
             latDouble == null -> "Invalid latitude format"
             latDouble !in MIN_LATITUDE..MAX_LATITUDE ->
                 "Latitude must be between $MIN_LATITUDE and $MAX_LATITUDE"
+
             else -> null
         }
     }
@@ -101,6 +102,7 @@ object AnimalDescriptionValidator {
             lonDouble == null -> "Invalid longitude format"
             lonDouble !in MIN_LONGITUDE..MAX_LONGITUDE ->
                 "Longitude must be between $MIN_LONGITUDE and $MAX_LONGITUDE"
+
             else -> null
         }
     }

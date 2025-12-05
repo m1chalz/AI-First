@@ -239,23 +239,31 @@ class AnimalListViewModelTest {
 
             advanceUntilIdle() // Let init complete
 
-            // First denial - shows rationale
-            viewModel.dispatchIntent(
-                AnimalListIntent.PermissionResult(
-                    granted = false,
-                    fineLocation = false,
-                    coarseLocation = false,
-                    shouldShowRationale = false,
-                ),
-            )
-            advanceUntilIdle()
-
-            // Dismiss rationale
-            viewModel.dispatchIntent(AnimalListIntent.RationaleDismissed)
-            advanceUntilIdle()
-
-            // When - permission denied again in same session
+            // Start collecting effects before dispatching intents (Channel buffers events)
             viewModel.effects.test {
+                // First denial - shows rationale
+                viewModel.dispatchIntent(
+                    AnimalListIntent.PermissionResult(
+                        granted = false,
+                        fineLocation = false,
+                        coarseLocation = false,
+                        shouldShowRationale = false,
+                    ),
+                )
+                advanceUntilIdle()
+
+                // Consume the first rationale effect
+                val firstEffect = awaitItem()
+                assertTrue(
+                    firstEffect is AnimalListEffect.ShowRationaleDialog,
+                    "First denial should emit ShowRationaleDialog",
+                )
+
+                // Dismiss rationale
+                viewModel.dispatchIntent(AnimalListIntent.RationaleDismissed)
+                advanceUntilIdle()
+
+                // When - permission denied again in same session
                 viewModel.dispatchIntent(
                     AnimalListIntent.PermissionResult(
                         granted = false,

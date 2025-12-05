@@ -16,13 +16,19 @@ import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 interface AnimalRepository {
     /**
      * Retrieves all animals from the data source.
-     * Mock implementation returns fixed list of 16 animals.
-     * Real implementation will support pagination and filtering.
+     * Optionally filters by location when lat/lng are provided.
      *
+     * @param lat Optional latitude for location-based filtering
+     * @param lng Optional longitude for location-based filtering
+     * @param range Optional search radius in kilometers (backend defaults to 5km if not provided)
      * @return List of animals
      * @throws Exception if data fetch fails
      */
-    suspend fun getAnimals(): List<Animal>
+    suspend fun getAnimals(
+        lat: Double? = null,
+        lng: Double? = null,
+        range: Int? = null,
+    ): List<Animal>
 
     /**
      * Retrieves a single animal by its unique identifier.

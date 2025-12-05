@@ -727,7 +727,7 @@ class AnimalDescriptionViewModelTest {
                 val effect = awaitItem()
                 assertTrue(effect is AnimalDescriptionUiEffect.ShowSnackbar)
                 assertTrue(
-                    (effect as AnimalDescriptionUiEffect.ShowSnackbar).message.contains("unavailable", ignoreCase = true) ||
+                    effect.message.contains("unavailable", ignoreCase = true) ||
                         effect.message.contains("not available", ignoreCase = true) ||
                         effect.message.contains("could not", ignoreCase = true),
                     "Message should indicate location unavailable",

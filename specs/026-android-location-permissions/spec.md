@@ -161,3 +161,43 @@ Users who change location permissions while the app is open (e.g., returning fro
 - **SC-001**: 100% of users can browse animal listings regardless of location permission status (no blocking UX)
 - **SC-002**: App handles location permission changes without crashes or UI inconsistencies in 100% of test scenarios
 - **SC-003**: App correctly handles all Android permission states including "Only this time" and "Approximate" location options
+
+## Known Issues
+
+### KI-001: Rationale Dialog Not Shown After Decline in System Prompt (Post-Fix Regression)
+
+**Status**: Open  
+**Discovered**: 2025-12-05  
+**Severity**: Low  
+**Affected Requirement**: FR-015
+
+**Description**:  
+After fixing the original bug where the rationale dialog wasn't shown after app restart, a new edge case was introduced:
+
+**Steps to Reproduce**:
+1. Launch app (fresh install or no location permission granted)
+2. Rationale dialog ("Location access needed") appears
+3. Tap "Continue" button in the rationale dialog
+4. System permission prompt appears
+5. Tap "Decline" (deny permission) in the system prompt
+6. Kill the app (Force Stop or swipe from recents)
+7. Relaunch the app
+
+**Expected Behavior**:  
+Per FR-015, the rationale dialog should appear again on new app session since:
+- Permission was denied
+- `shouldShowRationale = true` (can still ask again)
+- New session = `rationaleShownThisSession` should be `false`
+
+**Actual Behavior**:  
+The rationale dialog does NOT appear. App loads animal list directly without showing the rationale.
+
+**Workaround**:  
+None. User must go to Settings manually to grant location permission.
+
+**Impact**:  
+Low - Other location permission scenarios work correctly. This only affects the specific flow where user:
+1. Sees rationale → clicks Continue → declines system prompt → kills app → relaunches
+
+**Root Cause (Suspected)**:  
+Timing issue between Accompanist's `shouldShowRationale` state and the effect collector, or state not properly reset on new session after this specific flow.

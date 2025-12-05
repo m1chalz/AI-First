@@ -46,16 +46,18 @@ fun ContinueButton(
     Button(
         onClick = onClick,
         enabled = enabled && !isLoading,
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .padding(16.dp)
-            .then(if (testTag != null) Modifier.testTag(testTag) else Modifier),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(16.dp)
+                .then(if (testTag != null) Modifier.testTag(testTag) else Modifier),
         shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = ReportMissingColors.PrimaryBlue,
-            disabledContainerColor = ReportMissingColors.PrimaryBlue.copy(alpha = 0.5f),
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = ReportMissingColors.PrimaryBlue,
+                disabledContainerColor = ReportMissingColors.PrimaryBlue.copy(alpha = 0.5f),
+            ),
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -85,12 +87,13 @@ private data class ContinueButtonState(
 )
 
 private class ContinueButtonStateProvider : PreviewParameterProvider<ContinueButtonState> {
-    override val values = sequenceOf(
-        ContinueButtonState(text = "Continue"),
-        ContinueButtonState(text = "Submit"),
-        ContinueButtonState(text = "Continue", enabled = false),
-        ContinueButtonState(text = "Continue", isLoading = true),
-    )
+    override val values =
+        sequenceOf(
+            ContinueButtonState(text = "Continue"),
+            ContinueButtonState(text = "Submit"),
+            ContinueButtonState(text = "Continue", enabled = false),
+            ContinueButtonState(text = "Continue", isLoading = true),
+        )
 }
 
 @Preview(name = "Continue Button", showBackground = true, backgroundColor = 0xFFFFFFFF)
