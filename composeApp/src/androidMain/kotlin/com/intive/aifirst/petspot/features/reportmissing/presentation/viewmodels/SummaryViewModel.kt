@@ -2,7 +2,6 @@ package com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodel
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.SummaryUiEffect
@@ -84,4 +83,3 @@ class SummaryViewModel(
         const val CLIPBOARD_LABEL = "Management Code"
     }
 }
-

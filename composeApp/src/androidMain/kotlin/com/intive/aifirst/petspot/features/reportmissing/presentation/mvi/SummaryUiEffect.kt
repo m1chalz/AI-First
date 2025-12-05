@@ -10,4 +10,3 @@ sealed interface SummaryUiEffect {
      */
     data object DismissFlow : SummaryUiEffect
 }
-

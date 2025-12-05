@@ -28,4 +28,3 @@ sealed interface OwnerDetailsUiEffect {
         val action: OwnerDetailsUserIntent? = null,
     ) : OwnerDetailsUiEffect
 }
-

@@ -8,9 +8,8 @@ import androidx.navigation.compose.navigation
 import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.SummaryViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen

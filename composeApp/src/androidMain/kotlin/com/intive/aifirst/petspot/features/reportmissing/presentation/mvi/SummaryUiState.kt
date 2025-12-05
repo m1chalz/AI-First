@@ -11,4 +11,3 @@ data class SummaryUiState(
         val Initial = SummaryUiState()
     }
 }
-

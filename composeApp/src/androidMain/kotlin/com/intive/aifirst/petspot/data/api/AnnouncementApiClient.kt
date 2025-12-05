@@ -36,8 +36,7 @@ class AnnouncementApiClient(
      * @throws io.ktor.client.plugins.ServerResponseException on 5xx errors
      * @throws java.io.IOException on network failures
      */
-    suspend fun getAnnouncements(): AnnouncementsResponseDto =
-        httpClient.get("$baseUrl/api/v1/announcements").body()
+    suspend fun getAnnouncements(): AnnouncementsResponseDto = httpClient.get("$baseUrl/api/v1/announcements").body()
 
     /**
      * Fetches a single pet announcement by ID.

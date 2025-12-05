@@ -106,32 +106,36 @@ fun SummaryContent(
     onCloseClick: () -> Unit = {},
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .testTag("summary.content"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .testTag("summary.content"),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding(),
         ) {
             // Scrollable content area
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = SummaryDesign.HorizontalPadding),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = SummaryDesign.HorizontalPadding),
             ) {
                 Spacer(modifier = Modifier.height(SummaryDesign.TitleTopPadding))
 
                 // Title: "Report created"
                 Text(
                     text = SummaryCopy.TITLE,
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Normal,
-                    ),
+                    style =
+                        MaterialTheme.typography.headlineLarge.copy(
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Normal,
+                        ),
                     color = SummaryDesign.TitleColor,
                     modifier = Modifier.testTag("summary.title"),
                 )
@@ -144,17 +148,19 @@ fun SummaryContent(
                 ) {
                     Text(
                         text = SummaryCopy.BODY_PARAGRAPH_1,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 22.sp,
-                        ),
+                        style =
+                            MaterialTheme.typography.bodyMedium.copy(
+                                lineHeight = 22.sp,
+                            ),
                         color = SummaryDesign.BodyColor,
                         modifier = Modifier.testTag("summary.bodyParagraph1"),
                     )
                     Text(
                         text = SummaryCopy.BODY_PARAGRAPH_2,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 22.sp,
-                        ),
+                        style =
+                            MaterialTheme.typography.bodyMedium.copy(
+                                lineHeight = 22.sp,
+                            ),
                         color = SummaryDesign.BodyColor,
                         modifier = Modifier.testTag("summary.bodyParagraph2"),
                     )
@@ -174,17 +180,19 @@ fun SummaryContent(
             // Close button at bottom (outside scrolling area)
             Button(
                 onClick = onCloseClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp)
-                    .height(SummaryDesign.CloseButtonHeight)
-                    .testTag("summary.closeButton"),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
+                        .height(SummaryDesign.CloseButtonHeight)
+                        .testTag("summary.closeButton"),
                 shape = RoundedCornerShape(SummaryDesign.CloseButtonRadius),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = SummaryDesign.CloseButtonColor,
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = SummaryDesign.CloseButtonColor,
+                    ),
             ) {
                 Text(
                     text = SummaryCopy.CLOSE_BUTTON,
@@ -207,48 +215,53 @@ private fun PasswordContainer(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(SummaryDesign.PasswordContainerHeight)
-            .clip(RoundedCornerShape(SummaryDesign.PasswordContainerRadius))
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        SummaryDesign.GradientStart,
-                        SummaryDesign.GradientEnd,
-                    ),
-                    start = Offset(0.0f, Float.POSITIVE_INFINITY),
-                    end = Offset(Float.POSITIVE_INFINITY, 0.0f),
-                ),
-            )
-            .clickable(onClick = onClick)
-            .testTag("summary.passwordContainer"),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(SummaryDesign.PasswordContainerHeight)
+                .clip(RoundedCornerShape(SummaryDesign.PasswordContainerRadius))
+                .background(
+                    brush =
+                        Brush.linearGradient(
+                            colors =
+                                listOf(
+                                    SummaryDesign.GradientStart,
+                                    SummaryDesign.GradientEnd,
+                                ),
+                            start = Offset(0.0f, Float.POSITIVE_INFINITY),
+                            end = Offset(Float.POSITIVE_INFINITY, 0.0f),
+                        ),
+                )
+                .clickable(onClick = onClick)
+                .testTag("summary.passwordContainer"),
         contentAlignment = Alignment.Center,
     ) {
         // Glow effect overlay (positioned at left side as in Figma)
         Box(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .graphicsLayer {
-                    alpha = 0.2f
-                }
-                .blur(24.dp)
-                .background(
-                    color = Color(0xFFFB64B6),
-                    shape = RoundedCornerShape(percent = 50),
-                ),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterStart)
+                    .graphicsLayer {
+                        alpha = 0.2f
+                    }
+                    .blur(24.dp)
+                    .background(
+                        color = Color(0xFFFB64B6),
+                        shape = RoundedCornerShape(percent = 50),
+                    ),
         )
 
         // Password text
         Text(
             text = password,
-            style = TextStyle(
-                fontSize = SummaryDesign.PasswordFontSize,
-                letterSpacing = SummaryDesign.PasswordLetterSpacing,
-                fontFamily = FontFamily.SansSerif, // Arial equivalent
-                fontWeight = FontWeight.Normal,
-                lineHeight = 60.sp,
-            ),
+            style =
+                TextStyle(
+                    fontSize = SummaryDesign.PasswordFontSize,
+                    letterSpacing = SummaryDesign.PasswordLetterSpacing,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 60.sp,
+                ),
             color = Color.White,
             textAlign = TextAlign.Center,
             modifier = Modifier.testTag("summary.passwordText"),
@@ -260,12 +273,13 @@ private fun PasswordContainer(
  * Preview parameter provider for SummaryUiState.
  */
 class SummaryUiStateProvider : PreviewParameterProvider<SummaryUiState> {
-    override val values: Sequence<SummaryUiState> = sequenceOf(
-        // With password (typical case)
-        SummaryUiState(managementPassword = "5216577"),
-        // Empty password (null from flowState mapped to empty string)
-        SummaryUiState.Initial,
-    )
+    override val values: Sequence<SummaryUiState> =
+        sequenceOf(
+            // With password (typical case)
+            SummaryUiState(managementPassword = "5216577"),
+            // Empty password (null from flowState mapped to empty string)
+            SummaryUiState.Initial,
+        )
 }
 
 @Preview(name = "Summary Content", showBackground = true)

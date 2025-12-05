@@ -53,11 +53,12 @@ fun ContactDetailsScreen(
                     navController.popBackStack()
                 }
                 is OwnerDetailsUiEffect.ShowSnackbar -> {
-                    val result = snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = effect.actionLabel,
-                        duration = SnackbarDuration.Long,
-                    )
+                    val result =
+                        snackbarHostState.showSnackbar(
+                            message = effect.message,
+                            actionLabel = effect.actionLabel,
+                            duration = SnackbarDuration.Long,
+                        )
                     if (result == SnackbarResult.ActionPerformed && effect.actionLabel != null) {
                         viewModel.dispatchIntent(OwnerDetailsUserIntent.RetryClicked)
                     }

@@ -28,4 +28,3 @@ interface AnnouncementRepository {
         photoUri: String,
     ): Result<Unit>
 }
-

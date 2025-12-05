@@ -14,4 +14,3 @@ sealed interface SummaryUserIntent {
      */
     data object CloseClicked : SummaryUserIntent
 }
-

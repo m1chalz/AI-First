@@ -24,4 +24,3 @@ data class CreateAnnouncementRequestDto(
     @SerialName("description") val description: String? = null,
     @SerialName("reward") val reward: String? = null,
 )
-
