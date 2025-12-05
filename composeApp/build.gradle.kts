@@ -99,7 +99,12 @@ android {
             // Android emulator localhost alias
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000\"")
         }
-        getByName("release") {
+        create("liveTest") {
+            // Live test environment at petspot.zawali.ch
+            initWith(getByName("debug"))
+            buildConfigField("String", "API_BASE_URL", "\"https://petspot.zawali.ch\"")
+        }
+        release {
             isMinifyEnabled = false
             // Production URL (placeholder - update when deployed)
             buildConfigField("String", "API_BASE_URL", "\"https://api.petspot.com\"")
