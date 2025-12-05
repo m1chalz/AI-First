@@ -93,3 +93,6 @@ Feature: Pet Details Screen (iOS) - LEGACY
   # Remaining scenarios (error handling variations, edge cases, full field validation)
   # can be added in future iterations to reach 100% coverage
 
+
+
+

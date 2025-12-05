@@ -293,6 +293,84 @@ public class PetListMobileSteps {
         boolean loaded = petListScreen.waitForPetListVisible(10);
         assertTrue(loaded, "Pet list should be visible");
         System.out.println("Navigated to pet list page");
+        
+        // Log visible announcements for debugging
+        logVisibleAnnouncements();
+    }
+    
+    /**
+     * Logs all visible announcements on the current screen for debugging.
+     */
+    private void logVisibleAnnouncements() {
+        System.out.println("\n========== VISIBLE ANNOUNCEMENTS ==========");
+        try {
+            String pageSource = driver.getPageSource();
+            String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+            
+            // Extract announcement info from page source
+            java.util.List<String> announcements = new java.util.ArrayList<>();
+            
+            if (platformName.contains("android")) {
+                // Look for text elements that might be pet names/breeds
+                // Android Compose uses content-description for accessibility
+                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+                    "text=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"", 
+                    java.util.regex.Pattern.CASE_INSENSITIVE
+                );
+                java.util.regex.Matcher matcher = pattern.matcher(pageSource);
+                while (matcher.find()) {
+                    String text = matcher.group(1).trim();
+                    if (!text.isEmpty() && !announcements.contains(text)) {
+                        announcements.add(text);
+                    }
+                }
+                
+                // Also look for content-desc
+                pattern = java.util.regex.Pattern.compile(
+                    "content-desc=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"",
+                    java.util.regex.Pattern.CASE_INSENSITIVE
+                );
+                matcher = pattern.matcher(pageSource);
+                while (matcher.find()) {
+                    String text = matcher.group(1).trim();
+                    if (!text.isEmpty() && !announcements.contains(text)) {
+                        announcements.add(text);
+                    }
+                }
+            } else { // iOS
+                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+                    "(?:label|value|name)=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"",
+                    java.util.regex.Pattern.CASE_INSENSITIVE
+                );
+                java.util.regex.Matcher matcher = pattern.matcher(pageSource);
+                while (matcher.find()) {
+                    String text = matcher.group(1).trim();
+                    if (!text.isEmpty() && !announcements.contains(text)) {
+                        announcements.add(text);
+                    }
+                }
+            }
+            
+            if (announcements.isEmpty()) {
+                System.out.println("  (no announcements detected or page still loading)");
+            } else {
+                System.out.println("  Found " + announcements.size() + " announcement(s):");
+                for (int i = 0; i < announcements.size(); i++) {
+                    System.out.println("    " + (i + 1) + ". " + announcements.get(i));
+                }
+            }
+            
+            // Check for specific test data
+            boolean hasTestDog = pageSource.contains("E2E-TestDog");
+            boolean hasFarAwayPet = pageSource.contains("E2E-FarAwayPet");
+            System.out.println("\n  Test data check:");
+            System.out.println("    - E2E-TestDog: " + (hasTestDog ? "✅ VISIBLE" : "❌ NOT VISIBLE"));
+            System.out.println("    - E2E-FarAwayPet: " + (hasFarAwayPet ? "⚠️ VISIBLE (should NOT be!)" : "✅ NOT VISIBLE (correct)"));
+            
+        } catch (Exception e) {
+            System.out.println("  (failed to extract announcements: " + e.getMessage() + ")");
+        }
+        System.out.println("============================================\n");
     }
     
     @When("I navigate to the pet list page with location {string} {string}")
@@ -339,6 +417,57 @@ public class PetListMobileSteps {
         
         assertFalse(found, "Should NOT find announcement for " + petName + " in page source");
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
+    }
+    
+    /**
+     * Soft assertion - records failure but doesn't stop the test.
+     * Scrolls through the ENTIRE list to verify element is truly not visible.
+     * Failures are reported at the end of the scenario.
+     * 
+     * <p>Maps to Gherkin: "And I should NOT see the announcement for {string} (soft assert)"
+     */
+    @Then("I should NOT see the announcement for {string} \\(soft assert\\)")
+    public void iShouldNotSeeTheAnnouncementForSoftAssert(String petName) {
+        System.out.println("SOFT ASSERT: Scrolling through entire list to check if '" + petName + "' is NOT visible");
+        
+        // Scroll through entire list to make sure we've checked everything
+        int maxScrolls = 20;
+        boolean found = false;
+        String lastPageSource = "";
+        
+        for (int i = 0; i < maxScrolls && !found; i++) {
+            String pageSource = driver.getPageSource();
+            
+            // Check if element is visible
+            if (pageSource.contains(petName)) {
+                found = true;
+                System.out.println("  Scroll " + (i + 1) + ": Found '" + petName + "' in page source!");
+                break;
+            }
+            
+            // Check if we've reached the end (page source unchanged)
+            if (pageSource.equals(lastPageSource)) {
+                System.out.println("  Scroll " + (i + 1) + ": Reached end of list (no more content)");
+                break;
+            }
+            lastPageSource = pageSource;
+            
+            System.out.println("  Scroll " + (i + 1) + ": '" + petName + "' not found, scrolling down...");
+            petListScreen.scrollDown();
+            try { Thread.sleep(500); } catch (InterruptedException e) {}
+        }
+        
+        if (found) {
+            // Record failure but don't throw - test continues
+            com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addFailure(
+                "I should NOT see the announcement for \"" + petName + "\" (soft assert)",
+                "Found '" + petName + "' in list but expected NOT to see it (location filtering NOT working)"
+            );
+        } else {
+            com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addSuccess(
+                "'" + petName + "' NOT found after scrolling entire list (location filtering works!)"
+            );
+        }
     }
     
     @When("I tap on the announcement for {string}")
@@ -596,6 +725,168 @@ public class PetListMobileSteps {
         
         System.out.println("Device location set successfully");
     }
+    
+    // ========================================
+    // Location Rationale Dialog Steps
+    // ========================================
+    
+    /**
+     * Dismisses the location rationale dialog if it's currently displayed.
+     * This handles both Educational and Informational dialogs.
+     * 
+     * <p>Maps to Gherkin: "When I dismiss location rationale dialog if present"
+     */
+    @When("I dismiss location rationale dialog if present")
+    public void iDismissLocationRationaleDialogIfPresent() {
+        System.out.println("Checking for location rationale dialog...");
+        
+        try {
+            Thread.sleep(2000); // Wait for dialog to appear
+        } catch (InterruptedException e) {}
+        
+        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        
+        try {
+            if (platformName.contains("android")) {
+                // Look for "Not Now" or "Cancel" button
+                try {
+                    driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
+                        "new UiSelector().textContains(\"Not Now\")"
+                    )).click();
+                    System.out.println("Dismissed rationale dialog (Not Now)");
+                    return;
+                } catch (Exception e1) {
+                    try {
+                        driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
+                            "new UiSelector().textContains(\"Cancel\")"
+                        )).click();
+                        System.out.println("Dismissed rationale dialog (Cancel)");
+                        return;
+                    } catch (Exception e2) {
+                        // No dialog present
+                    }
+                }
+            } else { // iOS
+                try {
+                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
+                    System.out.println("Dismissed rationale dialog (Not Now)");
+                    return;
+                } catch (Exception e1) {
+                    try {
+                        driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
+                        System.out.println("Dismissed rationale dialog (Cancel)");
+                        return;
+                    } catch (Exception e2) {
+                        // No dialog present
+                    }
+                }
+            }
+            System.out.println("No rationale dialog present");
+        } catch (Exception e) {
+            System.out.println("No rationale dialog found: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Verifies that the location rationale dialog is displayed.
+     * 
+     * <p>Maps to Gherkin: "Then I should see location rationale dialog"
+     */
+    @Then("I should see location rationale dialog")
+    public void iShouldSeeLocationRationaleDialog() {
+        System.out.println("Verifying location rationale dialog is visible...");
+        
+        try {
+            Thread.sleep(2000); // Wait for dialog to appear
+        } catch (InterruptedException e) {}
+        
+        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        boolean found = false;
+        
+        if (platformName.contains("android")) {
+            String pageSource = driver.getPageSource();
+            found = pageSource.contains("Location") || pageSource.contains("location");
+        } else { // iOS
+            String pageSource = driver.getPageSource();
+            found = pageSource.contains("Location") || pageSource.contains("location");
+        }
+        
+        assertTrue(found, "Location rationale dialog should be visible");
+        System.out.println("Verified: Location rationale dialog is displayed");
+    }
+    
+    /**
+     * Verifies that the rationale dialog has a Settings button.
+     * 
+     * <p>Maps to Gherkin: "And the rationale dialog should have Settings button"
+     */
+    @Then("the rationale dialog should have Settings button")
+    public void theRationaleDialogShouldHaveSettingsButton() {
+        System.out.println("Verifying Settings button in rationale dialog...");
+        
+        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        boolean found = false;
+        
+        if (platformName.contains("android")) {
+            String pageSource = driver.getPageSource();
+            found = pageSource.contains("Settings") || pageSource.contains("settings") ||
+                    pageSource.contains("Go to Settings");
+        } else { // iOS
+            String pageSource = driver.getPageSource();
+            found = pageSource.contains("Settings") || pageSource.contains("settings") ||
+                    pageSource.contains("Go to Settings");
+        }
+        
+        assertTrue(found, "Rationale dialog should have Settings button");
+        System.out.println("Verified: Settings button is present in rationale dialog");
+    }
+    
+    /**
+     * Dismisses the location rationale dialog (expects it to be present).
+     * 
+     * <p>Maps to Gherkin: "When I dismiss location rationale dialog"
+     */
+    @When("I dismiss location rationale dialog")
+    public void iDismissLocationRationaleDialog() {
+        System.out.println("Dismissing location rationale dialog...");
+        
+        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
+        
+        if (platformName.contains("android")) {
+            try {
+                driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
+                    "new UiSelector().textContains(\"Not Now\")"
+                )).click();
+            } catch (Exception e1) {
+                try {
+                    driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
+                        "new UiSelector().textContains(\"Cancel\")"
+                    )).click();
+                } catch (Exception e2) {
+                    fail("Could not find dismiss button in rationale dialog");
+                }
+            }
+        } else { // iOS
+            try {
+                driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
+            } catch (Exception e1) {
+                try {
+                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
+                } catch (Exception e2) {
+                    fail("Could not find dismiss button in rationale dialog");
+                }
+            }
+        }
+        
+        System.out.println("Dismissed location rationale dialog");
+        
+        // Wait for dialog to close
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+    }
+    
+    // ========================================
+    // Scroll Steps
+    // ========================================
     
     /**
      * Scrolls down the list until the specified announcement is visible.

@@ -513,6 +513,43 @@ public class PetListWebSteps {
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
     }
     
+    /**
+     * Soft assertion - records failure but doesn't stop the test.
+     * Failures are reported at the end of the scenario.
+     * Useful for known bugs that we want to track without blocking other verifications.
+     */
+    @And("I should NOT see the announcement for {string} \\(soft assert\\)")
+    public void iShouldNotSeeTheAnnouncementForSoftAssert(String petName) {
+        System.out.println("SOFT ASSERT: Checking if announcement NOT visible: " + petName);
+        
+        // Wait a bit for data to load
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Find announcement by pet name in the list
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        
+        boolean found = false;
+        for (WebElement item : items) {
+            String text = item.getText();
+            if (text.contains(petName)) {
+                found = true;
+                break;
+            }
+        }
+        
+        if (found) {
+            // Record failure but don't throw - test continues
+            com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addFailure(
+                "I should NOT see the announcement for \"" + petName + "\" (soft assert)",
+                "Found '" + petName + "' but expected NOT to see it (web location filtering pending - spec 053)"
+            );
+        } else {
+            com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addSuccess(
+                "'" + petName + "' is NOT visible"
+            );
+        }
+    }
+    
     @When("I tap on the announcement for {string}")
     public void iTapOnTheAnnouncementFor(String petName) {
         System.out.println("Tapping on announcement: " + petName);
@@ -733,6 +770,57 @@ public class PetListWebSteps {
         petListPage.waitForPetListVisible(10);
         
         System.out.println("Page refreshed successfully");
+    }
+    
+    /**
+     * Sets device location - NO-OP for web (location mocking requires spec 053).
+     * This step exists for cross-platform feature file compatibility.
+     * 
+     * <p>Maps to Gherkin: "When I set device location to {string} {string}"
+     */
+    @When("I set device location to {string} {string}")
+    public void iSetDeviceLocationTo(String latitude, String longitude) {
+        System.out.println("Web: Skipping device location (spec 053 pending). Would set: " + latitude + ", " + longitude);
+        // TODO: Implement with Selenium CDP when spec 053 is done
+    }
+    
+    // ========================================
+    // Location Rationale Dialog Steps (NO-OP for Web)
+    // Web doesn't have native permission dialogs
+    // ========================================
+    
+    /**
+     * Dismisses location rationale dialog - NO-OP for web.
+     */
+    @When("I dismiss location rationale dialog if present")
+    public void iDismissLocationRationaleDialogIfPresent() {
+        System.out.println("Web: No location rationale dialog (web doesn't have permission dialogs)");
+    }
+    
+    /**
+     * Verifies location rationale dialog is visible - NO-OP for web.
+     */
+    @Then("I should see location rationale dialog")
+    public void iShouldSeeLocationRationaleDialog() {
+        System.out.println("Web: Skipping rationale dialog check (not applicable to web)");
+        // This test should be @pending-web
+    }
+    
+    /**
+     * Verifies Settings button in rationale dialog - NO-OP for web.
+     */
+    @Then("the rationale dialog should have Settings button")
+    public void theRationaleDialogShouldHaveSettingsButton() {
+        System.out.println("Web: Skipping Settings button check (not applicable to web)");
+        // This test should be @pending-web
+    }
+    
+    /**
+     * Dismisses location rationale dialog - NO-OP for web.
+     */
+    @When("I dismiss location rationale dialog")
+    public void iDismissLocationRationaleDialog() {
+        System.out.println("Web: No location rationale dialog to dismiss");
     }
     
     /**

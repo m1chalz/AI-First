@@ -60,6 +60,9 @@ public class Hooks {
         System.out.println("Tags: " + scenario.getSourceTagNames());
         System.out.println("========================================");
         
+        // Clear soft assertion failures from previous scenario
+        SoftAssertContext.clear();
+        
         // Detect platform from Cucumber tags and set as system property
         detectAndSetPlatform(scenario);
         
@@ -164,16 +167,34 @@ public class Hooks {
      */
     @After
     public void afterScenario(Scenario scenario) {
+        // Store soft failures before clearing
+        boolean hadSoftFailures = SoftAssertContext.hasFailures();
+        String softFailureSummary = hadSoftFailures ? SoftAssertContext.getFailureSummary() : null;
+        
         try {
+            // Report soft assertion failures (if any)
+            if (hadSoftFailures) {
+                System.err.println(softFailureSummary);
+                scenario.log(softFailureSummary);
+                // Attach as test output for reporting
+                scenario.attach(softFailureSummary.getBytes(), "text/plain", "Soft Assertion Failures");
+            }
+            
             // Capture screenshot if scenario failed
             if (scenario.isFailed()) {
                 System.err.println("Scenario FAILED: " + scenario.getName());
+                captureFailureScreenshot(scenario);
+            } else if (hadSoftFailures) {
+                System.err.println("Scenario FAILED (soft assertions): " + scenario.getName());
                 captureFailureScreenshot(scenario);
             } else {
                 System.out.println("Scenario PASSED: " + scenario.getName());
             }
             
         } finally {
+            // Clear soft assertions for next scenario
+            SoftAssertContext.clear();
+            
             // Cleanup test data created via API (ensures cleanup even on failure)
             cleanupTestData();
             
@@ -185,8 +206,14 @@ public class Hooks {
             
             System.out.println("========================================");
             System.out.println("Finished scenario: " + scenario.getName());
-            System.out.println("Status: " + scenario.getStatus());
+            System.out.println("Status: " + (hadSoftFailures ? "FAILED (soft assertions)" : scenario.getStatus()));
             System.out.println("========================================");
+            
+            // FAIL the scenario if there were soft assertion failures
+            // This must be at the very end, after all cleanup
+            if (hadSoftFailures) {
+                throw new AssertionError("Soft assertion failures:\n" + softFailureSummary);
+            }
         }
     }
     

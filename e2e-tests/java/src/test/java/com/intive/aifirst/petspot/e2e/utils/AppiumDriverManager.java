@@ -73,7 +73,7 @@ public class AppiumDriverManager {
     private static final String ANDROID_APP_PACKAGE = "com.intive.aifirst.petspot";
     
     /** iOS app bundle ID */
-    private static final String IOS_BUNDLE_ID = "com.intive.aifirst.petspot";
+    private static final String IOS_BUNDLE_ID = "com.intive.aifirst.petspot.PetSpot";
     
     /**
      * Gets the AppiumDriver instance for the current thread.
@@ -214,12 +214,48 @@ public class AppiumDriverManager {
         );
         options.setApp(appPath);
         
+        // Don't reset app - preserve permissions granted via simctl
+        options.setNoReset(true);
+        
         // Always accept alerts - app needs permissions to run
-        // Location filtering is controlled by GPS mocking, not by denying permissions
         options.setAutoAcceptAlerts(true);
-        System.out.println("iOS: Auto-accepting alerts (permissions granted)");
+        
+        // Disable waiting for app quiescence (fixes animation timeout issues)
+        options.setCapability("appium:waitForQuiescence", false);
+        
+        // Set location permission directly via capability (yes/no/unset)
+        options.setCapability("appium:permissions", 
+            "{\"" + IOS_BUNDLE_ID + "\": {\"location\": \"yes\"}}");
+        
+        System.out.println("iOS: Configured with noReset=true and location permission");
+        
+        // Also grant via simctl as backup (in case capability doesn't work)
+        grantIOSLocationPermission();
         
         return new IOSDriver(serverUrl, options);
+    }
+    
+    /**
+     * Grants location permission to PetSpot app on iOS simulator via simctl.
+     * This is a backup method in case the capability approach doesn't work.
+     */
+    private static void grantIOSLocationPermission() {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                "xcrun", "simctl", "privacy", "booted", "grant", "location", IOS_BUNDLE_ID
+            );
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            
+            if (exitCode == 0) {
+                System.out.println("iOS: Granted location permission via simctl");
+            } else {
+                System.out.println("iOS: simctl grant failed (exit code: " + exitCode + ")");
+            }
+        } catch (Exception e) {
+            System.out.println("iOS: simctl not available: " + e.getMessage());
+        }
     }
     
     /**
