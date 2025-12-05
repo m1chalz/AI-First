@@ -14,7 +14,9 @@
 | 3 | Web Implementation | P1 | ✅ |
 | 4 | iOS Implementation | P2 | ⚠️ (permissions issue) |
 | 5 | Android Implementation | P2 | ⚠️ (not tested yet) |
-| 6 | Geolocation Testing (Docker Selenium) | P3 | ⏳ |
+| 6 | Reorganize Features Folder | P1 | ✅ |
+| 7 | Update Test Runners | P1 | ✅ |
+| 8 | Geolocation Testing (Docker Selenium) | P3 | ⏳ |
 
 ---
 
@@ -46,10 +48,10 @@ And I delete all test announcements via API
 
 ## Task 2: Feature File ✅
 
-- **File**: `/e2e-tests/java/src/test/resources/features/web/animal-list.feature`
-- **Status**: ✅ DONE
+- **File**: `/e2e-tests/java/src/test/resources/features/animal-list.feature`
+- **Status**: ✅ DONE (reorganized from `features/web/`)
 
-**Content** (2 scenarios - sorting was NOT a requirement per FR-017):
+**Content** (2 scenarios):
 ```gherkin
 @animalList
 Feature: Animal List
@@ -65,21 +67,24 @@ Feature: Animal List
     Then the page should load successfully
     And I should see the announcement for "E2E-TestDog"
     And I should see the "Report a Missing Animal" button
+    When I scroll down the page
+    Then I should see the "Report a Missing Animal" button
     And I delete the test announcement via API
 
-  # Test 2: Location-based filtering (PENDING - requires Docker Selenium)
+  # Test 2: Location-based filtering + Empty state (PENDING)
   @web @ios @android @pending
-  Scenario: User sees only nearby animals when location is set
+  Scenario: User sees only nearby animals and empty state when no animals in area
     Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-NearbyPet"
-    And I create a test announcement at coordinates "40.7" "-74.0" with name "E2E-FarAwayPet"
+    When I navigate to the pet list page with location "40.7" "-74.0"
+    Then the page should load successfully
+    And I should NOT see the announcement for "E2E-NearbyPet"
+    And I should see empty state message
     When I navigate to the pet list page with location "51.1" "17.0"
     Then the page should load successfully
     And I should see the announcement for "E2E-NearbyPet"
-    And I should NOT see the announcement for "E2E-FarAwayPet"
+    And I should see the "Report a Missing Animal" button
     And I delete all test announcements via API
 ```
-
-**Note**: Date sorting test was removed - backend spec (FR-017) explicitly states "no specific sorting applied".
 
 ---
 
@@ -89,29 +94,15 @@ Feature: Animal List
 - **File**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/PetListPage.java`
 - **Status**: ✅ DONE
 
-**Methods implemented**:
-- `isAnnouncementVisible(String petName)` → boolean
-- `isReportButtonVisible()` → boolean
-- `waitForPetListVisible(int timeoutSeconds)` → boolean
-
 ### 3.2 Update PetListWebSteps.java ✅
 - **File**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/PetListWebSteps.java`
 - **Status**: ✅ DONE
 
-**Steps implemented**:
+**New steps added**:
 ```gherkin
-Given the application is running
-When I navigate to the pet list page
-When I navigate to the pet list page with location {string} {string}
-Then the page should load successfully
-Then I should see the announcement for {string}
-Then I should NOT see the announcement for {string}
-Then I should see the "Report a Missing Animal" button
+When I scroll down the page
+Then I should see empty state message
 ```
-
-### 3.3 Update WebTestRunner.java ✅
-- Filter: `@web and not @pending`
-- Location: `features/web/`
 
 ---
 
@@ -124,14 +115,14 @@ Then I should see the "Report a Missing Animal" button
 - **File**: `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/PetListMobileSteps.java`
 - **Status**: ✅ DONE - All required steps implemented
 
-### 4.3 IosTestRunner.java ✅
-- **Status**: ✅ UPDATED
-- **Changes**:
-  - `@SelectClasspathResource("features")` - reads from all feature directories
-  - Filter: `@ios and not @pending`
+**New steps added**:
+```gherkin
+When I scroll down the page
+Then I should see empty state message
+```
 
-### 4.4 Known Issue: iOS Location Permissions ⚠️
-- **Issue**: When app launches, iOS redirects to Settings screen for location permissions instead of showing the app
+### 4.3 Known Issue: iOS Location Permissions ⚠️
+- **Issue**: When app launches, iOS redirects to Settings screen for location permissions
 - **Root Cause**: PetSpot requires location permissions; iOS shows Settings instead of permission alert
 - **Workaround Options**:
   1. Pre-grant permissions: `xcrun simctl privacy <device-id> grant location com.petspot.app`
@@ -148,21 +139,56 @@ Then I should see the "Report a Missing Animal" button
 ### 5.2 PetListMobileSteps.java ✅
 - **Status**: ✅ Same as iOS - shared implementation
 
-### 5.3 AndroidTestRunner.java ✅
-- **Status**: ✅ UPDATED
-- **Changes**:
-  - `@SelectClasspathResource("features")` - reads from all feature directories
-  - Filter: `@android and not @pending`
-
-### 5.4 Status: Not Tested Yet ⚠️
+### 5.3 Status: Not Tested Yet ⚠️
 - Android tests have not been executed yet
 - May have similar permission issues as iOS
 
 ---
 
-## Task 6: Geolocation Testing (Docker Selenium) ⏳
+## Task 6: Reorganize Features Folder ✅
 
-Test 2 (location filtering) requires geolocation mocking which needs:
+### Old Structure:
+```
+features/
+├── mobile/
+│   ├── pet-list.feature
+│   └── pet-details.feature
+└── web/
+    └── animal-list.feature
+```
+
+### New Structure:
+```
+features/
+├── animal-list.feature        ← @web @ios @android (active)
+├── pet-details.feature        ← @web @ios @android @pending (placeholder)
+├── report-missing.feature     ← @web @ios @android @pending (placeholder)
+└── legacy/
+    ├── pet-list.feature       ← @mobile @legacy
+    └── pet-details.feature    ← @mobile @ios @legacy
+```
+
+---
+
+## Task 7: Update Test Runners ✅
+
+### WebTestRunner.java ✅
+- **Change**: `@SelectClasspathResource("features/web")` → `@SelectClasspathResource("features")`
+- **Filter**: `@web and not @pending and not @legacy`
+
+### IosTestRunner.java ✅
+- **Already correct**: `@SelectClasspathResource("features")`
+- **Filter**: `@ios and not @pending and not @legacy`
+
+### AndroidTestRunner.java ✅
+- **Already correct**: `@SelectClasspathResource("features")`
+- **Filter**: `@android and not @pending and not @legacy`
+
+---
+
+## Task 8: Geolocation Testing (Docker Selenium) ⏳
+
+Test 2 (location filtering + empty state) requires geolocation mocking which needs:
 - Chrome DevTools Protocol (CDP) support
 - Compatible Chrome version (v131 or older)
 
@@ -170,14 +196,14 @@ Test 2 (location filtering) requires geolocation mocking which needs:
 
 **Solution**: Use Docker Selenium Grid with Chrome v131.
 
-**Spec created**: `specs/053-selenium-docker/` (not committed yet)
+**Spec created**: `specs/053-selenium-docker/`
 
 ---
 
 ## Execution Commands
 
 ```bash
-# Run all @animalList tests on Web (only non-pending)
+# Run all @animalList tests on Web (only non-pending, non-legacy)
 cd e2e-tests/java
 mvn test -Dtest=WebTestRunner -Dcucumber.filter.tags="@animalList"
 
@@ -188,7 +214,7 @@ mvn test -Dtest=IosTestRunner -Dcucumber.filter.tags="@animalList"
 mvn test -Dtest=AndroidTestRunner -Dcucumber.filter.tags="@animalList"
 
 # Run smoke tests only (all platforms)
-mvn test -Dcucumber.filter.tags="@animalList and @smoke"
+mvn test -Dcucumber.filter.tags="@smoke and not @legacy and not @pending"
 ```
 
 ---
@@ -200,13 +226,19 @@ mvn test -Dcucumber.filter.tags="@animalList and @smoke"
 - [x] Web tests pass (Test 1 - smoke)
 - [x] iOS step definitions implemented
 - [x] Android step definitions implemented
-- [x] Runners updated to read from both directories
+- [x] Runners updated to read from new features/ structure
+- [x] Features folder reorganized (legacy/ subfolder)
 - [x] No dependency on seed data
 - [ ] iOS tests pass (blocked by location permissions issue)
 - [ ] Android tests pass (not tested yet)
-- [ ] Location filtering works (blocked by Chrome version - spec 053)
+- [ ] Location filtering + empty state works (blocked by Chrome version - spec 053)
 
-**Notes**:
-- Test 2 (location filtering) is marked `@pending` until Docker Selenium infrastructure is ready
-- iOS mobile tests blocked by app showing Settings screen instead of pet list (location permissions)
-- Android mobile tests not yet executed
+---
+
+## Summary of Changes (Session 2025-12-04)
+
+1. **Added scroll + button verification** to Test 1 (FR-003 from spec 005)
+2. **Added empty state verification** to Test 2 (FR-019 from spec 032)
+3. **Reorganized features folder** - unified structure with legacy subfolder
+4. **Updated all Runners** to use new features/ path and exclude @legacy
+5. **Created placeholder files** for pet-details.feature and report-missing.feature

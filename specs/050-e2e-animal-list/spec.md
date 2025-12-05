@@ -47,10 +47,11 @@ This spec defines E2E test coverage for the Animal List feature across all platf
 
 | Spec | Name | Relevance |
 |------|------|-----------|
-| 005 | Animal List | Core requirements |
-| 013 | Animal List Screen | Mobile UI |
-| 032 | Web Location Query | Web location filtering |
-| 033 | Announcements Location Query | Backend API |
+| 005 | Animal List | Core requirements (button visibility while scrolling, empty state) |
+| 013 | Animal List Screen | Android UI |
+| 015 | iOS Location Permissions | iOS location handling and fallback mode |
+| 032 | Web Location Query | Web location filtering, empty state message |
+| 033 | Announcements Location Query | Backend API for location filtering |
 
 ---
 
@@ -66,20 +67,27 @@ User opens the app and sees the animal list with all UI elements.
 - Page loads successfully
 - Announcements are displayed
 - "Report a Missing Animal" button is visible
+- **Button remains visible while scrolling** (FR-003 from spec 005)
 
 ---
 
-### Test 2: Location-Based Filtering (Priority: P0) - @pending
+### Test 2: Location-Based Filtering + Empty State (Priority: P0) - @pending
 
-User provides their location and sees only animals in their area.
+User provides their location and sees only animals in their area. When no animals are nearby, empty state is displayed.
 
 **Platforms**: Web, iOS, Android
 
-**Status**: `@pending` - Requires Chrome DevTools Protocol (CDP) for geolocation mocking. Blocked by Chrome version incompatibility (local Chrome v142 too new for Selenium 4.29.0). Will be enabled with Docker Selenium Grid (spec 053).
+**Status**: `@pending` - Requires geolocation mocking:
+- Web: Selenium CDP (blocked by Chrome 142+ compatibility)
+- iOS: Appium GPS simulation or Simulator location settings
+- Android: Appium GPS mock
+
+Will be enabled with Docker Selenium Grid (spec 053).
 
 **What is tested**:
-- Nearby announcement (same location) is visible
-- Far away announcement (different location) is NOT visible
+- Navigate with location far from any announcements → **empty state message displayed** (FR-019 from spec 032)
+- Navigate with location near announcement → announcement is visible
+- "Report a Missing Animal" button visible in both states
 
 ---
 
@@ -96,7 +104,7 @@ User provides their location and sees only animals in their area.
 
 **Feature File**:
 
-- **FR-005**: Feature file MUST be at `/e2e-tests/java/src/test/resources/features/web/animal-list.feature`
+- **FR-005**: Feature file MUST be at `/e2e-tests/java/src/test/resources/features/animal-list.feature`
 - **FR-006**: Scenarios MUST be tagged with platforms they run on (@web @ios @android)
 - **FR-007**: Scenarios MUST follow Given-When-Then structure with API setup/cleanup
 
@@ -129,10 +137,10 @@ User provides their location and sees only animals in their area.
 
 | # | Scenario | Web | iOS | Android | Status |
 |---|----------|-----|-----|---------|--------|
-| 1 | Display list with UI elements (announcements, report button) | ✓ | ✓ | ✓ | ✅ Active |
-| 2 | Location filtering (show nearby, hide far away) | ✓ | ✓ | ✓ | ⏳ @pending |
+| 1 | Display list with UI elements (announcements, report button, button visible on scroll) | ✓ | ✓ | ✓ | ✅ Active |
+| 2 | Location filtering + empty state (show nearby, hide far away, empty state when no animals in area) | ✓ | ✓ | ✓ | ⏳ @pending |
 
-**Note**: Date sorting (Test 3) removed - not a backend requirement (see spec 006, FR-017).
+**Note**: Date sorting removed - not a backend requirement (see spec 006, FR-017).
 
 **Total: 2 scenarios × 3 platforms = 6 test executions** (currently 1 active + 1 pending)
 

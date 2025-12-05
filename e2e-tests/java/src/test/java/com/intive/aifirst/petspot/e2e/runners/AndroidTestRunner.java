@@ -12,6 +12,8 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 /**
  * JUnit Platform Suite for running Android E2E tests with Cucumber.
  * Executes scenarios tagged with @android from all feature directories.
+ * 
+ * <p>Sets PLATFORM=Android system property to ensure Hooks.java uses correct driver.
  */
 @Suite
 @IncludeEngines("cucumber")
@@ -33,5 +35,10 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
             "junit:target/cucumber-android.xml"
 )
 public class AndroidTestRunner {
-    // No implementation needed - JUnit Platform Suite handles execution
+    
+    // Set PLATFORM when this runner class is loaded
+    static {
+        System.setProperty("PLATFORM", "Android");
+        System.out.println("AndroidTestRunner: Set PLATFORM=Android");
+    }
 }

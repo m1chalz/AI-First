@@ -12,6 +12,8 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 /**
  * JUnit Platform Suite for running iOS E2E tests with Cucumber.
  * Executes scenarios tagged with @ios from all feature directories.
+ * 
+ * <p>Sets PLATFORM=iOS system property to ensure Hooks.java uses correct driver.
  */
 @Suite
 @IncludeEngines("cucumber")
@@ -33,5 +35,10 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
             "junit:target/cucumber-ios.xml"
 )
 public class IosTestRunner {
-    // No implementation needed - JUnit Platform Suite handles execution
+    
+    // Set PLATFORM when this runner class is loaded
+    static {
+        System.setProperty("PLATFORM", "iOS");
+        System.out.println("IosTestRunner: Set PLATFORM=iOS");
+    }
 }

@@ -92,3 +92,4 @@ Feature: Pet Details Screen (iOS) - LEGACY
   # Total: 12 scenarios (35-40% coverage of Spec 012 requirements - MVP coverage)
   # Remaining scenarios (error handling variations, edge cases, full field validation)
   # can be added in future iterations to reach 100% coverage
+

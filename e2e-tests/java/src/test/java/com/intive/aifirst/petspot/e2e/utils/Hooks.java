@@ -65,32 +65,57 @@ public class Hooks {
     }
     
     /**
-     * Detects platform (Android/iOS) from Cucumber scenario tags and sets PLATFORM system property.
+     * Detects platform (Android/iOS/Web) from test runner or Cucumber scenario tags.
      * 
      * <p>Priority:
      * <ol>
-     *   <li>If @ios tag present → sets PLATFORM=iOS</li>
-     *   <li>If @android tag present → sets PLATFORM=Android</li>
+     *   <li>If PLATFORM system property already set (from -DPLATFORM=xxx) → use it</li>
+     *   <li>If scenario has ONLY @ios tag (not @android) → iOS</li>
+     *   <li>If scenario has ONLY @android tag (not @ios) → Android</li>
+     *   <li>If scenario has BOTH @ios and @android → use runner context (from system property)</li>
      *   <li>If @mobile tag without @ios/@android → defaults to Android</li>
-     *   <li>If @web tag → clears PLATFORM (not mobile)</li>
+     *   <li>If @web tag only → Web (clears PLATFORM)</li>
      * </ol>
+     * 
+     * <p>For cross-platform scenarios (@web @ios @android), the TestRunner sets PLATFORM
+     * via its configuration, so we honor that setting.
      * 
      * @param scenario Cucumber scenario with tags
      */
     private void detectAndSetPlatform(Scenario scenario) {
         var tags = scenario.getSourceTagNames();
         
-        if (tags.contains("@ios")) {
+        // Check if PLATFORM was set externally (e.g., from TestRunner or -DPLATFORM)
+        String externalPlatform = System.getProperty("PLATFORM");
+        if (externalPlatform != null && !externalPlatform.isEmpty()) {
+            System.out.println("Platform from system property: " + externalPlatform);
+            return; // Honor external setting
+        }
+        
+        boolean hasIos = tags.contains("@ios");
+        boolean hasAndroid = tags.contains("@android");
+        boolean hasWeb = tags.contains("@web");
+        boolean hasMobile = tags.contains("@mobile");
+        
+        // Cross-platform scenario (has both @ios and @android) - need runner context
+        if (hasIos && hasAndroid) {
+            // For cross-platform tests, platform should be set by runner
+            // Default to Android if not set (common case)
+            System.setProperty("PLATFORM", "Android");
+            System.out.println("Platform defaulted to: Android (cross-platform scenario, no runner context)");
+        } else if (hasIos && !hasAndroid) {
+            // iOS-only scenario
             System.setProperty("PLATFORM", "iOS");
             System.out.println("Platform detected from tags: iOS");
-        } else if (tags.contains("@android")) {
+        } else if (hasAndroid && !hasIos) {
+            // Android-only scenario
             System.setProperty("PLATFORM", "Android");
             System.out.println("Platform detected from tags: Android");
-        } else if (tags.contains("@mobile")) {
+        } else if (hasMobile) {
             // Mobile but no specific platform - default to Android
             System.setProperty("PLATFORM", "Android");
             System.out.println("Platform defaulted to: Android (mobile tag without ios/android)");
-        } else if (tags.contains("@web")) {
+        } else if (hasWeb) {
             // Web test - clear platform
             System.clearProperty("PLATFORM");
             System.out.println("Platform: Web (not mobile)");

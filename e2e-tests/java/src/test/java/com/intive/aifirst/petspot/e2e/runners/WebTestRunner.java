@@ -11,14 +11,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
 /**
  * JUnit Platform Suite for running web E2E tests with Cucumber.
- * 
- * <p>This test runner configures Cucumber to execute only web-tagged scenarios:
- * <ul>
- *   <li>Filter: {@code @web} tag (executes only web scenarios)</li>
- *   <li>Features: {@code features/web/*.feature} files</li>
- *   <li>Step Definitions: {@code steps.web} package</li>
- *   <li>Hooks: {@code utils.Hooks} for lifecycle management</li>
- * </ul>
+ * Executes scenarios tagged with @web from all feature directories.
  * 
  * <h2>How to Run:</h2>
  * <pre>
@@ -34,25 +27,17 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
  * 
  * <h2>Reports Generated:</h2>
  * <ul>
- *   <li>HTML Report: {@code target/cucumber-reports/web/index.html}</li>
+ *   <li>HTML Report: {@code target/cucumber-reports/web/cucumber.html}</li>
  *   <li>JSON Report: {@code target/cucumber-web.json}</li>
  *   <li>JUnit XML: {@code target/cucumber-web.xml}</li>
- *   <li>Console Output: Pretty-printed Gherkin execution log</li>
  * </ul>
- * 
- * <h2>Configuration:</h2>
- * <p>Additional configuration can be set in {@code src/test/resources/cucumber.properties}.
- * Command-line parameters override file-based configuration.
- * 
- * @see io.cucumber.junit.platform.engine.Cucumber
- * @see org.junit.platform.suite.api.Suite
  */
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/web")
+@SelectClasspathResource("features")
 @ConfigurationParameter(
     key = FILTER_TAGS_PROPERTY_NAME,
-    value = "@web and not @pending"
+    value = "@web and not @pending and not @legacy"
 )
 @ConfigurationParameter(
     key = GLUE_PROPERTY_NAME,

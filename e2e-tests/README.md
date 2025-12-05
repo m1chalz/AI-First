@@ -27,8 +27,10 @@ This directory contains the **unified E2E testing infrastructure** for PetSpot u
 │       │       └── utils/          # Utilities (drivers, helpers)
 │       └── resources/
 │           └── features/           # Gherkin feature files (.feature)
-│               ├── web/            # Web test scenarios
-│               └── mobile/         # Mobile test scenarios
+│               ├── animal-list.feature      # @web @ios @android
+│               ├── pet-details.feature      # @web @ios @android
+│               ├── report-missing.feature   # @web @ios @android
+│               └── legacy/                  # Old tests (to be removed)
 │
 └── README.md                       # This file
 ```
@@ -301,16 +303,43 @@ Scenario: View animal list
 
 ## Cucumber Tags
 
+### Platform Tags
 | Tag | Description |
 |-----|-------------|
 | `@web` | Web platform tests |
 | `@ios` | iOS platform tests |
 | `@android` | Android platform tests |
 | `@mobile` | All mobile tests (iOS + Android) |
+
+### Feature Tags
+| Tag | Description |
+|-----|-------------|
+| `@animalList` | Animal list feature tests |
+| `@petDetails` | Pet details feature tests |
+| `@reportMissing` | Report missing flow tests |
+
+### Status Tags
+| Tag | Description |
+|-----|-------------|
 | `@smoke` | Smoke tests (fast, critical paths) |
-| `@animal-list` | Animal list feature tests |
-| `@pet-details` | Pet details feature tests |
-| `@report-missing` | Report missing flow tests |
+| `@pending` | Tests waiting for infrastructure (e.g., geolocation mocking) |
+| `@legacy` | Old tests to be removed after migration |
+
+### Tag Filtering
+```bash
+# Run only active tests (exclude pending and legacy)
+mvn test -Dtest=WebTestRunner
+# Default filter: @web and not @pending and not @legacy
+
+# Run specific feature
+mvn test -Dcucumber.filter.tags="@animalList"
+
+# Run smoke tests only
+mvn test -Dcucumber.filter.tags="@smoke and not @legacy"
+
+# Run pending tests (for development)
+mvn test -Dcucumber.filter.tags="@pending"
+```
 
 ---
 

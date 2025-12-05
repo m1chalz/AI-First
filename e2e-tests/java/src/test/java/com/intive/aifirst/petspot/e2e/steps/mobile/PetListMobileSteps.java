@@ -554,5 +554,43 @@ public class PetListMobileSteps {
         assertTrue(found, "Should see microchip screen");
         System.out.println("Microchip screen is visible");
     }
+    
+    // ========================================
+    // Spec 050: Scroll and Empty State Steps
+    // ========================================
+    
+    /**
+     * Scrolls down the page to verify button visibility while scrolling.
+     * 
+     * <p>Maps to Gherkin: "When I scroll down the page"
+     */
+    @When("I scroll down the page")
+    public void iScrollDownThePage() {
+        System.out.println("Scrolling down the page...");
+        petListScreen.scrollDown();
+        
+        // Wait for scroll animation to complete
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        System.out.println("Scrolled down the page");
+    }
+    
+    /**
+     * Verifies that the empty state message is displayed.
+     * Used when no announcements are available in the current location.
+     * 
+     * <p>Maps to Gherkin: "And I should see empty state message"
+     */
+    @Then("I should see empty state message")
+    public void iShouldSeeEmptyStateMessage() {
+        System.out.println("Verifying empty state message is displayed...");
+        
+        // Wait a bit for the page to fully render
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Check if empty state is displayed
+        assertTrue(petListScreen.isEmptyStateDisplayed(),
+            "Empty state message should be visible when no animals in area");
+        System.out.println("Verified: Empty state message is displayed");
+    }
 }
 
