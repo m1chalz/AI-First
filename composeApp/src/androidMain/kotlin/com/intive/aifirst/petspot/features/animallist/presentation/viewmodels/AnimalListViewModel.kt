@@ -74,14 +74,22 @@ class AnimalListViewModel(
 
     /**
      * Handles Refresh intent: loads animals from repository.
+     * Passes current location (if available) to filter nearby animals.
      */
     private fun handleRefresh() {
         viewModelScope.launch {
             // Set loading state
             _state.value = AnimalListReducer.loading(_state.value)
 
-            // Call use case
-            val result = runCatching { getAnimalsUseCase() }
+            // Call use case with location if available
+            val location = _state.value.location
+            val result =
+                runCatching {
+                    getAnimalsUseCase(
+                        lat = location?.latitude,
+                        lng = location?.longitude,
+                    )
+                }
 
             // Reduce result to new state
             _state.value = AnimalListReducer.reduce(_state.value, result)

@@ -77,7 +77,11 @@ class GetAnimalByIdUseCaseTest {
             this.animals = animals
         }
 
-        override suspend fun getAnimals(): List<Animal> {
+        override suspend fun getAnimals(
+            lat: Double?,
+            lng: Double?,
+            range: Int?,
+        ): List<Animal> {
             if (shouldThrowException) throw RuntimeException("Test exception")
             return animals
         }
