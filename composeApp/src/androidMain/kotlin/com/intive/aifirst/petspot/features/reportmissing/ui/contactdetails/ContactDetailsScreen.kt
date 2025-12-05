@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUiEffect
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.OwnerDetailsUserIntent
+import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
 import com.intive.aifirst.petspot.navigation.ReportMissingRoute
 
@@ -23,12 +24,14 @@ import com.intive.aifirst.petspot.navigation.ReportMissingRoute
  * Following the same pattern as ChipNumberScreen and PhotoScreen (no Scaffold).
  *
  * @param viewModel OwnerDetailsViewModel for this screen (scoped to nav graph)
+ * @param flowState Shared flow state for persisting data across screens
  * @param navController Shared NavController for navigation
  * @param modifier Modifier for the component
  */
 @Composable
 fun ContactDetailsScreen(
     viewModel: OwnerDetailsViewModel,
+    flowState: ReportMissingFlowState,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -40,6 +43,8 @@ fun ContactDetailsScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is OwnerDetailsUiEffect.NavigateToSummary -> {
+                    // Store management password in flow state before navigating
+                    flowState.updateManagementPassword(effect.managementPassword)
                     navController.navigate(ReportMissingRoute.Summary) {
                         launchSingleTop = true
                     }

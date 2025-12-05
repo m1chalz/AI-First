@@ -98,6 +98,11 @@ class ReportMissingFlowState {
         _data.update { it.copy(rewardDescription = reward) }
     }
 
+    /** Update management password (after successful submission, for Summary screen) */
+    fun updateManagementPassword(password: String) {
+        _data.update { it.copy(managementPassword = password) }
+    }
+
     /** Clear all flow data (when flow is exited or completed) */
     fun clear() {
         _data.value = FlowData()
@@ -130,4 +135,6 @@ data class FlowData(
     val contactEmail: String = "",
     val contactPhone: String = "",
     val rewardDescription: String = "",
+    // Summary - Management password (set after successful submission)
+    val managementPassword: String? = null,
 )

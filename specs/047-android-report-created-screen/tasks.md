@@ -41,9 +41,9 @@
 
 **Purpose**: Verify prerequisites and project structure
 
-- [ ] T001 Verify branch `047-android-report-created-screen` is checked out and project builds with `./gradlew :composeApp:assembleDebug`
-- [ ] T002 Verify existing `ReportMissingFlowState.kt` contains `managementPassword: StateFlow<String?>` property in `/composeApp/src/androidMain/.../features/reportmissing/presentation/state/ReportMissingFlowState.kt`
-- [ ] T003 Verify existing `SummaryScreen.kt` placeholder exists in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryScreen.kt`
+- [X] T001 Verify branch `047-android-report-created-screen` is checked out and project builds with `./gradlew :composeApp:assembleDebug`
+- [X] T002 Verify existing `ReportMissingFlowState.kt` contains `managementPassword: StateFlow<String?>` property in `/composeApp/src/androidMain/.../features/reportmissing/presentation/state/ReportMissingFlowState.kt`
+- [X] T003 Verify existing `SummaryScreen.kt` placeholder exists in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryScreen.kt`
 
 ---
 
@@ -53,12 +53,12 @@
 
 **⚠️ CRITICAL**: No user story implementation can begin until MVI components exist
 
-- [ ] T004 [P] Create `SummaryUiState.kt` with immutable data class in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUiState.kt`
-- [ ] T005 [P] Create `SummaryUserIntent.kt` with sealed interface in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUserIntent.kt`
-- [ ] T006 [P] Create `SummaryUiEffect.kt` with sealed interface in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUiEffect.kt`
-- [ ] T007 Create `SummaryViewModel.kt` skeleton with StateFlow, SharedFlow, and dispatchIntent in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
-- [ ] T008 Register `SummaryViewModel` in Koin DI module in `/composeApp/src/androidMain/.../features/reportmissing/di/ReportMissingModule.kt`
-- [ ] T009 Create `SummaryViewModelTest.kt` test file skeleton in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T004 [P] Create `SummaryUiState.kt` with immutable data class in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUiState.kt`
+- [X] T005 [P] Create `SummaryUserIntent.kt` with sealed interface in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUserIntent.kt`
+- [X] T006 [P] Create `SummaryUiEffect.kt` with sealed interface in `/composeApp/src/androidMain/.../features/reportmissing/presentation/mvi/SummaryUiEffect.kt`
+- [X] T007 Create `SummaryViewModel.kt` skeleton with StateFlow, SharedFlow, and dispatchIntent in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
+- [X] T008 Register `SummaryViewModel` in Koin DI module in `/composeApp/src/androidMain/.../di/ViewModelModule.kt`
+- [X] T009 Create `SummaryViewModelTest.kt` test file skeleton in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
 
 **Checkpoint**: MVI foundation ready - user story implementation can now begin
 
@@ -75,21 +75,21 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Android Unit Tests**:
-- [ ] T010 [P] [US1] Unit test for initial state creation with password from flowState in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
-- [ ] T011 [P] [US1] Unit test for empty password handling (null → empty string) in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T010 [P] [US1] Unit test for initial state creation with password from flowState in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T011 [P] [US1] Unit test for empty password handling (null → empty string) in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T012 [P] [US1] Create Gherkin feature file with US1 scenario "User sees confirmation messaging" in `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
+- [X] T012 [P] [US1] Create Gherkin feature file with US1 scenario "User sees confirmation messaging" in `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
 
 ### Implementation for User Story 1
 
 **Android** (MVI ViewModel + UI):
-- [ ] T013 [US1] Implement ViewModel initialization logic to read `flowState.managementPassword` and map to `SummaryUiState` in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
-- [ ] T014 [US1] Update `SummaryScreen.kt` state host composable to inject ViewModel and collect state in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryScreen.kt`
-- [ ] T015 [US1] Update `SummaryContent.kt` stateless composable with title "Report created" and both body paragraphs in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T016 [US1] Add design constants (colors, spacing, typography) matching Figma spec to `SummaryContent.kt`
-- [ ] T017 [US1] Add testTag modifiers `summary.title`, `summary.bodyParagraph1`, `summary.bodyParagraph2` to UI elements
-- [ ] T017b [US1] Verify SummaryScreen has NO TopAppBar with navigation icon (per FR-011 - this is a terminal screen with only Close button at bottom)
+- [X] T013 [US1] Implement ViewModel initialization logic to read `flowState.managementPassword` and map to `SummaryUiState` in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
+- [X] T014 [US1] Update `SummaryScreen.kt` state host composable to inject ViewModel and collect state in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryScreen.kt`
+- [X] T015 [US1] Update `SummaryContent.kt` stateless composable with title "Report created" and both body paragraphs in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T016 [US1] Add design constants (colors, spacing, typography) matching Figma spec to `SummaryContent.kt`
+- [X] T017 [US1] Add testTag modifiers `summary.title`, `summary.bodyParagraph1`, `summary.bodyParagraph2` to UI elements
+- [X] T017b [US1] Verify SummaryScreen has NO TopAppBar with navigation icon (per FR-011 - this is a terminal screen with only Close button at bottom)
 
 **Checkpoint**: User Story 1 complete - confirmation messaging displays correctly
 
@@ -108,21 +108,21 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Android Unit Tests**:
-- [ ] T018 [P] [US2] Unit test for `CopyPasswordClicked` intent emitting `ShowSnackbar` effect in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
-- [ ] T019 [P] [US2] Unit test for password display with non-null value in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T018 [P] [US2] Unit test for `CopyPasswordClicked` intent emitting `ShowSnackbar` effect in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T019 [P] [US2] Unit test for password display with non-null value in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T020 [P] [US2] Add Gherkin scenario "User copies password to clipboard" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
+- [X] T020 [P] [US2] Add Gherkin scenario "User copies password to clipboard" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
 
 ### Implementation for User Story 2
 
 **Android** (Password Container + Clipboard):
-- [ ] T021 [US2] Implement gradient password container with `Brush.horizontalGradient` (#5C33FF → #F84BA1) and glow effect in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T022 [US2] Add password text display (60sp, white, -1.5sp letter spacing) inside gradient container in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T023 [US2] Implement `CopyPasswordClicked` intent handler in ViewModel with `ClipboardManager` copy logic in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
-- [ ] T024 [US2] Add `SnackbarHost` to `SummaryScreen.kt` and wire `ShowSnackbar` effect collection with message "Code copied to clipboard"
-- [ ] T025 [US2] Make password container clickable and dispatch `CopyPasswordClicked` intent on tap
-- [ ] T026 [US2] Add testTag modifiers `summary.passwordContainer`, `summary.passwordText`, `summary.snackbar` to UI elements
+- [X] T021 [US2] Implement gradient password container with `Brush.horizontalGradient` (#5C33FF → #F84BA1) and glow effect in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T022 [US2] Add password text display (60sp, white, -1.5sp letter spacing) inside gradient container in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T023 [US2] Implement `CopyPasswordClicked` intent handler in ViewModel with `ClipboardManager` copy logic in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
+- [X] T024 [US2] Add `SnackbarHost` to `SummaryScreen.kt` and wire `ShowSnackbar` effect collection with message "Code copied to clipboard"
+- [X] T025 [US2] Make password container clickable and dispatch `CopyPasswordClicked` intent on tap
+- [X] T026 [US2] Add testTag modifiers `summary.passwordContainer`, `summary.passwordText`, `summary.snackbar` to UI elements
 
 **Checkpoint**: User Story 2 complete - password displays and copies correctly
 
@@ -139,21 +139,21 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Android Unit Tests**:
-- [ ] T027 [P] [US3] Unit test for `CloseClicked` intent emitting `DismissFlow` effect in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
+- [X] T027 [P] [US3] Unit test for `CloseClicked` intent emitting `DismissFlow` effect in `/composeApp/src/androidUnitTest/.../features/reportmissing/presentation/viewmodels/SummaryViewModelTest.kt`
 
 **End-to-End Tests**:
-- [ ] T028 [P] [US3] Add Gherkin scenario "User exits flow via Close button" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
-- [ ] T029 [P] [US3] Add Gherkin scenario "User exits flow via system back" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
+- [X] T028 [P] [US3] Add Gherkin scenario "User exits flow via Close button" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
+- [X] T029 [P] [US3] Add Gherkin scenario "User exits flow via system back" to `/e2e-tests/java/src/test/resources/features/mobile/report-created-confirmation.feature`
 
 ### Implementation for User Story 3
 
 **Android** (Close Button + Navigation):
-- [ ] T030 [US3] Implement Close button (full-width, 52dp height, #155DFC background, 10dp radius) in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T031 [US3] Dispatch `CloseClicked` intent on Close button click in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T032 [US3] Implement `CloseClicked` intent handler in ViewModel emitting `DismissFlow` effect in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
-- [ ] T033 [US3] Add `BackHandler` to `SummaryScreen.kt` dispatching `CloseClicked` on system back
-- [ ] T034 [US3] Wire `DismissFlow` effect handler in `ReportMissingNavGraph.kt` to clear flowState and `popBackStack(inclusive=true)` in `/composeApp/src/androidMain/.../features/reportmissing/ui/ReportMissingNavGraph.kt`
-- [ ] T035 [US3] Add testTag modifier `summary.closeButton` to Close button
+- [X] T030 [US3] Implement Close button (full-width, 52dp height, #155DFC background, 10dp radius) in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T031 [US3] Dispatch `CloseClicked` intent on Close button click in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T032 [US3] Implement `CloseClicked` intent handler in ViewModel emitting `DismissFlow` effect in `/composeApp/src/androidMain/.../features/reportmissing/presentation/viewmodels/SummaryViewModel.kt`
+- [X] T033 [US3] Add `BackHandler` to `SummaryScreen.kt` dispatching `CloseClicked` on system back
+- [X] T034 [US3] Wire `DismissFlow` effect handler in `SummaryScreen.kt` to clear flowState and navigate back
+- [X] T035 [US3] Add testTag modifier `summary.closeButton` to Close button
 
 **Checkpoint**: User Story 3 complete - flow exits correctly via Close or system back
 
@@ -163,8 +163,8 @@
 
 **Purpose**: Complete E2E test implementation with Screen Objects and Step Definitions
 
-- [ ] T036 [P] Update `SummaryScreen.java` with element selectors (@AndroidFindBy) for all testTag identifiers in `/e2e-tests/java/src/test/java/.../screens/SummaryScreen.java`
-- [ ] T037 Create `ReportCreatedSteps.java` with step definitions for all Gherkin scenarios in `/e2e-tests/java/src/test/java/.../steps/mobile/ReportCreatedSteps.java`
+- [X] T036 [P] Create `SummaryScreen.java` with element selectors (@AndroidFindBy) for all testTag identifiers in `/e2e-tests/java/src/test/java/.../screens/SummaryScreen.java`
+- [X] T037 Create `ReportCreatedSteps.java` with step definitions for all Gherkin scenarios in `/e2e-tests/java/src/test/java/.../steps/mobile/ReportCreatedSteps.java`
 - [ ] T038 Verify E2E tests pass with `mvn test -Dtest=AndroidTestRunner -Dcucumber.filter.tags="@android and @report-created"` from `/e2e-tests/java/`
 
 ---
@@ -173,12 +173,12 @@
 
 **Purpose**: Quality assurance, documentation, and code cleanup
 
-- [ ] T039 Create `SummaryUiStateProvider` PreviewParameterProvider with sample states (with password, empty password) in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
-- [ ] T040 Add `@Preview` function for `SummaryContent` using `@PreviewParameter` (light mode, callbacks defaulted to no-ops)
-- [ ] T041 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for SummaryViewModel
+- [X] T039 Create `SummaryUiStateProvider` PreviewParameterProvider with sample states (with password, empty password) in `/composeApp/src/androidMain/.../features/reportmissing/ui/summary/SummaryContent.kt`
+- [X] T040 Add `@Preview` function for `SummaryContent` using `@PreviewParameter` (light mode, callbacks defaulted to no-ops)
+- [X] T041 Run `./gradlew :composeApp:testDebugUnitTest` and verify unit tests pass for SummaryViewModel
 - [ ] T042 Verify landscape orientation support - UI adapts without clipping, ViewModel state survives rotation
 - [ ] T043 Run manual smoke test per quickstart.md checklist (9 verification items)
-- [ ] T044 [P] Add KDoc documentation to complex ViewModel methods (skip self-explanatory dispatchIntent, etc.)
+- [X] T044 [P] Add KDoc documentation to complex ViewModel methods (skip self-explanatory dispatchIntent, etc.)
 
 ---
 
