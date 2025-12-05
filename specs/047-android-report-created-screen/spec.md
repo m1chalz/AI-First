@@ -139,7 +139,7 @@ Android users who have reviewed the confirmation can exit the flow via Close but
 ### Key Entities *(include if feature involves data)*
 
 - **ReportMissingFlowState** (existing): Flow state container (managed by NavGraph-scoped ViewModel) containing `managementPassword: String?` property set by OwnerDetailsViewModel after successful announcement submission.
-- **SummaryUiState**: Immutable data class representing the current UI state of the Summary screen. Contains `managementPassword: String` (empty string if null in flowState), `isPasswordCopied: Boolean` for UI feedback.
+- **SummaryUiState**: Immutable data class representing the current UI state of the Summary screen. Contains `managementPassword: String` (empty string if null in flowState). Password container is always tappable - Snackbar provides copy feedback.
 - **SummaryUserIntent**: Sealed class representing all possible user actions on this screen (CopyPasswordClicked, CloseClicked).
 - **SummaryUiEffect**: Sealed class for one-off events (ShowSnackbar(message: String), DismissFlow).
 
