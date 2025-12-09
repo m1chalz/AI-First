@@ -12,6 +12,7 @@
     "test:coverage": "vitest --coverage",
     "lint": "tsc && eslint ./src",
     "lint:fix": "eslint --fix ./src",
+    "format": "prettier --write .",
     "start": "node --experimental-transform-types ./src/index.ts",
     "knex:add-migration": "knex migrate:make -x ts"
   },
@@ -37,6 +38,7 @@
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^4.0.10",
     "eslint": "^9.39.1",
+    "prettier": "^3.4.1",
     "supertest": "^7.1.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4",
