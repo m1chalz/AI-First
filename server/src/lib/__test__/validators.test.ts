@@ -1,37 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { isValidEmail, isValidPhone } from '../validators.ts';
 
-const VALID_EMAILS = [
-  'user@example.com',
-  'john.doe@example.com',
-  'test+tag@domain.co.uk',
-  'admin@subdomain.example.com',
-];
+const VALID_EMAILS = ['user@example.com', 'john.doe@example.com', 'test+tag@domain.co.uk', 'admin@subdomain.example.com'];
 
-const INVALID_EMAILS = [
-  'notanemail',
-  '@example.com',
-  'user@',
-  'user @example.com',
-  'user@.com',
-  '',
-  'userexample.com',
-];
+const INVALID_EMAILS = ['notanemail', '@example.com', 'user@', 'user @example.com', 'user@.com', '', 'userexample.com'];
 
-const VALID_PHONES = [
-  '+1-555-1234',
-  '(555) 123-4567',
-  '5551234567',
-  '555-0101',
-  '+1 (312) 555-0142',
-];
+const VALID_PHONES = ['+1-555-1234', '(555) 123-4567', '5551234567', '555-0101', '+1 (312) 555-0142'];
 
-const INVALID_PHONES = [
-  'not-a-phone',
-  '',
-  '---',
-  '()',
-];
+const INVALID_PHONES = ['not-a-phone', '', '---', '()'];
 
 describe('validators', () => {
   describe('isValidEmail', () => {

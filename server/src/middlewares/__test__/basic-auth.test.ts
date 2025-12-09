@@ -20,7 +20,7 @@ describe('basicAuthMiddleware', () => {
     it.each([
       ['Basic', 'admin', 'test-password'],
       ['basic', 'user', 'pass'],
-      ['BASIC', 'john.doe', 'secure-pwd-123'],
+      ['BASIC', 'john.doe', 'secure-pwd-123']
     ])('should parse credentials with scheme "%s" and attach to req', (scheme, username, password) => {
       // Given: valid Base64 encoded credentials
       const credentials = Buffer.from(`${username}:${password}`).toString('base64');
@@ -39,12 +39,48 @@ describe('basicAuthMiddleware', () => {
 
   describe('authentication failures', () => {
     it.each<[string, () => void, string]>([
-      ['missing Authorization header', () => { req.headers = {}; }, 'header missing'],
-      ['invalid Base64 encoding', () => { req.headers = { authorization: 'Basic !!!invalid-base64!!!' }; }, 'base64 invalid'],
-      ['no colon separator', () => { req.headers = { authorization: `Basic ${Buffer.from('invalidcredentials').toString('base64')}` }; }, 'format invalid'],
-      ['empty username', () => { req.headers = { authorization: `Basic ${Buffer.from(':password').toString('base64')}` }; }, 'username empty'],
-      ['empty password', () => { req.headers = { authorization: `Basic ${Buffer.from('username:').toString('base64')}` }; }, 'password empty'],
-      ['Bearer scheme instead of Basic', () => { req.headers = { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' }; }, 'scheme invalid'],
+      [
+        'missing Authorization header',
+        () => {
+          req.headers = {};
+        },
+        'header missing'
+      ],
+      [
+        'invalid Base64 encoding',
+        () => {
+          req.headers = { authorization: 'Basic !!!invalid-base64!!!' };
+        },
+        'base64 invalid'
+      ],
+      [
+        'no colon separator',
+        () => {
+          req.headers = { authorization: `Basic ${Buffer.from('invalidcredentials').toString('base64')}` };
+        },
+        'format invalid'
+      ],
+      [
+        'empty username',
+        () => {
+          req.headers = { authorization: `Basic ${Buffer.from(':password').toString('base64')}` };
+        },
+        'username empty'
+      ],
+      [
+        'empty password',
+        () => {
+          req.headers = { authorization: `Basic ${Buffer.from('username:').toString('base64')}` };
+        },
+        'password empty'
+      ],
+      [
+        'Bearer scheme instead of Basic',
+        () => {
+          req.headers = { authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' };
+        },
+        'scheme invalid'
+      ]
     ])('should throw UnauthenticatedError when %s (%s)', (_scenario, setup, _detail) => {
       // Given: setup the invalid scenario
       setup();
@@ -54,4 +90,3 @@ describe('basicAuthMiddleware', () => {
     });
   });
 });
-

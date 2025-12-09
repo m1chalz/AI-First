@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  requestContextStorage,
-  getRequestId,
-  setRequestContext,
-} from '../request-context';
+import { requestContextStorage, getRequestId, setRequestContext } from '../request-context';
 
 describe('requestContext', () => {
   beforeEach(() => {
@@ -80,4 +76,3 @@ describe('requestContext', () => {
     });
   });
 });
-

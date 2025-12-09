@@ -8,7 +8,12 @@ export interface ErrorResponse {
 }
 
 export abstract class CustomError extends Error {
-  constructor(public statusCode: number, public code: string, public override message: string, public field?: string) {
+  constructor(
+    public statusCode: number,
+    public code: string,
+    public override message: string,
+    public field?: string
+  ) {
     super(message);
   }
 

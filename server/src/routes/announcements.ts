@@ -9,7 +9,6 @@ import { ValidationError } from '../lib/errors.ts';
 import path from 'path';
 import { announcementService, photoUploadService } from '../conf/di.conf.ts';
 
-
 const router = Router();
 
 const imagesDir = path.join(process.cwd(), 'public', 'images');
@@ -52,15 +51,10 @@ router.post(
   }
 );
 
-router.delete(
-  '/:id',
-  adminAuthMiddleware,
-  async (req, res) => {
-    const announcementId = req.params.id;
-    await announcementService.deleteAnnouncement(announcementId);
-    res.status(204).send();
-  }
-);
+router.delete('/:id', adminAuthMiddleware, async (req, res) => {
+  const announcementId = req.params.id;
+  await announcementService.deleteAnnouncement(announcementId);
+  res.status(204).send();
+});
 
 export default router;
-

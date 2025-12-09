@@ -17,7 +17,7 @@ function redactPII(data: unknown): unknown {
   }
 
   if (Array.isArray(data)) {
-    return data.map(item => redactPII(item));
+    return data.map((item) => redactPII(item));
   }
 
   const redacted: Record<string, unknown> = {};
@@ -74,16 +74,16 @@ export default pinoHttp({
       }
 
       return serialized;
-    },
+    }
   },
 
   redact: {
     paths: ['req.headers.authorization', 'res.headers.authorization'],
-    censor: '***',
+    censor: '***'
   },
 
   customAttributeKeys: {
-    responseTime: 'responseTime',
+    responseTime: 'responseTime'
   },
 
   autoLogging: true,
@@ -108,6 +108,6 @@ export default pinoHttp({
       return 'warn';
     }
     return 'info';
-  },
+  }
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

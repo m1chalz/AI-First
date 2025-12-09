@@ -12,17 +12,14 @@ export function generateManagementPassword(): string {
 
 export async function hashPassword(plainPassword: string): Promise<string> {
   const salt = randomBytes(SALT_LENGTH);
-  const derivedKey = await scryptAsync(plainPassword, salt, KEY_LENGTH) as Buffer;
+  const derivedKey = (await scryptAsync(plainPassword, salt, KEY_LENGTH)) as Buffer;
   return salt.toString('hex') + ':' + derivedKey.toString('hex');
 }
 
-export async function verifyPassword(
-  plainPassword: string,
-  hash: string
-): Promise<boolean> {
+export async function verifyPassword(plainPassword: string, hash: string): Promise<boolean> {
   const [saltHex, keyHex] = hash.split(':');
   const salt = Buffer.from(saltHex, 'hex');
   const originalKey = Buffer.from(keyHex, 'hex');
-  const derivedKey = await scryptAsync(plainPassword, salt, KEY_LENGTH) as Buffer;
+  const derivedKey = (await scryptAsync(plainPassword, salt, KEY_LENGTH)) as Buffer;
   return timingSafeEqual(originalKey, derivedKey);
 }

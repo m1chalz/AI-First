@@ -11,13 +11,7 @@ import path from 'path';
 
 export const announcementRepository = new AnnouncementRepository(db);
 
-export const photoUploadService = new PhotoUploadService(
-  announcementRepository,
-  validateImageFormat,
-  db.transaction.bind(db),
-  path,
-  fs
-);
+export const photoUploadService = new PhotoUploadService(announcementRepository, validateImageFormat, db.transaction.bind(db), path, fs);
 
 export const announcementService = new AnnouncementService(
   announcementRepository,

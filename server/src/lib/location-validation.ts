@@ -3,20 +3,20 @@ import { ValidationError } from './errors.ts';
 
 const LocationSchemaBase = z.object({
   lat: z
-    .number({ message: 'Parameter \'lat\' must be a valid number' })
-    .min(-90, { message: 'Parameter \'lat\' must be between -90 and 90' })
-    .max(90, { message: 'Parameter \'lat\' must be between -90 and 90' })
+    .number({ message: "Parameter 'lat' must be a valid number" })
+    .min(-90, { message: "Parameter 'lat' must be between -90 and 90" })
+    .max(90, { message: "Parameter 'lat' must be between -90 and 90" })
     .optional(),
   lng: z
-    .number({ message: 'Parameter \'lng\' must be a valid number' })
-    .min(-180, { message: 'Parameter \'lng\' must be between -180 and 180' })
-    .max(180, { message: 'Parameter \'lng\' must be between -180 and 180' })
+    .number({ message: "Parameter 'lng' must be a valid number" })
+    .min(-180, { message: "Parameter 'lng' must be between -180 and 180" })
+    .max(180, { message: "Parameter 'lng' must be between -180 and 180" })
     .optional(),
   range: z
-    .number({ message: 'Parameter \'range\' must be a valid number' })
-    .int({ message: 'Parameter \'range\' must be an integer' })
-    .refine((val) => val !== 0, { message: 'Parameter \'range\' must be greater than zero' })
-    .refine((val) => val > 0, { message: 'Parameter \'range\' must be a positive number' })
+    .number({ message: "Parameter 'range' must be a valid number" })
+    .int({ message: "Parameter 'range' must be an integer" })
+    .refine((val) => val !== 0, { message: "Parameter 'range' must be greater than zero" })
+    .refine((val) => val > 0, { message: "Parameter 'range' must be a positive number" })
     .optional()
 });
 
@@ -28,10 +28,10 @@ const LocationSchema = LocationSchemaBase.refine(
   },
   (data) => {
     if (data.lat !== undefined && data.lng === undefined) {
-      return { message: 'Parameter \'lng\' is required when \'lat\' is provided', path: ['lng'] };
+      return { message: "Parameter 'lng' is required when 'lat' is provided", path: ['lng'] };
     }
     if (data.lng !== undefined && data.lat === undefined) {
-      return { message: 'Parameter \'lat\' is required when \'lng\' is provided', path: ['lat'] };
+      return { message: "Parameter 'lat' is required when 'lng' is provided", path: ['lat'] };
     }
     return { message: 'Coordinate validation error', path: ['coordinates'] };
   }

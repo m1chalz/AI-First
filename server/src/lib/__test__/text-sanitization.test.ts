@@ -7,11 +7,11 @@ describe('sanitizeText', () => {
     ['Plain text with special chars: @#$%', 'Plain text with special chars: @#$%'],
     ['', ''],
     ['<div><p>Hello <strong>World</strong></p></div>', 'Hello World'],
-    ['<img src="x" onerror="alert(1)">Test', 'Test'],
+    ['<img src="x" onerror="alert(1)">Test', 'Test']
   ])('should sanitize %s to %s', (input, expected) => {
     // when
     const result = sanitizeText(input);
-    
+
     // then
     expect(result).toBe(expected);
   });

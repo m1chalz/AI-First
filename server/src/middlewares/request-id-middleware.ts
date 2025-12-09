@@ -15,4 +15,3 @@ export default function requestIdMiddleware(req: Request, res: Response, next: N
 
   next();
 }
-

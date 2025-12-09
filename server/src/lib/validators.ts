@@ -7,4 +7,3 @@ export function isValidEmail(email: string): boolean {
 export function isValidPhone(phone: string): boolean {
   return /\d/.test(phone);
 }
-

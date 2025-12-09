@@ -11,14 +11,12 @@ export function redactEmail(email: string): string {
   if (parts.length !== 2) {
     return email;
   }
-  
+
   const [localPart, domain] = parts;
   if (!localPart || !domain) {
     return email;
   }
-  
+
   const firstChar = localPart[0];
   return `${firstChar}***@${domain}`;
 }
-
-
