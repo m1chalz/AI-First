@@ -33,10 +33,12 @@ export function SummaryScreen() {
 
           <div>
             <p className={layoutStyles.description}>
-              Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a notification immediately.
+              Your report has been created, and your missing animal has been added to the database. If your pet is found, you will receive a
+              notification immediately.
             </p>
             <p className={layoutStyles.description}>
-              If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been sent to your email address
+              If you wish to remove your report from the database, use the code provided below in the removal form. This code has also been
+              sent to your email address
             </p>
           </div>
 
@@ -51,11 +53,7 @@ export function SummaryScreen() {
             </div>
           )}
 
-          <button
-            onClick={handleClose}
-            className={layoutStyles.primaryButton}
-            data-testid="summary.close.button"
-          >
+          <button onClick={handleClose} className={layoutStyles.primaryButton} data-testid="summary.close.button">
             Close
           </button>
         </div>
@@ -63,4 +61,3 @@ export function SummaryScreen() {
     </div>
   );
 }
-

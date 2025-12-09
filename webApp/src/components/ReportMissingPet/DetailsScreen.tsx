@@ -34,16 +34,10 @@ export const DetailsScreen: React.FC = () => {
   };
 
   return (
-    <ReportMissingPetLayout
-      title="Animal description"
-      progress="3/4"
-      onBack={handleBack}
-    >
+    <ReportMissingPetLayout title="Animal description" progress="3/4" onBack={handleBack}>
       <h2 className={styles.heading}>Your pet&apos;s details</h2>
-      
-      <p className={styles.description}>
-        Fill out the details about the missing animal.
-      </p>
+
+      <p className={styles.description}>Fill out the details about the missing animal.</p>
 
       <AnimalDescriptionForm
         formData={formData}

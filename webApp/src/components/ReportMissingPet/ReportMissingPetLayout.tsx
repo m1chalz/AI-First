@@ -9,21 +9,13 @@ interface ReportMissingPetLayoutProps {
   children: React.ReactNode;
 }
 
-export function ReportMissingPetLayout({
-  title,
-  progress,
-  onBack,
-  children,
-}: ReportMissingPetLayoutProps) {
+export function ReportMissingPetLayout({ title, progress, onBack, children }: ReportMissingPetLayoutProps) {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.contentCard}>
         <Header title={title} progress={progress} onBack={onBack} />
-        <div className={styles.contentInner}>
-          {children}
-        </div>
+        <div className={styles.contentInner}>{children}</div>
       </div>
     </div>
   );
 }
-

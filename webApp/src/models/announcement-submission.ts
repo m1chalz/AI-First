@@ -48,4 +48,3 @@ export function mapFlowStateToDto(flowState: ReportMissingPetFlowState): Announc
 
   return dto;
 }
-

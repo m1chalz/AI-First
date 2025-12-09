@@ -4,7 +4,6 @@ import type { Animal } from '../../types/animal';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 
 describe('AnnouncementService', () => {
-
   const underTest: AnnouncementService = new AnnouncementService();
   const originalFetch = window.fetch;
   const fetchMock = vi.fn();
@@ -20,7 +19,6 @@ describe('AnnouncementService', () => {
   });
 
   describe('AnnouncementService.getAnimals', () => {
-
     it('should fetch animals list successfully when API returns 200', async () => {
       // given
       const mockAnimals: Animal[] = [
@@ -136,7 +134,6 @@ describe('AnnouncementService', () => {
   });
 
   describe('AnnouncementService.getPetById', () => {
-
     it('should fetch pet details successfully when API returns 200', async () => {
       // given
       const mockPet: Animal = {
@@ -207,7 +204,6 @@ describe('AnnouncementService', () => {
   });
 
   describe('AnnouncementService.createAnnouncement', () => {
-
     it('should POST to /api/v1/announcements with correct payload', async () => {
       // given
       const dto: AnnouncementSubmissionDto = {
@@ -348,7 +344,6 @@ describe('AnnouncementService', () => {
   });
 
   describe('AnnouncementService.uploadPhoto', () => {
-
     it('should POST to /api/v1/announcements/:id/photos with FormData and Basic Auth header', async () => {
       // given
       const announcementId = 'ann-123';
@@ -423,7 +418,6 @@ describe('AnnouncementService', () => {
   });
 
   describe('AnnouncementService - Error Handling', () => {
-
     it('should map 400 errors to specific field validation messages', async () => {
       // given
       const dto: AnnouncementSubmissionDto = {

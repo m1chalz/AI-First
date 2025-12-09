@@ -13,4 +13,3 @@ export const SEX_LABELS: Record<AnimalSex, string> = {
   FEMALE: 'Female',
   UNKNOWN: 'Unknown'
 };
-

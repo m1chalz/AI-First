@@ -22,11 +22,7 @@ export interface AnimalDescriptionFormProps {
   onSubmit: () => void;
 }
 
-export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
-  formData,
-  onFieldChange,
-  onSubmit
-}) => {
+export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({ formData, onFieldChange, onSubmit }) => {
   const today = new Date().toISOString().split('T')[0];
   const { state } = useGeolocationContext();
   const { isLoading, coordinates, error, permissionCheckCompleted } = state;
@@ -41,9 +37,17 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
   };
 
   return (
-    <form className={styles.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+    <form
+      className={styles.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="lastSeenDate" className={sharedStyles.label}>Date of disappearance</label>
+        <label htmlFor="lastSeenDate" className={sharedStyles.label}>
+          Date of disappearance
+        </label>
         <div className={styles.dateInput}>
           <input
             id="lastSeenDate"
@@ -63,7 +67,9 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="petName" className={sharedStyles.label}>Animal name (optional)</label>
+        <label htmlFor="petName" className={sharedStyles.label}>
+          Animal name (optional)
+        </label>
         <input
           id="petName"
           type="text"
@@ -75,7 +81,9 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="species" className={sharedStyles.label}>Animal species</label>
+        <label htmlFor="species" className={sharedStyles.label}>
+          Animal species
+        </label>
         <SpeciesDropdown
           value={formData.species}
           onChange={(value) => onFieldChange('species', value)}
@@ -84,7 +92,9 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="breed" className={sharedStyles.label}>Animal race (optional)</label>
+        <label htmlFor="breed" className={sharedStyles.label}>
+          Animal race (optional)
+        </label>
         <input
           id="breed"
           type="text"
@@ -98,15 +108,13 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
 
       <div className={sharedStyles.inputGroup}>
         <label className={sharedStyles.label}>Gender</label>
-        <GenderSelector
-          value={formData.sex}
-          onChange={(value) => onFieldChange('sex', value)}
-          error={formData.validationErrors.sex}
-        />
+        <GenderSelector value={formData.sex} onChange={(value) => onFieldChange('sex', value)} error={formData.validationErrors.sex} />
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="age" className={sharedStyles.label}>Animal age (optional)</label>
+        <label htmlFor="age" className={sharedStyles.label}>
+          Animal age (optional)
+        </label>
         <input
           id="age"
           type="number"
@@ -132,12 +140,20 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
           className={styles.gpsButton}
           data-testid="details.gpsButton.click"
         >
-          {isLocationPermissionDenied ? 'Location not available' : !permissionCheckCompleted ? 'Checking permissions...' : isLoading ? 'Locating...' : 'Request GPS position'}
+          {isLocationPermissionDenied
+            ? 'Location not available'
+            : !permissionCheckCompleted
+              ? 'Checking permissions...'
+              : isLoading
+                ? 'Locating...'
+                : 'Request GPS position'}
         </button>
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="latitude" className={sharedStyles.label}>Lat / Long</label>
+        <label htmlFor="latitude" className={sharedStyles.label}>
+          Lat / Long
+        </label>
         <div className={styles.latLongContainer}>
           <input
             id="latitude"
@@ -166,7 +182,9 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       </div>
 
       <div className={sharedStyles.inputGroup}>
-        <label htmlFor="description" className={sharedStyles.label}>Animal additional description (optional)</label>
+        <label htmlFor="description" className={sharedStyles.label}>
+          Animal additional description (optional)
+        </label>
         <textarea
           id="description"
           value={formData.description}
@@ -183,15 +201,10 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({
       </div>
 
       <div>
-        <button
-          type="submit"
-          className={sharedStyles.primaryButton}
-          data-testid="details.continue.click"
-        >
+        <button type="submit" className={sharedStyles.primaryButton} data-testid="details.continue.click">
           Continue
         </button>
       </div>
     </form>
   );
 };
-

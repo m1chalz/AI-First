@@ -17,4 +17,3 @@ export function formatSex(sex: string): string {
   if (!sex) return sex;
   return sex.charAt(0).toUpperCase() + sex.slice(1).toLowerCase();
 }
-

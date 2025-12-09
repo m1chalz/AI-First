@@ -4,9 +4,7 @@ import { ReactNode } from 'react';
 import { useContactForm } from '../use-contact-form';
 import { ReportMissingPetFlowProvider } from '../../contexts/ReportMissingPetFlowContext';
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>
-);
+const wrapper = ({ children }: { children: ReactNode }) => <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>;
 
 describe('useContactForm', () => {
   describe('input field state management', () => {
@@ -313,7 +311,7 @@ describe('useContactForm', () => {
       'Free ice cream for life',
       '😀 Happy face reward',
       'Multiple\nlines\nof\ntext',
-      '',
+      ''
     ])('should accept submission with reward text: "%s"', (rewardText) => {
       // given
       const { result } = renderHook(() => useContactForm(), { wrapper });

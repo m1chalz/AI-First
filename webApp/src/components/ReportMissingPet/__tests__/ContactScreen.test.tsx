@@ -5,13 +5,14 @@ import { MemoryRouter } from 'react-router-dom';
 import { ContactScreen } from '../ContactScreen';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
 
-const renderWithProviders = () => render(
-  <ReportMissingPetFlowProvider>
-    <MemoryRouter initialEntries={['/report-missing-pet/contact']}>
-      <ContactScreen />
-    </MemoryRouter>
-  </ReportMissingPetFlowProvider>
-);
+const renderWithProviders = () =>
+  render(
+    <ReportMissingPetFlowProvider>
+      <MemoryRouter initialEntries={['/report-missing-pet/contact']}>
+        <ContactScreen />
+      </MemoryRouter>
+    </ReportMissingPetFlowProvider>
+  );
 
 describe('ContactScreen', () => {
   describe('rendering', () => {
@@ -186,7 +187,7 @@ describe('ContactScreen', () => {
 
       // then - no error text should appear for reward field
       const errorTexts = screen.queryAllByText(/reward/i);
-      const rewardErrorText = errorTexts.find(el => el.style.color === '#FB2C36');
+      const rewardErrorText = errorTexts.find((el) => el.style.color === '#FB2C36');
       expect(rewardErrorText).toBeFalsy();
     });
 
@@ -199,7 +200,7 @@ describe('ContactScreen', () => {
       await userEvent.type(rewardInput, '$500 reward');
 
       // then - reward field should not have validation errors
-      const errorTexts = screen.queryAllByText(/is required/i).filter(el => el.textContent?.includes('reward'));
+      const errorTexts = screen.queryAllByText(/is required/i).filter((el) => el.textContent?.includes('reward'));
       expect(errorTexts.length).toBe(0);
     });
 

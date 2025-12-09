@@ -61,7 +61,7 @@ export function useContactForm(): UseContactFormReturn {
       phone,
       email,
       reward,
-      currentStep: FlowStep.Summary,
+      currentStep: FlowStep.Summary
     });
 
     return true;
@@ -78,7 +78,6 @@ export function useContactForm(): UseContactFormReturn {
     handleRewardChange,
     validatePhone,
     validateEmail,
-    handleSubmit,
+    handleSubmit
   };
 }
-

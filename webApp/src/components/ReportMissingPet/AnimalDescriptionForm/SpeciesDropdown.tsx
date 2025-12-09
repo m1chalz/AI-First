@@ -10,25 +10,14 @@ export interface SpeciesDropdownProps {
   testId?: string;
 }
 
-export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({
-  value,
-  onChange,
-  error,
-  testId = 'details.species.select'
-}) => {
-
+export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({ value, onChange, error, testId = 'details.species.select' }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);
   };
 
   return (
     <div>
-      <select
-        value={value}
-        onChange={handleChange}
-        className={styles.select}
-        data-testid={testId}
-      >
+      <select value={value} onChange={handleChange} className={styles.select} data-testid={testId}>
         <option value="">Select species</option>
         {ANIMAL_SPECIES.map((s) => (
           <option key={s} value={s}>
@@ -44,4 +33,3 @@ export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({
     </div>
   );
 };
-

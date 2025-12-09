@@ -13,17 +13,29 @@
   position: relative;
 }
 
-.dateInput input[type="date"] {
+.dateInput input[type='date'] {
   position: relative;
   color: #364153;
-  font-family: 'Hind', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    'Hind',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: normal;
   padding-right: 40px;
 }
 
-.dateInput input[type="date"]::-webkit-calendar-picker-indicator {
+.dateInput input[type='date']::-webkit-calendar-picker-indicator {
   position: absolute;
   right: 12px;
   cursor: pointer;
@@ -32,7 +44,7 @@
   height: 24px;
 }
 
-.dateInput input[type="date"]::-webkit-date-and-time-value {
+.dateInput input[type='date']::-webkit-date-and-time-value {
   text-align: left;
 }
 
@@ -92,7 +104,7 @@
   border-color: #155dfc;
 }
 
-.genderOption input[type="radio"] {
+.genderOption input[type='radio'] {
   width: 24px;
   height: 24px;
   margin: 0;
@@ -159,10 +171,9 @@
   .genderContainer {
     flex-direction: column;
   }
-  
+
   .latLongContainer {
     flex-direction: column;
     gap: 16px;
   }
 }
-

@@ -9,12 +9,7 @@ interface HeaderProps {
 export function Header({ title, progress, onBack }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <button 
-        onClick={onBack}
-        data-testid="reportMissingPet.header.backButton.click"
-        className={styles.backButton}
-        aria-label="Go back"
-      >
+      <button onClick={onBack} data-testid="reportMissingPet.header.backButton.click" className={styles.backButton} aria-label="Go back">
         ←
       </button>
       <p className={styles.title} data-testid="reportMissingPet.header.title">
@@ -26,4 +21,3 @@ export function Header({ title, progress, onBack }: HeaderProps) {
     </header>
   );
 }
-

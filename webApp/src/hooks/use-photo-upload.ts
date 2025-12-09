@@ -23,7 +23,7 @@ export function usePhotoUpload(
 
   const handleFileSelect = (file: File) => {
     const validationError = getFileValidationError(file);
-    
+
     if (validationError) {
       setError(validationError);
       showToast(validationError, 5000);
@@ -40,7 +40,7 @@ export function usePhotoUpload(
       filename: file.name,
       size: file.size,
       mimeType: file.type,
-      previewUrl,
+      previewUrl
     };
 
     setPhoto(newPhoto);
@@ -75,11 +75,14 @@ export function usePhotoUpload(
     setPhoto(null);
   };
 
-  useEffect(() => () => {
+  useEffect(
+    () => () => {
       if (photo?.previewUrl) {
         URL.revokeObjectURL(photo.previewUrl);
       }
-    }, [photo]);
+    },
+    [photo]
+  );
 
   return {
     photo,
@@ -89,7 +92,6 @@ export function usePhotoUpload(
     handleDrop,
     handleDragOver,
     handleDragLeave,
-    removePhoto,
+    removePhoto
   };
 }
-

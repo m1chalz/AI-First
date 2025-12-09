@@ -9,7 +9,7 @@ describe('PhotoConfirmationCard', () => {
     filename: 'test.jpg',
     size: 2048,
     mimeType: 'image/jpeg',
-    previewUrl: 'blob:mock-url',
+    previewUrl: 'blob:mock-url'
   };
 
   describe('render', () => {
@@ -29,12 +29,12 @@ describe('PhotoConfirmationCard', () => {
       [1024, '1.0 KB'],
       [2048, '2.0 KB'],
       [1024 * 1024, '1.0 MB'],
-      [1024 * 1024 * 5, '5.0 MB'],
+      [1024 * 1024 * 5, '5.0 MB']
     ])('formats %d bytes as %s', (_bytes, expected) => {
       // given / when
       const photo: PhotoAttachment = {
         ...mockPhoto,
-        size: _bytes,
+        size: _bytes
       };
       render(<PhotoConfirmationCard photo={photo} onRemove={vi.fn()} />);
 
@@ -67,13 +67,13 @@ describe('PhotoConfirmationCard', () => {
       { filename: 'photo.jpg', mimeType: 'image/jpeg' },
       { filename: 'photo.png', mimeType: 'image/png' },
       { filename: 'photo.gif', mimeType: 'image/gif' },
-      { filename: 'my-vacation-photo.jpg', mimeType: 'image/jpeg' },
+      { filename: 'my-vacation-photo.jpg', mimeType: 'image/jpeg' }
     ])('renders confirmation for file $filename', ({ filename, mimeType }) => {
       // given
       const photo: PhotoAttachment = {
         ...mockPhoto,
         filename,
-        mimeType,
+        mimeType
       };
 
       // when
@@ -83,5 +83,4 @@ describe('PhotoConfirmationCard', () => {
       expect(screen.getByTestId('animalPhoto.filename.text').textContent).toBe(filename);
     });
   });
-
 });

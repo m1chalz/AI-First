@@ -10,13 +10,8 @@ export interface GenderSelectorProps {
   testId?: string;
 }
 
-export const GenderSelector: React.FC<GenderSelectorProps> = ({
-  value,
-  onChange,
-  error,
-  testId = 'details.sex.select'
-}) => {
-  const sexOptions = ANIMAL_SEXES.filter(s => s !== 'UNKNOWN');
+export const GenderSelector: React.FC<GenderSelectorProps> = ({ value, onChange, error, testId = 'details.sex.select' }) => {
+  const sexOptions = ANIMAL_SEXES.filter((s) => s !== 'UNKNOWN');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -27,14 +22,7 @@ export const GenderSelector: React.FC<GenderSelectorProps> = ({
       <div className={styles.genderContainer}>
         {sexOptions.map((sex) => (
           <div key={sex} className={styles.genderOption}>
-            <input
-              type="radio"
-              name="sex"
-              id={`sex-${sex}`}
-              value={sex}
-              checked={value === sex}
-              onChange={handleChange}
-            />
+            <input type="radio" name="sex" id={`sex-${sex}`} value={sex} checked={value === sex} onChange={handleChange} />
             <label htmlFor={`sex-${sex}`}>{SEX_LABELS[sex]}</label>
           </div>
         ))}
@@ -47,4 +35,3 @@ export const GenderSelector: React.FC<GenderSelectorProps> = ({
     </div>
   );
 };
-

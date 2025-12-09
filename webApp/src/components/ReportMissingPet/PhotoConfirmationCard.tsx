@@ -37,4 +37,3 @@ export function PhotoConfirmationCard({ photo, onRemove }: PhotoConfirmationCard
     </div>
   );
 }
-

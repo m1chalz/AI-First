@@ -10,7 +10,7 @@ describe('formatMicrochipNumber', () => {
     ['123456', '12345-6'],
     ['1234567890', '12345-67890'],
     ['123456789012345', '12345-67890-12345'],
-    ['12345678901234567890', '12345-67890-12345'], // truncates to 15
+    ['12345678901234567890', '12345-67890-12345'] // truncates to 15
   ])('formats "%s" as "%s"', (input, expected) => {
     expect(formatMicrochip(input)).toBe(expected);
   });
@@ -25,9 +25,8 @@ describe('stripNonDigits', () => {
     ['', ''],
     ['ABCXYZ', ''],
     ['123.456.789', '123456789'],
-    ['(123) 456-7890', '1234567890'],
+    ['(123) 456-7890', '1234567890']
   ])('strips non-digits from "%s" to "%s"', (input, expected) => {
     expect(stripNonDigits(input)).toBe(expected);
   });
 });
-

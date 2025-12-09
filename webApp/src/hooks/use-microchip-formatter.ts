@@ -36,7 +36,6 @@ export function useMicrochipFormatter(initialValue = ''): UseMicrochipFormatterR
     formattedValue,
     handleChange,
     handlePaste,
-    reset,
+    reset
   };
 }
-

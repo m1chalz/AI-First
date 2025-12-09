@@ -26,7 +26,7 @@ export interface UseDetailsFormReturn {
 
 export function useDetailsForm(): UseDetailsFormReturn {
   const { flowState, updateFlowState } = useReportMissingPetFlow();
-  
+
   const [formData, setFormData] = useState<DetailsFormData>({
     lastSeenDate: flowState.lastSeenDate || new Date().toISOString().split('T')[0],
     species: flowState.species || '',
@@ -37,14 +37,14 @@ export function useDetailsForm(): UseDetailsFormReturn {
     description: flowState.description || '',
     latitude: flowState.latitude !== null ? String(flowState.latitude) : '',
     longitude: flowState.longitude !== null ? String(flowState.longitude) : '',
-    validationErrors: {},
+    validationErrors: {}
   });
 
   const [previousSpecies, setPreviousSpecies] = useState(formData.species);
 
   useEffect(() => {
     if (formData.species !== previousSpecies && previousSpecies !== '') {
-      setFormData(prev => ({ ...prev, breed: '' }));
+      setFormData((prev) => ({ ...prev, breed: '' }));
       setPreviousSpecies(formData.species);
     }
   }, [formData.species, previousSpecies]);
@@ -53,12 +53,12 @@ export function useDetailsForm(): UseDetailsFormReturn {
     if (field === 'validationErrors') {
       return;
     }
-    
+
     if (field === 'species' && value !== formData.species && formData.species !== '') {
-      setFormData(prev => ({ ...prev, [field]: value, breed: '' }));
+      setFormData((prev) => ({ ...prev, [field]: value, breed: '' }));
       setPreviousSpecies(value);
     } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
     }
   };
 
@@ -71,15 +71,15 @@ export function useDetailsForm(): UseDetailsFormReturn {
       age: formData.age,
       description: formData.description,
       latitude: formData.latitude,
-      longitude: formData.longitude,
+      longitude: formData.longitude
     });
 
     if (Object.keys(errors).length > 0) {
-      setFormData(prev => ({ ...prev, validationErrors: errors }));
+      setFormData((prev) => ({ ...prev, validationErrors: errors }));
       return false;
     }
 
-    setFormData(prev => ({ ...prev, validationErrors: {} }));
+    setFormData((prev) => ({ ...prev, validationErrors: {} }));
 
     updateFlowState({
       lastSeenDate: formData.lastSeenDate,
@@ -91,7 +91,7 @@ export function useDetailsForm(): UseDetailsFormReturn {
       description: formData.description,
       latitude: formData.latitude ? Number(formData.latitude) : null,
       longitude: formData.longitude ? Number(formData.longitude) : null,
-      currentStep: FlowStep.Contact,
+      currentStep: FlowStep.Contact
     });
 
     return true;
@@ -101,7 +101,6 @@ export function useDetailsForm(): UseDetailsFormReturn {
     formData,
     updateField,
     handleSubmit,
-    flowState,
+    flowState
   };
 }
-

@@ -59,7 +59,7 @@ describe('useAnnouncementCreation', () => {
   it('should set isCreating to true during creation', async () => {
     // given
     vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({ id: 'ann-123', managementPassword: 'pass123' }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ id: 'ann-123', managementPassword: 'pass123' }), 100))
     );
 
     const { result } = renderHook(() => useAnnouncementCreation());
@@ -174,4 +174,3 @@ describe('useAnnouncementCreation', () => {
     );
   });
 });
-

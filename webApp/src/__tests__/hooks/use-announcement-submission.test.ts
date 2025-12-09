@@ -75,10 +75,10 @@ describe('useAnnouncementSubmission', () => {
   it('should set isSubmitting to true during full submission (create + upload)', async () => {
     // given
     vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve({ id: 'ann-123', managementPassword: 'pass123' }), 50))
+      () => new Promise((resolve) => setTimeout(() => resolve({ id: 'ann-123', managementPassword: 'pass123' }), 50))
     );
     vi.spyOn(announcementServiceModule.announcementService, 'uploadPhoto').mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(), 50))
+      () => new Promise((resolve) => setTimeout(() => resolve(), 50))
     );
 
     const { result } = renderHook(() => useAnnouncementSubmission());
@@ -130,8 +130,7 @@ describe('useAnnouncementSubmission', () => {
     vi.spyOn(announcementServiceModule.announcementService, 'uploadPhoto').mockImplementation(mockUploadPhoto);
 
     const networkError = { type: 'network', message: 'Network error. Please check your connection and try again.' };
-    vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement')
-      .mockRejectedValueOnce(networkError);
+    vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockRejectedValueOnce(networkError);
 
     const { result } = renderHook(() => useAnnouncementSubmission());
 
@@ -195,7 +194,9 @@ describe('useAnnouncementSubmission - Error Flow', () => {
     // then
     expect(result.current.error).toBeDefined();
     expect(result.current.error?.type).toBe('duplicate-microchip');
-    expect(result.current.error?.message).toBe('This microchip already exists. If this is your announcement, use your management password to update it.');
+    expect(result.current.error?.message).toBe(
+      'This microchip already exists. If this is your announcement, use your management password to update it.'
+    );
     expect(result.current.announcementId).toBeNull();
   });
 
@@ -289,8 +290,7 @@ describe('useAnnouncementSubmission - Error Flow', () => {
     vi.spyOn(announcementServiceModule.announcementService, 'uploadPhoto').mockImplementation(mockUploadPhoto);
 
     const networkError = { type: 'network', message: 'Network error' };
-    vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement')
-      .mockRejectedValueOnce(networkError);
+    vi.spyOn(announcementServiceModule.announcementService, 'createAnnouncement').mockRejectedValueOnce(networkError);
 
     const { result } = renderHook(() => useAnnouncementSubmission());
 
@@ -309,4 +309,3 @@ describe('useAnnouncementSubmission - Error Flow', () => {
     expect(result.current.isSubmitting).toBe(false);
   });
 });
-

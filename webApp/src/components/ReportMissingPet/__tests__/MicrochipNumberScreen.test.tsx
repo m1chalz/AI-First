@@ -12,15 +12,14 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useNavigate: () => mockNavigate,
+    useNavigate: () => mockNavigate
   };
 });
 
-const renderWithProviders = (component: React.ReactElement) => render(
+const renderWithProviders = (component: React.ReactElement) =>
+  render(
     <BrowserRouter>
-      <ReportMissingPetFlowProvider>
-        {component}
-      </ReportMissingPetFlowProvider>
+      <ReportMissingPetFlowProvider>{component}</ReportMissingPetFlowProvider>
     </BrowserRouter>
   );
 
@@ -53,7 +52,7 @@ describe('MicrochipNumberScreen', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
     const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
-    
+
     fireEvent.change(input, { target: { value: '123456789012345' } });
 
     // when
@@ -72,13 +71,13 @@ describe('MicrochipNumberScreen', () => {
 
     // when (leave input empty)
     expect(input.value).toBe('');
-    
+
     // then
     expect(continueButton.disabled).toBe(false);
-    
+
     // when (click continue with empty input)
     fireEvent.click(continueButton);
-    
+
     // then (should not throw error, navigation should occur)
     expect(continueButton).toBeTruthy();
   });
@@ -87,11 +86,11 @@ describe('MicrochipNumberScreen', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
     const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
-    
+
     // when (enter some data first)
     fireEvent.change(input, { target: { value: '12345' } });
     expect(input.value).toBe('12345');
-    
+
     // when (click back button)
     const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
     fireEvent.click(backButton);
@@ -105,7 +104,7 @@ describe('MicrochipNumberScreen', () => {
     // given (render with persistent provider to simulate real flow)
     const TestWrapper = () => {
       const [showMicrochip, setShowMicrochip] = React.useState(true);
-      
+
       return (
         <BrowserRouter>
           <ReportMissingPetFlowProvider>
@@ -127,20 +126,20 @@ describe('MicrochipNumberScreen', () => {
     };
 
     render(<TestWrapper />);
-    
+
     // when (enter data)
     const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '123456789012345' } });
     expect(input.value).toBe('12345-67890-12345');
-    
+
     // when (save to flow state and navigate away)
     const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
     fireEvent.click(continueButton);
     fireEvent.click(screen.getByTestId('test.navigateAway'));
-    
+
     // when (navigate back)
     fireEvent.click(screen.getByTestId('test.navigateBack'));
-    
+
     // then (data should be restored from flow state)
     const restoredInput = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
     expect(restoredInput.value).toBe('12345-67890-12345');
@@ -150,24 +149,22 @@ describe('MicrochipNumberScreen', () => {
     // given (start with existing data)
     renderWithProviders(<MicrochipNumberScreen />);
     const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
-    
+
     // when (enter initial value)
     fireEvent.change(input, { target: { value: '123456789012345' } });
     expect(input.value).toBe('12345-67890-12345');
-    
+
     // when (edit the value)
     fireEvent.change(input, { target: { value: '111111111111111' } });
-    
+
     // then (should show updated value)
     expect(input.value).toBe('11111-11111-11111');
-    
+
     // when (save updated value)
     const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
     fireEvent.click(continueButton);
-    
+
     // then (should navigate)
     expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.photo);
   });
-
 });
-

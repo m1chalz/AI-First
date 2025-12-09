@@ -7,7 +7,7 @@ describe('useReportMissingPetFlow', () => {
   it('returns context value when used within provider', () => {
     // given / when
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
 
     // then
@@ -30,4 +30,3 @@ describe('useReportMissingPetFlow', () => {
     console.error = consoleError;
   });
 });
-

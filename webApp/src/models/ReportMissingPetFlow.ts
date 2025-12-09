@@ -6,7 +6,7 @@ export enum FlowStep {
   Photo = 'photo',
   Details = 'details',
   Contact = 'contact',
-  Summary = 'summary',
+  Summary = 'summary'
 }
 
 export interface PhotoAttachment {
@@ -50,7 +50,7 @@ export const initialFlowState: ReportMissingPetFlowState = {
   longitude: null,
   phone: '',
   email: '',
-  reward: '',
+  reward: ''
 };
 
 export interface ReportMissingPetFlowContextValue {
@@ -69,4 +69,3 @@ export interface UseMicrochipFormatterReturn extends MicrochipNumberFormData {
   handlePaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
   reset: () => void;
 }
-

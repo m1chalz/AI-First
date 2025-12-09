@@ -197,5 +197,4 @@ describe('PhotoUploadCard', () => {
       expect(onFileInputChange).toHaveBeenCalled();
     });
   });
-
 });

@@ -55,4 +55,3 @@ describe('Header', () => {
     expect(screen.getByText('2/4')).toBeTruthy();
   });
 });
-

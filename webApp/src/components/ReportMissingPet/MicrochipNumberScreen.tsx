@@ -10,14 +10,12 @@ import { useEffect } from 'react';
 export function MicrochipNumberScreen() {
   const navigate = useNavigate();
   const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
-  const { value, formattedValue, handleChange, handlePaste } = useMicrochipFormatter(
-    flowState.microchipNumber
-  );
+  const { value, formattedValue, handleChange, handlePaste } = useMicrochipFormatter(flowState.microchipNumber);
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
       updateFlowState({
-        currentStep: FlowStep.Microchip,
+        currentStep: FlowStep.Microchip
       });
     }
   }, [flowState.currentStep, updateFlowState]);
@@ -25,7 +23,7 @@ export function MicrochipNumberScreen() {
   const handleContinue = () => {
     updateFlowState({
       microchipNumber: value,
-      currentStep: FlowStep.Photo,
+      currentStep: FlowStep.Photo
     });
     navigate(ReportMissingPetRoutes.photo);
   };
@@ -36,15 +34,12 @@ export function MicrochipNumberScreen() {
   };
 
   return (
-    <ReportMissingPetLayout
-      title="Microchip number"
-      progress="1/4"
-      onBack={handleBack}
-    >
+    <ReportMissingPetLayout title="Microchip number" progress="1/4" onBack={handleBack}>
       <h2 className={styles.heading}>Identification by Microchip</h2>
 
       <p className={styles.description}>
-        Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the microchip number, please enter it here.
+        Microchip identification is the most efficient way to reunite with your pet. If your pet has been microchipped and you know the
+        microchip number, please enter it here.
       </p>
 
       <div className={styles.inputGroup}>
@@ -64,14 +59,9 @@ export function MicrochipNumberScreen() {
         />
       </div>
 
-      <button
-        onClick={handleContinue}
-        className={styles.primaryButton}
-        data-testid="reportMissingPet.step1.continueButton.click"
-      >
+      <button onClick={handleContinue} className={styles.primaryButton} data-testid="reportMissingPet.step1.continueButton.click">
         Continue
       </button>
     </ReportMissingPetLayout>
   );
 }
-

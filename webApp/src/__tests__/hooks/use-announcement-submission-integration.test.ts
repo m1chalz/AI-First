@@ -202,4 +202,3 @@ describe('useAnnouncementSubmission - Integration', () => {
     expect(jsonString).toContain('FEMALE');
   });
 });
-

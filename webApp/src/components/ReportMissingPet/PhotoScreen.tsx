@@ -26,16 +26,11 @@ export function PhotoScreen() {
   const handleBack = () => {
     navigate(ReportMissingPetRoutes.microchip);
   };
-  
-  const {
-    photo,
-    isDragOver,
-    handleFileSelect,
-    handleDrop,
-    handleDragOver,
-    handleDragLeave,
-    removePhoto,
-  } = usePhotoUpload(flowState.photo, showToast);
+
+  const { photo, isDragOver, handleFileSelect, handleDrop, handleDragOver, handleDragLeave, removePhoto } = usePhotoUpload(
+    flowState.photo,
+    showToast
+  );
 
   const handleContinue = () => {
     if (!photo) {
@@ -45,7 +40,7 @@ export function PhotoScreen() {
 
     updateFlowState({
       photo,
-      currentStep: FlowStep.Details,
+      currentStep: FlowStep.Details
     });
     navigate(ReportMissingPetRoutes.details);
   };
@@ -62,16 +57,10 @@ export function PhotoScreen() {
   };
 
   return (
-    <ReportMissingPetLayout
-      title="Animal photo"
-      progress="2/4"
-      onBack={handleBack}
-    >
+    <ReportMissingPetLayout title="Animal photo" progress="2/4" onBack={handleBack}>
       <h2 className={styles.heading}>Your pet&apos;s photo</h2>
-      
-      <p className={styles.description}>
-        Please upload a photo of the missing animal.
-      </p>
+
+      <p className={styles.description}>Please upload a photo of the missing animal.</p>
 
       {!photo ? (
         <PhotoUploadCard
@@ -86,12 +75,8 @@ export function PhotoScreen() {
       ) : (
         <PhotoConfirmationCard photo={photo} onRemove={removePhoto} />
       )}
-      
-      <button
-        onClick={handleContinue}
-        className={styles.primaryButton}
-        data-testid="animalPhoto.continue.click"
-      >
+
+      <button onClick={handleContinue} className={styles.primaryButton} data-testid="animalPhoto.continue.click">
         Continue
       </button>
 

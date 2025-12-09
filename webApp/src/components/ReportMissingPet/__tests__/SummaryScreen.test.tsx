@@ -8,9 +8,7 @@ import '@testing-library/jest-dom';
 const renderWithRouter = (component: React.ReactNode) =>
   render(
     <BrowserRouter>
-      <ReportMissingPetFlowProvider>
-        {component}
-      </ReportMissingPetFlowProvider>
+      <ReportMissingPetFlowProvider>{component}</ReportMissingPetFlowProvider>
     </BrowserRouter>
   );
 

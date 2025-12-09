@@ -13,4 +13,3 @@ export function Toast({ message }: ToastProps) {
     </div>
   );
 }
-

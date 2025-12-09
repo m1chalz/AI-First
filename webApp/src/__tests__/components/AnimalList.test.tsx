@@ -6,7 +6,7 @@ import { Animal } from '../../types/animal';
 
 // Mock react-router-dom
 vi.mock('react-router-dom', () => ({
-  useNavigate: vi.fn(() => vi.fn()),
+  useNavigate: vi.fn(() => vi.fn())
 }));
 
 // Mock the hooks
@@ -17,7 +17,7 @@ vi.mock('../../hooks/use-animal-list', () => ({
     error: null,
     isEmpty: true,
     loadAnimals: vi.fn(),
-    geolocationError: null,
+    geolocationError: null
   }))
 }));
 
@@ -26,7 +26,7 @@ vi.mock('../../hooks/use-modal', () => ({
     isOpen: false,
     selectedPetId: null,
     openModal: vi.fn(),
-    closeModal: vi.fn(),
+    closeModal: vi.fn()
   }))
 }));
 
@@ -43,7 +43,7 @@ describe('AnimalList - Location Banner Integration', () => {
       error: null,
       isEmpty: true,
       loadAnimals: vi.fn(),
-      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError,
+      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
     });
 
     // when
@@ -62,7 +62,7 @@ describe('AnimalList - Location Banner Integration', () => {
       error: null,
       isEmpty: true,
       loadAnimals: vi.fn(),
-      geolocationError: null,
+      geolocationError: null
     });
 
     // when
@@ -80,7 +80,7 @@ describe('AnimalList - Location Banner Integration', () => {
       error: null,
       isEmpty: true,
       loadAnimals: vi.fn(),
-      geolocationError: { code: 3, message: 'Timeout' } as GeolocationPositionError,
+      geolocationError: { code: 3, message: 'Timeout' } as GeolocationPositionError
     });
 
     // when
@@ -98,7 +98,7 @@ describe('AnimalList - Location Banner Integration', () => {
       error: null,
       isEmpty: true,
       loadAnimals: vi.fn(),
-      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError,
+      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
     });
     render(<AnimalList />);
     const closeButton = screen.getByTestId('petList.locationBanner.close');
@@ -113,16 +113,35 @@ describe('AnimalList - Location Banner Integration', () => {
   it('should show pets list alongside LocationBanner when permission denied', () => {
     // given
     const mockAnimals: Animal[] = [
-      { id: '1', petName: 'Fluffy', species: 'CAT', breed: 'Maine Coon', locationLatitude: 52.0, locationLongitude: 21.0, sex: 'MALE', status: 'MISSING', lastSeenDate: '2025-11-18', description: 'Test', email: null, phone: null, photoUrl: 'placeholder', age: null, microchipNumber: null, reward: null, createdAt: null, updatedAt: null },
+      {
+        id: '1',
+        petName: 'Fluffy',
+        species: 'CAT',
+        breed: 'Maine Coon',
+        locationLatitude: 52.0,
+        locationLongitude: 21.0,
+        sex: 'MALE',
+        status: 'MISSING',
+        lastSeenDate: '2025-11-18',
+        description: 'Test',
+        email: null,
+        phone: null,
+        photoUrl: 'placeholder',
+        age: null,
+        microchipNumber: null,
+        reward: null,
+        createdAt: null,
+        updatedAt: null
+      }
     ];
-    
+
     vi.spyOn(useAnimalListModule, 'useAnimalList').mockReturnValue({
       animals: mockAnimals,
       isLoading: false,
       error: null,
       isEmpty: false,
       loadAnimals: vi.fn(),
-      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError,
+      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
     });
 
     // when
@@ -133,4 +152,3 @@ describe('AnimalList - Location Banner Integration', () => {
     screen.getByTestId('animalList.list');
   });
 });
-

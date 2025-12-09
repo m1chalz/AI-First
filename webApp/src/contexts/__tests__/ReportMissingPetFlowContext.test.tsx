@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { 
-  ReportMissingPetFlowProvider, 
-  useReportMissingPetFlow 
-} from '../ReportMissingPetFlowContext';
+import { ReportMissingPetFlowProvider, useReportMissingPetFlow } from '../ReportMissingPetFlowContext';
 import { FlowStep } from '../../models/ReportMissingPetFlow';
 import { AnimalSpecies, AnimalSex } from '../../types/animal';
 
@@ -11,7 +8,7 @@ describe('ReportMissingPetFlowContext', () => {
   it('provides initial flow state', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
 
     // then
@@ -23,7 +20,7 @@ describe('ReportMissingPetFlowContext', () => {
   it('updates microchip number', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
 
     // when
@@ -39,7 +36,7 @@ describe('ReportMissingPetFlowContext', () => {
   it('updates current step', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
 
     // when
@@ -54,14 +51,14 @@ describe('ReportMissingPetFlowContext', () => {
   it('updates multiple fields at once', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
 
     // when
     act(() => {
       result.current.updateFlowState({
         microchipNumber: '123456789012345',
-        currentStep: FlowStep.Photo,
+        currentStep: FlowStep.Photo
       });
     });
 
@@ -73,14 +70,14 @@ describe('ReportMissingPetFlowContext', () => {
   it('updates photo state', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
     const mockPhoto = {
       file: new File(['test'], 'test.jpg', { type: 'image/jpeg' }),
       filename: 'test.jpg',
       size: 1024,
       mimeType: 'image/jpeg',
-      previewUrl: 'blob:mock-url',
+      previewUrl: 'blob:mock-url'
     };
 
     // when
@@ -95,21 +92,21 @@ describe('ReportMissingPetFlowContext', () => {
   it('clears flow state to initial values', () => {
     // given
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider,
+      wrapper: ReportMissingPetFlowProvider
     });
     const mockPhoto = {
       file: new File(['test'], 'test.jpg', { type: 'image/jpeg' }),
       filename: 'test.jpg',
       size: 1024,
       mimeType: 'image/jpeg',
-      previewUrl: 'blob:mock-url',
+      previewUrl: 'blob:mock-url'
     };
 
     act(() => {
       result.current.updateFlowState({
         microchipNumber: '123456789012345',
         currentStep: FlowStep.Photo,
-        photo: mockPhoto,
+        photo: mockPhoto
       });
     });
 
@@ -142,9 +139,9 @@ describe('ReportMissingPetFlowContext', () => {
     it('should include lastSeenDate, species, breed, sex, age, description, latitude, longitude in flow state', () => {
       // given
       const { result } = renderHook(() => useReportMissingPetFlow(), {
-        wrapper: ReportMissingPetFlowProvider,
+        wrapper: ReportMissingPetFlowProvider
       });
-      
+
       // then
       expect(result.current.flowState).toHaveProperty('lastSeenDate');
       expect(result.current.flowState).toHaveProperty('species');
@@ -159,9 +156,9 @@ describe('ReportMissingPetFlowContext', () => {
     it('should initialize Step 3 fields with correct defaults', () => {
       // given
       const { result } = renderHook(() => useReportMissingPetFlow(), {
-        wrapper: ReportMissingPetFlowProvider,
+        wrapper: ReportMissingPetFlowProvider
       });
-      
+
       // then
       const today = new Date().toISOString().split('T')[0];
       expect(result.current.flowState.lastSeenDate).toBe(today);
@@ -181,17 +178,17 @@ describe('ReportMissingPetFlowContext', () => {
       ['sex', 'MALE' as AnimalSex, 'MALE'],
       ['age', 5, 5],
       ['description', 'Friendly dog', 'Friendly dog'],
-      ['latitude', 52.5200, 52.5200],
-      ['longitude', 13.4050, 13.4050],
+      ['latitude', 52.52, 52.52],
+      ['longitude', 13.405, 13.405]
     ])('should update %s field', (field, updateValue, expectedValue) => {
       // given
       const { result } = renderHook(() => useReportMissingPetFlow(), {
-        wrapper: ReportMissingPetFlowProvider,
+        wrapper: ReportMissingPetFlowProvider
       });
 
       // when
       act(() => result.current.updateFlowState({ [field]: updateValue }));
-      
+
       // then
       expect(result.current.flowState[field as keyof typeof result.current.flowState]).toBe(expectedValue);
     });
@@ -199,9 +196,9 @@ describe('ReportMissingPetFlowContext', () => {
     it('should update multiple Step 3 fields at once', () => {
       // given
       const { result } = renderHook(() => useReportMissingPetFlow(), {
-        wrapper: ReportMissingPetFlowProvider,
+        wrapper: ReportMissingPetFlowProvider
       });
-      
+
       // when
       act(() => {
         result.current.updateFlowState({
@@ -211,12 +208,12 @@ describe('ReportMissingPetFlowContext', () => {
           sex: 'MALE' as AnimalSex,
           age: 5,
           description: 'Friendly dog',
-          latitude: 52.5200,
-          longitude: 13.4050,
+          latitude: 52.52,
+          longitude: 13.405,
           currentStep: FlowStep.Contact
         });
       });
-      
+
       // then
       expect(result.current.flowState.lastSeenDate).toBe('2025-12-01');
       expect(result.current.flowState.species).toBe('DOG');
@@ -224,8 +221,8 @@ describe('ReportMissingPetFlowContext', () => {
       expect(result.current.flowState.sex).toBe('MALE');
       expect(result.current.flowState.age).toBe(5);
       expect(result.current.flowState.description).toBe('Friendly dog');
-      expect(result.current.flowState.latitude).toBe(52.5200);
-      expect(result.current.flowState.longitude).toBe(13.4050);
+      expect(result.current.flowState.latitude).toBe(52.52);
+      expect(result.current.flowState.longitude).toBe(13.405);
       expect(result.current.flowState.currentStep).toBe(FlowStep.Contact);
     });
   });

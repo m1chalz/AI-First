@@ -15,50 +15,56 @@ export function App() {
         <Routes>
           <Route path="/" element={<AnimalList />} />
           <Route path="/announcement/:announcementId" element={<AnimalList />} />
-        <Route path="/report-missing" element={<ReportMissingPetFlowProvider><Navigate to="microchip" replace /></ReportMissingPetFlowProvider>} />
-        <Route
-          path="/report-missing/microchip"
-          element={
-            <ReportMissingPetFlowProvider>
-              <MicrochipNumberScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/photo"
-          element={
-            <ReportMissingPetFlowProvider>
-              <PhotoScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/details"
-          element={
-            <ReportMissingPetFlowProvider>
-              <DetailsScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/contact"
-          element={
-            <ReportMissingPetFlowProvider>
-              <ContactScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/summary"
-          element={
-            <ReportMissingPetFlowProvider>
-              <SummaryScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
+          <Route
+            path="/report-missing"
+            element={
+              <ReportMissingPetFlowProvider>
+                <Navigate to="microchip" replace />
+              </ReportMissingPetFlowProvider>
+            }
+          />
+          <Route
+            path="/report-missing/microchip"
+            element={
+              <ReportMissingPetFlowProvider>
+                <MicrochipNumberScreen />
+              </ReportMissingPetFlowProvider>
+            }
+          />
+          <Route
+            path="/report-missing/photo"
+            element={
+              <ReportMissingPetFlowProvider>
+                <PhotoScreen />
+              </ReportMissingPetFlowProvider>
+            }
+          />
+          <Route
+            path="/report-missing/details"
+            element={
+              <ReportMissingPetFlowProvider>
+                <DetailsScreen />
+              </ReportMissingPetFlowProvider>
+            }
+          />
+          <Route
+            path="/report-missing/contact"
+            element={
+              <ReportMissingPetFlowProvider>
+                <ContactScreen />
+              </ReportMissingPetFlowProvider>
+            }
+          />
+          <Route
+            path="/report-missing/summary"
+            element={
+              <ReportMissingPetFlowProvider>
+                <SummaryScreen />
+              </ReportMissingPetFlowProvider>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </GeolocationProvider>
   );
 }
-
