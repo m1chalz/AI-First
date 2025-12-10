@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { PetDetailsContent } from '../../components/PetDetailsModal/PetDetailsContent';
-import type { Animal } from '../../types/animal';
+import { AnnouncementDetailsContent } from '../../components/AnnouncementDetailsModal/AnnouncementDetailsContent';
+import type { Announcement } from '../../types/animal';
 
-const MOCK_PET: Animal = {
+const MOCK_ANNOUNCEMENT: Announcement = {
   id: '123',
   petName: 'Bella',
   species: 'DOG',
@@ -24,14 +24,14 @@ const MOCK_PET: Animal = {
   updatedAt: '2024-11-25T10:00:00Z'
 };
 
-describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
+describe('AnnouncementDetailsContent - Identification Fields (User Story 2)', () => {
   describe('Microchip Field Display', () => {
     it('should display microchip number with proper formatting (XXXXX-XXXXX-XXXXX)', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, microchipNumber: '882097601234567' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, microchipNumber: '882097601234567' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Microchip number');
@@ -43,10 +43,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
       { microchipNumber: '', description: 'should display "—" when microchip is empty string' }
     ])('$description', ({ microchipNumber }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, microchipNumber };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, microchipNumber };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const microchipValues = screen.getAllByText('—');
@@ -57,10 +57,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
   describe('Species and Breed Fields Display', () => {
     it('should display Animal Species label and formatted species', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, species: 'DOG' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, species: 'DOG' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Animal Species');
@@ -69,10 +69,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display Animal Race label and breed', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, breed: 'Labrador' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, breed: 'Labrador' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Animal Race');
@@ -81,10 +81,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display "—" for breed when null', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, breed: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, breed: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const dashes = screen.getAllByText('—');
@@ -93,10 +93,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display species and breed in two-column layout', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, species: 'CAT', breed: 'Persian' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, species: 'CAT', breed: 'Persian' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Animal Species');
@@ -112,10 +112,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
       { sex: 'FEMALE' as const, expectedRegex: /Female ♀/, description: 'should display Animal Sex label with female icon for FEMALE' }
     ])('$description', ({ sex, expectedRegex }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, sex };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, sex };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Animal Sex');
@@ -124,10 +124,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display "—" for UNKNOWN sex', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, sex: 'UNKNOWN' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, sex: 'UNKNOWN' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const sexLabel = screen.getByText('Animal Sex').closest('.fieldRow') || screen.getByText('Animal Sex').parentElement;
@@ -142,10 +142,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
       { age: 1, expectedText: '1 years', description: 'should display age 1 correctly' }
     ])('$description', ({ age, expectedText }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, age };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, age };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Animal Approx. Age');
@@ -154,10 +154,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display "—" when age is null', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, age: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, age: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const ageLabel = screen.getByText('Animal Approx. Age').closest('.fieldRow') || screen.getByText('Animal Approx. Age').parentElement;
@@ -168,8 +168,8 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
   describe('Identification Fields Together', () => {
     it('should display all identification fields with proper values', () => {
       // Given
-      const pet: Animal = {
-        ...MOCK_PET,
+      const announcement: Announcement = {
+        ...MOCK_ANNOUNCEMENT,
         microchipNumber: '123456789012345',
         species: 'DOG',
         breed: 'Golden Retriever',
@@ -178,7 +178,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
       };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Microchip number');
@@ -195,7 +195,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
 
     it('should display all fields with null/empty values as dashes', () => {
       // Given
-      const pet: Animal = {
+      const announcement: Announcement = {
         id: '456',
         petName: 'Unknown',
         species: 'DOG',
@@ -217,7 +217,7 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
       };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const dashes = screen.getAllByText('—');
@@ -228,10 +228,10 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
   describe('Identification Layout', () => {
     it('should render identification section with all fields', () => {
       // Given
-      const pet: Animal = MOCK_PET;
+      const announcement: Announcement = MOCK_ANNOUNCEMENT;
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       // Verify that all identification fields are rendered
@@ -243,14 +243,14 @@ describe('PetDetailsContent - Identification Fields (User Story 2)', () => {
   });
 });
 
-describe('PetDetailsContent - Location & Contact Information (User Story 3)', () => {
+describe('AnnouncementDetailsContent - Location & Contact Information (User Story 3)', () => {
   describe('Location Display', () => {
     it('should display location coordinates when available', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, locationLatitude: 52.2297, locationLongitude: 21.0122 };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: 52.2297, locationLongitude: 21.0122 };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('Lat / Long');
@@ -259,10 +259,10 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
     it('should hide location section when coordinates unavailable', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, locationLatitude: null, locationLongitude: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: null, locationLongitude: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       // Should not have the location section at all
@@ -272,13 +272,13 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
     it('should display map button when coordinates available', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, locationLatitude: 40.7128, locationLongitude: -74.006 };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: 40.7128, locationLongitude: -74.006 };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
-      const mapButton = screen.getByTestId('petDetails.mapButton.click');
+      const mapButton = screen.getByTestId('announcementDetails.mapButton.click');
       expect(mapButton).toBeTruthy();
       expect(mapButton.getAttribute('href')).toContain('maps');
       expect(mapButton.getAttribute('target')).toBe('_blank');
@@ -286,22 +286,22 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
     it('should not display map button when coordinates unavailable', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, locationLatitude: null, locationLongitude: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: null, locationLongitude: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
-      const mapButton = screen.queryByTestId('petDetails.mapButton.click');
+      const mapButton = screen.queryByTestId('announcementDetails.mapButton.click');
       expect(mapButton).toBeNull();
     });
 
     it('should handle partial coordinates (one null)', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, locationLatitude: 52.2297, locationLongitude: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: 52.2297, locationLongitude: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       // Should hide location section if either coordinate is null
@@ -316,10 +316,10 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
       { phone: '+1 (555) 123-4567', description: 'should display phone with formatting' }
     ])('$description', ({ phone }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, phone };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, phone };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText(phone);
@@ -330,10 +330,10 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
       { email: 'contact@petfinder.org', description: 'should display email with organization domain' }
     ])('$description', ({ email }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, email };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, email };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText(email);
@@ -345,10 +345,10 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
     ])('$description', ({ contact }) => {
       // Given
       const petUpdates = contact === 'phone' ? { phone: null } : { email: null };
-      const pet: Animal = { ...MOCK_PET, ...petUpdates };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, ...petUpdates };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const dashes = screen.getAllByText('—');
@@ -357,10 +357,10 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
 
     it('should display both phone and email exactly as received', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, phone: '+1 (555) 123-4567', email: 'contact@petfinder.org' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, phone: '+1 (555) 123-4567', email: 'contact@petfinder.org' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       screen.getByText('+1 (555) 123-4567');
@@ -371,8 +371,8 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
   describe('Location and Contact Together', () => {
     it('should display all location and contact fields with proper values', () => {
       // Given
-      const pet: Animal = {
-        ...MOCK_PET,
+      const announcement: Announcement = {
+        ...MOCK_ANNOUNCEMENT,
         locationLatitude: 48.8566,
         locationLongitude: 2.3522,
         phone: '+33 1 2345 6789',
@@ -380,13 +380,13 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
       };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       // Location
       screen.getByText('Lat / Long');
       screen.getByText(/48\.8566° N, 2\.3522° E/);
-      screen.getByTestId('petDetails.mapButton.click');
+      screen.getByTestId('announcementDetails.mapButton.click');
 
       // Contact
       screen.getByText('+33 1 2345 6789');
@@ -395,14 +395,14 @@ describe('PetDetailsContent - Location & Contact Information (User Story 3)', ()
   });
 });
 
-describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
+describe('AnnouncementDetailsContent - Additional Details (User Story 4)', () => {
   describe('Description Display', () => {
     it('should display additional description with label', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, description: 'Friendly and playful dog with brown spots' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, description: 'Friendly and playful dog with brown spots' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('Animal Additional Description')).toBeTruthy();
@@ -412,10 +412,10 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
     it('should display multi-line description text', () => {
       // Given
       const multiLineDescription = 'Friendly and playful dog\nWith brown spots\nAnswers to "Bella"';
-      const pet: Animal = { ...MOCK_PET, description: multiLineDescription };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, description: multiLineDescription };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText(/Friendly and playful dog/)).toBeTruthy();
@@ -426,10 +426,10 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
       { description: '', testName: 'should display "—" when description is empty string' }
     ])('$testName', ({ description }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, description };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, description };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const descriptions = screen.getAllByText('—');
@@ -440,10 +440,10 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
       // Given
       const longDescription =
         'This is a very long description that contains detailed information about the pet including behavior, physical characteristics, and other identifying features. The description helps people identify if this is their pet.';
-      const pet: Animal = { ...MOCK_PET, description: longDescription };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, description: longDescription };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText(/This is a very long description/)).toBeTruthy();
@@ -452,10 +452,10 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
     it('should handle descriptions with special characters', () => {
       // Given
       const descriptionWithSpecialChars = 'Dog with spots & marks (brown/white) - very friendly!';
-      const pet: Animal = { ...MOCK_PET, description: descriptionWithSpecialChars };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, description: descriptionWithSpecialChars };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('Dog with spots & marks (brown/white) - very friendly!')).toBeTruthy();
@@ -465,8 +465,8 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
   describe('Description with Other Fields', () => {
     it('should display description along with other identification fields', () => {
       // Given
-      const pet: Animal = {
-        ...MOCK_PET,
+      const announcement: Announcement = {
+        ...MOCK_ANNOUNCEMENT,
         description: 'Friendly dog',
         microchipNumber: '123456789012345',
         species: 'DOG',
@@ -474,7 +474,7 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
       };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       // Identification fields
@@ -489,7 +489,7 @@ describe('PetDetailsContent - Additional Pet Details (User Story 4)', () => {
   });
 });
 
-describe('PetDetailsContent - Status Badge (User Story 6)', () => {
+describe('AnnouncementDetailsContent - Status Badge (User Story 6)', () => {
   describe('Status Badge Display', () => {
     it.each([
       { status: 'MISSING' as const, description: 'should display badge for MISSING status' },
@@ -497,10 +497,10 @@ describe('PetDetailsContent - Status Badge (User Story 6)', () => {
       { status: 'CLOSED' as const, description: 'should display badge for CLOSED status' }
     ])('$description', ({ status }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText(status)).toBeTruthy();
@@ -508,10 +508,10 @@ describe('PetDetailsContent - Status Badge (User Story 6)', () => {
 
     it('should display status badge text exactly as status value', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status: 'MISSING' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status: 'MISSING' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('MISSING')).toBeTruthy();
@@ -521,10 +521,10 @@ describe('PetDetailsContent - Status Badge (User Story 6)', () => {
   describe('Status Badge with Other Badges', () => {
     it('should display both status badge and reward badge when both present', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status: 'MISSING', reward: '500 PLN' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status: 'MISSING', reward: '500 PLN' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('MISSING')).toBeTruthy();
@@ -533,10 +533,10 @@ describe('PetDetailsContent - Status Badge (User Story 6)', () => {
 
     it('should display status badge but no reward badge when reward is null', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status: 'FOUND', reward: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status: 'FOUND', reward: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('FOUND')).toBeTruthy();
@@ -546,7 +546,7 @@ describe('PetDetailsContent - Status Badge (User Story 6)', () => {
   });
 });
 
-describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
+describe('AnnouncementDetailsContent - Reward Badge (User Story 5)', () => {
   describe('Reward Badge Display', () => {
     it.each([
       { reward: '500 PLN', description: 'should display reward badge when reward is present' },
@@ -554,10 +554,10 @@ describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
       { reward: 'Contact for reward', description: 'should display reward with custom text' }
     ])('$description', ({ reward }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, reward };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, reward };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText(`Reward ${reward}`)).toBeTruthy();
@@ -568,10 +568,10 @@ describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
       { reward: '', description: 'should not display reward badge when reward is empty string' }
     ])('$description', ({ reward }) => {
       // Given
-      const pet: Animal = { ...MOCK_PET, reward };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, reward };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       const rewardElements = screen.queryAllByText(/^Reward/);
@@ -582,10 +582,10 @@ describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
   describe('Reward Badge with Status Badge', () => {
     it('should display both status badge (top-right) and reward badge (bottom-left)', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status: 'MISSING', reward: '500 PLN' };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status: 'MISSING', reward: '500 PLN' };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('MISSING')).toBeTruthy();
@@ -594,10 +594,10 @@ describe('PetDetailsContent - Reward Badge (User Story 5)', () => {
 
     it('should display status badge but no reward badge when reward is null', () => {
       // Given
-      const pet: Animal = { ...MOCK_PET, status: 'FOUND', reward: null };
+      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, status: 'FOUND', reward: null };
 
       // When
-      render(<PetDetailsContent pet={pet} />);
+      render(<AnnouncementDetailsContent announcement={announcement} />);
 
       // Then
       expect(screen.getByText('FOUND')).toBeTruthy();

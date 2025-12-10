@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAnimalList } from '../../hooks/use-animal-list';
+import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { useModal } from '../../hooks/use-modal';
-import { AnimalCard } from './AnimalCard';
+import { AnnouncementCard } from './AnnouncementCard';
 import { EmptyState } from './EmptyState';
 import { LocationBanner } from '../LocationBanner/LocationBanner';
-import { PetDetailsModal } from '../PetDetailsModal/PetDetailsModal';
-import styles from './AnimalList.module.css';
+import { AnnouncementDetailsModal } from '../AnnouncementDetailsModal/AnnouncementDetailsModal';
+import styles from './AnnouncementList.module.css';
 
-export const AnimalList: React.FC = () => {
+export const AnnouncementList: React.FC = () => {
   const navigate = useNavigate();
-  const { animals, isLoading, error, isEmpty, geolocationError } = useAnimalList();
+  const { announcements, isLoading, error, isEmpty, geolocationError } = useAnnouncementList();
 
-  const { isOpen, selectedPetId, openModal, closeModal } = useModal();
+  const { isOpen, selectedAnnouncementId, openModal, closeModal } = useModal();
   const [isBannerDismissed, setIsBannerDismissed] = useState(false);
 
   const showLocationBanner = geolocationError?.code === 1 && !isBannerDismissed;
@@ -27,7 +27,7 @@ export const AnimalList: React.FC = () => {
             <button
               className={styles.primaryButton}
               onClick={() => navigate('/report-missing/microchip')}
-              data-testid="animalList.reportMissingButton"
+              data-testid="announcementList.reportMissingButton"
             >
               Report a Missing Animal
             </button>
@@ -37,9 +37,9 @@ export const AnimalList: React.FC = () => {
         <div className={styles.content}>
           {showLocationBanner && <LocationBanner onClose={() => setIsBannerDismissed(true)} />}
           {isLoading ? (
-            <div className={styles.loading} data-testid="animalList.loading">
+            <div className={styles.loading} data-testid="announcementList.loading">
               <div className={styles.spinner}></div>
-              <p>Loading animals...</p>
+              <p>Loading announcements...</p>
             </div>
           ) : error ? (
             <div className={styles.error}>
@@ -48,16 +48,19 @@ export const AnimalList: React.FC = () => {
           ) : isEmpty ? (
             <EmptyState />
           ) : (
-            <div className={styles.animalList} data-testid="animalList.list">
-              {animals.map((animal) => (
-                <AnimalCard key={animal.id} animal={animal} onDetailsClick={() => openModal(animal.id)} />
+            <div className={styles.announcementList} data-testid="announcementList.list">
+              {announcements.map((announcement) => (
+                <AnnouncementCard key={announcement.id} announcement={announcement} onDetailsClick={() => openModal(announcement.id)} />
               ))}
             </div>
           )}
         </div>
       </div>
 
-      <PetDetailsModal isOpen={isOpen} selectedPetId={selectedPetId} onClose={closeModal} />
+      <AnnouncementDetailsModal isOpen={isOpen} selectedAnnouncementId={selectedAnnouncementId} onClose={closeModal} />
     </div>
   );
 };
+
+// Backward compatibility alias
+export const AnimalList = AnnouncementList;

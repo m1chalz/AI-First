@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext';
 import { validateAllFields } from '../utils/form-validation';
-import { AnimalSpecies, AnimalSex } from '../types/animal';
+import { AnnouncementSpecies, AnnouncementSex } from '../types/animal';
 import { FlowStep } from '../models/ReportMissingPetFlow';
 
 export interface DetailsFormData {
@@ -83,9 +83,9 @@ export function useDetailsForm(): UseDetailsFormReturn {
 
     updateFlowState({
       lastSeenDate: formData.lastSeenDate,
-      species: formData.species as AnimalSpecies,
+      species: formData.species as AnnouncementSpecies,
       breed: formData.breed,
-      sex: formData.sex as AnimalSex,
+      sex: formData.sex as AnnouncementSex,
       age: formData.age ? Number(formData.age) : null,
       petName: formData.petName,
       description: formData.description,

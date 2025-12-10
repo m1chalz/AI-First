@@ -1,23 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { usePetDetails } from '../../hooks/use-pet-details';
+import { useAnnouncementDetails } from '../../hooks/use-announcement-details';
 import * as announcementServiceModule from '../../services/announcement-service';
-import type { Animal } from '../../types/animal';
+import type { Announcement } from '../../types/animal';
 
 vi.mock('../../services/announcement-service', () => ({
   announcementService: {
-    getPetById: vi.fn()
+    getAnnouncementById: vi.fn()
   }
 }));
 
-describe('usePetDetails', () => {
+describe('useAnnouncementDetails', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should initialize with loading state when pet ID is provided', () => {
+  it('should initialize with loading state when announcement ID is provided', () => {
     // given
-    const mockPet: Animal = {
+    const mockAnnouncement: Announcement = {
       id: 'pet-123',
       petName: 'Fluffy',
       photoUrl: 'https://example.com/photo.jpg',
@@ -37,20 +37,20 @@ describe('usePetDetails', () => {
       createdAt: null,
       updatedAt: null
     };
-    vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockResolvedValue(mockPet);
+    vi.spyOn(announcementServiceModule.announcementService, 'getAnnouncementById').mockResolvedValue(mockAnnouncement);
 
     // when
-    const { result } = renderHook(() => usePetDetails('pet-123'));
+    const { result } = renderHook(() => useAnnouncementDetails('announcement-123'));
 
     // then
     expect(result.current.isLoading).toBe(true);
-    expect(result.current.pet).toBeNull();
+    expect(result.current.announcement).toBeNull();
     expect(result.current.error).toBeNull();
   });
 
-  it('should load pet details successfully when repository returns data', async () => {
+  it('should load announcement details successfully when repository returns data', async () => {
     // given
-    const mockPet: Animal = {
+    const mockAnnouncement: Announcement = {
       id: 'pet-123',
       petName: 'Fluffy',
       photoUrl: 'https://example.com/photo.jpg',
@@ -70,40 +70,40 @@ describe('usePetDetails', () => {
       createdAt: null,
       updatedAt: null
     };
-    vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockResolvedValue(mockPet);
+    vi.spyOn(announcementServiceModule.announcementService, 'getAnnouncementById').mockResolvedValue(mockAnnouncement);
 
     // when
-    const { result } = renderHook(() => usePetDetails('pet-123'));
+    const { result } = renderHook(() => useAnnouncementDetails('pet-123'));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
     // then
-    expect(result.current.pet).toEqual(mockPet);
+    expect(result.current.announcement).toEqual(mockAnnouncement);
     expect(result.current.error).toBeNull();
   });
 
   it('should handle error state when repository throws error', async () => {
     // given
-    const mockError = new Error('Pet not found');
-    vi.spyOn(announcementServiceModule.announcementService, 'getPetById').mockRejectedValue(mockError);
+    const mockError = new Error('Announcement not found');
+    vi.spyOn(announcementServiceModule.announcementService, 'getAnnouncementById').mockRejectedValue(mockError);
 
     // when
-    const { result } = renderHook(() => usePetDetails('pet-123'));
+    const { result } = renderHook(() => useAnnouncementDetails('pet-123'));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
     // then
-    expect(result.current.pet).toBeNull();
-    expect(result.current.error).toBe('Failed to load pet details');
+    expect(result.current.announcement).toBeNull();
+    expect(result.current.error).toBe('Failed to load announcement details');
   });
 
-  it('should retry loading pet details when retry is called', async () => {
+  it('should retry loading announcement details when retry is called', async () => {
     // given
-    const mockPet: Animal = {
+    const mockAnnouncement: Announcement = {
       id: 'pet-123',
       petName: 'Fluffy',
       photoUrl: 'https://example.com/photo.jpg',
@@ -123,13 +123,13 @@ describe('usePetDetails', () => {
       createdAt: null,
       updatedAt: null
     };
-    const getPetByIdSpy = vi
-      .spyOn(announcementServiceModule.announcementService, 'getPetById')
+    const getAnnouncementByIdSpy = vi
+      .spyOn(announcementServiceModule.announcementService, 'getAnnouncementById')
       .mockRejectedValueOnce(new Error('Network error'))
-      .mockResolvedValueOnce(mockPet);
+      .mockResolvedValueOnce(mockAnnouncement);
 
     // when
-    const { result } = renderHook(() => usePetDetails('pet-123'));
+    const { result } = renderHook(() => useAnnouncementDetails('pet-123'));
 
     await waitFor(
       () => {
@@ -138,7 +138,7 @@ describe('usePetDetails', () => {
       { timeout: 3000 }
     );
 
-    expect(result.current.error).toBe('Failed to load pet details');
+    expect(result.current.error).toBe('Failed to load announcement details');
 
     act(() => {
       result.current.retry();
@@ -152,8 +152,8 @@ describe('usePetDetails', () => {
     );
 
     // then
-    expect(result.current.pet).toEqual(mockPet);
+    expect(result.current.announcement).toEqual(mockAnnouncement);
     expect(result.current.error).toBeNull();
-    expect(getPetByIdSpy).toHaveBeenCalledTimes(2);
+    expect(getAnnouncementByIdSpy).toHaveBeenCalledTimes(2);
   });
 });

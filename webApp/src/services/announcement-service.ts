@@ -1,16 +1,16 @@
 import config from '../config/config';
-import type { Animal } from '../types/animal';
+import type { Announcement } from '../types/animal';
 import type { Coordinates } from '../types/location';
 import type { AnnouncementSubmissionDto, AnnouncementResponse } from '../models/announcement-submission';
 import type { ApiError } from '../models/api-error';
 import { ValidationError, DuplicateMicrochipError, NetworkError, ServerError } from '../models/api-error';
 
 interface BackendAnnouncementsResponse {
-  data: Animal[];
+  data: Announcement[];
 }
 
 export class AnnouncementService {
-  async getAnimals(coordinates: Coordinates | null = null): Promise<Animal[]> {
+  async getAnnouncements(coordinates: Coordinates | null = null): Promise<Announcement[]> {
     let url = `${config.apiBaseUrl}/api/v1/announcements`;
 
     if (coordinates) {
@@ -24,21 +24,21 @@ export class AnnouncementService {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch animals: ${response.status} ${response.statusText}`);
+      throw new Error(`Failed to fetch announcements: ${response.status} ${response.statusText}`);
     }
 
     const data: BackendAnnouncementsResponse = await response.json();
     return data.data;
   }
 
-  async getPetById(id: string): Promise<Animal> {
+  async getAnnouncementById(id: string): Promise<Announcement> {
     const response = await fetch(`${config.apiBaseUrl}/api/v1/announcements/${id}`);
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error(`Pet with ID ${id} not found`);
+        throw new Error(`Announcement with ID ${id} not found`);
       }
-      throw new Error(`Failed to fetch pet details: ${response.status} ${response.statusText}`);
+      throw new Error(`Failed to fetch announcement details: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();

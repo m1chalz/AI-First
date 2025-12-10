@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDetailsForm } from '../../hooks/use-details-form';
 import { useToast } from '../../hooks/use-toast';
-import { AnimalDescriptionForm } from './AnimalDescriptionForm/AnimalDescriptionForm';
+import { AnimalDescriptionForm } from './AnnouncementDescriptionForm/AnimalDescriptionForm';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { Toast } from '../Toast/Toast';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
@@ -41,7 +41,7 @@ export const DetailsScreen: React.FC = () => {
 
       <AnimalDescriptionForm
         formData={formData}
-        onFieldChange={(field, value) => updateField(field as keyof typeof formData, value)}
+        onFieldChange={(field: string, value: string) => updateField(field as keyof typeof formData, value)}
         onSubmit={handleContinue}
       />
 

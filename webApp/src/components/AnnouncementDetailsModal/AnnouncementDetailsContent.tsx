@@ -1,17 +1,17 @@
 import React from 'react';
 import { MdCalendarToday, MdPhone, MdEmail, MdLocationOn, MdAttachMoney } from 'react-icons/md';
-import type { Animal, AnimalStatus } from '../../types/animal';
-import { ANIMAL_STATUS_BADGE_COLORS } from '../../types/animal';
+import type { Announcement, AnnouncementStatus } from '../../types/animal';
+import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/animal';
 import { formatDate } from '../../utils/date-formatter';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatMicrochip } from '../../utils/microchip-formatter';
 import { formatSpecies, formatSex } from '../../utils/species-formatter';
 import { buildMapUrl } from '../../utils/map-url-builder';
-import styles from './PetDetailsContent.module.css';
+import styles from './AnnouncementDetailsContent.module.css';
 import config from '../../config/config';
 
-interface PetDetailsContentProps {
-  pet: Animal;
+interface AnnouncementDetailsContentProps {
+  announcement: Announcement;
 }
 
 const getGenderIcon = (sex: string): string => {
@@ -20,36 +20,36 @@ const getGenderIcon = (sex: string): string => {
   return '';
 };
 
-const getStatusBadgeColor = (status: AnimalStatus): string => ANIMAL_STATUS_BADGE_COLORS[status] || '#93A2B4';
+const getStatusBadgeColor = (status: AnnouncementStatus): string => ANNOUNCEMENT_STATUS_BADGE_COLORS[status] || '#93A2B4';
 
-export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => {
-  const statusColor = getStatusBadgeColor(pet.status);
-  const formattedDate = formatDate(pet.lastSeenDate);
-  const hasLocation = pet.locationLatitude !== null && pet.locationLongitude !== null;
+export const AnnouncementDetailsContent: React.FC<AnnouncementDetailsContentProps> = ({ announcement }) => {
+  const statusColor = getStatusBadgeColor(announcement.status);
+  const formattedDate = formatDate(announcement.lastSeenDate);
+  const hasLocation = announcement.locationLatitude !== null && announcement.locationLongitude !== null;
   const mapUrl =
-    hasLocation && pet.locationLatitude !== null && pet.locationLongitude !== null
-      ? buildMapUrl(pet.locationLatitude, pet.locationLongitude)
+    hasLocation && announcement.locationLatitude !== null && announcement.locationLongitude !== null
+      ? buildMapUrl(announcement.locationLatitude, announcement.locationLongitude)
       : null;
 
   return (
     <div className={styles.content}>
       {/* Hero Image Section */}
-      {pet.photoUrl && (
+      {announcement.photoUrl && (
         <div className={styles.heroSection}>
           <img
-            src={`${config.apiBaseUrl}${pet.photoUrl}`}
-            alt={pet.petName ? `${pet.petName} photo` : 'Pet photo'}
+            src={`${config.apiBaseUrl}${announcement.photoUrl}`}
+            alt={announcement.petName ? `${announcement.petName} photo` : 'Announcement photo'}
             className={styles.heroImage}
           />
           {/* Status Badge Overlay - Top Right */}
           <div className={styles.statusBadge} style={{ backgroundColor: statusColor }}>
-            {pet.status}
+            {announcement.status}
           </div>
           {/* Reward Badge Overlay - Bottom Left */}
-          {pet.reward && (
+          {announcement.reward && (
             <div className={styles.rewardBadge}>
               <MdAttachMoney className={styles.rewardIcon} />
-              <span>Reward {pet.reward}</span>
+              <span>Reward {announcement.reward}</span>
             </div>
           )}
         </div>
@@ -70,59 +70,59 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
             <MdPhone className={styles.headerIcon} />
             <div className={styles.headerContent}>
               <span className={styles.headerLabel}>Contact owner</span>
-              <span className={styles.headerValue}>{pet.phone || '—'}</span>
+              <span className={styles.headerValue}>{announcement.phone || '—'}</span>
             </div>
           </div>
           <div className={styles.headerItem}>
             <MdEmail className={styles.headerIcon} />
             <div className={styles.headerContent}>
               <span className={styles.headerLabel}>Contact owner</span>
-              <span className={styles.headerValue}>{pet.email || '—'}</span>
+              <span className={styles.headerValue}>{announcement.email || '—'}</span>
             </div>
           </div>
         </div>
 
-        {/* Pet Details - 2-column grid */}
+        {/* Details - 2-column grid */}
         <div className={styles.section}>
           <div className={styles.gridRow}>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Name</span>
-              <span className={styles.fieldValue} data-testid="petDetails.name.value">
-                {pet.petName || '—'}
+              <span className={styles.fieldValue} data-testid="announcementDetails.name.value">
+                {announcement.petName || '—'}
               </span>
             </div>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Microchip number</span>
-              <span className={styles.fieldValue} data-testid="petDetails.microchip.value">
-                {pet.microchipNumber ? formatMicrochip(pet.microchipNumber) : '—'}
+              <span className={styles.fieldValue} data-testid="announcementDetails.microchip.value">
+                {announcement.microchipNumber ? formatMicrochip(announcement.microchipNumber) : '—'}
               </span>
             </div>
           </div>
           <div className={styles.gridRow}>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Species</span>
-              <span className={styles.fieldValue} data-testid="petDetails.species.value">
-                {formatSpecies(pet.species)}
+              <span className={styles.fieldValue} data-testid="announcementDetails.species.value">
+                {formatSpecies(announcement.species)}
               </span>
             </div>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Race</span>
-              <span className={styles.fieldValue} data-testid="petDetails.breed.value">
-                {pet.breed || '—'}
+              <span className={styles.fieldValue} data-testid="announcementDetails.breed.value">
+                {announcement.breed || '—'}
               </span>
             </div>
           </div>
           <div className={styles.gridRow}>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Sex</span>
-              <span className={styles.fieldValue} data-testid="petDetails.sex.value">
-                {pet.sex !== 'UNKNOWN' ? `${formatSex(pet.sex)} ${getGenderIcon(pet.sex)}` : '—'}
+              <span className={styles.fieldValue} data-testid="announcementDetails.sex.value">
+                {announcement.sex !== 'UNKNOWN' ? `${formatSex(announcement.sex)} ${getGenderIcon(announcement.sex)}` : '—'}
               </span>
             </div>
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Approx. Age</span>
-              <span className={styles.fieldValue} data-testid="petDetails.age.value">
-                {pet.age !== null ? `${pet.age} years` : '—'}
+              <span className={styles.fieldValue} data-testid="announcementDetails.age.value">
+                {announcement.age !== null ? `${announcement.age} years` : '—'}
               </span>
             </div>
           </div>
@@ -136,8 +136,8 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
               <div className={styles.locationContent}>
                 <span className={styles.fieldLabel}>Lat / Long</span>
                 <span className={styles.fieldValue}>
-                  {pet.locationLatitude !== null && pet.locationLongitude !== null
-                    ? formatCoordinates(pet.locationLatitude, pet.locationLongitude)
+                  {announcement.locationLatitude !== null && announcement.locationLongitude !== null
+                    ? formatCoordinates(announcement.locationLatitude, announcement.locationLongitude)
                     : '—'}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.mapButton}
-                  data-testid="petDetails.mapButton.click"
+                  data-testid="announcementDetails.mapButton.click"
                 >
                   Show on the map
                 </a>
@@ -160,10 +160,13 @@ export const PetDetailsContent: React.FC<PetDetailsContentProps> = ({ pet }) => 
         <div className={styles.section}>
           <div className={styles.fieldRow}>
             <span className={styles.fieldLabel}>Animal Additional Description</span>
-            <span className={styles.fieldValue}>{pet.description || '—'}</span>
+            <span className={styles.fieldValue}>{announcement.description || '—'}</span>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+// Backward compatibility alias
+export const PetDetailsContent = AnnouncementDetailsContent;

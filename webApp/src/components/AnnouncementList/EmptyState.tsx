@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './AnimalList.module.css';
+import styles from './AnnouncementList.module.css';
 
 export const EmptyState: React.FC = () => (
   <div className={styles.emptyState}>

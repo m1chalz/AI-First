@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AnnouncementService } from '../../services/announcement-service';
-import type { Animal } from '../../types/animal';
+import type { Announcement } from '../../types/animal';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 
 describe('AnnouncementService', () => {
@@ -18,10 +18,10 @@ describe('AnnouncementService', () => {
     vi.clearAllMocks();
   });
 
-  describe('AnnouncementService.getAnimals', () => {
-    it('should fetch animals list successfully when API returns 200', async () => {
+  describe('AnnouncementService.getAnnouncements', () => {
+    it('should fetch announcements list successfully when API returns 200', async () => {
       // given
-      const mockAnimals: Animal[] = [
+      const mockAnnouncements: Announcement[] = [
         {
           id: 'pet-123',
           petName: 'Fluffy',
@@ -66,14 +66,14 @@ describe('AnnouncementService', () => {
 
       fetchMock.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: mockAnimals })
+        json: async () => ({ data: mockAnnouncements })
       } as Response);
 
       // when
-      const result = await underTest.getAnimals();
+      const result = await underTest.getAnnouncements();
 
       // then
-      expect(result).toEqual(mockAnimals);
+      expect(result).toEqual(mockAnnouncements);
       expect(window.fetch).toHaveBeenCalledWith('http://localhost:3000/api/v1/announcements');
     });
 
@@ -85,11 +85,41 @@ describe('AnnouncementService', () => {
       } as Response);
 
       // when
-      const result = await underTest.getAnimals();
+      const result = await underTest.getAnnouncements();
 
       // then
       expect(result).toEqual([]);
       expect(window.fetch).toHaveBeenCalledWith('http://localhost:3000/api/v1/announcements');
+    });
+  });
+
+  describe('AnnouncementService.getAnnouncements with coordinates', () => {
+    it('should construct URL with positive coordinates', async () => {
+      // given
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: [] })
+      } as Response);
+
+      // when
+      await underTest.getAnnouncements({ lat: 52.2297, lng: 21.0122 });
+
+      // then
+      expect(window.fetch).toHaveBeenCalledWith('http://localhost:3000/api/v1/announcements?lat=52.2297&lng=21.0122&range=15');
+    });
+
+    it('should construct URL with negative coordinates', async () => {
+      // given
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: [] })
+      } as Response);
+
+      // when
+      await underTest.getAnnouncements({ lat: -33.8688, lng: 151.2093 });
+
+      // then
+      expect(window.fetch).toHaveBeenCalledWith('http://localhost:3000/api/v1/announcements?lat=-33.8688&lng=151.2093&range=15');
     });
 
     it('should throw error when API returns 500', async () => {
@@ -101,7 +131,7 @@ describe('AnnouncementService', () => {
       } as Response);
 
       // when / then
-      await expect(underTest.getAnimals()).rejects.toThrow('Failed to fetch animals: 500 Internal Server Error');
+      await expect(underTest.getAnnouncements()).rejects.toThrow('Failed to fetch announcements: 500 Internal Server Error');
     });
 
     it('should handle network errors', async () => {
@@ -109,34 +139,14 @@ describe('AnnouncementService', () => {
       fetchMock.mockRejectedValueOnce(new Error('Network error'));
 
       // when / then
-      await expect(underTest.getAnimals()).rejects.toThrow('Network error');
-    });
-
-    it.each([
-      { lat: 52.2297, lng: 21.0122, description: 'positive coordinates' },
-      { lat: -33.8688, lng: 151.2093, description: 'negative coordinates' }
-    ])('should construct URL with $description', async ({ lat, lng }) => {
-      const mockAnimals: Animal[] = [];
-
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ data: mockAnimals })
-      } as Response);
-
-      // given: coordinates
-      // when: getAnimals is called
-      const result = await underTest.getAnimals({ lat, lng });
-
-      // then: URL contains exact values and range parameter
-      expect(result).toEqual(mockAnimals);
-      expect(window.fetch).toHaveBeenCalledWith(`http://localhost:3000/api/v1/announcements?lat=${lat}&lng=${lng}&range=15`);
+      await expect(underTest.getAnnouncements()).rejects.toThrow('Network error');
     });
   });
 
-  describe('AnnouncementService.getPetById', () => {
-    it('should fetch pet details successfully when API returns 200', async () => {
+  describe('AnnouncementService.getAnnouncementById', () => {
+    it('should fetch announcement details successfully when API returns 200', async () => {
       // given
-      const mockPet: Animal = {
+      const mockAnnouncement: Announcement = {
         id: 'pet-123',
         petName: 'Fluffy',
         photoUrl: 'https://example.com/photo.jpg',
@@ -159,14 +169,14 @@ describe('AnnouncementService', () => {
 
       fetchMock.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockPet
+        json: async () => mockAnnouncement
       } as Response);
 
       // when
-      const result = await underTest.getPetById('pet-123');
+      const result = await underTest.getAnnouncementById('pet-123');
 
       // then
-      expect(result).toEqual(mockPet);
+      expect(result).toEqual(mockAnnouncement);
       expect(window.fetch).toHaveBeenCalledWith('http://localhost:3000/api/v1/announcements/pet-123');
     });
 
@@ -179,7 +189,7 @@ describe('AnnouncementService', () => {
       } as Response);
 
       // when / then
-      await expect(underTest.getPetById('pet-123')).rejects.toThrow('Pet with ID pet-123 not found');
+      await expect(underTest.getAnnouncementById('pet-123')).rejects.toThrow('Announcement with ID pet-123 not found');
     });
 
     it('should throw error when API returns 500', async () => {
@@ -191,7 +201,7 @@ describe('AnnouncementService', () => {
       } as Response);
 
       // when / then
-      await expect(underTest.getPetById('pet-123')).rejects.toThrow('Failed to fetch pet details: 500 Internal Server Error');
+      await expect(underTest.getAnnouncementById('pet-123')).rejects.toThrow('Failed to fetch announcement details: 500 Internal Server Error');
     });
 
     it('should handle network errors', async () => {
@@ -199,7 +209,7 @@ describe('AnnouncementService', () => {
       fetchMock.mockRejectedValueOnce(new Error('Network error'));
 
       // when / then
-      await expect(underTest.getPetById('pet-123')).rejects.toThrow('Network error');
+      await expect(underTest.getAnnouncementById('pet-123')).rejects.toThrow('Network error');
     });
   });
 

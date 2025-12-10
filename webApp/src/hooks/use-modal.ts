@@ -2,8 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export interface UseModalResult {
   isOpen: boolean;
-  selectedPetId: string | null;
-  openModal: (petId: string) => void;
+  selectedAnnouncementId: string | null;
+  openModal: (announcementId: string) => void;
   closeModal: () => void;
 }
 
@@ -13,10 +13,10 @@ export function useModal(): UseModalResult {
   const announcementId = params.announcementId;
 
   const isOpen = !!announcementId;
-  const selectedPetId = announcementId || null;
+  const selectedAnnouncementId = announcementId || null;
 
-  const openModal = (petId: string) => {
-    navigate(`/announcement/${petId}`);
+  const openModal = (announcementId: string) => {
+    navigate(`/announcement/${announcementId}`);
   };
 
   const closeModal = () => {
@@ -25,7 +25,7 @@ export function useModal(): UseModalResult {
 
   return {
     isOpen,
-    selectedPetId,
+    selectedAnnouncementId,
     openModal,
     closeModal
   };

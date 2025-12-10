@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { usePetDetails } from '../../hooks/use-pet-details';
-import { PetDetailsContent } from './PetDetailsContent';
-import styles from './PetDetailsModal.module.css';
+import { useAnnouncementDetails } from '../../hooks/use-announcement-details';
+import { AnnouncementDetailsContent } from './AnnouncementDetailsContent';
+import styles from './AnnouncementDetailsModal.module.css';
 
-interface PetDetailsModalProps {
+interface AnnouncementDetailsModalProps {
   isOpen: boolean;
-  selectedPetId: string | null;
+  selectedAnnouncementId: string | null;
   onClose: () => void;
 }
 
@@ -75,8 +75,8 @@ function setupFocusTrap(isOpen: boolean, modalRef: React.RefObject<HTMLDivElemen
   return () => modalRef.current?.removeEventListener('keydown', handleTabKey);
 }
 
-export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, selectedPetId, onClose }) => {
-  const { pet, isLoading, error, retry } = usePetDetails(selectedPetId);
+export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> = ({ isOpen, selectedAnnouncementId, onClose }) => {
+  const { announcement, isLoading, error, retry } = useAnnouncementDetails(selectedAnnouncementId);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -113,27 +113,27 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
       className={`${styles.backdrop} ${isClosing ? styles.closing : ''}`}
       onClick={handleBackdropClick}
       aria-hidden="true"
-      data-testid="petDetails.backdrop"
+      data-testid="announcementDetails.backdrop"
     >
       <div
         ref={modalRef}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="pet-details-title"
-        data-testid="petDetails.modal"
+        aria-labelledby="announcement-details-title"
+        data-testid="announcementDetails.modal"
       >
         <div className={styles.modalHeader}>
-          <button className={styles.closeButton} onClick={handleClose} aria-label="Close modal" data-testid="petDetails.closeButton.click">
+          <button className={styles.closeButton} onClick={handleClose} aria-label="Close modal" data-testid="announcementDetails.closeButton.click">
             ×
           </button>
         </div>
 
-        <div className={styles.modalBody} id="pet-details-title">
+        <div className={styles.modalBody} id="announcement-details-title">
           {isLoading && (
             <div className={styles.loading}>
               <div className={styles.spinner}></div>
-              <p>Loading pet details...</p>
+              <p>Loading announcement details...</p>
             </div>
           )}
 
@@ -146,7 +146,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
             </div>
           )}
 
-          {!isLoading && !error && pet && <PetDetailsContent pet={pet} />}
+          {!isLoading && !error && announcement && <AnnouncementDetailsContent announcement={announcement} />}
         </div>
       </div>
     </div>
@@ -154,3 +154,6 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ isOpen, select
 
   return createPortal(modalContent, document.body);
 };
+
+// Backward compatibility alias
+export const PetDetailsModal = AnnouncementDetailsModal;
