@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
@@ -12,7 +12,7 @@ import { FlowStep } from '../../models/NewAnnouncementFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();
-  const { flowState, updateFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useNewAnnouncementFlow();
   const { phone, email, reward, phoneError, emailError, handlePhoneChange, handleEmailChange, handleRewardChange, handleSubmit } =
     useContactForm();
   const { message, showToast } = useToast();

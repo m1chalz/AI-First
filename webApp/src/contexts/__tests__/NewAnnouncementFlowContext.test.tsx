@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { NewAnnouncementFlowProvider, useReportMissingPetFlow } from '../NewAnnouncementFlowContext';
+import { NewAnnouncementFlowProvider, useNewAnnouncementFlow } from '../NewAnnouncementFlowContext';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { AnimalSpecies, AnimalSex } from '../../types/animal';
 
-describe('ReportMissingPetFlowContext', () => {
+describe('NewAnnouncementFlowContext', () => {
   it('provides initial flow state', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
 
@@ -19,7 +19,7 @@ describe('ReportMissingPetFlowContext', () => {
 
   it('updates microchip number', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
 
@@ -35,7 +35,7 @@ describe('ReportMissingPetFlowContext', () => {
 
   it('updates current step', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
 
@@ -50,7 +50,7 @@ describe('ReportMissingPetFlowContext', () => {
 
   it('updates multiple fields at once', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
 
@@ -69,7 +69,7 @@ describe('ReportMissingPetFlowContext', () => {
 
   it('updates photo state', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
     const mockPhoto = {
@@ -91,7 +91,7 @@ describe('ReportMissingPetFlowContext', () => {
 
   it('clears flow state to initial values', () => {
     // given
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
     const mockPhoto = {
@@ -129,7 +129,7 @@ describe('ReportMissingPetFlowContext', () => {
 
     // when / then
     expect(() => {
-      renderHook(() => useReportMissingPetFlow());
+      renderHook(() => useNewAnnouncementFlow());
     }).toThrow('useNewAnnouncementFlow must be used within NewAnnouncementFlowProvider');
 
     console.error = consoleError;
@@ -138,7 +138,7 @@ describe('ReportMissingPetFlowContext', () => {
   describe('Step 3 fields (Animal Description)', () => {
     it('should include lastSeenDate, species, breed, sex, age, description, latitude, longitude in flow state', () => {
       // given
-      const { result } = renderHook(() => useReportMissingPetFlow(), {
+      const { result } = renderHook(() => useNewAnnouncementFlow(), {
         wrapper: NewAnnouncementFlowProvider
       });
 
@@ -155,7 +155,7 @@ describe('ReportMissingPetFlowContext', () => {
 
     it('should initialize Step 3 fields with correct defaults', () => {
       // given
-      const { result } = renderHook(() => useReportMissingPetFlow(), {
+      const { result } = renderHook(() => useNewAnnouncementFlow(), {
         wrapper: NewAnnouncementFlowProvider
       });
 
@@ -182,7 +182,7 @@ describe('ReportMissingPetFlowContext', () => {
       ['longitude', 13.405, 13.405]
     ])('should update %s field', (field, updateValue, expectedValue) => {
       // given
-      const { result } = renderHook(() => useReportMissingPetFlow(), {
+      const { result } = renderHook(() => useNewAnnouncementFlow(), {
         wrapper: NewAnnouncementFlowProvider
       });
 
@@ -195,7 +195,7 @@ describe('ReportMissingPetFlowContext', () => {
 
     it('should update multiple Step 3 fields at once', () => {
       // given
-      const { result } = renderHook(() => useReportMissingPetFlow(), {
+      const { result } = renderHook(() => useNewAnnouncementFlow(), {
         wrapper: NewAnnouncementFlowProvider
       });
 

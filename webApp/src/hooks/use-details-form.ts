@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useReportMissingPetFlow } from '../contexts/NewAnnouncementFlowContext';
+import { useNewAnnouncementFlow } from '../contexts/NewAnnouncementFlowContext';
 import { validateAllFields } from '../utils/form-validation';
 import { AnnouncementSpecies, AnnouncementSex } from '../types/animal';
 import { FlowStep } from '../models/NewAnnouncementFlow';
@@ -21,11 +21,11 @@ export interface UseDetailsFormReturn {
   formData: DetailsFormData;
   updateField: (field: keyof DetailsFormData, value: string) => void;
   handleSubmit: () => boolean;
-  flowState: ReturnType<typeof useReportMissingPetFlow>['flowState'];
+  flowState: ReturnType<typeof useNewAnnouncementFlow>['flowState'];
 }
 
 export function useDetailsForm(): UseDetailsFormReturn {
-  const { flowState, updateFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useNewAnnouncementFlow();
 
   const [formData, setFormData] = useState<DetailsFormData>({
     lastSeenDate: flowState.lastSeenDate || new Date().toISOString().split('T')[0],

@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useReportMissingPetFlow } from '../use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../use-report-missing-pet-flow';
 import { NewAnnouncementFlowProvider } from '../../contexts/NewAnnouncementFlowContext';
 
-describe('useReportMissingPetFlow', () => {
+describe('useNewAnnouncementFlow', () => {
   it('returns context value when used within provider', () => {
     // given / when
-    const { result } = renderHook(() => useReportMissingPetFlow(), {
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
       wrapper: NewAnnouncementFlowProvider
     });
 
@@ -24,7 +24,7 @@ describe('useReportMissingPetFlow', () => {
 
     // when / then
     expect(() => {
-      renderHook(() => useReportMissingPetFlow());
+      renderHook(() => useNewAnnouncementFlow());
     }).toThrow('useNewAnnouncementFlow must be used within NewAnnouncementFlowProvider');
 
     console.error = consoleError;

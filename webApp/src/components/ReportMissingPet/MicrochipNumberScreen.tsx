@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
-import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 export function MicrochipNumberScreen() {
   const navigate = useNavigate();
-  const { flowState, updateFlowState, clearFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState, clearFlowState } = useNewAnnouncementFlow();
   const { value, formattedValue, handleChange, handlePaste } = useMicrochipFormatter(flowState.microchipNumber);
 
   useEffect(() => {

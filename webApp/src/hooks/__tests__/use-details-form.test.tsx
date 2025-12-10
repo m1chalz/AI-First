@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { useDetailsForm } from '../use-details-form';
-import { ReportMissingPetFlowProvider } from '../../contexts/NewAnnouncementFlowContext';
+import { NewAnnouncementFlowProvider } from '../../contexts/NewAnnouncementFlowContext';
 
-const wrapper = ({ children }: { children: ReactNode }) => <ReportMissingPetFlowProvider>{children}</ReportMissingPetFlowProvider>;
+const wrapper = ({ children }: { children: ReactNode }) => <NewAnnouncementFlowProvider>{children}</NewAnnouncementFlowProvider>;
 
 describe('useDetailsForm', () => {
   describe('initialization', () => {

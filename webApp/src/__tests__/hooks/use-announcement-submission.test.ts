@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import * as announcementServiceModule from '../../services/announcement-service';
-import type { ReportMissingPetFlowState } from '../../models/NewAnnouncementFlow';
+import type { NewAnnouncementFlowState } from '../../models/NewAnnouncementFlow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 
 vi.mock('../../services/announcement-service', () => ({
@@ -12,7 +12,7 @@ vi.mock('../../services/announcement-service', () => ({
   }
 }));
 
-const mockFlowState: ReportMissingPetFlowState = {
+const mockFlowState: NewAnnouncementFlowState = {
   currentStep: FlowStep.Contact,
   petName: 'Whiskers',
   microchipNumber: '',
@@ -153,7 +153,7 @@ describe('useAnnouncementSubmission - Error Flow', () => {
     vi.clearAllMocks();
   });
 
-  const mockFlowStateWithDetails: ReportMissingPetFlowState = {
+  const mockFlowStateWithDetails: NewAnnouncementFlowState = {
     currentStep: FlowStep.Contact,
     petName: 'Buddy',
     microchipNumber: '123456789012345',

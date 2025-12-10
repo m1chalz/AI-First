@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAnnouncementCreation } from '../../hooks/use-announcement-creation';
 import * as announcementServiceModule from '../../services/announcement-service';
-import type { ReportMissingPetFlowState } from '../../models/NewAnnouncementFlow';
+import type { NewAnnouncementFlowState } from '../../models/NewAnnouncementFlow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 
 vi.mock('../../services/announcement-service', () => ({
@@ -11,7 +11,7 @@ vi.mock('../../services/announcement-service', () => ({
   }
 }));
 
-const mockFlowState: ReportMissingPetFlowState = {
+const mockFlowState: NewAnnouncementFlowState = {
   currentStep: FlowStep.Contact,
   microchipNumber: '',
   photo: null,

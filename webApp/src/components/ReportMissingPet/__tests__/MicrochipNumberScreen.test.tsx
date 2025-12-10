@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MicrochipNumberScreen } from '../MicrochipNumberScreen';
-import { ReportMissingPetFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
+import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
 
 const mockNavigate = vi.fn();
@@ -19,7 +19,7 @@ vi.mock('react-router-dom', async () => {
 const renderWithProviders = (component: React.ReactElement) =>
   render(
     <BrowserRouter>
-      <ReportMissingPetFlowProvider>{component}</ReportMissingPetFlowProvider>
+      <NewAnnouncementFlowProvider>{component}</NewAnnouncementFlowProvider>
     </BrowserRouter>
   );
 
@@ -107,7 +107,7 @@ describe('MicrochipNumberScreen', () => {
 
       return (
         <BrowserRouter>
-          <ReportMissingPetFlowProvider>
+          <NewAnnouncementFlowProvider>
             {showMicrochip ? (
               <>
                 <MicrochipNumberScreen />
@@ -120,7 +120,7 @@ describe('MicrochipNumberScreen', () => {
                 Navigate Back
               </button>
             )}
-          </ReportMissingPetFlowProvider>
+          </NewAnnouncementFlowProvider>
         </BrowserRouter>
       );
     };

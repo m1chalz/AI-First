@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
@@ -13,7 +13,7 @@ import styles from './ReportMissingPetLayout.module.css';
 
 export function PhotoScreen() {
   const navigate = useNavigate();
-  const { flowState, updateFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useNewAnnouncementFlow();
   const { message, showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

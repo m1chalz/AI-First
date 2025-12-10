@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useReportMissingPetFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useEffect } from 'react';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
 import layoutStyles from './ReportMissingPetLayout.module.css';
@@ -8,7 +8,7 @@ import styles from './SummaryScreen.module.css';
 export function SummaryScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { clearFlowState } = useReportMissingPetFlow();
+  const { clearFlowState } = useNewAnnouncementFlow();
   const managementPassword = (location.state as { managementPassword?: string })?.managementPassword;
 
   // Check if we have a valid announcement

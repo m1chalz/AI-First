@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
 import * as announcementServiceModule from '../../services/announcement-service';
-import type { ReportMissingPetFlowState, PhotoAttachment } from '../../models/NewAnnouncementFlow';
+import type { NewAnnouncementFlowState, PhotoAttachment } from '../../models/NewAnnouncementFlow';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 
@@ -29,7 +29,7 @@ describe('useAnnouncementSubmission - Integration', () => {
       previewUrl: 'data:image/jpeg;base64,fake'
     };
 
-    const completeFlowState: ReportMissingPetFlowState = {
+    const completeFlowState: NewAnnouncementFlowState = {
       currentStep: FlowStep.Contact,
       petName: 'Fluffy',
       microchipNumber: '123456789012345',
@@ -89,7 +89,7 @@ describe('useAnnouncementSubmission - Integration', () => {
 
   it('should send minimal fields when only required fields are provided', async () => {
     // given - minimal flow state
-    const minimalFlowState: ReportMissingPetFlowState = {
+    const minimalFlowState: NewAnnouncementFlowState = {
       currentStep: FlowStep.Contact,
       petName: '',
       microchipNumber: '',
@@ -149,7 +149,7 @@ describe('useAnnouncementSubmission - Integration', () => {
 
   it('should verify JSON stringification includes all fields', async () => {
     // given
-    const flowState: ReportMissingPetFlowState = {
+    const flowState: NewAnnouncementFlowState = {
       currentStep: FlowStep.Contact,
       petName: 'Rex',
       microchipNumber: '111112222233333',
