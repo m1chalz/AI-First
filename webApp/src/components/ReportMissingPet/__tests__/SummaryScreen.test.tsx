@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
 import { BrowserRouter } from 'react-router-dom';
 import { SummaryScreen } from '../SummaryScreen';
-import '@testing-library/jest-dom';
 
 const renderWithRouter = (component: React.ReactNode) =>
   render(
