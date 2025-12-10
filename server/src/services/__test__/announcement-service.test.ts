@@ -3,6 +3,7 @@ import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement, CreateAnnouncementDto } from '../../types/announcement.ts';
 import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 import { ConflictError, NotFoundError } from '../../lib/errors.ts';
+import { PhotoUploadService } from '../photo-upload-service.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -552,7 +553,7 @@ describe('AnnouncementService', () => {
         mockValidator,
         mockSanitizer,
         mockLocationValidator,
-        mockPhotoUploadService as any
+        mockPhotoUploadService as unknown as PhotoUploadService
       );
 
       // When: Service deletes announcement
@@ -582,7 +583,7 @@ describe('AnnouncementService', () => {
         mockValidator,
         mockSanitizer,
         mockLocationValidator,
-        mockPhotoUploadService as any
+        mockPhotoUploadService as unknown as PhotoUploadService
       );
 
       // When: Service tries to delete announcement
