@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PhotoAttachment } from '../models/ReportMissingPetFlow';
+import { PhotoAttachment } from '../models/NewAnnouncementFlow';
 import { getFileValidationError } from '../utils/file-validation';
 
 interface UsePhotoUploadReturn {

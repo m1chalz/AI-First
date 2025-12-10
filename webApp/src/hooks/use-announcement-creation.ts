@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { announcementService } from '../services/announcement-service';
 import { mapFlowStateToDto } from '../models/announcement-submission';
-import type { ReportMissingPetFlowState } from '../models/ReportMissingPetFlow';
+import type { ReportMissingPetFlowState } from '../models/NewAnnouncementFlow';
 import type { ApiError } from '../models/api-error';
 
 export interface UseAnnouncementCreationResult {

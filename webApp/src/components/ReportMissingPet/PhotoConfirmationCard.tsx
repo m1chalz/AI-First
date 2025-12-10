@@ -1,4 +1,4 @@
-import { PhotoAttachment } from '../../models/ReportMissingPetFlow';
+import { PhotoAttachment } from '../../models/NewAnnouncementFlow';
 import { formatFileSize } from '../../utils/format-file-size';
 import styles from './PhotoScreen.module.css';
 

@@ -8,7 +8,7 @@ import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { Toast } from '../Toast/Toast';
 import styles from './ReportMissingPetLayout.module.css';
 import { useEffect } from 'react';
-import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { FlowStep } from '../../models/NewAnnouncementFlow';
 
 export function ContactScreen() {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext';
+import { useReportMissingPetFlow } from '../contexts/NewAnnouncementFlowContext';
 import { validateAllFields } from '../utils/form-validation';
 import { AnnouncementSpecies, AnnouncementSex } from '../types/animal';
-import { FlowStep } from '../models/ReportMissingPetFlow';
+import { FlowStep } from '../models/NewAnnouncementFlow';
 
 export interface DetailsFormData {
   lastSeenDate: string;

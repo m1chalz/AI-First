@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
-import { ReportMissingPetFlowProvider } from '../../../contexts/ReportMissingPetFlowContext';
+import { ReportMissingPetFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from '../../../contexts/GeolocationContext';
 import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
 

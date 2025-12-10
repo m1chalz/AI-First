@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PhotoConfirmationCard } from '../PhotoConfirmationCard';
-import { PhotoAttachment } from '../../../models/ReportMissingPetFlow';
+import { PhotoAttachment } from '../../../models/NewAnnouncementFlow';
 
 describe('PhotoConfirmationCard', () => {
   const mockPhoto: PhotoAttachment = {

@@ -5,7 +5,7 @@ import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
 import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
 import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
 import { SummaryScreen } from './components/ReportMissingPet/SummaryScreen';
-import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
+import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
 
 export function App() {
@@ -18,49 +18,49 @@ export function App() {
           <Route
             path="/report-missing"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <Navigate to="microchip" replace />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
           <Route
             path="/report-missing/microchip"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <MicrochipNumberScreen />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
           <Route
             path="/report-missing/photo"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <PhotoScreen />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
           <Route
             path="/report-missing/details"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <DetailsScreen />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
           <Route
             path="/report-missing/contact"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <ContactScreen />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
           <Route
             path="/report-missing/summary"
             element={
-              <ReportMissingPetFlowProvider>
+              <NewAnnouncementFlowProvider>
                 <SummaryScreen />
-              </ReportMissingPetFlowProvider>
+              </NewAnnouncementFlowProvider>
             }
           />
         </Routes>

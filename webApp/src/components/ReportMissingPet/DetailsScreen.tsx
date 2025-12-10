@@ -6,7 +6,7 @@ import { AnimalDescriptionForm } from './AnnouncementDescriptionForm/AnimalDescr
 import { ReportMissingPetLayout } from './ReportMissingPetLayout';
 import { Toast } from '../Toast/Toast';
 import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
-import { FlowStep } from '../../models/ReportMissingPetFlow';
+import { FlowStep } from '../../models/NewAnnouncementFlow';
 import styles from './ReportMissingPetLayout.module.css';
 
 export const DetailsScreen: React.FC = () => {

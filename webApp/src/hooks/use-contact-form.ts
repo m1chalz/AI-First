@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext';
+import { useReportMissingPetFlow } from '../contexts/NewAnnouncementFlowContext';
 import { validatePhoneNumber, validateEmailAddress, validateContactForm } from '../utils/form-validation';
-import { FlowStep } from '../models/ReportMissingPetFlow';
+import { FlowStep } from '../models/NewAnnouncementFlow';
 
 export interface UseContactFormReturn {
   phone: string;

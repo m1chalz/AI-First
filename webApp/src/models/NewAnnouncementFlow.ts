@@ -17,7 +17,7 @@ export interface PhotoAttachment {
   previewUrl: string | null;
 }
 
-export interface ReportMissingPetFlowState {
+export interface NewAnnouncementFlowState {
   currentStep: FlowStep;
   microchipNumber: string;
   photo: PhotoAttachment | null;
@@ -35,7 +35,7 @@ export interface ReportMissingPetFlowState {
   reward: string;
 }
 
-export const initialFlowState: ReportMissingPetFlowState = {
+export const initialFlowState: NewAnnouncementFlowState = {
   currentStep: FlowStep.Empty,
   microchipNumber: '',
   photo: null,
@@ -53,11 +53,15 @@ export const initialFlowState: ReportMissingPetFlowState = {
   reward: ''
 };
 
-export interface ReportMissingPetFlowContextValue {
-  flowState: ReportMissingPetFlowState;
-  updateFlowState: (updates: Partial<ReportMissingPetFlowState>) => void;
+export interface NewAnnouncementFlowContextValue {
+  flowState: NewAnnouncementFlowState;
+  updateFlowState: (updates: Partial<NewAnnouncementFlowState>) => void;
   clearFlowState: () => void;
 }
+
+// Backward compatibility aliases
+export type ReportMissingPetFlowState = NewAnnouncementFlowState;
+export type ReportMissingPetFlowContextValue = NewAnnouncementFlowContextValue;
 
 export interface MicrochipNumberFormData {
   value: string;

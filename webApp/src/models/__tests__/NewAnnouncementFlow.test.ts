@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialFlowState, FlowStep } from '../ReportMissingPetFlow';
+import { initialFlowState, FlowStep } from '../NewAnnouncementFlow';
 
 describe('ReportMissingPetFlow', () => {
   // given

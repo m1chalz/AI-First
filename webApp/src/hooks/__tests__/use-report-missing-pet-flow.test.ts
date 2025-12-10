@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useReportMissingPetFlow } from '../use-report-missing-pet-flow';
-import { ReportMissingPetFlowProvider } from '../../contexts/ReportMissingPetFlowContext';
+import { NewAnnouncementFlowProvider } from '../../contexts/NewAnnouncementFlowContext';
 
 describe('useReportMissingPetFlow', () => {
   it('returns context value when used within provider', () => {
     // given / when
     const { result } = renderHook(() => useReportMissingPetFlow(), {
-      wrapper: ReportMissingPetFlowProvider
+      wrapper: NewAnnouncementFlowProvider
     });
 
     // then
@@ -20,12 +20,12 @@ describe('useReportMissingPetFlow', () => {
     // given
     const consoleError = console.error;
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    console.error = () => {};
+    console.error = () => { };
 
     // when / then
     expect(() => {
       renderHook(() => useReportMissingPetFlow());
-    }).toThrow('useReportMissingPetFlow must be used within ReportMissingPetFlowProvider');
+    }).toThrow('useNewAnnouncementFlow must be used within NewAnnouncementFlowProvider');
 
     console.error = consoleError;
   });

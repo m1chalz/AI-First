@@ -1,4 +1,4 @@
-import type { ReportMissingPetFlowState } from './ReportMissingPetFlow';
+import type { ReportMissingPetFlowState } from '../models/NewAnnouncementFlow';
 
 export interface AnnouncementSubmissionDto {
   petName?: string;
