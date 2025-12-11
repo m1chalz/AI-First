@@ -51,8 +51,3 @@ export function useAnnouncementList(): UseAnnouncementListResult {
     geolocationError: null
   };
 }
-
-// Backward compatibility alias
-export function useAnimalList(): UseAnnouncementListResult {
-  return useAnnouncementList();
-}

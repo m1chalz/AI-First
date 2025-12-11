@@ -167,6 +167,3 @@ export const AnnouncementDetailsContent: React.FC<AnnouncementDetailsContentProp
     </div>
   );
 };
-
-// Backward compatibility alias
-export const PetDetailsContent = AnnouncementDetailsContent;

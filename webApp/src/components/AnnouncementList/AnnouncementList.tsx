@@ -61,6 +61,3 @@ export const AnnouncementList: React.FC = () => {
     </div>
   );
 };
-
-// Backward compatibility alias
-export const AnimalList = AnnouncementList;

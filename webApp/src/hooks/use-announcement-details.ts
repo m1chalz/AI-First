@@ -56,8 +56,3 @@ export function useAnnouncementDetails(announcementId: string | null): UseAnnoun
     retry: loadAnnouncementDetails
   };
 }
-
-// Backward compatibility alias
-export function usePetDetails(petId: string | null): UseAnnouncementDetailsResult {
-  return useAnnouncementDetails(petId);
-}

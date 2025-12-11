@@ -1,5 +1,5 @@
 import React from 'react';
-import { ANIMAL_SPECIES } from '../../../types/announcement';
+import { ANNOUNCEMENT_SPECIES } from '../../../types/announcement';
 import { SPECIES_LABELS } from '../../../utils/display-labels';
 import styles from './PetDescriptionForm.module.css';
 
@@ -19,7 +19,7 @@ export const SpeciesDropdown: React.FC<SpeciesDropdownProps> = ({ value, onChang
     <div>
       <select value={value} onChange={handleChange} className={styles.select} data-testid={testId}>
         <option value="">Select species</option>
-        {ANIMAL_SPECIES.map((s) => (
+        {ANNOUNCEMENT_SPECIES.map((s) => (
           <option key={s} value={s}>
             {SPECIES_LABELS[s]}
           </option>

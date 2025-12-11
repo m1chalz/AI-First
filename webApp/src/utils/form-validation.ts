@@ -1,4 +1,4 @@
-import { ANIMAL_SPECIES } from '../types/announcement';
+import { ANNOUNCEMENT_SPECIES } from '../types/announcement';
 
 export const VALIDATION_MESSAGES = {
   LAST_SEEN_DATE_REQUIRED: 'Please select the date of disappearance',
@@ -39,7 +39,7 @@ export function validateSpecies(species: string): string | null {
     return VALIDATION_MESSAGES.SPECIES_REQUIRED;
   }
 
-  if (!ANIMAL_SPECIES.includes(species as (typeof ANIMAL_SPECIES)[number])) {
+  if (!ANNOUNCEMENT_SPECIES.includes(species as (typeof ANNOUNCEMENT_SPECIES)[number])) {
     return VALIDATION_MESSAGES.SPECIES_INVALID;
   }
 

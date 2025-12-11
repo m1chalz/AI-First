@@ -81,6 +81,3 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ announcement
     </div>
   );
 };
-
-// Backward compatibility alias
-export const AnimalCard = AnnouncementCard;

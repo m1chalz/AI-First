@@ -1,5 +1,5 @@
 import React from 'react';
-import { ANIMAL_SEXES } from '../../../types/announcement';
+import { ANNOUNCEMENT_SEXES } from '../../../types/announcement';
 import { SEX_LABELS } from '../../../utils/display-labels';
 import styles from './PetDescriptionForm.module.css';
 
@@ -11,7 +11,7 @@ export interface SexSelectorProps {
 }
 
 export const SexSelector: React.FC<SexSelectorProps> = ({ value, onChange, error, testId = 'details.sex.select' }) => {
-  const sexOptions = ANIMAL_SEXES.filter((s) => s !== 'UNKNOWN');
+  const sexOptions = ANNOUNCEMENT_SEXES.filter((s) => s !== 'UNKNOWN');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);

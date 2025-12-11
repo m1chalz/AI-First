@@ -159,6 +159,3 @@ export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> =
 
   return createPortal(modalContent, document.body);
 };
-
-// Backward compatibility alias
-export const PetDetailsModal = AnnouncementDetailsModal;

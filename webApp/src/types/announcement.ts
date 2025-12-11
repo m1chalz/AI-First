@@ -42,13 +42,3 @@ export interface Announcement {
   createdAt: string | null; // ISO 8601 timestamp
   updatedAt: string | null; // ISO 8601 timestamp
 }
-
-// Legacy alias for backward compatibility during migration
-export type Animal = Announcement;
-export const ANIMAL_STATUSES = ANNOUNCEMENT_STATUSES;
-export type AnimalStatus = AnnouncementStatus;
-export const ANIMAL_SEXES = ANNOUNCEMENT_SEXES;
-export type AnimalSex = AnnouncementSex;
-export const ANIMAL_SPECIES = ANNOUNCEMENT_SPECIES;
-export type AnimalSpecies = AnnouncementSpecies;
-export const ANIMAL_STATUS_BADGE_COLORS = ANNOUNCEMENT_STATUS_BADGE_COLORS;

@@ -58,18 +58,3 @@ export interface NewAnnouncementFlowContextValue {
   updateFlowState: (updates: Partial<NewAnnouncementFlowState>) => void;
   clearFlowState: () => void;
 }
-
-// Backward compatibility aliases
-export type ReportMissingPetFlowState = NewAnnouncementFlowState;
-export type ReportMissingPetFlowContextValue = NewAnnouncementFlowContextValue;
-
-export interface MicrochipNumberFormData {
-  value: string;
-  formattedValue: string;
-}
-
-export interface UseMicrochipFormatterReturn extends MicrochipNumberFormData {
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
-  reset: () => void;
-}
