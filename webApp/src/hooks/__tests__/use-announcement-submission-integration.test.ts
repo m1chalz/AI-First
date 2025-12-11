@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
+import { useAnnouncementSubmission } from '../use-announcement-submission';
 import * as announcementServiceModule from '../../services/announcement-service';
 import type { NewAnnouncementFlowState, PhotoAttachment } from '../../models/NewAnnouncementFlow';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';

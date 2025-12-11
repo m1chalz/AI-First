@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AnnouncementDetailsModal } from '../../components/AnnouncementDetailsModal/AnnouncementDetailsModal';
-import * as useAnnouncementDetailsModule from '../../hooks/use-announcement-details';
-import type { Announcement } from '../../types/animal';
+import { AnnouncementDetailsModal } from '../../AnnouncementDetailsModal/AnnouncementDetailsModal';
+import * as useAnnouncementDetailsModule from '../../../hooks/use-announcement-details';
+import type { Announcement } from '../../../types/animal';
 
 vi.mock('../../hooks/use-pet-details');
 

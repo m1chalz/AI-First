@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatCoordinates } from '../../utils/coordinate-formatter';
+import { formatCoordinates } from '../coordinate-formatter';
 
 describe('formatCoordinates', () => {
   describe('Given valid coordinates', () => {

@@ -1,15 +1,51 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAnnouncementList } from '../../use-announcement-list';
-import * as announcementServiceModule from '../../../services/announcement-service';
+import { useAnnouncementList } from '../use-announcement-list';
+import * as announcementServiceModule from '../../services/announcement-service';
 
-vi.mock('../../../services/announcement-service', () => ({
+// Setup navigator.geolocation mock for tests
+beforeEach(() => {
+  if (!navigator.geolocation) {
+    Object.defineProperty(navigator, 'geolocation', {
+      value: {
+        getCurrentPosition: vi.fn((success) =>
+          success({
+            coords: {
+              latitude: 52.0,
+              longitude: 21.0,
+              accuracy: 100,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null
+            },
+            timestamp: Date.now()
+          })
+        ),
+        watchPosition: vi.fn(),
+        clearWatch: vi.fn()
+      },
+      writable: true
+    });
+  }
+
+  if (!navigator.permissions) {
+    Object.defineProperty(navigator, 'permissions', {
+      value: {
+        query: vi.fn().mockResolvedValue({ state: 'granted' })
+      },
+      writable: true
+    });
+  }
+});
+
+vi.mock('../../services/announcement-service', () => ({
   announcementService: {
     getAnnouncements: vi.fn()
   }
 }));
 
-vi.mock('../../../contexts/GeolocationContext', () => ({
+vi.mock('../../contexts/GeolocationContext', () => ({
   useGeolocationContext: vi.fn(() => ({
     state: {
       coordinates: null,

@@ -1,14 +1,15 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { LocationBanner } from '../../components/LocationBanner/LocationBanner';
+import { MissingLocationPermissionBanner } from '../MissingLocationPermissionBanner';
 
-describe('LocationBanner', () => {
+describe('MissingLocationPermissionBanner', () => {
   it('should render benefit message', () => {
     // given
     const onClose = vi.fn();
 
     // when
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
     screen.getByText(/see pets near you/i);
@@ -19,7 +20,7 @@ describe('LocationBanner', () => {
     const onClose = vi.fn();
 
     // when
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
     screen.getByText(/enable location access/i);
@@ -31,7 +32,7 @@ describe('LocationBanner', () => {
     const onClose = vi.fn();
 
     // when
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
     screen.getByTestId('petList.locationBanner.close');
@@ -40,7 +41,7 @@ describe('LocationBanner', () => {
   it('should call onClose when close button is clicked', () => {
     // given
     const onClose = vi.fn();
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
     const closeButton = screen.getByTestId('petList.locationBanner.close');
 
     // when
@@ -55,7 +56,7 @@ describe('LocationBanner', () => {
     const onClose = vi.fn();
 
     // when
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
     screen.getByTestId('petList.locationBanner');
@@ -66,7 +67,7 @@ describe('LocationBanner', () => {
     const onClose = vi.fn();
 
     // when
-    render(<LocationBanner onClose={onClose} />);
+    render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
     const banner = screen.getByTestId('petList.locationBanner');

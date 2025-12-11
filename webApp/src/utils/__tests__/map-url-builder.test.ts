@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildMapUrl } from '../../utils/map-url-builder';
+import { buildMapUrl } from '../map-url-builder';
 
 describe('Map URL Builder', () => {
   describe('buildMapUrl', () => {

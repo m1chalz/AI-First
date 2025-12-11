@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AnnouncementList } from '../../components/AnnouncementList/AnnouncementList';
-import * as useAnnouncementListModule from '../../hooks/use-announcement-list';
-import type { Announcement } from '../../types/animal';
+import { AnnouncementList } from '../../AnnouncementList/AnnouncementList';
+import * as useAnnouncementListModule from '../../../hooks/use-announcement-list';
+import type { Announcement } from '../../../types/animal';
 
 // Mock react-router-dom
 vi.mock('react-router-dom', () => ({
-  useNavigate: vi.fn(() => vi.fn())
+  useNavigate: vi.fn(() => vi.fn()),
+  useParams: vi.fn(() => ({}))
 }));
 
 // Mock the hooks

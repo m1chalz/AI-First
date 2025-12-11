@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useAnnouncementCreation } from '../../hooks/use-announcement-creation';
+import { useAnnouncementCreation } from '../use-announcement-creation';
 import * as announcementServiceModule from '../../services/announcement-service';
 import type { NewAnnouncementFlowState } from '../../models/NewAnnouncementFlow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';

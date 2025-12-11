@@ -4,7 +4,7 @@ import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { useModal } from '../../hooks/use-modal';
 import { AnnouncementCard } from './AnnouncementCard';
 import { EmptyState } from './EmptyState';
-import { LocationBanner } from '../LocationBanner/LocationBanner';
+import { MissingLocationPermissionBanner } from '../MissingLocationPermissionBanner/MissingLocationPermissionBanner';
 import { AnnouncementDetailsModal } from '../AnnouncementDetailsModal/AnnouncementDetailsModal';
 import styles from './AnnouncementList.module.css';
 
@@ -35,7 +35,7 @@ export const AnnouncementList: React.FC = () => {
         </header>
 
         <div className={styles.content}>
-          {showLocationBanner && <LocationBanner onClose={() => setIsBannerDismissed(true)} />}
+          {showLocationBanner && <MissingLocationPermissionBanner onClose={() => setIsBannerDismissed(true)} />}
           {isLoading ? (
             <div className={styles.loading} data-testid="announcementList.loading">
               <div className={styles.spinner}></div>

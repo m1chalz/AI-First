@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useAnnouncementDetails } from '../../hooks/use-announcement-details';
+import { useAnnouncementDetails } from '../use-announcement-details';
 import * as announcementServiceModule from '../../services/announcement-service';
 import type { Announcement } from '../../types/animal';
 

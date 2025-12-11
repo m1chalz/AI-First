@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AnnouncementService } from '../../services/announcement-service';
+import { AnnouncementService } from '../announcement-service';
 import type { Announcement } from '../../types/animal';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 

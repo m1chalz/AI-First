@@ -11,7 +11,7 @@ vi.mock('react-router-dom', () => ({
     useParams: mockUseParams
 }));
 
-import { useModal } from '../../hooks/use-modal';
+import { useModal } from '../use-modal';
 
 describe('useModal', () => {
     beforeEach(() => {

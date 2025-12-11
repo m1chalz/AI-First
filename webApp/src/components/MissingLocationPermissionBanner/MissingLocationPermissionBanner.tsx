@@ -1,16 +1,12 @@
 import React from 'react';
 import { MdClose, MdInfoOutline } from 'react-icons/md';
-import styles from './LocationBanner.module.css';
+import styles from './MissingLocationPermissionBanner.module.css';
 
-interface LocationBannerProps {
+interface MissingLocationPermissionBannerProps {
   onClose: () => void;
 }
 
-/**
- * Informational banner displayed when location permissions are blocked.
- * Shows benefits and instructions for enabling location access.
- */
-export const LocationBanner: React.FC<LocationBannerProps> = ({ onClose }) => (
+export const MissingLocationPermissionBanner: React.FC<MissingLocationPermissionBannerProps> = ({ onClose }) => (
   <div className={styles.banner} data-testid="petList.locationBanner">
     <div className={styles.content}>
       <MdInfoOutline className={styles.icon} aria-hidden="true" />
