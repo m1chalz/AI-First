@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { NewAnnouncementFlowProvider, useNewAnnouncementFlow } from '../NewAnnouncementFlowContext';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { AnimalSpecies, AnimalSex } from '../../types/announcement';
+import { AnnouncementSpecies, AnnouncementSex } from '../../types/announcement';
 
 describe('NewAnnouncementFlowContext', () => {
   it('provides initial flow state', () => {
@@ -173,9 +173,9 @@ describe('NewAnnouncementFlowContext', () => {
 
     it.each([
       ['lastSeenDate', '2025-12-01', '2025-12-01'],
-      ['species', 'DOG' as AnimalSpecies, 'DOG'],
+      ['species', 'DOG' as AnnouncementSpecies, 'DOG'],
       ['breed', 'Golden Retriever', 'Golden Retriever'],
-      ['sex', 'MALE' as AnimalSex, 'MALE'],
+      ['sex', 'MALE' as AnnouncementSex, 'MALE'],
       ['age', 5, 5],
       ['description', 'Friendly dog', 'Friendly dog'],
       ['latitude', 52.52, 52.52],
@@ -203,9 +203,9 @@ describe('NewAnnouncementFlowContext', () => {
       act(() => {
         result.current.updateFlowState({
           lastSeenDate: '2025-12-01',
-          species: 'DOG' as AnimalSpecies,
+          species: 'DOG' as AnnouncementSpecies,
           breed: 'Golden Retriever',
-          sex: 'MALE' as AnimalSex,
+          sex: 'MALE' as AnnouncementSex,
           age: 5,
           description: 'Friendly dog',
           latitude: 52.52,

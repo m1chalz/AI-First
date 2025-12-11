@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { useEffect } from 'react';
 import { AppRoutes } from '../../routes/routes';
 import layoutStyles from './NewAnnouncementLayout.module.css';

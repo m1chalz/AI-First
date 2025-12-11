@@ -9,13 +9,13 @@ interface HeaderProps {
 export function Header({ title, progress, onBack }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <button onClick={onBack} data-testid="reportMissingPet.header.backButton.click" className={styles.backButton} aria-label="Go back">
+      <button onClick={onBack} data-testid="newAnnouncement.header.backButton.click" className={styles.backButton} aria-label="Go back">
         ←
       </button>
-      <p className={styles.title} data-testid="reportMissingPet.header.title">
+      <p className={styles.title} data-testid="newAnnouncement.header.title">
         {title}
       </p>
-      <div className={styles.progress} data-testid="reportMissingPet.header.progress">
+      <div className={styles.progress} data-testid="newAnnouncement.header.progress">
         {progress}
       </div>
     </header>

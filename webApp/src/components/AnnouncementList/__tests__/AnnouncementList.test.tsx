@@ -51,7 +51,7 @@ describe('AnnouncementList - Location Banner Integration', () => {
     render(<AnnouncementList />);
 
     // then
-    screen.getByTestId('petList.locationBanner');
+    screen.getByTestId('announcementList.locationBanner');
     screen.getByText(/see pets near you/i);
   });
 
@@ -70,7 +70,7 @@ describe('AnnouncementList - Location Banner Integration', () => {
     render(<AnnouncementList />);
 
     // then
-    expect(screen.queryByTestId('petList.locationBanner')).toBeNull();
+    expect(screen.queryByTestId('announcementList.locationBanner')).toBeNull();
   });
 
   it('should NOT show LocationBanner for non-permission errors (e.g., timeout)', () => {
@@ -88,7 +88,7 @@ describe('AnnouncementList - Location Banner Integration', () => {
     render(<AnnouncementList />);
 
     // then
-    expect(screen.queryByTestId('petList.locationBanner')).toBeNull();
+    expect(screen.queryByTestId('announcementList.locationBanner')).toBeNull();
   });
 
   it('should hide LocationBanner when close button is clicked', () => {
@@ -102,13 +102,13 @@ describe('AnnouncementList - Location Banner Integration', () => {
       geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
     });
     render(<AnnouncementList />);
-    const closeButton = screen.getByTestId('petList.locationBanner.close');
+    const closeButton = screen.getByTestId('announcementList.locationBanner.close');
 
     // when
     fireEvent.click(closeButton);
 
     // then
-    expect(screen.queryByTestId('petList.locationBanner')).toBeNull();
+    expect(screen.queryByTestId('announcementList.locationBanner')).toBeNull();
   });
 
   it('should show pets list alongside LocationBanner when permission denied', () => {
@@ -149,7 +149,7 @@ describe('AnnouncementList - Location Banner Integration', () => {
     render(<AnnouncementList />);
 
     // then
-    screen.getByTestId('petList.locationBanner');
+    screen.getByTestId('announcementList.locationBanner');
     screen.getByTestId('announcementList.list');
   });
 });

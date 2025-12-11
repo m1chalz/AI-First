@@ -1,4 +1,4 @@
-import { AnimalSpecies, AnimalSex } from '../types/announcement';
+import { AnnouncementSpecies, AnnouncementSex } from '../types/announcement';
 
 export enum FlowStep {
   Empty = 'emtpy',
@@ -22,9 +22,9 @@ export interface NewAnnouncementFlowState {
   microchipNumber: string;
   photo: PhotoAttachment | null;
   lastSeenDate: string;
-  species: AnimalSpecies | null;
+  species: AnnouncementSpecies | null;
   breed: string;
-  sex: AnimalSex | null;
+  sex: AnnouncementSex | null;
   age: number | null;
   petName: string;
   description: string;

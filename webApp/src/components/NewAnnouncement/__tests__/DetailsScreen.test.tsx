@@ -61,7 +61,7 @@ describe('DetailsScreen', () => {
   it('should render header with back arrow', () => {
     render(<DetailsScreen />, { wrapper });
 
-    const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
+    const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     expect(backButton).toBeDefined();
   });
 
@@ -74,7 +74,7 @@ describe('DetailsScreen', () => {
   it('should render progress indicator showing 3/4', () => {
     render(<DetailsScreen />, { wrapper });
 
-    const progress = screen.getByTestId('reportMissingPet.header.progress');
+    const progress = screen.getByTestId('newAnnouncement.header.progress');
     expect(progress.textContent).toContain('3');
     expect(progress.textContent).toContain('4');
   });
@@ -82,7 +82,7 @@ describe('DetailsScreen', () => {
   it('should navigate to Step 2 when back arrow clicked', () => {
     render(<DetailsScreen />, { wrapper });
 
-    const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
+    const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     fireEvent.click(backButton);
 
     expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.photo);

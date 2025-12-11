@@ -33,13 +33,13 @@ describe('MicrochipNumberScreen', () => {
     renderWithProviders(<MicrochipNumberScreen />);
 
     // then
-    expect(screen.getByTestId('reportMissingPet.step1.microchipInput.field')).toBeTruthy();
+    expect(screen.getByTestId('newAnnouncement.step1.microchipInput.field')).toBeTruthy();
   });
 
   it('updates formatted value when user types', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
 
     // when
     fireEvent.change(input, { target: { value: '123456' } });
@@ -51,12 +51,12 @@ describe('MicrochipNumberScreen', () => {
   it('saves microchip number to flow state when continue clicked', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '123456789012345' } });
 
     // when
-    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
+    const continueButton = screen.getByTestId('newAnnouncement.step1.continueButton.click');
     fireEvent.click(continueButton);
 
     // then
@@ -66,8 +66,8 @@ describe('MicrochipNumberScreen', () => {
   it('allows continuing with empty microchip number', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
-    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click') as HTMLButtonElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
+    const continueButton = screen.getByTestId('newAnnouncement.step1.continueButton.click') as HTMLButtonElement;
 
     // when (leave input empty)
     expect(input.value).toBe('');
@@ -85,14 +85,14 @@ describe('MicrochipNumberScreen', () => {
   it('navigates to home and clears flow state when back button clicked', () => {
     // given
     renderWithProviders(<MicrochipNumberScreen />);
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
 
     // when (enter some data first)
     fireEvent.change(input, { target: { value: '12345' } });
     expect(input.value).toBe('12345');
 
     // when (click back button)
-    const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
+    const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     fireEvent.click(backButton);
 
     // then (should navigate to home)
@@ -128,12 +128,12 @@ describe('MicrochipNumberScreen', () => {
     render(<TestWrapper />);
 
     // when (enter data)
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '123456789012345' } });
     expect(input.value).toBe('12345-67890-12345');
 
     // when (save to flow state and navigate away)
-    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
+    const continueButton = screen.getByTestId('newAnnouncement.step1.continueButton.click');
     fireEvent.click(continueButton);
     fireEvent.click(screen.getByTestId('test.navigateAway'));
 
@@ -141,14 +141,14 @@ describe('MicrochipNumberScreen', () => {
     fireEvent.click(screen.getByTestId('test.navigateBack'));
 
     // then (data should be restored from flow state)
-    const restoredInput = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const restoredInput = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
     expect(restoredInput.value).toBe('12345-67890-12345');
   });
 
   it('allows editing previously entered microchip number', () => {
     // given (start with existing data)
     renderWithProviders(<MicrochipNumberScreen />);
-    const input = screen.getByTestId('reportMissingPet.step1.microchipInput.field') as HTMLInputElement;
+    const input = screen.getByTestId('newAnnouncement.step1.microchipInput.field') as HTMLInputElement;
 
     // when (enter initial value)
     fireEvent.change(input, { target: { value: '123456789012345' } });
@@ -161,7 +161,7 @@ describe('MicrochipNumberScreen', () => {
     expect(input.value).toBe('11111-11111-11111');
 
     // when (save updated value)
-    const continueButton = screen.getByTestId('reportMissingPet.step1.continueButton.click');
+    const continueButton = screen.getByTestId('newAnnouncement.step1.continueButton.click');
     fireEvent.click(continueButton);
 
     // then (should navigate)

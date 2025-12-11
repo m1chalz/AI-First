@@ -34,14 +34,14 @@ describe('MissingLocationPermissionBanner', () => {
     render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
-    screen.getByTestId('petList.locationBanner.close');
+    screen.getByTestId('announcementList.locationBanner.close');
   });
 
   it('should call onClose when close button is clicked', () => {
     // given
     const onClose = vi.fn();
     render(<MissingLocationPermissionBanner onClose={onClose} />);
-    const closeButton = screen.getByTestId('petList.locationBanner.close');
+    const closeButton = screen.getByTestId('announcementList.locationBanner.close');
 
     // when
     fireEvent.click(closeButton);
@@ -58,7 +58,7 @@ describe('MissingLocationPermissionBanner', () => {
     render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
-    screen.getByTestId('petList.locationBanner');
+    screen.getByTestId('announcementList.locationBanner');
   });
 
   it('should display informational icon', () => {
@@ -69,7 +69,7 @@ describe('MissingLocationPermissionBanner', () => {
     render(<MissingLocationPermissionBanner onClose={onClose} />);
 
     // then
-    const banner = screen.getByTestId('petList.locationBanner');
+    const banner = screen.getByTestId('announcementList.locationBanner');
     expect(banner).toBeTruthy();
   });
 });

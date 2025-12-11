@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
-import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { AppRoutes } from '../../routes/routes';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
@@ -55,11 +55,11 @@ export function MicrochipNumberScreen() {
           onPaste={handlePaste}
           placeholder="00000-00000-00000"
           className={styles.input}
-          data-testid="reportMissingPet.step1.microchipInput.field"
+          data-testid="newAnnouncement.step1.microchipInput.field"
         />
       </div>
 
-      <button onClick={handleContinue} className={styles.primaryButton} data-testid="reportMissingPet.step1.continueButton.click">
+      <button onClick={handleContinue} className={styles.primaryButton} data-testid="newAnnouncement.step1.continueButton.click">
         Continue
       </button>
     </NewAnnouncementLayout>

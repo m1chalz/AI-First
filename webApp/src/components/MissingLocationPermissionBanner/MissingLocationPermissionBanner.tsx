@@ -7,7 +7,7 @@ interface MissingLocationPermissionBannerProps {
 }
 
 export const MissingLocationPermissionBanner: React.FC<MissingLocationPermissionBannerProps> = ({ onClose }) => (
-  <div className={styles.banner} data-testid="petList.locationBanner">
+  <div className={styles.banner} data-testid="announcementList.locationBanner">
     <div className={styles.content}>
       <MdInfoOutline className={styles.icon} aria-hidden="true" />
       <div className={styles.text}>
@@ -16,7 +16,7 @@ export const MissingLocationPermissionBanner: React.FC<MissingLocationPermission
         </p>
       </div>
     </div>
-    <button className={styles.closeButton} onClick={onClose} aria-label="Close banner" data-testid="petList.locationBanner.close">
+    <button className={styles.closeButton} onClick={onClose} aria-label="Close banner" data-testid="announcementList.locationBanner.close">
       <MdClose aria-hidden="true" />
     </button>
   </div>

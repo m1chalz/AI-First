@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
+import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';

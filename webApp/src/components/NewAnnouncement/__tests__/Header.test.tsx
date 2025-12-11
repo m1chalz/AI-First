@@ -11,9 +11,9 @@ describe('Header', () => {
     render(<Header title="Test Title" progress="1/4" onBack={onBack} />);
 
     // then
-    expect(screen.getByTestId('reportMissingPet.header.title')).toBeTruthy();
+    expect(screen.getByTestId('newAnnouncement.header.title')).toBeTruthy();
     expect(screen.getByText('Test Title')).toBeTruthy();
-    expect(screen.getByTestId('reportMissingPet.header.progress')).toBeTruthy();
+    expect(screen.getByTestId('newAnnouncement.header.progress')).toBeTruthy();
     expect(screen.getByText('1/4')).toBeTruthy();
   });
 
@@ -25,7 +25,7 @@ describe('Header', () => {
     render(<Header title="Test Title" progress="1/4" onBack={onBack} />);
 
     // then
-    const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
+    const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     expect(backButton).toBeTruthy();
     expect(backButton.getAttribute('aria-label')).toBe('Go back');
   });
@@ -36,7 +36,7 @@ describe('Header', () => {
     render(<Header title="Test Title" progress="1/4" onBack={onBack} />);
 
     // when
-    const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
+    const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     fireEvent.click(backButton);
 
     // then

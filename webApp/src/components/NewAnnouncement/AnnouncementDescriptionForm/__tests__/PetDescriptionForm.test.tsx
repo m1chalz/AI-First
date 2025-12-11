@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { PetDescriptionForm } from '../PetDescriptionForm';
 import { GeolocationProvider } from '../../../../contexts/GeolocationContext';
 
-describe('AnimalDescriptionForm', () => {
+describe('PetDescriptionForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock navigator.geolocation with auto-callback for successful location
