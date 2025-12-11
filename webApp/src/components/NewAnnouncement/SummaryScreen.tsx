@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { useEffect } from 'react';
-import { Routes } from '../../routes/routes';
+import { AppRoutes } from '../../routes/routes';
 import layoutStyles from './NewAnnouncementLayout.module.css';
 import styles from './SummaryScreen.module.css';
 
@@ -14,7 +14,7 @@ export function SummaryScreen() {
   // Check if we have a valid announcement
   useEffect(() => {
     if (!managementPassword) {
-      navigate(Routes.microchip, { replace: true });
+      navigate(AppRoutes.microchip, { replace: true });
     }
   }, [managementPassword, navigate]);
 

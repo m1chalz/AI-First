@@ -4,7 +4,7 @@ import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow'
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { Routes } from '../../routes/routes';
+import { AppRoutes } from '../../routes/routes';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
 import { PhotoConfirmationCard } from './PhotoConfirmationCard';
@@ -19,12 +19,12 @@ export function PhotoScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(Routes.microchip, { replace: true });
+      navigate(AppRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(Routes.microchip);
+    navigate(AppRoutes.microchip);
   };
 
   const { photo, isDragOver, handleFileSelect, handleDrop, handleDragOver, handleDragLeave, removePhoto } = usePhotoUpload(
@@ -42,7 +42,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details
     });
-    navigate(Routes.details);
+    navigate(AppRoutes.details);
   };
 
   const handleBrowseClick = () => {

@@ -3,7 +3,7 @@ import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow'
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
-import { Routes } from '../../routes/routes';
+import { AppRoutes } from '../../routes/routes';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { Toast } from '../Toast/Toast';
 import styles from './NewAnnouncementLayout.module.css';
@@ -20,13 +20,13 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(Routes.microchip, { replace: true });
+      navigate(AppRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   useEffect(() => {
     if (announcementId && managementPassword) {
-      navigate(Routes.summary, { state: { announcementId, managementPassword } });
+      navigate(AppRoutes.summary, { state: { announcementId, managementPassword } });
     }
   }, [announcementId, managementPassword, navigate]);
 
@@ -37,7 +37,7 @@ export function ContactScreen() {
   }, [error, showToast]);
 
   const handleBack = () => {
-    navigate(Routes.details);
+    navigate(AppRoutes.details);
   };
 
   const handleContinue = async () => {

@@ -5,7 +5,7 @@ import { useToast } from '../../hooks/use-toast';
 import { PetDescriptionForm } from './AnnouncementDescriptionForm/PetDescriptionForm';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { Toast } from '../Toast/Toast';
-import { Routes } from '../../routes/routes';
+import { AppRoutes } from '../../routes/routes';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import styles from './NewAnnouncementLayout.module.css';
 
@@ -16,18 +16,18 @@ export const DetailsScreen: React.FC = () => {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(Routes.microchip, { replace: true });
+      navigate(AppRoutes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(Routes.photo);
+    navigate(AppRoutes.photo);
   };
 
   const handleContinue = () => {
     const isValid = handleSubmit();
     if (isValid) {
-      navigate(Routes.contact);
+      navigate(AppRoutes.contact);
     } else {
       showToast('Please correct the errors below', 5000);
     }

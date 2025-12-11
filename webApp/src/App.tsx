@@ -7,6 +7,7 @@ import { ContactScreen } from './components/NewAnnouncement/ContactScreen';
 import { SummaryScreen } from './components/NewAnnouncement/SummaryScreen';
 import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
+import { AppRoutes } from './routes/routes';
 
 export function App() {
   return (
@@ -16,15 +17,15 @@ export function App() {
           <Route path="/" element={<AnnouncementList />} />
           <Route path="/announcement/:announcementId" element={<AnnouncementList />} />
           <Route
-            path="/report-missing"
+            path={AppRoutes.base}
             element={
               <NewAnnouncementFlowProvider>
-                <Navigate to="microchip" replace />
+                <Navigate to={AppRoutes.microchip} replace />
               </NewAnnouncementFlowProvider>
             }
           />
           <Route
-            path="/report-missing/microchip"
+            path={AppRoutes.microchip}
             element={
               <NewAnnouncementFlowProvider>
                 <MicrochipNumberScreen />
@@ -32,7 +33,7 @@ export function App() {
             }
           />
           <Route
-            path="/report-missing/photo"
+            path={AppRoutes.photo}
             element={
               <NewAnnouncementFlowProvider>
                 <PhotoScreen />
@@ -40,7 +41,7 @@ export function App() {
             }
           />
           <Route
-            path="/report-missing/details"
+            path={AppRoutes.details}
             element={
               <NewAnnouncementFlowProvider>
                 <DetailsScreen />
@@ -48,7 +49,7 @@ export function App() {
             }
           />
           <Route
-            path="/report-missing/contact"
+            path={AppRoutes.contact}
             element={
               <NewAnnouncementFlowProvider>
                 <ContactScreen />
@@ -56,7 +57,7 @@ export function App() {
             }
           />
           <Route
-            path="/report-missing/summary"
+            path={AppRoutes.summary}
             element={
               <NewAnnouncementFlowProvider>
                 <SummaryScreen />

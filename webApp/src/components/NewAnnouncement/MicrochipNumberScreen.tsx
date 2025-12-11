@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { Routes } from '../../routes/routes';
+import { AppRoutes } from '../../routes/routes';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import styles from './NewAnnouncementLayout.module.css';
 import { useEffect } from 'react';
@@ -25,7 +25,7 @@ export function MicrochipNumberScreen() {
       microchipNumber: value,
       currentStep: FlowStep.Photo
     });
-    navigate(Routes.photo);
+    navigate(AppRoutes.photo);
   };
 
   const handleBack = () => {

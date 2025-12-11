@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MicrochipNumberScreen } from '../MicrochipNumberScreen';
 import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
-import { Routes } from '../../../routes/routes';
+import { AppRoutes } from '../../../routes/routes';
 
 const mockNavigate = vi.fn();
 
@@ -165,6 +165,6 @@ describe('MicrochipNumberScreen', () => {
     fireEvent.click(continueButton);
 
     // then (should navigate)
-    expect(mockNavigate).toHaveBeenCalledWith(Routes.photo);
+    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.photo);
   });
 });

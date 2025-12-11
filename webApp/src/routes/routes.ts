@@ -1,4 +1,4 @@
-export const Routes = {
+export const AppRoutes = {
   base: '/report-missing',
   microchip: '/report-missing/microchip',
   photo: '/report-missing/photo',
