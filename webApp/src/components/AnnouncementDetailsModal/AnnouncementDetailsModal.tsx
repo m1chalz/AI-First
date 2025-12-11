@@ -124,7 +124,12 @@ export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> =
         data-testid="announcementDetails.modal"
       >
         <div className={styles.modalHeader}>
-          <button className={styles.closeButton} onClick={handleClose} aria-label="Close modal" data-testid="announcementDetails.closeButton.click">
+          <button
+            className={styles.closeButton}
+            onClick={handleClose}
+            aria-label="Close modal"
+            data-testid="announcementDetails.closeButton.click"
+          >
             ×
           </button>
         </div>

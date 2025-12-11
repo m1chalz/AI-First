@@ -2,7 +2,7 @@ import React from 'react';
 import { MdLocationOn } from 'react-icons/md';
 import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement, type AnnouncementSex } from '../../types/announcement';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
-import { formatSpecies } from '../../utils/species-formatter';
+import toPascalCase from '../../utils/pascal-case-formatter';
 import styles from './AnnouncementList.module.css';
 import config from '../../config/config';
 
@@ -50,7 +50,7 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ announcement
         </div>
 
         <div className={styles.speciesRow}>
-          <span className={styles.speciesText}>{formatSpecies(announcement.species)}</span>
+          <span className={styles.speciesText}>{toPascalCase(announcement.species)}</span>
           <span className={styles.separator}>|</span>
           {announcement.breed && <span className={styles.breedText}>{announcement.breed}</span>}
           {announcement.sex !== 'UNKNOWN' && <span className={styles.genderIcon}>{getGenderIcon(announcement.sex)}</span>}

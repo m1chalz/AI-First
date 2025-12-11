@@ -61,7 +61,9 @@ describe('AnnouncementDetailsModal', () => {
     });
 
     // When: Component is rendered with isOpen=true
-    const { baseElement } = render(<AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />);
+    const { baseElement } = render(
+      <AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />
+    );
 
     // Then: Modal should be visible (rendered in portal to body)
     expect(baseElement.querySelector('[role="dialog"]')).toBeTruthy();
@@ -126,7 +128,9 @@ describe('AnnouncementDetailsModal', () => {
     });
 
     const user = userEvent.setup();
-    const { baseElement } = render(<AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />);
+    const { baseElement } = render(
+      <AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />
+    );
 
     // When: Backdrop is clicked (backdrop contains the dialog)
     const backdrop = baseElement.querySelector('[class*="backdrop"]') as HTMLElement;
@@ -214,7 +218,9 @@ describe('AnnouncementDetailsModal', () => {
       });
 
       // When: Component is rendered
-      const { baseElement } = render(<AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />);
+      const { baseElement } = render(
+        <AnnouncementDetailsModal isOpen={true} selectedAnnouncementId="announcement-123" onClose={mockOnClose} />
+      );
 
       // Then: Modal dialog should exist
       expect(baseElement.querySelector('[role="dialog"]')).toBeTruthy();

@@ -5,7 +5,7 @@ import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/announcement';
 import { formatDate } from '../../utils/date-formatter';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatMicrochip } from '../../utils/microchip-formatter';
-import { formatSpecies, formatSex } from '../../utils/species-formatter';
+import toPascalCase from '../../utils/pascal-case-formatter';
 import { buildMapUrl } from '../../utils/map-url-builder';
 import styles from './AnnouncementDetailsContent.module.css';
 import config from '../../config/config';
@@ -102,7 +102,7 @@ export const AnnouncementDetailsContent: React.FC<AnnouncementDetailsContentProp
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Species</span>
               <span className={styles.fieldValue} data-testid="announcementDetails.species.value">
-                {formatSpecies(announcement.species)}
+                {toPascalCase(announcement.species)}
               </span>
             </div>
             <div className={styles.gridItem}>
@@ -116,7 +116,7 @@ export const AnnouncementDetailsContent: React.FC<AnnouncementDetailsContentProp
             <div className={styles.gridItem}>
               <span className={styles.fieldLabel}>Animal Sex</span>
               <span className={styles.fieldValue} data-testid="announcementDetails.sex.value">
-                {announcement.sex !== 'UNKNOWN' ? `${formatSex(announcement.sex)} ${getGenderIcon(announcement.sex)}` : '—'}
+                {announcement.sex !== 'UNKNOWN' ? `${toPascalCase(announcement.sex)} ${getGenderIcon(announcement.sex)}` : '—'}
               </span>
             </div>
             <div className={styles.gridItem}>

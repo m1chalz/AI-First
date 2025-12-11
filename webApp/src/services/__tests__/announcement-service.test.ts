@@ -201,7 +201,9 @@ describe('AnnouncementService', () => {
       } as Response);
 
       // when / then
-      await expect(underTest.getAnnouncementById('pet-123')).rejects.toThrow('Failed to fetch announcement details: 500 Internal Server Error');
+      await expect(underTest.getAnnouncementById('pet-123')).rejects.toThrow(
+        'Failed to fetch announcement details: 500 Internal Server Error'
+      );
     });
 
     it('should handle network errors', async () => {

@@ -17,8 +17,8 @@ vi.mock('../../hooks/use-animal-list', () => ({
     isLoading: false,
     error: null,
     isEmpty: true,
-      loadAnnouncements: vi.fn(),
-      geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
+    loadAnnouncements: vi.fn(),
+    geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
   }))
 }));
 

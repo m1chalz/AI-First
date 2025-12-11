@@ -20,7 +20,7 @@ describe('useNewAnnouncementFlow', () => {
     // given
     const consoleError = console.error;
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    console.error = () => { };
+    console.error = () => {};
 
     // when / then
     expect(() => {
