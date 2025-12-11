@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnnouncementList } from './components/AnnouncementList/AnnouncementList';
-import { MicrochipNumberScreen } from './components/ReportMissingPet/MicrochipNumberScreen';
-import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
-import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
-import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
-import { SummaryScreen } from './components/ReportMissingPet/SummaryScreen';
+import { MicrochipNumberScreen } from './components/NewAnnouncement/MicrochipNumberScreen';
+import { PhotoScreen } from './components/NewAnnouncement/PhotoScreen';
+import { DetailsScreen } from './components/NewAnnouncement/DetailsScreen';
+import { ContactScreen } from './components/NewAnnouncement/ContactScreen';
+import { SummaryScreen } from './components/NewAnnouncement/SummaryScreen';
 import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
 

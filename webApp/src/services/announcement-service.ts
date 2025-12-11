@@ -1,5 +1,5 @@
 import config from '../config/config';
-import type { Announcement } from '../types/animal';
+import type { Announcement } from '../types/announcement';
 import type { Coordinates } from '../types/location';
 import type { AnnouncementSubmissionDto, AnnouncementResponse } from '../models/announcement-submission';
 import type { ApiError } from '../models/api-error';

@@ -115,15 +115,15 @@
   width: 0;
 }
 
-/* Animal list */
-.animalList {
+/* Announcement list */
+.announcementList {
   display: flex;
   flex-direction: column;
   gap: 16px; /* 16px gap between cards for better spacing */
 }
 
-/* Animal card - Horizontal layout with image on left edge */
-.animalCard {
+/* Announcement card - Horizontal layout with image on left edge */
+.announcementCard {
   display: flex;
   align-items: stretch;
   gap: 0;
@@ -139,7 +139,7 @@
   overflow: hidden;
 }
 
-.animalCard:hover {
+.announcementCard:hover {
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
@@ -171,8 +171,8 @@
   border-radius: 0;
 }
 
-/* Left section: Basic animal info (location + species/breed) */
-.animalBasicInfo {
+/* Left section: Basic announcement info (location + species/breed) */
+.announcementBasicInfo {
   width: 200px;
   min-width: 200px;
   display: flex;
@@ -233,7 +233,7 @@
 }
 
 /* Center section: Description */
-.animalDescription {
+.announcementDescription {
   flex: 1;
   font-size: 13px;
   font-weight: 400;
@@ -251,7 +251,7 @@
 }
 
 /* Right section: Status and date (left column) + Details button (right column) */
-.animalStatusSection {
+.announcementStatusSection {
   display: flex;
   flex-direction: row;
   gap: 24px;
@@ -280,7 +280,7 @@
   text-align: center;
 }
 
-.animalDate {
+.announcementDate {
   font-size: 13px;
   font-weight: 400;
   color: #545f71;

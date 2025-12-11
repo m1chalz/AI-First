@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdLocationOn } from 'react-icons/md';
-import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement, type AnnouncementSex } from '../../types/animal';
+import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement, type AnnouncementSex } from '../../types/announcement';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatSpecies } from '../../utils/species-formatter';
 import styles from './AnnouncementList.module.css';

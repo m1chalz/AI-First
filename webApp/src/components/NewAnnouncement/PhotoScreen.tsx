@@ -4,12 +4,12 @@ import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow'
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
-import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import { Routes } from '../../routes/routes';
+import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
 import { PhotoConfirmationCard } from './PhotoConfirmationCard';
 import { Toast } from '../Toast/Toast';
-import styles from './ReportMissingPetLayout.module.css';
+import styles from './NewAnnouncementLayout.module.css';
 
 export function PhotoScreen() {
   const navigate = useNavigate();
@@ -19,12 +19,12 @@ export function PhotoScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(ReportMissingPetRoutes.microchip, { replace: true });
+      navigate(Routes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(ReportMissingPetRoutes.microchip);
+    navigate(Routes.microchip);
   };
 
   const { photo, isDragOver, handleFileSelect, handleDrop, handleDragOver, handleDragLeave, removePhoto } = usePhotoUpload(
@@ -42,7 +42,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details
     });
-    navigate(ReportMissingPetRoutes.details);
+    navigate(Routes.details);
   };
 
   const handleBrowseClick = () => {
@@ -57,7 +57,7 @@ export function PhotoScreen() {
   };
 
   return (
-    <ReportMissingPetLayout title="Animal photo" progress="2/4" onBack={handleBack}>
+    <NewAnnouncementLayout title="Animal photo" progress="2/4" onBack={handleBack}>
       <h2 className={styles.heading}>Your pet&apos;s photo</h2>
 
       <p className={styles.description}>Please upload a photo of the missing animal.</p>
@@ -81,6 +81,6 @@ export function PhotoScreen() {
       </button>
 
       <Toast message={message} />
-    </ReportMissingPetLayout>
+    </NewAnnouncementLayout>
   );
 }

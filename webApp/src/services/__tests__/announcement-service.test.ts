@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AnnouncementService } from '../announcement-service';
-import type { Announcement } from '../../types/animal';
+import type { Announcement } from '../../types/announcement';
 import type { AnnouncementSubmissionDto } from '../../models/announcement-submission';
 
 describe('AnnouncementService', () => {

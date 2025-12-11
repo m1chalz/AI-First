@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { AnnouncementDetailsContent } from '../../AnnouncementDetailsModal/AnnouncementDetailsContent';
-import type { Announcement } from '../../../types/animal';
+import type { Announcement } from '../../../types/announcement';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '123',

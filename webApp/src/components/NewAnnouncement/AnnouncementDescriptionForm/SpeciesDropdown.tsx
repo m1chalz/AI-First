@@ -1,7 +1,7 @@
 import React from 'react';
-import { ANIMAL_SPECIES } from '../../../types/animal';
+import { ANIMAL_SPECIES } from '../../../types/announcement';
 import { SPECIES_LABELS } from '../../../utils/display-labels';
-import styles from './AnimalDescriptionForm.module.css';
+import styles from './PetDescriptionForm.module.css';
 
 export interface SpeciesDropdownProps {
   value: string;

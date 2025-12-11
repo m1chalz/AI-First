@@ -59,6 +59,10 @@ export interface NewAnnouncementFlowContextValue {
   clearFlowState: () => void;
 }
 
+// Backward compatibility aliases
+export type ReportMissingPetFlowState = NewAnnouncementFlowState;
+export type ReportMissingPetFlowContextValue = NewAnnouncementFlowContextValue;
+
 export interface MicrochipNumberFormData {
   value: string;
   formattedValue: string;

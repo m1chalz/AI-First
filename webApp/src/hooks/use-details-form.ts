@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNewAnnouncementFlow } from '../contexts/NewAnnouncementFlowContext';
 import { validateAllFields } from '../utils/form-validation';
-import { AnnouncementSpecies, AnnouncementSex } from '../types/animal';
+import { AnnouncementSpecies, AnnouncementSex } from '../types/announcement';
 import { FlowStep } from '../models/NewAnnouncementFlow';
 
 export interface DetailsFormData {

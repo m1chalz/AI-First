@@ -1,11 +1,11 @@
 import React from 'react';
 import { SpeciesDropdown } from './SpeciesDropdown';
-import { GenderSelector } from './GenderSelector';
+import { SexSelector } from './SexSelector';
 import { useGeolocationContext } from '../../../contexts/GeolocationContext';
-import sharedStyles from '../ReportMissingPetLayout.module.css';
-import styles from './AnimalDescriptionForm.module.css';
+import sharedStyles from '../NewAnnouncementLayout.module.css';
+import styles from './PetDescriptionForm.module.css';
 
-export interface AnimalDescriptionFormProps {
+export interface PetDescriptionFormProps {
   formData: {
     lastSeenDate: string;
     species: string;
@@ -22,7 +22,7 @@ export interface AnimalDescriptionFormProps {
   onSubmit: () => void;
 }
 
-export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({ formData, onFieldChange, onSubmit }) => {
+export const PetDescriptionForm: React.FC<PetDescriptionFormProps> = ({ formData, onFieldChange, onSubmit }) => {
   const today = new Date().toISOString().split('T')[0];
   const { state } = useGeolocationContext();
   const { isLoading, coordinates, error, permissionCheckCompleted } = state;
@@ -108,7 +108,7 @@ export const AnimalDescriptionForm: React.FC<AnimalDescriptionFormProps> = ({ fo
 
       <div className={sharedStyles.inputGroup}>
         <label className={sharedStyles.label}>Gender</label>
-        <GenderSelector value={formData.sex} onChange={(value) => onFieldChange('sex', value)} error={formData.validationErrors.sex} />
+        <SexSelector value={formData.sex} onChange={(value) => onFieldChange('sex', value)} error={formData.validationErrors.sex} />
       </div>
 
       <div className={sharedStyles.inputGroup}>

@@ -1,4 +1,4 @@
-import { ANIMAL_SPECIES } from '../types/animal';
+import { ANIMAL_SPECIES } from '../types/announcement';
 
 export const VALIDATION_MESSAGES = {
   LAST_SEEN_DATE_REQUIRED: 'Please select the date of disappearance',

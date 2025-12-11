@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
-import { ReportMissingPetLayout } from './ReportMissingPetLayout';
-import styles from './ReportMissingPetLayout.module.css';
+import { Routes } from '../../routes/routes';
+import { NewAnnouncementLayout } from './NewAnnouncementLayout';
+import styles from './NewAnnouncementLayout.module.css';
 import { useEffect } from 'react';
 
 export function MicrochipNumberScreen() {
@@ -25,7 +25,7 @@ export function MicrochipNumberScreen() {
       microchipNumber: value,
       currentStep: FlowStep.Photo
     });
-    navigate(ReportMissingPetRoutes.photo);
+    navigate(Routes.photo);
   };
 
   const handleBack = () => {
@@ -34,7 +34,7 @@ export function MicrochipNumberScreen() {
   };
 
   return (
-    <ReportMissingPetLayout title="Microchip number" progress="1/4" onBack={handleBack}>
+    <NewAnnouncementLayout title="Microchip number" progress="1/4" onBack={handleBack}>
       <h2 className={styles.heading}>Identification by Microchip</h2>
 
       <p className={styles.description}>
@@ -62,6 +62,6 @@ export function MicrochipNumberScreen() {
       <button onClick={handleContinue} className={styles.primaryButton} data-testid="reportMissingPet.step1.continueButton.click">
         Continue
       </button>
-    </ReportMissingPetLayout>
+    </NewAnnouncementLayout>
   );
 }

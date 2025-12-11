@@ -1,4 +1,4 @@
-export const ReportMissingPetRoutes = {
+export const Routes = {
   base: '/report-missing',
   microchip: '/report-missing/microchip',
   photo: '/report-missing/photo',

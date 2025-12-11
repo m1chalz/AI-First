@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { NewAnnouncementFlowProvider, useNewAnnouncementFlow } from '../NewAnnouncementFlowContext';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { AnimalSpecies, AnimalSex } from '../../types/animal';
+import { AnimalSpecies, AnimalSex } from '../../types/announcement';
 
 describe('NewAnnouncementFlowContext', () => {
   it('provides initial flow state', () => {

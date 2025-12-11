@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { AnimalDescriptionForm } from '../AnimalDescriptionForm';
+import { PetDescriptionForm } from '../PetDescriptionForm';
 import { GeolocationProvider } from '../../../../contexts/GeolocationContext';
 
 describe('AnimalDescriptionForm', () => {
@@ -50,7 +50,7 @@ describe('AnimalDescriptionForm', () => {
   const wrapper = ({ children }: { children: ReactNode }) => <GeolocationProvider>{children}</GeolocationProvider>;
 
   it('should render date input field', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const dateInput = screen.getByTestId('details.lastSeenDate.input');
     expect(dateInput).toBeDefined();
@@ -58,28 +58,28 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should render species dropdown', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const speciesDropdown = screen.getByTestId('details.species.select');
     expect(speciesDropdown).toBeDefined();
   });
 
   it('should render breed input field', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const breedInput = screen.getByTestId('details.breed.input');
     expect(breedInput).toBeDefined();
   });
 
   it('should render gender selector', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const genderSelector = screen.getByTestId('details.sex.select');
     expect(genderSelector).toBeDefined();
   });
 
   it('should render age input field', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const ageInput = screen.getByTestId('details.age.input');
     expect(ageInput).toBeDefined();
@@ -87,7 +87,7 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should render pet name input field', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const petNameInput = screen.getByTestId('details.petName.input');
     expect(petNameInput).toBeDefined();
@@ -95,7 +95,7 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should render description textarea', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const textarea = screen.getByTestId('details.description.textarea');
     expect(textarea).toBeDefined();
@@ -103,7 +103,7 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should render enabled GPS button', async () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const gpsButton = screen.getByTestId('details.gpsButton.click');
     expect(gpsButton).toBeDefined();
@@ -133,7 +133,7 @@ describe('AnimalDescriptionForm', () => {
     const mockOnFieldChange = vi.fn();
 
     // when
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
 
     const gpsButton = screen.getByTestId('details.gpsButton.click');
 
@@ -170,7 +170,7 @@ describe('AnimalDescriptionForm', () => {
     const mockOnFieldChange = vi.fn();
 
     // when
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
 
     const gpsButton = screen.getByTestId('details.gpsButton.click');
 
@@ -211,7 +211,7 @@ describe('AnimalDescriptionForm', () => {
 
     // when
     const mockOnFieldChange = vi.fn();
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
 
     const gpsButton = screen.getByTestId('details.gpsButton.click') as HTMLButtonElement;
 
@@ -230,7 +230,7 @@ describe('AnimalDescriptionForm', () => {
     // The GeolocationContext also checks permissions on mount, but due to async nature,
     // the main user-facing behavior is tested when they click the button and see the error.
 
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const gpsButton = screen.getByTestId('details.gpsButton.click') as HTMLButtonElement;
 
@@ -245,14 +245,14 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should render Continue button', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const continueButton = screen.getByTestId('details.continue.click');
     expect(continueButton).toBeDefined();
   });
 
   it('should disable breed field when species is not selected', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const breedInput = screen.getByTestId('details.breed.input') as HTMLInputElement;
     expect(breedInput.disabled).toBe(true);
@@ -261,14 +261,14 @@ describe('AnimalDescriptionForm', () => {
   it('should enable breed field when species is selected', () => {
     const formDataWithSpecies = { ...defaultFormData, species: 'DOG' };
 
-    render(<AnimalDescriptionForm formData={formDataWithSpecies} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={formDataWithSpecies} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const breedInput = screen.getByTestId('details.breed.input') as HTMLInputElement;
     expect(breedInput.disabled).toBe(false);
   });
 
   it('should set max attribute to today on date picker', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const dateInput = screen.getByTestId('details.lastSeenDate.input');
     const today = new Date().toISOString().split('T')[0];
@@ -276,7 +276,7 @@ describe('AnimalDescriptionForm', () => {
   });
 
   it('should call onSubmit when Continue button is clicked', () => {
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={vi.fn()} onSubmit={mockOnSubmit} />, { wrapper });
 
     const continueButton = screen.getByTestId('details.continue.click');
     fireEvent.click(continueButton);
@@ -289,7 +289,7 @@ describe('AnimalDescriptionForm', () => {
     const mockOnFieldChange = vi.fn();
 
     // when
-    render(<AnimalDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
+    render(<PetDescriptionForm formData={defaultFormData} onFieldChange={mockOnFieldChange} onSubmit={mockOnSubmit} />, { wrapper });
 
     const petNameInput = screen.getByTestId('details.petName.input') as HTMLInputElement;
     fireEvent.change(petNameInput, { target: { value: 'Fluffy' } });

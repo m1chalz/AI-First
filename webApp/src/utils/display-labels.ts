@@ -1,4 +1,4 @@
-import { AnnouncementSpecies, AnnouncementSex } from '../types/animal';
+import { AnnouncementSpecies, AnnouncementSex } from '../types/announcement';
 
 export const SPECIES_LABELS: Record<AnnouncementSpecies, string> = {
   DOG: 'Dog',

@@ -3,10 +3,10 @@ import { useNewAnnouncementFlow } from '../../hooks/use-report-missing-pet-flow'
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
-import { ReportMissingPetRoutes } from '../../routes/report-missing-pet-routes';
-import { ReportMissingPetLayout } from './ReportMissingPetLayout';
+import { Routes } from '../../routes/routes';
+import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { Toast } from '../Toast/Toast';
-import styles from './ReportMissingPetLayout.module.css';
+import styles from './NewAnnouncementLayout.module.css';
 import { useEffect } from 'react';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 
@@ -20,13 +20,13 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(ReportMissingPetRoutes.microchip, { replace: true });
+      navigate(Routes.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   useEffect(() => {
     if (announcementId && managementPassword) {
-      navigate(ReportMissingPetRoutes.summary, { state: { announcementId, managementPassword } });
+      navigate(Routes.summary, { state: { announcementId, managementPassword } });
     }
   }, [announcementId, managementPassword, navigate]);
 
@@ -37,7 +37,7 @@ export function ContactScreen() {
   }, [error, showToast]);
 
   const handleBack = () => {
-    navigate(ReportMissingPetRoutes.details);
+    navigate(Routes.details);
   };
 
   const handleContinue = async () => {
@@ -51,7 +51,7 @@ export function ContactScreen() {
   };
 
   return (
-    <ReportMissingPetLayout title="Owner's details" progress="4/4" onBack={handleBack}>
+    <NewAnnouncementLayout title="Owner's details" progress="4/4" onBack={handleBack}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
           <h2 className={styles.heading}>Your contact info</h2>
@@ -128,6 +128,6 @@ export function ContactScreen() {
       </div>
 
       <Toast message={message} />
-    </ReportMissingPetLayout>
+    </NewAnnouncementLayout>
   );
 }

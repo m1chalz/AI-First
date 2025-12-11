@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
 import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from '../../../contexts/GeolocationContext';
-import { ReportMissingPetRoutes } from '../../../routes/report-missing-pet-routes';
+import { Routes } from '../../../routes/routes';
 
 const mockNavigate = vi.fn();
 
@@ -85,7 +85,7 @@ describe('DetailsScreen', () => {
     const backButton = screen.getByTestId('reportMissingPet.header.backButton.click');
     fireEvent.click(backButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.photo);
+    expect(mockNavigate).toHaveBeenCalledWith(Routes.photo);
   });
 
   it('should navigate to Step 4 on successful submit with valid data', () => {
@@ -116,7 +116,7 @@ describe('DetailsScreen', () => {
     const continueButton = screen.getByTestId('details.continue.click');
     fireEvent.click(continueButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.contact);
+    expect(mockNavigate).toHaveBeenCalledWith(Routes.contact);
   });
 
   it('should integrate useAnimalDescriptionForm hook', () => {
@@ -148,7 +148,7 @@ describe('DetailsScreen', () => {
       const continueButton = screen.getByTestId('details.continue.click');
       fireEvent.click(continueButton);
 
-      expect(mockNavigate).not.toHaveBeenCalledWith(ReportMissingPetRoutes.contact);
+      expect(mockNavigate).not.toHaveBeenCalledWith(Routes.contact);
     });
 
     it('should display inline errors for missing required fields', () => {
@@ -240,7 +240,7 @@ describe('DetailsScreen', () => {
       render(<DetailsScreen />, { wrapper });
 
       waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith(ReportMissingPetRoutes.microchip, { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith(Routes.microchip, { replace: true });
       });
     });
   });

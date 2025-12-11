@@ -1,15 +1,15 @@
 import React from 'react';
 import { Header } from './Header';
-import styles from './ReportMissingPetLayout.module.css';
+import styles from './NewAnnouncementLayout.module.css';
 
-interface ReportMissingPetLayoutProps {
+interface NewAnnouncementLayoutProps {
   title: string;
   progress: string;
   onBack: () => void;
   children: React.ReactNode;
 }
 
-export function ReportMissingPetLayout({ title, progress, onBack, children }: ReportMissingPetLayoutProps) {
+export function NewAnnouncementLayout({ title, progress, onBack, children }: NewAnnouncementLayoutProps) {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.contentCard}>

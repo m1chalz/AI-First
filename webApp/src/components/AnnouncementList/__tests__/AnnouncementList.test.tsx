@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AnnouncementList } from '../../AnnouncementList/AnnouncementList';
 import * as useAnnouncementListModule from '../../../hooks/use-announcement-list';
-import type { Announcement } from '../../../types/animal';
+import type { Announcement } from '../../../types/announcement';
 
 // Mock react-router-dom
 vi.mock('react-router-dom', () => ({

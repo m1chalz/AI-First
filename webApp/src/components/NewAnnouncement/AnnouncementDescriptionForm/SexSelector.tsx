@@ -1,16 +1,16 @@
 import React from 'react';
-import { ANIMAL_SEXES } from '../../../types/animal';
+import { ANIMAL_SEXES } from '../../../types/announcement';
 import { SEX_LABELS } from '../../../utils/display-labels';
-import styles from './AnimalDescriptionForm.module.css';
+import styles from './PetDescriptionForm.module.css';
 
-export interface GenderSelectorProps {
+export interface SexSelectorProps {
   value: string;
   onChange: (sex: string) => void;
   error?: string;
   testId?: string;
 }
 
-export const GenderSelector: React.FC<GenderSelectorProps> = ({ value, onChange, error, testId = 'details.sex.select' }) => {
+export const SexSelector: React.FC<SexSelectorProps> = ({ value, onChange, error, testId = 'details.sex.select' }) => {
   const sexOptions = ANIMAL_SEXES.filter((s) => s !== 'UNKNOWN');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

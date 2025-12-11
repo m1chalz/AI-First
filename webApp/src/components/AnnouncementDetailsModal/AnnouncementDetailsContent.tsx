@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdCalendarToday, MdPhone, MdEmail, MdLocationOn, MdAttachMoney } from 'react-icons/md';
-import type { Announcement, AnnouncementStatus } from '../../types/animal';
-import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/animal';
+import type { Announcement, AnnouncementStatus } from '../../types/announcement';
+import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/announcement';
 import { formatDate } from '../../utils/date-formatter';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatMicrochip } from '../../utils/microchip-formatter';
