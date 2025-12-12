@@ -4,7 +4,8 @@
   "description": "Web application that uses Kotlin Multiplatform Library",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "tsc && eslint ./src",
     "lint:fix": "eslint --fix ./src",
