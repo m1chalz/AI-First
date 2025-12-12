@@ -25,6 +25,7 @@ export default defineConfig(
       'arrow-body-style': ['error', 'as-needed'],
       'react-hooks/set-state-in-effect': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'import/no-unresolved': 'off',
       'import/order': [
         'error',
         {

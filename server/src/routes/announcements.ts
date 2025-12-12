@@ -1,3 +1,4 @@
+import path from 'path';
 import { Router } from 'express';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import upload from '../middlewares/upload-middleware.ts';
@@ -6,7 +7,6 @@ import announcementAuthMiddleware from '../middlewares/announcement-auth.ts';
 import adminAuthMiddleware from '../middlewares/admin-auth.ts';
 import type { RequestWithBasicAuth } from '../middlewares/basic-auth.ts';
 import { ValidationError } from '../lib/errors.ts';
-import path from 'path';
 import { announcementService, photoUploadService } from '../conf/di.conf.ts';
 
 const router = Router();

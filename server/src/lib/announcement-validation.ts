@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ValidationError } from './errors.ts';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
+import { ValidationError } from './errors.ts';
 import { isValidEmail, isValidPhone } from './validators.ts';
 
 function isNotFutureDate(dateString: string): boolean {

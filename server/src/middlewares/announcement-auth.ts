@@ -1,8 +1,8 @@
 import type { NextFunction, Response } from 'express';
 import { UnauthorizedError, NotFoundError } from '../lib/errors.ts';
 import { verifyPassword } from '../lib/password-management.ts';
-import type { RequestWithBasicAuth } from './basic-auth.ts';
 import { db } from '../database/db-utils.ts';
+import type { RequestWithBasicAuth } from './basic-auth.ts';
 
 interface PasswordRow {
   management_password_hash: string;
