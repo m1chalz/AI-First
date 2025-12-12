@@ -2,7 +2,19 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.4.0 → 2.5.0
+Version change: 2.5.0 → 2.5.1
+PATCH: Clarified test comment format for backend and webapp tests (Given-When-Then sections)
+
+Changes (v2.5.1):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - added mandatory comment format for backend and webapp
+- UPDATED: Test examples for backend and webapp to use `// given`, `// when`, `// then` (lowercase, no additional text)
+- Clarified that comment format applies specifically to backend (`/server`) and webapp (`/webApp`) tests
+
+Rationale:
+- Consistent comment format improves test readability and maintainability
+- Simple `// given` format (not `// given: prepared something!`) keeps comments concise and standardized
+
+Previous version (v2.5.0):
 MINOR: Added Web Architecture & Quality Standards principle for React 18 + TypeScript webApp
 
 Changes (v2.5.0):
@@ -74,6 +86,14 @@ Modified sections:
 Templates requiring updates:
 - ✅ .specify/templates/plan-template.md - Added Web Architecture & Quality Standards checks
 - ✅ .specify/templates/tasks-template.md - Updated Web test tasks to include TDD workflow and /src/lib/ structure
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.1):
+- VIII. Given-When-Then Test Convention (UPDATED - added mandatory comment format for backend and webapp)
+
+Templates requiring updates (v2.5.1):
+- ✅ .specify/templates/plan-template.md (no changes needed - comment format is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - comment format is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -814,6 +834,12 @@ All unit tests and E2E tests MUST follow the Given-When-Then (Arrange-Act-Assert
 - MUST test one behavior per test case
 - SHOULD use backtick test names for readability (Kotlin) or descriptive strings (other platforms)
 
+**Comment Format Requirements** (Backend and WebApp):
+- Backend tests (`/server`) and WebApp tests (`/webApp`) MUST use section comments to mark test phases
+- Comments MUST be lowercase: `// given`, `// when`, `// then`
+- Comments MUST NOT include additional text (e.g., `// given: prepared something!` is prohibited)
+- Use simple format: `// given`, `// when`, `// then` only
+
 **Kotlin Tests** (Android):
 ```kotlin
 @Test
@@ -861,7 +887,7 @@ func testLoadPets_whenRepositorySucceeds_shouldUpdatePetsState() async {
 ```typescript
 describe('usePets', () => {
     it('should load pets successfully when service returns data', async () => {
-        // Given - setup test data and mocks
+        // given
         const mockPets = [
             { id: '1', name: 'Max', species: 'dog' },
             { id: '2', name: 'Luna', species: 'cat' }
@@ -870,12 +896,12 @@ describe('usePets', () => {
 
         const { result } = renderHook(() => usePets());
 
-        // When - trigger the action
+        // when
         await act(async () => {
             await result.current.loadPets();
         });
 
-        // Then - verify expected state
+        // then
         expect(result.current.pets).toHaveLength(2);
         expect(result.current.pets[0].name).toBe('Max');
         expect(result.current.isLoading).toBe(false);
@@ -887,17 +913,17 @@ describe('usePets', () => {
 ```typescript
 describe('petService', () => {
     it('should return all pets when repository has data', async () => {
-        // Given - repository with test data
+        // given
         const mockPets = [
             { id: 1, name: 'Max', species: 'dog' },
             { id: 2, name: 'Luna', species: 'cat' }
         ];
         const fakeRepository = new FakePetRepository(mockPets);
 
-        // When - service is called
+        // when
         const result = await getAllPets(fakeRepository);
 
-        // Then - all pets are returned
+        // then
         expect(result).toHaveLength(2);
         expect(result[0].name).toBe('Max');
     });
@@ -916,13 +942,13 @@ describe('createPet', () => {
         ['Luna', 'cat'],
         ['Buddy', 'dog']
     ])('should create pet with name=%s and species=%s', async (name, species) => {
-        // Given
+        // given
         const pet = { name, species, ownerId: 1 };
         
-        // When
+        // when
         const result = await createPet(pet);
         
-        // Then
+        // then
         expect(result.name).toBe(name);
         expect(result.species).toBe(species);
     });
@@ -2012,4 +2038,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
