@@ -2,7 +2,20 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.3 → 2.5.4
+Version change: 2.5.4 → 2.5.5
+PATCH: Added variable reuse requirement for backend and webapp tests (reuse // given variables in // then phase)
+
+Changes (v2.5.5):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - added variable reuse requirement and updated test examples
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added variable reuse requirement to testing strategy
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added variable reuse requirement to testing strategy
+
+Rationale:
+- Reusing variables from // given phase in // then phase improves test maintainability
+- Reduces duplication and makes tests more readable
+- Ensures test data consistency between setup and assertions
+
+Previous version (v2.5.4):
 PATCH: Added parameterized test requirements and test case minimization guidelines for backend and webapp
 
 Changes (v2.5.4):
@@ -161,6 +174,16 @@ Modified principles (v2.5.4):
 Templates requiring updates (v2.5.4):
 - ✅ .specify/templates/plan-template.md (no changes needed - test case minimization is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - test case minimization is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.5):
+- VIII. Given-When-Then Test Convention (UPDATED - added variable reuse requirement and updated test examples for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - added variable reuse requirement to testing strategy)
+- XIII. Web Architecture & Quality Standards (UPDATED - added variable reuse requirement to testing strategy)
+
+Templates requiring updates (v2.5.5):
+- ✅ .specify/templates/plan-template.md (no changes needed - variable reuse is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - variable reuse is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -915,6 +938,12 @@ All unit tests and E2E tests MUST follow the Given-When-Then (Arrange-Act-Assert
 - Comments MUST NOT include additional text (e.g., `// given: prepared something!` is prohibited)
 - Use simple format: `// given`, `// when`, `// then` only
 
+**Variable Reuse Requirements** (Backend and WebApp):
+- When adding a test, MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
+- Prefer referencing test data variables (e.g., `mockPets[0].name`) over hardcoded literals (e.g., `'Max'`)
+- This improves test maintainability and ensures consistency between setup and assertions
+- Only use literals in `// then` when the expected value differs from the input (e.g., transformed data)
+
 **Kotlin Tests** (Android):
 ```kotlin
 @Test
@@ -977,8 +1006,8 @@ describe('usePets', () => {
         });
 
         // then
-        expect(result.current.pets).toHaveLength(2);
-        expect(result.current.pets[0].name).toBe('Max');
+        expect(result.current.pets).toHaveLength(mockPets.length);
+        expect(result.current.pets[0].name).toBe(mockPets[0].name);
         expect(result.current.isLoading).toBe(false);
     });
 });
@@ -999,8 +1028,8 @@ describe('petService', () => {
         const result = await getAllPets(fakeRepository);
 
         // then
-        expect(result).toHaveLength(2);
-        expect(result[0].name).toBe('Max');
+        expect(result).toHaveLength(mockPets.length);
+        expect(result[0].name).toBe(mockPets[0].name);
     });
 });
 ```
@@ -1161,6 +1190,7 @@ Backend development MUST follow TDD (Red-Green-Refactor):
 - MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
 - MUST use parameterized tests when possible and worthwhile to merge similar test logic
 - MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
 
 **Integration Tests** (Vitest + SuperTest) - MUST achieve 80% coverage:
 - Location: `/src/__test__/`
@@ -1745,6 +1775,7 @@ Web development MUST follow TDD (Red-Green-Refactor):
 - MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
 - MUST use parameterized tests when possible and worthwhile to merge similar test logic
 - MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
 
 **Component Tests** (Vitest + React Testing Library) - Recommended:
 - Location: `/src/components/.../__tests__/`
@@ -2184,4 +2215,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.4 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.5 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
