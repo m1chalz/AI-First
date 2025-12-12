@@ -2,7 +2,19 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.4 → 2.5.5
+Version change: 2.5.5 → 2.5.6
+PATCH: Added filename convention requirements for backend and webapp (kebab-case, PascalCase for React components)
+
+Changes (v2.5.6):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added filename convention requirement (kebab-case)
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added filename convention requirement (kebab-case, PascalCase for React components)
+
+Rationale:
+- Consistent filename conventions improve codebase organization and readability
+- kebab-case is standard for TypeScript/JavaScript files
+- PascalCase for React components follows React community conventions
+
+Previous version (v2.5.5):
 PATCH: Added variable reuse requirement for backend and webapp tests (reuse // given variables in // then phase)
 
 Changes (v2.5.5):
@@ -184,6 +196,15 @@ Modified principles (v2.5.5):
 Templates requiring updates (v2.5.5):
 - ✅ .specify/templates/plan-template.md (no changes needed - variable reuse is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - variable reuse is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.6):
+- IX. Backend Architecture & Quality Standards (UPDATED - added filename convention requirement: kebab-case)
+- XIII. Web Architecture & Quality Standards (UPDATED - added filename convention requirement: kebab-case, PascalCase for React components)
+
+Templates requiring updates (v2.5.6):
+- ✅ .specify/templates/plan-template.md (no changes needed - filename convention is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - filename convention is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -1139,6 +1160,10 @@ The backend module (`/server`) MUST follow modern Node.js best practices with ri
   - Avoid micro-dependencies (e.g., "is-even", "left-pad")
   - Document rationale for each dependency in comments
   - Regularly audit dependencies with `npm audit`
+- MUST use kebab-case convention for filenames
+  - Examples: `pet-service.ts`, `announcement-repository.ts`, `error-handler.ts`
+  - Test files: `pet-service.test.ts`, `announcement-repository.test.ts`
+  - Exception: Configuration files may use other conventions if required by tooling
 
 **Directory Structure** (inside `/server/src/`):
 
@@ -1737,6 +1762,11 @@ The web application (`/webApp`) MUST follow modern React 18 + TypeScript best pr
   - Avoid micro-dependencies (e.g., "is-even", "left-pad")
   - Document rationale for each dependency in comments
   - Regularly audit dependencies with `npm audit`
+- MUST use kebab-case convention for filenames (PascalCase if it's a React component)
+  - Non-component files: `use-pets.ts`, `pet-service.ts`, `form-validation.ts`
+  - React components: `PetList.tsx`, `AnnouncementCard.tsx`, `ContactForm.tsx`
+  - Test files: `use-pets.test.tsx`, `pet-service.test.ts`, `PetList.test.tsx`
+  - Exception: Configuration files may use other conventions if required by tooling
 
 **Business Logic Extraction (MANDATORY)**:
 
@@ -2215,4 +2245,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.5 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.6 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
