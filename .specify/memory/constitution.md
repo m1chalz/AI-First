@@ -2,7 +2,22 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.3.0 → 2.4.0
+Version change: 2.4.0 → 2.5.0
+MINOR: Added Web Architecture & Quality Standards principle for React 18 + TypeScript webApp
+
+Changes (v2.5.0):
+- ADDED: Principle XIII "Web Architecture & Quality Standards" - Clean Code, TDD, dependency minimization, business logic extraction
+- UPDATED: Module Structure - Web section to include /src/lib/ for business logic utilities
+- UPDATED: Testing Standards - Web section to clarify /src/hooks/__test__/ and /src/lib/__test__/ coverage requirements
+- UPDATED: Compliance checklist - added Web Architecture & Quality Standards checks
+
+Rationale:
+- Establishes consistent quality standards for webApp matching backend standards
+- Ensures business logic is testable and maintainable
+- TDD workflow improves code quality and reduces bugs
+- Dependency minimization reduces security surface and maintenance burden
+
+Previous version (v2.4.0):
 MINOR: Removed TypeScript E2E tests (Playwright + WebdriverIO) - Java stack is now the only E2E framework
 
 Changes (v2.4.0):
@@ -57,9 +72,9 @@ Modified sections:
 - Compliance (UPDATED - Maven commands with Cucumber tags)
 
 Templates requiring updates:
-- ⚠ .specify/templates/plan-template.md - Update E2E testing technology stack references
-- ⚠ .specify/templates/tasks-template.md - Update E2E test creation tasks (Gherkin scenarios, Java steps)
-- ⚠ .specify/templates/spec-template.md - Update E2E test requirements section
+- ✅ .specify/templates/plan-template.md - Added Web Architecture & Quality Standards checks
+- ✅ .specify/templates/tasks-template.md - Updated Web test tasks to include TDD workflow and /src/lib/ structure
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
 - ✅ COMPLETED (Spec 025): Removed TypeScript E2E tests (Playwright web + WebdriverIO mobile)
@@ -234,9 +249,9 @@ Each platform MUST maintain minimum 80% unit test coverage for business logic an
 - Scope: Domain models, use cases, ViewModels (ObservableObject with @Published properties)
 - Coverage target: 80% line + branch coverage
 
-**Web** (`/webApp/src/__tests__/`):
+**Web** (`/webApp/src/`):
 - Framework: Vitest + React Testing Library
-- Run command: `npm test -- --coverage` (from webApp/)
+- Run command: `npm test --coverage` (from webApp/)
 - Report: `webApp/coverage/index.html`
 - Scope: Domain models, services, custom hooks, state management
 - Coverage target: 80% line + branch coverage
@@ -245,7 +260,7 @@ Each platform MUST maintain minimum 80% unit test coverage for business logic an
 - Framework: Vitest (unit) + SuperTest (integration)
 - Run commands:
   - Unit tests: `npm test` (from server/)
-  - With coverage: `npm test -- --coverage`
+  - With coverage: `npm test --coverage`
 - Report: `server/coverage/index.html`
 - Scope: Business logic (`/src/services`), utility functions (`/src/lib`), REST API endpoints (`/src/__test__/`)
 - Coverage target: 80% line + branch coverage for both unit and integration tests
@@ -1499,6 +1514,114 @@ where appropriate. Cucumber tags allow flexible execution of platform-specific s
 single codebase. Mobile screen objects with dual annotations reduce duplication between Android
 and iOS test code.
 
+### XIII. Web Architecture & Quality Standards (NON-NEGOTIABLE)
+
+The web application (`/webApp`) MUST follow modern React 18 + TypeScript best practices with rigorous quality standards:
+
+**Technology Stack**:
+- **Framework**: React 18
+- **Language**: TypeScript (strict mode)
+- **Build Tool**: Vite
+- **Testing**: Vitest + React Testing Library
+- **Linting**: ESLint with TypeScript plugin
+
+**Code Quality Requirements**:
+- MUST follow Clean Code principles:
+  - Functions should be small, focused, and do one thing (single responsibility)
+  - Descriptive naming (no abbreviations except well-known ones like `id`, `api`, `http`)
+  - Avoid deep nesting (max 3 levels)
+  - Prefer composition over inheritance
+  - DRY (Don't Repeat Yourself) - extract reusable logic
+  - Self-documenting code with JSDoc ONLY when purpose is not clear from name alone
+- MUST minimize dependencies in `package.json`:
+  - Only add dependencies that provide significant value
+  - Prefer well-maintained, security-audited packages
+  - Avoid micro-dependencies (e.g., "is-even", "left-pad")
+  - Document rationale for each dependency in comments
+  - Regularly audit dependencies with `npm audit`
+
+**Business Logic Extraction (MANDATORY)**:
+
+All business logic MUST be extracted to separate, testable functions:
+
+- **`/src/hooks/`**: Custom React hooks for state management and business logic
+  - Hooks encapsulate complex stateful logic
+  - Hooks are pure functions (deterministic outputs for given inputs)
+  - Hooks MUST be covered by unit tests in `/src/hooks/__test__/`
+- **`/src/lib/`**: Pure utility functions and business logic helpers
+  - Framework-agnostic functions (no React dependencies)
+  - Reusable across components and hooks
+  - Pure functions (no side effects, testable in isolation)
+  - MUST be covered by unit tests in `/src/lib/__test__/`
+- **`/src/components/`**: React components (presentation layer ONLY)
+  - Components SHOULD be thin and delegate to hooks/lib for logic
+  - Components focus on rendering and user interaction handling
+  - Complex logic extracted to hooks or lib functions
+
+**Test-Driven Development (TDD) Workflow**:
+
+Web development MUST follow TDD (Red-Green-Refactor):
+
+1. **RED**: Write a failing test first
+2. **GREEN**: Write minimal code to make test pass
+3. **REFACTOR**: Improve code quality without changing behavior
+
+**Testing Strategy**:
+
+**Unit Tests** (Vitest) - MUST achieve 80% coverage:
+- Location: `/src/hooks/__test__/`, `/src/lib/__test__/`
+- Scope: All business logic in hooks and lib functions
+- Run command: `npm test --coverage` (from `/webApp`)
+- Report: `webApp/coverage/index.html`
+- Framework: Vitest + React Testing Library (for hooks that use React features)
+
+**Component Tests** (Vitest + React Testing Library) - Recommended:
+- Location: `/src/components/.../__tests__/`
+- Scope: Component rendering and user interactions
+- Focus on behavior, not implementation details
+
+**Testing Requirements**:
+- MUST test happy path, error cases, and edge cases
+- MUST follow Given-When-Then structure (see Principle VIII)
+- MUST use descriptive test names
+- MUST use test doubles (mocks, fakes) for dependencies
+- MUST test behavior, not implementation details
+
+**Directory Structure** (inside `/webApp/src/`):
+
+```
+/webApp/src/
+├── models/          - TypeScript domain models (interfaces/types)
+├── services/        - HTTP services consuming backend REST API
+├── hooks/           - Custom React hooks (state management, business logic)
+│   └── __test__/    - Unit tests for hooks (MUST achieve 80% coverage)
+├── lib/             - Pure utility functions and business logic helpers
+│   └── __test__/    - Unit tests for lib functions (MUST achieve 80% coverage)
+├── components/      - React components (presentation layer)
+│   └── __tests__/   - Component tests (recommended)
+├── contexts/        - React Context providers (DI, global state)
+├── routes/          - Route definitions
+├── config/          - Configuration files
+└── types/           - TypeScript type definitions
+```
+
+**Separation of Concerns**:
+- **`/src/hooks/`**: Stateful business logic, React-specific logic
+  - MUST be testable in isolation
+  - MUST NOT contain presentation logic
+- **`/src/lib/`**: Pure functions, utilities, framework-agnostic business logic
+  - MUST be framework-agnostic (no React dependencies)
+  - MUST be pure functions (no side effects)
+  - MUST be covered by unit tests
+- **`/src/components/`**: Presentation layer (rendering, user interactions)
+  - SHOULD delegate complex logic to hooks or lib functions
+  - SHOULD be thin and focused on UI concerns
+
+**Rationale**: Clean Code principles and business logic extraction ensure maintainability,
+testability, and scalability. TDD workflow catches bugs early and improves code quality.
+Minimal dependencies reduce security surface and maintenance burden. Separating business logic
+from presentation enables easy unit testing and code reuse across components.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -1569,11 +1692,17 @@ and iOS test code.
 
 **`/webApp/src/`** (Web - Full Stack):
 - `models/` - TypeScript interfaces/types for domain models
-- `services/` - HTTP services consuming backend REST API, business logic
-- `components/` - React components
-- `hooks/` - React hooks for state management
-- `utils/` - Utility functions and helpers
-- `di/` - Dependency injection setup (React Context, service locator, or DI libraries)
+- `services/` - HTTP services consuming backend REST API
+- `hooks/` - Custom React hooks for state management and business logic
+  - `__test__/` - Unit tests for hooks (MUST achieve 80% coverage)
+- `lib/` - Pure utility functions and business logic helpers (framework-agnostic)
+  - `__test__/` - Unit tests for lib functions (MUST achieve 80% coverage)
+- `components/` - React components (presentation layer)
+  - `__tests__/` - Component tests (recommended)
+- `contexts/` - React Context providers (DI, global state)
+- `routes/` - Route definitions
+- `config/` - Configuration files
+- `types/` - TypeScript type definitions
 
 **`/server/src/`** (Backend - Node.js/Express):
 - `middlewares/` - Express middlewares (auth, logging, error handling, validation)
@@ -1766,16 +1895,17 @@ Each platform MUST maintain 80% unit test coverage for domain logic and ViewMode
 - Scope: Domain models, use cases, ViewModels (ObservableObject), coordinators (optional)
 
 **Web**:
-- Location: `/webApp/src/__tests__/`
+- Location: `/webApp/src/hooks/__test__/`, `/webApp/src/lib/__test__/`
 - Framework: Vitest + React Testing Library
-- Run command: `npm test -- --coverage` (from webApp/)
+- Run command: `npm test --coverage` (from webApp/)
 - Report: `webApp/coverage/index.html`
-- Scope: Domain models, services, custom hooks, state management
+- Scope: Business logic in hooks and lib functions (MUST achieve 80% coverage)
+- TDD Workflow: Red-Green-Refactor cycle (write failing test, minimal implementation, refactor)
 
 **Backend**:
 - Location: `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`
 - Framework: Vitest (unit) + SuperTest (integration)
-- Run command: `npm test -- --coverage` (from server/)
+- Run command: `npm test --coverage` (from server/)
 - Report: `server/coverage/index.html`
 - Scope: Business logic, utilities, REST API endpoints
 
@@ -1857,6 +1987,13 @@ All pull requests MUST:
   - ViewModels conform to `ObservableObject` with `@Published` properties
   - ViewModels communicate with coordinators via methods or closures
   - SwiftUI views observe ViewModels (no business/navigation logic)
+- Verify Web application follows Architecture & Quality Standards (if /webApp affected):
+  - Business logic extracted to `/src/hooks/` or `/src/lib/` (not in components)
+  - All hooks and lib functions covered by unit tests (80% coverage)
+  - TDD workflow followed (tests written before implementation)
+  - Clean Code principles applied (small functions, max 3 nesting, DRY)
+  - Dependencies minimized in `package.json`
+  - Run ESLint: `npm run lint` (from webApp/)
 - Verify all new tests follow Given-When-Then structure:
   - Clear separation of setup (Given), action (When), verification (Then)
   - Descriptive test names following platform conventions
@@ -1875,4 +2012,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.3.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-26
+**Version**: 2.5.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27

@@ -83,7 +83,7 @@
 - [ ] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform
   - Android: Tests in `/composeApp/src/androidUnitTest/`, run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: Tests in `/iosApp/iosAppTests/`, run via XCTest
-  - Web: Tests in `/webApp/src/__tests__/`, run `npm test -- --coverage`
+  - Web: Tests in `/webApp/src/hooks/__test__/`, `/webApp/src/lib/__test__/`, run `npm test --coverage`
   - Backend: Tests in `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`, run `npm test -- --coverage`
   - Coverage target: 80% line + branch coverage per platform
   - Violation justification: _[Required if coverage < 80%]_
@@ -155,6 +155,59 @@
   - Document rationale for each dependency in comments
   - Regular `npm audit` security checks planned
   - Violation justification: _[Required if not compliant or N/A if /server not affected]_
+
+### Web Architecture & Quality Standards (if `/webApp` affected)
+
+- [ ] **Web Technology Stack**: Plan uses modern React 18 + TypeScript stack for `/webApp` module
+  - Framework: React 18
+  - Language: TypeScript with strict mode enabled
+  - Build Tool: Vite
+  - Testing: Vitest + React Testing Library
+  - Violation justification: _[Required if not compliant or N/A if /webApp not affected]_
+
+- [ ] **Web Code Quality**: Plan enforces quality standards for `/webApp` code
+  - ESLint with TypeScript plugin configured and enabled
+  - Clean Code principles applied:
+    - Small, focused functions (single responsibility)
+    - Descriptive naming (avoid unclear abbreviations)
+    - Maximum 3 nesting levels
+    - DRY principle (extract reusable logic)
+    - JSDoc documentation ONLY for complex functions
+  - Violation justification: _[Required if not compliant or N/A if /webApp not affected]_
+
+- [ ] **Web Dependency Management**: Plan minimizes dependencies in `/webApp/package.json`
+  - Only add dependencies providing significant value
+  - Prefer well-maintained, security-audited packages
+  - Avoid micro-dependencies (e.g., "is-even", "left-pad")
+  - Document rationale for each dependency in comments
+  - Regular `npm audit` security checks planned
+  - Violation justification: _[Required if not compliant or N/A if /webApp not affected]_
+
+- [ ] **Web Business Logic Extraction**: Plan ensures business logic is extracted to testable functions
+  - Business logic in `/webApp/src/hooks/` (custom React hooks)
+  - Pure utility functions in `/webApp/src/lib/` (framework-agnostic)
+  - Components remain thin (presentation layer only)
+  - All hooks and lib functions covered by unit tests
+  - Violation justification: _[Required if business logic in components or N/A if /webApp not affected]_
+
+- [ ] **Web TDD Workflow**: Plan follows Test-Driven Development (Red-Green-Refactor)
+  - RED: Write failing test first
+  - GREEN: Write minimal code to pass test
+  - REFACTOR: Improve code quality without changing behavior
+  - Tests written BEFORE implementation code
+  - Violation justification: _[Required if not compliant or N/A if /webApp not affected]_
+
+- [ ] **Web Testing Strategy**: Plan includes comprehensive test coverage for `/webApp`
+  - Unit tests (Vitest):
+    - Location: `/src/hooks/__test__/`, `/src/lib/__test__/`
+    - Coverage target: 80% line + branch coverage
+    - Scope: Business logic in hooks and lib functions
+  - Component tests (Vitest + React Testing Library):
+    - Location: `/src/components/.../__tests__/`
+    - Scope: Component rendering and user interactions (recommended)
+  - All tests follow Given-When-Then structure
+  - Run commands: `npm test`, `npm test --coverage`
+  - Violation justification: _[Required if coverage < 80% or N/A if /webApp not affected]_
 
 - [ ] **Backend Directory Structure**: Plan follows standardized layout in `/server/src/`
   - `/middlewares/` - Express middlewares (auth, logging, error handling)
