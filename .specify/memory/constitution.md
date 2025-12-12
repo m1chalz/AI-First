@@ -2,7 +2,20 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.0 → 2.5.1
+Version change: 2.5.1 → 2.5.2
+PATCH: Strengthened minimal documentation/commenting requirement for backend and webapp
+
+Changes (v2.5.2):
+- UPDATED: Principle VII "Public API Documentation" - added explicit prohibition of unnecessary documentation/comments for backend and webapp
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - emphasized minimal documentation (only when really unclear)
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - emphasized minimal documentation (only when really unclear)
+
+Rationale:
+- Code should be self-documenting through clear naming
+- Documentation/comments should only be added when code is genuinely unclear and hard to understand
+- Reduces maintenance burden and code noise
+
+Previous version (v2.5.1):
 PATCH: Clarified test comment format for backend and webapp tests (Given-When-Then sections)
 
 Changes (v2.5.1):
@@ -94,6 +107,16 @@ Modified principles (v2.5.1):
 Templates requiring updates (v2.5.1):
 - ✅ .specify/templates/plan-template.md (no changes needed - comment format is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - comment format is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.2):
+- VII. Public API Documentation (UPDATED - added explicit minimal documentation policy for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - emphasized minimal documentation requirement)
+- XIII. Web Architecture & Quality Standards (UPDATED - emphasized minimal documentation requirement)
+
+Templates requiring updates (v2.5.2):
+- ✅ .specify/templates/plan-template.md (no changes needed - documentation policy is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - documentation policy is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -722,6 +745,14 @@ Public APIs MUST have concise, high-level documentation when the purpose is not 
 - SHOULD answer: "What does this do?" and "When/why would I use it?"
 - MUST NOT state the obvious (e.g., "Returns a string" for `fun getString(): String`)
 
+**Backend and WebApp Documentation Policy (MANDATORY)**:
+- Backend (`/server`) and WebApp (`/webApp`) code MUST NOT be documented or commented unless it is really unclear and hard to understand
+- Code MUST be self-documenting through clear, descriptive naming
+- Documentation/comments MUST only be added when code is genuinely difficult to understand without them
+- Prefer refactoring unclear code to adding documentation/comments
+- Inline comments explaining "what" code does are PROHIBITED (code should be clear enough)
+- Inline comments explaining "why" complex business logic exists MAY be acceptable if the reason is non-obvious
+
 **Documentation Style** - GOOD Examples:
 
 ```kotlin
@@ -981,7 +1012,11 @@ The backend module (`/server`) MUST follow modern Node.js best practices with ri
   - Avoid deep nesting (max 3 levels)
   - Prefer composition over inheritance
   - DRY (Don't Repeat Yourself) - extract reusable logic
-  - Self-documenting code with JSDoc for public APIs
+  - Self-documenting code (clear naming, no unnecessary documentation/comments)
+- MUST NOT document or comment code unless it is really unclear and hard to understand
+  - Code MUST be self-documenting through clear naming
+  - Prefer refactoring unclear code to adding documentation/comments
+  - Only add JSDoc/comments when code is genuinely difficult to understand without them
 - MUST minimize dependencies in `package.json`:
   - Only add dependencies that provide significant value
   - Prefer well-maintained, security-audited packages
@@ -1558,7 +1593,11 @@ The web application (`/webApp`) MUST follow modern React 18 + TypeScript best pr
   - Avoid deep nesting (max 3 levels)
   - Prefer composition over inheritance
   - DRY (Don't Repeat Yourself) - extract reusable logic
-  - Self-documenting code with JSDoc ONLY when purpose is not clear from name alone
+  - Self-documenting code (clear naming, no unnecessary documentation/comments)
+- MUST NOT document or comment code unless it is really unclear and hard to understand
+  - Code MUST be self-documenting through clear naming
+  - Prefer refactoring unclear code to adding documentation/comments
+  - Only add JSDoc/comments when code is genuinely difficult to understand without them
 - MUST minimize dependencies in `package.json`:
   - Only add dependencies that provide significant value
   - Prefer well-maintained, security-audited packages
@@ -2038,4 +2077,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.1 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.2 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
