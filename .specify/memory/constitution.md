@@ -2,7 +2,20 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.5 → 2.5.6
+Version change: 2.5.6 → 2.5.7
+PATCH: Added project-wide policy to ignore performance verification in all phases
+
+Changes (v2.5.7):
+- ADDED: Principle XIV "Performance Not a Concern" - explicit policy to ignore performance verification
+- UPDATED: Principle V "Asynchronous Programming Standards" - removed performance rationale reference
+- UPDATED: .specify/templates/plan-template.md - removed/updated performance-related fields
+
+Rationale:
+- Performance is not a concern for this project
+- Eliminates unnecessary performance testing and optimization efforts
+- Focuses development on functionality and maintainability instead
+
+Previous version (v2.5.6):
 PATCH: Added filename convention requirements for backend and webapp (kebab-case, PascalCase for React components)
 
 Changes (v2.5.6):
@@ -205,6 +218,15 @@ Modified principles (v2.5.6):
 Templates requiring updates (v2.5.6):
 - ✅ .specify/templates/plan-template.md (no changes needed - filename convention is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - filename convention is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.7):
+- V. Asynchronous Programming Standards (UPDATED - removed performance rationale reference)
+- XIV. Performance Not a Concern (NEW - explicit policy to ignore performance verification)
+
+Templates requiring updates (v2.5.7):
+- ✅ .specify/templates/plan-template.md - Updated performance-related fields to indicate N/A
+- ✅ .specify/templates/tasks-template.md (no changes needed - performance policy is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -713,7 +735,7 @@ All asynchronous operations MUST follow platform-specific async patterns:
 **Rationale**: Modern async/await syntax is consistent across platforms (Kotlin coroutines,
 Swift Concurrency, JS async/await), making code more readable and maintainable. Eliminates
 complexity of reactive frameworks while maintaining testability. Platform-native async patterns
-ensure best performance and ecosystem compatibility.
+ensure ecosystem compatibility.
 
 ### VI. Test Identifiers for UI Controls (NON-NEGOTIABLE)
 
@@ -1855,6 +1877,22 @@ testability, and scalability. TDD workflow catches bugs early and improves code 
 Minimal dependencies reduce security surface and maintenance burden. Separating business logic
 from presentation enables easy unit testing and code reuse across components.
 
+### XIV. Performance Not a Concern (NON-NEGOTIABLE)
+
+Performance verification and optimization are NOT concerns for this project:
+
+**Performance Policy**:
+- MUST NOT verify, test, measure, or optimize performance in any phase of development
+- MUST NOT include performance goals, benchmarks, or constraints in specifications or plans
+- MUST NOT perform performance profiling, load testing, or performance analysis
+- MUST NOT make architectural or implementation decisions based on performance considerations
+- Focus development efforts on functionality, maintainability, and code quality instead
+
+**Rationale**: This project prioritizes functionality, maintainability, and code quality over
+performance. Eliminating performance concerns simplifies development, reduces unnecessary
+optimization efforts, and allows focus on delivering features that work correctly and are
+easy to maintain.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -2245,4 +2283,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.6 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.7 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
