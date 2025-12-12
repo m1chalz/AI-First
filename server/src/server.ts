@@ -16,7 +16,12 @@ export async function prepareServer(): Promise<express.Express> {
 
   const server = express();
   server.use(cors());
-  server.use(helmet({ contentSecurityPolicy: false })); // disabled for REST API - not serving HTML
+  server.use(
+    helmet({
+      contentSecurityPolicy: false, // disabled for REST API - not serving HTML
+      crossOriginResourcePolicy: false // allow cross-origin image requests
+    })
+  );
   server.use(express.json({ limit: '100kb' }));
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage
