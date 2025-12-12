@@ -2,7 +2,18 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.7 → 2.5.8
+Version change: 2.5.8 → 2.5.9
+PATCH: Added layout planning and CSS reuse requirements for webapp
+
+Changes (v2.5.9):
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added layout planning and CSS reuse requirements
+
+Rationale:
+- Planning layout for code reuse maximizes component and style sharing
+- Avoiding CSS duplication reduces maintenance burden and ensures consistency
+- Shared styles and components improve development efficiency
+
+Previous version (v2.5.8):
 PATCH: Added task-phase requirements for backend and webapp (atomic tasks, TDD workflow, no summary files)
 
 Changes (v2.5.8):
@@ -248,6 +259,14 @@ Modified principles (v2.5.8):
 Templates requiring updates (v2.5.8):
 - ✅ .specify/templates/plan-template.md (no changes needed - task-phase requirements are implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - task-phase requirements align with existing TDD guidance)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.9):
+- XIII. Web Architecture & Quality Standards (UPDATED - added layout planning and CSS reuse requirements)
+
+Templates requiring updates (v2.5.9):
+- ✅ .specify/templates/plan-template.md (no changes needed - layout planning is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - CSS reuse is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -1822,6 +1841,15 @@ The web application (`/webApp`) MUST follow modern React 18 + TypeScript best pr
   - React components: `PetList.tsx`, `AnnouncementCard.tsx`, `ContactForm.tsx`
   - Test files: `use-pets.test.tsx`, `pet-service.test.ts`, `PetList.test.tsx`
   - Exception: Configuration files may use other conventions if required by tooling
+- MUST plan application layout to maximize code reuse
+  - Design layouts to reuse as much code as possible across screens and components
+  - Extract common layout patterns into reusable components
+  - Share layout components and structures across features
+- MUST NOT duplicate CSS styles in different files/components
+  - Extract shared styles to common CSS modules or global stylesheets
+  - Reuse CSS classes and styles across components
+  - Avoid copying the same CSS rules to multiple component files
+  - Prefer shared style utilities and CSS modules over component-specific duplicated styles
 
 **Business Logic Extraction (MANDATORY)**:
 
@@ -2328,4 +2356,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.8 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.9 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
