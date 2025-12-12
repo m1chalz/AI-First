@@ -29,25 +29,12 @@ export default defineConfig(
       'import/order': [
         'error',
         {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index'
-          ]
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index']
         }
       ],
-      'no-console': [
-        'warn',
-        { allow: ['warn', 'error', 'info'] }
-      ],
-      'eqeqeq': ['error', 'always', { null: 'ignore' }],
-      'prefer-const': [
-        'error',
-        { destructuring: 'all' }
-      ],
+      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      'prefer-const': ['error', { destructuring: 'all' }],
       'no-var': 'error',
       'no-constant-condition': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }]

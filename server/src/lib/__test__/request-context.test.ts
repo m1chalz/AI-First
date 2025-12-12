@@ -32,17 +32,25 @@ describe('requestContext', () => {
       const requestId2 = 'request002';
 
       // When
-      const promise1 = requestContextStorage.run({ requestId: requestId1 }, () => new Promise<string>((resolve) => {
-          setTimeout(() => {
-            resolve(getRequestId() || '');
-          }, 10);
-        }));
+      const promise1 = requestContextStorage.run(
+        { requestId: requestId1 },
+        () =>
+          new Promise<string>((resolve) => {
+            setTimeout(() => {
+              resolve(getRequestId() || '');
+            }, 10);
+          })
+      );
 
-      const promise2 = requestContextStorage.run({ requestId: requestId2 }, () => new Promise<string>((resolve) => {
-          setTimeout(() => {
-            resolve(getRequestId() || '');
-          }, 5);
-        }));
+      const promise2 = requestContextStorage.run(
+        { requestId: requestId2 },
+        () =>
+          new Promise<string>((resolve) => {
+            setTimeout(() => {
+              resolve(getRequestId() || '');
+            }, 5);
+          })
+      );
 
       // Then
       const [result1, result2] = await Promise.all([promise1, promise2]);
