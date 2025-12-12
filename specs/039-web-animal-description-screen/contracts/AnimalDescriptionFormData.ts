@@ -9,7 +9,7 @@
  * in the web application.
  */
 
-import { AnimalSpecies, AnimalSex } from '../../../webApp/src/types/animal';
+import { AnimalSpecies, AnimalSex } from '../../../webApp/src/types/announcement';
 
 /**
  * Local form state for Animal Description screen (Step 3/4).

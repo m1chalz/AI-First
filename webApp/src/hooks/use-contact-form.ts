@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useReportMissingPetFlow } from '../contexts/ReportMissingPetFlowContext';
+import { useNewAnnouncementFlow } from '../contexts/NewAnnouncementFlowContext';
 import { validatePhoneNumber, validateEmailAddress, validateContactForm } from '../utils/form-validation';
-import { FlowStep } from '../models/ReportMissingPetFlow';
+import { FlowStep } from '../models/NewAnnouncementFlow';
 
 export interface UseContactFormReturn {
   phone: string;
@@ -18,7 +18,7 @@ export interface UseContactFormReturn {
 }
 
 export function useContactForm(): UseContactFormReturn {
-  const { flowState, updateFlowState } = useReportMissingPetFlow();
+  const { flowState, updateFlowState } = useNewAnnouncementFlow();
   const [phone, setPhone] = useState(flowState.phone || '');
   const [email, setEmail] = useState(flowState.email || '');
   const [reward, setReward] = useState(flowState.reward || '');
@@ -61,7 +61,7 @@ export function useContactForm(): UseContactFormReturn {
       phone,
       email,
       reward,
-      currentStep: FlowStep.Summary,
+      currentStep: FlowStep.Summary
     });
 
     return true;
@@ -78,7 +78,6 @@ export function useContactForm(): UseContactFormReturn {
     handleRewardChange,
     validatePhone,
     validateEmail,
-    handleSubmit,
+    handleSubmit
   };
 }
-

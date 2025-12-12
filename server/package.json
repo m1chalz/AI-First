@@ -1,5 +1,5 @@
 {
-  "name": "pet-spot",
+  "name": "petspot-backend",
   "version": "0.0.1",
   "description": "",
   "license": "ISC",
@@ -8,10 +8,14 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "node --experimental-transform-types --watch ./src/index.ts | npx pino-pretty",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "tsc && eslint ./src",
     "lint:fix": "eslint --fix ./src",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "npm install && npm run test:coverage && npm run lint && npm run format:check",
     "start": "node --experimental-transform-types ./src/index.ts",
     "knex:add-migration": "knex migrate:make -x ts"
   },
@@ -30,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/knex": "^0.15.2",
     "@types/multer": "^2.0.0",
@@ -37,6 +42,7 @@
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^4.0.10",
     "eslint": "^9.39.1",
+    "prettier": "^3.4.1",
     "supertest": "^7.1.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4",

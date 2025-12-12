@@ -8,7 +8,7 @@ const ALLOWED_IMAGE_TYPES = new Set([
   'image/bmp',
   'image/tiff',
   'image/heic',
-  'image/heif',
+  'image/heif'
 ]);
 
 export async function validateImageFormat(buffer: Buffer): Promise<string | null> {

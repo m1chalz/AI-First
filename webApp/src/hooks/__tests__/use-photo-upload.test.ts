@@ -42,7 +42,7 @@ describe('use-photo-upload', () => {
         filename: 'test.jpg',
         size: 1024,
         mimeType: 'image/jpeg',
-        previewUrl: 'blob:existing-url',
+        previewUrl: 'blob:existing-url'
       };
 
       // when
@@ -71,7 +71,7 @@ describe('use-photo-upload', () => {
         filename: 'photo.jpg',
         size: 1024,
         mimeType: 'image/jpeg',
-        previewUrl: mockBlobUrl,
+        previewUrl: mockBlobUrl
       });
       expect(result.current.error).toBe(null);
       expect(createObjectURLSpy).toHaveBeenCalledWith(validFile);
@@ -168,8 +168,8 @@ describe('use-photo-upload', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [file],
-        },
+          files: [file]
+        }
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       // when
@@ -192,8 +192,8 @@ describe('use-photo-upload', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [],
-        },
+          files: []
+        }
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       // when
@@ -215,8 +215,8 @@ describe('use-photo-upload', () => {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
         dataTransfer: {
-          files: [file1, file2],
-        },
+          files: [file1, file2]
+        }
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       // when
@@ -236,7 +236,7 @@ describe('use-photo-upload', () => {
       const { result } = renderHook(() => usePhotoUpload(null, showToast));
       const dragEvent = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn(),
+        stopPropagation: vi.fn()
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       // when
@@ -256,7 +256,7 @@ describe('use-photo-upload', () => {
       const { result } = renderHook(() => usePhotoUpload(null, showToast));
       const dragEvent = {
         preventDefault: vi.fn(),
-        stopPropagation: vi.fn(),
+        stopPropagation: vi.fn()
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       act(() => {
@@ -343,4 +343,3 @@ describe('use-photo-upload', () => {
     });
   });
 });
-

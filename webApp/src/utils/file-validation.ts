@@ -6,7 +6,7 @@ export const ALLOWED_MIME_TYPES = [
   'image/bmp',
   'image/tiff',
   'image/heic',
-  'image/heif',
+  'image/heif'
 ];
 
 export const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;

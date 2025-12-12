@@ -9,7 +9,7 @@ describe('useMicrochipFormatter', () => {
       { input: '12345', expectedValue: '12345', expectedFormatted: '12345' },
       { input: '123456', expectedValue: '123456', expectedFormatted: '12345-6' },
       { input: '1234567890', expectedValue: '1234567890', expectedFormatted: '12345-67890' },
-      { input: '123456789012345', expectedValue: '123456789012345', expectedFormatted: '12345-67890-12345' },
+      { input: '123456789012345', expectedValue: '123456789012345', expectedFormatted: '12345-67890-12345' }
     ])('formats $input as $expectedFormatted', ({ input, expectedValue, expectedFormatted }) => {
       // given
       const { result } = renderHook(() => useMicrochipFormatter());
@@ -46,7 +46,7 @@ describe('useMicrochipFormatter', () => {
       { pasted: 'ABC123XYZ456', expectedValue: '123456', expectedFormatted: '12345-6' },
       { pasted: '12-34-56-78-90', expectedValue: '1234567890', expectedFormatted: '12345-67890' },
       { pasted: 'ABCXYZ', expectedValue: '', expectedFormatted: '' },
-      { pasted: '123.456.789', expectedValue: '123456789', expectedFormatted: '12345-6789' },
+      { pasted: '123.456.789', expectedValue: '123456789', expectedFormatted: '12345-6789' }
     ])('strips non-digits from $pasted to $expectedValue', ({ pasted, expectedValue, expectedFormatted }) => {
       // given
       const { result } = renderHook(() => useMicrochipFormatter());
@@ -56,7 +56,7 @@ describe('useMicrochipFormatter', () => {
         result.current.handlePaste({
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           preventDefault: () => {},
-          clipboardData: { getData: () => pasted },
+          clipboardData: { getData: () => pasted }
         } as unknown as React.ClipboardEvent<HTMLInputElement>);
       });
 
@@ -74,7 +74,7 @@ describe('useMicrochipFormatter', () => {
         result.current.handlePaste({
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           preventDefault: () => {},
-          clipboardData: { getData: () => '12345678901234567890' },
+          clipboardData: { getData: () => '12345678901234567890' }
         } as unknown as React.ClipboardEvent<HTMLInputElement>);
       });
 
@@ -103,4 +103,3 @@ describe('useMicrochipFormatter', () => {
     });
   });
 });
-

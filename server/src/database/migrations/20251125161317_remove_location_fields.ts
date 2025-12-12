@@ -1,4 +1,4 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.alterTable('announcement', (table) => {
@@ -13,4 +13,3 @@ export async function down(knex: Knex): Promise<void> {
     table.integer('location_radius').nullable();
   });
 }
-

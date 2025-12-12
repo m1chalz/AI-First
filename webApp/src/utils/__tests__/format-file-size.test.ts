@@ -14,7 +14,7 @@ describe('format-file-size', () => {
       [1.5 * 1024 * 1024, '1.5 MB'],
       [2.5 * 1024 * 1024, '2.5 MB'],
       [2.567 * 1024 * 1024, '2.6 MB'],
-      [20 * 1024 * 1024, '20.0 MB'],
+      [20 * 1024 * 1024, '20.0 MB']
     ])('formats %d bytes as "%s"', (bytes, expected) => {
       // given / when
       const result = formatFileSize(bytes);
@@ -24,4 +24,3 @@ describe('format-file-size', () => {
     });
   });
 });
-

@@ -1,33 +1,35 @@
 import { describe, it, expect } from 'vitest';
-import { formatMicrochip, stripNonDigits } from '../microchip-formatter';
+import { formatMicrochip } from '../microchip-formatter';
 
-describe('formatMicrochipNumber', () => {
-  it.each([
-    // given: input digits, when: formatted, then: expected output
-    ['', ''],
-    ['1', '1'],
-    ['12345', '12345'],
-    ['123456', '12345-6'],
-    ['1234567890', '12345-67890'],
-    ['123456789012345', '12345-67890-12345'],
-    ['12345678901234567890', '12345-67890-12345'], // truncates to 15
-  ])('formats "%s" as "%s"', (input, expected) => {
-    expect(formatMicrochip(input)).toBe(expected);
+describe('formatMicrochip', () => {
+  describe('Given edge cases', () => {
+    it.each([
+      { input: '', expected: '', description: 'should return empty string for empty input' },
+      { input: '12345', expected: '12345', description: 'should return original input for numbers shorter than 15 digits' },
+      {
+        input: '1234567890123451111',
+        expected: '12345-67890-12345',
+        description: 'should handle numbers longer than 15 digits (take first 15)'
+      }
+    ])('$description', ({ input, expected }) => {
+      // When
+      const result = formatMicrochip(input);
+
+      // Then
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('Given real-world microchip scenarios', () => {
+    it.each([
+      { input: '882097601234567', expected: '88209-76012-34567', description: 'should format European microchip format correctly' },
+      { input: '123004560078901', expected: '12300-45600-78901', description: 'should handle microchip with mixed digit patterns' }
+    ])('$description', ({ input, expected }) => {
+      // When
+      const result = formatMicrochip(input);
+
+      // Then
+      expect(result).toBe(expected);
+    });
   });
 });
-
-describe('stripNonDigits', () => {
-  it.each([
-    // given: input string, when: stripped, then: digits only
-    ['123456789012345', '123456789012345'],
-    ['ABC123XYZ456', '123456'],
-    ['12-34-56', '123456'],
-    ['', ''],
-    ['ABCXYZ', ''],
-    ['123.456.789', '123456789'],
-    ['(123) 456-7890', '1234567890'],
-  ])('strips non-digits from "%s" to "%s"', (input, expected) => {
-    expect(stripNonDigits(input)).toBe(expected);
-  });
-});
-

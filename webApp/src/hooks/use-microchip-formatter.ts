@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatMicrochip, stripNonDigits } from '../utils/microchip-formatter';
-import { UseMicrochipFormatterReturn } from '../models/ReportMissingPetFlow';
+import { UseMicrochipFormatterReturn } from '../models/NewAnnouncementFlow';
 
 export function useMicrochipFormatter(initialValue = ''): UseMicrochipFormatterReturn {
   const [value, setValue] = useState(initialValue);
@@ -36,7 +36,6 @@ export function useMicrochipFormatter(initialValue = ''): UseMicrochipFormatterR
     formattedValue,
     handleChange,
     handlePaste,
-    reset,
+    reset
   };
 }
-

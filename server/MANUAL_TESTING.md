@@ -3,6 +3,7 @@
 ## Prerequisites
 
 1. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -63,6 +64,7 @@ curl -X POST http://localhost:3000/api/v1/announcements \
 ```
 
 **Expected**: HTTP 400 with error:
+
 ```json
 {
   "error": {
@@ -106,6 +108,7 @@ curl -X POST http://localhost:3000/api/v1/announcements \
 ```
 
 **Expected**: HTTP 409 with error:
+
 ```json
 {
   "error": {
@@ -135,6 +138,7 @@ curl -X POST http://localhost:3000/api/v1/announcements \
 ```
 
 **Expected**: HTTP 201 with sanitized text fields:
+
 - `description`: "Friendly dog" (HTML tags removed)
 - `petName`: "Buddy" (HTML tags removed)
 - `species`: "Golden Retriever" (no HTML tags)
@@ -200,6 +204,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ```
 
 **Expected**: HTTP 403 with error:
+
 ```json
 {
   "error": {
@@ -220,6 +225,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ```
 
 **Expected**: HTTP 401 with error:
+
 ```json
 {
   "error": {
@@ -242,6 +248,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${FAKE_ID}/photos" \
 ```
 
 **Expected**: HTTP 404 with error:
+
 ```json
 {
   "error": {
@@ -267,6 +274,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ```
 
 **Expected**: HTTP 400 with error:
+
 ```json
 {
   "error": {
@@ -292,6 +300,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ```
 
 **Expected**: HTTP 413 with error:
+
 ```json
 {
   "error": {
@@ -315,6 +324,7 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ```
 
 **Expected**: HTTP 400 with error:
+
 ```json
 {
   "error": {
@@ -350,7 +360,8 @@ curl -X POST "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}/phot
 ls -lh public/images/${ANNOUNCEMENT_ID}.*
 ```
 
-**Expected**: 
+**Expected**:
+
 - First request returns 201
 - Second request returns 201
 - Only ONE file exists in `public/images/` with the announcement ID (new format)
@@ -376,6 +387,7 @@ curl -X POST http://localhost:3000/api/v1/announcements \
 ```
 
 **Expected**: HTTP 400 with error:
+
 ```json
 {
   "error": {
@@ -407,6 +419,7 @@ echo "Authorization: Basic ${CREDENTIALS}"
 ```
 
 Usage:
+
 ```bash
 chmod +x scripts/get-auth-header.sh
 ./scripts/get-auth-header.sh abc123-def456 secret123
@@ -452,6 +465,7 @@ curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_
 **Expected**: HTTP 204 (No Content - empty response body)
 
 **Verify**: Announcement and photos are deleted:
+
 ```bash
 # Announcement should return 404
 curl -X GET "http://localhost:3000/api/v1/announcements/${ANNOUNCEMENT_ID}"
@@ -470,6 +484,7 @@ curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_
 ```
 
 **Expected**: HTTP 401 with error:
+
 ```json
 {
   "error": {
@@ -490,6 +505,7 @@ curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${ANNOUNCEMENT_
 ```
 
 **Expected**: HTTP 401 with error:
+
 ```json
 {
   "error": {
@@ -511,6 +527,7 @@ curl -X DELETE "http://localhost:3000/api/admin/v1/announcements/${FAKE_ID}" \
 ```
 
 **Expected**: HTTP 404 with error:
+
 ```json
 {
   "error": {
@@ -567,6 +584,7 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 ```
 
 **Expected**:
+
 - Delete request returns HTTP 204
 - First announcement returns HTTP 404
 - Second announcement returns HTTP 200 with data
@@ -574,6 +592,7 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 ## Verification Checklist
 
 ### Announcement Creation Tests
+
 - [ ] T075: Email contact announcement created successfully
 - [ ] T076: Phone contact announcement created successfully
 - [ ] T077: Validation error returned for missing field
@@ -581,6 +600,7 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 - [ ] T079: HTML tags stripped from text fields
 
 ### Photo Upload Tests
+
 - [ ] T080: Photo uploaded successfully with valid credentials (201)
 - [ ] T081: Invalid credentials rejected (403)
 - [ ] T082: Missing Authorization header rejected (401)
@@ -592,9 +612,9 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 - [ ] T088: photoUrl field rejected in creation (400)
 
 ### Admin Delete Announcement Tests
+
 - [ ] T089: Announcement deleted successfully with admin token (204)
 - [ ] T090: Missing Authorization header rejected (401)
 - [ ] T091: Invalid admin token rejected (401)
 - [ ] T092: Non-existent announcement returns 404
 - [ ] T093: Only specified announcement is deleted (others remain)
-

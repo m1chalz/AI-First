@@ -10,9 +10,9 @@ The server is active on [localhost:3000](localhost:3000)
 
 ## Environment variables
 
-Name | Description                         | Default value
------|-------------------------------------|---------------
-PORT | Port on which the server is exposed | 3000
+| Name | Description                         | Default value |
+| ---- | ----------------------------------- | ------------- |
+| PORT | Port on which the server is exposed | 3000          |
 
 ## API Endpoints
 
@@ -21,16 +21,19 @@ PORT | Port on which the server is exposed | 3000
 Retrieves all pet announcements. Optionally filter by location using geographic coordinates and radius.
 
 **Query Parameters (all optional):**
+
 - `lat` (number): Latitude coordinate (-90 to 90). Must be provided with `lng`.
 - `lng` (number): Longitude coordinate (-180 to 180). Must be provided with `lat`.
 - `range` (integer): Search radius in kilometers (positive integer). Defaults to 5km if `lat`/`lng` provided without `range`. Ignored if `lat`/`lng` not provided.
 
 **Examples:**
+
 - `GET /api/v1/announcements` - Returns all announcements
 - `GET /api/v1/announcements?lat=50.0614&lng=19.9383` - Returns announcements within 5km (default) of coordinates
 - `GET /api/v1/announcements?lat=50.0614&lng=19.9383&range=10` - Returns announcements within 10km of coordinates
 
 **Response (200 OK):**
+
 ```json
 {
   "data": [
@@ -63,6 +66,7 @@ Retrieves all pet announcements. Optionally filter by location using geographic 
 **Error Responses:**
 
 - **400 Bad Request**: Invalid location parameters
+
   ```json
   {
     "error": {
@@ -72,7 +76,7 @@ Retrieves all pet announcements. Optionally filter by location using geographic 
     }
   }
   ```
-  
+
   **Common validation errors:**
   - `lat` or `lng` must be valid numbers
   - `lat` must be between -90 and 90
@@ -98,9 +102,11 @@ Retrieves all pet announcements. Optionally filter by location using geographic 
 Retrieves a single pet announcement by its ID.
 
 **Path Parameters:**
+
 - `id` (string): UUID of the announcement
 
 **Response (200 OK):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -124,13 +130,15 @@ Retrieves a single pet announcement by its ID.
 }
 ```
 
-**Note:** 
+**Note:**
+
 - Optional fields may be `null` if not provided
 - `managementPassword` is **never** included in GET responses (security)
 
 **Error Responses:**
 
 - **404 Not Found**: Announcement with given ID does not exist
+
   ```json
   {
     "error": {
@@ -157,6 +165,7 @@ Retrieves a single pet announcement by its ID.
 Creates a new pet announcement (lost or found pet listing).
 
 **Request Body:**
+
 ```json
 {
   "species": "Golden Retriever",
@@ -171,6 +180,7 @@ Creates a new pet announcement (lost or found pet listing).
 ```
 
 **Required Fields:**
+
 - `species` (string): Pet species
 - `sex` (string): Pet sex
 - `lastSeenDate` (string): ISO 8601 date (YYYY-MM-DD), must be today or past
@@ -181,6 +191,7 @@ Creates a new pet announcement (lost or found pet listing).
 - At least one of: `email` (string) OR `phone` (string)
 
 **Optional Fields:**
+
 - `petName` (string)
 - `breed` (string)
 - `age` (number): Positive integer
@@ -189,6 +200,7 @@ Creates a new pet announcement (lost or found pet listing).
 - `reward` (string)
 
 **Response (201 Created):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -208,6 +220,7 @@ Creates a new pet announcement (lost or found pet listing).
 **Error Responses:**
 
 - **400 Bad Request**: Validation error
+
   ```json
   {
     "error": {
@@ -219,6 +232,7 @@ Creates a new pet announcement (lost or found pet listing).
   ```
 
 - **409 Conflict**: Duplicate microchip number
+
   ```json
   {
     "error": {
@@ -240,6 +254,7 @@ Creates a new pet announcement (lost or found pet listing).
   ```
 
 **Validation:**
+
 - Fail-fast validation (returns first error only)
 - All text fields are sanitized to prevent XSS attacks
 - Unknown fields are rejected

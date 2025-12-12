@@ -11,15 +11,16 @@ const ANNOUNCEMENTS = [
     description: 'A York puppy named Fredi Kamionka Gmina Burzenin went missing',
     microchip_number: null,
     location_latitude: 51.12,
-    location_longitude: 17.00,
+    location_longitude: 17.0,
     last_seen_date: '2025-11-18',
     email: 'spotterka@example.pl',
     phone: '+48 123 456 789',
     photo_url: '/images/seed-11111111-1111-1111-1111-111111111111.webp',
     status: 'MISSING',
     reward: null,
-    management_password_hash: 'a1b2c3d4e5f6:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
-    created_at: '2025-11-18T10:00:00.000Z',
+    management_password_hash:
+      'a1b2c3d4e5f6:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+    created_at: '2025-11-18T10:00:00.000Z'
   },
   {
     id: '22222222-2222-2222-2222-222222222222',
@@ -28,7 +29,8 @@ const ANNOUNCEMENTS = [
     breed: null,
     sex: 'FEMALE',
     age: 3,
-    description: 'Black female cat Luna with distinctive white paws and a small white spot on her chest went missing. She is about 3 years old, weighs around 4 kg, very shy and may hide from strangers. Luna has green eyes and wears a pink collar with a bell. Last seen near Grabiszyn in Wrocław. Luna is deeply attached to home and has never run away before. She eats special food due to a sensitive stomach. If you spot her, do not try to catch her - she will run away. Please call the phone number provided instead. Luna responds to her name only when spoken in a calm, gentle tone. She is vaccinated, neutered, and microchipped. We miss her dearly and are asking for any information. We are offering a reward. Luna is a beloved member of our family and her absence is very painful for us. If anyone has seen a cat matching this description, please contact us urgently. We have already checked all local shelters and veterinary clinics without any luck. Luna may be frightened.',
+    description:
+      'Black female cat Luna with distinctive white paws and a small white spot on her chest went missing. She is about 3 years old, weighs around 4 kg, very shy and may hide from strangers. Luna has green eyes and wears a pink collar with a bell. Last seen near Grabiszyn in Wrocław. Luna is deeply attached to home and has never run away before. She eats special food due to a sensitive stomach. If you spot her, do not try to catch her - she will run away. Please call the phone number provided instead. Luna responds to her name only when spoken in a calm, gentle tone. She is vaccinated, neutered, and microchipped. We miss her dearly and are asking for any information. We are offering a reward. Luna is a beloved member of our family and her absence is very painful for us. If anyone has seen a cat matching this description, please contact us urgently. We have already checked all local shelters and veterinary clinics without any luck. Luna may be frightened.',
     microchip_number: '123456789012345',
     location_latitude: 51.15,
     location_longitude: 16.95,
@@ -38,8 +40,9 @@ const ANNOUNCEMENTS = [
     photo_url: '/images/seed-22222222-2222-2222-2222-222222222222.jpg',
     status: 'MISSING',
     reward: '500 PLN',
-    management_password_hash: 'b2c3d4e5f6a7:1234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef',
-    created_at: '2025-11-15T12:30:00.000Z',
+    management_password_hash:
+      'b2c3d4e5f6a7:1234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef01234567890bcdef',
+    created_at: '2025-11-15T12:30:00.000Z'
   },
   {
     id: '33333333-3333-3333-3333-333333333333',
@@ -58,8 +61,9 @@ const ANNOUNCEMENTS = [
     photo_url: '/images/seed-33333333-3333-3333-3333-333333333333.jpg',
     status: 'MISSING',
     reward: null,
-    management_password_hash: 'c3d4e5f6a7b8:234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef',
-    created_at: '2025-11-17T09:15:00.000Z',
+    management_password_hash:
+      'c3d4e5f6a7b8:234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef1234567890bcdef',
+    created_at: '2025-11-17T09:15:00.000Z'
   },
   {
     id: '44444444-4444-4444-4444-444444444444',
@@ -78,8 +82,9 @@ const ANNOUNCEMENTS = [
     photo_url: '/images/seed-44444444-4444-4444-4444-444444444444.jpg',
     status: 'MISSING',
     reward: null,
-    management_password_hash: 'd4e5f6a7b8c9:34567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef',
-    created_at: '2025-11-10T14:20:00.000Z',
+    management_password_hash:
+      'd4e5f6a7b8c9:34567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef234567890bcdef',
+    created_at: '2025-11-10T14:20:00.000Z'
   },
   {
     id: '55555555-5555-5555-5555-555555555555',
@@ -98,8 +103,9 @@ const ANNOUNCEMENTS = [
     photo_url: '/images/seed-55555555-5555-5555-5555-555555555555.jpg',
     status: 'MISSING',
     reward: null,
-    management_password_hash: 'e5f6a7b8c9d0:4567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef',
-    created_at: '2025-11-12T16:45:00.000Z',
+    management_password_hash:
+      'e5f6a7b8c9d0:4567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef34567890bcdef',
+    created_at: '2025-11-12T16:45:00.000Z'
   },
   {
     id: '66666666-6666-6666-6666-666666666666',
@@ -118,8 +124,9 @@ const ANNOUNCEMENTS = [
     photo_url: '/images/seed-66666666-6666-6666-6666-666666666666.jpg',
     status: 'MISSING',
     reward: null,
-    management_password_hash: 'f6a7b8c9d0e1:567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef',
-    created_at: '2025-11-16T11:00:00.000Z',
+    management_password_hash:
+      'f6a7b8c9d0e1:567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef4567890bcdef',
+    created_at: '2025-11-16T11:00:00.000Z'
   },
   {
     id: '77777777-7777-7777-7777-777777777777',
@@ -139,7 +146,7 @@ const ANNOUNCEMENTS = [
     status: 'MISSING',
     reward: null,
     management_password_hash: 'a7b8c9d0e1f2:67890bcdef567890bcdef567890bcdef567890bcdef567890bcdef567890bcdef567890bcdef567890bcdef',
-    created_at: '2025-11-05T08:30:00.000Z',
+    created_at: '2025-11-05T08:30:00.000Z'
   },
   {
     id: '88888888-8888-8888-8888-888888888888',
@@ -159,13 +166,11 @@ const ANNOUNCEMENTS = [
     status: 'MISSING',
     reward: null,
     management_password_hash: 'b8c9d0e1f2a3:7890bcdef67890bcdef67890bcdef67890bcdef67890bcdef67890bcdef67890bcdef67890bcdef',
-    created_at: '2025-11-14T13:45:00.000Z',
-  },
+    created_at: '2025-11-14T13:45:00.000Z'
+  }
 ];
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('announcement').del();
-  await knex('announcement').insert(ANNOUNCEMENTS)
-    .onConflict('id')
-    .merge();
+  await knex('announcement').insert(ANNOUNCEMENTS).onConflict('id').merge();
 }

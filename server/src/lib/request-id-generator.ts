@@ -14,4 +14,3 @@ export function generateRequestId(): string {
   }
   return id;
 }
-

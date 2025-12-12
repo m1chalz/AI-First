@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express';
 import { runDbMigrations } from './database/db-utils.ts';
 import routes from './routes/routes.ts';
 import requestIdMiddleware from './middlewares/request-id-middleware.ts';

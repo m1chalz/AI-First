@@ -14,11 +14,11 @@ vi.mock('fs/promises');
 vi.mock('../../lib/file-validation.ts', () => ({
   validateImageFormat: vi.fn((buffer: Buffer) => {
     // Simulate valid JPEG
-    if (buffer[0] === 0xFF && buffer[1] === 0xD8) {
+    if (buffer[0] === 0xff && buffer[1] === 0xd8) {
       return Promise.resolve('image/jpeg');
     }
     return Promise.resolve(null);
-  }),
+  })
 }));
 
 const findByIdMock = vi.fn();
@@ -38,7 +38,7 @@ describe('PhotoUploadService', () => {
 
     // Setup validation mocks with proper typing
     mockValidateImageFormat = vi.fn(async (buffer: Buffer): Promise<string | null> => {
-      if (buffer[0] === 0xFF && buffer[1] === 0xD8) {
+      if (buffer[0] === 0xff && buffer[1] === 0xd8) {
         return 'image/jpeg';
       }
       return null;
@@ -50,7 +50,7 @@ describe('PhotoUploadService', () => {
       findById: findByIdMock,
       existsByMicrochip: vi.fn(),
       create: vi.fn(),
-      updatePhotoUrl: updatePhotoUrlMock,
+      updatePhotoUrl: updatePhotoUrlMock
     } as unknown as IAnnouncementRepository;
 
     // Setup fs mock
@@ -66,25 +66,19 @@ describe('PhotoUploadService', () => {
     });
 
     // Create service with mocked dependencies
-    service = new PhotoUploadService(
-      mockRepository,
-      mockValidateImageFormat,
-      mockWithTransaction,
-      path,
-      mockFs as unknown as typeof fs
-    );
+    service = new PhotoUploadService(mockRepository, mockValidateImageFormat, mockWithTransaction, path, mockFs as unknown as typeof fs);
   });
 
   describe('uploadPhoto', () => {
     it('should save photo and update database with transaction', async () => {
       // Given: valid announcement and photo
       const announcementId = 'announce-123';
-      const photoBuffer = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]);
+      const photoBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
       const uploadPath = '/uploads';
 
       findByIdMock.mockResolvedValue({
         id: announcementId,
-        photo_url: null,
+        photo_url: null
       });
 
       // When: uploadPhoto is called
@@ -92,15 +86,8 @@ describe('PhotoUploadService', () => {
 
       // Then: should return photo URL, save file, and update DB
       expect(result).toBe(`/images/${announcementId}.jpeg`);
-      expect(writeFileMock).toHaveBeenCalledWith(
-        expect.stringContaining(announcementId),
-        photoBuffer
-      );
-      expect(updatePhotoUrlMock).toHaveBeenCalledWith(
-        expect.any(Object),
-        announcementId,
-        `/images/announce-123.jpeg`
-      );
+      expect(writeFileMock).toHaveBeenCalledWith(expect.stringContaining(announcementId), photoBuffer);
+      expect(updatePhotoUrlMock).toHaveBeenCalledWith(expect.any(Object), announcementId, `/images/announce-123.jpeg`);
       expect(findByIdMock).toHaveBeenCalled();
     });
   });
@@ -109,7 +96,7 @@ describe('PhotoUploadService', () => {
     it('should throw error when announcement not found', async () => {
       // Given: non-existent announcement
       const announcementId = 'non-existent';
-      const photoBuffer = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]);
+      const photoBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
       const uploadPath = '/uploads';
 
       findByIdMock.mockResolvedValue(null);
@@ -122,7 +109,7 @@ describe('PhotoUploadService', () => {
     it('should not save the file if the DB write fails inside transaction', async () => {
       // Given: file save fails inside transaction
       const announcementId = 'announce-456';
-      const photoBuffer = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]);
+      const photoBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
       const uploadPath = '/uploads';
       const saveError = new Error('Disk full');
 
@@ -131,7 +118,7 @@ describe('PhotoUploadService', () => {
 
       findByIdMock.mockResolvedValue({
         id: announcementId,
-        photo_url: null,
+        photo_url: null
       });
 
       const failService = new PhotoUploadService(
@@ -157,7 +144,7 @@ describe('PhotoUploadService', () => {
 
       findByIdMock.mockResolvedValue({
         id: announcementId,
-        photo_url: null,
+        photo_url: null
       });
 
       // When/Then: should throw validation error without saving file
@@ -174,7 +161,7 @@ describe('PhotoUploadService', () => {
 
       findByIdMock.mockResolvedValue({
         id: announcementId,
-        photo_url: null,
+        photo_url: null
       });
 
       // When/Then: should throw validation error without saving file
@@ -195,9 +182,7 @@ describe('PhotoUploadService', () => {
 
       // Then: Should delete the specific file at correct absolute path
       expect(unlinkMock).toHaveBeenCalledTimes(1);
-      expect(unlinkMock).toHaveBeenCalledWith(
-        path.join(process.cwd(), 'public', 'images', 'announce-delete-123.jpeg')
-      );
+      expect(unlinkMock).toHaveBeenCalledWith(path.join(process.cwd(), 'public', 'images', 'announce-delete-123.jpeg'));
     });
 
     it('should handle non-existent photo file gracefully', async () => {
@@ -234,9 +219,7 @@ describe('PhotoUploadService', () => {
       await service.deletePhotos(photoUrl);
 
       // Then: Should use correct absolute path
-      expect(unlinkMock).toHaveBeenCalledWith(
-        path.join(process.cwd(), 'public', 'images', 'my-announcement-id.webp')
-      );
+      expect(unlinkMock).toHaveBeenCalledWith(path.join(process.cwd(), 'public', 'images', 'my-announcement-id.webp'));
     });
 
     it('should skip deletion when photoUrl is null', async () => {
@@ -273,9 +256,7 @@ describe('PhotoUploadService', () => {
       await service.deletePhotos(photoUrl);
 
       // Then: Should still construct correct path
-      expect(unlinkMock).toHaveBeenCalledWith(
-        path.join(process.cwd(), 'public', 'images', 'announce-123.jpeg')
-      );
+      expect(unlinkMock).toHaveBeenCalledWith(path.join(process.cwd(), 'public', 'images', 'announce-123.jpeg'));
     });
   });
 });

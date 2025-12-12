@@ -8,7 +8,7 @@
  * Description Form. Implementation should follow these contracts.
  */
 
-import { AnimalSpecies } from '../../../webApp/src/types/animal';
+import { AnimalSpecies } from '../../../webApp/src/types/announcement';
 
 /**
  * Validation function type.

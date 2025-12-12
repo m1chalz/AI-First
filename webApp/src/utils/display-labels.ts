@@ -1,6 +1,6 @@
-import { AnimalSpecies, AnimalSex } from '../types/animal';
+import { AnnouncementSpecies, AnnouncementSex } from '../types/announcement';
 
-export const SPECIES_LABELS: Record<AnimalSpecies, string> = {
+export const SPECIES_LABELS: Record<AnnouncementSpecies, string> = {
   DOG: 'Dog',
   CAT: 'Cat',
   BIRD: 'Bird',
@@ -8,9 +8,8 @@ export const SPECIES_LABELS: Record<AnimalSpecies, string> = {
   OTHER: 'Other'
 };
 
-export const SEX_LABELS: Record<AnimalSex, string> = {
+export const SEX_LABELS: Record<AnnouncementSex, string> = {
   MALE: 'Male',
   FEMALE: 'Female',
   UNKNOWN: 'Unknown'
 };
-

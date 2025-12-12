@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { announcementService } from '../services/announcement-service';
 import { mapFlowStateToDto } from '../models/announcement-submission';
-import type { ReportMissingPetFlowState } from '../models/ReportMissingPetFlow';
+import type { NewAnnouncementFlowState } from '../models/NewAnnouncementFlow';
 import type { ApiError } from '../models/api-error';
 
 export interface UseAnnouncementCreationResult {
@@ -9,7 +9,7 @@ export interface UseAnnouncementCreationResult {
   error: ApiError | null;
   announcementId: string | null;
   managementPassword: string | null;
-  createAnnouncement: (flowState: ReportMissingPetFlowState) => Promise<void>;
+  createAnnouncement: (flowState: NewAnnouncementFlowState) => Promise<void>;
 }
 
 export function useAnnouncementCreation(): UseAnnouncementCreationResult {
@@ -18,7 +18,7 @@ export function useAnnouncementCreation(): UseAnnouncementCreationResult {
   const [announcementId, setAnnouncementId] = useState<string | null>(null);
   const [managementPassword, setManagementPassword] = useState<string | null>(null);
 
-  const createAnnouncement = async (flowState: ReportMissingPetFlowState) => {
+  const createAnnouncement = async (flowState: NewAnnouncementFlowState) => {
     setIsCreating(true);
     setError(null);
 
@@ -45,4 +45,3 @@ export function useAnnouncementCreation(): UseAnnouncementCreationResult {
     createAnnouncement
   };
 }
-
