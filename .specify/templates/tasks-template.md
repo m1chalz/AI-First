@@ -19,7 +19,7 @@ description: "Task list template for feature implementation"
   - Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - Web: `/webApp/src/__tests__/` (Vitest + RTL), 80% coverage
   - Scope: Domain models, services, custom hooks, state management
-  - Run: `npm test -- --coverage` (from webApp/)
+  - Run: `npm test --coverage` (from webApp/)
 - Convention: MUST follow Given-When-Then structure with descriptive names
 
 **MANDATORY - Backend Unit Tests** (if `/server` affected):
@@ -137,10 +137,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T024 [P] [US1] Create fake [Repository] in `/iosApp/iosAppTests/Fakes/Fake[Repository].swift`
 - [ ] T025 [P] [US1] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift` (test repository calls directly)
 
-**Web Unit Tests**:
-- [ ] T026 [P] [US1] Unit test for service in `/webApp/src/__tests__/services/[Service].test.ts`
-- [ ] T027 [P] [US1] Unit test for model in `/webApp/src/__tests__/models/[Model].test.ts`
-- [ ] T028 [P] [US1] Web hook test in `/webApp/src/__tests__/hooks/use[Feature].test.ts`
+**Web Unit Tests** (TDD: Red-Green-Refactor):
+- [ ] T026 [P] [US1] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts` (Vitest, Given-When-Then)
+- [ ] T027 [P] [US1] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts` (Vitest, Given-When-Then)
 
 **Backend Unit Tests** (TDD: Red-Green-Refactor):
 - [ ] T029 [P] [US1] Unit test for service in `/server/src/services/__test__/[Service].test.ts` (Vitest, Given-When-Then)
@@ -186,15 +185,20 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T057 [US1] Add accessibilityIdentifier to all interactive views in [Feature]View (e.g., `.accessibilityIdentifier("[screen].[element].[action]")`)
 - [ ] T058 [P] [US1] Add SwiftDoc documentation to complex iOS APIs (skip self-explanatory methods/properties)
 
-**Web** (Full Stack Implementation):
+**Web** (Full Stack Implementation - TDD: Red-Green-Refactor):
 - [ ] T059 [P] [US1] Create TypeScript domain models in `/webApp/src/models/[Model].ts`
 - [ ] T060 [P] [US1] Create service interface in `/webApp/src/services/[Service].ts`
 - [ ] T061 [US1] Implement HTTP service consuming backend API in `/webApp/src/services/[Service]Impl.ts`
 - [ ] T062 [US1] Add service to Web DI in `/webApp/src/di/ServiceProvider.tsx` (React Context or other DI pattern)
-- [ ] T063 [US1] Create custom hook in `/webApp/src/hooks/use[Feature].ts`
-- [ ] T064 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx`
-- [ ] T065 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
-- [ ] T066 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
+- [ ] T063 [US1] GREEN: Implement custom hook in `/webApp/src/hooks/use[Feature].ts` (minimal code to pass test from T026)
+- [ ] T064 [US1] REFACTOR: Improve hook code quality (extract helpers, apply Clean Code principles)
+- [ ] T065 [P] [US1] GREEN: Implement lib function in `/webApp/src/lib/[util].ts` (minimal code to pass test from T027)
+- [ ] T066 [US1] REFACTOR: Improve lib function code quality (extract helpers, apply Clean Code principles)
+- [ ] T067 [US1] Create React component in `/webApp/src/components/[Feature]/[Feature].tsx` (thin, delegates to hooks/lib)
+- [ ] T068 [US1] Add data-testid attributes to all interactive elements in [Feature] component (e.g., `data-testid="[screen].[element].[action]"`)
+- [ ] T069 [P] [US1] Add JSDoc documentation to complex Web APIs (skip self-explanatory functions)
+- [ ] T070 [US1] Run `npm test --coverage` and verify 80% coverage for hooks and lib
+- [ ] T071 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Backend** (TDD: Red-Green-Refactor):
 - [ ] T067 [P] [US1] RED: Write failing unit test for [Service] in `/server/src/services/__test__/[Service].test.ts`
@@ -208,7 +212,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T075 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
 - [ ] T076 [US1] REFACTOR: Add error handling middleware for [feature] routes
 - [ ] T077 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
-- [ ] T078 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
+- [ ] T078 [US1] Run `npm test --coverage` and verify 80% coverage for services and lib
 - [ ] T079 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
@@ -230,8 +234,9 @@ Examples of foundational tasks (adjust based on your project):
 **iOS Unit Tests**:
 - [ ] T079 [P] [US2] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift` (test repository calls directly)
 
-**Web Unit Tests**:
-- [ ] T080 [P] [US2] Web hook test in `/webApp/src/__tests__/hooks/use[Feature].test.ts`
+**Web Unit Tests** (TDD: Red-Green-Refactor):
+- [ ] T080 [P] [US2] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts`
+- [ ] T081 [P] [US2] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts`
 
 **End-to-End Tests**:
 - [ ] T081 [P] [US2] Web E2E test in `/e2e-tests/web/specs/[feature-name].spec.ts`
@@ -260,15 +265,21 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T096 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
 - [ ] T097 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
 
-**Web** (Full Stack):
+**Web** (Full Stack - TDD: Red-Green-Refactor):
 - [ ] T098 [P] [US2] Create TypeScript models for US2 in `/webApp/src/models/`
-- [ ] T099 [US2] Implement HTTP service + DI + hook + React component
-- [ ] T100 [US2] Add data-testid attributes to all Web UI elements for US2
-- [ ] T101 [P] [US2] Add JSDoc documentation to complex US2 Web APIs (skip self-explanatory)
+- [ ] T099 [US2] GREEN: Implement hook in `/webApp/src/hooks/use[Feature].ts` (minimal code to pass test)
+- [ ] T100 [US2] REFACTOR: Improve hook code quality
+- [ ] T101 [P] [US2] GREEN: Implement lib function in `/webApp/src/lib/[util].ts` (minimal code to pass test)
+- [ ] T102 [US2] REFACTOR: Improve lib function code quality
+- [ ] T103 [US2] Implement HTTP service + DI + React component (thin, delegates to hooks/lib)
+- [ ] T104 [US2] Add data-testid attributes to all Web UI elements for US2
+- [ ] T105 [P] [US2] Add JSDoc documentation ONLY to complex US2 Web APIs (skip self-explanatory)
+- [ ] T106 [US2] Run `npm test --coverage` and verify 80% coverage
+- [ ] T107 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Backend** (TDD):
 - [ ] T102 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
-- [ ] T103 [US2] Run `npm test -- --coverage` and verify 80% coverage
+- [ ] T103 [US2] Run `npm test --coverage` and verify 80% coverage
 - [ ] T104 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently

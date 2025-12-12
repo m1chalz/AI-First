@@ -135,7 +135,7 @@ The backend server provides REST API endpoints for all platform clients.
 
 5. Run tests with coverage:
    ```shell
-   npm test -- --coverage
+   npm test --coverage
    ```
 
 See [server/README.md](./server/README.md) for more backend commands and documentation.
@@ -241,13 +241,13 @@ xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 
 **Web** (Vitest + React Testing Library):
 ```shell
 cd webApp
-npm test -- --coverage
+npm test --coverage
 ```
 
 **Backend** (Vitest + SuperTest):
 ```shell
 cd server
-npm test -- --coverage
+npm test --coverage
 ```
 
 **End-to-End Tests** (Java 21 + Maven + Cucumber):

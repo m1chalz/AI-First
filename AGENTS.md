@@ -19,7 +19,7 @@
 - Run dev server: `npm run dev` (from server/, active on http://localhost:3000)
 - Run production server: `npm start` (from server/)
 - Run backend tests: `npm test` (from server/)
-- Run backend tests with coverage: `npm test -- --coverage` (from server/, view at server/coverage/index.html)
+- Run backend tests with coverage: `npm test --coverage` (from server/, view at server/coverage/index.html)
 - Run linter: `npm run lint` (from server/)
 - Create migration: `npm run knex:add-migration <name>` (from server/)
 
@@ -27,7 +27,7 @@
 - Install dependencies: `npm install` (run from webApp/)
 - Run web dev server: `npm run start` (from webApp/)
 - Build web app: `npm run build` (from webApp/)
-- Run web tests with coverage: `npm test -- --coverage` (run from webApp/, view at webApp/coverage/index.html)
+- Run web tests with coverage: `npm test --coverage` (run from webApp/, view at webApp/coverage/index.html)
 
 ### End-to-End Tests (Java 21 + Maven + Cucumber)
 - Run E2E web tests: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
@@ -192,7 +192,7 @@
   - Coverage: Xcode coverage report
 - Web: Vitest + React Testing Library
   - Tests: `/webApp/src/__tests__/`
-  - Coverage: `npm test -- --coverage` (from webApp/)
+  - Coverage: `npm test --coverage` (from webApp/)
 - Backend: Vitest + Supertest (unit + integration tests)
   - TDD Workflow (MANDATORY): Red-Green-Refactor cycle
     - RED: Write failing test first
@@ -200,7 +200,7 @@
     - REFACTOR: Improve code quality without changing behavior
   - Unit tests: `/server/src/services/__test__/`, `/server/src/lib/__test__/` (80% coverage)
   - Integration tests: `/server/src/__test__/` (REST API endpoints, 80% coverage)
-  - Coverage: `npm test -- --coverage` (from server/)
+  - Coverage: `npm test --coverage` (from server/)
 - E2E Tests: Java 21 + Maven + Selenium/Appium + Cucumber (unified stack for all platforms)
   - Location: `/e2e-tests/java/`
   - Features: `/e2e-tests/java/src/test/resources/features/`
