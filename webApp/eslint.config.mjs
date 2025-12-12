@@ -37,7 +37,19 @@ export default defineConfig(
             'index'
           ]
         }
-      ]
+      ],
+      'no-console': [
+        'warn',
+        { allow: ['warn', 'error', 'info'] }
+      ],
+      'eqeqeq': ['error', 'always', { null: 'ignore' }],
+      'prefer-const': [
+        'error',
+        { destructuring: 'all' }
+      ],
+      'no-var': 'error',
+      'no-constant-condition': 'error',
+      'no-empty': ['error', { allowEmptyCatch: true }]
     }
   }
 );
