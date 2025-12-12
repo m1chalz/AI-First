@@ -2,7 +2,20 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.2 → 2.5.3
+Version change: 2.5.3 → 2.5.4
+PATCH: Added parameterized test requirements and test case minimization guidelines for backend and webapp
+
+Changes (v2.5.4):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - enhanced parameterized tests section with requirements
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added test case minimization requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added test case minimization requirements
+
+Rationale:
+- Parameterized tests reduce duplication and improve maintainability
+- Minimizing test cases while covering all scenarios improves test suite efficiency
+- Description parameters should only be added when test purpose is unclear
+
+Previous version (v2.5.3):
 PATCH: Added code reuse, simplicity, and implementation phase requirements for backend and webapp
 
 Changes (v2.5.3):
@@ -138,6 +151,16 @@ Modified principles (v2.5.3):
 Templates requiring updates (v2.5.3):
 - ✅ .specify/templates/plan-template.md (no changes needed - code reuse and simplicity are implementation details)
 - ✅ .specify/templates/tasks-template.md (no changes needed - code reuse and simplicity are implementation details)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.4):
+- VIII. Given-When-Then Test Convention (UPDATED - enhanced parameterized tests section with requirements for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - added test case minimization requirements)
+- XIII. Web Architecture & Quality Standards (UPDATED - added test case minimization requirements)
+
+Templates requiring updates (v2.5.4):
+- ✅ .specify/templates/plan-template.md (no changes needed - test case minimization is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - test case minimization is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -986,8 +1009,16 @@ describe('petService', () => {
 
 When tests share the same logic with different input/output pairs, SHOULD use parameterized tests:
 
+**Parameterized Test Requirements** (Backend, Web, Android):
+- MUST merge tests into parameterized ones if possible and worthwhile
+- MUST add description parameter ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- Each parameter set MUST test a distinct scenario (different edge case, different happy path, etc.)
+- Avoid parameterized tests when test logic differs significantly between cases
+
 ```typescript
 // TypeScript/Backend/Web (Vitest)
+// ✅ GOOD - Parameterized test with clear purpose (testing different species)
 describe('createPet', () => {
     it.each([
         ['Max', 'dog'],
@@ -1005,6 +1036,28 @@ describe('createPet', () => {
         expect(result.species).toBe(species);
     });
 });
+
+// ✅ GOOD - Parameterized test with description when purpose is unclear
+describe('validateEmail', () => {
+    it.each([
+        { email: 'user@example.com', expected: true, description: 'valid email with common domain' },
+        { email: 'user+tag@example.co.uk', expected: true, description: 'valid email with plus and subdomain' },
+        { email: 'invalid', expected: false, description: 'missing @ symbol' }
+    ])('should return $expected for $description', ({ email, expected }) => {
+        // given
+        // when
+        const result = validateEmail(email);
+        // then
+        expect(result).toBe(expected);
+    });
+});
+
+// ❌ BAD - Duplicate similar cases (all test the same happy path)
+it.each([
+    ['Max', 'dog'],
+    ['Max', 'dog'],  // duplicate
+    ['Max', 'dog']   // duplicate
+])('should create pet', async (name, species) => { /* ... */ });
 ```
 
 **Rationale**: Given-When-Then structure standardizes test organization across platforms,
@@ -1105,6 +1158,9 @@ Backend development MUST follow TDD (Red-Green-Refactor):
 - Location: `/src/services/__test__/`, `/src/lib/__test__/`
 - Scope: Business logic and utilities in isolation
 - Run command: `npm test --coverage` (from `/server`)
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- MUST use parameterized tests when possible and worthwhile to merge similar test logic
+- MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
 
 **Integration Tests** (Vitest + SuperTest) - MUST achieve 80% coverage:
 - Location: `/src/__test__/`
@@ -1686,6 +1742,9 @@ Web development MUST follow TDD (Red-Green-Refactor):
 - Run command: `npm test --coverage` (from `/webApp`)
 - Report: `webApp/coverage/index.html`
 - Framework: Vitest + React Testing Library (for hooks that use React features)
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- MUST use parameterized tests when possible and worthwhile to merge similar test logic
+- MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
 
 **Component Tests** (Vitest + React Testing Library) - Recommended:
 - Location: `/src/components/.../__tests__/`
@@ -1698,6 +1757,7 @@ Web development MUST follow TDD (Red-Green-Refactor):
 - MUST use descriptive test names
 - MUST use test doubles (mocks, fakes) for dependencies
 - MUST test behavior, not implementation details
+- MUST minimize number of test cases - cover all scenarios without duplicating similar cases
 
 **Directory Structure** (inside `/webApp/src/`):
 
@@ -2124,4 +2184,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.3 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.4 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
