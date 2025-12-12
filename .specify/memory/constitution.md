@@ -2,7 +2,19 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.6 → 2.5.7
+Version change: 2.5.7 → 2.5.8
+PATCH: Added task-phase requirements for backend and webapp (atomic tasks, TDD workflow, no summary files)
+
+Changes (v2.5.8):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added task-phase requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added task-phase requirements
+
+Rationale:
+- Atomic tasks ensure each task is complete and testable before moving to the next
+- TDD workflow ensures tests are written first and pass before task completion
+- No summary files keeps focus on code implementation
+
+Previous version (v2.5.7):
 PATCH: Added project-wide policy to ignore performance verification in all phases
 
 Changes (v2.5.7):
@@ -227,6 +239,15 @@ Modified principles (v2.5.7):
 Templates requiring updates (v2.5.7):
 - ✅ .specify/templates/plan-template.md - Updated performance-related fields to indicate N/A
 - ✅ .specify/templates/tasks-template.md (no changes needed - performance policy is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.8):
+- IX. Backend Architecture & Quality Standards (UPDATED - added task-phase requirements: atomic tasks, TDD workflow, no summary files)
+- XIII. Web Architecture & Quality Standards (UPDATED - added task-phase requirements: atomic tasks, TDD workflow, no summary files)
+
+Templates requiring updates (v2.5.8):
+- ✅ .specify/templates/plan-template.md (no changes needed - task-phase requirements are implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - task-phase requirements align with existing TDD guidance)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -1228,6 +1249,18 @@ Backend development MUST follow TDD (Red-Green-Refactor):
 2. **GREEN**: Write minimal code to make test pass
 3. **REFACTOR**: Improve code quality without changing behavior
 
+**Task Implementation Requirements** (During Tasks Phase):
+
+- MUST use TDD workflow for all tasks
+- Each task MUST be atomic (complete and testable before moving to the next task)
+- Task workflow MUST follow this sequence:
+  1. **Start with tests**: Write failing tests first (RED phase)
+  2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
+  3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones)
+- MUST NOT create any files with summaries during task implementation
+- Each task MUST be completed (tests passing, linting clean) before starting the next task
+
 **Testing Strategy**:
 
 **Unit Tests** (Vitest) - MUST achieve 80% coverage:
@@ -1816,6 +1849,18 @@ Web development MUST follow TDD (Red-Green-Refactor):
 2. **GREEN**: Write minimal code to make test pass
 3. **REFACTOR**: Improve code quality without changing behavior
 
+**Task Implementation Requirements** (During Tasks Phase):
+
+- MUST use TDD workflow for all tasks
+- Each task MUST be atomic (complete and testable before moving to the next task)
+- Task workflow MUST follow this sequence:
+  1. **Start with tests**: Write failing tests first (RED phase)
+  2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
+  3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones)
+- MUST NOT create any files with summaries during task implementation
+- Each task MUST be completed (tests passing, linting clean) before starting the next task
+
 **Testing Strategy**:
 
 **Unit Tests** (Vitest) - MUST achieve 80% coverage:
@@ -2283,4 +2328,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.7 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.8 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
