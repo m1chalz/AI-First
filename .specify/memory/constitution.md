@@ -2,7 +2,19 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.1 → 2.5.2
+Version change: 2.5.2 → 2.5.3
+PATCH: Added code reuse, simplicity, and implementation phase requirements for backend and webapp
+
+Changes (v2.5.3):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added code reuse, simplicity, and no summary files requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added code reuse, simplicity, and no summary files requirements
+
+Rationale:
+- Code reuse reduces duplication and maintenance burden
+- Simple code is easier to understand and maintain
+- Summary files during implementation add unnecessary overhead and can become outdated
+
+Previous version (v2.5.2):
 PATCH: Strengthened minimal documentation/commenting requirement for backend and webapp
 
 Changes (v2.5.2):
@@ -117,6 +129,15 @@ Modified principles (v2.5.2):
 Templates requiring updates (v2.5.2):
 - ✅ .specify/templates/plan-template.md (no changes needed - documentation policy is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - documentation policy is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.3):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code reuse, simplicity, and no summary files requirements)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code reuse, simplicity, and no summary files requirements)
+
+Templates requiring updates (v2.5.3):
+- ✅ .specify/templates/plan-template.md (no changes needed - code reuse and simplicity are implementation details)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code reuse and simplicity are implementation details)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -1017,6 +1038,19 @@ The backend module (`/server`) MUST follow modern Node.js best practices with ri
   - Code MUST be self-documenting through clear naming
   - Prefer refactoring unclear code to adding documentation/comments
   - Only add JSDoc/comments when code is genuinely difficult to understand without them
+- MUST reuse existing code, logic, and styles whenever possible
+  - Check for existing utilities, helpers, and patterns before creating new ones
+  - Extract reusable logic to `/src/lib/` for shared use
+  - Reuse existing styles, components, and patterns from the codebase
+  - Avoid duplicating functionality that already exists
+- MUST keep code simple
+  - Prefer simple, straightforward solutions over complex ones
+  - Avoid over-engineering and premature optimization
+  - Use the simplest approach that solves the problem
+- MUST NOT produce any summary files during the implementation phase
+  - No README files, summary documents, or implementation notes
+  - Focus on code implementation only
+  - Documentation belongs in code comments (only when necessary) or existing documentation files
 - MUST minimize dependencies in `package.json`:
   - Only add dependencies that provide significant value
   - Prefer well-maintained, security-audited packages
@@ -1598,6 +1632,19 @@ The web application (`/webApp`) MUST follow modern React 18 + TypeScript best pr
   - Code MUST be self-documenting through clear naming
   - Prefer refactoring unclear code to adding documentation/comments
   - Only add JSDoc/comments when code is genuinely difficult to understand without them
+- MUST reuse existing code, logic, and styles whenever possible
+  - Check for existing utilities, helpers, hooks, and patterns before creating new ones
+  - Extract reusable logic to `/src/lib/` or `/src/hooks/` for shared use
+  - Reuse existing styles, components, and patterns from the codebase
+  - Avoid duplicating functionality that already exists
+- MUST keep code simple
+  - Prefer simple, straightforward solutions over complex ones
+  - Avoid over-engineering and premature optimization
+  - Use the simplest approach that solves the problem
+- MUST NOT produce any summary files during the implementation phase
+  - No README files, summary documents, or implementation notes
+  - Focus on code implementation only
+  - Documentation belongs in code comments (only when necessary) or existing documentation files
 - MUST minimize dependencies in `package.json`:
   - Only add dependencies that provide significant value
   - Prefer well-maintained, security-audited packages
@@ -2077,4 +2124,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.2 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.3 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
