@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useAnnouncementDetails } from '../../hooks/use-announcement-details';
 import { AnnouncementDetailsContent } from './AnnouncementDetailsContent';
@@ -81,12 +81,12 @@ export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> =
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
       onClose();
     }, 300); // Match animation duration
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -94,7 +94,7 @@ export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> =
     }
   }, [isOpen]);
 
-  useEffect(() => setupModalAccessibility(isOpen, previousActiveElementRef, handleClose), [isOpen]);
+  useEffect(() => setupModalAccessibility(isOpen, previousActiveElementRef, handleClose), [isOpen, handleClose]);
 
   useEffect(() => setupFocusTrap(isOpen, modalRef), [isOpen]);
 
