@@ -1,8 +1,8 @@
 import React from 'react';
-import { SpeciesDropdown } from './SpeciesDropdown';
-import { SexSelector } from './SexSelector';
 import { useGeolocationContext } from '../../../contexts/GeolocationContext';
 import sharedStyles from '../NewAnnouncementLayout.module.css';
+import { SpeciesDropdown } from './SpeciesDropdown';
+import { SexSelector } from './SexSelector';
 import styles from './PetDescriptionForm.module.css';
 
 export interface PetDescriptionFormProps {

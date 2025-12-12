@@ -52,9 +52,7 @@ describe('AnnouncementService', () => {
     validator = mockValidator,
     sanitizer = mockSanitizer,
     locationValidator = mockLocationValidator
-  ) => {
-    return new AnnouncementService(repository, validator, sanitizer, locationValidator);
-  };
+  ) => new AnnouncementService(repository, validator, sanitizer, locationValidator);
 
   beforeEach(() => {
     vi.clearAllMocks();

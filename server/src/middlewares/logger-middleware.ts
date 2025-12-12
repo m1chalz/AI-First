@@ -88,17 +88,11 @@ export default pinoHttp({
 
   autoLogging: true,
 
-  customReceivedMessage: () => {
-    return 'Request received';
-  },
+  customReceivedMessage: () => 'Request received',
 
-  customSuccessMessage: () => {
-    return 'Request completed';
-  },
+  customSuccessMessage: () => 'Request completed',
 
-  customErrorMessage: (_req: any, _res: any, err: any) => {
-    return `Request failed: ${err.message}`;
-  },
+  customErrorMessage: (_req: any, _res: any, err: any) => `Request failed: ${err.message}`,
 
   customLogLevel: (_req: any, res: any) => {
     if (res.statusCode >= 500) {
