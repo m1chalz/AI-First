@@ -3,8 +3,8 @@ import { MdLocationOn } from 'react-icons/md';
 import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement, type AnnouncementSex } from '../../types/announcement';
 import { formatCoordinates } from '../../utils/coordinate-formatter';
 import toPascalCase from '../../utils/pascal-case-formatter';
-import styles from './AnnouncementList.module.css';
 import config from '../../config/config';
+import styles from './AnnouncementList.module.css';
 
 interface AnnouncementCardProps {
   announcement: Announcement;

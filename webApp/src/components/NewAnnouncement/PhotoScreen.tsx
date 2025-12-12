@@ -5,10 +5,10 @@ import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { AppRoutes } from '../../routes/routes';
+import { Toast } from '../Toast/Toast';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
 import { PhotoConfirmationCard } from './PhotoConfirmationCard';
-import { Toast } from '../Toast/Toast';
 import styles from './NewAnnouncementLayout.module.css';
 
 export function PhotoScreen() {

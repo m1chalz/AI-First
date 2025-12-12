@@ -7,8 +7,8 @@ import { formatCoordinates } from '../../utils/coordinate-formatter';
 import { formatMicrochip } from '../../utils/microchip-formatter';
 import toPascalCase from '../../utils/pascal-case-formatter';
 import { buildMapUrl } from '../../utils/map-url-builder';
-import styles from './AnnouncementDetailsContent.module.css';
 import config from '../../config/config';
+import styles from './AnnouncementDetailsContent.module.css';
 
 interface AnnouncementDetailsContentProps {
   announcement: Announcement;

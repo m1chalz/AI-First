@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { useModal } from '../../hooks/use-modal';
-import { AnnouncementCard } from './AnnouncementCard';
-import { EmptyState } from './EmptyState';
 import { MissingLocationPermissionBanner } from '../MissingLocationPermissionBanner/MissingLocationPermissionBanner';
 import { AnnouncementDetailsModal } from '../AnnouncementDetailsModal/AnnouncementDetailsModal';
+import { AnnouncementCard } from './AnnouncementCard';
+import { EmptyState } from './EmptyState';
 import styles from './AnnouncementList.module.css';
 
 export const AnnouncementList: React.FC = () => {

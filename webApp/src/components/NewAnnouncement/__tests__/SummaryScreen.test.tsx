@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { BrowserRouter } from 'react-router-dom';
+import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { SummaryScreen } from '../SummaryScreen';
 
 const renderWithRouter = (component: React.ReactNode) =>

@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDetailsForm } from '../../hooks/use-details-form';
 import { useToast } from '../../hooks/use-toast';
-import { PetDescriptionForm } from './AnnouncementDescriptionForm/PetDescriptionForm';
-import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { Toast } from '../Toast/Toast';
 import { AppRoutes } from '../../routes/routes';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
+import { NewAnnouncementLayout } from './NewAnnouncementLayout';
+import { PetDescriptionForm } from './AnnouncementDescriptionForm/PetDescriptionForm';
 import styles from './NewAnnouncementLayout.module.css';
 
 export const DetailsScreen: React.FC = () => {

@@ -81,6 +81,9 @@ export const AnnouncementDetailsModal: React.FC<AnnouncementDetailsModalProps> =
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
+  const aa = 'asdf';
+  console.log(aa);
+
   const handleClose = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
