@@ -2,7 +2,19 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.8 → 2.5.9
+Version change: 2.5.9 → 2.5.10
+PATCH: Added code formatting requirement for backend and webapp (format code at end of each task)
+
+Changes (v2.5.10):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added code formatting requirement in task workflow
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added code formatting requirement in task workflow
+
+Rationale:
+- Code formatting ensures consistent code style across the codebase
+- Running format at the end of each task ensures all code is properly formatted
+- Prevents formatting inconsistencies from accumulating during development
+
+Previous version (v2.5.9):
 PATCH: Added layout planning and CSS reuse requirements for webapp
 
 Changes (v2.5.9):
@@ -267,6 +279,24 @@ Modified principles (v2.5.9):
 Templates requiring updates (v2.5.9):
 - ✅ .specify/templates/plan-template.md (no changes needed - layout planning is implementation detail)
 - ✅ .specify/templates/tasks-template.md (no changes needed - CSS reuse is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.10):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+
+Templates requiring updates (v2.5.10):
+- ✅ .specify/templates/plan-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.10):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+
+Templates requiring updates (v2.5.10):
+- ✅ .specify/templates/plan-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code formatting is implementation detail)
 - ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
@@ -1276,9 +1306,10 @@ Backend development MUST follow TDD (Red-Green-Refactor):
   1. **Start with tests**: Write failing tests first (RED phase)
   2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
   3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
-  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones). If the code/tests were modified, make sure the tests and linting pass
+  5. **Format the code**: Always format the code using `npm run format` at the end of each task
 - MUST NOT create any files with summaries during task implementation
-- Each task MUST be completed (tests passing, linting clean) before starting the next task
+- Each task MUST be completed (tests passing, linting clean, code formatted) before starting the next task
 
 **Testing Strategy**:
 
@@ -1885,9 +1916,10 @@ Web development MUST follow TDD (Red-Green-Refactor):
   1. **Start with tests**: Write failing tests first (RED phase)
   2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
   3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
-  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones). If the code/tests were modified, make sure the tests and linting pass
+  5. **Format the code**: Always format the code using `npm run format` at the end of each task
 - MUST NOT create any files with summaries during task implementation
-- Each task MUST be completed (tests passing, linting clean) before starting the next task
+- Each task MUST be completed (tests passing, linting clean, code formatted) before starting the next task
 
 **Testing Strategy**:
 
@@ -2356,4 +2388,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.5.9 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
+**Version**: 2.5.10 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
