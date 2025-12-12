@@ -1009,7 +1009,7 @@ Backend development MUST follow TDD (Red-Green-Refactor):
 **Unit Tests** (Vitest) - MUST achieve 80% coverage:
 - Location: `/src/services/__test__/`, `/src/lib/__test__/`
 - Scope: Business logic and utilities in isolation
-- Run command: `npm test -- --coverage` (from `/server`)
+- Run command: `npm test --coverage` (from `/server`)
 
 **Integration Tests** (Vitest + SuperTest) - MUST achieve 80% coverage:
 - Location: `/src/__test__/`
@@ -1961,8 +1961,8 @@ All pull requests MUST:
 - Run platform-specific unit tests and ensure 80%+ coverage:
   - Android: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: XCTest with coverage enabled
-  - Web: `npm test -- --coverage` (from webApp/)
-  - Backend: `npm test -- --coverage` (from server/)
+  - Web: `npm test --coverage` (from webApp/)
+  - Backend: `npm test --coverage` (from server/)
 - Run E2E tests for affected features:
   - Web: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web"`
   - Mobile: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"` or `@ios`

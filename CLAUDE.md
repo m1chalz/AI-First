@@ -12,7 +12,7 @@
 - Run single test: `./gradlew :shared:cleanJsTest :shared:jsTest --tests "com.intive.aifirst.petspot.SharedCommonTest.example"`
 - Run Android tests: `./gradlew :composeApp:testDebugUnitTest`
 - Run Android ViewModel tests with coverage: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` (view at composeApp/build/reports/kover/html/index.html)
-- Run web tests with coverage: `npm test -- --coverage` (run from webApp/, view at webApp/coverage/index.html)
+- Run web tests with coverage: `npm test --coverage` (run from webApp/, view at webApp/coverage/index.html)
 - Run E2E web tests: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
 - Run E2E Android tests: `mvn test -Dtest=AndroidTestRunner` (from e2e-tests/java/)
 - Run E2E iOS tests: `mvn test -Dtest=IosTestRunner` (from e2e-tests/java/)

@@ -19,7 +19,7 @@ description: "Task list template for feature implementation"
   - Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - Web: `/webApp/src/__tests__/` (Vitest + RTL), 80% coverage
   - Scope: Domain models, services, custom hooks, state management
-  - Run: `npm test -- --coverage` (from webApp/)
+  - Run: `npm test --coverage` (from webApp/)
 - Convention: MUST follow Given-When-Then structure with descriptive names
 
 **MANDATORY - Backend Unit Tests** (if `/server` affected):
@@ -212,7 +212,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T075 [US1] GREEN: Wire up route to service in `/server/src/app.ts` (minimal code to pass test)
 - [ ] T076 [US1] REFACTOR: Add error handling middleware for [feature] routes
 - [ ] T077 [P] [US1] Add JSDoc documentation to complex backend APIs (services, lib - skip obvious functions)
-- [ ] T078 [US1] Run `npm test -- --coverage` and verify 80% coverage for services and lib
+- [ ] T078 [US1] Run `npm test --coverage` and verify 80% coverage for services and lib
 - [ ] T079 [P] [US1] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
@@ -279,7 +279,7 @@ Examples of foundational tasks (adjust based on your project):
 
 **Backend** (TDD):
 - [ ] T102 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
-- [ ] T103 [US2] Run `npm test -- --coverage` and verify 80% coverage
+- [ ] T103 [US2] Run `npm test --coverage` and verify 80% coverage
 - [ ] T104 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently

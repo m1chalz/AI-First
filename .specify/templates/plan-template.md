@@ -84,7 +84,7 @@
   - Android: Tests in `/composeApp/src/androidUnitTest/`, run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: Tests in `/iosApp/iosAppTests/`, run via XCTest
   - Web: Tests in `/webApp/src/hooks/__test__/`, `/webApp/src/lib/__test__/`, run `npm test --coverage`
-  - Backend: Tests in `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`, run `npm test -- --coverage`
+  - Backend: Tests in `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`, run `npm test --coverage`
   - Coverage target: 80% line + branch coverage per platform
   - Violation justification: _[Required if coverage < 80%]_
 
@@ -237,7 +237,7 @@
     - Coverage target: 80% for API endpoints
     - Scope: REST API end-to-end (request → response)
   - All tests follow Given-When-Then structure
-  - Run commands: `npm test`, `npm test -- --coverage`
+  - Run commands: `npm test`, `npm test --coverage`
   - Violation justification: _[Required if coverage < 80% or N/A if /server not affected]_
 
 ## Project Structure
