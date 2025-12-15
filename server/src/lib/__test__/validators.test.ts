@@ -1,32 +1,55 @@
 import { describe, it, expect } from 'vitest';
-import { isValidEmail, isValidPhone } from '../validators.ts';
+import { isValidPassword, isValidEmail, isValidPhone } from '../validators';
 
-const VALID_EMAILS = ['user@example.com', 'john.doe@example.com', 'test+tag@domain.co.uk', 'admin@subdomain.example.com'];
-
-const INVALID_EMAILS = ['notanemail', '@example.com', 'user@', 'user @example.com', 'user@.com', '', 'userexample.com'];
-
-const VALID_PHONES = ['+1-555-1234', '(555) 123-4567', '5551234567', '555-0101', '+1 (312) 555-0142'];
-
-const INVALID_PHONES = ['not-a-phone', '', '---', '()'];
-
-describe('validators', () => {
+describe('Email Validation', () => {
   describe('isValidEmail', () => {
-    it.each(VALID_EMAILS)('should return true for valid email: %s', (email) => {
-      expect(isValidEmail(email)).toBe(true);
-    });
-
-    it.each(INVALID_EMAILS)('should return false for invalid email: %s', (email) => {
-      expect(isValidEmail(email)).toBe(false);
+    it.each([
+      ['user@example.com', true],
+      ['test.email+tag@domain.co.uk', true],
+      ['simple@example.org', true],
+      ['invalid.email', false],
+      ['user@', false],
+      ['@example.com', false],
+      ['user @example.com', false],
+      ['', false],
+      ['   ', false],
+      ['a'.repeat(242) + '@example.com', true],
+      ['a'.repeat(243) + '@example.com', false]
+    ])('should validate %s as %s', (email, expected) => {
+      expect(isValidEmail(email)).toBe(expected);
     });
   });
+});
 
-  describe('isValidPhone', () => {
-    it.each(VALID_PHONES)('should return true for phone with digits: %s', (phone) => {
-      expect(isValidPhone(phone)).toBe(true);
+describe('Password Validation', () => {
+  describe('isValidPassword', () => {
+    it.each([
+      ['password123', true],
+      ['MyP@ss123', true],
+      ['a'.repeat(128), true],
+      ['12345678', true],
+      ['pass', false],
+      ['1234567', false],
+      ['', false],
+      ['a'.repeat(129), false],
+      ['a'.repeat(200), false],
+      ['P@ssw0rd!', true],
+      ['MyP@$$#%^&*()', true],
+      ['my pass word 123', true]
+    ])('should validate %s as %s', (password, expected) => {
+      expect(isValidPassword(password)).toBe(expected);
     });
+  });
+});
 
-    it.each(INVALID_PHONES)('should return false for phone without digits: %s', (phone) => {
-      expect(isValidPhone(phone)).toBe(false);
+describe('Phone Validation', () => {
+  describe('isValidPhone', () => {
+    it.each([
+      ['123-456-7890', true],
+      ['555.1234', true],
+      ['no digits here', false]
+    ])('should validate %s as %s', (phone, expected) => {
+      expect(isValidPhone(phone)).toBe(expected);
     });
   });
 });
