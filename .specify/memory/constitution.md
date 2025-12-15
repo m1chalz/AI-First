@@ -2,7 +2,145 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.3.0 → 2.4.0
+Version change: 2.5.9 → 2.5.10
+PATCH: Added code formatting requirement for backend and webapp (format code at end of each task)
+
+Changes (v2.5.10):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added code formatting requirement in task workflow
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added code formatting requirement in task workflow
+
+Rationale:
+- Code formatting ensures consistent code style across the codebase
+- Running format at the end of each task ensures all code is properly formatted
+- Prevents formatting inconsistencies from accumulating during development
+
+Previous version (v2.5.9):
+PATCH: Added layout planning and CSS reuse requirements for webapp
+
+Changes (v2.5.9):
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added layout planning and CSS reuse requirements
+
+Rationale:
+- Planning layout for code reuse maximizes component and style sharing
+- Avoiding CSS duplication reduces maintenance burden and ensures consistency
+- Shared styles and components improve development efficiency
+
+Previous version (v2.5.8):
+PATCH: Added task-phase requirements for backend and webapp (atomic tasks, TDD workflow, no summary files)
+
+Changes (v2.5.8):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added task-phase requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added task-phase requirements
+
+Rationale:
+- Atomic tasks ensure each task is complete and testable before moving to the next
+- TDD workflow ensures tests are written first and pass before task completion
+- No summary files keeps focus on code implementation
+
+Previous version (v2.5.7):
+PATCH: Added project-wide policy to ignore performance verification in all phases
+
+Changes (v2.5.7):
+- ADDED: Principle XIV "Performance Not a Concern" - explicit policy to ignore performance verification
+- UPDATED: Principle V "Asynchronous Programming Standards" - removed performance rationale reference
+- UPDATED: .specify/templates/plan-template.md - removed/updated performance-related fields
+
+Rationale:
+- Performance is not a concern for this project
+- Eliminates unnecessary performance testing and optimization efforts
+- Focuses development on functionality and maintainability instead
+
+Previous version (v2.5.6):
+PATCH: Added filename convention requirements for backend and webapp (kebab-case, PascalCase for React components)
+
+Changes (v2.5.6):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added filename convention requirement (kebab-case)
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added filename convention requirement (kebab-case, PascalCase for React components)
+
+Rationale:
+- Consistent filename conventions improve codebase organization and readability
+- kebab-case is standard for TypeScript/JavaScript files
+- PascalCase for React components follows React community conventions
+
+Previous version (v2.5.5):
+PATCH: Added variable reuse requirement for backend and webapp tests (reuse // given variables in // then phase)
+
+Changes (v2.5.5):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - added variable reuse requirement and updated test examples
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added variable reuse requirement to testing strategy
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added variable reuse requirement to testing strategy
+
+Rationale:
+- Reusing variables from // given phase in // then phase improves test maintainability
+- Reduces duplication and makes tests more readable
+- Ensures test data consistency between setup and assertions
+
+Previous version (v2.5.4):
+PATCH: Added parameterized test requirements and test case minimization guidelines for backend and webapp
+
+Changes (v2.5.4):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - enhanced parameterized tests section with requirements
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added test case minimization requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added test case minimization requirements
+
+Rationale:
+- Parameterized tests reduce duplication and improve maintainability
+- Minimizing test cases while covering all scenarios improves test suite efficiency
+- Description parameters should only be added when test purpose is unclear
+
+Previous version (v2.5.3):
+PATCH: Added code reuse, simplicity, and implementation phase requirements for backend and webapp
+
+Changes (v2.5.3):
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - added code reuse, simplicity, and no summary files requirements
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - added code reuse, simplicity, and no summary files requirements
+
+Rationale:
+- Code reuse reduces duplication and maintenance burden
+- Simple code is easier to understand and maintain
+- Summary files during implementation add unnecessary overhead and can become outdated
+
+Previous version (v2.5.2):
+PATCH: Strengthened minimal documentation/commenting requirement for backend and webapp
+
+Changes (v2.5.2):
+- UPDATED: Principle VII "Public API Documentation" - added explicit prohibition of unnecessary documentation/comments for backend and webapp
+- UPDATED: Principle IX "Backend Architecture & Quality Standards" - emphasized minimal documentation (only when really unclear)
+- UPDATED: Principle XIII "Web Architecture & Quality Standards" - emphasized minimal documentation (only when really unclear)
+
+Rationale:
+- Code should be self-documenting through clear naming
+- Documentation/comments should only be added when code is genuinely unclear and hard to understand
+- Reduces maintenance burden and code noise
+
+Previous version (v2.5.1):
+PATCH: Clarified test comment format for backend and webapp tests (Given-When-Then sections)
+
+Changes (v2.5.1):
+- UPDATED: Principle VIII "Given-When-Then Test Convention" - added mandatory comment format for backend and webapp
+- UPDATED: Test examples for backend and webapp to use `// given`, `// when`, `// then` (lowercase, no additional text)
+- Clarified that comment format applies specifically to backend (`/server`) and webapp (`/webApp`) tests
+
+Rationale:
+- Consistent comment format improves test readability and maintainability
+- Simple `// given` format (not `// given: prepared something!`) keeps comments concise and standardized
+
+Previous version (v2.5.0):
+MINOR: Added Web Architecture & Quality Standards principle for React 18 + TypeScript webApp
+
+Changes (v2.5.0):
+- ADDED: Principle XIII "Web Architecture & Quality Standards" - Clean Code, TDD, dependency minimization, business logic extraction
+- UPDATED: Module Structure - Web section to include /src/lib/ for business logic utilities
+- UPDATED: Testing Standards - Web section to clarify /src/hooks/__test__/ and /src/lib/__test__/ coverage requirements
+- UPDATED: Compliance checklist - added Web Architecture & Quality Standards checks
+
+Rationale:
+- Establishes consistent quality standards for webApp matching backend standards
+- Ensures business logic is testable and maintainable
+- TDD workflow improves code quality and reduces bugs
+- Dependency minimization reduces security surface and maintenance burden
+
+Previous version (v2.4.0):
 MINOR: Removed TypeScript E2E tests (Playwright + WebdriverIO) - Java stack is now the only E2E framework
 
 Changes (v2.4.0):
@@ -57,9 +195,109 @@ Modified sections:
 - Compliance (UPDATED - Maven commands with Cucumber tags)
 
 Templates requiring updates:
-- ⚠ .specify/templates/plan-template.md - Update E2E testing technology stack references
-- ⚠ .specify/templates/tasks-template.md - Update E2E test creation tasks (Gherkin scenarios, Java steps)
-- ⚠ .specify/templates/spec-template.md - Update E2E test requirements section
+- ✅ .specify/templates/plan-template.md - Added Web Architecture & Quality Standards checks
+- ✅ .specify/templates/tasks-template.md - Updated Web test tasks to include TDD workflow and /src/lib/ structure
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.1):
+- VIII. Given-When-Then Test Convention (UPDATED - added mandatory comment format for backend and webapp)
+
+Templates requiring updates (v2.5.1):
+- ✅ .specify/templates/plan-template.md (no changes needed - comment format is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - comment format is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.2):
+- VII. Public API Documentation (UPDATED - added explicit minimal documentation policy for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - emphasized minimal documentation requirement)
+- XIII. Web Architecture & Quality Standards (UPDATED - emphasized minimal documentation requirement)
+
+Templates requiring updates (v2.5.2):
+- ✅ .specify/templates/plan-template.md (no changes needed - documentation policy is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - documentation policy is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.3):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code reuse, simplicity, and no summary files requirements)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code reuse, simplicity, and no summary files requirements)
+
+Templates requiring updates (v2.5.3):
+- ✅ .specify/templates/plan-template.md (no changes needed - code reuse and simplicity are implementation details)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code reuse and simplicity are implementation details)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.4):
+- VIII. Given-When-Then Test Convention (UPDATED - enhanced parameterized tests section with requirements for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - added test case minimization requirements)
+- XIII. Web Architecture & Quality Standards (UPDATED - added test case minimization requirements)
+
+Templates requiring updates (v2.5.4):
+- ✅ .specify/templates/plan-template.md (no changes needed - test case minimization is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - test case minimization is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.5):
+- VIII. Given-When-Then Test Convention (UPDATED - added variable reuse requirement and updated test examples for backend and webapp)
+- IX. Backend Architecture & Quality Standards (UPDATED - added variable reuse requirement to testing strategy)
+- XIII. Web Architecture & Quality Standards (UPDATED - added variable reuse requirement to testing strategy)
+
+Templates requiring updates (v2.5.5):
+- ✅ .specify/templates/plan-template.md (no changes needed - variable reuse is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - variable reuse is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.6):
+- IX. Backend Architecture & Quality Standards (UPDATED - added filename convention requirement: kebab-case)
+- XIII. Web Architecture & Quality Standards (UPDATED - added filename convention requirement: kebab-case, PascalCase for React components)
+
+Templates requiring updates (v2.5.6):
+- ✅ .specify/templates/plan-template.md (no changes needed - filename convention is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - filename convention is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.7):
+- V. Asynchronous Programming Standards (UPDATED - removed performance rationale reference)
+- XIV. Performance Not a Concern (NEW - explicit policy to ignore performance verification)
+
+Templates requiring updates (v2.5.7):
+- ✅ .specify/templates/plan-template.md - Updated performance-related fields to indicate N/A
+- ✅ .specify/templates/tasks-template.md (no changes needed - performance policy is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.8):
+- IX. Backend Architecture & Quality Standards (UPDATED - added task-phase requirements: atomic tasks, TDD workflow, no summary files)
+- XIII. Web Architecture & Quality Standards (UPDATED - added task-phase requirements: atomic tasks, TDD workflow, no summary files)
+
+Templates requiring updates (v2.5.8):
+- ✅ .specify/templates/plan-template.md (no changes needed - task-phase requirements are implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - task-phase requirements align with existing TDD guidance)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.9):
+- XIII. Web Architecture & Quality Standards (UPDATED - added layout planning and CSS reuse requirements)
+
+Templates requiring updates (v2.5.9):
+- ✅ .specify/templates/plan-template.md (no changes needed - layout planning is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - CSS reuse is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.10):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+
+Templates requiring updates (v2.5.10):
+- ✅ .specify/templates/plan-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
+
+Modified principles (v2.5.10):
+- IX. Backend Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+- XIII. Web Architecture & Quality Standards (UPDATED - added code formatting requirement in task workflow)
+
+Templates requiring updates (v2.5.10):
+- ✅ .specify/templates/plan-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/tasks-template.md (no changes needed - code formatting is implementation detail)
+- ✅ .specify/templates/spec-template.md (no changes needed - platform-agnostic)
 
 Follow-up TODOs:
 - ✅ COMPLETED (Spec 025): Removed TypeScript E2E tests (Playwright web + WebdriverIO mobile)
@@ -234,9 +472,9 @@ Each platform MUST maintain minimum 80% unit test coverage for business logic an
 - Scope: Domain models, use cases, ViewModels (ObservableObject with @Published properties)
 - Coverage target: 80% line + branch coverage
 
-**Web** (`/webApp/src/__tests__/`):
+**Web** (`/webApp/src/`):
 - Framework: Vitest + React Testing Library
-- Run command: `npm test -- --coverage` (from webApp/)
+- Run command: `npm test --coverage` (from webApp/)
 - Report: `webApp/coverage/index.html`
 - Scope: Domain models, services, custom hooks, state management
 - Coverage target: 80% line + branch coverage
@@ -245,7 +483,7 @@ Each platform MUST maintain minimum 80% unit test coverage for business logic an
 - Framework: Vitest (unit) + SuperTest (integration)
 - Run commands:
   - Unit tests: `npm test` (from server/)
-  - With coverage: `npm test -- --coverage`
+  - With coverage: `npm test --coverage`
 - Report: `server/coverage/index.html`
 - Scope: Business logic (`/src/services`), utility functions (`/src/lib`), REST API endpoints (`/src/__test__/`)
 - Coverage target: 80% line + branch coverage for both unit and integration tests
@@ -567,7 +805,7 @@ All asynchronous operations MUST follow platform-specific async patterns:
 **Rationale**: Modern async/await syntax is consistent across platforms (Kotlin coroutines,
 Swift Concurrency, JS async/await), making code more readable and maintainable. Eliminates
 complexity of reactive frameworks while maintaining testability. Platform-native async patterns
-ensure best performance and ecosystem compatibility.
+ensure ecosystem compatibility.
 
 ### VI. Test Identifiers for UI Controls (NON-NEGOTIABLE)
 
@@ -687,6 +925,14 @@ Public APIs MUST have concise, high-level documentation when the purpose is not 
 - SHOULD answer: "What does this do?" and "When/why would I use it?"
 - MUST NOT state the obvious (e.g., "Returns a string" for `fun getString(): String`)
 
+**Backend and WebApp Documentation Policy (MANDATORY)**:
+- Backend (`/server`) and WebApp (`/webApp`) code MUST NOT be documented or commented unless it is really unclear and hard to understand
+- Code MUST be self-documenting through clear, descriptive naming
+- Documentation/comments MUST only be added when code is genuinely difficult to understand without them
+- Prefer refactoring unclear code to adding documentation/comments
+- Inline comments explaining "what" code does are PROHIBITED (code should be clear enough)
+- Inline comments explaining "why" complex business logic exists MAY be acceptable if the reason is non-obvious
+
 **Documentation Style** - GOOD Examples:
 
 ```kotlin
@@ -799,6 +1045,18 @@ All unit tests and E2E tests MUST follow the Given-When-Then (Arrange-Act-Assert
 - MUST test one behavior per test case
 - SHOULD use backtick test names for readability (Kotlin) or descriptive strings (other platforms)
 
+**Comment Format Requirements** (Backend and WebApp):
+- Backend tests (`/server`) and WebApp tests (`/webApp`) MUST use section comments to mark test phases
+- Comments MUST be lowercase: `// given`, `// when`, `// then`
+- Comments MUST NOT include additional text (e.g., `// given: prepared something!` is prohibited)
+- Use simple format: `// given`, `// when`, `// then` only
+
+**Variable Reuse Requirements** (Backend and WebApp):
+- When adding a test, MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
+- Prefer referencing test data variables (e.g., `mockPets[0].name`) over hardcoded literals (e.g., `'Max'`)
+- This improves test maintainability and ensures consistency between setup and assertions
+- Only use literals in `// then` when the expected value differs from the input (e.g., transformed data)
+
 **Kotlin Tests** (Android):
 ```kotlin
 @Test
@@ -846,7 +1104,7 @@ func testLoadPets_whenRepositorySucceeds_shouldUpdatePetsState() async {
 ```typescript
 describe('usePets', () => {
     it('should load pets successfully when service returns data', async () => {
-        // Given - setup test data and mocks
+        // given
         const mockPets = [
             { id: '1', name: 'Max', species: 'dog' },
             { id: '2', name: 'Luna', species: 'cat' }
@@ -855,14 +1113,14 @@ describe('usePets', () => {
 
         const { result } = renderHook(() => usePets());
 
-        // When - trigger the action
+        // when
         await act(async () => {
             await result.current.loadPets();
         });
 
-        // Then - verify expected state
-        expect(result.current.pets).toHaveLength(2);
-        expect(result.current.pets[0].name).toBe('Max');
+        // then
+        expect(result.current.pets).toHaveLength(mockPets.length);
+        expect(result.current.pets[0].name).toBe(mockPets[0].name);
         expect(result.current.isLoading).toBe(false);
     });
 });
@@ -872,19 +1130,19 @@ describe('usePets', () => {
 ```typescript
 describe('petService', () => {
     it('should return all pets when repository has data', async () => {
-        // Given - repository with test data
+        // given
         const mockPets = [
             { id: 1, name: 'Max', species: 'dog' },
             { id: 2, name: 'Luna', species: 'cat' }
         ];
         const fakeRepository = new FakePetRepository(mockPets);
 
-        // When - service is called
+        // when
         const result = await getAllPets(fakeRepository);
 
-        // Then - all pets are returned
-        expect(result).toHaveLength(2);
-        expect(result[0].name).toBe('Max');
+        // then
+        expect(result).toHaveLength(mockPets.length);
+        expect(result[0].name).toBe(mockPets[0].name);
     });
 });
 ```
@@ -893,25 +1151,55 @@ describe('petService', () => {
 
 When tests share the same logic with different input/output pairs, SHOULD use parameterized tests:
 
+**Parameterized Test Requirements** (Backend, Web, Android):
+- MUST merge tests into parameterized ones if possible and worthwhile
+- MUST add description parameter ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- Each parameter set MUST test a distinct scenario (different edge case, different happy path, etc.)
+- Avoid parameterized tests when test logic differs significantly between cases
+
 ```typescript
 // TypeScript/Backend/Web (Vitest)
+// ✅ GOOD - Parameterized test with clear purpose (testing different species)
 describe('createPet', () => {
     it.each([
         ['Max', 'dog'],
         ['Luna', 'cat'],
         ['Buddy', 'dog']
     ])('should create pet with name=%s and species=%s', async (name, species) => {
-        // Given
+        // given
         const pet = { name, species, ownerId: 1 };
         
-        // When
+        // when
         const result = await createPet(pet);
         
-        // Then
+        // then
         expect(result.name).toBe(name);
         expect(result.species).toBe(species);
     });
 });
+
+// ✅ GOOD - Parameterized test with description when purpose is unclear
+describe('validateEmail', () => {
+    it.each([
+        { email: 'user@example.com', expected: true, description: 'valid email with common domain' },
+        { email: 'user+tag@example.co.uk', expected: true, description: 'valid email with plus and subdomain' },
+        { email: 'invalid', expected: false, description: 'missing @ symbol' }
+    ])('should return $expected for $description', ({ email, expected }) => {
+        // given
+        // when
+        const result = validateEmail(email);
+        // then
+        expect(result).toBe(expected);
+    });
+});
+
+// ❌ BAD - Duplicate similar cases (all test the same happy path)
+it.each([
+    ['Max', 'dog'],
+    ['Max', 'dog'],  // duplicate
+    ['Max', 'dog']   // duplicate
+])('should create pet', async (name, species) => { /* ... */ });
 ```
 
 **Rationale**: Given-When-Then structure standardizes test organization across platforms,
@@ -940,13 +1228,34 @@ The backend module (`/server`) MUST follow modern Node.js best practices with ri
   - Avoid deep nesting (max 3 levels)
   - Prefer composition over inheritance
   - DRY (Don't Repeat Yourself) - extract reusable logic
-  - Self-documenting code with JSDoc for public APIs
+  - Self-documenting code (clear naming, no unnecessary documentation/comments)
+- MUST NOT document or comment code unless it is really unclear and hard to understand
+  - Code MUST be self-documenting through clear naming
+  - Prefer refactoring unclear code to adding documentation/comments
+  - Only add JSDoc/comments when code is genuinely difficult to understand without them
+- MUST reuse existing code, logic, and styles whenever possible
+  - Check for existing utilities, helpers, and patterns before creating new ones
+  - Extract reusable logic to `/src/lib/` for shared use
+  - Reuse existing styles, components, and patterns from the codebase
+  - Avoid duplicating functionality that already exists
+- MUST keep code simple
+  - Prefer simple, straightforward solutions over complex ones
+  - Avoid over-engineering and premature optimization
+  - Use the simplest approach that solves the problem
+- MUST NOT produce any summary files during the implementation phase
+  - No README files, summary documents, or implementation notes
+  - Focus on code implementation only
+  - Documentation belongs in code comments (only when necessary) or existing documentation files
 - MUST minimize dependencies in `package.json`:
   - Only add dependencies that provide significant value
   - Prefer well-maintained, security-audited packages
   - Avoid micro-dependencies (e.g., "is-even", "left-pad")
   - Document rationale for each dependency in comments
   - Regularly audit dependencies with `npm audit`
+- MUST use kebab-case convention for filenames
+  - Examples: `pet-service.ts`, `announcement-repository.ts`, `error-handler.ts`
+  - Test files: `pet-service.test.ts`, `announcement-repository.test.ts`
+  - Exception: Configuration files may use other conventions if required by tooling
 
 **Directory Structure** (inside `/server/src/`):
 
@@ -989,12 +1298,29 @@ Backend development MUST follow TDD (Red-Green-Refactor):
 2. **GREEN**: Write minimal code to make test pass
 3. **REFACTOR**: Improve code quality without changing behavior
 
+**Task Implementation Requirements** (During Tasks Phase):
+
+- MUST use TDD workflow for all tasks
+- Each task MUST be atomic (complete and testable before moving to the next task)
+- Task workflow MUST follow this sequence:
+  1. **Start with tests**: Write failing tests first (RED phase)
+  2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
+  3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones). If the code/tests were modified, make sure the tests and linting pass
+  5. **Format the code**: Always format the code using `npm run format` at the end of each task
+- MUST NOT create any files with summaries during task implementation
+- Each task MUST be completed (tests passing, linting clean, code formatted) before starting the next task
+
 **Testing Strategy**:
 
 **Unit Tests** (Vitest) - MUST achieve 80% coverage:
 - Location: `/src/services/__test__/`, `/src/lib/__test__/`
 - Scope: Business logic and utilities in isolation
-- Run command: `npm test -- --coverage` (from `/server`)
+- Run command: `npm test --coverage` (from `/server`)
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- MUST use parameterized tests when possible and worthwhile to merge similar test logic
+- MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
 
 **Integration Tests** (Vitest + SuperTest) - MUST achieve 80% coverage:
 - Location: `/src/__test__/`
@@ -1499,6 +1825,179 @@ where appropriate. Cucumber tags allow flexible execution of platform-specific s
 single codebase. Mobile screen objects with dual annotations reduce duplication between Android
 and iOS test code.
 
+### XIII. Web Architecture & Quality Standards (NON-NEGOTIABLE)
+
+The web application (`/webApp`) MUST follow modern React 18 + TypeScript best practices with rigorous quality standards:
+
+**Technology Stack**:
+- **Framework**: React 18
+- **Language**: TypeScript (strict mode)
+- **Build Tool**: Vite
+- **Testing**: Vitest + React Testing Library
+- **Linting**: ESLint with TypeScript plugin
+
+**Code Quality Requirements**:
+- MUST follow Clean Code principles:
+  - Functions should be small, focused, and do one thing (single responsibility)
+  - Descriptive naming (no abbreviations except well-known ones like `id`, `api`, `http`)
+  - Avoid deep nesting (max 3 levels)
+  - Prefer composition over inheritance
+  - DRY (Don't Repeat Yourself) - extract reusable logic
+  - Self-documenting code (clear naming, no unnecessary documentation/comments)
+- MUST NOT document or comment code unless it is really unclear and hard to understand
+  - Code MUST be self-documenting through clear naming
+  - Prefer refactoring unclear code to adding documentation/comments
+  - Only add JSDoc/comments when code is genuinely difficult to understand without them
+- MUST reuse existing code, logic, and styles whenever possible
+  - Check for existing utilities, helpers, hooks, and patterns before creating new ones
+  - Extract reusable logic to `/src/lib/` or `/src/hooks/` for shared use
+  - Reuse existing styles, components, and patterns from the codebase
+  - Avoid duplicating functionality that already exists
+- MUST keep code simple
+  - Prefer simple, straightforward solutions over complex ones
+  - Avoid over-engineering and premature optimization
+  - Use the simplest approach that solves the problem
+- MUST NOT produce any summary files during the implementation phase
+  - No README files, summary documents, or implementation notes
+  - Focus on code implementation only
+  - Documentation belongs in code comments (only when necessary) or existing documentation files
+- MUST minimize dependencies in `package.json`:
+  - Only add dependencies that provide significant value
+  - Prefer well-maintained, security-audited packages
+  - Avoid micro-dependencies (e.g., "is-even", "left-pad")
+  - Document rationale for each dependency in comments
+  - Regularly audit dependencies with `npm audit`
+- MUST use kebab-case convention for filenames (PascalCase if it's a React component)
+  - Non-component files: `use-pets.ts`, `pet-service.ts`, `form-validation.ts`
+  - React components: `PetList.tsx`, `AnnouncementCard.tsx`, `ContactForm.tsx`
+  - Test files: `use-pets.test.tsx`, `pet-service.test.ts`, `PetList.test.tsx`
+  - Exception: Configuration files may use other conventions if required by tooling
+- MUST plan application layout to maximize code reuse
+  - Design layouts to reuse as much code as possible across screens and components
+  - Extract common layout patterns into reusable components
+  - Share layout components and structures across features
+- MUST NOT duplicate CSS styles in different files/components
+  - Extract shared styles to common CSS modules or global stylesheets
+  - Reuse CSS classes and styles across components
+  - Avoid copying the same CSS rules to multiple component files
+  - Prefer shared style utilities and CSS modules over component-specific duplicated styles
+
+**Business Logic Extraction (MANDATORY)**:
+
+All business logic MUST be extracted to separate, testable functions:
+
+- **`/src/hooks/`**: Custom React hooks for state management and business logic
+  - Hooks encapsulate complex stateful logic
+  - Hooks are pure functions (deterministic outputs for given inputs)
+  - Hooks MUST be covered by unit tests in `/src/hooks/__test__/`
+- **`/src/lib/`**: Pure utility functions and business logic helpers
+  - Framework-agnostic functions (no React dependencies)
+  - Reusable across components and hooks
+  - Pure functions (no side effects, testable in isolation)
+  - MUST be covered by unit tests in `/src/lib/__test__/`
+- **`/src/components/`**: React components (presentation layer ONLY)
+  - Components SHOULD be thin and delegate to hooks/lib for logic
+  - Components focus on rendering and user interaction handling
+  - Complex logic extracted to hooks or lib functions
+
+**Test-Driven Development (TDD) Workflow**:
+
+Web development MUST follow TDD (Red-Green-Refactor):
+
+1. **RED**: Write a failing test first
+2. **GREEN**: Write minimal code to make test pass
+3. **REFACTOR**: Improve code quality without changing behavior
+
+**Task Implementation Requirements** (During Tasks Phase):
+
+- MUST use TDD workflow for all tasks
+- Each task MUST be atomic (complete and testable before moving to the next task)
+- Task workflow MUST follow this sequence:
+  1. **Start with tests**: Write failing tests first (RED phase)
+  2. **Implement the logic**: Write minimal code to make tests pass (GREEN phase)
+  3. **Finish with verification**: Run tests (they MUST succeed) and run linting (no issues expected)
+  4. **Optimize the code and the tests**: Verify if the code or tests may be improved/simplified (e.g. by converting the tests to parameterized ones). If the code/tests were modified, make sure the tests and linting pass
+  5. **Format the code**: Always format the code using `npm run format` at the end of each task
+- MUST NOT create any files with summaries during task implementation
+- Each task MUST be completed (tests passing, linting clean, code formatted) before starting the next task
+
+**Testing Strategy**:
+
+**Unit Tests** (Vitest) - MUST achieve 80% coverage:
+- Location: `/src/hooks/__test__/`, `/src/lib/__test__/`
+- Scope: All business logic in hooks and lib functions
+- Run command: `npm test --coverage` (from `/webApp`)
+- Report: `webApp/coverage/index.html`
+- Framework: Vitest + React Testing Library (for hooks that use React features)
+- MUST minimize number of test cases - cover all edge cases and happy paths, but don't duplicate similar cases
+- MUST use parameterized tests when possible and worthwhile to merge similar test logic
+- MUST add description parameter to parameterized tests ONLY if it's unclear why it's worth testing the given set of arguments
+- MUST try to reuse variables created in the `// given` phase also in the `// then` phase instead of copying literals
+
+**Component Tests** (Vitest + React Testing Library) - Recommended:
+- Location: `/src/components/.../__tests__/`
+- Scope: Component rendering and user interactions
+- Focus on behavior, not implementation details
+
+**Testing Requirements**:
+- MUST test happy path, error cases, and edge cases
+- MUST follow Given-When-Then structure (see Principle VIII)
+- MUST use descriptive test names
+- MUST use test doubles (mocks, fakes) for dependencies
+- MUST test behavior, not implementation details
+- MUST minimize number of test cases - cover all scenarios without duplicating similar cases
+
+**Directory Structure** (inside `/webApp/src/`):
+
+```
+/webApp/src/
+├── models/          - TypeScript domain models (interfaces/types)
+├── services/        - HTTP services consuming backend REST API
+├── hooks/           - Custom React hooks (state management, business logic)
+│   └── __test__/    - Unit tests for hooks (MUST achieve 80% coverage)
+├── lib/             - Pure utility functions and business logic helpers
+│   └── __test__/    - Unit tests for lib functions (MUST achieve 80% coverage)
+├── components/      - React components (presentation layer)
+│   └── __tests__/   - Component tests (recommended)
+├── contexts/        - React Context providers (DI, global state)
+├── routes/          - Route definitions
+├── config/          - Configuration files
+└── types/           - TypeScript type definitions
+```
+
+**Separation of Concerns**:
+- **`/src/hooks/`**: Stateful business logic, React-specific logic
+  - MUST be testable in isolation
+  - MUST NOT contain presentation logic
+- **`/src/lib/`**: Pure functions, utilities, framework-agnostic business logic
+  - MUST be framework-agnostic (no React dependencies)
+  - MUST be pure functions (no side effects)
+  - MUST be covered by unit tests
+- **`/src/components/`**: Presentation layer (rendering, user interactions)
+  - SHOULD delegate complex logic to hooks or lib functions
+  - SHOULD be thin and focused on UI concerns
+
+**Rationale**: Clean Code principles and business logic extraction ensure maintainability,
+testability, and scalability. TDD workflow catches bugs early and improves code quality.
+Minimal dependencies reduce security surface and maintenance burden. Separating business logic
+from presentation enables easy unit testing and code reuse across components.
+
+### XIV. Performance Not a Concern (NON-NEGOTIABLE)
+
+Performance verification and optimization are NOT concerns for this project:
+
+**Performance Policy**:
+- MUST NOT verify, test, measure, or optimize performance in any phase of development
+- MUST NOT include performance goals, benchmarks, or constraints in specifications or plans
+- MUST NOT perform performance profiling, load testing, or performance analysis
+- MUST NOT make architectural or implementation decisions based on performance considerations
+- Focus development efforts on functionality, maintainability, and code quality instead
+
+**Rationale**: This project prioritizes functionality, maintainability, and code quality over
+performance. Eliminating performance concerns simplifies development, reduces unnecessary
+optimization efforts, and allows focus on delivering features that work correctly and are
+easy to maintain.
+
 ## Platform Architecture Rules
 
 ### Dependency Flow
@@ -1569,11 +2068,17 @@ and iOS test code.
 
 **`/webApp/src/`** (Web - Full Stack):
 - `models/` - TypeScript interfaces/types for domain models
-- `services/` - HTTP services consuming backend REST API, business logic
-- `components/` - React components
-- `hooks/` - React hooks for state management
-- `utils/` - Utility functions and helpers
-- `di/` - Dependency injection setup (React Context, service locator, or DI libraries)
+- `services/` - HTTP services consuming backend REST API
+- `hooks/` - Custom React hooks for state management and business logic
+  - `__test__/` - Unit tests for hooks (MUST achieve 80% coverage)
+- `lib/` - Pure utility functions and business logic helpers (framework-agnostic)
+  - `__test__/` - Unit tests for lib functions (MUST achieve 80% coverage)
+- `components/` - React components (presentation layer)
+  - `__tests__/` - Component tests (recommended)
+- `contexts/` - React Context providers (DI, global state)
+- `routes/` - Route definitions
+- `config/` - Configuration files
+- `types/` - TypeScript type definitions
 
 **`/server/src/`** (Backend - Node.js/Express):
 - `middlewares/` - Express middlewares (auth, logging, error handling, validation)
@@ -1766,16 +2271,17 @@ Each platform MUST maintain 80% unit test coverage for domain logic and ViewMode
 - Scope: Domain models, use cases, ViewModels (ObservableObject), coordinators (optional)
 
 **Web**:
-- Location: `/webApp/src/__tests__/`
+- Location: `/webApp/src/hooks/__test__/`, `/webApp/src/lib/__test__/`
 - Framework: Vitest + React Testing Library
-- Run command: `npm test -- --coverage` (from webApp/)
+- Run command: `npm test --coverage` (from webApp/)
 - Report: `webApp/coverage/index.html`
-- Scope: Domain models, services, custom hooks, state management
+- Scope: Business logic in hooks and lib functions (MUST achieve 80% coverage)
+- TDD Workflow: Red-Green-Refactor cycle (write failing test, minimal implementation, refactor)
 
 **Backend**:
 - Location: `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/`
 - Framework: Vitest (unit) + SuperTest (integration)
-- Run command: `npm test -- --coverage` (from server/)
+- Run command: `npm test --coverage` (from server/)
 - Report: `server/coverage/index.html`
 - Scope: Business logic, utilities, REST API endpoints
 
@@ -1831,8 +2337,8 @@ All pull requests MUST:
 - Run platform-specific unit tests and ensure 80%+ coverage:
   - Android: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
   - iOS: XCTest with coverage enabled
-  - Web: `npm test -- --coverage` (from webApp/)
-  - Backend: `npm test -- --coverage` (from server/)
+  - Web: `npm test --coverage` (from webApp/)
+  - Backend: `npm test --coverage` (from server/)
 - Run E2E tests for affected features:
   - Web: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@web"`
   - Mobile: `mvn -f e2e-tests/pom.xml test -Dcucumber.filter.tags="@android"` or `@ios`
@@ -1857,6 +2363,13 @@ All pull requests MUST:
   - ViewModels conform to `ObservableObject` with `@Published` properties
   - ViewModels communicate with coordinators via methods or closures
   - SwiftUI views observe ViewModels (no business/navigation logic)
+- Verify Web application follows Architecture & Quality Standards (if /webApp affected):
+  - Business logic extracted to `/src/hooks/` or `/src/lib/` (not in components)
+  - All hooks and lib functions covered by unit tests (80% coverage)
+  - TDD workflow followed (tests written before implementation)
+  - Clean Code principles applied (small functions, max 3 nesting, DRY)
+  - Dependencies minimized in `package.json`
+  - Run ESLint: `npm run lint` (from webApp/)
 - Verify all new tests follow Given-When-Then structure:
   - Clear separation of setup (Given), action (When), verification (Then)
   - Descriptive test names following platform conventions
@@ -1875,4 +2388,4 @@ with temporary exception approval.
 This constitution guides runtime development. For command-specific workflows,
 see `.specify/templates/commands/*.md` files (if present).
 
-**Version**: 2.3.0 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-11-26
+**Version**: 2.5.10 | **Ratified**: 2025-11-14 | **Last Amended**: 2025-01-27
