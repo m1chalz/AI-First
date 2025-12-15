@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "dodajemy endpoint do rejestracji użytkowników. URL endpointu to /api/v1/users, metoda POST. ciało ma zawierać pola 'email' i 'password'. logien będzie adres email, wymagania co do hasła - minimum 8 znaków (nic więcej). użytkownicy przechowywani w bazie danych w tabeli `user` (kolumny id (uuid), email, password_hash, created_at, updated_at). algorytm hashowania - scrypt (wykorzystaj implementację istniejącą dla management password). jeśli rejestracja się powiedzie, zwracamy HTTP 201. w razie próby rejestracji istniejącego adresu email zwracamy 409."
 
+## Clarifications
+
+### Session 2025-12-15
+
+- Q: When registration succeeds (HTTP 201), what should the response body contain? → A: Only the user ID: `{"id": "uuid"}`
+- Q: What structure should error responses have (for validation errors, duplicate email, malformed JSON)? → A: Reuse existing backend format: `{"error": {"requestId": "string", "code": "ERROR_CODE", "message": "description", "field": "optional"}}`
+- Q: Should there be a maximum password length limit to prevent resource exhaustion attacks? → A: 128 characters maximum
+- Q: How should the system handle race conditions when the same email is submitted simultaneously? → A: Database unique constraint on email column
+- Q: What is the maximum length for email addresses? → A: 254 characters (RFC 5321 maximum)
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Successful User Registration (Priority: P1)
@@ -13,11 +23,11 @@ A new user visits the application and wants to create an account to access the s
 
 **Why this priority**: This is the core functionality - without successful registration, no users can be created. This is the MVP that delivers immediate value by enabling the primary use case.
 
-**Independent Test**: Can be fully tested by submitting POST request to `/api/v1/users` with valid registration data `{"email": "test@example.com", "password": "password123"}` and verifying HTTP 201 response with user creation in database including UUID generation.
+**Independent Test**: Can be fully tested by submitting POST request to `/api/v1/users` with valid registration data `{"email": "test@example.com", "password": "password123"}` and verifying HTTP 201 response with body `{"id": "uuid"}` and user creation in database including UUID generation.
 
 **Acceptance Scenarios**:
 
-1. **Given** no existing account with email "user@example.com", **When** user submits POST request to `/api/v1/users` with body `{"email": "user@example.com", "password": "password123"}`, **Then** system creates new user account, stores hashed password, and returns HTTP 201
+1. **Given** no existing account with email "user@example.com", **When** user submits POST request to `/api/v1/users` with body `{"email": "user@example.com", "password": "password123"}`, **Then** system creates new user account, stores hashed password, and returns HTTP 201 with body `{"id": "generated-uuid"}`
 2. **Given** user provides valid registration data, **When** registration completes successfully, **Then** user record contains unique UUID id, email, hashed password (using scrypt), created_at timestamp, and updated_at timestamp
 
 ---
@@ -32,21 +42,23 @@ Users may attempt to register with invalid data (duplicate email, invalid email 
 
 **Acceptance Scenarios**:
 
-1. **Given** existing account with email "existing@example.com", **When** user attempts to register with same email "existing@example.com", **Then** system rejects registration and returns HTTP 409 (Conflict) status code
-2. **Given** user provides email "invalid-email", **When** registration is submitted, **Then** system rejects registration with validation error about invalid email format
-3. **Given** user provides password "short", **When** registration is submitted, **Then** system rejects registration with validation error about password length (minimum 8 characters)
-4. **Given** user provides empty or missing email/password, **When** registration is submitted, **Then** system returns validation error about required fields
+1. **Given** existing account with email "existing@example.com", **When** user attempts to register with same email "existing@example.com", **Then** system rejects registration and returns HTTP 409 (Conflict) with structured error response
+2. **Given** user provides email "invalid-email", **When** registration is submitted, **Then** system rejects registration with HTTP 400 and structured error response about invalid email format (with `field: "email"`)
+3. **Given** user provides email exceeding 254 characters, **When** registration is submitted, **Then** system rejects registration with HTTP 400 and structured error response about maximum email length (with `field: "email"`)
+4. **Given** user provides password "short", **When** registration is submitted, **Then** system rejects registration with HTTP 400 and structured error response about password length requirement (with `field: "password"`)
+5. **Given** user provides password exceeding 128 characters, **When** registration is submitted, **Then** system rejects registration with HTTP 400 and structured error response about maximum password length
+6. **Given** user provides empty or missing email/password, **When** registration is submitted, **Then** system returns HTTP 400 with structured error response about required fields
 
 ---
 
 ### Edge Cases
 
-- What happens when the same email is submitted simultaneously by two different requests?
+- Database unique constraint on email ensures only one registration succeeds when the same email is submitted simultaneously by multiple requests
 - How does the system handle malformed JSON in the request body?
 - What happens if database connection fails during user creation?
 - How does the system handle emails with special characters or international characters (unicode)?
 - What happens if email is provided with mixed case (User@Example.COM vs user@example.com)?
-- How does the system handle very long passwords (beyond reasonable limits)?
+- System rejects passwords exceeding 128 characters to prevent resource exhaustion attacks
 
 ## Requirements
 
@@ -55,16 +67,17 @@ Users may attempt to register with invalid data (duplicate email, invalid email 
 - **FR-001**: System MUST provide a registration endpoint accessible at URL path `/api/v1/users` using POST method
 - **FR-002**: System MUST accept request body containing `email` and `password` fields in JSON format
 - **FR-003**: System MUST accept email address as the user's login identifier
-- **FR-004**: System MUST validate that email addresses are in valid format (RFC 5322 compliant)
-- **FR-005**: System MUST validate that passwords meet minimum length requirement of 8 characters
-- **FR-006**: System MUST reject registration attempts with passwords shorter than 8 characters
+- **FR-004**: System MUST validate that email addresses are in valid format (RFC 5322 compliant) and do not exceed 254 characters in length
+- **FR-004a**: System MUST reject registration attempts with email addresses longer than 254 characters
+- **FR-005**: System MUST validate that passwords meet minimum length requirement of 8 characters and maximum length of 128 characters
+- **FR-006**: System MUST reject registration attempts with passwords shorter than 8 characters or longer than 128 characters
 - **FR-007**: System MUST check for duplicate email addresses and reject registration if email already exists, returning HTTP 409 (Conflict)
 - **FR-008**: System MUST hash passwords using scrypt algorithm before storage (using existing implementation from password management)
-- **FR-009**: System MUST store user data in `user` database table with columns: id (UUID), email, password_hash, created_at, updated_at
+- **FR-009**: System MUST store user data in `user` database table with columns: id (UUID), email (unique constraint), password_hash, created_at, updated_at
 - **FR-010**: System MUST generate and assign a unique UUID identifier for each new user
-- **FR-011**: System MUST return HTTP 201 (Created) status code when registration succeeds
-- **FR-012**: System MUST return HTTP 409 (Conflict) status code when attempting to register with an existing email address
-- **FR-013**: System MUST return appropriate error status codes (4xx) when registration fails due to validation errors
+- **FR-011**: System MUST return HTTP 201 (Created) status code when registration succeeds with response body containing only the user ID: `{"id": "uuid"}`
+- **FR-012**: System MUST return HTTP 409 (Conflict) status code when attempting to register with an existing email address with error response body following standard format
+- **FR-013**: System MUST return appropriate error status codes (4xx) when registration fails due to validation errors with structured error response body: `{"error": {"requestId": "string", "code": "ERROR_CODE", "message": "description", "field": "optional"}}`
 - **FR-014**: System MUST automatically populate created_at and updated_at timestamps during user creation
 - **FR-015**: System MUST normalize email addresses for consistency (e.g., lowercase) before storage and duplicate checking
 
@@ -72,7 +85,7 @@ Users may attempt to register with invalid data (duplicate email, invalid email 
 
 - **User**: Represents a registered user account in the system
   - ID: Unique identifier for the user (UUID format)
-  - Email: User's email address serving as unique identifier and login credential
+  - Email: User's email address serving as unique identifier and login credential (max 254 characters, RFC 5322 compliant)
   - Password Hash: Securely hashed password using scrypt algorithm (never stored in plain text)
   - Created At: Timestamp of when the account was created
   - Updated At: Timestamp of when the account was last modified
@@ -83,11 +96,11 @@ Users may attempt to register with invalid data (duplicate email, invalid email 
 
 - **SC-001**: Users can successfully register a new account in under 30 seconds (including form input and server response)
 - **SC-002**: System correctly rejects 100% of registration attempts with duplicate emails
-- **SC-003**: System correctly rejects 100% of registration attempts with passwords shorter than 8 characters
+- **SC-003**: System correctly rejects 100% of registration attempts with passwords shorter than 8 characters or longer than 128 characters
 - **SC-004**: System correctly validates and accepts 95%+ of properly formatted email addresses
 - **SC-005**: All passwords are stored as hashed values with zero instances of plain-text passwords in database
 - **SC-006**: Registration endpoint responds within 2 seconds under normal load conditions
-- **SC-007**: System provides clear, actionable error messages for 100% of validation failures
+- **SC-007**: System provides clear, actionable error messages for 100% of validation failures using structured error response format with error codes and field identifiers
 
 ## Assumptions
 
@@ -106,7 +119,7 @@ Users may attempt to register with invalid data (duplicate email, invalid email 
 ## Dependencies
 
 - Existing scrypt password hashing implementation
-- Database access and `user` table schema with columns: id (UUID), email, password_hash, created_at, updated_at (must be created if doesn't exist)
+- Database access and `user` table schema with columns: id (UUID), email (with unique constraint), password_hash, created_at, updated_at (must be created if doesn't exist)
 - UUID generation capability (standard library or database feature)
 - HTTP routing infrastructure supporting `/api/v1/users` endpoint
 
