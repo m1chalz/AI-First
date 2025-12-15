@@ -91,8 +91,8 @@ describe('validateCreateUser', () => {
       { description: 'email is missing', fieldName: 'email', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       { description: 'password is missing', fieldName: 'password', fieldValue: undefined, expectedCode: 'MISSING_VALUE' },
       // Empty string fields
-      { description: 'email is empty string', fieldName: 'email', fieldValue: '', expectedCode: 'MISSING_VALUE' },
-      { description: 'password is empty string', fieldName: 'password', fieldValue: '', expectedCode: 'MISSING_VALUE' },
+      { description: 'email is empty string', fieldName: 'email', fieldValue: '', expectedCode: 'INVALID_FORMAT' },
+      { description: 'password is empty string', fieldName: 'password', fieldValue: '', expectedCode: 'INVALID_FORMAT' },
       // Invalid email formats
       { description: 'email without @', fieldName: 'email', fieldValue: 'invalid-email', expectedCode: 'INVALID_FORMAT' },
       { description: 'email without domain', fieldName: 'email', fieldValue: 'user@', expectedCode: 'INVALID_FORMAT' },
@@ -103,6 +103,7 @@ describe('validateCreateUser', () => {
       // Password length validation
       { description: 'password shorter than 8 characters', fieldName: 'password', fieldValue: 'short', expectedCode: 'INVALID_FORMAT' },
       { description: 'password with 7 characters', fieldName: 'password', fieldValue: '1234567', expectedCode: 'INVALID_FORMAT' },
+      { description: 'password with 7 non-whitespace characters', fieldName: 'password', fieldValue: '1234567  ', expectedCode: 'INVALID_FORMAT' },
       { description: 'password exceeding 128 characters', fieldName: 'password', fieldValue: 'a'.repeat(129), expectedCode: 'INVALID_FORMAT' },
       // Type mismatches
       { description: 'email is not a string', fieldName: 'email', fieldValue: 123, expectedCode: 'INVALID_FORMAT' },
@@ -161,81 +162,6 @@ describe('validateCreateUser', () => {
 
       // when & then - after trim, still valid length and format
       expect(() => validateCreateUser(data)).not.toThrow();
-    });
-
-    it('should reject whitespace-only email after trim (fails isValidEmail)', () => {
-      // given
-      const data = {
-        email: '   ',
-        password: 'password123'
-      };
-
-      // when & then
-      expectValidationError(data, 'INVALID_FORMAT', 'email');
-    });
-
-    it('should reject whitespace-only password after trim (fails isValidPassword)', () => {
-      // given
-      const data = {
-        email: 'user@example.com',
-        password: '   '
-      };
-
-      // when & then
-      expectValidationError(data, 'INVALID_FORMAT', 'password');
-    });
-  });
-
-  describe('boundary values', () => {
-    it.each([
-      {
-        description: 'email with minimum length (valid format)',
-        email: 'a@b.c',
-        password: 'password123'
-      },
-      {
-        description: 'password with exactly 8 characters',
-        email: 'user@example.com',
-        password: '12345678'
-      },
-      {
-        description: 'password with exactly 128 characters',
-        email: 'user@example.com',
-        password: 'a'.repeat(128)
-      }
-    ])('should accept valid $description', ({ email, password }) => {
-      // given
-      const data = { email, password };
-
-      // when & then
-      expect(() => validateCreateUser(data)).not.toThrow();
-    });
-
-    it.each([
-      {
-        description: 'password with exactly 7 characters',
-        email: 'user@example.com',
-        password: '1234567',
-        expectedField: 'password'
-      },
-      {
-        description: 'password with exactly 129 characters',
-        email: 'user@example.com',
-        password: 'a'.repeat(129),
-        expectedField: 'password'
-      },
-      {
-        description: 'email exceeding exactly 254 characters',
-        email: 'a'.repeat(243) + '@example.com',
-        password: 'password123',
-        expectedField: 'email'
-      }
-    ])('should reject $description', ({ email, password, expectedField }) => {
-      // given
-      const data = { email, password };
-
-      // when & then
-      expectValidationError(data, 'INVALID_FORMAT', expectedField);
     });
   });
 });

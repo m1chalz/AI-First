@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import { ValidationError } from './errors.ts';
-import { isValidEmail, isValidPhone } from './validators.ts';
 import { mapZodErrorCode } from './zod-errors.ts';
+
+const EMAIL_REGEX = /^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isNotFutureDate(dateString: string): boolean {
   const dateObj = new Date(dateString);
@@ -30,16 +31,12 @@ const CreateAnnouncementSchema = z
     email: z
       .string()
       .trim()
-      .refine((val) => !val || isValidEmail(val), {
-        message: 'invalid email format'
-      })
+      .regex(EMAIL_REGEX, { message: 'email format is invalid' })
       .optional(),
     phone: z
       .string()
       .trim()
-      .refine((val) => !val || isValidPhone(val), {
-        message: 'invalid phone format'
-      })
+      .regex(/\d/, { message: 'invalid phone format' })
       .optional(),
     lastSeenDate: z
       .string()

@@ -55,11 +55,11 @@ describe('POST /api/v1/users', () => {
       { email: 'user@', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
       { email: '@example.com', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
       { email: 'a'.repeat(243) + '@example.com', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: '', password: 'password123', field: 'email', code: 'MISSING_VALUE' },
+      { email: '', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
       { email: 'user@example.com', password: 'short', field: 'password', code: 'INVALID_FORMAT' },
       { email: 'user@example.com', password: '1234567', field: 'password', code: 'INVALID_FORMAT' },
       { email: 'user@example.com', password: 'a'.repeat(129), field: 'password', code: 'INVALID_FORMAT' },
-      { email: 'user@example.com', password: '', field: 'password', code: 'MISSING_VALUE' }
+      { email: 'user@example.com', password: '', field: 'password', code: 'INVALID_FORMAT' }
     ])('should return HTTP 400 with validation error for $field', async ({ email, password, field, code }) => {
       // when
       const response = await request(server)

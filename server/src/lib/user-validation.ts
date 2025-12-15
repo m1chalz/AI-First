@@ -1,23 +1,22 @@
 import { z } from 'zod';
 import { ValidationError } from './errors.ts';
-import { isValidEmail, isValidPassword } from './validators.ts';
 import { mapZodErrorCode } from './zod-errors.ts';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const CreateUserSchema = z
   .object({
     email: z
       .string()
-      .min(1, { message: 'email is required' })
       .trim()
-      .refine(isValidEmail, {
-        message: 'email format is invalid'
-      }),
+      .min(3, { message: 'email must be 3-254 characters long' })
+      .max(254, { message: 'email must be 3-254 characters long' })
+      .regex(EMAIL_REGEX, { message: 'email format is invalid' }),
     password: z
       .string()
-      .min(1, { message: 'password is required' })
-      .refine(isValidPassword, {
-        message: 'password must be 8-128 characters long'
-      })
+      .trim()
+      .min(8, { message: 'password must be 8-128 characters long' })
+      .max(128, { message: 'password must be 8-128 characters long' })
   })
   .strict();
 
