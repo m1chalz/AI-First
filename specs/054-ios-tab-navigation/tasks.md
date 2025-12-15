@@ -12,13 +12,13 @@ description: "Actionable task list for iOS tab navigation implementation"
 **MANDATORY - iOS Unit Tests**:
 - Location: `/iosApp/iosAppTests/` (XCTest with Swift Concurrency), 80% coverage
 - Scope: Coordinators (TabCoordinator, PlaceholderCoordinator), ViewModels (PlaceholderViewModel)
-- Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
+- Run: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
 - Convention: MUST follow Given-When-Then structure with descriptive camelCase_with_underscores names
 
-**DEFERRED - End-to-End Tests**:
-- E2E tests deferred to future iteration - tab navigation infrastructure only
-- Placeholder screens not valuable to E2E test (static "Coming soon" message)
-- Will add E2E tests when Home, Found Pet, Contact Us, Account features implemented
+**INTENTIONAL CONSTITUTION VIOLATION - End-to-End Tests (Principle XII)**:
+- Decision: We will NOT add E2E tests in this feature.
+- Rationale: Placeholder-only content; unit tests + manual validation are deemed sufficient for now.
+- Follow-up: Add E2E coverage when tab content features are implemented.
 
 **Organization**: Tasks are grouped by implementation phase following the natural dependency order from plan.md. Since this is infrastructure (navigation), tasks are organized by technical layers rather than user stories, but all work toward delivering User Story 1 (P1): Navigate to Portal Sections Using Tabs.
 
@@ -310,7 +310,7 @@ All tasks in this file work toward achieving these success metrics from plan.md:
 - Each checkpoint validates independent functionality
 - Commit after each logical group of tasks
 - This is iOS-only implementation - Android and Web will have separate feature specs
-- E2E tests deferred until tab content features implemented (Home, Found Pet, Contact Us, Account)
+- E2E tests intentionally omitted in this feature (Principle XII violation); add E2E coverage when tab content features are implemented
 - Architecture: TabCoordinator and AppCoordinator do NOT conform to CoordinatorInterface (manage different container types)
   - TabCoordinator manages UITabBarController (exposes via computed property)
   - AppCoordinator manages TabCoordinator (exposes tabBarController via computed property)

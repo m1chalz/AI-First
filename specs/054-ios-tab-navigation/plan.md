@@ -73,10 +73,9 @@ Implement tab-based navigation for iOS application following MVVM-C architecture
 
 - [ ] **End-to-End Tests**: Plan includes E2E tests for all user stories
   - Web: N/A (Web implementation in separate feature spec)
-  - Mobile: Deferred to future iteration - E2E tests will be added after all tab features implemented
-  - E2E test complexity: Requires all 5 tabs to be fully implemented (only Lost Pet currently exists)
-  - Placeholder screens not valuable to E2E test (static "Coming soon" message)
-  - Violation justification: E2E tests deferred - tab navigation infrastructure only, placeholder content not testable in meaningful way. Will add E2E tests when Home, Found Pet, Contact Us, Account features implemented.
+  - Mobile: Intentional constitution violation (Principle XII) - we will NOT add E2E tests in this feature
+  - Rationale: Infrastructure-only change with placeholder content; unit tests + manual validation are considered sufficient for now
+  - Follow-up: Add E2E coverage when tab content features are implemented (separate feature)
 
 - [x] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
   - iOS: Swift Concurrency (`async`/`await`) for coordinator `start()` methods with `@MainActor`
@@ -181,7 +180,7 @@ specs/054-ios-tab-navigation/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| E2E tests deferred | Only Lost Pet tab implemented; other tabs show placeholder "Coming soon" screens. E2E tests not valuable until tab content features exist. | Creating E2E tests for static placeholders provides no meaningful validation. Will add E2E coverage when Home, Found Pet, Contact Us, Account features implemented. Navigation infrastructure tested via unit tests. |
+| Principle XII: E2E tests missing | Intentional: no E2E tests in this feature | “Add minimal smoke E2E” rejected by decision; will add E2E when tab content features are implemented |
 
 ## Implementation Steps
 
@@ -217,7 +216,7 @@ specs/054-ios-tab-navigation/
      - Configures tab bar items on navigation controllers (SF Symbols icons, localized titles)
      - Sets navigation controllers as `tabBarController.viewControllers`
      - Maintains strong references to child coordinators in internal array
-     - Configures tab bar appearance (colors: `#FAFAFA` background, `#808080` inactive, `#FF6B35` active)
+    - Configures tab bar appearance using system defaults (no design source for custom colors in this feature)
      - Exposes UITabBarController via computed property `var tabBarController: UITabBarController { get }`
    - **`start(animated:)`**: Starts all child coordinators to populate content (asynchronous, @MainActor)
      - Calls `await coordinator.start(animated:)` on each child coordinator
