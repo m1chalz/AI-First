@@ -68,11 +68,11 @@ Users can use the tab navigation system to access different sections of the port
 - **FR-009**: Tab navigation items MUST be interactive and navigate to their respective sections when tapped
 - **FR-010**: Each tab MUST use an appropriate Material Design icon (Home: home icon, Lost Pet: pets/search icon, Found Pet: pets/check icon, Contact Us: contact_support icon, Account: person/account_circle icon)
 - **FR-011**: When a tab navigation target doesn't exist yet (any of the 5 tabs), the tab MUST remain enabled and navigate to the shared placeholder screen displaying a "Coming soon" message
-- **FR-012**: When user taps on an already active tab at the tab root, system MUST do nothing; if user is deep in the tab's navigation stack, system MUST pop back to the tab root
+- **FR-012**: When user taps on an already active tab at the tab root, system MUST do nothing; if user is deep in the tab's navigation stack (back stack has >0 entries beyond tab root), system MUST pop back to the tab root
 - **FR-013**: When the user switches between tabs, each tab MUST preserve its own navigation state (back stack) so returning to a tab restores the last visited screen within that tab
 - **FR-014**: System MUST handle Android back button press according to Material Design guidance: navigate within current tab's back stack first, then allow system to handle app exit when at tab root
 - **FR-015**: On app restart or fresh launch, the application MUST display the Home tab regardless of which tab was active before termination (tab state is not persisted across sessions)
-- **FR-016**: Tab navigation and per-tab navigation stacks MUST persist across configuration changes (screen rotation, dark mode toggle) using SavedStateHandle
+- **FR-016**: Tab navigation and per-tab navigation stacks MUST persist across configuration changes (screen rotation, dark mode toggle) automatically via rememberNavController()
 - **FR-017**: Bottom Navigation Bar MUST include appropriate test tags for E2E testing (e.g., `bottomNav.homeTab`, `bottomNav.lostPetTab`, `bottomNav.foundPetTab`, `bottomNav.contactTab`, `bottomNav.accountTab`)
 - **FR-018**: Tab switching MUST use instant content replacement without transition animations (following Material Design Bottom Navigation standard)
 - **FR-019**: Bottom Navigation Bar MUST remain fixed and always visible regardless of content scroll state within any tab
@@ -95,7 +95,7 @@ Users can use the tab navigation system to access different sections of the port
 
 - **SC-001**: 100% of implemented tab navigation items are functional and navigate to their intended destinations
 - **SC-002**: Current tab is visually distinguishable from non-active tabs using Material Design active state (filled icon, primary color)
-- **SC-003**: Tab navigation maintains usable layout and tap targets on screen widths from 320dp (small phones) to 600dp+ (tablets)
+- **SC-003**: Tab navigation maintains usable layout and tap targets (minimum 48dp per Material Design guidelines) on screen widths from 320dp (small phones) to 600dp+ (tablets)
 - **SC-004**: Users can successfully switch between any two implemented tabs
 - **SC-005**: Switching away from a tab and back restores the last visited screen within that tab (per-tab back stack preserved)
 - **SC-006**: Tab selection and navigation stacks survive configuration changes (screen rotation, dark mode toggle)
@@ -107,7 +107,7 @@ Users can use the tab navigation system to access different sections of the port
 - **Navigation Destinations**: "Home" tab navigates to the landing page, "Lost Pet" tab navigates to lost pet announcements list, "Found Pet" tab navigates to found pet announcements list. "Contact Us" and "Account" tabs navigate to placeholder screens with "Coming soon" message. If any destination screen is not yet implemented, the tab navigates to the same shared placeholder screen. These sections either exist or will be implemented as part of this or related features.
 - **Material Design Conventions**: Android implementation uses Material Design Bottom Navigation Bar for 5-item navigation. Bottom Navigation Bar is positioned at the bottom of the screen and is always visible across all screens in each tab's navigation flow.
 - **Default Tab**: The "Home" tab (landing page) is the default tab displayed on app startup. The landing page content is assumed to exist or will be implemented separately.
-- **Navigation Architecture**: Android implementation uses Jetpack Navigation Component with multiple NavHosts (one per tab) to support per-tab back stacks. Tab state and navigation stacks are preserved across configuration changes using SavedStateHandle and rememberSaveable.
+- **Navigation Architecture**: Android implementation uses Jetpack Navigation Component with a single NavHost containing nested navigation graphs (one per tab) to support per-tab back stacks. Tab state and navigation stacks are preserved across configuration changes automatically via rememberNavController().
 - **Coming Soon Screen**: When a tab destination is not yet implemented, the system displays a single shared reusable Composable screen with a centered "Coming soon" message. The specific styling follows Material Design conventions. This shared placeholder can be used by any of the 5 tabs (Home, Lost Pet, Found Pet, Contact Us, Account) if their destination screens are not yet implemented.
 - **Re-tap Behavior**: When user taps an already active tab, behavior follows Material Design guidance: if at tab root (initial screen), do nothing; if deep in navigation stack, pop all the way back to tab root.
 - **Icon Selection**: Tab icons use Material Icons from the Compose Material library. Specific icon choices follow Material Design guidance for common navigation patterns (home, search/pets, contacts, account).

@@ -174,135 +174,157 @@ fun BottomNavigationBar(
 
 ---
 
-### 3. Configuration Change Handling (SavedStateHandle)
+### 3. Configuration Change Handling
 
-**Decision**: Use `SavedStateHandle` in ViewModel + `rememberSaveable` for NavController states
+**Decision**: Use `rememberNavController()` - automatic configuration change survival
 
 **Rationale**:
-- SavedStateHandle persists ViewModel state across process death and configuration changes
-- `rememberNavController()` with `rememberSaveable` preserves each tab's back stack
+- `rememberNavController()` automatically survives configuration changes (rotation, dark mode)
+- Navigation Component handles back stack preservation internally
+- No manual `SavedStateHandle`, `onSaveInstanceState`, or `onRestoreInstanceState` needed
+- `saveState`/`restoreState` flags in navigation preserve per-tab back stacks
 - Compose automatically handles recomposition after configuration changes
-- No manual `onSaveInstanceState` / `onRestoreInstanceState` needed
-- Works seamlessly with MVI architecture (StateFlow backed by SavedStateHandle)
 
 **Implementation Pattern**:
 ```kotlin
-class TabNavigationViewModel(
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    
-    private val _state = MutableStateFlow(
-        savedStateHandle.get<TabNavigationUiState>("uiState") 
-            ?: TabNavigationUiState.initial()
-    )
-    val state: StateFlow<TabNavigationUiState> = _state.asStateFlow()
-    
-    private fun updateState(newState: TabNavigationUiState) {
-        _state.value = newState
-        savedStateHandle["uiState"] = newState  // Persist on every change
-    }
-}
-
-// In composable
 @Composable
-fun TabContent(
-    visible: Boolean,
-    startDestination: String,
-    builder: NavGraphBuilder.() -> Unit
-) {
-    if (visible) {
-        val navController = rememberSaveable(
-            saver = NavController.saver(LocalContext.current)
-        ) {
-            NavController(LocalContext.current)
+fun MainScaffold() {
+    // NavController survives configuration changes automatically
+    val navController = rememberNavController()
+    
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                TabDestination.entries.forEach { tab ->
+                    NavigationBarItem(
+                        onClick = {
+                            navController.navigate(tab.toRoute()) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true   // Preserve tab's back stack
+                                }
+                                launchSingleTop = true
+                                restoreState = true    // Restore tab's back stack
+                            }
+                        },
+                        // ... icon, label, etc.
+                    )
+                }
+            }
         }
-        NavHost(navController, startDestination, builder = builder)
+    ) {
+        NavHost(navController, startDestination = TabRoute.Home) {
+            // Navigation graphs - back stacks preserved automatically
+        }
     }
 }
 ```
 
 **Alternatives Considered**:
-- ViewModel only (no SavedStateHandle) → Rejected: Loses state on process death
+- Manual SavedStateHandle management → Rejected: Not needed, NavController handles it
 - Manual Bundle save/restore → Rejected: More boilerplate, error-prone
 - DataStore for tab state → Rejected: Overkill for in-memory state (spec explicitly says no persistence across app restarts)
 
 ---
 
-### 4. MVI Architecture for Navigation State Management
+### 4. Navigation State Management (No ViewModel Needed)
 
-**Decision**: Single `TabNavigationUiState` data class with sealed `TabNavigationUserIntent` and optional `TabNavigationUiEffect`
+**Decision**: Use NavController directly - no custom ViewModel, UiState, or MVI components
 
 **Rationale**:
-- Tab selection state is UI state (which tab is active)
-- Tab switching is a user intent (SelectTab, ReTapActiveTab)
-- Navigation effects (PopToRoot) are one-off events → use UiEffect
-- Pure reducer function ensures predictable state transitions
-- Easy to test (given state + intent → expected new state)
+- Tab navigation state is **framework-managed** by NavController
+- NavController already provides:
+  - Current tab detection via `currentBackStackEntryAsState()`
+  - Back stack preservation via `saveState`/`restoreState` flags
+  - Configuration change survival via `rememberNavController()`
+- Creating a ViewModel wrapper would be unnecessary abstraction
+- Tab switching is pure UI navigation - no business logic involved
+- Testing covered by E2E tests (NavController behavior tested by Google)
 
-**Data Models**:
+**Implementation Pattern**:
 ```kotlin
-data class TabNavigationUiState(
-    val selectedTab: TabDestination
-) {
-    companion object {
-        fun initial() = TabNavigationUiState(
-            selectedTab = TabDestination.HOME  // FR-015: Default to Home
-        )
+@Composable
+fun MainScaffold() {
+    val navController = rememberNavController()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
+    
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                TabDestination.entries.forEach { tab ->
+                    NavigationBarItem(
+                        // Determine selected tab from NavController state
+                        selected = currentRoute?.startsWith(
+                            tab.toRoute()::class.simpleName ?: ""
+                        ) == true,
+                        
+                        // Handle tab switching inline (no ViewModel dispatch)
+                        onClick = {
+                            val tabRouteName = tab.toRoute()::class.simpleName ?: ""
+                            if (currentRoute?.startsWith(tabRouteName) == true) {
+                                // Re-tap: pop to root
+                                navController.popBackStack(tab.toRoute(), inclusive = false)
+                            } else {
+                                // Switch tabs
+                                navController.navigate(tab.toRoute()) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        icon = { Icon(tab.icon, contentDescription = null) },
+                        label = { Text(tab.label) },
+                        modifier = Modifier.testTag("bottomNav.${tab.testId}")
+                    )
+                }
+            }
+        }
+    ) {
+        NavHost(navController, startDestination = TabRoute.Home) {
+            // Navigation graphs
+        }
     }
 }
+```
 
-sealed class TabNavigationUserIntent {
-    data class SelectTab(val tab: TabDestination) : TabNavigationUserIntent()
-    data class ReTapActiveTab(val tab: TabDestination) : TabNavigationUserIntent()
-}
-
-sealed class TabNavigationUiEffect {
-    data class PopToRoot(val tab: TabDestination) : TabNavigationUiEffect()
-}
-
+**UI Configuration Model**:
+```kotlin
 enum class TabDestination(
-    val route: String,
     val label: String,
     val icon: ImageVector,
     val testId: String
 ) {
-    HOME("home", "Home", Icons.Filled.Home, "homeTab"),
-    LOST_PET("lost_pet", "Lost Pet", Icons.Filled.Pets, "lostPetTab"),
-    FOUND_PET("found_pet", "Found Pet", Icons.Filled.Pets, "foundPetTab"),
-    CONTACT_US("contact", "Contact Us", Icons.Filled.ContactSupport, "contactTab"),
-    ACCOUNT("account", "Account", Icons.Filled.AccountCircle, "accountTab")
-}
-```
-
-**Reducer Logic**:
-```kotlin
-private fun reduce(currentState: TabNavigationUiState, intent: TabNavigationUserIntent): Pair<TabNavigationUiState, TabNavigationUiEffect?> {
-    return when (intent) {
-        is TabNavigationUserIntent.SelectTab -> {
-            if (intent.tab == currentState.selectedTab) {
-                // Re-tap on active tab → emit PopToRoot effect (if not at tab root)
-                currentState to TabNavigationUiEffect.PopToRoot(intent.tab)
-            } else {
-                // Switch to new tab → emit NavigateToTab effect
-                val newState = currentState.copy(selectedTab = intent.tab)
-                newState to TabNavigationUiEffect.NavigateToTab(intent.tab)
-            }
-        }
-        
-        is TabNavigationUserIntent.ReTapActiveTab -> {
-            // Explicit re-tap intent → always pop to root
-            currentState to TabNavigationUiEffect.PopToRoot(intent.tab)
-        }
+    HOME("Home", Icons.Filled.Home, "homeTab"),
+    LOST_PET("Lost Pet", Icons.Filled.Pets, "lostPetTab"),
+    FOUND_PET("Found Pet", Icons.Filled.Pets, "foundPetTab"),
+    CONTACT_US("Contact Us", Icons.Filled.ContactSupport, "contactTab"),
+    ACCOUNT("Account", Icons.Filled.AccountCircle, "accountTab");
+    
+    // Maps to type-safe navigation route
+    fun toRoute(): TabRoute = when (this) {
+        HOME -> TabRoute.Home
+        LOST_PET -> TabRoute.LostPet
+        FOUND_PET -> TabRoute.FoundPet
+        CONTACT_US -> TabRoute.Contact
+        ACCOUNT -> TabRoute.Account
     }
 }
 ```
 
-**Note**: With single NavHost approach, navigation is handled via NavController, but we still emit effects to trigger navigation from the ViewModel in a testable way.
+**When Would You Need a ViewModel**:
+- ❌ Tab selection depends on business logic (e.g., fetch permissions) - NOT our case
+- ❌ Tab state persists across app restarts - Spec says NO (FR-015)
+- ❌ Complex tab orchestration beyond navigation - NOT our case
+
+For this feature, NavController provides all needed functionality.
 
 **Alternatives Considered**:
-- Single intent for both select and re-tap → Chosen: Simpler, re-tap detection in reducer
-- Separate ViewModels per tab → Rejected: Over-complication, single ViewModel manages all tab state
-- No UiEffect (navigation in ViewModel) → Rejected: Violates MVI principle (ViewModel shouldn't hold NavController)
+- MVI ViewModel with StateFlow/UserIntent/UiEffect → Rejected: Over-engineering for framework-managed state
+- Separate ViewModels per tab → Rejected: No business logic to manage
+- Manual state tracking → Rejected: NavController already provides it
 
 ---
 
@@ -397,12 +419,12 @@ private fun PlaceholderScreenPreview() {
 |--------|----------|-----------|
 | Tab Navigation | Single NavHost with nested graphs | Standard Compose pattern, Navigation 2.4.0+ multi-back-stack support |
 | Bottom Nav UI | Material 3 NavigationBar | Current standard, built-in accessibility |
-| State Persistence | SavedStateHandle + saveState/restoreState flags | Survives configuration changes, built-in NavController support |
-| State Management | MVI (StateFlow + Intent + Effect) | Predictable, testable, follows constitution |
+| State Persistence | rememberNavController + saveState/restoreState flags | Automatic configuration change survival, built-in NavController support |
+| State Management | Framework-managed (NavController) | No ViewModel needed - navigation is framework concern, not business logic |
 | Back Handling | NavController automatic | Default Navigation Component behavior |
 | Placeholder | Single shared composable | DRY principle, spec requirement |
 
-**Note**: This decision was updated after research to align with existing codebase patterns and use the standard Navigation Component approach with native multi-back-stack support (Navigation 2.4.0+).
+**Note**: Simplified from original MVI design. Tab navigation state is framework-managed by NavController, eliminating need for custom ViewModel, UiState, UserIntent, and UiEffect layers. This is the idiomatic Compose Navigation approach for pure UI navigation without business logic.
 
 ---
 

@@ -6,16 +6,18 @@
 
 ## Overview
 
-This guide shows you how to work with the Android tab navigation system - adding new screens to tabs, modifying tab behavior, and testing navigation flows.
+This guide shows you how to work with the Android tab navigation system - adding new screens to tabs, modifying tab behavior, and testing navigation flows using standard Jetpack Compose Navigation patterns.
 
 **⚠️ IMPORTANT**: This project uses **type-safe navigation with kotlinx-serialization** (NOT string-based routes). All code examples use `@Serializable` sealed interfaces and `composable<RouteType>` syntax, matching the existing codebase pattern.
+
+**Architecture**: Navigation state is managed by **NavController** (framework-provided). No custom ViewModel, UiState, or MVI components - this is the standard idiomatic Compose Navigation approach.
 
 ## Prerequisites
 
 - Android Studio with Kotlin plugin
 - Jetpack Compose knowledge
-- Understanding of MVI architecture
-- Familiarity with Jetpack Navigation Component
+- Understanding of Jetpack Navigation Component
+- Familiarity with type-safe navigation (kotlinx-serialization)
 
 ## Quick Start
 
@@ -34,7 +36,7 @@ This guide shows you how to work with the Android tab navigation system - adding
 
 ### Tab Configuration
 
-**UI Enum** - All 5 tabs are defined in `TabDestination` enum (for UI state only):
+**UI Enum** - All 5 tabs are defined in `TabDestination` enum:
 
 ```kotlin
 // composeApp/src/androidMain/kotlin/.../domain/models/TabDestination.kt
@@ -53,7 +55,9 @@ enum class TabDestination(
     fun toRoute(): TabRoute = when (this) {
         HOME -> TabRoute.Home
         LOST_PET -> TabRoute.LostPet
-        // ... etc
+        FOUND_PET -> TabRoute.FoundPet
+        CONTACT_US -> TabRoute.Contact
+        ACCOUNT -> TabRoute.Account
     }
 }
 ```
@@ -102,16 +106,15 @@ sealed interface LostPetRoute {
    @Composable
    fun LostPetListScreen(
        onPetClick: (petId: String) -> Unit,
-       navController: NavController,  // For type-safe navigation
        modifier: Modifier = Modifier
    ) {
        // Your screen implementation
    }
    ```
 
-3. **Add screen to Lost Pet navigation graph** (TYPE-SAFE):
+3. **Add screen to Lost Pet navigation graph in MainScaffold** (TYPE-SAFE):
    ```kotlin
-   // composeApp/src/androidMain/kotlin/.../ui/navigation/MainScaffoldContent.kt
+   // composeApp/src/androidMain/kotlin/.../ui/navigation/MainScaffold.kt
    
    // Find the Lost Pet navigation graph and update it:
    NavHost(navController, startDestination = TabRoute.Home) {  // Type-safe
@@ -126,8 +129,7 @@ sealed interface LostPetRoute {
                    onPetClick = { petId ->
                        // Type-safe navigation with route object
                        navController.navigate(LostPetRoute.Details(petId))
-                   },
-                   navController = navController
+                   }
                )
            }
            
@@ -146,12 +148,7 @@ sealed interface LostPetRoute {
 - Compile-time safety - typos in route names cause compiler errors
 - IDE autocomplete for all routes and arguments
 
-3. **Test the navigation**:
-   ```bash
-   ./gradlew :composeApp:testDebugUnitTest
-   ```
-
-### 2. Adding a New Tab (Rare - Type-Safe)
+### 2. Adding a New Tab (Rare)
 
 **Note**: The spec defines 5 fixed tabs. This is for future reference only.
 
@@ -189,8 +186,9 @@ sealed interface LostPetRoute {
    }
    ```
 
-3. **Add navigation graph in NavHost** (TYPE-SAFE):
+3. **Add navigation graph in MainScaffold** (TYPE-SAFE):
    ```kotlin
+   // In MainScaffold.kt NavHost block
    NavHost(navController, startDestination = TabRoute.Home) {
        // ... existing tabs
        
@@ -205,8 +203,7 @@ sealed interface LostPetRoute {
    }
    ```
 
-4. **Update bottom navigation** (if using manual configuration):
-   The `BottomNavigationBar` composable iterates over all enum values automatically and uses `tab.toRoute()` for navigation.
+4. **Bottom navigation updates automatically**: The `NavigationBar` in `MainScaffold` iterates over `TabDestination.entries`, so the new tab appears automatically.
 
 ### 3. Changing Tab Icons
 
@@ -214,7 +211,7 @@ sealed interface LostPetRoute {
 
 **Steps**:
 
-1. **Update icon in UI enum** (routes don't change):
+1. **Update icon in UI enum**:
    ```kotlin
    enum class TabDestination(
        val label: String,
@@ -237,29 +234,107 @@ sealed interface LostPetRoute {
 
 **Note**: Icon changes only affect the UI enum, not the type-safe routes. Navigation routes remain unchanged.
 
-### 4. Testing Tab Navigation
+### 4. Understanding MainScaffold Structure
 
-#### Unit Tests (ViewModel)
+The `MainScaffold.kt` file contains all navigation logic in one place:
 
 ```kotlin
-// composeApp/src/androidUnitTest/kotlin/.../presentation/navigation/TabNavigationViewModelTest.kt
-
-@Test
-fun `when user taps Lost Pet tab from Home, then selected tab updates to Lost Pet`() = runTest {
-    // given
-    val viewModel = TabNavigationViewModel(SavedStateHandle())
+@Composable
+fun MainScaffold() {
+    // 1. Create NavController (survives config changes automatically)
+    val navController = rememberNavController()
     
-    // when
-    viewModel.dispatchIntent(TabNavigationUserIntent.SelectTab(TabDestination.LOST_PET))
+    // 2. Observe current route to determine selected tab
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
     
-    // then
-    viewModel.state.test {
-        assertEquals(TabDestination.LOST_PET, awaitItem().selectedTab)
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                // 3. Iterate over all tabs
+                TabDestination.entries.forEach { tab ->
+                    NavigationBarItem(
+                        // 4. Determine if this tab is selected
+                        selected = currentRoute?.startsWith(
+                            tab.toRoute()::class.simpleName ?: ""
+                        ) == true,
+                        
+                        // 5. Handle tab clicks (switch or re-tap)
+                        onClick = {
+                            val tabRouteName = tab.toRoute()::class.simpleName ?: ""
+                            if (currentRoute?.startsWith(tabRouteName) == true) {
+                                // Already on this tab - pop to root
+                                navController.popBackStack(tab.toRoute(), inclusive = false)
+                            } else {
+                                // Switch to different tab
+                                navController.navigate(tab.toRoute()) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true   // Save current tab's back stack
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true    // Restore target tab's back stack
+                                }
+                            }
+                        },
+                        
+                        // 6. Display icon, label, and test tag
+                        icon = { Icon(tab.icon, contentDescription = null) },
+                        label = { Text(tab.label) },
+                        modifier = Modifier.testTag("bottomNav.${tab.testId}")
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
+        // 7. Single NavHost with nested navigation graphs
+        NavHost(
+            navController = navController,
+            startDestination = TabRoute.Home,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            // One navigation graph per tab
+            navigation<TabRoute.Home>(startDestination = HomeRoute.Root) {
+                composable<HomeRoute.Root> { /* ... */ }
+            }
+            navigation<TabRoute.LostPet>(startDestination = LostPetRoute.List) {
+                composable<LostPetRoute.List> { /* ... */ }
+            }
+            // ... other tabs
+        }
     }
 }
 ```
 
-#### E2E Tests (Java/Cucumber)
+**Key Points**:
+- **No ViewModel**: NavController manages all state
+- **No UiState**: Current route is derived from `currentBackStackEntryAsState()`
+- **No MVI ceremony**: All logic is inline and straightforward
+- **Configuration changes**: Handled automatically by `rememberNavController()`
+- **Back stack preservation**: Managed by `saveState`/`restoreState` flags
+
+### 5. Testing Tab Navigation
+
+#### Unit Tests (Minimal)
+
+```kotlin
+// composeApp/src/androidUnitTest/kotlin/.../domain/models/TabDestinationTest.kt
+
+@Test
+fun `when HOME tab toRoute called, then returns TabRoute-Home`() {
+    // given
+    val destination = TabDestination.HOME
+    
+    // when
+    val route = destination.toRoute()
+    
+    // then
+    assertEquals(TabRoute.Home, route)
+}
+```
+
+**Why minimal unit tests**: NavController is framework code tested by Google. We only test our enum logic.
+
+#### E2E Tests (Primary Coverage)
 
 ```java
 // e2e-tests/java/src/test/java/.../screens/BottomNavigationScreen.java
@@ -282,164 +357,34 @@ public class BottomNavigationScreen {
 }
 ```
 
-### 5. Debugging Navigation Issues (Type-Safe)
+### 6. Debugging Navigation Issues (Type-Safe)
 
-#### Check Current Tab Selection
+#### Check Current Tab/Route
 
 ```kotlin
-// In your ViewModel or composable
-Log.d("Navigation", "Current tab: ${uiState.selectedTab}")
-Log.d("Navigation", "Current tab route: ${uiState.selectedTab.toRoute()}")
+// In MainScaffold or any screen
+val currentBackStackEntry = navController.currentBackStackEntry
+Log.d("Navigation", "Current destination: ${currentBackStackEntry?.destination?.route}")
 ```
 
-#### Check NavController Back Stack (Type-Safe)
+#### Check Back Stack
 
 ```kotlin
-// In composable
-val currentBackStackEntry = navController.currentBackStackEntry
-val currentRoute = currentBackStackEntry?.toRoute<TabRoute>()
-Log.d("Navigation", "Current route object: $currentRoute")
-// Example output: TabRoute.LostPet
-```
-
-#### Verify Current Navigation Graph
-
-```kotlin
-// In MainScaffoldContent or any screen
-val currentBackStackEntry = navController.currentBackStackEntry
-
-// For type-safe navigation, check the route instance
-try {
-    val route = currentBackStackEntry?.toRoute<LostPetRoute.Details>()
-    Log.d("Navigation", "Current route: LostPetRoute.Details(petId=${route.petId})")
-} catch (e: Exception) {
-    Log.d("Navigation", "Not a LostPetRoute.Details")
+// View entire back stack
+navController.currentBackStack.value.forEach { entry ->
+    Log.d("Navigation", "Back stack entry: ${entry.destination.route}")
 }
-
-// Or check parent graph
-val parentRoute = currentBackStackEntry?.destination?.parent?.route
-Log.d("Navigation", "Parent graph ID: $parentRoute")
 ```
 
 #### Type-Safe Route Inspection
 
 ```kotlin
 // Get current route and determine which tab it belongs to
-when (val route = navController.currentBackStackEntry?.toRoute<TabRoute>()) {
-    TabRoute.Home -> Log.d("Navigation", "On Home tab")
-    TabRoute.LostPet -> Log.d("Navigation", "On Lost Pet tab")
-    TabRoute.FoundPet -> Log.d("Navigation", "On Found Pet tab")
-    TabRoute.Contact -> Log.d("Navigation", "On Contact tab")
-    TabRoute.Account -> Log.d("Navigation", "On Account tab")
-    null -> Log.d("Navigation", "Unknown route")
-}
-```
-
-## Architecture Patterns
-
-### MVI Flow
-
-```
-User taps tab
-    ↓
-TabNavigationUserIntent.SelectTab
-    ↓
-ViewModel.dispatchIntent()
-    ↓
-Reducer function (pure)
-    ↓
-New TabNavigationUiState + Optional TabNavigationUiEffect
-    ↓
-StateFlow emission → UI recomposes
-    ↓
-SharedFlow emission → Effect consumed once
-```
-
-### Stateless Composable Pattern
-
-**State Host** (connects ViewModel to UI):
-```kotlin
-@Composable
-fun MainScaffold(viewModel: TabNavigationViewModel = koinViewModel()) {
-    val uiState by viewModel.state.collectAsState()
-    val navController = rememberNavController()
-    
-    LaunchedEffect(Unit) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is TabNavigationUiEffect.NavigateToTab -> {
-                    // TYPE-SAFE: Convert UI enum to route object
-                    val route = effect.tab.toRoute()
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-                is TabNavigationUiEffect.PopToRoot -> {
-                    // TYPE-SAFE: Pop using route type
-                    navController.popBackStack<TabRoute>(inclusive = false)
-                }
-            }
-        }
-    }
-    
-    MainScaffoldContent(
-        uiState = uiState,
-        onTabSelected = { tab -> 
-            viewModel.dispatchIntent(TabNavigationUserIntent.SelectTab(tab))
-        },
-        navController = navController
-    )
-}
-```
-
-**Stateless Content** (pure UI, no ViewModel):
-```kotlin
-@Composable
-fun MainScaffoldContent(
-    uiState: TabNavigationUiState,
-    onTabSelected: (TabDestination) -> Unit,
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-    Scaffold(
-        modifier = modifier,
-        bottomBar = {
-            BottomNavigationBar(
-                selectedTab = uiState.selectedTab,
-                onTabSelected = onTabSelected
-            )
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = TabRoute.Home,  // Type-safe
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            // Nested navigation graphs for each tab
-            navigation(startDestination = "home", route = "home_tab") {
-                composable("home") { /* ... */ }
-            }
-            // ... other tabs
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun MainScaffoldContentPreview(
-    @PreviewParameter(TabNavigationPreviewProvider::class) uiState: TabNavigationUiState
-) {
-    MaterialTheme {
-        MainScaffoldContent(
-            uiState = uiState,
-            onTabSelected = {},  // No-op for preview
-            navController = rememberNavController()
-        )
-    }
+try {
+    val homeRoute = navController.currentBackStackEntry?.toRoute<TabRoute.Home>()
+    Log.d("Navigation", "On Home tab")
+} catch (e: Exception) {
+    Log.d("Navigation", "Not on Home tab")
 }
 ```
 
@@ -448,92 +393,78 @@ private fun MainScaffoldContentPreview(
 ### ✅ Do
 
 - **Use test tags** on all interactive elements (`Modifier.testTag("bottomNav.homeTab")`)
-- **Follow Given-When-Then** in all unit tests
-- **Keep reducers pure** (no side effects, easy to test)
-- **Use effects for navigation** (not direct NavController calls in ViewModel)
-- **Preserve back stacks** with `rememberSaveable`
-- **Add previews** for all stateless composables with `PreviewParameterProvider`
+- **Follow type-safe navigation** (use route objects, not strings)
+- **Keep navigation logic in MainScaffold** (centralized, easy to find)
+- **Test via E2E tests** (navigation behavior is best tested integration-style)
+- **Add previews** for stateless composables like PlaceholderScreen
 
 ### ❌ Don't
 
 - **Don't persist tab state across app restarts** (spec says always start on Home)
 - **Don't add animations** to tab switching (spec says instant switch per FR-018)
 - **Don't hide bottom nav on scroll** (spec says always visible per FR-019)
-- **Don't call NavController directly** in ViewModel (use effects)
-- **Don't create multiple placeholder routes** (reuse single PlaceholderScreen composable)
+- **Don't create a ViewModel for navigation** (NavController is sufficient)
+- **Don't over-test framework code** (focus E2E tests on behavior, not NavController internals)
 
 ## Troubleshooting
 
 ### Issue: Tab doesn't switch when tapped
 
 **Check**:
-1. Is `onTabSelected` lambda connected to `viewModel.dispatchIntent`?
-2. Is reducer logic correct (does it update `selectedTab`)?
-3. Is StateFlow emitting new state?
+1. Is `onClick` lambda correctly calling `navController.navigate()`?
+2. Are `saveState`/`restoreState` flags set correctly?
+3. Is the route correctly mapped in `toRoute()`?
 
 **Debug**:
 ```kotlin
-viewModel.dispatchIntent(TabNavigationUserIntent.SelectTab(tab))
-Log.d("Tab", "Dispatched intent: $tab")
+onClick = {
+    Log.d("Tab", "Tapped: ${tab.label}")
+    val route = tab.toRoute()
+    Log.d("Tab", "Navigating to: $route")
+    navController.navigate(route) { /* ... */ }
+}
 ```
 
 ### Issue: Back stack lost after configuration change
 
 **Check**:
-1. Is NavController using `rememberNavController()`?
-2. Are you using `saveState = true` and `restoreState = true` in navigation?
-3. Is ViewModel using `SavedStateHandle`?
+1. Are you using `rememberNavController()` (not creating new instance)?
+2. Are `saveState`/`restoreState` flags set in navigation?
 
-**Fix**:
-```kotlin
-// NavController automatically handles configuration changes
-val navController = rememberNavController()
-
-// Ensure saveState/restoreState flags are set when navigating between tabs
-navController.navigate(tabRoute) {
-    popUpTo(navController.graph.findStartDestination().id) {
-        saveState = true  // CRITICAL
-    }
-    restoreState = true  // CRITICAL
-    launchSingleTop = true
-}
-```
+**Fix**: NavController automatically survives configuration changes when using `rememberNavController()`.
 
 ### Issue: Re-tap doesn't pop to root
 
 **Check**:
-1. Is `PopToRoot` effect being emitted?
-2. Is effect being collected in `LaunchedEffect`?
-3. Is `popBackStack` being called with correct route?
+1. Is current route detection correct?
+2. Is `popBackStack()` being called with correct route?
 
 **Debug**:
 ```kotlin
-LaunchedEffect(Unit) {
-    viewModel.effects.collect { effect ->
-        Log.d("Effect", "Received: $effect")
-        when (effect) {
-            is TabNavigationUiEffect.PopToRoot -> {
-                Log.d("Navigation", "Popping to root for: ${effect.tab}")
-                // ... popBackStack call
-            }
-        }
+onClick = {
+    val tabRouteName = tab.toRoute()::class.simpleName ?: ""
+    val isCurrentTab = currentRoute?.startsWith(tabRouteName) == true
+    Log.d("Tab", "Current tab? $isCurrentTab, Route: $currentRoute")
+    
+    if (isCurrentTab) {
+        Log.d("Tab", "Popping to root for: ${tab.label}")
+        navController.popBackStack(tab.toRoute(), inclusive = false)
     }
 }
 ```
 
 ## Performance Notes
 
-**Performance is NOT a concern for this project** (Principle XIV). However, some implementation notes:
-
+**Performance is NOT a concern for this project** (Principle XIV). However:
 - Tab switching is instant (no animations per FR-018)
-- NavHost composables are conditionally rendered (only visible tab is active)
+- NavHost composables are conditionally rendered (only visible content is active)
 - Back stacks are preserved in memory (lightweight, no disk I/O)
-- State updates are synchronous (StateFlow emits immediately)
+- State updates are synchronous (immediate)
 
 ## Related Documentation
 
 - [spec.md](./spec.md) - Feature requirements
-- [data-model.md](./data-model.md) - MVI state models
+- [data-model.md](./data-model.md) - TabDestination enum model
 - [contracts/navigation-routes.md](./contracts/navigation-routes.md) - Navigation architecture
 - [research.md](./research.md) - Technical decisions and alternatives
 
@@ -542,7 +473,5 @@ LaunchedEffect(Unit) {
 For questions or issues:
 1. Check this quickstart guide first
 2. Review spec.md for requirements
-3. Check unit tests for usage examples
+3. Check E2E tests for usage examples
 4. Ask in team chat/Slack
-
-
