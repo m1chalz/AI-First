@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import { ValidationError } from './errors.ts';
 import { isValidEmail, isValidPhone } from './validators.ts';
+import { mapZodErrorCode } from './zod-errors.ts';
 
 function isNotFutureDate(dateString: string): boolean {
   const dateObj = new Date(dateString);
@@ -58,30 +59,6 @@ const CreateAnnouncementSchema = z
     path: ['contact']
   });
 
-function mapZodErrorCode(zodCode: string, zodError: z.ZodIssue): string {
-  // Handle unknown fields (strict mode violation)
-  if (zodCode === 'unrecognized_keys') {
-    return 'INVALID_FIELD';
-  }
-
-  // Handle missing required fields
-  if (zodCode === 'invalid_type' && 'received' in zodError && zodError.received === 'undefined') {
-    return 'MISSING_VALUE';
-  }
-
-  // Handle empty/whitespace-only fields
-  if (zodCode === 'too_small' && 'minimum' in zodError && zodError.minimum === 1) {
-    return 'MISSING_VALUE';
-  }
-
-  // Handle missing contact method
-  if (zodCode === 'custom' && zodError.path[0] === 'contact') {
-    return 'MISSING_CONTACT';
-  }
-
-  // All other validation errors are format errors
-  return 'INVALID_FORMAT';
-}
 
 export default function validateCreateAnnouncement(data: CreateAnnouncementDto): void {
   try {
