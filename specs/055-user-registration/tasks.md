@@ -37,9 +37,9 @@
 
 **Purpose**: Database schema setup and initial project structure
 
-- [ ] T001 Create database migration for user table in `/server/src/database/migrations/YYYYMMDDHHMMSS_create_user_table.ts`
-- [ ] T002 Run migration to create user table in SQLite database
-- [ ] T003 [P] Verify migration rollback works correctly
+- [X] T001 Create database migration for user table in `/server/src/database/migrations/YYYYMMDDHHMMSS_create_user_table.ts`
+- [X] T002 Run migration to create user table in SQLite database
+- [X] T003 [P] Verify migration rollback works correctly
 
 **Checkpoint**: Database schema ready for user registration
 
