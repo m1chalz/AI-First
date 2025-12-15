@@ -1,6 +1,6 @@
 # Feature Specification: Tab Navigation
 
-**Feature Branch**: `048-tab-navigation`  
+**Feature Branch**: `054-ios-tab-navigation`  
 **Created**: 2025-12-15  
 **Status**: Draft  
 **Input**: User description: "Application should have a tab navigation system with menu items: Lost Pet, Found Pet, Contact Us, About Us, Log in. The navigation should be visible on every screen and allow users to switch between different sections of the portal."
@@ -45,7 +45,7 @@ Users can use the tab navigation system to access different sections of the port
 
 - **What happens when tab navigation targets don't exist yet?**: Tab remains enabled and navigates to an empty screen displaying "Coming soon" message
 - **How does tab navigation display on different platforms?**: Tab navigation should follow platform-specific conventions (web: horizontal tabs/nav bar, iOS: tab bar at bottom, Android: bottom navigation or top tabs per Material Design)
-- **What happens when user is already on a tab and clicks it again?**: Behavior should follow platform-specific conventions (e.g., some platforms scroll to top, some do nothing)
+- **What happens when user is already on a tab and clicks it again?**: iOS follows standard UITabBarController behavior: tapping the active tab scrolls content to top if scrollable (native behavior, no custom implementation needed)
 
 ## Requirements *(mandatory)*
 
@@ -64,7 +64,7 @@ Users can use the tab navigation system to access different sections of the port
 - **FR-011**: Tab navigation items MUST be interactive and navigate to their respective sections when clicked/tapped
 - **FR-012**: Tab navigation layout MUST follow platform-specific design conventions (web, iOS, Android)
 - **FR-013**: When a tab navigation target doesn't exist yet, the tab MUST remain enabled and navigate to an empty screen displaying a "Coming soon" message
-- **FR-014**: When user clicks/taps on an already active tab, behavior MUST follow platform-specific conventions (e.g., scroll to top, refresh, or no action)
+- **FR-014**: When user clicks/taps on an already active tab, system MUST follow iOS platform convention: tapping active tab scrolls to top if content is scrollable (native UITabBarController behavior, no custom implementation required)
 - **FR-015**: When the user switches between tabs, each tab MUST preserve its own navigation state (back stack) so returning to a tab restores the last visited screen within that tab
 - **FR-016**: Web platform MUST support URL routing for each tab (e.g., /home, /lost-pets, /found-pets, /contact, /account) to enable bookmarking and direct navigation via URL
 - **FR-017**: On app restart or fresh launch, the application MUST display the Home tab regardless of which tab was active before termination (tab state is not persisted across sessions)
@@ -91,6 +91,7 @@ Users can use the tab navigation system to access different sections of the port
 - **Platform-Specific Conventions**: Web applications typically use horizontal navigation bars or side navigation. iOS applications typically use bottom tab bars (UITabBar). Android applications typically use bottom navigation bars (Material Design) or top tabs. Implementation should follow these conventions.
 - **Default Tab**: The "Home" tab (landing page) is the default tab displayed on app startup. The landing page content is implemented in feature 049-landing-page.
 - **Authentication Status Persistence**: The system can determine if a user is logged in (via session, token, or similar mechanism) to control access to announcement creation features (not related to tab navigation itself, but affects behavior after navigation).
+- **Authentication System**: Full authentication system (login, logout, session management) is out of scope for this feature. The Account tab currently displays a placeholder "Coming soon" screen. FR-007 (logged-in state with "Log out" button) will be implemented in a future authentication feature. Tab navigation infrastructure supports both auth states (logged out → auth page, logged in → account page) via conditional content rendering.
 - **Public Access Model**: All browsing and viewing features (lost pets list, found pets list, pet details, Contact Us) are publicly accessible without authentication. Authentication is required only when user initiates the action to create/submit a new announcement (via "Add" or "Submit" buttons in the respective list views, NOT via tab navigation).
 - **Routing/Navigation System**: Each platform has a routing/navigation system in place (web: React Router or similar with URL routing for each tab, iOS: UIKit coordinators, Android: Jetpack Navigation or similar) that can handle tab-based navigation. Web platform supports deep linking via URL routes (e.g., /home, /lost-pets, /found-pets, /contact, /account). Mobile platforms do not persist tab state across app restarts and always launch to Home tab (external deep linking planned for future implementation).
 - **Coming Soon Screen**: When a tab destination is not yet implemented, the system displays a simple screen with a "Coming soon" message. The specific styling and layout of this screen follows platform conventions and is consistent across all unimplemented sections.

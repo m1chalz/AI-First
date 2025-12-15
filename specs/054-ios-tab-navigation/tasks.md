@@ -189,6 +189,17 @@ description: "Actionable task list for iOS tab navigation implementation"
 
 ## Dependencies & Execution Order
 
+### External Feature Dependencies
+
+**Authentication System** (Future Feature):
+- FR-006 and FR-007 depend on authentication system (not yet implemented)
+- Auth system will provide:
+  - User authentication state determination (logged in / logged out)
+  - Login screen / form
+  - Account screen with "Log out" functionality
+- Tab navigation provides infrastructure only: Account tab displays placeholder "Coming soon" until auth feature is implemented
+- Auth feature will replace PlaceholderCoordinator for Account tab with actual auth coordinator
+
 ### Phase Dependencies
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
