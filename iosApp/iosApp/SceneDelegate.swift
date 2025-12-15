@@ -2,14 +2,14 @@ import UIKit
 import SwiftUI
 
 /// Scene lifecycle manager.
-/// Configures window, navigation controller, and root coordinator.
+/// Configures window with tab bar navigation and root coordinator.
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     private var appCoordinator: AppCoordinator?
     
     /// Called when connecting a new scene session.
-    /// Use this method to configure the window and initialize coordinators.
+    /// Sets up tab bar navigation as the app's root interface.
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -24,24 +24,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        // Create navigation controller with splash screen as root
-        let splashViewController = UIHostingController(rootView: SplashScreenView())
-        splashViewController.navigationItem.hidesBackButton = true
-        let navigationController = UINavigationController(rootViewController: splashViewController)
-        // Hide navigation bar for splash screen
-        navigationController.isNavigationBarHidden = true
-        
-        // Set window root and make visible
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
-        
-        // Initialize and start app coordinator
-        // Sets AnimalListScreen as primary entry point per FR-010
-        let coordinator = AppCoordinator(navigationController: navigationController)
+        // Create AppCoordinator (creates complete tab bar structure synchronously)
+        let coordinator = AppCoordinator()
         self.appCoordinator = coordinator
         
-        // Start coordinator asynchronously without animation (initial load)
-        Task {
+        // Set tab bar controller as window root
+        window.rootViewController = coordinator.tabBarController
+        window.makeKeyAndVisible()
+        
+        // Start coordinator asynchronously to populate tab content
+        Task { @MainActor in
             await coordinator.start(animated: false)
         }
     }
@@ -97,4 +89,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
     }
 }
-

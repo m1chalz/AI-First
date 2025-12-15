@@ -34,8 +34,8 @@ description: "Actionable task list for iOS tab navigation implementation"
 
 **Purpose**: Prepare project structure and localization infrastructure
 
-- [ ] T001 Create placeholder feature directory structure in `/iosApp/iosApp/Features/Placeholder/Views/`
-- [ ] T002 [P] Verify SwiftGen is installed and configured for localization string generation
+- [x] T001 Create placeholder feature directory structure in `/iosApp/iosApp/Features/Placeholder/Views/`
+- [x] T002 [P] Verify SwiftGen is installed and configured for localization string generation
 
 ---
 
@@ -45,11 +45,11 @@ description: "Actionable task list for iOS tab navigation implementation"
 
 **⚠️ CRITICAL**: Complete before any implementation work begins
 
-- [ ] T003 Add tab navigation strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (tabs.home, tabs.lostPet, tabs.foundPet, tabs.contactUs, tabs.account)
-- [ ] T004 Add placeholder screen strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (placeholder.title, placeholder.message)
-- [ ] T005 Add tab navigation strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (Polish translations)
-- [ ] T006 Add placeholder screen strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (Polish translations)
-- [ ] T007 Run SwiftGen to regenerate `/iosApp/iosApp/Generated/Strings.swift` with new localization keys
+- [x] T003 Add tab navigation strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (tabs.home, tabs.lostPet, tabs.foundPet, tabs.contactUs, tabs.account)
+- [x] T004 Add placeholder screen strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (placeholder.title, placeholder.message)
+- [x] T005 Add tab navigation strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (Polish translations)
+- [x] T006 Add placeholder screen strings to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (Polish translations)
+- [x] T007 Run SwiftGen to regenerate `/iosApp/iosApp/Generated/Strings.swift` with new localization keys
 
 **Checkpoint**: Localization ready - implementation can now begin
 
@@ -66,17 +66,17 @@ description: "Actionable task list for iOS tab navigation implementation"
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **iOS Unit Tests**:
-- [ ] T008 [P] [US1] Create unit test file `/iosApp/iosAppTests/Features/Placeholder/Views/PlaceholderViewModelTests.swift`
-- [ ] T009 [P] [US1] Test: PlaceholderViewModel initializes with correct title in PlaceholderViewModelTests.swift (Given-When-Then structure)
-- [ ] T010 [P] [US1] Test: PlaceholderViewModel exposes correct localized message in PlaceholderViewModelTests.swift (Given-When-Then structure)
-- [ ] T011 [P] [US1] Create unit test file `/iosApp/iosAppTests/Coordinators/TabCoordinatorTests.swift`
-- [ ] T012 [P] [US1] Test: TabCoordinator init creates 5 child coordinators (stored in internal array) in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T013 [P] [US1] Test: Each child coordinator has non-nil UINavigationController after init in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T014 [P] [US1] Test: tabBarController computed property returns UITabBarController with 5 view controllers (navigation controllers) in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T015 [P] [US1] Test: Tab bar items have correct titles (localized) in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T016 [P] [US1] Test: Tab bar items have correct SF Symbols icons in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T017 [P] [US1] Test: Accessibility identifiers set correctly on tab bar items in TabCoordinatorTests.swift (Given-When-Then structure)
-- [ ] T018 [P] [US1] Test: Child coordinators started successfully when start() is called in TabCoordinatorTests.swift (Given-When-Then structure, async/await)
+- [x] T008 [P] [US1] Create unit test file `/iosApp/iosAppTests/Features/Placeholder/Views/PlaceholderViewModelTests.swift`
+- [x] T009 [P] [US1] Test: PlaceholderViewModel initializes with correct title in PlaceholderViewModelTests.swift (Given-When-Then structure)
+- [x] T010 [P] [US1] Test: PlaceholderViewModel exposes correct localized message in PlaceholderViewModelTests.swift (Given-When-Then structure)
+- [x] T011 [P] [US1] Create unit test file `/iosApp/iosAppTests/Coordinators/TabCoordinatorTests.swift`
+- [x] T012 [P] [US1] Test: TabCoordinator init creates 5 child coordinators (stored in internal array) in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T013 [P] [US1] Test: Each child coordinator has non-nil UINavigationController after init in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T014 [P] [US1] Test: tabBarController computed property returns UITabBarController with 5 view controllers (navigation controllers) in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T015 [P] [US1] Test: Tab bar items have correct titles (localized) in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T016 [P] [US1] Test: Tab bar items have correct SF Symbols icons in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T017 [P] [US1] Test: Accessibility identifiers set correctly on tab bar items in TabCoordinatorTests.swift (Given-When-Then structure)
+- [x] T018 [P] [US1] Test: Child coordinators started successfully when start() is called in TabCoordinatorTests.swift (Given-When-Then structure, async/await)
 
 ### Implementation for User Story 1
 
@@ -84,70 +84,70 @@ description: "Actionable task list for iOS tab navigation implementation"
 
 #### Placeholder Feature (Views + ViewModel + Coordinator)
 
-- [ ] T019 [P] [US1] Create PlaceholderViewModel in `/iosApp/iosApp/Features/Placeholder/Views/PlaceholderViewModel.swift` (ObservableObject with @Published var title: String)
-- [ ] T020 [P] [US1] Create PlaceholderView in `/iosApp/iosApp/Features/Placeholder/Views/PlaceholderView.swift` (SwiftUI view observing PlaceholderViewModel)
-- [ ] T021 [US1] Add SF Symbol clock.fill icon to PlaceholderView
-- [ ] T022 [US1] Add test identifiers to PlaceholderView (placeholder.comingSoon.icon, placeholder.comingSoon.message)
-- [ ] T023 [US1] Create PlaceholderCoordinator in `/iosApp/iosApp/Coordinators/PlaceholderCoordinator.swift` (root coordinator pattern: creates own UINavigationController in init(title:))
-- [ ] T024 [US1] Implement PlaceholderCoordinator.init(title:) to create UINavigationController and set as navigationController property
-- [ ] T025 [US1] Implement PlaceholderCoordinator.start(animated:) async to create PlaceholderViewModel, PlaceholderView, wrap in UIHostingController (@MainActor)
-- [ ] T026 [P] [US1] Add SwiftDoc documentation to PlaceholderViewModel public methods (skip self-explanatory properties)
-- [ ] T027 [P] [US1] Add SwiftDoc documentation to PlaceholderCoordinator public methods documenting root coordinator pattern
+- [x] T019 [P] [US1] Create PlaceholderViewModel in `/iosApp/iosApp/Features/Placeholder/Views/PlaceholderViewModel.swift` (ObservableObject with @Published var title: String)
+- [x] T020 [P] [US1] Create PlaceholderView in `/iosApp/iosApp/Features/Placeholder/Views/PlaceholderView.swift` (SwiftUI view observing PlaceholderViewModel)
+- [x] T021 [US1] Add SF Symbol clock.fill icon to PlaceholderView
+- [x] T022 [US1] Add test identifiers to PlaceholderView (placeholder.comingSoon.icon, placeholder.comingSoon.message)
+- [x] T023 [US1] Create PlaceholderCoordinator in `/iosApp/iosApp/Coordinators/PlaceholderCoordinator.swift` (root coordinator pattern: creates own UINavigationController in init(title:))
+- [x] T024 [US1] Implement PlaceholderCoordinator.init(title:) to create UINavigationController and set as navigationController property
+- [x] T025 [US1] Implement PlaceholderCoordinator.start(animated:) async to create PlaceholderViewModel, PlaceholderView, wrap in UIHostingController (@MainActor)
+- [x] T026 [P] [US1] Add SwiftDoc documentation to PlaceholderViewModel public methods (skip self-explanatory properties)
+- [x] T027 [P] [US1] Add SwiftDoc documentation to PlaceholderCoordinator public methods documenting root coordinator pattern
 
 #### Tab Coordinator (UITabBarController Management)
 
-- [ ] T028 [US1] Create TabCoordinator in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (manages UITabBarController, does NOT conform to CoordinatorInterface)
-- [ ] T029 [US1] Implement TabCoordinator.init() to create UITabBarController instance
-- [ ] T030 [US1] Create Home tab child coordinator (PlaceholderCoordinator with L10n.Tabs.home title) in TabCoordinator.init()
-- [ ] T031 [US1] Create Lost Pet tab child coordinator (AnnouncementListCoordinator with own UINavigationController) in TabCoordinator.init()
-- [ ] T032 [US1] Create Found Pet tab child coordinator (PlaceholderCoordinator with L10n.Tabs.foundPet title) in TabCoordinator.init()
-- [ ] T033 [US1] Create Contact Us tab child coordinator (PlaceholderCoordinator with L10n.Tabs.contactUs title) in TabCoordinator.init()
-- [ ] T034 [US1] Create Account tab child coordinator (PlaceholderCoordinator with L10n.Tabs.account title) in TabCoordinator.init()
-- [ ] T035 [US1] Retrieve UINavigationController from each child coordinator with guard let navigation = coordinator.navigationController else { fatalError("Coordinator must have navigationController") } in TabCoordinator.init()
-- [ ] T036 [US1] Configure tab bar items on navigation controllers with SF Symbols icons and localized titles in TabCoordinator.init()
-- [ ] T037 [US1] Set accessibility identifiers on tab bar items (tabs.home, tabs.lostPet, tabs.foundPet, tabs.contactUs, tabs.account) in TabCoordinator.init()
-- [ ] T038 [US1] Set navigation controllers as tabBarController.viewControllers in TabCoordinator.init()
-- [ ] T039 [US1] Store child coordinators in childCoordinators array (strong references) in TabCoordinator.init()
-- [ ] T040 [US1] Configure tab bar appearance (#FAFAFA background, #808080 inactive, #FF6B35 active) in TabCoordinator.init()
-- [ ] T041 [US1] Add computed property var tabBarController: UITabBarController { get } to expose UITabBarController
-- [ ] T042 [US1] Implement TabCoordinator.start(animated:) async to start all child coordinators (@MainActor)
-- [ ] T043 [P] [US1] Add SwiftDoc documentation to TabCoordinator public methods documenting synchronous init and asynchronous start
+- [x] T028 [US1] Create TabCoordinator in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (manages UITabBarController, does NOT conform to CoordinatorInterface)
+- [x] T029 [US1] Implement TabCoordinator.init() to create UITabBarController instance
+- [x] T030 [US1] Create Home tab child coordinator (PlaceholderCoordinator with L10n.Tabs.home title) in TabCoordinator.init()
+- [x] T031 [US1] Create Lost Pet tab child coordinator (AnnouncementListCoordinator with own UINavigationController) in TabCoordinator.init()
+- [x] T032 [US1] Create Found Pet tab child coordinator (PlaceholderCoordinator with L10n.Tabs.foundPet title) in TabCoordinator.init()
+- [x] T033 [US1] Create Contact Us tab child coordinator (PlaceholderCoordinator with L10n.Tabs.contactUs title) in TabCoordinator.init()
+- [x] T034 [US1] Create Account tab child coordinator (PlaceholderCoordinator with L10n.Tabs.account title) in TabCoordinator.init()
+- [x] T035 [US1] Retrieve UINavigationController from each child coordinator with guard let navigation = coordinator.navigationController else { fatalError("Coordinator must have navigationController") } in TabCoordinator.init()
+- [x] T036 [US1] Configure tab bar items on navigation controllers with SF Symbols icons and localized titles in TabCoordinator.init()
+- [x] T037 [US1] Set accessibility identifiers on tab bar items (tabs.home, tabs.lostPet, tabs.foundPet, tabs.contactUs, tabs.account) in TabCoordinator.init()
+- [x] T038 [US1] Set navigation controllers as tabBarController.viewControllers in TabCoordinator.init()
+- [x] T039 [US1] Store child coordinators in childCoordinators array (strong references) in TabCoordinator.init()
+- [x] T040 [US1] Configure tab bar appearance (#FAFAFA background, #808080 inactive, #FF6B35 active) in TabCoordinator.init()
+- [x] T041 [US1] Add computed property var tabBarController: UITabBarController { get } to expose UITabBarController
+- [x] T042 [US1] Implement TabCoordinator.start(animated:) async to start all child coordinators (@MainActor)
+- [x] T043 [P] [US1] Add SwiftDoc documentation to TabCoordinator public methods documenting synchronous init and asynchronous start
 
 #### Update AnnouncementListCoordinator (Root Coordinator Pattern)
 
-- [ ] T044 [US1] Update AnnouncementListCoordinator in `/iosApp/iosApp/Features/AnnouncementList/Coordinators/AnnouncementListCoordinator.swift` to change init(navigationController:) to no-argument init()
-- [ ] T045 [US1] Create own UINavigationController in AnnouncementListCoordinator.init() and set navigationController property (CoordinatorInterface conformance preserved)
-- [ ] T046 [P] [US1] Add SwiftDoc documentation to AnnouncementListCoordinator documenting root coordinator pattern change (creates own UINavigationController for tab-based navigation)
+- [x] T044 [US1] Update AnnouncementListCoordinator in `/iosApp/iosApp/Features/AnnouncementList/Coordinators/AnnouncementListCoordinator.swift` to change init(navigationController:) to no-argument init()
+- [x] T045 [US1] Create own UINavigationController in AnnouncementListCoordinator.init() and set navigationController property (CoordinatorInterface conformance preserved)
+- [x] T046 [P] [US1] Add SwiftDoc documentation to AnnouncementListCoordinator documenting root coordinator pattern change (creates own UINavigationController for tab-based navigation)
 
 #### Update AppCoordinator (Remove NavigationController Dependency)
 
-- [ ] T047 [US1] Remove CoordinatorInterface conformance from AppCoordinator in `/iosApp/iosApp/Coordinators/AppCoordinator.swift` (AppCoordinator manages TabCoordinator, not UINavigationController)
-- [ ] T048 [US1] Remove init(navigationController:) parameter from AppCoordinator, create no-argument init()
-- [ ] T049 [US1] Create TabCoordinator in AppCoordinator.init() and store as private property
-- [ ] T050 [US1] Implement AppCoordinator.start(animated:) async to start TabCoordinator (@MainActor)
-- [ ] T051 [US1] Add computed property var tabBarController: UITabBarController { get } to expose TabCoordinator's tabBarController
-- [ ] T052 [P] [US1] Add SwiftDoc documentation to AppCoordinator documenting tab navigation setup and why it doesn't conform to CoordinatorInterface
+- [x] T047 [US1] Remove CoordinatorInterface conformance from AppCoordinator in `/iosApp/iosApp/Coordinators/AppCoordinator.swift` (AppCoordinator manages TabCoordinator, not UINavigationController)
+- [x] T048 [US1] Remove init(navigationController:) parameter from AppCoordinator, create no-argument init()
+- [x] T049 [US1] Create TabCoordinator in AppCoordinator.init() and store as private property
+- [x] T050 [US1] Implement AppCoordinator.start(animated:) async to start TabCoordinator (@MainActor)
+- [x] T051 [US1] Add computed property var tabBarController: UITabBarController { get } to expose TabCoordinator's tabBarController
+- [x] T052 [P] [US1] Add SwiftDoc documentation to AppCoordinator documenting tab navigation setup and why it doesn't conform to CoordinatorInterface
 
 #### Update SceneDelegate (Direct Tab Bar Launch)
 
-- [ ] T054 [US1] Remove splash screen setup from SceneDelegate.swift in `/iosApp/iosApp/SceneDelegate.swift`
-- [ ] T055 [US1] Update SceneDelegate.scene(_:willConnectTo:options:) to create window
-- [ ] T056 [US1] Create AppCoordinator with init() in SceneDelegate (creates complete UITabBarController structure synchronously)
-- [ ] T057 [US1] Set window.rootViewController to AppCoordinator.tabBarController (computed property) in SceneDelegate
-- [ ] T058 [US1] Call window.makeKeyAndVisible() in SceneDelegate
-- [ ] T059 [US1] Start AppCoordinator asynchronously in Task { @MainActor in await coordinator.start() } in SceneDelegate
+- [x] T054 [US1] Remove splash screen setup from SceneDelegate.swift in `/iosApp/iosApp/SceneDelegate.swift`
+- [x] T055 [US1] Update SceneDelegate.scene(_:willConnectTo:options:) to create window
+- [x] T056 [US1] Create AppCoordinator with init() in SceneDelegate (creates complete UITabBarController structure synchronously)
+- [x] T057 [US1] Set window.rootViewController to AppCoordinator.tabBarController (computed property) in SceneDelegate
+- [x] T058 [US1] Call window.makeKeyAndVisible() in SceneDelegate
+- [x] T059 [US1] Start AppCoordinator asynchronously in Task { @MainActor in await coordinator.start() } in SceneDelegate
 
 #### Detail Screen Tab Bar Hiding
 
-- [ ] T060 [US1] Update PetDetailsCoordinator in `/iosApp/iosApp/Features/PetDetails/Coordinators/PetDetailsCoordinator.swift` to set hidesBottomBarWhenPushed = true before push
+- [x] T060 [US1] Update PetDetailsCoordinator in `/iosApp/iosApp/Features/PetDetails/Coordinators/PetDetailsCoordinator.swift` to set hidesBottomBarWhenPushed = true before push
 
 #### Verification
 
-- [ ] T061 [US1] Run iOS unit tests with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
+- [x] T061 [US1] Run iOS unit tests with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
 - [ ] T062 [US1] Verify 80% line + branch coverage for TabCoordinator in Xcode coverage report
 - [ ] T063 [US1] Verify 80% line + branch coverage for PlaceholderViewModel in Xcode coverage report
-- [ ] T064 [US1] Build iOS app with `xcodebuild -scheme iosApp -sdk iphonesimulator -configuration Debug`
-- [ ] T065 [US1] Verify no build errors or warnings introduced
+- [x] T064 [US1] Build iOS app with `xcodebuild -scheme iosApp -sdk iphonesimulator -configuration Debug`
+- [x] T065 [US1] Verify no build errors or warnings introduced
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -157,11 +157,11 @@ description: "Actionable task list for iOS tab navigation implementation"
 
 **Purpose**: Final documentation and cleanup
 
-- [ ] T066 [P] Update documentation in plan.md if implementation revealed new insights
-- [ ] T067 [P] Document root coordinator vs sub-coordinator distinction in SwiftDoc comments
-- [ ] T068 [P] Document tab bar appearance configuration in SwiftDoc comments
-- [ ] T069 [P] Document navigation stack isolation (independent per tab) in SwiftDoc comments
-- [ ] T070 [P] Document PlaceholderView reusability for future unimplemented features in SwiftDoc comments
+- [x] T066 [P] Update documentation in plan.md if implementation revealed new insights
+- [x] T067 [P] Document root coordinator vs sub-coordinator distinction in SwiftDoc comments
+- [x] T068 [P] Document tab bar appearance configuration in SwiftDoc comments
+- [x] T069 [P] Document navigation stack isolation (independent per tab) in SwiftDoc comments
+- [x] T070 [P] Document PlaceholderView reusability for future unimplemented features in SwiftDoc comments
 
 ---
 

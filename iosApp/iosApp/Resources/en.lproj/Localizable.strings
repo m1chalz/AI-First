@@ -239,3 +239,18 @@
 
 // Toast message
 "report_created.code_copied" = "Code copied to clipboard";
+
+/* MARK: - Tab Navigation */
+
+// Tab bar items
+"tabs.home" = "Home";
+"tabs.lostPet" = "Lost Pet";
+"tabs.foundPet" = "Found Pet";
+"tabs.contactUs" = "Contact Us";
+"tabs.account" = "Account";
+
+/* MARK: - Placeholder Screen */
+
+// Coming soon
+"placeholder.title" = "Coming soon";
+"placeholder.message" = "This feature is under development";
