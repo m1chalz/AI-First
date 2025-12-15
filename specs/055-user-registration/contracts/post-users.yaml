@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: User Registration API
+  description: |
+    API endpoint for user registration in the PetSpot application.
+    
+    This endpoint allows new users to create accounts by providing email and password.
+    Passwords are securely hashed using scrypt before storage.
+  version: 1.0.0
+  contact:
+    name: PetSpot API Team
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.petspot.example.com
+    description: Production server (placeholder)
+
+paths:
+  /api/v1/users:
+    post:
+      summary: Register a new user
+      description: |
+        Creates a new user account with the provided email and password.
+        
+        **Validation Rules**:
+        - Email: RFC 5322 compliant, max 254 characters, unique
+        - Password: 8-128 characters (any characters allowed)
+        
+        **Security**:
+        - Passwords are hashed using scrypt before storage
+        - Email addresses are normalized to lowercase
+        - Database unique constraint prevents race conditions
+        
+        **Success**: Returns HTTP 201 with user ID
+        **Failure**: Returns HTTP 400 (validation) or HTTP 409 (duplicate email)
+      operationId: createUser
+      tags:
+        - User Registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              validRequest:
+                summary: Valid registration request
+                value:
+                  email: user@example.com
+                  password: securePassword123
+              minimumPassword:
+                summary: Minimum password length (8 chars)
+                value:
+                  email: test@example.com
+                  password: 12345678
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+              examples:
+                success:
+                  summary: Successful registration
+                  value:
+                    id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+        '400':
+          description: Validation error (missing fields, invalid format, length constraints)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingEmail:
+                  summary: Email field missing
+                  value:
+                    error:
+                      requestId: "req_abc123"
+                      code: "MISSING_EMAIL"
+                      message: "Email is required"
+                      field: "email"
+                invalidEmailFormat:
+                  summary: Invalid email format
+                  value:
+                    error:
+                      requestId: "req_def456"
+                      code: "INVALID_EMAIL_FORMAT"
+                      message: "Email format is invalid"
+                      field: "email"
+                emailTooLong:
+                  summary: Email exceeds 254 characters
+                  value:
+                    error:
+                      requestId: "req_ghi789"
+                      code: "EMAIL_TOO_LONG"
+                      message: "Email must not exceed 254 characters"
+                      field: "email"
+                passwordTooShort:
+                  summary: Password too short (< 8 chars)
+                  value:
+                    error:
+                      requestId: "req_jkl012"
+                      code: "PASSWORD_TOO_SHORT"
+                      message: "Password must be at least 8 characters"
+                      field: "password"
+                passwordTooLong:
+                  summary: Password too long (> 128 chars)
+                  value:
+                    error:
+                      requestId: "req_mno345"
+                      code: "PASSWORD_TOO_LONG"
+                      message: "Password must not exceed 128 characters"
+                      field: "password"
+                missingPassword:
+                  summary: Password field missing
+                  value:
+                    error:
+                      requestId: "req_pqr678"
+                      code: "MISSING_PASSWORD"
+                      message: "Password is required"
+                      field: "password"
+                malformedJson:
+                  summary: Malformed JSON request body
+                  value:
+                    error:
+                      requestId: "req_stu901"
+                      code: "INVALID_JSON"
+                      message: "Request body must be valid JSON"
+        '409':
+          description: Conflict - email address already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emailExists:
+                  summary: Email already exists
+                  value:
+                    error:
+                      requestId: "req_vwx234"
+                      code: "EMAIL_ALREADY_EXISTS"
+                      message: "Email address is already registered"
+                      field: "email"
+        '413':
+          description: Payload too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                payloadTooLarge:
+                  summary: Request payload exceeds size limit
+                  value:
+                    error:
+                      requestId: "req_yza567"
+                      code: "PAYLOAD_TOO_LARGE"
+                      message: "Request payload exceeds maximum size limit (100KB)"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internalError:
+                  summary: Unexpected server error
+                  value:
+                    error:
+                      requestId: "req_bcd890"
+                      code: "INTERNAL_SERVER_ERROR"
+                      message: "An unexpected error occurred"
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: |
+            User's email address. Must be:
+            - RFC 5322 compliant format
+            - Maximum 254 characters (RFC 5321 limit)
+            - Unique (not already registered)
+            
+            Email will be normalized to lowercase before storage.
+          example: user@example.com
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          format: password
+          description: |
+            User's password. Must be:
+            - Minimum 8 characters
+            - Maximum 128 characters
+            - Any characters allowed (no complexity requirements)
+            
+            Password will be hashed using scrypt before storage.
+          example: securePassword123
+    
+    CreateUserResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier (UUID v4) of the newly created user
+          example: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+    
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - requestId
+            - code
+            - message
+          properties:
+            requestId:
+              type: string
+              description: Unique identifier for the request (for tracing/debugging)
+              example: "req_abc123"
+            code:
+              type: string
+              description: Machine-readable error code
+              enum:
+                - MISSING_EMAIL
+                - INVALID_EMAIL_FORMAT
+                - EMAIL_TOO_LONG
+                - MISSING_PASSWORD
+                - PASSWORD_TOO_SHORT
+                - PASSWORD_TOO_LONG
+                - EMAIL_ALREADY_EXISTS
+                - INVALID_JSON
+                - PAYLOAD_TOO_LARGE
+                - INTERNAL_SERVER_ERROR
+              example: "INVALID_EMAIL_FORMAT"
+            message:
+              type: string
+              description: Human-readable error message
+              example: "Email format is invalid"
+            field:
+              type: string
+              description: Name of the field that failed validation (optional, present for field-specific errors)
+              example: "email"
+
+tags:
+  - name: User Registration
+    description: User account creation and registration
+
