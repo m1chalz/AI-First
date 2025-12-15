@@ -391,13 +391,7 @@ public class PetListScreen {
         }
     }
 
-    private void waitForScrollIdle() {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
+    // Removed unused private method waitForScrollIdle() - was never called
     
     // ========================================
     // Helper Methods

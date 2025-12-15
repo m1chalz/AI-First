@@ -800,16 +800,9 @@ public class PetListMobileSteps {
             Thread.sleep(2000); // Wait for dialog to appear
         } catch (InterruptedException e) {}
         
-        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-        boolean found = false;
-        
-        if (platformName.contains("android")) {
-            String pageSource = driver.getPageSource();
-            found = pageSource.contains("Location") || pageSource.contains("location");
-        } else { // iOS
-            String pageSource = driver.getPageSource();
-            found = pageSource.contains("Location") || pageSource.contains("location");
-        }
+        // Same logic for both platforms
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains("Location") || pageSource.contains("location");
         
         assertTrue(found, "Location rationale dialog should be visible");
         System.out.println("Verified: Location rationale dialog is displayed");
@@ -824,18 +817,10 @@ public class PetListMobileSteps {
     public void theRationaleDialogShouldHaveSettingsButton() {
         System.out.println("Verifying Settings button in rationale dialog...");
         
-        String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-        boolean found = false;
-        
-        if (platformName.contains("android")) {
-            String pageSource = driver.getPageSource();
-            found = pageSource.contains("Settings") || pageSource.contains("settings") ||
-                    pageSource.contains("Go to Settings");
-        } else { // iOS
-            String pageSource = driver.getPageSource();
-            found = pageSource.contains("Settings") || pageSource.contains("settings") ||
-                    pageSource.contains("Go to Settings");
-        }
+        // Same logic for both platforms
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains("Settings") || pageSource.contains("settings") ||
+                pageSource.contains("Go to Settings");
         
         assertTrue(found, "Rationale dialog should have Settings button");
         System.out.println("Verified: Settings button is present in rationale dialog");

@@ -241,7 +241,7 @@ public class ReportCreatedSteps {
     @And("I should be on the pet list screen")
     public void iShouldBeOnThePetListScreen() {
         assertTrue(
-            petListScreen.waitForListVisible(10),
+            petListScreen.waitForPetListVisible(10),
             "Pet list screen should be displayed after flow dismissal"
         );
     }
@@ -303,7 +303,12 @@ public class ReportCreatedSteps {
     
     @When("I rotate the device to landscape")
     public void iRotateTheDeviceToLandscape() {
-        driver.rotate(org.openqa.selenium.ScreenOrientation.LANDSCAPE);
+        // Appium 9.x: Use platform-specific methods
+        if (driver instanceof io.appium.java_client.android.AndroidDriver) {
+            ((io.appium.java_client.android.AndroidDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.LANDSCAPE);
+        } else if (driver instanceof io.appium.java_client.ios.IOSDriver) {
+            ((io.appium.java_client.ios.IOSDriver) driver).rotate(org.openqa.selenium.ScreenOrientation.LANDSCAPE);
+        }
         System.out.println("Rotated device to landscape");
     }
     
