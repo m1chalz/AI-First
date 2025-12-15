@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SpotBugs exclusion filter for PetSpot E2E Tests
+    
+    Excludes false positives and acceptable patterns for test automation code.
+-->
+
+<FindBugsFilter>
+    <!-- Exclude test classes from some checks -->
+    <Match>
+        <Class name="~.*Test.*"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+    
+    <Match>
+        <Class name="~.*Test.*"/>
+        <Bug pattern="DM_RUN_FINALIZERS_ON_EXIT"/>
+    </Match>
+    
+    <!-- Page Objects and Screen Objects may have public fields -->
+    <Match>
+        <Class name="~.*Page"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    
+    <Match>
+        <Class name="~.*Page"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <Match>
+        <Class name="~.*Screen"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    
+    <Match>
+        <Class name="~.*Screen"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- WebDriver/Appium instances are managed externally -->
+    <Match>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+        <Field name="~.*driver"/>
+    </Match>
+    
+    <!-- Wait utilities may intentionally use Thread.sleep in tests -->
+    <Match>
+        <Class name="~.*Wait.*"/>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    </Match>
+    
+    <!-- Screenshot utilities may ignore mkdirs return value -->
+    <Match>
+        <Class name="~.*Screenshot.*"/>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+    </Match>
+    
+    <!-- Template classes may have unused helper methods -->
+    <Match>
+        <Class name="~.*Template"/>
+        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+    </Match>
+    
+    <!-- Test code may catch generic Exception for robustness -->
+    <Match>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
+    
+    <!-- Test code may use toUpperCase/toLowerCase without locale (acceptable for test data) -->
+    <Match>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
+    
+    <!-- Dead stores in test code (may be intentional for readability) -->
+    <Match>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    </Match>
+</FindBugsFilter>

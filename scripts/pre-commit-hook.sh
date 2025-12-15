@@ -2,8 +2,10 @@
 # Pre-commit Git Hook for Static Analysis
 # This hook is installed by running: ./scripts/install-hooks.sh
 #
-# It automatically runs static analysis (Detekt, ktlint, Android Lint) on staged
-# Kotlin files before allowing a commit.
+# It automatically runs static analysis on staged files before allowing a commit:
+# - Kotlin files: Detekt, ktlint, Android Lint (for composeApp files)
+# - Java files (e2e-tests/java/): Checkstyle, SpotBugs
+# - Gherkin files (*.feature): gherkin-lint
 #
 # To bypass this hook in emergencies: git commit --no-verify
 
