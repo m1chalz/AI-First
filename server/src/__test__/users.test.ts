@@ -51,16 +51,16 @@ describe('POST /api/v1/users', () => {
 
   describe('validation errors', () => {
     it.each([
-      { email: 'invalid-email', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: 'user@', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: '@example.com', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: 'a'.repeat(243) + '@example.com', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: '', password: 'password123', field: 'email', code: 'INVALID_FORMAT' },
-      { email: 'user@example.com', password: 'short', field: 'password', code: 'INVALID_FORMAT' },
-      { email: 'user@example.com', password: '1234567', field: 'password', code: 'INVALID_FORMAT' },
-      { email: 'user@example.com', password: 'a'.repeat(129), field: 'password', code: 'INVALID_FORMAT' },
-      { email: 'user@example.com', password: '', field: 'password', code: 'INVALID_FORMAT' }
-    ])('should return HTTP 400 with validation error for $field', async ({ email, password, field, code }) => {
+      { email: 'invalid-email', password: 'password123', field: 'email' },
+      { email: 'user@', password: 'password123', field: 'email' },
+      { email: '@example.com', password: 'password123', field: 'email' },
+      { email: 'a'.repeat(243) + '@example.com', password: 'password123', field: 'email' },
+      { email: '', password: 'password123', field: 'email' },
+      { email: 'user@example.com', password: 'short', field: 'password' },
+      { email: 'user@example.com', password: '1234567', field: 'password' },
+      { email: 'user@example.com', password: 'a'.repeat(129), field: 'password' },
+      { email: 'user@example.com', password: '', field: 'password' }
+    ])('should return HTTP 400 with validation error for $field', async ({ email, password, field }) => {
       // when
       const response = await request(server)
         .post('/api/v1/users')
@@ -69,12 +69,25 @@ describe('POST /api/v1/users', () => {
       // then
       expect(response.status).toBe(400);
       expect(response.body.error).toHaveProperty('requestId');
-      expect(response.body.error.code).toBe(code);
+      expect(response.body.error.code).toBe('INVALID_FORMAT');
       expect(response.body.error.field).toBe(field);
     });
-  });
 
-  describe('duplicate email', () => {
+    it.each([
+      { email: 'user@example.com' },
+      { password: '12345678' }
+    ])('should return HTTP 400 when one of the fields is missing', async (requestBody) => {
+      // when
+      const response = await request(server)
+        .post('/api/v1/users')
+        .send(requestBody);
+
+      // then
+      expect(response.status).toBe(400);
+      expect(response.body.error).toHaveProperty('requestId');
+      expect(response.body.error.code).toBe('MISSING_VALUE');
+    });
+
     it('should return HTTP 409 for duplicate email', async () => {
       // given
       const email = 'duplicate@example.com';
