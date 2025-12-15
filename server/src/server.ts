@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { runDbMigrations } from './database/db-utils.ts';
 import routes from './routes/routes.ts';
 import requestIdMiddleware from './middlewares/request-id-middleware.ts';
@@ -15,6 +16,12 @@ export async function prepareServer(): Promise<express.Express> {
 
   const server = express();
   server.use(cors());
+  server.use(
+    helmet({
+      contentSecurityPolicy: false, // disabled for REST API - not serving HTML
+      crossOriginResourcePolicy: false // allow cross-origin image requests
+    })
+  );
   server.use(express.json({ limit: '100kb' }));
 
   // Request ID middleware - generate unique ID and propagate via AsyncLocalStorage
