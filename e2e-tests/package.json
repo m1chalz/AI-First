@@ -1,0 +1,17 @@
+{
+  "name": "petspot-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E testing infrastructure with static analysis for Gherkin feature files",
+  "private": true,
+  "scripts": {
+    "gherkin-lint": "gherkin-lint java/src/test/resources/features",
+    "gherkin-lint:fix": "gherkin-lint java/src/test/resources/features --fix"
+  },
+  "devDependencies": {
+    "gherkin-lint": "^4.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

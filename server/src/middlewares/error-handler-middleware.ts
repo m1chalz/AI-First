@@ -9,11 +9,11 @@ export default function errorHandlerMiddleware(err: Error, _req: Request, res: R
   if (err instanceof Error && (err.message.includes('request entity too large') || err.message.includes('File too large'))) {
     return res.status(413).json(payloadTooLargeErrorResponse(requestId));
   }
-  
+
   if (err instanceof CustomError) {
     return res.status(err.statusCode).json(err.toErrorResponse(requestId));
   }
-  
+
   return res.status(500).json(internalServerErrorResponse(requestId));
 }
 
@@ -24,7 +24,7 @@ function internalServerErrorResponse(requestId: string): ErrorResponse {
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Internal server error'
     }
-  }
+  };
 }
 
 function payloadTooLargeErrorResponse(requestId: string): ErrorResponse {
@@ -34,6 +34,5 @@ function payloadTooLargeErrorResponse(requestId: string): ErrorResponse {
       code: 'PAYLOAD_TOO_LARGE',
       message: 'Request payload exceeds maximum size limit (100KB)'
     }
-  }
+  };
 }
-

@@ -17,12 +17,20 @@ class AnimalRepositoryImpl(
 ) : AnimalRepository {
     /**
      * Retrieves all pet announcements from the backend API.
+     * Optionally filters by location when lat/lng are provided.
      *
+     * @param lat Optional latitude for location-based filtering
+     * @param lng Optional longitude for location-based filtering
+     * @param range Optional search radius in kilometers (backend defaults to 5km if not provided)
      * @return List of animals from backend
      * @throws Exception on network or API errors
      */
-    override suspend fun getAnimals(): List<Animal> {
-        val response = apiClient.getAnnouncements()
+    override suspend fun getAnimals(
+        lat: Double?,
+        lng: Double?,
+        range: Int?,
+    ): List<Animal> {
+        val response = apiClient.getAnnouncements(lat, lng, range)
         return response.data.map { it.toDomain(baseUrl) }
     }
 

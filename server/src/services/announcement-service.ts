@@ -1,8 +1,8 @@
 import type { Announcement, AnnouncementWithManagementPassword, CreateAnnouncementDto, LocationFilter } from '../types/announcement.ts';
 import type { IAnnouncementRepository } from '../database/repositories/announcement-repository.ts';
-import type { PhotoUploadService } from './photo-upload-service.ts';
 import { ConflictError, NotFoundError } from '../lib/errors.ts';
 import { generateManagementPassword } from '../lib/password-management.ts';
+import type { PhotoUploadService } from './photo-upload-service.ts';
 
 const DEFAULT_RANGE_KM = 5;
 
@@ -17,26 +17,26 @@ export class AnnouncementService {
 
   async getAllAnnouncements(lat?: number, lng?: number, range?: number): Promise<Announcement[]> {
     this.locationValidator(lat, lng, range);
-    
+
     let locationFilter: LocationFilter | undefined;
     if (lat !== undefined && lng !== undefined) {
       locationFilter = {
         lat,
         lng,
-        range: range ?? DEFAULT_RANGE_KM,
+        range: range ?? DEFAULT_RANGE_KM
       };
     }
-    
+
     return this.repository.findAll(locationFilter);
   }
 
   async getAnnouncementById(id: string): Promise<Announcement> {
     const announcement = await this.repository.findById(id);
-    
+
     if (!announcement) {
       throw new NotFoundError();
     }
-    
+
     return announcement;
   }
 
@@ -57,7 +57,7 @@ export class AnnouncementService {
       breed: data.breed ? this.sanitizer(data.breed) : undefined,
       sex: this.sanitizer(data.sex),
       description: data.description ? this.sanitizer(data.description) : undefined,
-      reward: data.reward ? this.sanitizer(data.reward) : undefined,
+      reward: data.reward ? this.sanitizer(data.reward) : undefined
     } as CreateAnnouncementDto;
 
     const managementPassword = generateManagementPassword();
@@ -66,13 +66,13 @@ export class AnnouncementService {
 
     return {
       ...created,
-      managementPassword,
+      managementPassword
     };
   }
 
   async deleteAnnouncement(id: string): Promise<void> {
     const announcement = await this.repository.findById(id);
-    
+
     if (!announcement) {
       throw new NotFoundError();
     }
@@ -85,4 +85,3 @@ export class AnnouncementService {
     await this.repository.delete(id);
   }
 }
-

@@ -21,16 +21,16 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       rows = await this.db('announcement').whereNotNull('photo_url').select('*');
     } else {
       const { lat, lng, range } = locationFilter;
-  
+
       /**
        * Haversine formula calculates great-circle distance between two points on a sphere.
        * Formula: d = R * acos(cos(φ1) * cos(φ2) * cos(Δλ) + sin(φ1) * sin(φ2))
        * Where: R = Earth radius (6371 km), φ = latitude, λ = longitude
        */
-      const subquery = this.db('announcement')
-        .select(
-          '*',
-          this.db.raw(`
+      const subquery = this.db('announcement').select(
+        '*',
+        this.db.raw(
+          `
             (6371 * acos(
               cos(radians(?)) *
               cos(radians(location_latitude)) *
@@ -38,9 +38,11 @@ export class AnnouncementRepository implements IAnnouncementRepository {
               sin(radians(?)) *
               sin(radians(location_latitude))
             )) AS distance
-          `, [lat, lng, lat])
-        );
-  
+          `,
+          [lat, lng, lat]
+        )
+      );
+
       rows = await this.db
         .from(subquery.as('announcements_with_distance'))
         .where('distance', '<', range)
@@ -52,18 +54,14 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   }
 
   async findById(id: string): Promise<Announcement | null> {
-    const row: AnnouncementRow | undefined = await this.db('announcement')
-      .where('id', id)
-      .first();
-    
+    const row: AnnouncementRow | undefined = await this.db('announcement').where('id', id).first();
+
     return row ? this.mapRowToAnnouncement(row) : null;
   }
 
   async existsByMicrochip(microchipNumber: string): Promise<boolean> {
-    const row: AnnouncementRow | undefined = await this.db('announcement')
-      .where('microchip_number', microchipNumber)
-      .first();
-    
+    const row: AnnouncementRow | undefined = await this.db('announcement').where('microchip_number', microchipNumber).first();
+
     return !!row;
   }
 
@@ -71,7 +69,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
     const passwordHash = await hashPassword(managementPassword);
     const id = uuidv4();
     const now = new Date().toISOString();
-    
+
     const row: AnnouncementRow = {
       id,
       pet_name: data.petName ?? null,
@@ -91,7 +89,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       reward: data.reward ?? null,
       management_password_hash: passwordHash,
       created_at: now,
-      updated_at: now,
+      updated_at: now
     };
 
     await this.db('announcement').insert(row);
@@ -99,12 +97,10 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   }
 
   async updatePhotoUrl(trx: Knex.Transaction, id: string, photoUrl: string): Promise<void> {
-    await trx('announcement')
-      .where('id', id)
-      .update({
-        photo_url: photoUrl,
-        updated_at: new Date().toISOString(),
-      });
+    await trx('announcement').where('id', id).update({
+      photo_url: photoUrl,
+      updated_at: new Date().toISOString()
+    });
   }
 
   async delete(id: string): Promise<void> {
@@ -130,8 +126,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       status: row.status,
       reward: row.reward,
       createdAt: row.created_at,
-      updatedAt: row.updated_at,
+      updatedAt: row.updated_at
     };
   }
 }
-

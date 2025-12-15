@@ -6,6 +6,7 @@ package com.intive.aifirst.petspot.features.reportmissing.util
  */
 sealed interface OwnerDetailsValidationResult {
     data object Valid : OwnerDetailsValidationResult
+
     data class Invalid(val message: String) : OwnerDetailsValidationResult
 }
 
@@ -69,4 +70,3 @@ object OwnerDetailsValidator {
         }
     }
 }
-

@@ -5,7 +5,7 @@ describe('file-validation', () => {
   describe('validateImageFormat', () => {
     it('should detect JPEG format from magic bytes', async () => {
       // Given
-      const buffer = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46]);
+      const buffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]);
 
       // When
       const result = await validateImageFormat(buffer);
@@ -27,7 +27,7 @@ describe('file-validation', () => {
 
     it('should detect BMP format from magic bytes', async () => {
       // Given
-      const buffer = Buffer.from([0x42, 0x4D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+      const buffer = Buffer.from([0x42, 0x4d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
       // When
       const result = await validateImageFormat(buffer);
@@ -37,10 +37,10 @@ describe('file-validation', () => {
     });
 
     it.each([
-      ['random bytes', Buffer.from([0xAB, 0xCD, 0xEF])],
+      ['random bytes', Buffer.from([0xab, 0xcd, 0xef])],
       ['text data', Buffer.from('Hello World')],
       ['empty buffer', Buffer.alloc(0)],
-      ['PDF magic bytes', Buffer.from([0x25, 0x50, 0x44, 0x46])],
+      ['PDF magic bytes', Buffer.from([0x25, 0x50, 0x44, 0x46])]
     ])('should return null for non-image format: %s', async (desc, buffer) => {
       // Given / When
       const result = await validateImageFormat(buffer);
@@ -51,7 +51,7 @@ describe('file-validation', () => {
 
     it('should detect spoofed MIME types using magic bytes', async () => {
       // Given
-      const jpegBuffer = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]);
+      const jpegBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
       const claimedMime = 'image/png';
 
       // When
@@ -63,4 +63,3 @@ describe('file-validation', () => {
     });
   });
 });
-

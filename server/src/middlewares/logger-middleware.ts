@@ -17,7 +17,7 @@ function redactPII(data: unknown): unknown {
   }
 
   if (Array.isArray(data)) {
-    return data.map(item => redactPII(item));
+    return data.map((item) => redactPII(item));
   }
 
   const redacted: Record<string, unknown> = {};
@@ -74,31 +74,25 @@ export default pinoHttp({
       }
 
       return serialized;
-    },
+    }
   },
 
   redact: {
     paths: ['req.headers.authorization', 'res.headers.authorization'],
-    censor: '***',
+    censor: '***'
   },
 
   customAttributeKeys: {
-    responseTime: 'responseTime',
+    responseTime: 'responseTime'
   },
 
   autoLogging: true,
 
-  customReceivedMessage: () => {
-    return 'Request received';
-  },
+  customReceivedMessage: () => 'Request received',
 
-  customSuccessMessage: () => {
-    return 'Request completed';
-  },
+  customSuccessMessage: () => 'Request completed',
 
-  customErrorMessage: (_req: any, _res: any, err: any) => {
-    return `Request failed: ${err.message}`;
-  },
+  customErrorMessage: (_req: any, _res: any, err: any) => `Request failed: ${err.message}`,
 
   customLogLevel: (_req: any, res: any) => {
     if (res.statusCode >= 500) {
@@ -108,6 +102,6 @@ export default pinoHttp({
       return 'warn';
     }
     return 'info';
-  },
+  }
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

@@ -37,12 +37,14 @@ sealed interface AnimalListIntent {
 
     /**
      * Permission result received from Accompanist/system dialog.
+     * @param isFromSystemDialog When true, skip rationale dialog (per US2: just load animals after system dialog denial)
      */
     data class PermissionResult(
         val granted: Boolean,
         val fineLocation: Boolean = false,
         val coarseLocation: Boolean = false,
         val shouldShowRationale: Boolean = false,
+        val isFromSystemDialog: Boolean = false,
     ) : AnimalListIntent
 
     /**

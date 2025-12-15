@@ -1,64 +1,71 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnimalList } from './components/AnimalList/AnimalList';
-import { MicrochipNumberScreen } from './components/ReportMissingPet/MicrochipNumberScreen';
-import { PhotoScreen } from './components/ReportMissingPet/PhotoScreen';
-import { DetailsScreen } from './components/ReportMissingPet/DetailsScreen';
-import { ContactScreen } from './components/ReportMissingPet/ContactScreen';
-import { SummaryScreen } from './components/ReportMissingPet/SummaryScreen';
-import { ReportMissingPetFlowProvider } from './contexts/ReportMissingPetFlowContext';
+import { AnnouncementList } from './components/AnnouncementList/AnnouncementList';
+import { MicrochipNumberScreen } from './components/NewAnnouncement/MicrochipNumberScreen';
+import { PhotoScreen } from './components/NewAnnouncement/PhotoScreen';
+import { DetailsScreen } from './components/NewAnnouncement/DetailsScreen';
+import { ContactScreen } from './components/NewAnnouncement/ContactScreen';
+import { SummaryScreen } from './components/NewAnnouncement/SummaryScreen';
+import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
+import { AppRoutes } from './routes/routes';
 
 export function App() {
   return (
     <GeolocationProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AnimalList />} />
-          <Route path="/announcement/:announcementId" element={<AnimalList />} />
-        <Route path="/report-missing" element={<ReportMissingPetFlowProvider><Navigate to="microchip" replace /></ReportMissingPetFlowProvider>} />
-        <Route
-          path="/report-missing/microchip"
-          element={
-            <ReportMissingPetFlowProvider>
-              <MicrochipNumberScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/photo"
-          element={
-            <ReportMissingPetFlowProvider>
-              <PhotoScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/details"
-          element={
-            <ReportMissingPetFlowProvider>
-              <DetailsScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/contact"
-          element={
-            <ReportMissingPetFlowProvider>
-              <ContactScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
-        <Route
-          path="/report-missing/summary"
-          element={
-            <ReportMissingPetFlowProvider>
-              <SummaryScreen />
-            </ReportMissingPetFlowProvider>
-          }
-        />
+          <Route path="/" element={<AnnouncementList />} />
+          <Route path="/announcement/:announcementId" element={<AnnouncementList />} />
+          <Route
+            path={AppRoutes.base}
+            element={
+              <NewAnnouncementFlowProvider>
+                <Navigate to={AppRoutes.microchip} replace />
+              </NewAnnouncementFlowProvider>
+            }
+          />
+          <Route
+            path={AppRoutes.microchip}
+            element={
+              <NewAnnouncementFlowProvider>
+                <MicrochipNumberScreen />
+              </NewAnnouncementFlowProvider>
+            }
+          />
+          <Route
+            path={AppRoutes.photo}
+            element={
+              <NewAnnouncementFlowProvider>
+                <PhotoScreen />
+              </NewAnnouncementFlowProvider>
+            }
+          />
+          <Route
+            path={AppRoutes.details}
+            element={
+              <NewAnnouncementFlowProvider>
+                <DetailsScreen />
+              </NewAnnouncementFlowProvider>
+            }
+          />
+          <Route
+            path={AppRoutes.contact}
+            element={
+              <NewAnnouncementFlowProvider>
+                <ContactScreen />
+              </NewAnnouncementFlowProvider>
+            }
+          />
+          <Route
+            path={AppRoutes.summary}
+            element={
+              <NewAnnouncementFlowProvider>
+                <SummaryScreen />
+              </NewAnnouncementFlowProvider>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </GeolocationProvider>
   );
 }
-

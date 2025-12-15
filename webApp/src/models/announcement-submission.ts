@@ -1,4 +1,4 @@
-import type { ReportMissingPetFlowState } from './ReportMissingPetFlow';
+import type { NewAnnouncementFlowState } from '../models/NewAnnouncementFlow';
 
 export interface AnnouncementSubmissionDto {
   petName?: string;
@@ -22,7 +22,7 @@ export interface AnnouncementResponse {
   managementPassword: string;
 }
 
-export function mapFlowStateToDto(flowState: ReportMissingPetFlowState): AnnouncementSubmissionDto {
+export function mapFlowStateToDto(flowState: NewAnnouncementFlowState): AnnouncementSubmissionDto {
   // required fields are guaranteed by form validation
   if (!flowState.species || !flowState.sex || flowState.latitude === null || flowState.longitude === null) {
     throw new Error('Required fields are missing');
@@ -48,4 +48,3 @@ export function mapFlowStateToDto(flowState: ReportMissingPetFlowState): Announc
 
   return dto;
 }
-

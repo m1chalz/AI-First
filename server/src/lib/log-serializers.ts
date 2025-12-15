@@ -7,7 +7,7 @@ const BINARY_CONTENT_TYPES = [
   /^application\/pdf/,
   /^application\/octet-stream/,
   /^application\/zip/,
-  /^application\/gzip/,
+  /^application\/gzip/
 ];
 
 export interface TruncatedBody {
@@ -37,7 +37,7 @@ export function truncateBody(body: unknown): unknown | TruncatedBody {
     return {
       content: bodyString.substring(0, MAX_BODY_SIZE),
       truncated: true,
-      originalSize: bodyString.length,
+      originalSize: bodyString.length
     };
   }
 
@@ -70,10 +70,9 @@ export function serializeBody(
     return {
       binaryOmitted: true,
       contentType,
-      contentLength: headers['content-length'] || 'unknown',
+      contentLength: headers['content-length'] || 'unknown'
     };
   }
 
   return truncateBody(body);
 }
-

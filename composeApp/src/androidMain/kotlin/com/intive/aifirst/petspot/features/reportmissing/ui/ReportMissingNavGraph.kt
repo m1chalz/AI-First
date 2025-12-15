@@ -8,9 +8,9 @@ import androidx.navigation.compose.navigation
 import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.OwnerDetailsViewModel
-import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ReportMissingViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.PhotoViewModel
+import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.SummaryViewModel
 import com.intive.aifirst.petspot.features.reportmissing.ui.chipnumber.ChipNumberScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.contactdetails.ContactDetailsScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.description.DescriptionScreen
@@ -150,7 +150,11 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
                     parametersOf(flowState)
                 }
 
-            ContactDetailsScreen(viewModel = viewModel, navController = navController)
+            ContactDetailsScreen(
+                viewModel = viewModel,
+                flowState = flowState,
+                navController = navController,
+            )
         }
 
         composable<ReportMissingRoute.Summary> { backStackEntry ->
@@ -158,8 +162,23 @@ fun NavGraphBuilder.reportMissingNavGraph(navController: NavController) {
                 remember(backStackEntry) {
                     navController.getBackStackEntry<NavRoute.ReportMissing>()
                 }
-            val viewModel: ReportMissingViewModel = koinViewModel(viewModelStoreOwner = parentEntry)
-            SummaryScreen(viewModel = viewModel, navController = navController)
+
+            // Shared flow state (NavGraph-scoped)
+            val flowStateHolder: FlowStateHolder =
+                koinViewModel(viewModelStoreOwner = parentEntry)
+            val flowState = flowStateHolder.flowState
+
+            // Screen ViewModel with MVI pattern
+            val viewModel: SummaryViewModel =
+                koinViewModel {
+                    parametersOf(flowState)
+                }
+
+            SummaryScreen(
+                viewModel = viewModel,
+                flowState = flowState,
+                navController = navController,
+            )
         }
     }
 }

@@ -65,29 +65,37 @@ fun ContactDetailsContent(
     onContinueClick: () -> Unit = {},
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .testTag("ownersDetails.content"),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .testTag("ownersDetails.content"),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding(),
         ) {
             // Header with back button, title, and progress indicator
             StepHeader(
                 title = "Owner's details",
                 currentStep = 4,
-                onBackClick = if (state.isSubmitting) { {} } else onBackClick,
+                onBackClick =
+                    if (state.isSubmitting) {
+                        {}
+                    } else {
+                        onBackClick
+                    },
             )
 
             // Scrollable content
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -172,14 +180,16 @@ fun ContactDetailsContent(
                             Text(
                                 text = "${state.rewardCharacterCount}/${state.rewardMaxLength}",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = if (state.rewardCharacterCount >= state.rewardMaxLength) {
-                                    ReportMissingColors.ErrorTextColor
-                                } else {
-                                    ReportMissingColors.LabelColor
-                                },
-                                modifier = Modifier
-                                    .padding(end = 4.dp)
-                                    .testTag("ownersDetails.rewardCounter"),
+                                color =
+                                    if (state.rewardCharacterCount >= state.rewardMaxLength) {
+                                        ReportMissingColors.ErrorTextColor
+                                    } else {
+                                        ReportMissingColors.LabelColor
+                                    },
+                                modifier =
+                                    Modifier
+                                        .padding(end = 4.dp)
+                                        .testTag("ownersDetails.rewardCounter"),
                             )
                         }
                     }
@@ -200,9 +210,10 @@ fun ContactDetailsContent(
         // Snackbar for error messages with Retry action
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .testTag("ownersDetails.snackbar"),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .testTag("ownersDetails.snackbar"),
         )
     }
 }
@@ -211,29 +222,30 @@ fun ContactDetailsContent(
  * Preview parameter provider for ContactDetailsContent.
  */
 class OwnerDetailsUiStateProvider : PreviewParameterProvider<OwnerDetailsUiState> {
-    override val values = sequenceOf(
-        // Initial state
-        OwnerDetailsUiState(),
-        // With values entered
-        OwnerDetailsUiState(
-            phone = "+48 123 456 789",
-            email = "owner@example.com",
-            reward = "$250 gift card",
-        ),
-        // With validation errors
-        OwnerDetailsUiState(
-            phone = "123",
-            email = "invalid",
-            phoneError = "Enter at least 7 digits",
-            emailError = "Enter a valid email address",
-        ),
-        // Loading state
-        OwnerDetailsUiState(
-            phone = "+48 123 456 789",
-            email = "owner@example.com",
-            isSubmitting = true,
-        ),
-    )
+    override val values =
+        sequenceOf(
+            // Initial state
+            OwnerDetailsUiState(),
+            // With values entered
+            OwnerDetailsUiState(
+                phone = "+48 123 456 789",
+                email = "owner@example.com",
+                reward = "$250 gift card",
+            ),
+            // With validation errors
+            OwnerDetailsUiState(
+                phone = "123",
+                email = "invalid",
+                phoneError = "Enter at least 7 digits",
+                emailError = "Enter a valid email address",
+            ),
+            // Loading state
+            OwnerDetailsUiState(
+                phone = "+48 123 456 789",
+                email = "owner@example.com",
+                isSubmitting = true,
+            ),
+        )
 }
 
 @Preview(name = "Contact Details Content", showBackground = true)

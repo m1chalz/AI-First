@@ -31,6 +31,9 @@ class PetDetailsViewModel: ObservableObject {
     /// Callback to coordinator when user wants to navigate back
     var onBack: (() -> Void)?
     
+    /// Callback to coordinator when user wants to open map
+    var onShowMap: ((Coordinate) -> Void)?
+    
     // MARK: - Initialization
     
     /// Creates a new PetDetailsViewModel
@@ -132,16 +135,14 @@ class PetDetailsViewModel: ObservableObject {
     
     // MARK: - Action Handlers
     
-    /// Handles remove report action (placeholder for future feature)
-    func handleRemoveReport() {
-        print("Remove Report button tapped (placeholder)")
-        // TODO: Implement report removal in future feature
-    }
-    
-    /// Handles show on map action (placeholder for future feature)
+    /// Handles show on map action
     func handleShowMap() {
-        print("Show on the map button tapped (placeholder)")
-        // TODO: Implement map view navigation in future feature
+        guard case .loaded(let petDetails) = state else { return }
+        let coordinate = Coordinate(
+            latitude: petDetails.latitude,
+            longitude: petDetails.longitude
+        )
+        onShowMap?(coordinate)
     }
 }
 

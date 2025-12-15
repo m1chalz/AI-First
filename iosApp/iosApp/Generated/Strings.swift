@@ -76,6 +76,10 @@ public enum L10n {
       public static let missingDate = L10n.tr("Localizable", "animalDescription.error.missingDate", fallback: "Please select a date")
       /// Please select a gender
       public static let missingGender = L10n.tr("Localizable", "animalDescription.error.missingGender", fallback: "Please select a gender")
+      /// Fill in latitude
+      public static let missingLatitude = L10n.tr("Localizable", "animalDescription.error.missingLatitude", fallback: "Fill in latitude")
+      /// Fill in longitude
+      public static let missingLongitude = L10n.tr("Localizable", "animalDescription.error.missingLongitude", fallback: "Fill in longitude")
       /// Please enter the breed or race
       public static let missingRace = L10n.tr("Localizable", "animalDescription.error.missingRace", fallback: "Please enter the breed or race")
       /// Please select a species

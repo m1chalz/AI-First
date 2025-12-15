@@ -59,6 +59,9 @@ fun AnimalListScreen(
     // Dialog state management
     var showRationaleDialog by remember { mutableStateOf<RationaleDialogType?>(null) }
 
+    // Track if initial permission check has been handled (prevents duplicate handling)
+    var hasHandledInitialPermission by remember { mutableStateOf(false) }
+
     // Accompanist permissions state for location with callback for when user responds
     val locationPermissionState =
         rememberMultiplePermissionsState(
@@ -73,15 +76,16 @@ fun AnimalListScreen(
             val coarseResult = permissionsResult[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
             val anyResult = fineResult || coarseResult
 
-            // Note: We can't read shouldShowRationale here as the state hasn't updated yet
-            // We'll dispatch with false and let the LaunchedEffect handle the updated state
+            // Per spec US2: When user responds to system dialog, just load animals (no rationale)
+            // Rationale dialogs (US3/US4) are for subsequent app launches, not immediate responses
+            // isFromSystemDialog = true skips the rationale dialog
             viewModel.dispatchIntent(
                 AnimalListIntent.PermissionResult(
                     granted = anyResult,
                     fineLocation = fineResult,
                     coarseLocation = coarseResult,
-                    // Will be corrected by state observation
                     shouldShowRationale = false,
+                    isFromSystemDialog = true,
                 ),
             )
         }
@@ -98,8 +102,13 @@ fun AnimalListScreen(
     val anyGranted = fineGranted || coarseGranted
     val shouldShowRationale = locationPermissionState.shouldShowRationale
 
-    // Initial permission check - runs once on first composition
-    LaunchedEffect(Unit) {
+    // Initial permission check - uses permission state as keys to handle late initialization
+    // Accompanist may not have the correct shouldShowRationale value on first composition,
+    // so we re-run when the values change but only handle once via hasHandledInitialPermission
+    LaunchedEffect(anyGranted, shouldShowRationale) {
+        if (hasHandledInitialPermission) return@LaunchedEffect
+        hasHandledInitialPermission = true
+
         if (anyGranted) {
             // Permission already granted - dispatch result immediately
             viewModel.dispatchIntent(

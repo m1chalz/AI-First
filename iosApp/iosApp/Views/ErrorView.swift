@@ -37,7 +37,7 @@ struct ErrorView: View {
                             .cornerRadius(10)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityIdentifier("\(model.accessibilityIdentifier).retry.button")
+                    .accessibilityIdentifier(model.retryButtonAccessibilityIdentifier)
                 }
             }
             .padding()

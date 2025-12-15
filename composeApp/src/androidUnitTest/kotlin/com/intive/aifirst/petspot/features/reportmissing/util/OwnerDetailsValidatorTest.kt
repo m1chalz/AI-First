@@ -9,7 +9,6 @@ import kotlin.test.assertIs
  * Tests phone validation (7-11 digits, leading +, sanitization) and email validation (RFC 5322 basic).
  */
 class OwnerDetailsValidatorTest {
-
     // ═══════════════════════════════════════════════════════════════════════════
     // Phone Validation Tests
     // ═══════════════════════════════════════════════════════════════════════════
@@ -310,4 +309,3 @@ class OwnerDetailsValidatorTest {
         assertIs<OwnerDetailsValidationResult.Invalid>(result)
     }
 }
-

@@ -8,28 +8,29 @@ import com.intive.aifirst.petspot.features.reportmissing.domain.models.CreatedAn
 /**
  * Maps domain request to DTO for API call.
  */
-fun CreateAnnouncementRequest.toDto() = CreateAnnouncementRequestDto(
-    species = species,
-    sex = sex,
-    lastSeenDate = lastSeenDate,
-    locationLatitude = locationLatitude,
-    locationLongitude = locationLongitude,
-    email = email,
-    phone = phone,
-    status = status,
-    petName = petName,
-    breed = breed,
-    age = age,
-    microchipNumber = microchipNumber,
-    description = description,
-    reward = reward,
-)
+fun CreateAnnouncementRequest.toDto() =
+    CreateAnnouncementRequestDto(
+        species = species,
+        sex = sex,
+        lastSeenDate = lastSeenDate,
+        locationLatitude = locationLatitude,
+        locationLongitude = locationLongitude,
+        email = email,
+        phone = phone,
+        status = status,
+        petName = petName,
+        breed = breed,
+        age = age,
+        microchipNumber = microchipNumber,
+        description = description,
+        reward = reward,
+    )
 
 /**
  * Maps API response DTO to domain model.
  */
-fun CreateAnnouncementResponseDto.toDomain() = CreatedAnnouncement(
-    id = id,
-    managementPassword = managementPassword,
-)
-
+fun CreateAnnouncementResponseDto.toDomain() =
+    CreatedAnnouncement(
+        id = id,
+        managementPassword = managementPassword,
+    )

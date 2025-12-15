@@ -23,10 +23,10 @@ const VALID_ANNOUNCEMENT_DATA = {
   species: 'DOG',
   sex: 'MALE',
   locationLatitude: 40.7128,
-  locationLongitude: -74.0060,
+  locationLongitude: -74.006,
   lastSeenDate: '2025-11-19',
   status: 'MISSING' as const,
-  email: 'test@example.com',
+  email: 'test@example.com'
 };
 
 describe('validateCreateAnnouncement', () => {
@@ -34,7 +34,7 @@ describe('validateCreateAnnouncement', () => {
     it.each([
       {
         description: 'all required fields are valid',
-        data: VALID_ANNOUNCEMENT_DATA,
+        data: VALID_ANNOUNCEMENT_DATA
       },
       {
         description: 'optional fields are provided',
@@ -46,24 +46,24 @@ describe('validateCreateAnnouncement', () => {
           description: 'Friendly dog',
           microchipNumber: '123456789',
           phone: '+1-555-0101',
-          reward: '$100',
-        },
+          reward: '$100'
+        }
       },
       {
         description: 'only email is provided (no phone)',
         data: {
           ...VALID_ANNOUNCEMENT_DATA,
-          email: 'test@example.com',
-        },
+          email: 'test@example.com'
+        }
       },
       {
         description: 'only phone is provided (no email)',
         data: {
           ...VALID_ANNOUNCEMENT_DATA,
           email: undefined,
-          phone: '+1-555-0101',
-        },
-      },
+          phone: '+1-555-0101'
+        }
+      }
     ])('should not throw when $description', ({ data }) => {
       expect(() => validateCreateAnnouncement(data)).not.toThrow();
     });
@@ -73,13 +73,13 @@ describe('validateCreateAnnouncement', () => {
       const testCases = [
         { latitude: -90, description: 'minimum latitude' },
         { latitude: 90, description: 'maximum latitude' },
-        { latitude: 0, description: 'equator' },
+        { latitude: 0, description: 'equator' }
       ];
 
       testCases.forEach(({ latitude }) => {
         const data = {
           ...VALID_ANNOUNCEMENT_DATA,
-          locationLatitude: latitude,
+          locationLatitude: latitude
         };
 
         // When: Validation is called
@@ -93,13 +93,13 @@ describe('validateCreateAnnouncement', () => {
       const testCases = [
         { longitude: -180, description: 'minimum longitude' },
         { longitude: 180, description: 'maximum longitude' },
-        { longitude: 0, description: 'prime meridian' },
+        { longitude: 0, description: 'prime meridian' }
       ];
 
       testCases.forEach(({ longitude }) => {
         const data = {
           ...VALID_ANNOUNCEMENT_DATA,
-          locationLongitude: longitude,
+          locationLongitude: longitude
         };
 
         // When: Validation is called
@@ -108,14 +108,14 @@ describe('validateCreateAnnouncement', () => {
       });
     });
 
-    it('should accept today\'s date as valid lastSeenDate', () => {
+    it("should accept today's date as valid lastSeenDate", () => {
       // Given: Data with today's date
       const today = new Date();
       const todayString = today.toISOString().split('T')[0];
-      
+
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        lastSeenDate: todayString,
+        lastSeenDate: todayString
       };
 
       // When: Validation is called
@@ -123,15 +123,15 @@ describe('validateCreateAnnouncement', () => {
       expect(() => validateCreateAnnouncement(data)).not.toThrow();
     });
 
-    it('should accept yesterday\'s date as valid lastSeenDate', () => {
+    it("should accept yesterday's date as valid lastSeenDate", () => {
       // Given: Data with yesterday's date
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayString = yesterday.toISOString().split('T')[0];
-      
+
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        lastSeenDate: yesterdayString,
+        lastSeenDate: yesterdayString
       };
 
       // When: Validation is called
@@ -143,7 +143,7 @@ describe('validateCreateAnnouncement', () => {
       // Given: Data with valid microchip number
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        microchipNumber: '123456789012345',
+        microchipNumber: '123456789012345'
       };
 
       // When: Validation is called
@@ -151,14 +151,11 @@ describe('validateCreateAnnouncement', () => {
       expect(() => validateCreateAnnouncement(data)).not.toThrow();
     });
 
-    it.each([
-      { status: 'MISSING' as const },
-      { status: 'FOUND' as const },
-    ])('should accept status $description', ({ status }) => {
+    it.each([{ status: 'MISSING' as const }, { status: 'FOUND' as const }])('should accept status $description', ({ status }) => {
       // Given: Data with status
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        status,
+        status
       };
 
       // When: Validation is called
@@ -173,7 +170,7 @@ describe('validateCreateAnnouncement', () => {
       testCases.forEach((age) => {
         const data = {
           ...VALID_ANNOUNCEMENT_DATA,
-          age,
+          age
         };
 
         // When: Validation is called
@@ -200,25 +197,54 @@ describe('validateCreateAnnouncement', () => {
       // Invalid formats
       { description: 'email format is invalid', fieldName: 'email', fieldValue: 'invalid-email', expectedCode: 'INVALID_FORMAT' },
       { description: 'phone format is invalid', fieldName: 'phone', fieldValue: 'no-digits', expectedCode: 'INVALID_FORMAT' },
-      { description: 'lastSeenDate format is invalid', fieldName: 'lastSeenDate', fieldValue: '2025/11/19', expectedCode: 'INVALID_FORMAT' },
-      { description: 'lastSeenDate is in the future', fieldName: 'lastSeenDate', fieldValue: (() => { const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); return tomorrow.toISOString().split('T')[0]; })(), expectedCode: 'INVALID_FORMAT' },
+      {
+        description: 'lastSeenDate format is invalid',
+        fieldName: 'lastSeenDate',
+        fieldValue: '2025/11/19',
+        expectedCode: 'INVALID_FORMAT'
+      },
+      {
+        description: 'lastSeenDate is in the future',
+        fieldName: 'lastSeenDate',
+        fieldValue: (() => {
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          return tomorrow.toISOString().split('T')[0];
+        })(),
+        expectedCode: 'INVALID_FORMAT'
+      },
       { description: 'status is not MISSING or FOUND', fieldName: 'status', fieldValue: 'INVALID_STATUS', expectedCode: 'INVALID_FORMAT' },
-      { description: 'microchipNumber contains non-digits', fieldName: 'microchipNumber', fieldValue: '123abc', expectedCode: 'INVALID_FORMAT' },
+      {
+        description: 'microchipNumber contains non-digits',
+        fieldName: 'microchipNumber',
+        fieldValue: '123abc',
+        expectedCode: 'INVALID_FORMAT'
+      },
       { description: 'age is negative', fieldName: 'age', fieldValue: -1, expectedCode: 'INVALID_FORMAT' },
       { description: 'age is zero', fieldName: 'age', fieldValue: 0, expectedCode: 'INVALID_FORMAT' },
       { description: 'age is non-integer', fieldName: 'age', fieldValue: 3.5, expectedCode: 'INVALID_FORMAT' },
       { description: 'locationLatitude is greater than 90', fieldName: 'locationLatitude', fieldValue: 91, expectedCode: 'INVALID_FORMAT' },
       { description: 'locationLatitude is less than -90', fieldName: 'locationLatitude', fieldValue: -91, expectedCode: 'INVALID_FORMAT' },
-      { description: 'locationLongitude is greater than 180', fieldName: 'locationLongitude', fieldValue: 181, expectedCode: 'INVALID_FORMAT' },
-      { description: 'locationLongitude is less than -180', fieldName: 'locationLongitude', fieldValue: -181, expectedCode: 'INVALID_FORMAT' },
+      {
+        description: 'locationLongitude is greater than 180',
+        fieldName: 'locationLongitude',
+        fieldValue: 181,
+        expectedCode: 'INVALID_FORMAT'
+      },
+      {
+        description: 'locationLongitude is less than -180',
+        fieldName: 'locationLongitude',
+        fieldValue: -181,
+        expectedCode: 'INVALID_FORMAT'
+      },
       // Type mismatches
       { description: 'species is not a string', fieldName: 'species', fieldValue: 123, expectedCode: 'INVALID_FORMAT' },
-      { description: 'age is not a number', fieldName: 'age', fieldValue: 'three', expectedCode: 'INVALID_FORMAT' },
+      { description: 'age is not a number', fieldName: 'age', fieldValue: 'three', expectedCode: 'INVALID_FORMAT' }
     ])('should throw ValidationError with $expectedCode code when $description', ({ fieldName, fieldValue, expectedCode }) => {
       // Given: Data with invalid field
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        [fieldName]: fieldValue,
+        [fieldName]: fieldValue
       };
 
       // When: Validation is called
@@ -231,7 +257,7 @@ describe('validateCreateAnnouncement', () => {
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
         email: undefined,
-        phone: undefined,
+        phone: undefined
       };
 
       // When: Validation is called
@@ -243,7 +269,7 @@ describe('validateCreateAnnouncement', () => {
       // Given: Data with unknown field
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
-        unknownField: 'value',
+        unknownField: 'value'
       };
 
       // When: Validation is called
@@ -256,7 +282,7 @@ describe('validateCreateAnnouncement', () => {
       const data = {
         ...VALID_ANNOUNCEMENT_DATA,
         unknownField1: 'value1',
-        unknownField2: 'value2',
+        unknownField2: 'value2'
       };
 
       // When: Validation is called
@@ -268,7 +294,7 @@ describe('validateCreateAnnouncement', () => {
       // Given: Data with whitespace-only required fields
       const dataWithWhitespace = {
         ...VALID_ANNOUNCEMENT_DATA,
-        species: '   ',
+        species: '   '
       };
 
       // When: Validation is called
@@ -277,4 +303,3 @@ describe('validateCreateAnnouncement', () => {
     });
   });
 });
-

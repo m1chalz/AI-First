@@ -44,6 +44,10 @@ class PetDetailsCoordinator: CoordinatorInterface {
             self?.finish()
         }
         
+        viewModel.onShowMap = { [weak self] coordinate in
+            self?.openInMaps(coordinate: coordinate)
+        }
+        
         let detailsView = NavigationBackHiding {
             PetDetailsView(viewModel: viewModel)
         }
@@ -67,6 +71,22 @@ class PetDetailsCoordinator: CoordinatorInterface {
     func finish() {
         navigationController?.popViewController(animated: true)
 //        parentCoordinator?.childDidFinish(self)
+    }
+    
+    // MARK: - Private Methods
+    
+    /// Opens Apple Maps with a pin at the specified coordinate
+    /// - Parameter coordinate: Geographic coordinate to display
+    private func openInMaps(coordinate: Coordinate) {
+        let urlString = "https://maps.apple.com/?ll=\(coordinate.latitude),\(coordinate.longitude)&q=X"
+        
+        guard let url = URL(string: urlString),
+              UIApplication.shared.canOpenURL(url) else {
+            print("Failed to open Apple Maps: invalid URL or app not available")
+            return
+        }
+        
+        UIApplication.shared.open(url)
     }
 }
 

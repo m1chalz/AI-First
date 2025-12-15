@@ -12,13 +12,9 @@ export class PhotoUploadService {
     private withTransaction: TransactionalWrapper,
     private path: typeof import('path'),
     private fileSystem: typeof fs
-  ) { }
+  ) {}
 
-  async uploadPhoto(
-    announcementId: string,
-    photoBuffer: Buffer,
-    uploadPath: string
-  ): Promise<string> {
+  async uploadPhoto(announcementId: string, photoBuffer: Buffer, uploadPath: string): Promise<string> {
     const announcement = await this.repository.findById(announcementId);
     if (!announcement) {
       throw new NotFoundError(`Announcement with ID ${announcementId} not found`);
@@ -75,5 +71,4 @@ export class PhotoUploadService {
       // File doesn't exist or cannot be deleted, silently ignore
     }
   }
-
 }

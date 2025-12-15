@@ -5,13 +5,10 @@ import server from '../server.ts';
 describe('Error responses', () => {
   it('should return 404 with structured error for non-existent routes', async () => {
     // Given
-    
+
     // When
-    const response = await request(server)
-      .get('/api/not/found')
-      .expect('Content-Type', /json/)
-      .expect(404);
-    
+    const response = await request(server).get('/api/not/found').expect('Content-Type', /json/).expect(404);
+
     // Then
     expect(response.body).toEqual({
       error: {
@@ -29,11 +26,7 @@ describe('Error responses', () => {
     };
 
     // When
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(largePayload)
-      .expect('Content-Type', /json/)
-      .expect(413);
+    const response = await request(server).post('/api/v1/announcements').send(largePayload).expect('Content-Type', /json/).expect(413);
 
     // Then
     expect(response.body).toEqual({
@@ -44,6 +37,4 @@ describe('Error responses', () => {
       }
     });
   });
-
 });
-

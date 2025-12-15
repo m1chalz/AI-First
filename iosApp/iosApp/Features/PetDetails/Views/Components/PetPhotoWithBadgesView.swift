@@ -58,7 +58,7 @@ struct PetPhotoWithBadgesView: View {
                         }
                     }
                 )
-                .accessibilityIdentifier("petDetails.photo.image")
+                .accessibilityIdentifier("petDetails.photo")
         } else {
             imagePlaceholder
         }
@@ -75,7 +75,7 @@ struct PetPhotoWithBadgesView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.1))
-        .accessibilityIdentifier("petDetails.photo.image")
+        .accessibilityIdentifier("petDetails.photo")
     }
     
     // MARK: - Status Badge
@@ -88,7 +88,7 @@ struct PetPhotoWithBadgesView: View {
             .padding(.vertical, 2)
             .background(Color(hex: model.statusBadgeColorHex))
             .cornerRadius(22369600)
-            .accessibilityIdentifier("petDetails.status.badge")
+            .accessibilityIdentifier("petDetails.statusBadge")
     }
     
     // MARK: - Reward Badge
@@ -108,7 +108,7 @@ struct PetPhotoWithBadgesView: View {
                     .foregroundColor(.white)
             }
         }
-        .accessibilityIdentifier("petDetails.reward.badge")
+        .accessibilityIdentifier("petDetails.rewardBadge")
     }
 }
 

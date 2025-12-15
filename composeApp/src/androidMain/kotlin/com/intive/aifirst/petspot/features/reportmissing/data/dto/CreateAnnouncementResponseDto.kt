@@ -12,4 +12,3 @@ data class CreateAnnouncementResponseDto(
     @SerialName("id") val id: String,
     @SerialName("managementPassword") val managementPassword: String,
 )
-

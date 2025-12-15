@@ -12,7 +12,7 @@ import {
   VALIDATION_MESSAGES,
   validatePhoneNumber,
   validateEmailAddress,
-  validateContactForm,
+  validateContactForm
 } from '../form-validation';
 
 describe('validateLastSeenDate', () => {
@@ -23,14 +23,14 @@ describe('validateLastSeenDate', () => {
 
   it.each([
     ['empty', '', VALIDATION_MESSAGES.LAST_SEEN_DATE_REQUIRED],
-    ['future date', futureDateStr, VALIDATION_MESSAGES.LAST_SEEN_DATE_FUTURE],
+    ['future date', futureDateStr, VALIDATION_MESSAGES.LAST_SEEN_DATE_FUTURE]
   ])('should return error when date is %s', (_, date, expectedError) => {
     expect(validateLastSeenDate(date)).toBe(expectedError);
   });
 
   it.each([
     ['today', today],
-    ['past date', '2025-01-01'],
+    ['past date', '2025-01-01']
   ])('should return null when date is %s', (_, date) => {
     expect(validateLastSeenDate(date)).toBeNull();
   });
@@ -39,34 +39,28 @@ describe('validateLastSeenDate', () => {
 describe('validateSpecies', () => {
   it.each([
     ['empty', '', VALIDATION_MESSAGES.SPECIES_REQUIRED],
-    ['invalid', 'ELEPHANT', VALIDATION_MESSAGES.SPECIES_INVALID],
+    ['invalid', 'ELEPHANT', VALIDATION_MESSAGES.SPECIES_INVALID]
   ])('should return error when species is %s', (_, species, expectedError) => {
     expect(validateSpecies(species)).toBe(expectedError);
   });
 
-  it.each(['DOG', 'CAT', 'BIRD', 'RABBIT', 'OTHER'])(
-    'should return null when species is %s',
-    (species) => {
-      expect(validateSpecies(species)).toBeNull();
-    }
-  );
+  it.each(['DOG', 'CAT', 'BIRD', 'RABBIT', 'OTHER'])('should return null when species is %s', (species) => {
+    expect(validateSpecies(species)).toBeNull();
+  });
 });
 
 describe('validateSex', () => {
   it.each([
     ['empty', '', VALIDATION_MESSAGES.SEX_REQUIRED],
     ['UNKNOWN', 'UNKNOWN', VALIDATION_MESSAGES.SEX_INVALID],
-    ['invalid', 'OTHER', VALIDATION_MESSAGES.SEX_INVALID],
+    ['invalid', 'OTHER', VALIDATION_MESSAGES.SEX_INVALID]
   ])('should return error when sex is %s', (_, sex, expectedError) => {
     expect(validateSex(sex)).toBe(expectedError);
   });
 
-  it.each(['MALE', 'FEMALE'])(
-    'should return null when sex is %s',
-    (sex) => {
-      expect(validateSex(sex)).toBeNull();
-    }
-  );
+  it.each(['MALE', 'FEMALE'])('should return null when sex is %s', (sex) => {
+    expect(validateSex(sex)).toBeNull();
+  });
 });
 
 describe('validateAge', () => {
@@ -74,7 +68,7 @@ describe('validateAge', () => {
     ['not a number', 'abc', VALIDATION_MESSAGES.AGE_INVALID_NUMBER],
     ['decimal', '5.5', VALIDATION_MESSAGES.AGE_INVALID_NUMBER],
     ['negative', '-1', VALIDATION_MESSAGES.AGE_OUT_OF_RANGE],
-    ['greater than 40', '41', VALIDATION_MESSAGES.AGE_OUT_OF_RANGE],
+    ['greater than 40', '41', VALIDATION_MESSAGES.AGE_OUT_OF_RANGE]
   ])('should return error when age is %s', (_, age, expectedError) => {
     expect(validateAge(age)).toBe(expectedError);
   });
@@ -83,7 +77,7 @@ describe('validateAge', () => {
     ['empty', ''],
     ['0', '0'],
     ['40', '40'],
-    ['valid integer within range', '5'],
+    ['valid integer within range', '5']
   ])('should return null when age is %s', (_, age) => {
     expect(validateAge(age)).toBeNull();
   });
@@ -98,7 +92,7 @@ describe('validateDescription', () => {
   it.each([
     ['empty', ''],
     ['exactly 500 characters', 'a'.repeat(500)],
-    ['under 500 characters', 'Valid description'],
+    ['under 500 characters', 'Valid description']
   ])('should return null when description is %s', (_, description) => {
     expect(validateDescription(description)).toBeNull();
   });
@@ -109,7 +103,7 @@ describe('validateLatitude', () => {
     ['empty', '', VALIDATION_MESSAGES.LATITUDE_REQUIRED],
     ['not a number', 'abc', VALIDATION_MESSAGES.LATITUDE_INVALID_NUMBER],
     ['less than -90', '-91', VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE],
-    ['greater than 90', '91', VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE],
+    ['greater than 90', '91', VALIDATION_MESSAGES.LATITUDE_OUT_OF_RANGE]
   ])('should return error when latitude is %s', (_, latitude, expectedError) => {
     expect(validateLatitude(latitude)).toBe(expectedError);
   });
@@ -118,7 +112,7 @@ describe('validateLatitude', () => {
     ['-90', '-90'],
     ['90', '90'],
     ['0', '0'],
-    ['valid value', '52.5200'],
+    ['valid value', '52.5200']
   ])('should return null when latitude is %s', (_, latitude) => {
     expect(validateLatitude(latitude)).toBeNull();
   });
@@ -129,7 +123,7 @@ describe('validateLongitude', () => {
     ['empty', '', VALIDATION_MESSAGES.LONGITUDE_REQUIRED],
     ['not a number', 'abc', VALIDATION_MESSAGES.LONGITUDE_INVALID_NUMBER],
     ['less than -180', '-181', VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE],
-    ['greater than 180', '181', VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE],
+    ['greater than 180', '181', VALIDATION_MESSAGES.LONGITUDE_OUT_OF_RANGE]
   ])('should return error when longitude is %s', (_, longitude, expectedError) => {
     expect(validateLongitude(longitude)).toBe(expectedError);
   });
@@ -138,7 +132,7 @@ describe('validateLongitude', () => {
     ['-180', '-180'],
     ['180', '180'],
     ['0', '0'],
-    ['valid value', '13.4050'],
+    ['valid value', '13.4050']
   ])('should return null when longitude is %s', (_, longitude) => {
     expect(validateLongitude(longitude)).toBeNull();
   });
@@ -158,7 +152,7 @@ describe('validateAllFields', () => {
     };
 
     const errors = validateAllFields(formData);
-    
+
     expect(errors.lastSeenDate).toBe(VALIDATION_MESSAGES.LAST_SEEN_DATE_REQUIRED);
     expect(errors.species).toBe(VALIDATION_MESSAGES.SPECIES_REQUIRED);
     expect(errors.sex).toBe(VALIDATION_MESSAGES.SEX_REQUIRED);
@@ -210,24 +204,60 @@ describe('isFormValid', () => {
     ],
     [
       'all required fields are valid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '52.52', longitude: '13.40' },
+      {
+        lastSeenDate: '2025-01-01',
+        species: 'DOG',
+        breed: 'Golden Retriever',
+        sex: 'MALE',
+        age: '',
+        description: '',
+        latitude: '52.52',
+        longitude: '13.40'
+      },
       true
     ],
     [
       'optional field age is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '50', description: '', latitude: '52.52', longitude: '13.40' },
+      {
+        lastSeenDate: '2025-01-01',
+        species: 'DOG',
+        breed: 'Golden Retriever',
+        sex: 'MALE',
+        age: '50',
+        description: '',
+        latitude: '52.52',
+        longitude: '13.40'
+      },
       false
     ],
     [
       'latitude is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '100', longitude: '13.40' },
+      {
+        lastSeenDate: '2025-01-01',
+        species: 'DOG',
+        breed: 'Golden Retriever',
+        sex: 'MALE',
+        age: '',
+        description: '',
+        latitude: '100',
+        longitude: '13.40'
+      },
       false
     ],
     [
       'longitude is invalid',
-      { lastSeenDate: '2025-01-01', species: 'DOG', breed: 'Golden Retriever', sex: 'MALE', age: '', description: '', latitude: '52.52', longitude: '200' },
+      {
+        lastSeenDate: '2025-01-01',
+        species: 'DOG',
+        breed: 'Golden Retriever',
+        sex: 'MALE',
+        age: '',
+        description: '',
+        latitude: '52.52',
+        longitude: '200'
+      },
       false
-    ],
+    ]
   ])('should return correct result when %s', (_, formData, result) => {
     expect(isFormValid(formData)).toBe(result);
   });
@@ -244,7 +274,7 @@ describe('validatePhoneNumber', () => {
     { phone: '123', expectedError: 'Phone number must have at least 7 digits' },
     { phone: 'abc', expectedError: 'Phone number must have at least 7 digits' },
     { phone: '+++', expectedError: 'Phone number must have at least 7 digits' },
-    { phone: '123456', expectedError: 'Phone number must have at least 7 digits' },
+    { phone: '123456', expectedError: 'Phone number must have at least 7 digits' }
   ])('should validate phone "$phone" with error "$expectedError"', ({ phone, expectedError }) => {
     expect(validatePhoneNumber(phone)).toBe(expectedError);
   });
@@ -259,7 +289,7 @@ describe('validateEmailAddress', () => {
     { email: 'invalid@', expectedError: 'Enter a valid email address' },
     { email: '@example.com', expectedError: 'Enter a valid email address' },
     { email: 'owner', expectedError: 'Enter a valid email address' },
-    { email: 'owner @example.com', expectedError: 'Enter a valid email address' },
+    { email: 'owner @example.com', expectedError: 'Enter a valid email address' }
   ])('should validate email "$email" with error "$expectedError"', ({ email, expectedError }) => {
     expect(validateEmailAddress(email)).toBe(expectedError);
   });
@@ -274,7 +304,7 @@ describe('validateContactForm', () => {
     { phone: 'abc', email: '', isValid: false },
     { phone: '', email: 'invalid@', isValid: false },
     { phone: '123', email: 'invalid', isValid: false },
-    { phone: 'abc', email: 'invalid@', isValid: false },
+    { phone: 'abc', email: 'invalid@', isValid: false }
   ])('phone="$phone" email="$email" should isValid=$isValid', ({ phone, email, isValid }) => {
     const result = validateContactForm({ phone, email });
     expect(result.isValid).toBe(isValid);
@@ -314,4 +344,3 @@ describe('validateContactForm', () => {
     expect(result.isValid).toBe(false);
   });
 });
-

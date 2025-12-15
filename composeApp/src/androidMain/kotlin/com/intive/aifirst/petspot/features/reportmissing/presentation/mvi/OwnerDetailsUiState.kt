@@ -32,4 +32,3 @@ data class OwnerDetailsUiState(
      */
     val hasErrors: Boolean = phoneError != null || emailError != null
 }
-

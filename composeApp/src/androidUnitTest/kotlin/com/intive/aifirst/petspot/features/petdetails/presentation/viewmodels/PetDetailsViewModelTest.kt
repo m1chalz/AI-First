@@ -173,7 +173,11 @@ class PetDetailsViewModelTest {
         var result: Animal? = null
         var error: Throwable? = null
 
-        override suspend fun getAnimals(): List<Animal> = emptyList()
+        override suspend fun getAnimals(
+            lat: Double?,
+            lng: Double?,
+            range: Int?,
+        ): List<Animal> = emptyList()
 
         override suspend fun getAnimalById(id: String): Animal {
             error?.let { throw it }

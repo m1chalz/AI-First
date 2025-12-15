@@ -23,7 +23,7 @@ const TEST_ANNOUNCEMENT_1 = {
   reward: null,
   management_password_hash: 'test_hash_1',
   created_at: '2025-11-19T10:00:00.000Z',
-  updated_at: '2025-11-19T10:00:00.000Z',
+  updated_at: '2025-11-19T10:00:00.000Z'
 };
 
 const TEST_ANNOUNCEMENT_2 = {
@@ -45,7 +45,7 @@ const TEST_ANNOUNCEMENT_2 = {
   reward: null,
   management_password_hash: 'test_hash_2',
   created_at: '2025-11-18T12:00:00.000Z',
-  updated_at: '2025-11-18T12:00:00.000Z',
+  updated_at: '2025-11-18T12:00:00.000Z'
 };
 
 describe('GET /api/v1/announcements', () => {
@@ -56,20 +56,20 @@ describe('GET /api/v1/announcements', () => {
   it('should return 200 with announcements array when database has data', async () => {
     // Given: Database has 2 test announcements
     await db('announcement').insert([TEST_ANNOUNCEMENT_1, TEST_ANNOUNCEMENT_2]);
-    
+
     // When: Client requests all announcements
     const response = await request(server).get('/api/v1/announcements');
-    
+
     // Then: Returns HTTP 200 with JSON array containing announcements
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('data');
     expect(Array.isArray(response.body.data)).toBe(true);
     expect(response.body.data.length).toBe(2);
-    
+
     // Find TEST_ANNOUNCEMENT_1 in response by ID
     const announcement1 = response.body.data.find((a: Announcement) => a.id === TEST_ANNOUNCEMENT_1.id);
     expect(announcement1).toBeDefined();
-    
+
     // Verify announcement has correct values
     expect(announcement1).toEqual({
       id: TEST_ANNOUNCEMENT_1.id,
@@ -89,7 +89,7 @@ describe('GET /api/v1/announcements', () => {
       status: TEST_ANNOUNCEMENT_1.status,
       reward: TEST_ANNOUNCEMENT_1.reward,
       createdAt: expect.any(String),
-      updatedAt: expect.any(String),
+      updatedAt: expect.any(String)
     });
   });
 
@@ -97,12 +97,12 @@ describe('GET /api/v1/announcements', () => {
     // Given: Database has 2 test announcements
     await db('announcement').insert({
       ...TEST_ANNOUNCEMENT_1,
-      photo_url: null,
+      photo_url: null
     });
-    
+
     // When: Client requests all announcements
     const response = await request(server).get('/api/v1/announcements');
-    
+
     // Then: Returns HTTP 200 with JSON array containing announcements
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveLength(0);
@@ -110,10 +110,10 @@ describe('GET /api/v1/announcements', () => {
 
   it('should return 200 with empty array when database is empty', async () => {
     // Given: Database has no announcements (cleaned in beforeEach)
-    
+
     // When: Client requests all announcements
     const response = await request(server).get('/api/v1/announcements');
-    
+
     // Then: Returns HTTP 200 with empty data array
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ data: [] });
@@ -128,13 +128,13 @@ describe('GET /api/v1/announcements/:id', () => {
   it('should return 200 and announcement when ID exists', async () => {
     // Given: Database seeded with test announcement
     await db('announcement').insert(TEST_ANNOUNCEMENT_1);
-    
+
     // When: Client requests announcement by ID
     const response = await request(server)
       .get(`/api/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
       .expect('Content-Type', /json/)
       .expect(200);
-    
+
     // Then: Response contains announcement
     expect(response.body).toEqual({
       id: TEST_ANNOUNCEMENT_1.id,
@@ -154,22 +154,19 @@ describe('GET /api/v1/announcements/:id', () => {
       status: TEST_ANNOUNCEMENT_1.status,
       reward: TEST_ANNOUNCEMENT_1.reward,
       createdAt: expect.any(String),
-      updatedAt: expect.any(String),
+      updatedAt: expect.any(String)
     });
   });
 
   it.each([
     { id: '123e4567-e89b-12d3-a456-426614174000', description: 'non-existent ID' },
-    { id: 'abc-123', description: 'malformed UUID' },
+    { id: 'abc-123', description: 'malformed UUID' }
   ])('should return 404 when $description', async ({ id }) => {
     // Given: Empty database (cleared by beforeEach)
-    
+
     // When: Client requests with invalid ID
-    const response = await request(server)
-      .get(`/api/v1/announcements/${id}`)
-      .expect('Content-Type', /json/)
-      .expect(404);
-    
+    const response = await request(server).get(`/api/v1/announcements/${id}`).expect('Content-Type', /json/).expect(404);
+
     // Then: Error response returned
     expect(response.body).toEqual({
       error: {
@@ -183,12 +180,10 @@ describe('GET /api/v1/announcements/:id', () => {
   it('should include optional fields with null values', async () => {
     // Given: Announcement with null optional fields
     await db('announcement').insert(TEST_ANNOUNCEMENT_2);
-    
+
     // When: Client requests announcement
-    const response = await request(server)
-      .get(`/api/v1/announcements/${TEST_ANNOUNCEMENT_2.id}`)
-      .expect(200);
-    
+    const response = await request(server).get(`/api/v1/announcements/${TEST_ANNOUNCEMENT_2.id}`).expect(200);
+
     // Then: Response includes null optional fields
     expect(response.body.breed).toBeNull();
     expect(response.body.email).toBeNull();
@@ -212,13 +207,10 @@ describe('POST /api/v1/announcements', () => {
       locationLongitude: -73.968285,
       email: 'john@example.com'
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(201);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(201);
+
     // then
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('managementPassword');
@@ -247,13 +239,10 @@ describe('POST /api/v1/announcements', () => {
       phone: '+1 555 123 4567',
       reward: '500 USD'
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(201);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(201);
+
     // then
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('managementPassword');
@@ -289,13 +278,10 @@ describe('POST /api/v1/announcements', () => {
       locationLongitude: -0.1278,
       phone: '+44 20 7946 0958'
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(201);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(201);
+
     // then
     expect(response.body.id).toBeDefined();
     expect(response.body.managementPassword).toMatch(/^\d{6}$/);
@@ -313,13 +299,10 @@ describe('POST /api/v1/announcements', () => {
       locationLongitude: -73.968285,
       email: 'john@example.com'
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(400);
+
     // then
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
@@ -338,13 +321,10 @@ describe('POST /api/v1/announcements', () => {
       locationLatitude: 40.785091,
       locationLongitude: -73.968285
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(400);
+
     // then
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
@@ -366,13 +346,10 @@ describe('POST /api/v1/announcements', () => {
       locationLongitude: -73.968285,
       email: 'john@example.com'
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(201);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(201);
+
     // then
     expect(response.body.species).toBe('GoldenRetriever');
     expect(response.body.petName).toBe('Buddy');
@@ -393,13 +370,10 @@ describe('POST /api/v1/announcements', () => {
       email: 'john@example.com',
       unknownField: 'value' // Unknown field
     };
-    
+
     // when
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(data)
-      .expect(400);
-    
+    const response = await request(server).post('/api/v1/announcements').send(data).expect(400);
+
     // then
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
@@ -420,12 +394,9 @@ describe('POST /api/v1/announcements', () => {
       email: 'john@example.com',
       microchipNumber: '123456789012345'
     };
-    
-    await request(server)
-      .post('/api/v1/announcements')
-      .send(firstAnnouncement)
-      .expect(201);
-    
+
+    await request(server).post('/api/v1/announcements').send(firstAnnouncement).expect(201);
+
     // when: Attempt to create second announcement with same microchip number
     const duplicateAnnouncement = {
       species: 'Labrador',
@@ -437,12 +408,9 @@ describe('POST /api/v1/announcements', () => {
       email: 'jane@example.com',
       microchipNumber: '123456789012345' // Same microchip number
     };
-    
-    const response = await request(server)
-      .post('/api/v1/announcements')
-      .send(duplicateAnnouncement)
-      .expect(409);
-    
+
+    const response = await request(server).post('/api/v1/announcements').send(duplicateAnnouncement).expect(409);
+
     // then: Returns HTTP 409 with CONFLICT error
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
@@ -455,7 +423,7 @@ describe('POST /api/v1/announcements', () => {
 
 describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => {
   const KRAKOW = { lat: 50.0614, lng: 19.9383 };
-  const NEARBY_2KM = { lat: 50.0700, lng: 19.9500 };
+  const NEARBY_2KM = { lat: 50.07, lng: 19.95 };
   const WARSAW = { lat: 52.2297, lng: 21.0122 };
 
   const ANNOUNCEMENT_KRAKOW = {
@@ -477,7 +445,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     reward: null,
     management_password_hash: 'hash1',
     created_at: '2025-11-20T10:00:00.000Z',
-    updated_at: '2025-11-20T10:00:00.000Z',
+    updated_at: '2025-11-20T10:00:00.000Z'
   };
 
   const ANNOUNCEMENT_NEARBY = {
@@ -499,7 +467,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     reward: null,
     management_password_hash: 'hash2',
     created_at: '2025-11-21T10:00:00.000Z',
-    updated_at: '2025-11-21T10:00:00.000Z',
+    updated_at: '2025-11-21T10:00:00.000Z'
   };
 
   const ANNOUNCEMENT_WARSAW = {
@@ -521,16 +489,12 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     reward: null,
     management_password_hash: 'hash3',
     created_at: '2025-11-22T10:00:00.000Z',
-    updated_at: '2025-11-22T10:00:00.000Z',
+    updated_at: '2025-11-22T10:00:00.000Z'
   };
 
   beforeEach(async () => {
     await db('announcement').del();
-    await db('announcement').insert([
-      ANNOUNCEMENT_KRAKOW,
-      ANNOUNCEMENT_NEARBY,
-      ANNOUNCEMENT_WARSAW,
-    ]);
+    await db('announcement').insert([ANNOUNCEMENT_KRAKOW, ANNOUNCEMENT_NEARBY, ANNOUNCEMENT_WARSAW]);
   });
 
   it('should filter announcements within custom radius (10km)', async () => {
@@ -540,10 +504,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     const range = 10;
 
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ lat: searchLat, lng: searchLng, range: range })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ lat: searchLat, lng: searchLng, range: range }).expect(200);
 
     // then
     expect(response.body.data).toHaveLength(2);
@@ -560,10 +521,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     const range = 10;
 
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ lat: searchLat, lng: searchLng, range: range })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ lat: searchLat, lng: searchLng, range: range }).expect(200);
 
     // then
     expect(response.body.data).toEqual([]);
@@ -576,10 +534,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     const range = 300;
 
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ lat: searchLat, lng: searchLng, range: range })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ lat: searchLat, lng: searchLng, range: range }).expect(200);
 
     // then
     expect(response.body.data).toHaveLength(3);
@@ -592,10 +547,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     const range = 5;
 
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ lat: searchLat, lng: searchLng, range: range })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ lat: searchLat, lng: searchLng, range: range }).expect(200);
 
     // then
     expect(response.body.data).toHaveLength(2);
@@ -611,10 +563,7 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
     const searchLng = KRAKOW.lng;
 
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ lat: searchLat, lng: searchLng })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ lat: searchLat, lng: searchLng }).expect(200);
 
     // then
     expect(response.body.data).toHaveLength(2);
@@ -626,35 +575,29 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
 
   it('should return HTTP 400 when only lat provided', async () => {
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements?lat=50.0614')
-      .expect(400);
+    const response = await request(server).get('/api/v1/announcements?lat=50.0614').expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: 'Parameter \'lng\' is required when \'lat\' is provided',
+      message: "Parameter 'lng' is required when 'lat' is provided"
     });
   });
 
   it('should return HTTP 400 when only lng provided', async () => {
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements?lng=19.9383')
-      .expect(400);
+    const response = await request(server).get('/api/v1/announcements?lng=19.9383').expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: 'Parameter \'lat\' is required when \'lng\' is provided',
+      message: "Parameter 'lat' is required when 'lng' is provided"
     });
   });
 
   it('should return all announcements when neither lat nor lng provided', async () => {
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').expect(200);
 
     // then
     expect(response.body.data).toHaveLength(3);
@@ -662,76 +605,65 @@ describe('GET /api/v1/announcements - Location Filtering (User Story 1)', () => 
 
   it('should ignore range parameter when lat/lng not provided', async () => {
     // when
-    const response = await request(server)
-      .get('/api/v1/announcements')
-      .query({ range: 10 })
-      .expect(200);
+    const response = await request(server).get('/api/v1/announcements').query({ range: 10 }).expect(200);
 
     // then
     expect(response.body.data).toHaveLength(3);
   });
 
   it.each([
-    { lat: 91, lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be between -90 and 90' },
-    { lat: -91, lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be between -90 and 90' },
+    { lat: 91, lng: 19.9383, expectedMessage: "Parameter 'lat' must be between -90 and 90" },
+    { lat: -91, lng: 19.9383, expectedMessage: "Parameter 'lat' must be between -90 and 90" }
   ])('should return HTTP 400 when lat out of range: $lat', async ({ lat, lng, expectedMessage }) => {
     // when
-    const response = await request(server)
-      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
-      .expect(400);
+    const response = await request(server).get(`/api/v1/announcements?lat=${lat}&lng=${lng}`).expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: expectedMessage,
+      message: expectedMessage
     });
   });
 
   it.each([
-    { lat: 50.0614, lng: 181, expectedMessage: 'Parameter \'lng\' must be between -180 and 180' },
-    { lat: 50.0614, lng: -181, expectedMessage: 'Parameter \'lng\' must be between -180 and 180' },
+    { lat: 50.0614, lng: 181, expectedMessage: "Parameter 'lng' must be between -180 and 180" },
+    { lat: 50.0614, lng: -181, expectedMessage: "Parameter 'lng' must be between -180 and 180" }
   ])('should return HTTP 400 when lng out of range: $lng', async ({ lat, lng, expectedMessage }) => {
     // when
-    const response = await request(server)
-      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
-      .expect(400);
+    const response = await request(server).get(`/api/v1/announcements?lat=${lat}&lng=${lng}`).expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: expectedMessage,
+      message: expectedMessage
     });
   });
 
   it.each([
-    { lat: 'abc', lng: 19.9383, expectedMessage: 'Parameter \'lat\' must be a valid number' },
-    { lat: 50.0614, lng: 'xyz', expectedMessage: 'Parameter \'lng\' must be a valid number' },
+    { lat: 'abc', lng: 19.9383, expectedMessage: "Parameter 'lat' must be a valid number" },
+    { lat: 50.0614, lng: 'xyz', expectedMessage: "Parameter 'lng' must be a valid number" }
   ])('should return HTTP 400 when coordinates are not numbers', async ({ lat, lng, expectedMessage }) => {
     // when
-    const response = await request(server)
-      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}`)
-      .expect(400);
+    const response = await request(server).get(`/api/v1/announcements?lat=${lat}&lng=${lng}`).expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: expectedMessage,
+      message: expectedMessage
     });
   });
 
   it.each([
-    { lat: 50.0614, lng: 19.9383, range: 0.5, expectedMessage: 'Parameter \'range\' must be an integer' },
-    { lat: 50.0614, lng: 19.9383, range: 10.5, expectedMessage: 'Parameter \'range\' must be an integer' },
+    { lat: 50.0614, lng: 19.9383, range: 0.5, expectedMessage: "Parameter 'range' must be an integer" },
+    { lat: 50.0614, lng: 19.9383, range: 10.5, expectedMessage: "Parameter 'range' must be an integer" }
   ])('should return HTTP 400 when range is not an integer: $range', async ({ lat, lng, range, expectedMessage }) => {
     // when
-    const response = await request(server)
-      .get(`/api/v1/announcements?lat=${lat}&lng=${lng}&range=${range}`)
-      .expect(400);
+    const response = await request(server).get(`/api/v1/announcements?lat=${lat}&lng=${lng}&range=${range}`).expect(400);
 
     // then
     expect(response.body.error).toMatchObject({
       code: 'INVALID_PARAMETER',
-      message: expectedMessage,
+      message: expectedMessage
     });
   });
 });
@@ -754,9 +686,7 @@ describe('DELETE /api/admin/v1/announcements/:id', () => {
 
     // Then: Announcement is deleted
     expect(response.body).toEqual({});
-    const deletedAnnouncement = await db('announcement')
-      .where('id', TEST_ANNOUNCEMENT_1.id)
-      .first();
+    const deletedAnnouncement = await db('announcement').where('id', TEST_ANNOUNCEMENT_1.id).first();
     expect(deletedAnnouncement).toBeUndefined();
   });
 
@@ -765,20 +695,16 @@ describe('DELETE /api/admin/v1/announcements/:id', () => {
     await db('announcement').insert(TEST_ANNOUNCEMENT_1);
 
     // When: Client sends DELETE request without Authorization header
-    const response = await request(server)
-      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
-      .expect(401);
+    const response = await request(server).delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`).expect(401);
 
     // Then: Returns 401 Unauthenticated error
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
-      code: 'UNAUTHENTICATED',
+      code: 'UNAUTHENTICATED'
     });
 
     // Announcement should still exist
-    const announcement = await db('announcement')
-      .where('id', TEST_ANNOUNCEMENT_1.id)
-      .first();
+    const announcement = await db('announcement').where('id', TEST_ANNOUNCEMENT_1.id).first();
     expect(announcement).toBeDefined();
   });
 
@@ -795,13 +721,11 @@ describe('DELETE /api/admin/v1/announcements/:id', () => {
     // Then: Returns 401 Unauthenticated error
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
-      code: 'UNAUTHENTICATED',
+      code: 'UNAUTHENTICATED'
     });
 
     // Announcement should still exist
-    const announcement = await db('announcement')
-      .where('id', TEST_ANNOUNCEMENT_1.id)
-      .first();
+    const announcement = await db('announcement').where('id', TEST_ANNOUNCEMENT_1.id).first();
     expect(announcement).toBeDefined();
   });
 
@@ -819,7 +743,7 @@ describe('DELETE /api/admin/v1/announcements/:id', () => {
     // Then: Returns 404 Not Found error
     expect(response.body.error).toMatchObject({
       requestId: expect.any(String),
-      code: 'NOT_FOUND',
+      code: 'NOT_FOUND'
     });
   });
 
@@ -829,20 +753,13 @@ describe('DELETE /api/admin/v1/announcements/:id', () => {
     const adminToken = 'tajnehasloadmina';
 
     // When: Admin deletes first announcement
-    await request(server)
-      .delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`)
-      .set('Authorization', adminToken)
-      .expect(204);
+    await request(server).delete(`/api/admin/v1/announcements/${TEST_ANNOUNCEMENT_1.id}`).set('Authorization', adminToken).expect(204);
 
     // Then: Only first announcement is deleted, second still exists
-    const deletedAnnouncement = await db('announcement')
-      .where('id', TEST_ANNOUNCEMENT_1.id)
-      .first();
+    const deletedAnnouncement = await db('announcement').where('id', TEST_ANNOUNCEMENT_1.id).first();
     expect(deletedAnnouncement).toBeUndefined();
 
-    const remainingAnnouncement = await db('announcement')
-      .where('id', TEST_ANNOUNCEMENT_2.id)
-      .first();
+    const remainingAnnouncement = await db('announcement').where('id', TEST_ANNOUNCEMENT_2.id).first();
     expect(remainingAnnouncement).toBeDefined();
     expect(remainingAnnouncement.pet_name).toBe(TEST_ANNOUNCEMENT_2.pet_name);
   });

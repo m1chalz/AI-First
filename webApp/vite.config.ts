@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
+    emptyOutDir: true
   },
   server: { port: 8080 },
   test: {
     environment: 'jsdom',
-    globals: true,
-  },
+    globals: true
+  }
 });

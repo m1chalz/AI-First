@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  validateFileMimeType,
-  validateFileSize,
-  getFileValidationError,
-  MAX_FILE_SIZE_BYTES,
-} from '../file-validation';
+import { validateFileMimeType, validateFileSize, getFileValidationError, MAX_FILE_SIZE_BYTES } from '../file-validation';
 
 describe('file-validation', () => {
   describe('validateFileMimeType', () => {
@@ -16,7 +11,7 @@ describe('file-validation', () => {
       ['photo.bmp', 'image/bmp'],
       ['photo.tiff', 'image/tiff'],
       ['photo.heic', 'image/heic'],
-      ['photo.heif', 'image/heif'],
+      ['photo.heif', 'image/heif']
     ])('returns true for %s (%s)', (filename, mimeType) => {
       // given
       const file = new File(['content'], filename, { type: mimeType });
@@ -31,7 +26,7 @@ describe('file-validation', () => {
     it.each([
       ['document.pdf', 'application/pdf'],
       ['document.txt', 'text/plain'],
-      ['image.svg', 'image/svg+xml'],
+      ['image.svg', 'image/svg+xml']
     ])('returns false for %s (%s)', (filename, mimeType) => {
       // given
       const file = new File(['content'], filename, { type: mimeType });
@@ -51,12 +46,13 @@ describe('file-validation', () => {
       ['exactly 20MB', MAX_FILE_SIZE_BYTES, true],
       ['empty', 0, true],
       ['21MB', 21 * 1024 * 1024, false],
-      ['30MB', 30 * 1024 * 1024, false],
+      ['30MB', 30 * 1024 * 1024, false]
     ])('returns %s for %s file', (_description, size, expected) => {
       // given
-      const file = size > 0 
-        ? new File([new ArrayBuffer(size)], 'photo.jpg', { type: 'image/jpeg' })
-        : new File([], 'photo.jpg', { type: 'image/jpeg' });
+      const file =
+        size > 0
+          ? new File([new ArrayBuffer(size)], 'photo.jpg', { type: 'image/jpeg' })
+          : new File([], 'photo.jpg', { type: 'image/jpeg' });
 
       // when
       const result = validateFileSize(file);
@@ -68,26 +64,22 @@ describe('file-validation', () => {
 
   describe('getFileValidationError', () => {
     it.each([
-      [
-        'null for valid file',
-        new File([new ArrayBuffer(1024)], 'photo.jpg', { type: 'image/jpeg' }),
-        null,
-      ],
+      ['null for valid file', new File([new ArrayBuffer(1024)], 'photo.jpg', { type: 'image/jpeg' }), null],
       [
         'format error for invalid MIME type',
         new File(['content'], 'document.pdf', { type: 'application/pdf' }),
-        'Please upload JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, or HEIF format',
+        'Please upload JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, or HEIF format'
       ],
       [
         'size error for oversized file',
         new File([new ArrayBuffer(21 * 1024 * 1024)], 'photo.jpg', { type: 'image/jpeg' }),
-        'File size exceeds 20MB limit',
+        'File size exceeds 20MB limit'
       ],
       [
         'format error first when both validations fail',
         new File([new ArrayBuffer(21 * 1024 * 1024)], 'document.pdf', { type: 'application/pdf' }),
-        'Please upload JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, or HEIF format',
-      ],
+        'Please upload JPG, PNG, GIF, WEBP, BMP, TIFF, HEIC, or HEIF format'
+      ]
     ])('returns %s', (_description, file, expected) => {
       // when
       const result = getFileValidationError(file);
@@ -97,4 +89,3 @@ describe('file-validation', () => {
     });
   });
 });
-

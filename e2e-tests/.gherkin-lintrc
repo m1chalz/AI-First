@@ -1,0 +1,35 @@
+{
+  "no-unnamed-features": "on",
+  "no-unnamed-scenarios": "on",
+  "no-duplicate-tags": "on",
+  "no-empty-file": "on",
+  "indentation": ["on", {
+    "Feature": 0,
+    "Background": 2,
+    "Scenario": 2,
+    "Step": 4,
+    "Examples": 4,
+    "example": 6,
+    "given": 4,
+    "when": 4,
+    "then": 4,
+    "and": 4,
+    "but": 4
+  }],
+  "name-length": ["on", {
+    "Feature": 150,
+    "Scenario": 100,
+    "Step": 120
+  }],
+  "new-line-at-eof": ["on", "yes"],
+  "no-trailing-spaces": "on",
+  "no-multiple-empty-lines": ["on", 2],
+  "no-files-without-scenarios": "on",
+  "no-scenario-outlines-without-examples": "on",
+  "one-space-between-tags": "on",
+  "no-superfluous-tags": "on",
+  "no-dupe-feature-names": "on",
+  "no-dupe-scenario-names": ["on", "in-feature"],
+  "no-partially-commented-tag-lines": "on",
+  "use-and": "on"
+}

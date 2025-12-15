@@ -3,6 +3,7 @@ import { AnnouncementService } from '../announcement-service.ts';
 import type { Announcement, CreateAnnouncementDto } from '../../types/announcement.ts';
 import type { IAnnouncementRepository } from '../../database/repositories/announcement-repository.ts';
 import { ConflictError, NotFoundError } from '../../lib/errors.ts';
+import { PhotoUploadService } from '../photo-upload-service.ts';
 
 const MOCK_ANNOUNCEMENT: Announcement = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -12,14 +13,14 @@ const MOCK_ANNOUNCEMENT: Announcement = {
   sex: 'MALE',
   description: 'Friendly dog',
   locationLatitude: 40.7128,
-  locationLongitude: -74.0060,
+  locationLongitude: -74.006,
   lastSeenDate: '2025-11-18',
   email: 'john@example.com',
   phone: '+1-555-0101',
   photoUrl: 'https://example.com/max.jpg',
   status: 'MISSING',
   createdAt: '2025-11-19T10:00:00Z',
-  updatedAt: '2025-11-19T10:00:00Z',
+  updatedAt: '2025-11-19T10:00:00Z'
 };
 
 const defaultMockRepository: IAnnouncementRepository = {
@@ -28,17 +29,17 @@ const defaultMockRepository: IAnnouncementRepository = {
   existsByMicrochip: async () => false,
   create: async () => MOCK_ANNOUNCEMENT,
   updatePhotoUrl: async () => undefined,
-  delete: async () => undefined,
+  delete: async () => undefined
 };
 
 const VALID_CREATE_DATA: CreateAnnouncementDto = {
   species: 'DOG',
   sex: 'MALE',
   locationLatitude: 40.7128,
-  locationLongitude: -74.0060,
+  locationLongitude: -74.006,
   lastSeenDate: '2025-11-19',
   status: 'MISSING',
-  email: 'test@example.com',
+  email: 'test@example.com'
 };
 
 describe('AnnouncementService', () => {
@@ -46,9 +47,12 @@ describe('AnnouncementService', () => {
   const mockSanitizer = vi.fn((input: string) => input);
   const mockLocationValidator = vi.fn();
 
-  const createService = (repository: IAnnouncementRepository, validator = mockValidator, sanitizer = mockSanitizer, locationValidator = mockLocationValidator) => {
-    return new AnnouncementService(repository, validator, sanitizer, locationValidator);
-  };
+  const createService = (
+    repository: IAnnouncementRepository,
+    validator = mockValidator,
+    sanitizer = mockSanitizer,
+    locationValidator = mockLocationValidator
+  ) => new AnnouncementService(repository, validator, sanitizer, locationValidator);
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -60,23 +64,26 @@ describe('AnnouncementService', () => {
   describe('getAllAnnouncements', () => {
     it.each([
       { announcements: [MOCK_ANNOUNCEMENT], expectedLength: 1 },
-      { announcements: [], expectedLength: 0 },
-    ])('should return $expectedLength announcements when repository returns $expectedLength items', async ({ announcements, expectedLength }) => {
-      // given
-      const fakeRepository = {
-        ...defaultMockRepository,
-        findAll: async () => announcements,
-      };
-      
-      const service = createService(fakeRepository);
-      
-      // when
-      const result = await service.getAllAnnouncements();
-      
-      // then
-      expect(result).toEqual(announcements);
-      expect(result.length).toBe(expectedLength);
-    });
+      { announcements: [], expectedLength: 0 }
+    ])(
+      'should return $expectedLength announcements when repository returns $expectedLength items',
+      async ({ announcements, expectedLength }) => {
+        // given
+        const fakeRepository = {
+          ...defaultMockRepository,
+          findAll: async () => announcements
+        };
+
+        const service = createService(fakeRepository);
+
+        // when
+        const result = await service.getAllAnnouncements();
+
+        // then
+        expect(result).toEqual(announcements);
+        expect(result.length).toBe(expectedLength);
+      }
+    );
 
     it('should pass location parameters to validator and construct filter for repository', async () => {
       // given
@@ -84,19 +91,19 @@ describe('AnnouncementService', () => {
       const lng = 19.9383;
       const range = 10;
       const expectedFilter = { lat, lng, range };
-      
+
       const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
       const locationValidatorSpy = vi.fn();
       const fakeRepository = {
         ...defaultMockRepository,
-        findAll: findAllSpy,
+        findAll: findAllSpy
       };
-      
+
       const service = createService(fakeRepository, mockValidator, mockSanitizer, locationValidatorSpy);
-      
+
       // when
       await service.getAllAnnouncements(lat, lng, range);
-      
+
       // then
       expect(locationValidatorSpy).toHaveBeenCalledWith(lat, lng, range);
       expect(locationValidatorSpy).toHaveBeenCalledTimes(1);
@@ -109,18 +116,18 @@ describe('AnnouncementService', () => {
       const lat = 50.0614;
       const lng = 19.9383;
       const expectedFilter = { lat, lng, range: 5 };
-      
+
       const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
       const fakeRepository = {
         ...defaultMockRepository,
-        findAll: findAllSpy,
+        findAll: findAllSpy
       };
-      
+
       const service = createService(fakeRepository);
-      
+
       // when
       await service.getAllAnnouncements(lat, lng, undefined);
-      
+
       // then
       expect(findAllSpy).toHaveBeenCalledWith(expectedFilter);
     });
@@ -130,14 +137,14 @@ describe('AnnouncementService', () => {
       const findAllSpy = vi.fn().mockResolvedValue([MOCK_ANNOUNCEMENT]);
       const fakeRepository = {
         ...defaultMockRepository,
-        findAll: findAllSpy,
+        findAll: findAllSpy
       };
-      
+
       const service = createService(fakeRepository);
-      
+
       // when
       await service.getAllAnnouncements(undefined, undefined, undefined);
-      
+
       // then
       expect(findAllSpy).toHaveBeenCalledWith(undefined);
     });
@@ -150,12 +157,12 @@ describe('AnnouncementService', () => {
         ...defaultMockRepository,
         findById: async (_id: string) => MOCK_ANNOUNCEMENT
       };
-      
+
       const service = createService(fakeRepository);
-      
+
       // When: Service is called with existing ID
       const result = await service.getAnnouncementById(MOCK_ANNOUNCEMENT.id);
-      
+
       // Then: Announcement is returned
       expect(result).toEqual(MOCK_ANNOUNCEMENT);
     });
@@ -163,9 +170,9 @@ describe('AnnouncementService', () => {
     it('should throw NotFoundError when ID does not exist', async () => {
       // Given: Repository with empty data
       const fakeRepository = defaultMockRepository;
-      
+
       const service = createService(fakeRepository);
-      
+
       // When: Service is called with non-existent ID
       // Then: NotFoundError is thrown
       await expect(service.getAnnouncementById('non-existent-id')).rejects.toThrow(NotFoundError);
@@ -176,19 +183,19 @@ describe('AnnouncementService', () => {
       const announcementWithNulls: Announcement = {
         ...MOCK_ANNOUNCEMENT,
         breed: null,
-        email: null,
+        email: null
       };
-      
+
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => announcementWithNulls
       };
-      
+
       const service = createService(fakeRepository);
-      
+
       // When: Service is called
       const result = await service.getAnnouncementById(announcementWithNulls.id);
-      
+
       // Then: Announcement with nulls is returned
       expect(result).toEqual(announcementWithNulls);
       expect(result.breed).toBeNull();
@@ -204,19 +211,19 @@ describe('AnnouncementService', () => {
         species: 'DOG',
         sex: 'MALE',
         locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
+        locationLongitude: -74.006,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
         email: 'test@example.com',
         createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
+        updatedAt: '2025-11-19T10:00:00Z'
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async () => createdAnnouncement),
+        create: vi.fn(async () => createdAnnouncement)
       };
 
       const service = createService(fakeRepository);
@@ -227,12 +234,12 @@ describe('AnnouncementService', () => {
       // Then
       expect(result).toMatchObject({
         ...createdAnnouncement,
-        managementPassword: expect.stringMatching(/^\d{6}$/),
+        managementPassword: expect.stringMatching(/^\d{6}$/)
       });
       expect(fakeRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           species: 'DOG',
-          sex: 'MALE',
+          sex: 'MALE'
         }),
         expect.stringMatching(/^\d{6}$/)
       );
@@ -247,7 +254,7 @@ describe('AnnouncementService', () => {
         breed: '<img src=x onerror=alert(1)>',
         sex: 'MALE',
         description: '<script>malicious</script>',
-        reward: '<p>Reward</p>',
+        reward: '<p>Reward</p>'
       };
 
       const createdAnnouncement: Announcement = {
@@ -255,20 +262,20 @@ describe('AnnouncementService', () => {
         species: 'DOG',
         sex: 'MALE',
         locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
+        locationLongitude: -74.006,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
         email: 'test@example.com',
         createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
+        updatedAt: '2025-11-19T10:00:00Z'
       };
 
       const testSanitizer = vi.fn((input: string) => input);
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async () => createdAnnouncement),
+        create: vi.fn(async () => createdAnnouncement)
       };
 
       const service = createService(fakeRepository, mockValidator, testSanitizer);
@@ -293,19 +300,19 @@ describe('AnnouncementService', () => {
         species: 'DOG',
         sex: 'MALE',
         locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
+        locationLongitude: -74.006,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
         email: 'test@example.com',
         createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
+        updatedAt: '2025-11-19T10:00:00Z'
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async () => createdAnnouncement),
+        create: vi.fn(async () => createdAnnouncement)
       };
 
       const service = createService(fakeRepository);
@@ -327,13 +334,13 @@ describe('AnnouncementService', () => {
       // Given: Announcement data with microchip number that already exists
       const dataWithMicrochip: CreateAnnouncementDto = {
         ...VALID_CREATE_DATA,
-        microchipNumber: '123456789',
+        microchipNumber: '123456789'
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: vi.fn(async () => true),
-        create: vi.fn(),
+        create: vi.fn()
       };
 
       const service = createService(fakeRepository);
@@ -342,7 +349,7 @@ describe('AnnouncementService', () => {
       // Then: ConflictError is thrown
       await expect(service.createAnnouncement(dataWithMicrochip)).rejects.toThrow(ConflictError);
       await expect(service.createAnnouncement(dataWithMicrochip)).rejects.toThrow('An entity with this value already exists');
-      
+
       expect(fakeRepository.existsByMicrochip).toHaveBeenCalledWith('123456789');
       expect(fakeRepository.create).not.toHaveBeenCalled();
     });
@@ -354,19 +361,19 @@ describe('AnnouncementService', () => {
         species: 'DOG',
         sex: 'MALE',
         locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
+        locationLongitude: -74.006,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
         email: 'test@example.com',
         createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
+        updatedAt: '2025-11-19T10:00:00Z'
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: vi.fn(),
-        create: vi.fn(async () => createdAnnouncement),
+        create: vi.fn(async () => createdAnnouncement)
       };
 
       const service = createService(fakeRepository);
@@ -387,19 +394,21 @@ describe('AnnouncementService', () => {
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async (): Promise<Announcement> => ({
-          id: 'new-id-123',
-          species: 'DOG',
-          sex: 'MALE',
-          locationLatitude: 40.7128,
-          locationLongitude: -74.0060,
-          photoUrl: 'https://example.com/photo.jpg',
-          lastSeenDate: '2025-11-19',
-          status: 'MISSING',
-          email: 'test@example.com',
-          createdAt: '2025-11-19T10:00:00Z',
-          updatedAt: '2025-11-19T10:00:00Z',
-        })),
+        create: vi.fn(
+          async (): Promise<Announcement> => ({
+            id: 'new-id-123',
+            species: 'DOG',
+            sex: 'MALE',
+            locationLatitude: 40.7128,
+            locationLongitude: -74.006,
+            photoUrl: 'https://example.com/photo.jpg',
+            lastSeenDate: '2025-11-19',
+            status: 'MISSING',
+            email: 'test@example.com',
+            createdAt: '2025-11-19T10:00:00Z',
+            updatedAt: '2025-11-19T10:00:00Z'
+          })
+        )
       };
 
       const service = createService(fakeRepository, mockValidator, mockSanitizer);
@@ -422,7 +431,7 @@ describe('AnnouncementService', () => {
         description: 'Friendly dog',
         microchipNumber: '123456789',
         phone: '+1-555-0101',
-        reward: '$100',
+        reward: '$100'
       };
 
       const createdAnnouncement: Announcement = {
@@ -435,7 +444,7 @@ describe('AnnouncementService', () => {
         description: 'Friendly dog',
         microchipNumber: '123456789',
         locationLatitude: 40.7128,
-        locationLongitude: -74.0060,
+        locationLongitude: -74.006,
         photoUrl: 'https://example.com/photo.jpg',
         lastSeenDate: '2025-11-19',
         status: 'MISSING',
@@ -443,13 +452,13 @@ describe('AnnouncementService', () => {
         phone: '+1-555-0101',
         reward: '$100',
         createdAt: '2025-11-19T10:00:00Z',
-        updatedAt: '2025-11-19T10:00:00Z',
+        updatedAt: '2025-11-19T10:00:00Z'
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         existsByMicrochip: async () => false,
-        create: vi.fn(async () => createdAnnouncement),
+        create: vi.fn(async () => createdAnnouncement)
       };
 
       const service = createService(fakeRepository);
@@ -460,7 +469,7 @@ describe('AnnouncementService', () => {
       // Then: All fields are included in the result
       expect(result).toMatchObject({
         ...createdAnnouncement,
-        managementPassword: expect.stringMatching(/^\d{6}$/),
+        managementPassword: expect.stringMatching(/^\d{6}$/)
       });
       expect(fakeRepository.create).toHaveBeenCalled();
     });
@@ -473,7 +482,7 @@ describe('AnnouncementService', () => {
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => MOCK_ANNOUNCEMENT,
-        delete: deleteSpy,
+        delete: deleteSpy
       };
 
       const service = createService(fakeRepository);
@@ -492,7 +501,7 @@ describe('AnnouncementService', () => {
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => null,
-        delete: deleteSpy,
+        delete: deleteSpy
       };
 
       const service = createService(fakeRepository);
@@ -513,7 +522,7 @@ describe('AnnouncementService', () => {
         findById: async (_id: string) => MOCK_ANNOUNCEMENT,
         delete: async () => {
           throw deleteError;
-        },
+        }
       };
 
       const service = createService(fakeRepository);
@@ -528,13 +537,13 @@ describe('AnnouncementService', () => {
       const deletePhotosSpy = vi.fn();
       const mockPhotoUploadService = {
         uploadPhoto: vi.fn(),
-        deletePhotos: deletePhotosSpy,
+        deletePhotos: deletePhotosSpy
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => MOCK_ANNOUNCEMENT,
-        delete: vi.fn(),
+        delete: vi.fn()
       };
 
       const service = new AnnouncementService(
@@ -542,7 +551,7 @@ describe('AnnouncementService', () => {
         mockValidator,
         mockSanitizer,
         mockLocationValidator,
-        mockPhotoUploadService as any
+        mockPhotoUploadService as unknown as PhotoUploadService
       );
 
       // When: Service deletes announcement
@@ -558,13 +567,13 @@ describe('AnnouncementService', () => {
       // Given: Mock photo upload service that fails
       const mockPhotoUploadService = {
         uploadPhoto: vi.fn(),
-        deletePhotos: vi.fn().mockRejectedValue(new Error('Photo deletion failed')),
+        deletePhotos: vi.fn().mockRejectedValue(new Error('Photo deletion failed'))
       };
 
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => MOCK_ANNOUNCEMENT,
-        delete: vi.fn(),
+        delete: vi.fn()
       };
 
       const service = new AnnouncementService(
@@ -572,7 +581,7 @@ describe('AnnouncementService', () => {
         mockValidator,
         mockSanitizer,
         mockLocationValidator,
-        mockPhotoUploadService as any
+        mockPhotoUploadService as unknown as PhotoUploadService
       );
 
       // When: Service tries to delete announcement
@@ -586,7 +595,7 @@ describe('AnnouncementService', () => {
       const fakeRepository = {
         ...defaultMockRepository,
         findById: async (_id: string) => MOCK_ANNOUNCEMENT,
-        delete: vi.fn(),
+        delete: vi.fn()
       };
 
       const service = createService(fakeRepository);
@@ -594,7 +603,7 @@ describe('AnnouncementService', () => {
       // When: Service deletes announcement
       await service.deleteAnnouncement(MOCK_ANNOUNCEMENT.id);
 
-      // Then: Only announcement is deleted, no photo service call
+      // Then
       expect(fakeRepository.delete).toHaveBeenCalledWith(MOCK_ANNOUNCEMENT.id);
     });
   });

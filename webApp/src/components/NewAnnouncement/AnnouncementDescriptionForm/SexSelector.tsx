@@ -1,0 +1,37 @@
+import React from 'react';
+import { ANNOUNCEMENT_SEXES } from '../../../types/announcement';
+import { SEX_LABELS } from '../../../utils/display-labels';
+import styles from './PetDescriptionForm.module.css';
+
+export interface SexSelectorProps {
+  value: string;
+  onChange: (sex: string) => void;
+  error?: string;
+  testId?: string;
+}
+
+export const SexSelector: React.FC<SexSelectorProps> = ({ value, onChange, error, testId = 'details.sex.select' }) => {
+  const sexOptions = ANNOUNCEMENT_SEXES.filter((s) => s !== 'UNKNOWN');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
+  return (
+    <div data-testid={testId}>
+      <div className={styles.genderContainer}>
+        {sexOptions.map((sex) => (
+          <div key={sex} className={styles.genderOption}>
+            <input type="radio" name="sex" id={`sex-${sex}`} value={sex} checked={value === sex} onChange={handleChange} />
+            <label htmlFor={`sex-${sex}`}>{SEX_LABELS[sex]}</label>
+          </div>
+        ))}
+      </div>
+      {error && (
+        <span role="alert" className={styles.errorMessage}>
+          {error}
+        </span>
+      )}
+    </div>
+  );
+};

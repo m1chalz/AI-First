@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { Buffer } from 'buffer';
+import { describe, it, expect } from 'vitest';
 import { truncateBody, isBinaryContent, serializeBody, TruncatedBody } from '../log-serializers';
 
 describe('logSerializers', () => {
@@ -42,10 +42,7 @@ describe('logSerializers', () => {
       expect(result.originalSize).toBeGreaterThan(10240);
     });
 
-    it.each([
-      null,
-      undefined
-    ])('should return %s as-is', (body) => {
+    it.each([null, undefined])('should return %s as-is', (body) => {
       // When
       const result = truncateBody(body);
 
@@ -55,7 +52,7 @@ describe('logSerializers', () => {
 
     it.each([
       [10240, false],
-      [10241, true],
+      [10241, true]
     ])('should handle edge case at %i bytes', (size, shouldTruncate) => {
       // Given
       const body = 'x'.repeat(size);
@@ -76,12 +73,7 @@ describe('logSerializers', () => {
   });
 
   describe('isBinaryContent', () => {
-    it.each([
-      'image/jpeg',
-      'image/png',
-      'application/gzip',
-      'application/octet-stream',
-    ])('should detect %s as binary', (mimeType) => {
+    it.each(['image/jpeg', 'image/png', 'application/gzip', 'application/octet-stream'])('should detect %s as binary', (mimeType) => {
       // When
       const result = isBinaryContent(mimeType);
 
@@ -89,11 +81,7 @@ describe('logSerializers', () => {
       expect(result).toBe(true);
     });
 
-    it.each([
-      'application/json',
-      'text/plain',
-      'text/csv',
-    ])('should NOT detect %s as binary', (mimeType) => {
+    it.each(['application/json', 'text/plain', 'text/csv'])('should NOT detect %s as binary', (mimeType) => {
       // When
       const result = isBinaryContent(mimeType);
 
@@ -121,7 +109,7 @@ describe('logSerializers', () => {
       expect(result).toEqual({
         binaryOmitted: true,
         contentType: 'image/jpeg',
-        contentLength: '245678',
+        contentLength: '245678'
       });
     });
 
@@ -165,7 +153,7 @@ describe('logSerializers', () => {
       expect(result).toEqual({
         binaryOmitted: true,
         contentType: 'application/pdf',
-        contentLength: 'unknown',
+        contentLength: 'unknown'
       });
     });
 
@@ -184,4 +172,3 @@ describe('logSerializers', () => {
     });
   });
 });
-

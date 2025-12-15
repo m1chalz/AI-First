@@ -27,3 +27,7 @@ thumbs.db
 
 # SQLite
 *.db
+
+# Public images (ignore all except seed files)
+/public/images/*
+!/public/images/seed-*

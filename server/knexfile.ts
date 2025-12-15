@@ -1,4 +1,4 @@
-import type { Knex } from 'knex'
+import type { Knex } from 'knex';
 
 const DB_FILENAME = process.env.DATABASE_PATH || (process.env.NODE_ENV === 'test' ? './pets-its.db' : './pets.db');
 
@@ -10,13 +10,13 @@ const config: Knex.Config = {
   migrations: {
     tableName: 'knex_migrations',
     directory: './src/database/migrations',
-    extension: 'ts',
+    extension: 'ts'
   },
   seeds: {
     directory: './src/database/seeds',
-    extension: 'ts',
+    extension: 'ts'
   },
   useNullAsDefault: true
-}
+};
 
-export default config
+export default config;

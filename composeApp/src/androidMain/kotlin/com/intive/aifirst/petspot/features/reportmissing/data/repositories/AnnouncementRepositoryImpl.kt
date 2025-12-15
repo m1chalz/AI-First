@@ -2,14 +2,14 @@ package com.intive.aifirst.petspot.features.reportmissing.data.repositories
 
 import android.content.ContentResolver
 import android.util.Base64
+import androidx.core.net.toUri
 import com.intive.aifirst.petspot.data.api.AnnouncementApiClient
-import com.intive.aifirst.petspot.features.reportmissing.data.mappers.toDto
 import com.intive.aifirst.petspot.features.reportmissing.data.mappers.toDomain
+import com.intive.aifirst.petspot.features.reportmissing.data.mappers.toDto
 import com.intive.aifirst.petspot.features.reportmissing.domain.models.CreateAnnouncementRequest
 import com.intive.aifirst.petspot.features.reportmissing.domain.models.CreatedAnnouncement
 import com.intive.aifirst.petspot.features.reportmissing.domain.repositories.AnnouncementRepository
 import java.io.IOException
-import androidx.core.net.toUri
 
 /**
  * Implementation of AnnouncementRepository using AnnouncementApiClient.
@@ -58,4 +58,3 @@ class AnnouncementRepositoryImpl(
             Result.failure(e)
         }
 }
-

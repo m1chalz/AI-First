@@ -22,4 +22,3 @@ export default function adminAuthMiddleware(_req: Request, _res: Response, next:
 
   next();
 }
-

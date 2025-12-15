@@ -1,0 +1,32 @@
+import { describe, it, expect } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { useNewAnnouncementFlow } from '../use-new-announcement-flow';
+import { NewAnnouncementFlowProvider } from '../../contexts/NewAnnouncementFlowContext';
+
+describe('useNewAnnouncementFlow', () => {
+  it('returns context value when used within provider', () => {
+    // given / when
+    const { result } = renderHook(() => useNewAnnouncementFlow(), {
+      wrapper: NewAnnouncementFlowProvider
+    });
+
+    // then
+    expect(result.current.flowState).toBeDefined();
+    expect(result.current.updateFlowState).toBeDefined();
+    expect(result.current.clearFlowState).toBeDefined();
+  });
+
+  it('throws error when used outside provider', () => {
+    // given
+    const consoleError = console.error;
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    console.error = () => {};
+
+    // when / then
+    expect(() => {
+      renderHook(() => useNewAnnouncementFlow());
+    }).toThrow('useNewAnnouncementFlow must be used within NewAnnouncementFlowProvider');
+
+    console.error = consoleError;
+  });
+});

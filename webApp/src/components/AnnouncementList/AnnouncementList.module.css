@@ -1,0 +1,404 @@
+/**
+ * Styles for Animal List component.
+ * Matches Figma design specifications (node 71:9154).
+ * 
+ * Color palette:
+ * - Primary text: #2D2D2D
+ * - Secondary text: #545F71
+ * - Tertiary text: #93A2B4
+ * - Background: #FAFAFA
+ * - Placeholder: #EEEEEE
+ * - Primary button: #2D2D2D
+ * - Secondary button: #E5E9EC
+ */
+
+/* Container - Full page wrapper */
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  overflow: hidden;
+  margin: 0;
+  padding: 0 32px 24px;
+}
+
+/* Main content wrapper - per Figma layout */
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  margin-bottom: 44px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 100%;
+  color: #2d2d2d;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 16px;
+}
+
+/* Primary Button - per Figma design (Blue) */
+.primaryButton {
+  width: 327px;
+  height: 48px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s,
+    transform 0.2s;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #ffffff;
+  background-color: #155dfc;
+}
+
+.primaryButton:hover {
+  background-color: #0d47a1;
+  transform: translateY(-2px);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+/* Content area */
+.content {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Announcement list */
+.announcementList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* 16px gap between cards for better spacing */
+}
+
+/* Announcement card - Horizontal layout with image on left edge */
+.announcementCard {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  min-height: 140px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+  overflow: hidden;
+}
+
+.announcementCard:hover {
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Photo placeholder - Square (1:1), stuck to left edge, full height */
+.photoPlaceholder {
+  width: 140px;
+  min-width: 140px;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 0;
+  background-color: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.photoIcon {
+  font-size: 40px;
+  color: #93a2b4;
+}
+
+.photoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Przycinanie aby wypełnić całą przestrzeń */
+  border-radius: 0;
+}
+
+/* Left section: Basic announcement info (location + species/breed) */
+.announcementBasicInfo {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 16px 16px 24px;
+}
+
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.locationIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #616161;
+}
+
+.locationText {
+  font-size: 13px;
+  font-weight: 400;
+  color: #545f71;
+  font-family: 'Inter', sans-serif;
+}
+
+.speciesRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.speciesText {
+  font-size: 16px;
+  font-weight: 400;
+  color: #2d2d2d;
+  font-family: 'Inter', sans-serif;
+}
+
+.separator {
+  font-size: 16px;
+  color: #93a2b4;
+  font-family: 'Inter', sans-serif;
+}
+
+.breedText {
+  font-size: 14px;
+  font-weight: 400;
+  color: #2d2d2d;
+  font-family: 'Inter', sans-serif;
+}
+
+.genderIcon {
+  font-size: 24px;
+  color: #616161;
+}
+
+/* Center section: Description */
+.announcementDescription {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 400;
+  color: #545f71;
+  line-height: 1.4;
+  font-family: 'Inter', sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 16px 16px;
+  max-height: 54px;
+}
+
+/* Right section: Status and date (left column) + Details button (right column) */
+.announcementStatusSection {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  padding: 16px 16px;
+  min-width: fit-content;
+}
+
+/* Status and date grouped in left column */
+.statusDateGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 1px 10px 2px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #fafafa;
+  background-color: #ff0000;
+  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.announcementDate {
+  font-size: 13px;
+  font-weight: 400;
+  color: #545f71;
+  font-family: 'Inter', sans-serif;
+}
+
+.detailsButton {
+  width: 127px;
+  height: 44px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #155dfc;
+  background-color: transparent;
+  border: 1px solid #155dfc;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detailsButton:hover {
+  background-color: #155dfc;
+  color: white;
+}
+
+.detailsButton:focus {
+  outline: 2px solid #155dfc;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e5e9ec;
+  border-top-color: #2d2d2d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  font-size: 16px;
+  color: #545f71;
+}
+
+/* Error state */
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 32px;
+}
+
+.error p {
+  font-size: 16px;
+  color: #ff0000;
+  text-align: center;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 32px;
+}
+
+.emptyStateText {
+  font-size: 16px;
+  color: #545f71;
+  text-align: center;
+  line-height: 24px;
+  max-width: 500px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .headerButtons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}

@@ -15,14 +15,14 @@ export interface RequestWithBasicAuth extends Request {
  * Extracts Basic authentication credentials from the Authorization header.
  * Parses Base64-encoded username:password format and attaches to req.basicAuth.
  * When used for announcement routes, also verifies password against announcement's management password hash.
- * 
+ *
  * Throws UnauthenticatedError (401) if:
  * - Authorization header is missing
  * - Authorization scheme is not "Basic"
  * - Base64 encoding is invalid
  * - Credentials format is invalid (not username:password)
  * - Username or password is empty
- * 
+ *
  * Throws UnauthorizedError (403) if password verification fails for announcement routes.
  */
 export default function basicAuthMiddleware(req: RequestWithBasicAuth, _res: Response, next: NextFunction): void {
@@ -66,4 +66,3 @@ export default function basicAuthMiddleware(req: RequestWithBasicAuth, _res: Res
 
   next();
 }
-

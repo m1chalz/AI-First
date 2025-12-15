@@ -1,0 +1,322 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Hero Image Section */
+.heroSection {
+  position: relative;
+  width: 100%;
+  max-height: 320px;
+  overflow: hidden;
+  background-color: #e8ecf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroImage {
+  max-width: 100%;
+  max-height: 320px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  z-index: 2;
+}
+
+.rewardBadge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #101828;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.rewardIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Content Section */
+.contentSection {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header Row - 3 columns */
+.headerRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e8ecf0;
+}
+
+.headerItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.headerIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #616161;
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.headerLabel {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6a7282;
+  font-family: Arial, sans-serif;
+}
+
+.headerValue {
+  font-size: 16px;
+  font-weight: 500;
+  color: #101828;
+  font-family: Arial, sans-serif;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Field Row */
+.fieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6a7282;
+  font-family: Arial, sans-serif;
+}
+
+.fieldValue {
+  font-size: 16px;
+  font-weight: 500;
+  color: #101828;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Grid Row - 2 columns */
+.gridRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Location Row */
+.locationRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.locationIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #616161;
+}
+
+.locationContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.mapButton {
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #155dfc;
+  background-color: transparent;
+  border: 1px solid #155dfc;
+  border-radius: 10px;
+  text-decoration: none;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  align-self: flex-start;
+  white-space: nowrap;
+  width: 44%;
+}
+
+.mapButton:hover {
+  background-color: #155dfc;
+  color: white;
+}
+
+.mapButton:focus {
+  outline: 2px solid #155dfc;
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .heroSection {
+    max-height: 240px;
+  }
+
+  .heroImage {
+    max-height: 240px;
+  }
+
+  .statusBadge {
+    top: 12px;
+    right: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .rewardBadge {
+    bottom: 12px;
+    left: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .contentSection {
+    padding: 16px;
+  }
+
+  .headerRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .gridRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .locationRow {
+    flex-direction: column;
+  }
+
+  .mapButton {
+    width: 100%;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .fieldLabel {
+    font-size: 14px;
+  }
+
+  .fieldValue {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .heroSection {
+    max-height: 280px;
+  }
+
+  .heroImage {
+    max-height: 280px;
+  }
+
+  .statusBadge {
+    top: 14px;
+    right: 14px;
+    padding: 6px 11px;
+    font-size: 13px;
+  }
+
+  .rewardBadge {
+    bottom: 14px;
+    left: 14px;
+    padding: 7px 11px;
+    font-size: 13px;
+  }
+
+  .contentSection {
+    padding: 20px;
+  }
+
+  .fieldLabel {
+    font-size: 15px;
+  }
+
+  .fieldValue {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    max-height: 320px;
+  }
+
+  .heroImage {
+    max-height: 320px;
+  }
+
+  .contentSection {
+    padding: 24px;
+  }
+
+  .fieldLabel {
+    font-size: 16px;
+  }
+
+  .fieldValue {
+    font-size: 16px;
+  }
+}

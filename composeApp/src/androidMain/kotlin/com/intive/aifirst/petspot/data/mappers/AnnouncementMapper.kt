@@ -34,7 +34,10 @@ fun AnnouncementDto.toDomain(baseUrl: String): Animal =
  * Constructs full photo URL from relative path.
  * Handles both relative paths (/images/...) and already-full URLs (https://...).
  */
-private fun buildFullPhotoUrl(photoUrl: String, baseUrl: String): String =
+private fun buildFullPhotoUrl(
+    photoUrl: String,
+    baseUrl: String,
+): String =
     if (photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) {
         photoUrl // Already a full URL
     } else {

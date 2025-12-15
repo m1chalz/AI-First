@@ -189,6 +189,8 @@
 "animalDescription.error.invalidLatitude" = "Szerokość geograficzna musi być między -90 a 90";
 "animalDescription.error.invalidLongitude" = "Długość geograficzna musi być między -180 a 180";
 "animalDescription.error.invalidCoordinateFormat" = "Nieprawidłowy format współrzędnych";
+"animalDescription.error.missingLatitude" = "Uzupełnij szer. geogr.";
+"animalDescription.error.missingLongitude" = "Uzupełnij dł. geogr.";
 
 // Toast messages
 "animalDescription.toast.validationErrors" = "Proszę poprawić podświetlone pola";
