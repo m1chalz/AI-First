@@ -1,4 +1,4 @@
-# Manual Testing Guide for POST /api/v1/announcements
+# Manual Testing Guide
 
 ## Prerequisites
 
@@ -9,6 +9,219 @@
    ```
 
 2. Server should be running on `http://localhost:3000`
+
+---
+
+## User Registration Tests (POST /api/v1/users)
+
+### T101: Test successful user registration
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+**Expected**: HTTP 201 with user ID:
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+### T102: Test duplicate email registration (HTTP 409)
+
+```bash
+# First, register a user
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "duplicate@example.com",
+    "password": "password123"
+  }'
+
+# Then, attempt to register with the same email
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "duplicate@example.com",
+    "password": "differentpassword"
+  }'
+```
+
+**Expected**: HTTP 409 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "CONFLICT",
+    "message": "Email already exists"
+  }
+}
+```
+
+### T103: Test invalid email format (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "invalid-email",
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FORMAT",
+    "message": "email format is invalid",
+    "field": "email"
+  }
+}
+```
+
+### T104: Test password too short (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "short"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FORMAT",
+    "message": "password must be 8-128 characters long",
+    "field": "password"
+  }
+}
+```
+
+### T105: Test password too long (HTTP 400)
+
+```bash
+# Generate a 129-character password
+LONG_PASSWORD=$(printf 'a%.0s' {1..129})
+
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"email\": \"user@example.com\",
+    \"password\": \"${LONG_PASSWORD}\"
+  }"
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FORMAT",
+    "message": "password must be 8-128 characters long",
+    "field": "password"
+  }
+}
+```
+
+### T106: Test missing email (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "MISSING_VALUE",
+    "message": "Required",
+    "field": "email"
+  }
+}
+```
+
+### T107: Test missing password (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "MISSING_VALUE",
+    "message": "Required",
+    "field": "password"
+  }
+}
+```
+
+### T108: Test malformed JSON (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{ invalid json }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "MALFORMED_JSON",
+    "message": "Invalid JSON in request body"
+  }
+}
+```
+
+### T109: Test email normalization (case-insensitive)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "USER@EXAMPLE.COM",
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 201 - Email is stored as lowercase `user@example.com`
+
+---
+
+## Announcement Tests (POST /api/v1/announcements)
 
 ## Test Cases
 
@@ -610,6 +823,18 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 - [ ] T086: Missing photo field rejected (400)
 - [ ] T087: Photo replacement works correctly
 - [ ] T088: photoUrl field rejected in creation (400)
+
+### User Registration Tests
+
+- [ ] T101: User registered successfully (201)
+- [ ] T102: Duplicate email rejected (409)
+- [ ] T103: Invalid email format rejected (400)
+- [ ] T104: Password too short rejected (400)
+- [ ] T105: Password too long rejected (400)
+- [ ] T106: Missing email rejected (400)
+- [ ] T107: Missing password rejected (400)
+- [ ] T108: Malformed JSON rejected (400)
+- [ ] T109: Email normalized to lowercase (201)
 
 ### Admin Delete Announcement Tests
 
