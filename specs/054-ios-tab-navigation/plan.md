@@ -198,56 +198,55 @@ specs/054-ios-tab-navigation/
    - Test identifiers: `placeholder.comingSoon.icon`, `placeholder.comingSoon.message`
 
 3. **Create PlaceholderCoordinator** (`/iosApp/iosApp/Coordinators/PlaceholderCoordinator.swift`)
-   - **Root coordinator pattern**: Creates own `UINavigationController` in `init(title:)`
+   - **Root coordinator pattern**: Conforms to CoordinatorInterface, creates own `UINavigationController` in `init(title:)`
    - Sets `navigationController` property to own nav controller (CoordinatorInterface conformance)
-   - Creates PlaceholderViewModel with title
-   - Creates PlaceholderView with ViewModel
-   - Wraps in UIHostingController and sets as navigation root
+   - **`start(animated:)`**: Asynchronous method (@MainActor) that creates PlaceholderViewModel, PlaceholderView, wraps in UIHostingController and sets as navigation root
    - Follows MVVM-C pattern (Coordinator → ViewModel → View)
 
 4. **Create TabCoordinator** (`/iosApp/iosApp/Coordinators/TabCoordinator.swift`)
+   - **Does NOT conform to CoordinatorInterface** (manages UITabBarController, not UINavigationController)
    - **`init()`**: Creates complete UITabBarController structure (fully synchronous, ready immediately)
      - Creates UITabBarController
      - Creates root coordinators for each tab (coordinators create own UINavigationController in init):
        - Home → PlaceholderCoordinator(title: L10n.Tabs.home)
-       - Lost Pet → AnnouncementListCoordinator()
+       - Lost Pet → AnnouncementListCoordinator() (updated to create own UINavigationController)
        - Found Pet → PlaceholderCoordinator(title: L10n.Tabs.foundPet)
        - Contact Us → PlaceholderCoordinator(title: L10n.Tabs.contactUs)
        - Account → PlaceholderCoordinator(title: L10n.Tabs.account)
-     - Retrieves UINavigationController from each coordinator via `coordinator.navigationController!` (available immediately after coordinator init)
+     - Retrieves UINavigationController from each coordinator with `guard let` (safe unwrapping)
      - Configures tab bar items on navigation controllers (SF Symbols icons, localized titles)
      - Sets navigation controllers as `tabBarController.viewControllers`
-     - Maintains strong references to child coordinators in `childCoordinators` array
+     - Maintains strong references to child coordinators in internal array
      - Configures tab bar appearance (colors: `#FAFAFA` background, `#808080` inactive, `#FF6B35` active)
-     - Exposes UITabBarController via `getTabBarController()` method
-   - **`start(animated:)`**: Starts all child coordinators to populate content (asynchronous)
+     - Exposes UITabBarController via computed property `var tabBarController: UITabBarController { get }`
+   - **`start(animated:)`**: Starts all child coordinators to populate content (asynchronous, @MainActor)
      - Calls `await coordinator.start(animated:)` on each child coordinator
      - Child coordinators populate their navigation controllers with content
    - Test identifiers: `tabs.home`, `tabs.lostPet`, `tabs.foundPet`, `tabs.contactUs`, `tabs.account`
 
 5. **Update AnnouncementListCoordinator** (`/iosApp/iosApp/Features/AnnouncementList/Coordinators/AnnouncementListCoordinator.swift`)
-   - **Change to root coordinator pattern**: Update `init()` to create own `UINavigationController` (no longer accepts navigationController parameter)
-   - Set `navigationController` property to own nav controller (CoordinatorInterface conformance - TabCoordinator reads this property)
+   - **Change to root coordinator pattern**: Update `init(navigationController:)` to no-argument `init()` that creates own `UINavigationController`
+   - Create UINavigationController in init and set `navigationController` property (CoordinatorInterface conformance preserved - TabCoordinator reads this property)
    - Keep all existing logic (start flow, create ViewModels, child coordinators)
    - Sub-coordinators (PetDetailsCoordinator, ReportMissingPetCoordinator) still receive navigationController from this coordinator (existing pattern preserved)
 
 6. **Update AppCoordinator** (`/iosApp/iosApp/Coordinators/AppCoordinator.swift`)
+   - **Remove CoordinatorInterface conformance** - AppCoordinator manages TabCoordinator, not UINavigationController
    - Remove `init(navigationController:)` parameter - no longer needed (tab coordinators create own nav controllers)
    - **`init()`**: Creates TabCoordinator (fully synchronous, complete structure ready)
      - `tabCoordinator = TabCoordinator()` creates entire tab bar structure with all navigation controllers
-     - Store TabCoordinator reference
-     - Maintain as child coordinator
-   - **`start(animated:)`**: Starts TabCoordinator to populate content (asynchronous)
+     - Store TabCoordinator as private property
+   - **`start(animated:)`**: Starts TabCoordinator to populate content (asynchronous, @MainActor)
      - Calls `await tabCoordinator.start(animated:)`
      - Child coordinators fill their navigation controllers with views
-   - Add `getTabBarController()` method to expose TabCoordinator's UITabBarController for SceneDelegate
-   - Note: `navigationController` property kept as `nil` for CoordinatorInterface conformance (not used in tab navigation)
+   - Add computed property `var tabBarController: UITabBarController { get }` to expose TabCoordinator's tabBarController for SceneDelegate
+   - Note: No `navigationController` property or `childCoordinators` array (not conforming to CoordinatorInterface)
 
 7. **Update SceneDelegate** (`/iosApp/iosApp/SceneDelegate.swift`)
    - Remove splash screen setup (no longer needed)
    - Create window
    - Create AppCoordinator with `init()` - creates complete UITabBarController structure synchronously (all 5 tabs with navigation controllers ready)
-   - Set `window.rootViewController` to AppCoordinator's UITabBarController (via `getTabBarController()`)
+   - Set `window.rootViewController` to AppCoordinator's tabBarController (computed property)
    - Make window visible (`window.makeKeyAndVisible()`)
    - Start AppCoordinator asynchronously in `Task { @MainActor in await coordinator.start() }`
    - Flow: Complete tab bar with 5 tabs visible immediately, coordinators populate content asynchronously
