@@ -6,7 +6,7 @@ const router = express.Router();
 router.post('/', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const result = await userService.registerUser(email, password);
-  res.status(201).json({ id: result.id });
+  res.status(201).json(result);
 });
 
 router.post('/login', async (req: Request, res: Response) => {

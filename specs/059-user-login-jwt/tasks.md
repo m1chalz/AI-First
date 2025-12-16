@@ -124,27 +124,27 @@
 
 **Backend Unit Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T039 [P] [US2] RED: Write failing unit test for registerUser() returning accessToken in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T040 [P] [US2] RED: Write failing unit test verifying token contains correct user ID in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T041 [P] [US2] RED: Write failing unit test verifying token has correct expiration (1 hour) in `/server/src/services/__test__/user-service.test.ts`
+- [x] T039 [P] [US2] RED: Write failing unit test for registerUser() returning accessToken in `/server/src/services/__test__/user-service.test.ts`
+- [x] T040 [P] [US2] RED: Write failing unit test verifying token contains correct user ID in `/server/src/services/__test__/user-service.test.ts`
+- [x] T041 [P] [US2] RED: Write failing unit test verifying token has correct expiration (1 hour) in `/server/src/services/__test__/user-service.test.ts`
 
 **Backend Integration Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T042 [P] [US2] RED: Write failing integration test for POST /api/v1/users returning 201 with id and accessToken in `/server/src/__test__/http/users.test.ts`
-- [ ] T043 [P] [US2] RED: Write failing integration test verifying token is valid JWT in `/server/src/__test__/http/users.test.ts`
-- [ ] T044 [P] [US2] RED: Write failing integration test verifying token payload contains userId in `/server/src/__test__/http/users.test.ts`
-- [ ] T045 [P] [US2] RED: Write failing integration test verifying token expires after 1 hour in `/server/src/__test__/http/users.test.ts`
+- [x] T042 [P] [US2] RED: Write failing integration test for POST /api/v1/users returning 201 with id and accessToken in `/server/src/__test__/http/registration.test.ts`
+- [x] T043 [P] [US2] RED: Write failing integration test verifying token is valid JWT in `/server/src/__test__/http/registration.test.ts`
+- [x] T044 [P] [US2] RED: Write failing integration test verifying token payload contains userId in `/server/src/__test__/http/registration.test.ts`
+- [x] T045 [P] [US2] RED: Write failing integration test verifying token expires after 1 hour in `/server/src/__test__/http/registration.test.ts`
 
 ### Implementation for User Story 2
 
 **Backend** (TDD: Red-Green-Refactor):
 
-- [ ] T046 [US2] GREEN: Extend UserService.registerUser() to generate and return JWT token in `/server/src/services/user-service.ts` (minimal code to pass T039-T041)
-- [ ] T047 [US2] REFACTOR: Improve registerUser() code quality (DRY principle - reuse token generation)
-- [ ] T048 [US2] GREEN: Update POST /users route handler to return AuthResponse in `/server/src/routes/users.ts` (minimal code to pass T042-T045)
-- [ ] T049 [US2] REFACTOR: Ensure consistent response structure across login and registration
-- [ ] T050 [US2] Run `npm test --coverage` from `/server` and verify 80% coverage maintained
-- [ ] T051 [P] [US2] Run `npm run lint` from `/server` and fix all ESLint violations
+- [x] T046 [US2] GREEN: Extend UserService.registerUser() to generate and return JWT token in `/server/src/services/user-service.ts` (minimal code to pass T039-T041)
+- [x] T047 [US2] REFACTOR: Improve registerUser() code quality (DRY principle - reuse token generation)
+- [x] T048 [US2] GREEN: Update POST /users route handler to return AuthResponse in `/server/src/routes/users.ts` (minimal code to pass T042-T045)
+- [x] T049 [US2] REFACTOR: Ensure consistent response structure across login and registration
+- [x] T050 [US2] Run `npm test --coverage` from `/server` and verify 80% coverage maintained
+- [x] T051 [P] [US2] Run `npm run lint` from `/server` and fix all ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently (login + registration with JWT)
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import validateCreateUser, { type CreateUserRequest } from '../user-validation.ts';
+import validateCreateUser from '../user-validation.ts';
 import { ValidationError } from '../errors.ts';
+import { AuthRequest } from '../../types/auth';
 
 function expectValidationError(data: unknown, expectedCode: string, expectedField?: string): void {
   let error: ValidationError | undefined;
@@ -19,7 +20,7 @@ function expectValidationError(data: unknown, expectedCode: string, expectedFiel
   }
 }
 
-const VALID_USER_DATA: CreateUserRequest = {
+const VALID_USER_DATA: AuthRequest = {
   email: 'user@example.com',
   password: 'password123'
 };

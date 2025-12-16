@@ -1,20 +1,18 @@
 import { hashPassword, verifyPassword } from '../lib/password-management.ts';
 import { ConflictError, InvalidCredentialsError } from '../lib/errors.ts';
 import type { IUserRepository } from '../database/repositories/user-repository.ts';
-import { CreateUserRequest } from '../lib/user-validation.ts';
-import { User } from '../types/user.js';
 import { generateToken } from '../lib/jwt-utils.ts';
-import type { AuthResponse } from '../types/auth.js';
+import type { AuthRequest, AuthResponse } from '../types/auth.js';
 
 const DUMMY_HASH = '0'.repeat(32) + ':' + '0'.repeat(128);
 
 export class UserService {
   constructor(
     private repository: IUserRepository,
-    private validator: (data: CreateUserRequest) => void
+    private validator: (data: AuthRequest) => void
   ) {}
 
-  async registerUser(email: string, password: string): Promise<User> {
+  async registerUser(email: string, password: string): Promise<AuthResponse> {
     this.validator({ email, password });
 
     const normalizedEmail = email.toLowerCase();
@@ -25,8 +23,8 @@ export class UserService {
     }
 
     const passwordHash = await hashPassword(password);
-
-    return this.repository.create(normalizedEmail, passwordHash);
+    await this.repository.create(normalizedEmail, passwordHash);
+    return this.loginUser(email, password);
   }
 
   async loginUser(email: string, password: string): Promise<AuthResponse> {

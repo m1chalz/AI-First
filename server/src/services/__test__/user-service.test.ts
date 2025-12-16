@@ -28,13 +28,16 @@ describe('UserService', () => {
       // given
       const expectedId = '550e8400-e29b-41d4-a716-446655440000';
       mockRepository.create.mockResolvedValue({ id: expectedId });
-      mockRepository.findByEmail.mockResolvedValue(null);
+      mockRepository.findByEmail.mockResolvedValueOnce(null);
+      mockRepository.findByEmail.mockResolvedValueOnce({ id: expectedId, passwordHash: await hashPassword(password) }); // login
 
       // when
       const result = await underTest.registerUser(email, password);
 
       // then
-      expect(result.id).toBe(expectedId);
+      expect(result.userId).toBe(expectedId);
+      expect(result.accessToken).toBeDefined();
+      expect(typeof result.accessToken).toBe('string');
       expect(mockRepository.findByEmail).toHaveBeenCalledWith(email.toLowerCase());
       expect(mockRepository.create).toHaveBeenCalled();
     });
