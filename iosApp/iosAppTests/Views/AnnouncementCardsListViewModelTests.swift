@@ -30,12 +30,9 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
     
     // MARK: - Helper Methods
     
-    private func makeSUT(
-        query: AnnouncementListQuery = .landingPageQuery(location: nil)
-    ) -> AnnouncementCardsListViewModel {
+    private func makeSUT() -> AnnouncementCardsListViewModel {
         return AnnouncementCardsListViewModel(
             repository: fakeRepository,
-            query: query,
             onAnnouncementTapped: { [weak self] id in
                 self?.capturedAnnouncementId = id
             }
@@ -71,7 +68,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         }
         fakeRepository.stubbedAnnouncements = announcements
         
-        sut = makeSUT(query: .landingPageQuery(location: nil))
+        sut = makeSUT()
         
         // When - setQuery is called with limit 5
         sut.setQuery(.landingPageQuery(location: nil))
@@ -175,9 +172,9 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         ]
         fakeRepository.stubbedAnnouncements = announcements
         
-        sut = makeSUT(query: .defaultQuery(location: nil)) // No limit
+        sut = makeSUT()
         
-        // When - setQuery is called
+        // When - setQuery is called with default (no limit)
         sut.setQuery(.defaultQuery(location: nil))
         
         // Wait for async load

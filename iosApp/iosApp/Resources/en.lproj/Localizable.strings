@@ -249,6 +249,14 @@
 "tabs.contactUs" = "Contact Us";
 "tabs.account" = "Account";
 
+/* MARK: - Landing Page (Home Tab) */
+
+// Navigation
+"landingPage.navigationTitle" = "Home";
+
+// Empty state
+"landingPage.emptyState.message" = "No recent announcements.\nCheck back later for pet reports in your area.";
+
 /* MARK: - Placeholder Screen */
 
 // Coming soon

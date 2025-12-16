@@ -242,6 +242,14 @@
 "tabs.contactUs" = "Kontakt";
 "tabs.account" = "Konto";
 
+/* MARK: - Landing Page (Home Tab) */
+
+// Navigation
+"landingPage.navigationTitle" = "Strona główna";
+
+// Empty state
+"landingPage.emptyState.message" = "Brak ostatnich ogłoszeń.\nSprawdź później, czy pojawiły się zgłoszenia zwierząt w Twojej okolicy.";
+
 /* MARK: - Placeholder Screen */
 
 // Coming soon

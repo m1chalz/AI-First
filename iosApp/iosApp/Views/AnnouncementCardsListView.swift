@@ -70,10 +70,9 @@ struct AnnouncementCardsListView: View {
 #Preview("Loading State") {
     let viewModel = AnnouncementCardsListViewModel(
         repository: FakePreviewRepository(),
-        query: .landingPageQuery(location: nil),
         onAnnouncementTapped: { _ in }
     )
-    // Simulate loading state by not calling setQuery
+    // Query not set - list shows empty state (no loading triggered)
     AnnouncementCardsListView(
         viewModel: viewModel,
         emptyStateModel: .default,

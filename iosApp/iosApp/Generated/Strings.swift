@@ -218,6 +218,15 @@ public enum L10n {
     /// Retry
     public static let retry = L10n.tr("Localizable", "common.retry", fallback: "Retry")
   }
+  public enum LandingPage {
+    /// MARK: - Landing Page (Home Tab)
+    public static let navigationTitle = L10n.tr("Localizable", "landingPage.navigationTitle", fallback: "Home")
+    public enum EmptyState {
+      /// No recent announcements.
+      /// Check back later for pet reports in your area.
+      public static let message = L10n.tr("Localizable", "landingPage.emptyState.message", fallback: "No recent announcements.\nCheck back later for pet reports in your area.")
+    }
+  }
   public enum Location {
     public enum Permission {
       public enum Popup {

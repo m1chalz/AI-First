@@ -46,11 +46,10 @@ class LandingPageViewModel: ObservableObject {
     ) {
         self.locationHandler = locationHandler
         
-        // Create child list ViewModel with initial empty query (no data loaded yet)
-        // Parent will call setQuery() after fetching location in loadData()
+        // Create child list ViewModel (query not set yet - list remains empty)
+        // loadData() will call setQuery() after fetching location
         self.listViewModel = AnnouncementCardsListViewModel(
             repository: repository,
-            query: .landingPageQuery(location: nil),
             onAnnouncementTapped: onAnnouncementTapped
         )
     }

@@ -46,6 +46,7 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         guard let navigationController = navigationController else { return }
         
         // Get dependencies from DI container
+        // TODO: change this! pass container in init!
         let container = ServiceContainer.shared
         let repository = container.announcementRepository
         let locationHandler = container.locationPermissionHandler

@@ -32,8 +32,8 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     private let repository: AnnouncementRepositoryProtocol
     
-    /// Query configuration - mutable, parent can update via `setQuery()`
-    private var query: AnnouncementListQuery
+    /// Query configuration - nil means "don't fetch yet", set via `setQuery()`
+    private var query: AnnouncementListQuery?
     
     /// Callback for card tap events
     private let onAnnouncementTapped: (String) -> Void
@@ -45,19 +45,18 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    /// Creates autonomous list ViewModel with repository and initial query.
+    /// Creates autonomous list ViewModel with repository.
     ///
     /// - Parameters:
     ///   - repository: Repository for fetching announcements
-    ///   - query: Initial query configuration (limit, sortBy, location)
     ///   - onAnnouncementTapped: Closure invoked when user taps announcement card
+    ///
+    /// - Note: Call `setQuery(_:)` to start loading. Until then, list remains empty.
     init(
         repository: AnnouncementRepositoryProtocol,
-        query: AnnouncementListQuery,
         onAnnouncementTapped: @escaping (String) -> Void
     ) {
         self.repository = repository
-        self.query = query
         self.onAnnouncementTapped = onAnnouncementTapped
     }
     
@@ -79,7 +78,9 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     /// Reloads announcements with current query.
     /// Called by retry button in error screen.
+    /// Does nothing if query is not set.
     func reload() {
+        guard query != nil else { return }
         loadTask?.cancel()
         loadTask = Task { await loadAnnouncements() }
     }
@@ -87,7 +88,13 @@ class AnnouncementCardsListViewModel: ObservableObject {
     // MARK: - Private Methods
     
     /// Loads announcements from repository, applies query filters/sorting, and creates card ViewModels.
+    /// Does nothing if query is nil.
     private func loadAnnouncements() async {
+        guard let query = query else {
+            cardViewModels = []
+            return
+        }
+        
         isLoading = true
         errorMessage = nil
         
@@ -99,7 +106,7 @@ class AnnouncementCardsListViewModel: ObservableObject {
             try Task.checkCancellation()
             
             // Apply query filters and sorting
-            let processedAnnouncements = applyQuery(to: allAnnouncements)
+            let processedAnnouncements = applyQuery(query, to: allAnnouncements)
             
             // Convert to card ViewModels
             updateCardViewModels(with: processedAnnouncements)
@@ -116,9 +123,11 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     /// Applies query configuration (filtering, sorting) to announcements.
     ///
-    /// - Parameter announcements: Raw announcements from repository
+    /// - Parameters:
+    ///   - query: Query configuration with sorting and limit options
+    ///   - announcements: Raw announcements from repository
     /// - Returns: Filtered and sorted announcements per query configuration
-    private func applyQuery(to announcements: [Announcement]) -> [Announcement] {
+    private func applyQuery(_ query: AnnouncementListQuery, to announcements: [Announcement]) -> [Announcement] {
         var result = announcements
         
         // Apply sorting

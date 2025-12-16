@@ -36,23 +36,6 @@ struct LandingPageView: View {
     }
 }
 
-// MARK: - Localization Extension
-
-extension L10n {
-    /// Localization keys for Landing Page feature.
-    enum LandingPage {
-        enum EmptyState {
-            static var message: String {
-                NSLocalizedString(
-                    "landing_page.empty_state.message",
-                    value: "No recent announcements.\nCheck back later for pet reports in your area.",
-                    comment: "Empty state message when no announcements exist on landing page"
-                )
-            }
-        }
-    }
-}
-
 // MARK: - Preview
 
 #Preview("Landing Page") {

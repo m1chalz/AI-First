@@ -8,9 +8,7 @@ import SwiftUI
 /// suitable for use as a tab's root coordinator where navigation controller
 /// is not provided externally.
 ///
-/// **Same pattern as AnnouncementListCoordinator**:
-/// - Simple init() with only closure parameter
-/// - Dependencies fetched in start() from ServiceContainer.shared
+/// **Constructor injection**: All dependencies passed via init (no ServiceContainer access).
 ///
 /// **Responsibilities**:
 /// - Creates and configures LandingPageViewModel
@@ -22,7 +20,10 @@ class HomeCoordinator: CoordinatorInterface {
     var navigationController: UINavigationController?
     var childCoordinators: [CoordinatorInterface] = []
     
-    // MARK: - Private Properties
+    // MARK: - Dependencies
+    
+    private let repository: AnnouncementRepositoryProtocol
+    private let locationHandler: LocationPermissionHandler
     
     /// Closure to handle cross-tab navigation when user taps announcement
     private let onShowPetDetails: (String) -> Void
@@ -34,28 +35,31 @@ class HomeCoordinator: CoordinatorInterface {
     /// **Root coordinator pattern**: This coordinator creates and owns its
     /// UINavigationController, making it suitable for use as a tab's root.
     ///
-    /// - Parameter onShowPetDetails: Closure invoked when user taps announcement card.
-    ///   TabCoordinator provides this closure to handle cross-tab navigation.
-    init(onShowPetDetails: @escaping (String) -> Void) {
+    /// - Parameters:
+    ///   - repository: Repository for fetching announcements
+    ///   - locationHandler: Handler for location permissions
+    ///   - onShowPetDetails: Closure invoked when user taps announcement card.
+    ///     TabCoordinator provides this closure to handle cross-tab navigation.
+    init(
+        repository: AnnouncementRepositoryProtocol,
+        locationHandler: LocationPermissionHandler,
+        onShowPetDetails: @escaping (String) -> Void
+    ) {
         self.navigationController = UINavigationController()
+        self.repository = repository
+        self.locationHandler = locationHandler
         self.onShowPetDetails = onShowPetDetails
     }
     
     // MARK: - CoordinatorInterface Methods
     
     /// Starts the Home tab flow by showing landing page.
-    /// Fetches dependencies from ServiceContainer (same as AnnouncementListCoordinator).
     ///
     /// - Parameter animated: Whether to animate the transition
     func start(animated: Bool) async {
         guard let navigationController = navigationController else { return }
         
-        // Get dependencies from DI container (same pattern as AnnouncementListCoordinator)
-        let container = ServiceContainer.shared
-        let repository = container.announcementRepository
-        let locationHandler = container.locationPermissionHandler
-        
-        // Create ViewModel with dependencies
+        // Create ViewModel with injected dependencies
         let viewModel = LandingPageViewModel(
             repository: repository,
             locationHandler: locationHandler,
@@ -69,7 +73,7 @@ class HomeCoordinator: CoordinatorInterface {
         let hostingController = UIHostingController(rootView: landingPageView)
         
         // Configure navigation bar (UIKit - coordinator responsibility, NOT SwiftUI .navigationTitle())
-        hostingController.title = L10n.Tabs.home
+        hostingController.title = L10n.LandingPage.navigationTitle
         hostingController.navigationItem.largeTitleDisplayMode = .never
         
         // Show navigation bar and set as root

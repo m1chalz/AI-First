@@ -50,8 +50,13 @@ final class TabCoordinator {
     init() {
         _tabBarController = UITabBarController()
         
+        // Get shared dependencies from DI container
+        let container = ServiceContainer.shared
+        
         // Create child coordinators (root coordinator pattern - each creates own UINavigationController)
         let homeCoordinator = HomeCoordinator(
+            repository: container.announcementRepository,
+            locationHandler: container.locationPermissionHandler,
             onShowPetDetails: { [weak self] announcementId in
                 self?.showPetDetailsFromHome(announcementId)
             }
