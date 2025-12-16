@@ -16,6 +16,14 @@ Lost pets component:
 
 Existing BE endpoint for getting announcements should be used."
 
+## Clarifications
+
+### Session 2025-12-16
+- Q: How should pet entries be uniquely identified when navigating from teaser to details? → A: Use same pattern as existing navigation from list to pet details
+- Q: How should the teaser handle cases where the backend endpoint for announcements is temporarily unavailable? → A: Show error message with manual refresh button
+- Q: What should be displayed in the teaser when no lost pets are available to show? → A: Show proper empty state with hint that there are no lost pets
+- Q: What should happen when a user taps a pet entry in the teaser that has been removed from the backend between teaser load and navigation to details? → A: Details screen handles this case, no additional implementation needed
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - View Lost Pets Teaser on Home Page (Priority: P1)
@@ -68,9 +76,9 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 
 ### Edge Cases
 
-- What happens when there are no lost pets available to display in the teaser?
-- How does the system handle cases where the backend endpoint is temporarily unavailable?
-- What happens when a user taps a pet entry that has been removed between teaser load and navigation?
+- When no lost pets are available, the system MUST display a proper empty state with a hint to the user that there are no lost pets currently
+- When the backend endpoint is temporarily unavailable, the system MUST display an error message with a manual refresh button
+- When a pet entry has been removed between teaser load and navigation to details, the existing details screen error handling will manage this case
 
 ## Requirements *(mandatory)*
 
@@ -82,7 +90,7 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 - **FR-004**: System MUST sort teaser entries by time of addition with newest entries displayed at the top
 - **FR-005**: System MUST provide a "View All Lost Pets" button styled consistently with other blue buttons in the app
 - **FR-006**: System MUST navigate to the lost pets tab when "View All Lost Pets" button is tapped
-- **FR-007**: System MUST navigate to the lost pets tab and display pet details when a teaser entry is tapped
+- **FR-007**: System MUST navigate to the lost pets tab and display pet details when a teaser entry is tapped, using the same navigation pattern as the existing list-to-details navigation
 - **FR-008**: System MUST retrieve lost pet data using the existing backend endpoint for announcements
 
 ### Key Entities *(include if feature involves data)*
