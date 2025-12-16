@@ -1,0 +1,25 @@
+# QA-specific Dockerfile for Backend
+# Same as standard Dockerfile but with explicit QA context
+# Used by: e2e-tests/docker-compose.qa-env.yml
+
+FROM node:24-alpine
+
+WORKDIR /app/server
+
+COPY package*.json ./
+
+RUN npm ci --omit=dev && \
+    npm cache clean --force
+
+COPY . .
+
+# Create db directory with proper permissions for node user
+# Required for SQLite database in Docker container
+RUN mkdir -p /app/server/db && chown -R node:node /app/server/db
+
+EXPOSE 3000
+
+USER node
+
+CMD ["npm", "start"]
+
