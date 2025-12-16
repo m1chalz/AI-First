@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "endpoint do logowania POST /api/v1/users/login. Body takie samo jak w POST /api/v1/users (wykorzystaj ponownie istniejące DTO). W odpowiedzi endpoint zwraca HTTP 200 z polami id (userId) i accessToken w body. Odpowiedź z POST /api/v1/users ma być rozszerzona żeby również zwracała id i accessToken. Access token to JWT. HTTP 401 gdy kombinacja email/hasło jest nieprawidłowa, HTTP 400 gdy walidacja nie przeszła (wykorzystaj istniejącą logikę walidacji z POST /api/v1/users"
 
+## Clarifications
+
+### Session 2025-12-16
+
+- Q: How long should JWT access tokens remain valid before expiring? → A: 1 hour
+- Q: What rate limit should be applied to login attempts to prevent brute force attacks? → A: No rate limiting (out of scope for this feature)
+- Q: What user information should be included in the JWT token payload? → A: User ID only
+- Q: What HTTP status should be returned when a user attempts to use an expired JWT token? → A: Out of scope - Handle in authentication middleware feature
+- Q: Should users be allowed to login if their email address hasn't been verified? → A: No email verification system - Out of scope entirely
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Existing User Authentication (Priority: P1)
@@ -17,7 +27,7 @@ A registered user wants to log into the application using their email and passwo
 
 **Acceptance Scenarios**:
 
-1. **Given** a user has registered with email "user@example.com" and password "SecurePass123!", **When** they submit these credentials to the login endpoint, **Then** they receive HTTP 200 with their user ID and a valid JWT access token
+1. **Given** a user has registered with email "user@example.com" and password "SecurePass123!", **When** they submit these credentials to the login endpoint, **Then** they receive HTTP 200 with their user ID and a valid JWT access token with 1 hour expiration
 2. **Given** a user has a valid access token, **When** they use it to access protected endpoints, **Then** they are successfully authenticated
 3. **Given** a user provides valid email but incorrect password, **When** they attempt to login, **Then** they receive HTTP 401 with an appropriate error message
 4. **Given** a user provides an email that doesn't exist in the system, **When** they attempt to login, **Then** they receive HTTP 401 with an appropriate error message
@@ -57,12 +67,16 @@ Users who make mistakes during login (typos, validation errors, malformed input)
 
 ### Edge Cases
 
-- What happens when a user attempts to login with an email that hasn't been verified (if email verification is implemented)?
 - How does the system handle concurrent login attempts from the same user?
 - What happens when a user attempts to login while already having an active session?
 - How does the system handle extremely long email or password strings?
 - What happens when special characters are used in passwords?
-- How are rate limits applied to prevent brute force attacks?
+
+### Explicitly Out of Scope
+
+- Rate limiting / brute force attack prevention (to be addressed in separate security feature)
+- Expired token handling and error responses (to be addressed in authentication middleware feature)
+- Email verification system (to be addressed in separate feature if needed)
 
 ## Requirements *(mandatory)*
 
@@ -75,6 +89,8 @@ Users who make mistakes during login (typos, validation errors, malformed input)
 - **FR-005**: System MUST securely verify that the provided password matches the stored password for the user
 - **FR-006**: System MUST return HTTP 200 on successful authentication with response body containing `id` (user ID) and `accessToken` (JWT) fields
 - **FR-007**: System MUST generate a valid JWT access token upon successful authentication
+- **FR-007a**: System MUST set JWT access token expiration to 1 hour from issuance time
+- **FR-007b**: System MUST include only the user ID in the JWT token payload (minimal payload principle)
 - **FR-008**: System MUST return HTTP 401 when the email/password combination is incorrect
 - **FR-009**: System MUST return HTTP 400 when request data fails validation
 - **FR-010**: System MUST extend the POST `/api/v1/users` (registration) endpoint response to include `id` and `accessToken` fields
@@ -85,7 +101,7 @@ Users who make mistakes during login (typos, validation errors, malformed input)
 ### Key Entities
 
 - **User**: Represents a registered user account with stored credentials (email, password hash) and a unique identifier
-- **Access Token**: JWT token that authenticates user requests, contains user identification information and has an expiration time
+- **Access Token**: JWT token that authenticates user requests, contains user ID in payload and expires after 1 hour from issuance
 
 ## Success Criteria *(mandatory)*
 
