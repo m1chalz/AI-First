@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import type { CreateAnnouncementDto } from '../types/announcement.ts';
 import { ValidationError } from './errors.ts';
-import { isValidEmail, isValidPhone } from './validators.ts';
+import { mapZodErrorCode } from './zod-errors.ts';
+
+const EMAIL_REGEX = /^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isNotFutureDate(dateString: string): boolean {
   const dateObj = new Date(dateString);
@@ -26,20 +28,8 @@ const CreateAnnouncementSchema = z
       .number()
       .min(-180, { message: 'longitude must be between -180 and 180' })
       .max(180, { message: 'longitude must be between -180 and 180' }),
-    email: z
-      .string()
-      .trim()
-      .refine((val) => !val || isValidEmail(val), {
-        message: 'invalid email format'
-      })
-      .optional(),
-    phone: z
-      .string()
-      .trim()
-      .refine((val) => !val || isValidPhone(val), {
-        message: 'invalid phone format'
-      })
-      .optional(),
+    email: z.string().trim().regex(EMAIL_REGEX, { message: 'email format is invalid' }).optional(),
+    phone: z.string().trim().regex(/\d/, { message: 'invalid phone format' }).optional(),
     lastSeenDate: z
       .string()
       .trim()
@@ -57,31 +47,6 @@ const CreateAnnouncementSchema = z
     message: 'at least one contact method (email or phone) is required',
     path: ['contact']
   });
-
-function mapZodErrorCode(zodCode: string, zodError: z.ZodIssue): string {
-  // Handle unknown fields (strict mode violation)
-  if (zodCode === 'unrecognized_keys') {
-    return 'INVALID_FIELD';
-  }
-
-  // Handle missing required fields
-  if (zodCode === 'invalid_type' && 'received' in zodError && zodError.received === 'undefined') {
-    return 'MISSING_VALUE';
-  }
-
-  // Handle empty/whitespace-only fields
-  if (zodCode === 'too_small' && 'minimum' in zodError && zodError.minimum === 1) {
-    return 'MISSING_VALUE';
-  }
-
-  // Handle missing contact method
-  if (zodCode === 'custom' && zodError.path[0] === 'contact') {
-    return 'MISSING_CONTACT';
-  }
-
-  // All other validation errors are format errors
-  return 'INVALID_FORMAT';
-}
 
 export default function validateCreateAnnouncement(data: CreateAnnouncementDto): void {
   try {

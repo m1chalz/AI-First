@@ -50,13 +50,13 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         .select('*');
     }
 
-    return rows.map(this.mapRowToAnnouncement);
+    return rows.map(this.rowToEntity);
   }
 
   async findById(id: string): Promise<Announcement | null> {
     const row: AnnouncementRow | undefined = await this.db('announcement').where('id', id).first();
 
-    return row ? this.mapRowToAnnouncement(row) : null;
+    return row ? this.rowToEntity(row) : null;
   }
 
   async existsByMicrochip(microchipNumber: string): Promise<boolean> {
@@ -107,7 +107,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
     await this.db('announcement').where('id', id).delete();
   }
 
-  private mapRowToAnnouncement(row: AnnouncementRow): Announcement {
+  private rowToEntity(row: AnnouncementRow): Announcement {
     return {
       id: row.id,
       petName: row.pet_name,
