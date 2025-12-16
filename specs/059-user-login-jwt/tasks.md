@@ -71,42 +71,42 @@
 
 **Backend Unit Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T011 [P] [US1] RED: Write failing unit test for generateToken() in `/server/src/lib/__test__/jwt-utils.test.ts` (valid token generation)
-- [ ] T012 [P] [US1] RED: Write failing unit test for verifyToken() in `/server/src/lib/__test__/jwt-utils.test.ts` (valid token verification)
-- [ ] T013 [P] [US1] RED: Write failing unit test for verifyToken() with expired token in `/server/src/lib/__test__/jwt-utils.test.ts`
-- [ ] T014 [P] [US1] RED: Write failing unit test for verifyToken() with invalid signature in `/server/src/lib/__test__/jwt-utils.test.ts`
-- [ ] T015 [P] [US1] RED: Write failing unit test for verifyToken() with malformed token in `/server/src/lib/__test__/jwt-utils.test.ts`
-- [ ] T016 [P] [US1] RED: Write failing unit test for loginUser() with valid credentials in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T017 [P] [US1] RED: Write failing unit test for loginUser() with non-existent email in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T018 [P] [US1] RED: Write failing unit test for loginUser() with incorrect password in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T019 [P] [US1] RED: Write failing unit test verifying identical error messages for invalid email and wrong password in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T020 [P] [US1] RED: Write failing unit test for loginUser() with invalid email format (validation) in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T021 [P] [US1] RED: Write failing unit test for loginUser() with missing password (validation) in `/server/src/services/__test__/user-service.test.ts`
+- [x] T011 [P] [US1] RED: Write failing unit test for generateToken() in `/server/src/lib/__test__/jwt-utils.test.ts` (valid token generation)
+- [x] T012 [P] [US1] RED: Write failing unit test for verifyToken() in `/server/src/lib/__test__/jwt-utils.test.ts` (valid token verification)
+- [x] T013 [P] [US1] RED: Write failing unit test for verifyToken() with expired token in `/server/src/lib/__test__/jwt-utils.test.ts`
+- [x] T014 [P] [US1] RED: Write failing unit test for verifyToken() with invalid signature in `/server/src/lib/__test__/jwt-utils.test.ts`
+- [x] T015 [P] [US1] RED: Write failing unit test for verifyToken() with malformed token in `/server/src/lib/__test__/jwt-utils.test.ts`
+- [x] T016 [P] [US1] RED: Write failing unit test for loginUser() with valid credentials in `/server/src/services/__test__/user-service.test.ts`
+- [x] T017 [P] [US1] RED: Write failing unit test for loginUser() with non-existent email in `/server/src/services/__test__/user-service.test.ts`
+- [x] T018 [P] [US1] RED: Write failing unit test for loginUser() with incorrect password in `/server/src/services/__test__/user-service.test.ts`
+- [x] T019 [P] [US1] RED: Write failing unit test verifying identical error messages for invalid email and wrong password in `/server/src/services/__test__/user-service.test.ts`
+- [x] T020 [P] [US1] RED: Write failing unit test for loginUser() with invalid email format (validation) in `/server/src/services/__test__/user-service.test.ts`
+- [x] T021 [P] [US1] RED: Write failing unit test for loginUser() with missing password (validation) in `/server/src/services/__test__/user-service.test.ts`
 
 **Backend Integration Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T022 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with valid credentials (200) in `/server/src/__test__/http/login.test.ts`
-- [ ] T023 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with invalid email (401) in `/server/src/__test__/http/login.test.ts`
-- [ ] T024 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with wrong password (401) in `/server/src/__test__/http/login.test.ts`
-- [ ] T025 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with missing fields (400) in `/server/src/__test__/http/login.test.ts`
-- [ ] T026 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with invalid email format (400) in `/server/src/__test__/http/login.test.ts`
-- [ ] T027 [P] [US1] RED: Write failing integration test verifying response time similarity for invalid email vs wrong password in `/server/src/__test__/http/login.test.ts`
-- [ ] T028 [P] [US1] RED: Write failing integration test verifying JWT token structure and payload in `/server/src/__test__/http/login.test.ts`
+- [x] T022 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with valid credentials (200) in `/server/src/__test__/http/login.test.ts`
+- [x] T023 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with invalid email (401) in `/server/src/__test__/http/login.test.ts`
+- [x] T024 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with wrong password (401) in `/server/src/__test__/http/login.test.ts`
+- [x] T025 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with missing fields (400) in `/server/src/__test__/http/login.test.ts`
+- [x] T026 [P] [US1] RED: Write failing integration test for POST /api/v1/users/login with invalid email format (400) in `/server/src/__test__/http/login.test.ts`
+- [x] T027 [P] [US1] RED: Write failing integration test verifying response time similarity for invalid email vs wrong password in `/server/src/__test__/http/login.test.ts`
+- [x] T028 [P] [US1] RED: Write failing integration test verifying JWT token structure and payload in `/server/src/__test__/http/login.test.ts`
 
 ### Implementation for User Story 1
 
 **Backend** (TDD: Red-Green-Refactor):
 
-- [ ] T029 [P] [US1] GREEN: Implement generateToken() in `/server/src/lib/jwt-utils.ts` (minimal code to pass T011)
-- [ ] T030 [P] [US1] GREEN: Implement verifyToken() in `/server/src/lib/jwt-utils.ts` (minimal code to pass T012-T015)
-- [ ] T031 [US1] REFACTOR: Improve jwt-utils.ts code quality (extract helpers, JSDoc documentation, Clean Code principles)
-- [ ] T032 [US1] GREEN: Extend UserService with loginUser() method in `/server/src/services/user-service.ts` (minimal code to pass T016-T021)
-- [ ] T033 [US1] GREEN: Implement user enumeration prevention (dummy hash verification) in UserService.loginUser()
-- [ ] T034 [US1] REFACTOR: Improve loginUser() code quality (extract helpers, JSDoc documentation, max 3 nesting levels)
-- [ ] T035 [US1] GREEN: Create POST /login route in `/server/src/routes/users.ts` (minimal code to pass T022-T028)
-- [ ] T036 [US1] REFACTOR: Improve route handler code quality (error handling, JSDoc documentation)
-- [ ] T037 [US1] Run `npm test --coverage` from `/server` and verify 80% coverage for jwt-utils and user-service
-- [ ] T038 [P] [US1] Run `npm run lint` from `/server` and fix all ESLint violations
+- [x] T029 [P] [US1] GREEN: Implement generateToken() in `/server/src/lib/jwt-utils.ts` (minimal code to pass T011)
+- [x] T030 [P] [US1] GREEN: Implement verifyToken() in `/server/src/lib/jwt-utils.ts` (minimal code to pass T012-T015)
+- [x] T031 [US1] REFACTOR: Improve jwt-utils.ts code quality (extract helpers, JSDoc documentation, Clean Code principles)
+- [x] T032 [US1] GREEN: Extend UserService with loginUser() method in `/server/src/services/user-service.ts` (minimal code to pass T016-T021)
+- [x] T033 [US1] GREEN: Implement user enumeration prevention (dummy hash verification) in UserService.loginUser()
+- [x] T034 [US1] REFACTOR: Improve loginUser() code quality (extract helpers, JSDoc documentation, max 3 nesting levels)
+- [x] T035 [US1] GREEN: Create POST /login route in `/server/src/routes/users.ts` (minimal code to pass T022-T028)
+- [x] T036 [US1] REFACTOR: Improve route handler code quality (error handling, JSDoc documentation)
+- [x] T037 [US1] Run `npm test --coverage` from `/server` and verify 80% coverage for jwt-utils and user-service
+- [x] T038 [P] [US1] Run `npm run lint` from `/server` and fix all ESLint violations
 
 **Checkpoint**: At this point, User Story 1 (login endpoint) should be fully functional and testable independently
 
