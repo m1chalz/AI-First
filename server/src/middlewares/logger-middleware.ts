@@ -27,6 +27,8 @@ function redactPII(data: unknown): unknown {
       redacted[key] = redactEmail(value);
     } else if (key === 'phone' && typeof value === 'string') {
       redacted[key] = redactPhone(value);
+    } else if (key === 'password' && typeof value === 'string') {
+      redacted[key] = '***';
     } else if (typeof value === 'object' && value !== null) {
       redacted[key] = redactPII(value);
     } else {
