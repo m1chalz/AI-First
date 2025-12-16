@@ -34,13 +34,13 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Install jsonwebtoken dependency in `/server/package.json`
-- [ ] T002 [P] Install @types/jsonwebtoken dev dependency in `/server/package.json`
-- [ ] T002a [P] Update npm scripts in `/server/package.json` to use --env-file=.env flag (Node.js v24 native .env support)
-- [ ] T003 [P] Generate JWT_SECRET and add to `/server/.env` file
-- [ ] T004 [P] Add JWT_SECRET example to `/server/.env.example` with documentation
-- [ ] T005 [P] Create AuthResponse type definition in `/server/src/types/auth.d.ts`
-- [ ] T006 [P] Create JwtPayload type definition in `/server/src/types/auth.d.ts`
+- [x] T001 Install jsonwebtoken dependency in `/server/package.json`
+- [x] T002 [P] Install @types/jsonwebtoken dev dependency in `/server/package.json`
+- [x] T002a [P] Update npm scripts in `/server/package.json` to use --env-file=.env flag (Node.js v24 native .env support)
+- [x] T003 [P] Generate JWT_SECRET and add to `/server/.env` file
+- [x] T004 [P] Add JWT_SECRET example to `/server/.env.example` with documentation
+- [x] T005 [P] Create AuthResponse type definition in `/server/src/types/auth.d.ts`
+- [x] T006 [P] Create JwtPayload type definition in `/server/src/types/auth.d.ts`
 
 ---
 
@@ -50,10 +50,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Create UnauthorizedError class in `/server/src/lib/errors.ts`
-- [ ] T008 Update error handler middleware to handle UnauthorizedError (401 status) in `/server/src/middlewares/error-handler-middleware.ts`
-- [ ] T009 [P] Verify existing user-validation.ts validateCreateUser() function can be reused for login
-- [ ] T010 [P] Verify existing password-management.ts verifyPassword() function uses constant-time comparison
+- [x] T007 Create InvalidCredentialsError class in `/server/src/lib/errors.ts` (401 status for login failures)
+- [x] T008 Update error handler middleware to handle InvalidCredentialsError (401 status) in `/server/src/middlewares/error-handler-middleware.ts` - already handled by CustomError
+- [x] T009 [P] Verify existing user-validation.ts validateCreateUser() function can be reused for login - ✅ validates email/password with same rules
+- [x] T010 [P] Verify existing password-management.ts verifyPassword() function uses constant-time comparison - ✅ uses timingSafeEqual
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
