@@ -31,8 +31,8 @@ Users opening the app land on a Home tab that displays the 5 most recent pet ann
 2. **Given** the backend has less than 5 announcements (e.g., 3 announcements), **When** user opens Home tab, **Then** the app displays all available announcements (3 in this case)
 3. **Given** the backend database is empty, **When** user opens Home tab, **Then** the app displays an empty state view with "No recent announcements" message and an illustrative icon/image
 4. **Given** backend API is unavailable, **When** user opens Home tab, **Then** the app displays a clear error message explaining the connection problem
-5. **Given** user has location permissions granted, **When** Home tab loads, **Then** announcements are displayed with distance information from user's location
-6. **Given** user has location permissions denied, **When** Home tab loads, **Then** announcements are displayed without distance information
+5. **Given** user has location permissions granted, **When** Home tab loads, **Then** announcements are displayed with location coordinates (latitude/longitude)
+6. **Given** user has location permissions denied, **When** Home tab loads, **Then** announcements are displayed without location coordinates
 
 ---
 
@@ -69,7 +69,7 @@ Users can tap on any announcement card on the Home tab to view complete details 
 - **FR-001**: Home tab MUST display a landing page showing the 5 most recent pet announcements from the backend
 - **FR-002**: Landing page MUST use the same API endpoint (GET /api/v1/announcements) as the full announcement list screen
 - **FR-002a**: iOS app MUST perform client-side sorting (by creation date descending) and filtering (limit to first 5) of announcements returned from backend
-- **FR-003**: Announcement cards on landing page MUST display the same information and visual design as cards in the full announcement list (name, species, status, photo, location/distance)
+- **FR-003**: Announcement cards on landing page MUST display the same information and visual design as cards in the full announcement list (name, species, status, photo, location coordinates)
 - **FR-004**: Landing page MUST sort announcements by creation date with newest announcements first
 - **FR-005**: Landing page MUST limit display to exactly 5 announcements, even if backend returns more
 - **FR-006**: When backend has fewer than 5 announcements, landing page MUST display all available announcements
@@ -80,14 +80,14 @@ Users can tap on any announcement card on the Home tab to view complete details 
 - **FR-010**: When user taps Home tab after viewing pet details from landing page, system MUST display the landing page (announcement cards), NOT the detail screen
 - **FR-011**: Landing page MUST display loading indicators while fetching data from backend
 - **FR-012**: Landing page MUST handle API errors (network unavailable, timeout, server errors) by displaying clear error messages
-- **FR-013**: When user has location permissions granted, landing page MUST display distance information for each announcement (same as full list)
-- **FR-014**: When user has location permissions denied, landing page MUST display announcements without distance information (same as full list)
+- **FR-013**: When user has location permissions granted, landing page MUST display location coordinates for each announcement (same as full list)
+- **FR-014**: When user has location permissions denied, landing page MUST display announcements without location coordinates (same as full list)
 - **FR-015**: Landing page MUST reuse existing announcement list UI components to ensure visual consistency
 - **FR-016**: Landing page MUST handle broken photo URLs, malformed data, and missing optional fields the same way as the full announcement list
 
 ### Key Entities
 
-- **Announcement**: Represents a pet announcement fetched from backend, includes pet information (name, species, status, photo URL), location data (coordinates, distance from user), contact details, and metadata (creation date, update date)
+- **Announcement**: Represents a pet announcement fetched from backend, includes pet information (name, species, status, photo URL), location data (coordinates: latitude/longitude), contact details, and metadata (creation date, update date)
 - **Landing Page**: Represents the Home tab root screen, contains a limited subset (first 5) of announcements sorted by creation date
 - **Navigation Context**: Tracks the user's navigation path, ensures that navigating to pet details from landing page places the user in the Lost Pets tab context (affects back navigation behavior)
 
@@ -105,7 +105,7 @@ Users can tap on any announcement card on the Home tab to view complete details 
 ## Assumptions
 
 - **API Compatibility**: The existing GET /api/v1/announcements endpoint returns all announcements. iOS app performs client-side filtering and sorting to limit display to 5 most recent items sorted by creation date descending
-- **Component Reusability**: Existing announcement list UI components (announcement cards, loading indicators, error views, empty states) are designed to be reusable and can be integrated into the landing page
+- **Component Reusability**: Announcement list UI components will be refactored into reusable autonomous components (AnnouncementCardsListView with its own ViewModel) to enable sharing between full list and landing page while maintaining separation of concerns
 - **Navigation System**: iOS coordinator-based navigation system supports programmatic tab switching and navigation stack manipulation (switch to tab + push detail screen)
 - **Existing Pet Details Screen**: Pet Details screen already exists with its own loading states, error handling, and UI components. Landing page navigation reuses this existing screen without modifications
 - **Default Tab**: Home tab is already configured as the default tab when app launches (as per feature 054-ios-tab-navigation)

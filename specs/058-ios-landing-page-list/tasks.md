@@ -88,8 +88,8 @@
   - Scenario: Display all announcements when backend has fewer than 5
   - Scenario: Display empty state when no announcements
   - Scenario: Display error message when backend is unavailable
-  - Scenario: Display distance when location permissions granted
-  - Scenario: Hide distance when location permissions denied
+  - Scenario: Display location coordinates when location permissions granted
+  - Scenario: Hide location coordinates when location permissions denied
 - [ ] T010 [P] [US1] Create Screen Object `LandingPageScreen.java` in `/e2e-tests/java/src/test/java/com/petspot/e2e/screens/LandingPageScreen.java`
 - [ ] T011 [P] [US1] Create step definitions `LandingPageSteps.java` in `/e2e-tests/java/src/test/java/com/petspot/e2e/steps/mobile/LandingPageSteps.java`
 
@@ -186,8 +186,8 @@
   - [ ] Error state displays when backend is unavailable
   - [ ] Tapping announcement navigates to Lost Pets tab with detail screen
   - [ ] Back navigation returns to Lost Pets tab, not Home tab
-  - [ ] Distance displayed when location permissions granted
-  - [ ] Distance hidden when location permissions denied
+  - [ ] Location coordinates displayed when location permissions granted
+  - [ ] Location coordinates hidden when location permissions denied
 - [ ] T031 Run quickstart.md validation (all steps executable)
 
 ---

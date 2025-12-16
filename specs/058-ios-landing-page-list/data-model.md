@@ -71,9 +71,9 @@ Represents geographic coordinates for pet location.
 - `address` max 200 characters if present
 
 **Business Rules**:
-- Distance calculation: Use Haversine formula to calculate distance from user's current location
-- Distance display: Show distance in kilometers with 1 decimal place (e.g., "2.3 km")
-- Distance visibility: Only show if user has granted location permissions
+- Location display: Show coordinates in degrees format (e.g., "52.2297° N, 21.0122° E")
+- Location visibility: Only show coordinates if user has granted location permissions
+- Future enhancement: Distance calculation could use Haversine formula (not implemented in current iteration)
 
 ---
 
@@ -119,12 +119,12 @@ struct AnnouncementListQuery {
 |-------|------|----------|-------------|---------------|
 | `limit` | Int? | No | Maximum number of results (nil = all) | nil |
 | `sortBy` | SortOption | Yes | Sorting order for results | .createdAtDescending |
-| `location` | Coordinate? | No | User's current location for distance calculation (nil = no location) | nil |
+| `location` | Coordinate? | No | User's current location for enabling location coordinate display (nil = no location) | nil |
 
 **Usage Examples**:
-- **Full list query**: `AnnouncementListQuery.defaultQuery(location: userLocation)` → Returns all announcements sorted by date with distance info
-- **Landing page query**: `AnnouncementListQuery.landingPageQuery(location: userLocation)` → Returns 5 most recent announcements with distance info
-- **No location**: `AnnouncementListQuery.landingPageQuery(location: nil)` → Returns 5 most recent announcements without distance info
+- **Full list query**: `AnnouncementListQuery.defaultQuery(location: userLocation)` → Returns all announcements sorted by date with location coordinates
+- **Landing page query**: `AnnouncementListQuery.landingPageQuery(location: userLocation)` → Returns 5 most recent announcements with location coordinates
+- **No location**: `AnnouncementListQuery.landingPageQuery(location: nil)` → Returns 5 most recent announcements without location coordinates
 
 **Business Rules**:
 - `limit = nil` means no limit (return all matching announcements)
@@ -327,7 +327,7 @@ Response structure for GET /api/v1/announcements endpoint.
 - Invalid announcements are silently skipped (not displayed)
 - Network errors are displayed to user with retry option
 - Image load failures show placeholder image (no error message)
-- Location permission denial hides distance info (no error message)
+- Location permission denial hides location coordinates (no error message)
 
 ---
 

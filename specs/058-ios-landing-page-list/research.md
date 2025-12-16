@@ -451,18 +451,18 @@ class LandingPageViewModel: ObservableObject {
 ## 4. Location Permission Handling in iOS
 
 ### Decision
-LandingPageViewModel will check location permission state via existing LocationService and conditionally calculate distances for announcements when permission is granted.
+LandingPageViewModel will check location permission state via existing LocationService and conditionally display location coordinates for announcements when permission is granted.
 
 ### Rationale
 - iOS requires explicit user permission to access location via CLLocationManager
 - Existing LocationService (from previous features) encapsulates permission checking and location fetching
-- When permission granted: ViewModel fetches user location and passes it to AnnouncementCard for distance calculation
-- When permission denied: ViewModel passes `nil` location to AnnouncementCard, which hides distance information
+- When permission granted: ViewModel fetches user location and passes it to AnnouncementCard for location coordinate display
+- When permission denied: ViewModel passes `nil` location to AnnouncementCard, which hides location coordinates
 - This approach matches existing behavior in full announcement list (requirement FR-013, FR-014)
 
 ### Alternatives Considered
-1. **Always show distance with fallback**: Display "Unknown location" text when permission denied
-   - Rejected: UX guideline is to hide distance information entirely when unavailable, not show placeholder text
+1. **Always show location with fallback**: Display "Unknown location" text when permission denied
+   - Rejected: UX guideline is to hide location coordinates entirely when unavailable, not show placeholder text
 2. **Request permission on Home tab load**: Prompt user for location permission when landing page appears
    - Rejected: Permission prompts should be contextual (when user explicitly needs location feature), not automatic on tab load
 
@@ -491,9 +491,9 @@ struct AnnouncementCard: View {
     let userLocation: CLLocation?  // Optional location
     
     var body: some View {
-        // Show distance only if userLocation is available
+        // Show location coordinates only if userLocation is available
         if let userLocation = userLocation {
-            Text("\(announcement.distanceFrom(userLocation)) km")
+            Text(announcement.locationText)
         }
     }
 }

@@ -1005,8 +1005,8 @@ Before marking implementation complete, verify:
   - [ ] Error state displays when backend is unavailable
   - [ ] Tapping announcement navigates to Lost Pets tab with detail screen
   - [ ] Back navigation returns to Lost Pets tab, not Home tab
-  - [ ] Distance displayed when location permissions granted
-  - [ ] Distance hidden when location permissions denied
+  - [ ] Location coordinates displayed when location permissions granted
+  - [ ] Location coordinates hidden when location permissions denied
 - [ ] **E2E Tests**: All Cucumber scenarios pass for iOS
 - [ ] **Accessibility Identifiers**: All interactive elements have testIDs
 - [ ] **Code Quality**: SwiftDoc comments on public APIs, follows MVVM-C pattern
@@ -1037,9 +1037,9 @@ announcements = allAnnouncements
     .map { $0 }
 ```
 
-### Issue 3: Location Distance Not Displayed
+### Issue 3: Location Coordinates Not Displayed
 
-**Symptom**: Distance info missing on announcement cards
+**Symptom**: Location coordinates missing on announcement cards
 
 **Solution**: Check location permission flow:
 1. Verify `locationService.hasLocationPermission` returns true
