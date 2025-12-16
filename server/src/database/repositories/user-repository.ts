@@ -16,7 +16,7 @@ export interface IUserRepository {
 }
 
 export class UserRepository implements IUserRepository {
-  constructor(private db: Knex) { }
+  constructor(private db: Knex) {}
 
   async create(email: string, passwordHash: string): Promise<User> {
     const now = new Date();

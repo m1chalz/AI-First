@@ -28,16 +28,8 @@ const CreateAnnouncementSchema = z
       .number()
       .min(-180, { message: 'longitude must be between -180 and 180' })
       .max(180, { message: 'longitude must be between -180 and 180' }),
-    email: z
-      .string()
-      .trim()
-      .regex(EMAIL_REGEX, { message: 'email format is invalid' })
-      .optional(),
-    phone: z
-      .string()
-      .trim()
-      .regex(/\d/, { message: 'invalid phone format' })
-      .optional(),
+    email: z.string().trim().regex(EMAIL_REGEX, { message: 'email format is invalid' }).optional(),
+    phone: z.string().trim().regex(/\d/, { message: 'invalid phone format' }).optional(),
     lastSeenDate: z
       .string()
       .trim()
@@ -55,7 +47,6 @@ const CreateAnnouncementSchema = z
     message: 'at least one contact method (email or phone) is required',
     path: ['contact']
   });
-
 
 export default function validateCreateAnnouncement(data: CreateAnnouncementDto): void {
   try {

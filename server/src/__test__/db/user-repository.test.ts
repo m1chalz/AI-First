@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { db } from '../../db-utils.ts';
-import { UserRepository } from '../user-repository.ts';
+import { db } from '../../database/db-utils.ts';
+import { UserRepository } from '../../database/repositories/user-repository.ts';
 
 describe('UserRepository', () => {
   let repository: UserRepository;

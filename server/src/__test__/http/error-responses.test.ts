@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import server from '../server.ts';
+import server from '../../server.ts';
 
 describe('Error responses', () => {
   it('should return 404 with structured error for non-existent routes', async () => {

@@ -8,7 +8,7 @@ export class UserService {
   constructor(
     private repository: IUserRepository,
     private validator: (data: CreateUserRequest) => void
-  ) { }
+  ) {}
 
   async registerUser(email: string, password: string): Promise<User> {
     this.validator({ email, password });

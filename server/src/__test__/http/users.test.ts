@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import request from 'supertest';
-import server from '../server.ts';
-import { db } from '../database/db-utils.ts';
+import server from '../../server.ts';
+import { db } from '../../database/db-utils.ts';
 
 describe('POST /api/v1/users', () => {
   beforeEach(async () => {
@@ -18,9 +18,7 @@ describe('POST /api/v1/users', () => {
       const payload = { email: 'persist@example.com', password: 'password123' };
 
       // when
-      const response = await request(server)
-        .post('/api/v1/users')
-        .send(payload);
+      const response = await request(server).post('/api/v1/users').send(payload);
 
       // then
       expect(response.status).toBe(201);
@@ -38,9 +36,7 @@ describe('POST /api/v1/users', () => {
       const payload = { email: 'MixedCase@Example.COM', password: 'password123' };
 
       // when
-      const response = await request(server)
-        .post('/api/v1/users')
-        .send(payload);
+      const response = await request(server).post('/api/v1/users').send(payload);
 
       // then
       expect(response.status).toBe(201);
@@ -62,9 +58,7 @@ describe('POST /api/v1/users', () => {
       { email: 'user@example.com', password: '', field: 'password' }
     ])('should return HTTP 400 with validation error for $field', async ({ email, password, field }) => {
       // when
-      const response = await request(server)
-        .post('/api/v1/users')
-        .send({ email, password });
+      const response = await request(server).post('/api/v1/users').send({ email, password });
 
       // then
       expect(response.status).toBe(400);
@@ -73,20 +67,18 @@ describe('POST /api/v1/users', () => {
       expect(response.body.error.field).toBe(field);
     });
 
-    it.each([
-      { email: 'user@example.com' },
-      { password: '12345678' }
-    ])('should return HTTP 400 when one of the fields is missing', async (requestBody) => {
-      // when
-      const response = await request(server)
-        .post('/api/v1/users')
-        .send(requestBody);
+    it.each([{ email: 'user@example.com' }, { password: '12345678' }])(
+      'should return HTTP 400 when one of the fields is missing',
+      async (requestBody) => {
+        // when
+        const response = await request(server).post('/api/v1/users').send(requestBody);
 
-      // then
-      expect(response.status).toBe(400);
-      expect(response.body.error).toHaveProperty('requestId');
-      expect(response.body.error.code).toBe('MISSING_VALUE');
-    });
+        // then
+        expect(response.status).toBe(400);
+        expect(response.body.error).toHaveProperty('requestId');
+        expect(response.body.error.code).toBe('MISSING_VALUE');
+      }
+    );
 
     it('should return HTTP 409 for duplicate email', async () => {
       // given
@@ -95,14 +87,11 @@ describe('POST /api/v1/users', () => {
       await request(server).post('/api/v1/users').send(payload);
 
       // when
-      const response = await request(server)
-        .post('/api/v1/users')
-        .send(payload);
+      const response = await request(server).post('/api/v1/users').send(payload);
 
       // then
       expect(response.status).toBe(409);
       expect(response.body.error.code).toBe('CONFLICT');
     });
   });
-
 });

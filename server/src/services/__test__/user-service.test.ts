@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UserService } from '../user-service.ts';
-import { ValidationError, ConflictError } from '../../lib/errors.ts';
+import { ConflictError } from '../../lib/errors.ts';
+import { IUserRepository } from '../../database/repositories/user-repository.ts';
 
 const mockRepository = {
   create: vi.fn(),
@@ -13,7 +14,7 @@ describe('UserService', () => {
   let underTest: UserService;
 
   beforeEach(() => {
-    underTest = new UserService(mockRepository as any, mockValidator);
+    underTest = new UserService(mockRepository as IUserRepository, mockValidator);
     vi.clearAllMocks();
   });
 

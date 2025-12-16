@@ -99,12 +99,27 @@ describe('validateCreateUser', () => {
       { description: 'email without local part', fieldName: 'email', fieldValue: '@example.com', expectedCode: 'INVALID_FORMAT' },
       { description: 'email with space', fieldName: 'email', fieldValue: 'user @example.com', expectedCode: 'INVALID_FORMAT' },
       // Email length validation
-      { description: 'email exceeding 254 characters', fieldName: 'email', fieldValue: 'a'.repeat(243) + '@example.com', expectedCode: 'INVALID_FORMAT' },
+      {
+        description: 'email exceeding 254 characters',
+        fieldName: 'email',
+        fieldValue: 'a'.repeat(243) + '@example.com',
+        expectedCode: 'INVALID_FORMAT'
+      },
       // Password length validation
       { description: 'password shorter than 8 characters', fieldName: 'password', fieldValue: 'short', expectedCode: 'INVALID_FORMAT' },
       { description: 'password with 7 characters', fieldName: 'password', fieldValue: '1234567', expectedCode: 'INVALID_FORMAT' },
-      { description: 'password with 7 non-whitespace characters', fieldName: 'password', fieldValue: '1234567  ', expectedCode: 'INVALID_FORMAT' },
-      { description: 'password exceeding 128 characters', fieldName: 'password', fieldValue: 'a'.repeat(129), expectedCode: 'INVALID_FORMAT' },
+      {
+        description: 'password with 7 non-whitespace characters',
+        fieldName: 'password',
+        fieldValue: '1234567  ',
+        expectedCode: 'INVALID_FORMAT'
+      },
+      {
+        description: 'password exceeding 128 characters',
+        fieldName: 'password',
+        fieldValue: 'a'.repeat(129),
+        expectedCode: 'INVALID_FORMAT'
+      },
       // Type mismatches
       { description: 'email is not a string', fieldName: 'email', fieldValue: 123, expectedCode: 'INVALID_FORMAT' },
       { description: 'password is not a string', fieldName: 'password', fieldValue: 123, expectedCode: 'INVALID_FORMAT' }
@@ -165,4 +180,3 @@ describe('validateCreateUser', () => {
     });
   });
 });
-

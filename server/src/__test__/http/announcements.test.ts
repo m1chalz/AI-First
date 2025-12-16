@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import server from '../server.ts';
-import { db } from '../database/db-utils.ts';
-import type { Announcement } from '../types/announcement.ts';
+import server from '../../server.ts';
+import { db } from '../../database/db-utils.ts';
+import type { Announcement } from '../../types/announcement';
 
 const TEST_ANNOUNCEMENT_1 = {
   id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',

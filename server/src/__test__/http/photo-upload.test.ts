@@ -2,10 +2,10 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
-import server from '../server.ts';
-import { db } from '../database/db-utils.ts';
-import { hashPassword } from '../lib/password-management.ts';
-import { AnnouncementRow } from '../types/announcement';
+import server from '../../server.ts';
+import { db } from '../../database/db-utils.ts';
+import { hashPassword } from '../../lib/password-management.ts';
+import { AnnouncementRow } from '../../types/announcement';
 
 async function getPhotoUrl(id: string): Promise<string | null> {
   return (await db('announcement').where({ id }).first()).photo_url;
