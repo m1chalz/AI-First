@@ -98,9 +98,9 @@ Implement a landing page on iOS Home tab that displays the 5 most recent pet ann
   - Android: N/A
   - iOS: ✅ `.accessibilityIdentifier()` modifier on:
     - Announcement cards: `landingPage.announcementCard.${announcementId}`
-    - Loading indicator: `landingPage.loadingIndicator`
+    - Loading indicator: `landingPage.loading`
     - Empty state view: `landingPage.emptyState`
-    - Error message: `landingPage.errorMessage`
+    - Error message: `landingPage.error`
   - Web: N/A
   - Naming convention: `{screen}.{element}.{id/action}` ✅
   - Violation justification: N/A
@@ -175,42 +175,42 @@ iosApp/iosApp/
 │   │   ├── Announcement.swift           # Existing model (reused)
 │   │   └── AnnouncementListQuery.swift  # NEW: Query configuration model
 │   └── Repositories/
-│       └── AnnouncementRepository.swift # Existing protocol (reused)
+│       └── AnnouncementRepositoryProtocol.swift # Existing protocol (reused)
 ├── Data/
 │   └── Repositories/
-│       └── AnnouncementRepositoryImpl.swift # Existing implementation (reused)
-├── ViewModels/
-│   ├── AnnouncementCardsListViewModel.swift # NEW: Autonomous list component ViewModel (reusable)
-│   └── LandingPageViewModel.swift       # NEW: Parent ViewModel for landing page (thin wrapper)
-├── Features/
-│   └── AnnouncementList/
-│       └── Views/
-│           ├── AnnouncementListViewModel.swift # MODIFIED (optional): Refactor to use AnnouncementCardsListViewModel
-│           └── AnnouncementListView.swift      # MODIFIED (optional): Use autonomous component
-├── Coordinators/
-│   ├── HomeCoordinator.swift            # NEW: Manages Home tab navigation (same pattern as AnnouncementListCoordinator)
-│   └── TabCoordinator.swift             # MODIFIED: Replace PlaceholderCoordinator with HomeCoordinator for Home tab
+│       └── AnnouncementRepository.swift # Existing implementation (reused)
 ├── Views/
-│   ├── Shared/
-│   │   └── AnnouncementCardsListView.swift  # NEW: Autonomous list component (observes own ViewModel)
+│   ├── AnnouncementCardsListViewModel.swift  # NEW: Autonomous list component ViewModel (reusable across features)
+│   └── AnnouncementCardsListView.swift       # NEW: Autonomous list component (observes own ViewModel)
+├── Features/
 │   ├── LandingPage/
-│   │   └── LandingPageView.swift        # NEW: Landing page view (composes autonomous component)
-│   ├── AnnouncementCard/
-│   │   └── AnnouncementCardView.swift   # Existing component (reused)
-│   ├── EmptyState/
-│   │   └── EmptyStateView.swift         # Existing component (reused)
-│   └── Error/
-│       └── ErrorView.swift              # Existing component (reused)
+│   │   ├── Coordinators/
+│   │   │   └── HomeCoordinator.swift            # NEW: Manages Home tab navigation (same pattern as AnnouncementListCoordinator)
+│   │   └── Views/
+│   │       ├── LandingPageViewModel.swift       # NEW: Parent ViewModel for landing page (thin wrapper)
+│   │       └── LandingPageView.swift            # NEW: Landing page view (composes autonomous component)
+│   └── AnnouncementList/
+│       ├── Coordinators/
+│       │   └── AnnouncementListCoordinator.swift # Existing coordinator (may be extended for cross-tab navigation)
+│       └── Views/
+│           ├── AnnouncementListViewModel.swift   # MODIFIED (optional): Refactor to use AnnouncementCardsListViewModel
+│           ├── AnnouncementListView.swift        # MODIFIED (optional): Use autonomous component
+│           ├── AnnouncementCardView.swift        # Existing component (reused)
+│           └── AnnouncementCardViewModel.swift   # Existing component VM (reused)
+├── Coordinators/
+│   └── TabCoordinator.swift                 # MODIFIED: Replace PlaceholderCoordinator with HomeCoordinator for Home tab
 └── DI/
     └── ServiceContainer.swift           # MODIFIED: Register ViewModels and Coordinators
 
 iosApp/iosAppTests/
-├── Domain/Models/
-│   └── AnnouncementListQueryTests.swift # NEW (optional): Unit tests for query model
-├── ViewModels/
-│   ├── AnnouncementCardsListViewModelTests.swift  # NEW: Unit tests for autonomous component ViewModel
-│   ├── LandingPageViewModelTests.swift  # NEW: Unit tests for parent ViewModel
-│   └── HomeCoordinatorTests.swift       # NEW: Unit tests for HomeCoordinator
+├── Views/
+│   └── AnnouncementCardsListViewModelTests.swift  # NEW: Unit tests for autonomous component ViewModel
+├── Features/
+│   └── LandingPage/
+│       ├── Views/
+│       │   └── LandingPageViewModelTests.swift    # NEW: Unit tests for parent ViewModel
+│       └── Coordinators/
+│           └── HomeCoordinatorTests.swift         # NEW: Unit tests for HomeCoordinator
 
 e2e-tests/java/
 ├── src/test/resources/features/mobile/

@@ -51,8 +51,8 @@
 
 - [ ] T003 Create `AnnouncementCardsListViewModel` (autonomous component) in `/iosApp/iosApp/Views/AnnouncementCardsListViewModel.swift`
 - [ ] T004 Create `AnnouncementCardsListView` (reusable UI component) in `/iosApp/iosApp/Views/AnnouncementCardsListView.swift`
-- [ ] T005 [P] Create mock `MockAnnouncementRepository` in `/iosApp/iosAppTests/Mocks/MockAnnouncementRepository.swift` (if not exists)
-- [ ] T006 [P] Create mock `MockLocationPermissionHandler` in `/iosApp/iosAppTests/Mocks/MockLocationPermissionHandler.swift` (if not exists)
+- [ ] T005 [P] Reuse existing fake repository in `/iosApp/iosAppTests/Fakes/FakeAnnouncementRepository.swift` (create only if missing)
+- [ ] T006 [P] Reuse existing fakes for location flow in `/iosApp/iosAppTests/Fakes/` (create only if missing; avoid introducing a new `Mocks/` convention)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -68,7 +68,7 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T007 [P] [US1] Create `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/ViewModels/AnnouncementCardsListViewModelTests.swift`
+- [ ] T007 [P] [US1] Create `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/Views/AnnouncementCardsListViewModelTests.swift`
   - Test: `setQuery_whenQueryLimitIs5_shouldTriggerLoadAndDisplayFirst5MostRecent`
   - Test: `setQuery_whenRepositoryReturnsLessThan5Items_shouldDisplayAllAvailable`
   - Test: `setQuery_whenRepositoryReturnsEmptyArray_shouldResultInEmptyCardViewModels`
@@ -76,10 +76,16 @@
   - Test: `reload_shouldCancelPreviousTaskAndStartNew`
   - Test: `applyQuery_shouldSortByCreatedAtDescending`
   - Test: `onAnnouncementTapped_shouldInvokeClosureWithCorrectId`
-- [ ] T008 [P] [US1] Create `LandingPageViewModelTests.swift` in `/iosApp/iosAppTests/ViewModels/LandingPageViewModelTests.swift`
+- [ ] T008 [P] [US1] Create `LandingPageViewModelTests.swift` in `/iosApp/iosAppTests/Features/LandingPage/Views/LandingPageViewModelTests.swift`
   - Test: `init_shouldCreateListViewModelWithLandingPageQuery`
   - Test: `loadData_shouldFetchLocationAndSetQueryOnListViewModel`
   - Test: `loadData_whenLocationDenied_shouldSetQueryWithNilLocation`
+- [ ] T032 [P] [US1] Extend `AnnouncementMapperTests.swift` in `/iosApp/iosAppTests/Data/Mappers/AnnouncementMapperTests.swift` for malformed DTO handling (FR-016)
+  - Test: `map_whenDtoHasEmptyId_shouldReturnNil`
+  - Test: `map_whenDtoHasInvalidCoordinates_shouldReturnNil` (e.g., NaN)
+- [ ] T033 [P] [US1] Extend `AnnouncementCardViewModelTests.swift` in `/iosApp/iosAppTests/Features/AnnouncementList/Views/AnnouncementCardViewModelTests.swift` to cover invalid photo URLs (FR-016)
+  - Test: `photoURL_whenPhotoUrlIsEmpty_shouldBeNil`
+  - Test: `photoURL_whenPhotoUrlIsInvalid_shouldBeNil`
 
 ### E2E Tests for User Story 1 (MANDATORY) ✅
 
@@ -122,6 +128,11 @@
   - List: `landingPage.list`
   - Cards inherit from `AnnouncementCardView`
 - [ ] T017 [P] [US1] Add SwiftDoc documentation to `AnnouncementCardsListViewModel`, `LandingPageViewModel`, `HomeCoordinator` public APIs
+- [ ] T034 [US1] Implement malformed data skipping in `/iosApp/iosApp/Data/Mappers/AnnouncementMapper.swift` and ensure repository filters out invalid items (FR-016)
+  - Return `nil` from mapper for invalid required fields (e.g., empty id) or invalid coordinates
+  - Ensure list endpoint mapping uses `compactMap` and does not crash when one item is invalid
+- [ ] T035 [US1] Prevent infinite loading placeholder for invalid/empty photo URL in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementCardView.swift` (FR-016)
+  - If `photoURL` is nil, show the same error placeholder (pawprint) instead of `AsyncImage`’s `.empty` spinner
 - [ ] T018 [US1] Run unit tests and verify 80% coverage for `AnnouncementCardsListViewModel` and `LandingPageViewModel`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Home tab displays 5 recent announcements with proper states (loading, error, empty, success).
@@ -136,9 +147,9 @@
 
 ### Unit Tests for User Story 2 (MANDATORY) ✅
 
-- [ ] T019 [P] [US2] Add tests to `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/ViewModels/AnnouncementCardsListViewModelTests.swift`
+- [ ] T019 [P] [US2] Add tests to `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/Views/AnnouncementCardsListViewModelTests.swift`
   - Test: `handleAnnouncementAction_whenSelected_shouldInvokeOnAnnouncementTappedWithId`
-- [ ] T020 [P] [US2] Create `HomeCoordinatorTests.swift` in `/iosApp/iosAppTests/Coordinators/HomeCoordinatorTests.swift`
+- [ ] T020 [P] [US2] Create `HomeCoordinatorTests.swift` in `/iosApp/iosAppTests/Features/LandingPage/Coordinators/HomeCoordinatorTests.swift`
   - Test: `start_shouldCreateLandingPageViewAndSetAsRootViewController`
   - Test: `onShowPetDetails_shouldInvokeClosureWithAnnouncementId`
 
