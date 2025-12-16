@@ -66,8 +66,8 @@ RUN cat > /docker-entrypoint.d/40-envsubst-nginx-config.sh << 'EOF'
 #!/bin/sh
 set -e
 
-# Use default if not provided
-: ${API_BASE_URL:=http://backend:3000}
+# Use empty string as default (Nginx proxy will handle routing)
+: ${API_BASE_URL:=}
 
 echo "Configuring nginx with API_BASE_URL=${API_BASE_URL}"
 
@@ -80,8 +80,8 @@ EOF
 
 RUN chmod +x /docker-entrypoint.d/40-envsubst-nginx-config.sh
 
-# Set default API URL (can be overridden in docker-compose)
-ENV API_BASE_URL=http://backend:3000
+# Set default empty API URL (Nginx proxy will handle routing)
+ENV API_BASE_URL=
 
 EXPOSE 8080
 

@@ -2,9 +2,29 @@
 # All services run in the same Docker network - no host.docker.internal needed!
 # Usage: docker-compose -f docker-compose.qa-env.yml up -d
 
-version: "3.8"
-
 services:
+  # ========================================
+  # Nginx Reverse Proxy - Single Entry Point
+  # ========================================
+  nginx:
+    image: nginx:alpine
+    container_name: qa-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"  # Main entry point for all requests
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - qa-network
+    depends_on:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   # ========================================
   # Backend API (Node.js) - QA Configuration
   # ========================================
@@ -13,6 +33,7 @@ services:
       context: ../server
       dockerfile: Dockerfile.qa  # QA-specific Dockerfile (mirrors standard but with QA context)
     container_name: qa-backend
+    restart: unless-stopped  # Auto-restart backend if it crashes (for mobile E2E tests)
     environment:
       - NODE_ENV=production
       - DATABASE_PATH=/app/server/db/pets.db
@@ -37,11 +58,13 @@ services:
       context: ../webApp
       dockerfile: Dockerfile.qa  # QA-specific Dockerfile with runtime config
     container_name: qa-frontend
+    restart: unless-stopped  # Auto-restart frontend if it crashes
     environment:
       # Runtime API URL configuration (no source code changes needed!)
-      - API_BASE_URL=http://backend:3000
+      # Empty = relative URLs, routed through Nginx proxy (works for macOS browser via http://localhost and Docker Chrome via http://nginx)
+      - API_BASE_URL=
     ports:
-      - "8080:8080"  # Expose on standard port (local dev frontend must be stopped)
+      - "8080:8080"  # Keep exposed for direct access/debugging
     networks:
       - qa-network
     depends_on:
@@ -59,6 +82,7 @@ services:
   selenium-event-bus:
     image: seleniarm/event-bus:latest
     container_name: qa-selenium-event-bus
+    restart: unless-stopped  # Auto-restart if crashes
     ports:
       - "4442:4442"
       - "4443:4443"
@@ -69,6 +93,7 @@ services:
   selenium-sessions:
     image: seleniarm/sessions:latest
     container_name: qa-selenium-sessions
+    restart: unless-stopped
     ports:
       - "5556:5556"
     depends_on:
@@ -83,6 +108,7 @@ services:
   selenium-session-queue:
     image: seleniarm/session-queue:latest
     container_name: qa-selenium-session-queue
+    restart: unless-stopped
     ports:
       - "5559:5559"
     depends_on:
@@ -97,6 +123,7 @@ services:
   selenium-distributor:
     image: seleniarm/distributor:latest
     container_name: qa-selenium-distributor
+    restart: unless-stopped
     ports:
       - "5553:5553"
     depends_on:
@@ -117,6 +144,7 @@ services:
   selenium-router:
     image: seleniarm/router:latest
     container_name: qa-selenium-router
+    restart: unless-stopped
     ports:
       - "4444:4444"
     depends_on:
@@ -139,6 +167,7 @@ services:
   chrome:
     image: seleniarm/node-chromium:latest
     container_name: qa-selenium-chrome
+    restart: unless-stopped
     shm_size: 2gb
     depends_on:
       - selenium-event-bus
@@ -158,6 +187,7 @@ services:
   firefox:
     image: seleniarm/node-firefox:latest
     container_name: qa-selenium-firefox
+    restart: unless-stopped
     shm_size: 2gb
     depends_on:
       - selenium-event-bus

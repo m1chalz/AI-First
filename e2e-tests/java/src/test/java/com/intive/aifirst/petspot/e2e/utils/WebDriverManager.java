@@ -4,7 +4,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.URL;
 import java.time.Duration;
 
 /**
@@ -65,31 +67,35 @@ public class WebDriverManager {
     }
     
     /**
-     * Initializes a new ChromeDriver with recommended configuration.
+     * Initializes a new WebDriver with recommended configuration.
+     * 
+     * <p>Uses RemoteWebDriver with Selenium Grid (Docker) by default.
+     * Falls back to local ChromeDriver if Selenium Grid is not available.
      * 
      * <p>Configuration includes:
      * <ul>
-     *   <li>Automatic ChromeDriver binary management</li>
-     *   <li>Maximized browser window</li>
+     *   <li>RemoteWebDriver → Selenium Grid at http://localhost:4444 (Docker)</li>
+     *   <li>Maximized browser window (1920x1080)</li>
      *   <li>Disabled browser notifications</li>
      *   <li>Disabled popup blocking</li>
      *   <li>Implicit wait timeout ({@value DEFAULT_IMPLICIT_WAIT_SECONDS} seconds)</li>
      * </ul>
      */
     private static void initializeDriver() {
-        // Let Selenium 4.29+ handle driver management automatically (built-in Selenium Manager)
-        // Alternatively use bonigarcia for older setups:
-        // io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
-        
         // Chrome options for stable test execution
         ChromeOptions options = new ChromeOptions();
+        
         // Use headless mode based on system property (default: false for local debugging)
         String headless = System.getProperty("webdriver.chrome.headless", "false");
         if ("true".equals(headless) || System.getenv("CI") != null) {
             options.addArguments("--headless=new");
             System.out.println("Running Chrome in headless mode");
         }
-        options.addArguments("--window-size=1920,1080");
+        
+        // Use fullscreen to maximize available viewport in Docker Selenium Grid
+        // Docker screen: SE_SCREEN_WIDTH=1360, SE_SCREEN_HEIGHT=1020
+        options.addArguments("--start-maximized");  // Start browser maximized
+        options.addArguments("--kiosk");  // Fullscreen mode (no browser chrome)
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
         options.addArguments("--disable-dev-shm-usage");  // Overcome limited resource problems
@@ -103,8 +109,26 @@ public class WebDriverManager {
         prefs.put("profile.default_content_setting_values.geolocation", 2);  // 2 = block
         options.setExperimentalOption("prefs", prefs);
         
-        // Initialize ChromeDriver
-        WebDriver webDriver = new ChromeDriver(options);
+        // Check if we should use Selenium Grid (Docker) or local ChromeDriver
+        String gridUrl = System.getProperty("selenium.grid.url", "http://localhost:4444");
+        WebDriver webDriver;
+        
+        try {
+            // Try to connect to Selenium Grid (Docker)
+            System.out.println("🌐 Connecting to Selenium Grid at " + gridUrl);
+            webDriver = new RemoteWebDriver(new URL(gridUrl), options);
+            
+            // Set webdriver.remote=true so TestConfig uses web.base.url.docker (http://frontend:8080)
+            // instead of web.base.url (http://localhost:8080) which doesn't work from Docker container
+            System.setProperty("webdriver.remote", "true");
+            System.out.println("✅ Connected to Selenium Grid successfully");
+        } catch (Exception e) {
+            // Fall back to local ChromeDriver
+            System.out.println("⚠️  Selenium Grid not available at " + gridUrl);
+            System.out.println("⚠️  Falling back to local ChromeDriver: " + e.getMessage());
+            webDriver = new ChromeDriver(options);
+            System.out.println("✅ Using local ChromeDriver");
+        }
         
         // Set implicit wait (WebDriver will poll for elements up to this timeout)
         webDriver.manage().timeouts().implicitlyWait(

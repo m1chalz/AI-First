@@ -45,6 +45,95 @@ import org.openqa.selenium.WebDriver;
 public class Hooks {
     
     /**
+     * Ensures Docker is running for web tests.
+     * Executes with highest priority (-300) before any other setup.
+     * 
+     * <p>Web tests require Docker containers (qa-backend, qa-frontend).
+     * This hook verifies Docker is running and throws a helpful error if not.
+     * 
+     * <p><strong>Web only:</strong> Mobile tests use local backend (no Docker needed).
+     * 
+     * @param scenario Cucumber scenario being executed
+     * @throws RuntimeException if Docker is not running (with instructions how to start it)
+     */
+    @Before(order = -300)
+    public void ensureDockerForWebTests(Scenario scenario) {
+        // Only check Docker for web tests
+        if (scenario.getSourceTagNames().stream().anyMatch(tag -> tag.equals("@web"))) {
+            DockerChecker.ensureDockerRunning();
+            
+            // Auto-start QA environment if needed
+            if (!DockerChecker.autoStartQaEnvironment()) {
+                throw new RuntimeException(
+                    "\n\n" +
+                    "❌ Failed to start QA environment!\n" +
+                    "\n" +
+                    "Please start manually:\n" +
+                    "  cd e2e-tests\n" +
+                    "  docker-compose -f docker-compose.qa-env.yml up -d\n" +
+                    "\n"
+                );
+            }
+        }
+    }
+    
+    /**
+     * Ensures backend server is running before mobile tests.
+     * Executes with highest priority to ensure backend is available for mobile apps.
+     * 
+     * <p>Automatically checks if backend is running at http://localhost:3000.
+     * If not running, starts it using {@code npm run dev} in the background.
+     * 
+     * <p><strong>Mobile only:</strong> Mobile tests need local backend (127.0.0.1:3000).
+     * Web tests use Docker QA environment (docker-compose.qa-env.yml).
+     * 
+     * <p>Backend logs are written to {@code target/backend.log}.
+     */
+    @Before(order = -200)
+    public void ensureBackendRunning(Scenario scenario) {
+        // Only auto-start backend for mobile tests
+        // Web tests use Docker QA environment (docker-compose.qa-env.yml)
+        if (scenario.getSourceTagNames().stream().anyMatch(tag -> 
+                tag.equals("@ios") || tag.equals("@android") || tag.equals("@mobile"))) {
+            BackendManager.ensureBackendRunning();
+        }
+    }
+    
+    /**
+     * Ensures apps are built before any test runs.
+     * Executes once at the start of test suite with high priority.
+     * 
+     * <p>Automatically:
+     * <ul>
+     *   <li>Uninstalls old app from devices/simulators</li>
+     *   <li>Builds fresh iOS and Android apps (in parallel)</li>
+     *   <li>Copies apps to e2e-tests/java/apps/ directory</li>
+     * </ul>
+     * 
+     * <p><strong>Mobile only:</strong> Web tests don't need mobile apps.
+     * Platform is determined by checking the test runner class name.
+     * 
+     * <p>Set {@code -Dskip.app.build=true} to skip building (use existing apps).
+     */
+    @Before(order = -100)
+    public void prepareApps(Scenario scenario) {
+        // Check if app build should be skipped (set by WebTestRunner or via -Dskip.app.build=true)
+        String skipBuild = System.getProperty("skip.app.build");
+        if ("true".equals(skipBuild)) {
+            System.out.println("✅ skip.app.build=true - skipping mobile app build");
+            return;
+        }
+        
+        // Mobile tests - detect platform from scenario
+        String platform = detectPlatformFromScenario(scenario);
+        
+        System.out.println("📱 Building apps for platform: " + platform);
+        
+        // Build apps (runs only once per test run - singleton)
+        AppBuilder.ensureAppsBuilt(platform);
+    }
+    
+    /**
      * Executes before each Cucumber scenario.
      * 
      * <p>Performs setup including platform detection from Cucumber tags.
@@ -60,6 +149,9 @@ public class Hooks {
         System.out.println("Tags: " + scenario.getSourceTagNames());
         System.out.println("========================================");
         
+        // Reset debug screenshot counter for this scenario
+        DebugScreenshotHelper.reset();
+        
         // Clear soft assertion failures from previous scenario
         SoftAssertContext.clear();
         
@@ -71,23 +163,72 @@ public class Hooks {
     }
     
     /**
-     * Detects @location tag and configures Appium to grant/deny location permission.
+     * Detects platform from scenario tags without setting system property.
+     * Used by AppBuilder to determine which app(s) to build.
+     * 
+     * @param scenario Cucumber scenario with tags
+     * @return Platform name ("iOS", "Android", or null for both/web)
+     */
+    private String detectPlatformFromScenario(Scenario scenario) {
+        var tags = scenario.getSourceTagNames();
+        
+        // Check external PLATFORM setting first
+        String externalPlatform = System.getProperty("PLATFORM");
+        if (externalPlatform != null && !externalPlatform.isEmpty()) {
+            return externalPlatform;
+        }
+        
+        boolean hasIos = tags.contains("@ios");
+        boolean hasAndroid = tags.contains("@android");
+        boolean hasWeb = tags.contains("@web");
+        
+        // Web-only scenario - no mobile app needed
+        if (hasWeb && !hasIos && !hasAndroid) {
+            return "Web";
+        }
+        
+        // iOS-only scenario
+        if (hasIos && !hasAndroid) {
+            return "iOS";
+        }
+        
+        // Android-only scenario
+        if (hasAndroid && !hasIos) {
+            return "Android";
+        }
+        
+        // Cross-platform or unknown - build both
+        return null;
+    }
+    
+    /**
+     * Detects @location and @locationDialog tags and configures Appium accordingly.
      * 
      * <p>By default, location permission is DENIED so app shows full animal list.
      * When @location tag is present, permission is GRANTED for location filtering tests.
+     * When @locationDialog tag is present, permission is NOT auto-granted (shows real system popup).
      * 
      * @param scenario Cucumber scenario with tags
      */
     private void detectLocationTag(Scenario scenario) {
         var tags = scenario.getSourceTagNames();
         boolean hasLocationTag = tags.contains("@location");
+        boolean hasLocationDialogTag = tags.contains("@locationDialog");
         
-        AppiumDriverManager.setGrantLocationPermission(hasLocationTag);
-        
-        if (hasLocationTag) {
-            System.out.println("@location tag detected - will grant location permission");
+        // @locationDialog tag overrides @location tag (for testing permission dialogs)
+        if (hasLocationDialogTag) {
+            AppiumDriverManager.setGrantLocationPermission(false);
+            AppiumDriverManager.setShowLocationDialog(true);
+            System.out.println("@locationDialog tag detected - will show real location permission popup");
         } else {
-            System.out.println("No @location tag - location permission will be denied (full list)");
+            AppiumDriverManager.setGrantLocationPermission(hasLocationTag);
+            AppiumDriverManager.setShowLocationDialog(false);
+            
+            if (hasLocationTag) {
+                System.out.println("@location tag detected - will grant location permission silently");
+            } else {
+                System.out.println("No @location tag - location permission will be denied (full list)");
+            }
         }
     }
     
@@ -126,10 +267,9 @@ public class Hooks {
         
         // Cross-platform scenario (has both @ios and @android) - need runner context
         if (hasIos && hasAndroid) {
-            // For cross-platform tests, platform should be set by runner
-            // Default to Android if not set (common case)
-            System.setProperty("PLATFORM", "Android");
-            System.out.println("Platform defaulted to: Android (cross-platform scenario, no runner context)");
+            // For cross-platform tests, PLATFORM should be set by runner
+            // Don't override it - runner knows which platform to use
+            System.out.println("Platform: Cross-platform scenario (runner should have set PLATFORM)");
         } else if (hasIos && !hasAndroid) {
             // iOS-only scenario
             System.setProperty("PLATFORM", "iOS");
