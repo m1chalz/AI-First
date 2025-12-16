@@ -13,13 +13,19 @@ RUN npm ci --omit=dev && \
 
 COPY . .
 
-# Create db directory with proper permissions for node user
-# Required for SQLite database in Docker container
-RUN mkdir -p /app/server/db && chown -R node:node /app/server/db
+# Create db and public/images directories with proper permissions for node user
+# Required for SQLite database and photo uploads in Docker container
+RUN mkdir -p /app/server/db /app/server/public/images && \
+    chown -R node:node /app/server/db /app/server/public/images
 
 EXPOSE 3000
 
-USER node
+# Create entrypoint script to fix volume permissions at runtime
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'chown -R node:node /app/server/db /app/server/public/images 2>/dev/null || true' >> /docker-entrypoint.sh && \
+    echo 'exec su-exec node npm start' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh && \
+    apk add --no-cache su-exec
 
-CMD ["npm", "start"]
+CMD ["/docker-entrypoint.sh"]
 
