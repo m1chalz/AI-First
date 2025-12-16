@@ -12,12 +12,12 @@ import Foundation
 /// **Autonomous Component Pattern**:
 /// - LandingPageViewModel is a thin wrapper - no list state management
 /// - All list state (`cardViewModels`, `isLoading`, `errorMessage`) managed by `listViewModel`
-/// - Parent can trigger reload via `listViewModel.setQuery()` or `listViewModel.reload()`
+/// - Parent can trigger reload via `listViewModel.query = ...`
 ///
 /// **Loading Flow**:
 /// 1. LandingPageView has `.task { await viewModel.loadData() }`
 /// 2. `loadData()` fetches location from LocationPermissionHandler
-/// 3. `loadData()` calls `listViewModel.setQuery(queryWithLocation)`
+/// 3. `loadData()` sets `listViewModel.query = queryWithLocation`
 /// 4. Child ViewModel automatically reloads with new query
 @MainActor
 class LandingPageViewModel: ObservableObject {
@@ -79,7 +79,7 @@ class LandingPageViewModel: ObservableObject {
         
         // Set query on child ViewModel (triggers automatic reload)
         let queryWithLocation = AnnouncementListQuery.landingPageQuery(location: result.location)
-        listViewModel.setQuery(queryWithLocation)
+        listViewModel.query = queryWithLocation
     }
     
     /// Refreshes data with updated location.

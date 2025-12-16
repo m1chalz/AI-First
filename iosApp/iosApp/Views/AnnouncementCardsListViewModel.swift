@@ -7,14 +7,14 @@ import Foundation
 /// - Self-contained state and behavior (no external state management)
 /// - Configured via `AnnouncementListQuery` (limit, sortBy, location)
 /// - Reusable in multiple contexts (full list, landing page, search, etc.)
-/// - Parent ViewModels call `setQuery()` to trigger loads with updated configuration
+/// - Parent ViewModels set `query` property to trigger loads with updated configuration
 ///
 /// **Public API**:
-/// - `setQuery(_:)`: Updates query configuration and triggers reload (called by parent ViewModel)
-/// - `reload()`: Reloads with current query (for retry button in error screen)
+/// - `query`: Setting triggers automatic reload (called by parent ViewModel)
+/// - `onRetryTapped()`: Handles retry from error screen (calls private reload)
 ///
 /// **Private Implementation**:
-/// - `loadAnnouncements()` is private - only triggered via `setQuery()` or `reload()`
+/// - `loadAnnouncements()` is private - only triggered via `query` setter or `onRetryTapped()`
 @MainActor
 class AnnouncementCardsListViewModel: ObservableObject {
     // MARK: - Published Properties (UI State)
@@ -32,11 +32,19 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     private let repository: AnnouncementRepositoryProtocol
     
-    /// Query configuration - nil means "don't fetch yet", set via `setQuery()`
-    private var query: AnnouncementListQuery?
-    
     /// Callback for card tap events
     private let onAnnouncementTapped: (String) -> Void
+    
+    // MARK: - Query Configuration
+    
+    /// Query configuration - nil means "don't fetch yet".
+    /// Setting triggers automatic reload.
+    var query: AnnouncementListQuery? {
+        didSet {
+            loadTask?.cancel()
+            loadTask = Task { await loadAnnouncements() }
+        }
+    }
     
     // MARK: - Task Management
     
@@ -51,7 +59,7 @@ class AnnouncementCardsListViewModel: ObservableObject {
     ///   - repository: Repository for fetching announcements
     ///   - onAnnouncementTapped: Closure invoked when user taps announcement card
     ///
-    /// - Note: Call `setQuery(_:)` to start loading. Until then, list remains empty.
+    /// - Note: Set `query` property to start loading. Until then, list remains empty.
     init(
         repository: AnnouncementRepositoryProtocol,
         onAnnouncementTapped: @escaping (String) -> Void
@@ -64,28 +72,22 @@ class AnnouncementCardsListViewModel: ObservableObject {
         loadTask?.cancel()
     }
     
-    // MARK: - Public Methods
+    // MARK: - User Actions
     
-    /// Sets query configuration and triggers reload.
-    /// Called by parent ViewModel when configuration changes (e.g., location updated).
-    ///
-    /// - Parameter newQuery: New query configuration
-    func setQuery(_ newQuery: AnnouncementListQuery) {
-        self.query = newQuery
-        loadTask?.cancel()
-        loadTask = Task { await loadAnnouncements() }
+    /// Handles retry button tap from error screen.
+    func onRetryTapped() {
+        reload()
     }
     
+    // MARK: - Private Methods
+    
     /// Reloads announcements with current query.
-    /// Called by retry button in error screen.
     /// Does nothing if query is not set.
-    func reload() {
+    private func reload() {
         guard query != nil else { return }
         loadTask?.cancel()
         loadTask = Task { await loadAnnouncements() }
     }
-    
-    // MARK: - Private Methods
     
     /// Loads announcements from repository, applies query filters/sorting, and creates card ViewModels.
     /// Does nothing if query is nil.
@@ -100,6 +102,7 @@ class AnnouncementCardsListViewModel: ObservableObject {
         
         do {
             // Fetch announcements with location from query (parent prepared location)
+            // TODO: let this method take query (see in which layer query should be)
             let allAnnouncements = try await repository.getAnnouncements(near: query.location)
             
             // Check for cancellation after async operation

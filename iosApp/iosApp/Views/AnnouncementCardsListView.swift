@@ -7,10 +7,10 @@ import SwiftUI
 /// - Observes own ViewModel for state (loading, error, empty, success)
 /// - Handles states internally (loading spinner, error view, empty state, list)
 /// - Reusable in multiple contexts (full list, landing page, search, etc.)
-/// - Parent View triggers load via parent ViewModel calling `listViewModel.setQuery()`
+/// - Parent View triggers load via parent ViewModel setting `listViewModel.query`
 ///
 /// **Does NOT trigger loading** - parent View's `.task` calls parent ViewModel's `loadData()`,
-/// which then calls `listViewModel.setQuery()` to trigger the actual load.
+/// which then sets `listViewModel.query` to trigger the actual load.
 struct AnnouncementCardsListView: View {
     @ObservedObject var viewModel: AnnouncementCardsListViewModel
     
@@ -43,7 +43,7 @@ struct AnnouncementCardsListView: View {
                     title: L10n.AnnouncementList.Error.title,
                     message: errorMessage,
                     onRetry: {
-                        viewModel.reload()
+                        viewModel.onRetryTapped()
                     },
                     accessibilityIdentifier: "\(listAccessibilityId).error"
                 ))

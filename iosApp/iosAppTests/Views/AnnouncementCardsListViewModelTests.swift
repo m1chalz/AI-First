@@ -71,7 +71,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called with limit 5
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -95,7 +95,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -111,7 +111,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -129,7 +129,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -148,11 +148,11 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called, then immediately reload
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait a bit then call reload (should cancel first task)
         try? await Task.sleep(nanoseconds: 50_000_000)
-        sut.reload()
+        sut.onRetryTapped()
         
         // Wait for second load to complete
         try? await Task.sleep(nanoseconds: 600_000_000)
@@ -175,7 +175,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called with default (no limit)
-        sut.setQuery(.defaultQuery(location: nil))
+        sut.query = .defaultQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -192,7 +192,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         fakeRepository.stubbedAnnouncements = [makeAnnouncement(id: "tapped-id")]
         
         sut = makeSUT()
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -218,7 +218,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Then - Should be loading immediately
         try? await Task.sleep(nanoseconds: 10_000_000) // Small delay to let task start
@@ -241,7 +241,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called with location
-        sut.setQuery(.landingPageQuery(location: location))
+        sut.query = .landingPageQuery(location: location)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)
@@ -258,7 +258,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         sut = makeSUT()
         
         // When - setQuery is called without location
-        sut.setQuery(.landingPageQuery(location: nil))
+        sut.query = .landingPageQuery(location: nil)
         
         // Wait for async load
         try? await Task.sleep(nanoseconds: 100_000_000)

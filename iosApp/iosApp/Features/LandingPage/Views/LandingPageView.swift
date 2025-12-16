@@ -14,7 +14,7 @@ import SwiftUI
 ///
 /// **Loading Flow**:
 /// 1. View appears → `.task { await viewModel.loadData() }`
-/// 2. Parent ViewModel fetches location and calls `listViewModel.setQuery()`
+/// 2. Parent ViewModel fetches location and sets `listViewModel.query`
 /// 3. Child ViewModel loads announcements and updates state
 /// 4. `AnnouncementCardsListView` observes child ViewModel and renders UI
 struct LandingPageView: View {
