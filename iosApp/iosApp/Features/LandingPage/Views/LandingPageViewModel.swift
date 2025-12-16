@@ -27,6 +27,16 @@ class LandingPageViewModel: ObservableObject {
     /// Observed by `AnnouncementCardsListView` for UI updates.
     let listViewModel: AnnouncementCardsListViewModel
     
+    // MARK: - UI Configuration
+    
+    /// Empty state model for the list component
+    let emptyStateModel = EmptyStateView.Model(
+        message: L10n.LandingPage.EmptyState.message
+    )
+    
+    /// Accessibility identifier prefix for list elements
+    let listAccessibilityId = "landingPage"
+    
     // MARK: - Dependencies
     
     private let locationHandler: LocationPermissionHandler

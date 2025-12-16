@@ -51,3 +51,4 @@ target/
 .project
 *.iws
 *.ipr
+iosApp/TestResults.xcresult

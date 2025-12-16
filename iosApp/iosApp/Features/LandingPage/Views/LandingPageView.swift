@@ -23,14 +23,11 @@ struct LandingPageView: View {
     var body: some View {
         // NO NavigationView - coordinator manages UINavigationController
         AnnouncementCardsListView(
-            viewModel: viewModel.listViewModel, // Child ViewModel
-            emptyStateModel: EmptyStateView.Model(
-                message: L10n.LandingPage.EmptyState.message
-            ),
-            listAccessibilityId: "landingPage"
+            viewModel: viewModel.listViewModel,
+            emptyStateModel: viewModel.emptyStateModel,
+            listAccessibilityId: viewModel.listAccessibilityId
         )
         .task {
-            // Parent View triggers parent ViewModel to prepare query and load data
             await viewModel.loadData()
         }
     }
