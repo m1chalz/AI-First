@@ -20,8 +20,8 @@ import java.util.List;
  * 
  * <h2>Locator Strategy:</h2>
  * <ul>
- *   <li>Pattern: {@code //*[@data-testid='animalList.element.action']}</li>
- *   <li>Example: {@code //*[@data-testid='animalList.reportMissingButton']}</li>
+ *   <li>Pattern: {@code //*[@data-testid='announcementList.element.action']}</li>
+ *   <li>Example: {@code //*[@data-testid='announcementList.reportMissingButton']}</li>
  *   <li>Rationale: data-testid attributes are stable across refactorings</li>
  * </ul>
  * 
@@ -48,23 +48,23 @@ public class PetListPage {
     // ========================================
     
     /**
-     * Pet list container element.
+     * Pet list container element locator (dynamic - not using @FindBy).
      * Displays the list of all pet announcements.
+     * Note: This element only exists when data is loaded (not during loading state).
      */
-    @FindBy(xpath = "//*[@data-testid='animalList.list']")
-    private WebElement petList;
+    private final By petListLocator = By.xpath("//*[@data-testid='announcementList.list']");
     
     /**
      * Add button for creating new pet announcements.
      */
-    @FindBy(xpath = "//*[@data-testid='animalList.reportMissingButton']")
+    @FindBy(xpath = "//*[@data-testid='announcementList.reportMissingButton']")
     private WebElement addButton;
     
     /**
      * Empty state message element.
      * Displayed when no pets are available.
      */
-    @FindBy(xpath = "//*[@data-testid='animalList.emptyState']")
+    @FindBy(xpath = "//*[@data-testid='announcementList.emptyState']")
     private WebElement emptyStateMessage;
     
     // ========================================
@@ -87,6 +87,7 @@ public class PetListPage {
     
     /**
      * Waits for the pet list to be visible and loaded.
+     * Uses dynamic locator to handle cases where element doesn't exist during page load.
      * 
      * @param timeoutSeconds Maximum wait time in seconds
      * @return true if list became visible within timeout
@@ -94,9 +95,10 @@ public class PetListPage {
     public boolean waitForPetListVisible(int timeoutSeconds) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
-            wait.until(ExpectedConditions.visibilityOf(petList));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(petListLocator));
             return true;
         } catch (Exception e) {
+            System.err.println("Failed to wait for pet list visibility: " + e.getMessage());
             return false;
         }
     }
@@ -133,7 +135,7 @@ public class PetListPage {
      */
     public boolean isPetListDisplayed() {
         try {
-            return petList.isDisplayed();
+            return driver.findElement(petListLocator).isDisplayed();
         } catch (Exception e) {
             return false;
         }
@@ -254,9 +256,9 @@ public class PetListPage {
      * @return List of WebElements representing pet items
      */
     private List<WebElement> getPetItems() {
-        // Pattern: animalList.item.{id} where {id} is the pet ID
+        // Pattern: announcementList.item.{id} where {id} is the pet ID
         return driver.findElements(
-            By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]")
+            By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]")
         );
     }
     
@@ -312,8 +314,9 @@ public class PetListPage {
      */
     public void scrollToBottom() {
         try {
+            WebElement petListElement = driver.findElement(petListLocator);
             org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
-            js.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", petList);
+            js.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", petListElement);
         } catch (Exception e) {
             System.err.println("Failed to scroll to bottom: " + e.getMessage());
         }
@@ -326,9 +329,10 @@ public class PetListPage {
      */
     public boolean isScrollable() {
         try {
+            WebElement petListElement = driver.findElement(petListLocator);
             org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
-            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petList);
-            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petList);
+            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petListElement);
+            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petListElement);
             return scrollHeight > clientHeight;
         } catch (Exception e) {
             System.err.println("Failed to check if scrollable: " + e.getMessage());
@@ -343,10 +347,11 @@ public class PetListPage {
      */
     public boolean canScrollFurther() {
         try {
+            WebElement petListElement = driver.findElement(petListLocator);
             org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
-            Long scrollTop = (Long) js.executeScript("return arguments[0].scrollTop", petList);
-            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petList);
-            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petList);
+            Long scrollTop = (Long) js.executeScript("return arguments[0].scrollTop", petListElement);
+            Long scrollHeight = (Long) js.executeScript("return arguments[0].scrollHeight", petListElement);
+            Long clientHeight = (Long) js.executeScript("return arguments[0].clientHeight", petListElement);
             return (scrollTop + clientHeight) < scrollHeight;
         } catch (Exception e) {
             System.err.println("Failed to check if can scroll further: " + e.getMessage());
@@ -361,7 +366,7 @@ public class PetListPage {
      */
     public void clickAnimalCard(String animalId) {
         try {
-            String xpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+            String xpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
             WebElement animalCard = driver.findElement(By.xpath(xpath));
             animalCard.click();
         } catch (Exception e) {
@@ -409,7 +414,7 @@ public class PetListPage {
     public WebElement getReportFoundButton() {
         try {
             return driver.findElement(
-                By.xpath("//*[@data-testid='animalList.reportFoundButton']")
+                By.xpath("//*[@data-testid='announcementList.reportFoundButton']")
             );
         } catch (Exception e) {
             throw new RuntimeException("Report Found button not found - " + e.getMessage());
@@ -425,13 +430,13 @@ public class PetListPage {
     public String getStatusBadgeText(String animalId) {
         try {
             // Try to find status badge element with test ID first
-            String xpath = String.format("//*[@data-testid='animalList.item.%s']//*[@data-testid='animalList.statusBadge']", animalId);
+            String xpath = String.format("//*[@data-testid='announcementList.item.%s']//*[@data-testid='announcementList.statusBadge']", animalId);
             WebElement statusBadge = driver.findElement(By.xpath(xpath));
             return statusBadge.getText();
         } catch (Exception e) {
             // Fallback: try to find status badge without specific test ID
             try {
-                String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+                String cardXpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
                 WebElement card = driver.findElement(By.xpath(cardXpath));
                 String cardText = card.getText();
                 // Look for status values: Active, Found, Closed (web) or MISSING, FOUND (mobile)
@@ -457,13 +462,13 @@ public class PetListPage {
      */
     public String getDateText(String animalId) {
         try {
-            String xpath = String.format("//*[@data-testid='animalList.item.%s']//*[@data-testid='animalList.date']", animalId);
+            String xpath = String.format("//*[@data-testid='announcementList.item.%s']//*[@data-testid='announcementList.date']", animalId);
             WebElement dateElement = driver.findElement(By.xpath(xpath));
             return dateElement.getText();
         } catch (Exception e) {
             // Fallback: try to extract date from card text
             try {
-                String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+                String cardXpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
                 WebElement card = driver.findElement(By.xpath(cardXpath));
                 String cardText = card.getText();
                 // Look for date pattern DD/MM/YYYY or DD-MM-YYYY
@@ -486,7 +491,7 @@ public class PetListPage {
      */
     public boolean cardHasAllRequiredFields(String animalId) {
         try {
-            String cardXpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+            String cardXpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
             WebElement card = driver.findElement(By.xpath(cardXpath));
             String cardText = card.getText().toLowerCase();
             

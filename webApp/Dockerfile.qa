@@ -1,0 +1,88 @@
+# QA-specific Dockerfile with runtime API URL configuration via nginx sub_filter
+# This allows changing API URL without modifying source code or rebuilding
+# 
+# Key difference from dev Dockerfile:
+# - Uses nginx sub_filter to replace empty apiBaseUrl with actual backend URL in runtime
+# - No changes needed in config.ts (developers keep their setup)
+# - API URL can be changed via API_BASE_URL environment variable
+
+FROM node:24-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci && \
+    npm cache clean --force
+
+COPY . .
+
+# Build normally - config.ts will have empty string for PROD
+RUN npm run build
+
+FROM nginx:alpine
+
+# Copy built files
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Create QA-specific nginx config with sub_filter for runtime API URL replacement
+RUN cat > /etc/nginx/nginx.conf << 'EOF'
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server {
+        listen 8080;
+        server_name localhost;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Enable sub_filter for JS files to replace API URL at runtime
+        sub_filter_types application/javascript;
+        sub_filter_once off;
+        # Replace empty apiBaseUrl with environment variable value
+        sub_filter 'apiBaseUrl:""' 'apiBaseUrl:"${API_BASE_URL}"';
+        sub_filter "apiBaseUrl:''" "apiBaseUrl:'${API_BASE_URL}'";
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+}
+EOF
+
+# Create entrypoint script to substitute environment variables in nginx config
+RUN cat > /docker-entrypoint.d/40-envsubst-nginx-config.sh << 'EOF'
+#!/bin/sh
+set -e
+
+# Use default if not provided
+: ${API_BASE_URL:=http://backend:3000}
+
+echo "Configuring nginx with API_BASE_URL=${API_BASE_URL}"
+
+# Substitute environment variables in nginx config
+envsubst '${API_BASE_URL}' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp
+mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf
+
+echo "Nginx configuration updated successfully"
+EOF
+
+RUN chmod +x /docker-entrypoint.d/40-envsubst-nginx-config.sh
+
+# Set default API URL (can be overridden in docker-compose)
+ENV API_BASE_URL=http://backend:3000
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]

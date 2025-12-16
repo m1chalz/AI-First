@@ -90,6 +90,120 @@ mvn test -Dtest=WebTestRunner
 - If Chrome crashes on startup, update dependencies in `pom.xml` to latest Selenium version
 - Current working versions (Dec 2025): Selenium 4.27.0, WebDriverManager 5.9.2
 
+#### 3.1 Selenium Grid (Recommended for parallel/CI execution)
+
+**Option A: All-in-One Docker (Easiest - Everything in Docker)**
+
+Everything runs in Docker - no local backend/frontend needed:
+
+```bash
+cd e2e-tests
+
+# Start Backend + Frontend + Selenium Grid (all in Docker)
+docker-compose -f docker-compose.qa-env.yml up -d
+
+# Run tests
+cd java && mvn test -Dtest=WebTestRunner -Dwebdriver.remote=true
+
+# Stop everything
+cd .. && docker-compose -f docker-compose.qa-env.yml down
+```
+
+**What you get:**
+- Backend: `localhost:3000` (Docker)
+- Frontend: `localhost:8080` (Docker) 
+- Selenium Grid: `localhost:4444` (Docker)
+- No dev tools needed - just Docker!
+
+---
+
+**Option B: Grid Only (Backend/Frontend run locally)**
+
+Run tests against Selenium Grid in Docker (backend/frontend run locally):
+
+```bash
+# Terminal 1: Start backend + frontend
+cd server && npm run dev                  # localhost:3000
+cd ../webApp && npm run start             # localhost:8080
+
+# Terminal 2: Start Selenium Grid + run tests
+cd e2e-tests
+./start-selenium-grid.sh                  # Auto-detects ARM/x86
+cd java && mvn test -Dtest=WebTestRunner -Dwebdriver.remote=true
+```
+
+**How it works:** Grid uses `extra_hosts: localhost→host-gateway` to reach your Mac!
+
+---
+
+**📚 Full documentation**: See [SELENIUM-GRID.md](./SELENIUM-GRID.md) for complete setup guide.
+
+**Two configurations available:**
+
+##### ARM Architecture (Apple Silicon, M1/M2/M3)
+
+```bash
+cd e2e-tests
+docker-compose -f docker-compose.selenium-arm.yml up -d
+
+# Verify Grid is running
+curl http://localhost:4444/wd/hub/status
+
+# Grid Console (web UI)
+open http://localhost:4444/ui
+```
+
+##### x86/amd64 Architecture (Intel/AMD processors)
+
+```bash
+cd e2e-tests
+docker-compose -f docker-compose.selenium-x86.yml up -d
+
+# Verify Grid is running
+curl http://localhost:4444/wd/hub/status
+
+# Grid Console (web UI)
+open http://localhost:4444/ui
+```
+
+**Grid Features:**
+- **Hub URL**: `http://localhost:4444` (same for both architectures)
+- **Browsers**:
+  - ARM: Chrome (Chromium), Firefox
+  - x86: Chrome, Firefox, Edge
+- **VNC Access** (for debugging):
+  - Chrome: `vnc://localhost:5900` (password not required)
+  - Firefox: `vnc://localhost:5901`
+  - Edge (x86 only): `vnc://localhost:5902`
+- **Max sessions per node**: 5 (configurable via `SE_NODE_MAX_SESSIONS`)
+- **Session timeout**: 300s (5 minutes)
+
+**Stop Grid:**
+```bash
+# ARM
+docker-compose -f docker-compose.selenium-arm.yml down
+
+# x86
+docker-compose -f docker-compose.selenium-x86.yml down
+```
+
+**Connect tests to Grid:**
+Update `WebDriverManager.java` to use Grid Hub:
+```java
+WebDriver driver = new RemoteWebDriver(
+    new URL("http://localhost:4444"),
+    new ChromeOptions()
+);
+```
+
+**Quick Start (Automatic architecture detection):**
+```bash
+# Start Grid (auto-detects ARM vs x86)
+./start-selenium-grid.sh
+
+# Stop Grid
+./stop-selenium-grid.sh
+```
 ### 4. Android Tests Setup (Appium + UiAutomator2)
 
 #### 4.1 Install Android SDK

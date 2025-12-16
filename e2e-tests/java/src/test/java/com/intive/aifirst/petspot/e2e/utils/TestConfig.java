@@ -83,10 +83,25 @@ public class TestConfig {
     /**
      * Gets the base URL for web application.
      * 
-     * @return Base URL (default: http://localhost:3000)
+     * <p>Uses {@code web.base.url.docker} when running with remote WebDriver (Docker Selenium Grid).
+     * Uses {@code web.base.url} for local execution.
+     * 
+     * @return Base URL (default: http://localhost:8080 for local, http://frontend:8080 for Docker)
      */
     public static String getWebBaseUrl() {
-        return properties.getProperty("web.base.url", "http://localhost:3000");
+        boolean useRemote = Boolean.parseBoolean(System.getProperty("webdriver.remote", "false"));
+        
+        if (useRemote) {
+            // Docker Selenium Grid: Browser runs in Docker, use internal Docker network URL
+            String dockerUrl = properties.getProperty("web.base.url.docker", "http://frontend:8080");
+            System.out.println("🐳 Using Docker web URL: " + dockerUrl);
+            return dockerUrl;
+        } else {
+            // Local execution: Browser runs on host, use localhost
+            String localUrl = properties.getProperty("web.base.url", "http://localhost:8080");
+            System.out.println("🏠 Using local web URL: " + localUrl);
+            return localUrl;
+        }
     }
     
     // ===== Android Configuration =====
