@@ -20,11 +20,6 @@ const CreateUserSchema = z
   })
   .strict();
 
-export interface CreateUserRequest {
-  email: string;
-  password: string;
-}
-
 export default function validateCreateUser(data: unknown): void {
   try {
     CreateUserSchema.parse(data);

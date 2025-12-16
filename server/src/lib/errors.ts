@@ -41,6 +41,12 @@ export class UnauthenticatedError extends CustomError {
   }
 }
 
+export class InvalidCredentialsError extends CustomError {
+  constructor(message = 'Invalid email or password') {
+    super(401, 'INVALID_CREDENTIALS', message);
+  }
+}
+
 export class UnauthorizedError extends CustomError {
   constructor(message = 'Invalid credentials') {
     super(403, 'UNAUTHORIZED', message);

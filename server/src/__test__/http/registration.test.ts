@@ -12,8 +12,8 @@ describe('POST /api/v1/users', () => {
     await db('user').del();
   });
 
-  describe('successful registration', () => {
-    it('should return HTTP 201 with user id on successful registration', async () => {
+  describe('successful registration with JWT', () => {
+    it('should return HTTP 201 with userId and accessToken on successful registration', async () => {
       // given
       const payload = { email: 'persist@example.com', password: 'password123' };
 
@@ -22,8 +22,10 @@ describe('POST /api/v1/users', () => {
 
       // then
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('id');
-      expect(typeof response.body.id).toBe('string');
+      expect(response.body).toHaveProperty('userId');
+      expect(typeof response.body.userId).toBe('string');
+      expect(response.body).toHaveProperty('accessToken');
+      expect(typeof response.body.accessToken).toBe('string');
 
       const user = await db('user').where({ email: payload.email }).first();
       expect(user).toBeDefined();
@@ -92,6 +94,19 @@ describe('POST /api/v1/users', () => {
       // then
       expect(response.status).toBe(409);
       expect(response.body.error.code).toBe('CONFLICT');
+    });
+
+    it('should return HTTP 400 with INVALID_FIELD for extra fields', async () => {
+      // given
+      const payload = { email: 'user@example.com', password: 'password123', extraField: 'value' };
+
+      // when
+      const response = await request(server).post('/api/v1/users').send(payload);
+
+      // then
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('INVALID_FIELD');
+      expect(response.body.error.field).toBe('extraField');
     });
   });
 });

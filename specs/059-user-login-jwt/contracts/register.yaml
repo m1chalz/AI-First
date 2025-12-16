@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: User Registration API
+  description: User registration endpoint with automatic JWT token generation
+  version: 1.0.0
+  contact:
+    name: PetSpot Backend Team
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.petspot.example.com/api/v1
+    description: Production server
+
+paths:
+  /users:
+    post:
+      summary: User Registration
+      description: |
+        Registers a new user account with email and password credentials.
+        Returns the user ID and a JWT access token valid for 1 hour.
+        User can immediately use the token to access protected resources without separate login.
+        
+        Changes from previous version:
+        - Response now includes `accessToken` field (was only `id` before)
+        - JWT token automatically generated upon successful registration
+        
+        Security considerations:
+        - Email uniqueness enforced (409 if email exists)
+        - Password hashed using scrypt before storage
+        - Email normalized to lowercase
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              valid:
+                summary: Valid registration data
+                value:
+                  email: newuser@example.com
+                  password: SecurePass123!
+              invalidEmail:
+                summary: Invalid email format
+                value:
+                  email: not-an-email
+                  password: password123
+              shortPassword:
+                summary: Password too short
+                value:
+                  email: user@example.com
+                  password: short
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              examples:
+                success:
+                  summary: Successful registration
+                  value:
+                    id: 124
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyNCwiaWF0IjoxNzAyNzQyNDAwLCJleHAiOjE3MDI3NDYwMDB9.signature
+        '400':
+          description: Validation error (invalid request data)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                missingField:
+                  summary: Missing required field
+                  value:
+                    code: MISSING_FIELD
+                    message: password is required
+                    field: password
+                invalidFormat:
+                  summary: Invalid email format
+                  value:
+                    code: INVALID_FORMAT
+                    message: email format is invalid
+                    field: email
+                invalidLength:
+                  summary: Password too short
+                  value:
+                    code: INVALID_LENGTH
+                    message: password must be 8-128 characters long
+                    field: password
+                invalidField:
+                  summary: Unknown field provided
+                  value:
+                    code: INVALID_FIELD
+                    message: firstName is not a valid field
+                    field: firstName
+        '409':
+          description: Conflict - Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              examples:
+                emailExists:
+                  summary: Email already registered
+                  value:
+                    error: Email already exists
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+              examples:
+                serverError:
+                  summary: Unexpected error
+                  value:
+                    error: Internal server error
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 254
+          description: |
+            User's email address (case-insensitive, will be normalized to lowercase).
+            Must be unique across all users.
+          example: newuser@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+          description: |
+            User's password (will be hashed using scrypt before storage).
+            Minimum 8 characters for security.
+          example: SecurePass123!
+      description: User registration data (email and password)
+
+    AuthResponse:
+      type: object
+      required:
+        - id
+        - accessToken
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Newly created user's unique identifier
+          example: 124
+        accessToken:
+          type: string
+          format: jwt
+          pattern: ^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$
+          description: |
+            JWT access token valid for 1 hour.
+            Format: header.payload.signature (base64url encoded)
+            Payload contains: { userId, iat, exp }
+            User can immediately use this token to access protected resources.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyNCwiaWF0IjoxNzAyNzQyNDAwLCJleHAiOjE3MDI3NDYwMDB9.signature
+      description: Successful registration response (includes JWT token)
+
+    ValidationError:
+      type: object
+      required:
+        - code
+        - message
+        - field
+      properties:
+        code:
+          type: string
+          enum:
+            - MISSING_FIELD
+            - INVALID_FORMAT
+            - INVALID_LENGTH
+            - INVALID_FIELD
+          description: Error code indicating validation failure type
+          example: INVALID_LENGTH
+        message:
+          type: string
+          description: Human-readable error message
+          example: password must be 8-128 characters long
+        field:
+          type: string
+          description: Field name that failed validation
+          example: password
+      description: Validation error response (HTTP 400)
+
+    ConflictError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Conflict error message
+          example: Email already exists
+      description: Conflict error response (HTTP 409)
+
+    ServerError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Generic server error message
+          example: Internal server error
+      description: Server error response (HTTP 500)
+
+tags:
+  - name: Authentication
+    description: User authentication operations
+

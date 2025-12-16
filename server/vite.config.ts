@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    setupFiles: ['src/__test__/it-setup.ts'],
     fileParallelism: false, // announcement and photo upload tests can't be run in parallel because they share the same database TO BE FIXED LATER
     coverage: {
       provider: 'v8',

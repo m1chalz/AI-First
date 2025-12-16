@@ -1,0 +1,217 @@
+openapi: 3.0.3
+info:
+  title: User Login API
+  description: JWT-based user authentication endpoint
+  version: 1.0.0
+  contact:
+    name: PetSpot Backend Team
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.petspot.example.com/api/v1
+    description: Production server
+
+paths:
+  /users/login:
+    post:
+      summary: User Login
+      description: |
+        Authenticates a user with email and password credentials.
+        Returns a JWT access token valid for 1 hour upon successful authentication.
+        
+        Security considerations:
+        - Prevents user enumeration (same error for invalid email/password)
+        - Uses constant-time password verification
+        - Returns 401 for any authentication failure
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              valid:
+                summary: Valid login credentials
+                value:
+                  email: user@example.com
+                  password: SecurePass123!
+              invalidEmail:
+                summary: Invalid email format
+                value:
+                  email: not-an-email
+                  password: password123
+              missingPassword:
+                summary: Missing password field
+                value:
+                  email: user@example.com
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              examples:
+                success:
+                  summary: Successful login
+                  value:
+                    id: 123
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiaWF0IjoxNzAyNzQyNDAwLCJleHAiOjE3MDI3NDYwMDB9.signature
+        '400':
+          description: Validation error (invalid request data)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                missingField:
+                  summary: Missing required field
+                  value:
+                    code: MISSING_FIELD
+                    message: email is required
+                    field: email
+                invalidFormat:
+                  summary: Invalid email format
+                  value:
+                    code: INVALID_FORMAT
+                    message: email format is invalid
+                    field: email
+                invalidLength:
+                  summary: Password too short
+                  value:
+                    code: INVALID_LENGTH
+                    message: password must be 8-128 characters long
+                    field: password
+                invalidField:
+                  summary: Unknown field provided
+                  value:
+                    code: INVALID_FIELD
+                    message: username is not a valid field
+                    field: username
+        '401':
+          description: Authentication failed (invalid credentials)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                invalidCredentials:
+                  summary: Invalid email or password
+                  value:
+                    error: Invalid email or password
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+              examples:
+                serverError:
+                  summary: Unexpected error
+                  value:
+                    error: Internal server error
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 254
+          description: User's email address (case-insensitive)
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+          description: User's password
+          example: SecurePass123!
+      description: Login credentials (email and password)
+
+    AuthResponse:
+      type: object
+      required:
+        - id
+        - accessToken
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: User's unique identifier
+          example: 123
+        accessToken:
+          type: string
+          format: jwt
+          pattern: ^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$
+          description: |
+            JWT access token valid for 1 hour.
+            Format: header.payload.signature (base64url encoded)
+            Payload contains: { userId, iat, exp }
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiaWF0IjoxNzAyNzQyNDAwLCJleHAiOjE3MDI3NDYwMDB9.signature
+      description: Successful authentication response
+
+    ValidationError:
+      type: object
+      required:
+        - code
+        - message
+        - field
+      properties:
+        code:
+          type: string
+          enum:
+            - MISSING_FIELD
+            - INVALID_FORMAT
+            - INVALID_LENGTH
+            - INVALID_FIELD
+          description: Error code indicating validation failure type
+          example: INVALID_FORMAT
+        message:
+          type: string
+          description: Human-readable error message
+          example: email format is invalid
+        field:
+          type: string
+          description: Field name that failed validation
+          example: email
+      description: Validation error response (HTTP 400)
+
+    AuthError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Generic authentication error message (prevents user enumeration)
+          example: Invalid email or password
+      description: Authentication error response (HTTP 401)
+
+    ServerError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Generic server error message
+          example: Internal server error
+      description: Server error response (HTTP 500)
+
+tags:
+  - name: Authentication
+    description: User authentication operations
+
