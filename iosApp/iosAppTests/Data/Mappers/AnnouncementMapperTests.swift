@@ -120,7 +120,96 @@ final class AnnouncementMapperTests: XCTestCase {
         XCTAssertNil(announcement?.name)
     }
     
-    // MARK: - Failure Cases
+    // MARK: - Failure Cases (FR-016: Malformed Data Handling)
+    
+    func test_map_whenDtoHasEmptyId_shouldReturnNil() {
+        // Given - DTO with empty id
+        let dto = makeTestDTO(id: "")
+        
+        // When
+        let announcement = sut.map(dto)
+        
+        // Then - Should return nil for invalid ID
+        XCTAssertNil(announcement, "Should return nil when ID is empty")
+    }
+    
+    func test_map_whenDtoHasInvalidLatitude_shouldReturnNil() {
+        // Given - DTO with latitude out of valid range (-90 to 90)
+        let dto = AnnouncementDTO(
+            id: "test-id",
+            petName: "TestPet",
+            species: .dog,
+            status: .missing,
+            photoUrl: "/images/test.jpg",
+            lastSeenDate: "2024-12-01",
+            locationLatitude: 91.0, // Invalid: > 90
+            locationLongitude: 21.0122,
+            breed: "Test",
+            sex: .male,
+            age: 5,
+            description: "Test",
+            phone: "+48123456789",
+            email: "test@example.com"
+        )
+        
+        // When
+        let announcement = sut.map(dto)
+        
+        // Then - Should return nil for invalid coordinates
+        XCTAssertNil(announcement, "Should return nil when latitude is invalid (> 90)")
+    }
+    
+    func test_map_whenDtoHasInvalidLongitude_shouldReturnNil() {
+        // Given - DTO with longitude out of valid range (-180 to 180)
+        let dto = AnnouncementDTO(
+            id: "test-id",
+            petName: "TestPet",
+            species: .dog,
+            status: .missing,
+            photoUrl: "/images/test.jpg",
+            lastSeenDate: "2024-12-01",
+            locationLatitude: 52.2297,
+            locationLongitude: 181.0, // Invalid: > 180
+            breed: "Test",
+            sex: .male,
+            age: 5,
+            description: "Test",
+            phone: "+48123456789",
+            email: "test@example.com"
+        )
+        
+        // When
+        let announcement = sut.map(dto)
+        
+        // Then - Should return nil for invalid coordinates
+        XCTAssertNil(announcement, "Should return nil when longitude is invalid (> 180)")
+    }
+    
+    func test_map_whenDtoHasNaNLatitude_shouldReturnNil() {
+        // Given - DTO with NaN latitude
+        let dto = AnnouncementDTO(
+            id: "test-id",
+            petName: "TestPet",
+            species: .dog,
+            status: .missing,
+            photoUrl: "/images/test.jpg",
+            lastSeenDate: "2024-12-01",
+            locationLatitude: Double.nan,
+            locationLongitude: 21.0122,
+            breed: "Test",
+            sex: .male,
+            age: 5,
+            description: "Test",
+            phone: "+48123456789",
+            email: "test@example.com"
+        )
+        
+        // When
+        let announcement = sut.map(dto)
+        
+        // Then - Should return nil for NaN coordinates
+        XCTAssertNil(announcement, "Should return nil when latitude is NaN")
+    }
     
     // MARK: - Helper Methods
     

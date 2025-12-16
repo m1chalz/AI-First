@@ -23,7 +23,8 @@ class FakeAnnouncementRepository: AnnouncementRepositoryProtocol {
     var lastLocationParameter: Coordinate?
     
     /// For location testing - stubbed announcements to return
-    var stubbedAnnouncements: [Announcement] = []
+    /// When set to non-nil, overrides default mock generation (even if empty)
+    var stubbedAnnouncements: [Announcement]?
     
     /// For testing async cancellation - simulates slow network
     var delayDuration: TimeInterval = 0
@@ -96,7 +97,7 @@ class FakeAnnouncementRepository: AnnouncementRepositoryProtocol {
             throw error
         }
         
-        if !stubbedAnnouncements.isEmpty {
+        if let stubbedAnnouncements = stubbedAnnouncements {
             return stubbedAnnouncements
         }
         

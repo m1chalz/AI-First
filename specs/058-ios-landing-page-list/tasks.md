@@ -38,8 +38,8 @@
 
 **Purpose**: Project initialization and model creation
 
-- [ ] T001 Create `AnnouncementListQuery` model with factory methods in `/iosApp/iosApp/Domain/Models/AnnouncementListQuery.swift`
-- [ ] T002 Create directory structure for LandingPage feature: `/iosApp/iosApp/Features/LandingPage/Views/` and `/iosApp/iosApp/Features/LandingPage/Coordinators/`
+- [X] T001 Create `AnnouncementListQuery` model with factory methods in `/iosApp/iosApp/Domain/Models/AnnouncementListQuery.swift`
+- [X] T002 Create directory structure for LandingPage feature: `/iosApp/iosApp/Features/LandingPage/Views/` and `/iosApp/iosApp/Features/LandingPage/Coordinators/`
 
 ---
 
@@ -49,10 +49,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Create `AnnouncementCardsListViewModel` (autonomous component) in `/iosApp/iosApp/Views/AnnouncementCardsListViewModel.swift`
-- [ ] T004 Create `AnnouncementCardsListView` (reusable UI component) in `/iosApp/iosApp/Views/AnnouncementCardsListView.swift`
-- [ ] T005 [P] Reuse existing fake repository in `/iosApp/iosAppTests/Fakes/FakeAnnouncementRepository.swift` (create only if missing)
-- [ ] T006 [P] Reuse existing fakes for location flow in `/iosApp/iosAppTests/Fakes/` (create only if missing; avoid introducing a new `Mocks/` convention)
+- [X] T003 Create `AnnouncementCardsListViewModel` (autonomous component) in `/iosApp/iosApp/Views/AnnouncementCardsListViewModel.swift`
+- [X] T004 Create `AnnouncementCardsListView` (reusable UI component) in `/iosApp/iosApp/Views/AnnouncementCardsListView.swift`
+- [X] T005 [P] Reuse existing fake repository in `/iosApp/iosAppTests/Fakes/FakeAnnouncementRepository.swift` (create only if missing)
+- [X] T006 [P] Reuse existing fakes for location flow in `/iosApp/iosAppTests/Fakes/` (create only if missing; avoid introducing a new `Mocks/` convention)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -68,7 +68,7 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T007 [P] [US1] Create `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/Views/AnnouncementCardsListViewModelTests.swift`
+- [X] T007 [P] [US1] Create `AnnouncementCardsListViewModelTests.swift` in `/iosApp/iosAppTests/Views/AnnouncementCardsListViewModelTests.swift`
   - Test: `setQuery_whenQueryLimitIs5_shouldTriggerLoadAndDisplayFirst5MostRecent`
   - Test: `setQuery_whenRepositoryReturnsLessThan5Items_shouldDisplayAllAvailable`
   - Test: `setQuery_whenRepositoryReturnsEmptyArray_shouldResultInEmptyCardViewModels`
@@ -76,64 +76,67 @@
   - Test: `reload_shouldCancelPreviousTaskAndStartNew`
   - Test: `applyQuery_shouldSortByCreatedAtDescending`
   - Test: `onAnnouncementTapped_shouldInvokeClosureWithCorrectId`
-- [ ] T008 [P] [US1] Create `LandingPageViewModelTests.swift` in `/iosApp/iosAppTests/Features/LandingPage/Views/LandingPageViewModelTests.swift`
+- [X] T008 [P] [US1] Create `LandingPageViewModelTests.swift` in `/iosApp/iosAppTests/Features/LandingPage/Views/LandingPageViewModelTests.swift`
   - Test: `init_shouldCreateListViewModelWithLandingPageQuery`
   - Test: `loadData_shouldFetchLocationAndSetQueryOnListViewModel`
   - Test: `loadData_whenLocationDenied_shouldSetQueryWithNilLocation`
-- [ ] T032 [P] [US1] Extend `AnnouncementMapperTests.swift` in `/iosApp/iosAppTests/Data/Mappers/AnnouncementMapperTests.swift` for malformed DTO handling (FR-016)
+- [X] T032 [P] [US1] Extend `AnnouncementMapperTests.swift` in `/iosApp/iosAppTests/Data/Mappers/AnnouncementMapperTests.swift` for malformed DTO handling (FR-016)
   - Test: `map_whenDtoHasEmptyId_shouldReturnNil`
   - Test: `map_whenDtoHasInvalidCoordinates_shouldReturnNil` (e.g., NaN)
-- [ ] T033 [P] [US1] Extend `AnnouncementCardViewModelTests.swift` in `/iosApp/iosAppTests/Features/AnnouncementList/Views/AnnouncementCardViewModelTests.swift` to cover invalid photo URLs (FR-016)
+- [X] T033 [P] [US1] Extend `AnnouncementCardViewModelTests.swift` in `/iosApp/iosAppTests/Features/AnnouncementList/Views/AnnouncementCardViewModelTests.swift` to cover invalid photo URLs (FR-016)
   - Test: `photoURL_whenPhotoUrlIsEmpty_shouldBeNil`
   - Test: `photoURL_whenPhotoUrlIsInvalid_shouldBeNil`
 
 ### E2E Tests for User Story 1 (MANDATORY) ✅
 
-- [ ] T009 [P] [US1] Create E2E feature file `/e2e-tests/java/src/test/resources/features/mobile/landing-page.feature`
+- [X] T009 [P] [US1] Create E2E feature file `/e2e-tests/java/src/test/resources/features/mobile/landing-page.feature`
   - Scenario: Display 5 most recent announcements
   - Scenario: Display all announcements when backend has fewer than 5
   - Scenario: Display empty state when no announcements
   - Scenario: Display error message when backend is unavailable
   - Scenario: Display location coordinates when location permissions granted
   - Scenario: Hide location coordinates when location permissions denied
-- [ ] T010 [P] [US1] Create Screen Object `LandingPageScreen.java` in `/e2e-tests/java/src/test/java/com/petspot/e2e/screens/LandingPageScreen.java`
-- [ ] T011 [P] [US1] Create step definitions `LandingPageSteps.java` in `/e2e-tests/java/src/test/java/com/petspot/e2e/steps/mobile/LandingPageSteps.java`
+- [X] T010 [P] [US1] Create Screen Object `LandingPageScreen.java` in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/LandingPageScreen.java`
+- [X] T011 [P] [US1] Create step definitions `LandingPageSteps.java` in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LandingPageSteps.java`
 
 ### Implementation for User Story 1
 
 **iOS** (Full Stack Implementation):
 
-- [ ] T012 [US1] Implement `LandingPageViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
+- [X] T012 [US1] Implement `LandingPageViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
   - Properties: `listViewModel: AnnouncementCardsListViewModel`, `locationHandler: LocationPermissionHandler`
   - Methods: `loadData()` async, `refreshIfNeeded()` async
   - Pattern: Thin wrapper, delegates list logic to child ViewModel
-- [ ] T013 [US1] Implement `LandingPageView` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift`
+- [X] T013 [US1] Implement `LandingPageView` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift`
   - Composite view - list is only part of the screen (future: header, sections, etc.)
   - Compose `AnnouncementCardsListView` (handles its own empty/error/loading states internally)
   - Add `.task { await viewModel.loadData() }`
   - NO NavigationView (coordinator manages UINavigationController)
   - NO custom empty state in LandingPageView - delegated to AnnouncementCardsListView
-- [ ] T014 [US1] Implement `HomeCoordinator` in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
+- [X] T014 [US1] Implement `HomeCoordinator` in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
   - Follow same pattern as `AnnouncementListCoordinator`
   - Simple `init(onShowPetDetails: @escaping (String) -> Void)`
   - `start(animated:)` fetches dependencies from `ServiceContainer.shared`
   - Creates `LandingPageViewModel` and presents `LandingPageView` in UIHostingController
-- [ ] T015 [US1] Modify `TabCoordinator` to use `HomeCoordinator` instead of `PlaceholderCoordinator` in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
+- [X] T015 [US1] Modify `TabCoordinator` to use `HomeCoordinator` instead of `PlaceholderCoordinator` in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
   - Replace `PlaceholderCoordinator(title: L10n.Tabs.home)` with `HomeCoordinator(onShowPetDetails: { ... })`
   - Add `showPetDetailsFromHome(_ announcementId: String)` private method (placeholder for US2)
-- [ ] T016 [US1] Add accessibility identifiers to `LandingPageView` and `AnnouncementCardsListView`:
+- [X] T016 [US1] Add accessibility identifiers to `LandingPageView` and `AnnouncementCardsListView`:
   - Loading: `landingPage.loading`
   - Error: `landingPage.error`
   - Empty state: `landingPage.emptyState`
   - List: `landingPage.list`
   - Cards inherit from `AnnouncementCardView`
-- [ ] T017 [P] [US1] Add SwiftDoc documentation to `AnnouncementCardsListViewModel`, `LandingPageViewModel`, `HomeCoordinator` public APIs
-- [ ] T034 [US1] Implement malformed data skipping in `/iosApp/iosApp/Data/Mappers/AnnouncementMapper.swift` and ensure repository filters out invalid items (FR-016)
+- [X] T017 [P] [US1] Add SwiftDoc documentation to `AnnouncementCardsListViewModel`, `LandingPageViewModel`, `HomeCoordinator` public APIs
+- [X] T034 [US1] Implement malformed data skipping in `/iosApp/iosApp/Data/Mappers/AnnouncementMapper.swift` and ensure repository filters out invalid items (FR-016)
   - Return `nil` from mapper for invalid required fields (e.g., empty id) or invalid coordinates
   - Ensure list endpoint mapping uses `compactMap` and does not crash when one item is invalid
-- [ ] T035 [US1] Prevent infinite loading placeholder for invalid/empty photo URL in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementCardView.swift` (FR-016)
-  - If `photoURL` is nil, show the same error placeholder (pawprint) instead of `AsyncImage`’s `.empty` spinner
-- [ ] T018 [US1] Run unit tests and verify 80% coverage for `AnnouncementCardsListViewModel` and `LandingPageViewModel`
+- [X] T035 [US1] Prevent infinite loading placeholder for invalid/empty photo URL in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementCardView.swift` (FR-016)
+  - If `photoURL` is nil, show the same error placeholder (pawprint) instead of `AsyncImage`'s `.empty` spinner
+- [X] T018 [US1] Run unit tests and verify 80% coverage for `AnnouncementCardsListViewModel` and `LandingPageViewModel`
+  - AnnouncementCardsListViewModel: 87.86% ✅
+  - LandingPageViewModel: 86.36% ✅
+  - HomeCoordinator: 100.00% ✅
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Home tab displays 5 recent announcements with proper states (loading, error, empty, success).
 
