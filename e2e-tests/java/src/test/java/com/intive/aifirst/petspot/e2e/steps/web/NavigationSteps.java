@@ -112,5 +112,97 @@ public class NavigationSteps {
         assertTrue(getNavigationPage().isNavigationBarDisplayed(),
                 "Navigation bar with logo should be visible");
     }
+
+    // User Story 2 - Visual Design Step Definitions
+
+    @Then("navigation bar should display with horizontal layout")
+    public void navigationBarShouldDisplayWithHorizontalLayout() {
+        assertTrue(getNavigationPage().isNavigationBarHorizontalLayout(),
+                "Navigation bar should have horizontal flexbox layout");
+    }
+
+    @Then("navigation bar logo should be positioned on the left side")
+    public void navigationBarLogoShouldBePositionedOnLeftSide() {
+        assertTrue(getNavigationPage().isLogoPositionedLeft(),
+                "Logo should be positioned on the left side of navigation bar");
+    }
+
+    @Then("navigation items should be positioned on the right side")
+    public void navigationItemsShouldBePositionedOnRightSide() {
+        assertTrue(getNavigationPage().areNavigationItemsPositionedRight(),
+                "Navigation items should be positioned on the right side");
+    }
+
+    @Then("all navigation items should display an icon")
+    public void allNavigationItemsShouldDisplayAnIcon() {
+        assertTrue(getNavigationPage().allNavigationItemsHaveIcons(),
+                "All navigation items should display an icon");
+    }
+
+    @Then("all navigation items should display a text label")
+    public void allNavigationItemsShouldDisplayATextLabel() {
+        assertTrue(getNavigationPage().allNavigationItemsHaveLabels(),
+                "All navigation items should display a text label");
+    }
+
+    @Then("icons should appear before labels")
+    public void iconsShouldAppearBeforeLabels() {
+        assertTrue(getNavigationPage().iconsAppearBeforeLabels(),
+                "Icons should appear before labels in navigation items");
+    }
+
+    @Then("{string} navigation item should have active styling")
+    public void navigationItemShouldHaveActiveStyling(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasActiveClass(page.getNavigationItem(section)),
+                section + " navigation item should have active styling");
+    }
+
+    @Then("{string} navigation item should have blue background color")
+    public void navigationItemShouldHaveBlueBackgroundColor(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasActiveItemBlueBackground(page.getNavigationItem(section)),
+                section + " navigation item should have blue background color (#EFF6FF)");
+    }
+
+    @Then("{string} navigation item should have blue text color")
+    public void navigationItemShouldHaveBlueTextColor(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasActiveItemBlueText(page.getNavigationItem(section)),
+                section + " navigation item should have blue text color (#155DFC)");
+    }
+
+    @Then("{string} navigation item should have inactive styling")
+    public void navigationItemShouldHaveInactiveStyling(String section) {
+        NavigationPage page = getNavigationPage();
+        assertFalse(page.hasActiveClass(page.getNavigationItem(section)),
+                section + " navigation item should have inactive styling");
+    }
+
+    @Then("{string} navigation item should have transparent background")
+    public void navigationItemShouldHaveTransparentBackground(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasInactiveItemTransparentBackground(page.getNavigationItem(section)),
+                section + " navigation item should have transparent background");
+    }
+
+    @Then("{string} navigation item should have gray text color")
+    public void navigationItemShouldHaveGrayTextColor(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasInactiveItemGrayText(page.getNavigationItem(section)),
+                section + " navigation item should have gray text color (#4A5565)");
+    }
+
+    @When("user hovers over {string} navigation item")
+    public void userHoversOverNavigationItem(String section) {
+        getNavigationPage().hoverOverNavigationItem(section);
+    }
+
+    @Then("{string} navigation item should show hover feedback")
+    public void navigationItemShouldShowHoverFeedback(String section) {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.hasHoverFeedback(page.getNavigationItem(section)),
+                section + " navigation item should show hover feedback");
+    }
 }
 

@@ -37,3 +37,36 @@ Feature: Web Navigation Bar
     Then "Lost Pet" navigation item should be highlighted
     And other navigation items should not be highlighted
 
+  # User Story 2 - Visual Design Consistency
+  @P2 @US2
+  Scenario: Navigation bar displays horizontal layout with logo on left
+    Then navigation bar should display with horizontal layout
+    And navigation bar logo should be positioned on the left side
+    And navigation items should be positioned on the right side
+
+  @P2 @US2
+  Scenario: Navigation items display icon and label
+    Then all navigation items should display an icon
+    And all navigation items should display a text label
+    And icons should appear before labels
+
+  @P2 @US2
+  Scenario: Active navigation item has visual styling
+    Given user is on the Home page
+    Then "Home" navigation item should have active styling
+    And "Home" navigation item should have blue background color
+    And "Home" navigation item should have blue text color
+
+  @P2 @US2
+  Scenario: Inactive navigation items have neutral styling
+    Given user is on the Home page
+    Then "Lost Pet" navigation item should have inactive styling
+    And "Lost Pet" navigation item should have transparent background
+    And "Lost Pet" navigation item should have gray text color
+
+  @P2 @US2
+  Scenario: Navigation item hover state provides feedback
+    Given user is on the Home page
+    When user hovers over "Lost Pet" navigation item
+    Then "Lost Pet" navigation item should show hover feedback
+
