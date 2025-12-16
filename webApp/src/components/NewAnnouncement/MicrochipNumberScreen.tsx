@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useMicrochipFormatter } from '../../hooks/use-microchip-formatter';
 import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import styles from './NewAnnouncementLayout.module.css';
 

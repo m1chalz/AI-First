@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
 import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from '../../../contexts/GeolocationContext';
-import { AppRoutes } from '../../../routes/routes';
+import { AppRoutes } from '../../../pages/routes';
 
 const mockNavigate = vi.fn();
 

@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MicrochipNumberScreen } from '../MicrochipNumberScreen';
 import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
-import { AppRoutes } from '../../../routes/routes';
+import { AppRoutes } from '../../../pages/routes';
 
 const mockNavigate = vi.fn();
 

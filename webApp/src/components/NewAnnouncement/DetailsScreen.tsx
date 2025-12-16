@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDetailsForm } from '../../hooks/use-details-form';
 import { useToast } from '../../hooks/use-toast';
 import { Toast } from '../Toast/Toast';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PetDescriptionForm } from './AnnouncementDescriptionForm/PetDescriptionForm';

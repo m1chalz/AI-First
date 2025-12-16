@@ -1,21 +1,31 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnnouncementList } from './components/AnnouncementList/AnnouncementList';
 import { MicrochipNumberScreen } from './components/NewAnnouncement/MicrochipNumberScreen';
 import { PhotoScreen } from './components/NewAnnouncement/PhotoScreen';
 import { DetailsScreen } from './components/NewAnnouncement/DetailsScreen';
 import { ContactScreen } from './components/NewAnnouncement/ContactScreen';
 import { SummaryScreen } from './components/NewAnnouncement/SummaryScreen';
+import { NavigationBar } from './components/NavigationBar';
 import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
-import { AppRoutes } from './routes/routes';
+import { Home } from './pages/Home';
+import { LostPets } from './pages/LostPets';
+import { FoundPets } from './pages/FoundPets';
+import { Contact } from './pages/Contact';
+import { Account } from './pages/Account';
+import { AppRoutes } from './pages/routes';
 
 export function App() {
   return (
     <GeolocationProvider>
       <BrowserRouter>
+        <NavigationBar />
         <Routes>
-          <Route path="/" element={<AnnouncementList />} />
-          <Route path="/announcement/:announcementId" element={<AnnouncementList />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/lost-pets" element={<LostPets />} />
+          <Route path="/lost-pets/:announcementId" element={<LostPets />} />
+          <Route path="/found-pets" element={<FoundPets />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/account" element={<Account />} />
           <Route
             path={AppRoutes.base}
             element={

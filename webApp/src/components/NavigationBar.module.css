@@ -1,0 +1,66 @@
+.navigationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo {
+  height: 2.5rem;
+  width: auto;
+}
+
+.navigationItems {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navigationItem,
+.navigationItemActive {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.navigationItem {
+  background-color: transparent;
+  color: #4a5565;
+}
+
+.navigationItem:hover {
+  background-color: #f3f4f6;
+}
+
+.navigationItemActive {
+  background-color: #eff6ff;
+  color: #155dfc;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .navigationBar {
+    display: none;
+  }
+}
+

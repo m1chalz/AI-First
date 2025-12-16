@@ -4,7 +4,7 @@ import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { Toast } from '../Toast/Toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
