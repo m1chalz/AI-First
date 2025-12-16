@@ -7,12 +7,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +39,7 @@ import com.intive.aifirst.petspot.navigation.HomeRoute
 import com.intive.aifirst.petspot.navigation.LostPetRoute
 import com.intive.aifirst.petspot.navigation.NavRoute
 import com.intive.aifirst.petspot.navigation.TabRoute
+import com.intive.aifirst.petspot.ui.theme.BottomNavColors
 
 /**
  * Main scaffold with bottom navigation bar.
@@ -58,11 +63,20 @@ fun MainScaffold(modifier: Modifier = Modifier) {
         modifier = modifier,
         bottomBar = {
             if (showBottomNav) {
-                NavigationBar {
+                NavigationBar(containerColor = BottomNavColors.BackgroundColor) {
+                    val colors =
+                        NavigationBarItemDefaults.colors(
+                            selectedIconColor = BottomNavColors.ActiveColor,
+                            selectedTextColor = BottomNavColors.ActiveColor,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = BottomNavColors.InactiveColor,
+                            unselectedTextColor = BottomNavColors.InactiveColor,
+                        )
                     TabDestination.entries.forEach { tab ->
                         BottomNavItem(
                             tab = tab,
                             currentRoute = currentRoute,
+                            colors = colors,
                             onTabClick = { tabRoute, isCurrentTab ->
                                 if (isCurrentTab) {
                                     // Re-tap on current tab: pop to tab root
@@ -187,6 +201,7 @@ private fun RowScope.BottomNavItem(
     tab: TabDestination,
     currentRoute: String?,
     onTabClick: (TabRoute, Boolean) -> Unit,
+    colors: NavigationBarItemColors = NavigationBarItemDefaults.colors(),
 ) {
     val tabRoute = tab.toRoute()
     val tabRouteName = tabRoute::class.qualifiedName ?: ""
@@ -199,10 +214,11 @@ private fun RowScope.BottomNavItem(
         onClick = { onTabClick(tabRoute, isSelected) },
         icon = {
             Icon(
-                imageVector = tab.icon,
+                painter = painterResource(tab.iconRes),
                 contentDescription = null,
             )
         },
+        colors = colors,
         label = { Text(tab.label) },
         modifier =
             Modifier
@@ -236,6 +252,7 @@ private fun isCurrentTabSelected(
                 currentRoute.contains("TabRoute.LostPet") ||
                 currentRoute.contains("AnimalDetail")
         }
+
         TabDestination.FOUND_PET -> currentRoute.contains("FoundPetRoute") || currentRoute.contains("TabRoute.FoundPet")
         TabDestination.CONTACT_US -> currentRoute.contains("ContactRoute") || currentRoute.contains("TabRoute.Contact")
         TabDestination.ACCOUNT -> currentRoute.contains("AccountRoute") || currentRoute.contains("TabRoute.Account")
@@ -248,21 +265,6 @@ private fun MainScaffoldPreview() {
     MaterialTheme {
         // Preview shows the scaffold structure
         // Note: Navigation won't work in preview, but layout is visible
-        Scaffold(
-            bottomBar = {
-                NavigationBar {
-                    TabDestination.entries.forEach { tab ->
-                        NavigationBarItem(
-                            selected = tab == TabDestination.HOME,
-                            onClick = { },
-                            icon = { Icon(tab.icon, contentDescription = null) },
-                            label = { Text(tab.label) },
-                        )
-                    }
-                }
-            },
-        ) { paddingValues ->
-            PlaceholderScreen(modifier = Modifier.padding(paddingValues))
-        }
+        MainScaffold()
     }
 }

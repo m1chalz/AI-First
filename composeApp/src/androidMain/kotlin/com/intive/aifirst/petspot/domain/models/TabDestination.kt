@@ -1,45 +1,41 @@
 package com.intive.aifirst.petspot.domain.models
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ContactSupport
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Pets
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.annotation.DrawableRes
+import com.intive.aifirst.petspot.R
 import com.intive.aifirst.petspot.navigation.TabRoute
 
 /**
  * Enum representing the 5 tab destinations in bottom navigation.
- * Provides UI configuration (label, icon, testId) and maps to type-safe routes.
+ * Provides UI configuration (label, icon resource, testId) and maps to type-safe routes.
  */
 enum class TabDestination(
     val label: String,
-    val icon: ImageVector,
+    @DrawableRes val iconRes: Int,
     val testId: String,
 ) {
     HOME(
         label = "Home",
-        icon = Icons.Filled.Home,
+        iconRes = R.drawable.ic_home,
         testId = "homeTab",
     ),
     LOST_PET(
         label = "Lost Pet",
-        icon = Icons.Filled.Pets,
+        iconRes = R.drawable.ic_lost,
         testId = "lostPetTab",
     ),
     FOUND_PET(
         label = "Found Pet",
-        icon = Icons.Filled.Pets,
+        iconRes = R.drawable.ic_found,
         testId = "foundPetTab",
     ),
     CONTACT_US(
         label = "Contact Us",
-        icon = Icons.AutoMirrored.Filled.ContactSupport,
+        iconRes = R.drawable.ic_contact,
         testId = "contactTab",
     ),
     ACCOUNT(
         label = "Account",
-        icon = Icons.Filled.AccountCircle,
+        iconRes = R.drawable.ic_account,
         testId = "accountTab",
     ),
     ;
