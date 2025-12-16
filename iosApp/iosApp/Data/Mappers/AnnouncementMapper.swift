@@ -15,7 +15,6 @@ struct AnnouncementMapper {
     /// - ID must be non-empty
     /// - Latitude must be in range [-90, 90]
     /// - Longitude must be in range [-180, 180]
-    /// - Coordinates must not be NaN
     ///
     /// - Parameter dto: DTO from backend API
     /// - Returns: Announcement domain model, or nil if DTO contains invalid data
@@ -53,23 +52,11 @@ struct AnnouncementMapper {
         !id.isEmpty
     }
     
-    /// Validates that coordinates are within valid ranges and not NaN.
+    /// Validates that coordinates are within valid ranges.
+    /// NaN values fail range checks automatically (NaN comparisons return false).
     private func isValidCoordinate(latitude: Double, longitude: Double) -> Bool {
-        // Check for NaN
-        guard !latitude.isNaN && !longitude.isNaN else {
-            return false
-        }
-        
-        // Validate latitude range: -90 to 90
-        guard latitude >= -90 && latitude <= 90 else {
-            return false
-        }
-        
-        // Validate longitude range: -180 to 180
-        guard longitude >= -180 && longitude <= 180 else {
-            return false
-        }
-        
-        return true
+        let validLatitude = latitude >= -90 && latitude <= 90
+        let validLongitude = longitude >= -180 && longitude <= 180
+        return validLatitude && validLongitude
     }
 }

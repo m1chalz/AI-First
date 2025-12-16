@@ -207,7 +207,7 @@ final class AnnouncementMapperTests: XCTestCase {
         // When
         let announcement = sut.map(dto)
         
-        // Then - Should return nil for NaN coordinates
+        // Then - Should return nil (NaN fails range check: NaN >= -90 is false)
         XCTAssertNil(announcement, "Should return nil when latitude is NaN")
     }
     
