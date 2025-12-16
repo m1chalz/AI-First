@@ -25,13 +25,16 @@ curl -X POST http://localhost:3000/api/v1/users \
   }'
 ```
 
-**Expected**: HTTP 201 with user ID:
+**Expected**: HTTP 201 with userId and JWT accessToken:
 
 ```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440000"
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
+
+**Note**: The `accessToken` is a JWT valid for 1 hour containing the `userId` claim.
 
 ### T102: Test duplicate email registration (HTTP 409)
 
@@ -217,7 +220,224 @@ curl -X POST http://localhost:3000/api/v1/users \
   }'
 ```
 
-**Expected**: HTTP 201 - Email is stored as lowercase `user@example.com`
+**Expected**: HTTP 201 with userId and accessToken - Email is stored as lowercase `user@example.com`
+
+### T110: Test extra fields rejected (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "extraField": "not allowed"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FIELD",
+    "message": "extraField is not a valid field",
+    "field": "extraField"
+  }
+}
+```
+
+---
+
+## User Login Tests (POST /api/v1/users/login)
+
+### T111: Test successful user login
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+**Expected**: HTTP 200 with userId and JWT accessToken:
+
+```json
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Verify JWT token** at [jwt.io](https://jwt.io):
+- Header: `{"alg": "HS256", "typ": "JWT"}`
+- Payload contains: `userId`, `iat`, `exp` (expires in 1 hour)
+
+### T112: Test login with invalid email (HTTP 401)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "nonexistent@example.com",
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 401 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_CREDENTIALS",
+    "message": "Invalid email or password"
+  }
+}
+```
+
+### T113: Test login with wrong password (HTTP 401)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "password": "wrongpassword"
+  }'
+```
+
+**Expected**: HTTP 401 with identical error message (prevents user enumeration):
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_CREDENTIALS",
+    "message": "Invalid email or password"
+  }
+}
+```
+
+### T114: Test login with invalid email format (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "invalid-email",
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 400 with validation error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FORMAT",
+    "message": "email format is invalid",
+    "field": "email"
+  }
+}
+```
+
+### T115: Test login with password too short (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "short"
+  }'
+```
+
+**Expected**: HTTP 400 with validation error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FORMAT",
+    "message": "password must be 8-128 characters long",
+    "field": "password"
+  }
+}
+```
+
+### T116: Test login with missing fields (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com"
+  }'
+```
+
+**Expected**: HTTP 400 with validation error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "MISSING_VALUE",
+    "message": "Required",
+    "field": "password"
+  }
+}
+```
+
+### T117: Test login with extra fields rejected (HTTP 400)
+
+```bash
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "extraField": "not allowed"
+  }'
+```
+
+**Expected**: HTTP 400 with error:
+
+```json
+{
+  "error": {
+    "requestId": "...",
+    "code": "INVALID_FIELD",
+    "message": "extraField is not a valid field",
+    "field": "extraField"
+  }
+}
+```
+
+### T118: Test login email is case-insensitive
+
+```bash
+# First register with lowercase
+curl -X POST http://localhost:3000/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "casetest@example.com",
+    "password": "password123"
+  }'
+
+# Then login with uppercase
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "CASETEST@EXAMPLE.COM",
+    "password": "password123"
+  }'
+```
+
+**Expected**: HTTP 200 - Login successful with same credentials regardless of email case
 
 ---
 
@@ -826,7 +1046,7 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 
 ### User Registration Tests
 
-- [ ] T101: User registered successfully (201)
+- [ ] T101: User registered successfully with userId and accessToken (201)
 - [ ] T102: Duplicate email rejected (409)
 - [ ] T103: Invalid email format rejected (400)
 - [ ] T104: Password too short rejected (400)
@@ -835,6 +1055,18 @@ curl -X GET "http://localhost:3000/api/v1/announcements/${ID2}"
 - [ ] T107: Missing password rejected (400)
 - [ ] T108: Malformed JSON rejected (400)
 - [ ] T109: Email normalized to lowercase (201)
+- [ ] T110: Extra fields rejected (400)
+
+### User Login Tests
+
+- [ ] T111: User logged in successfully with userId and accessToken (200)
+- [ ] T112: Invalid email rejected (401)
+- [ ] T113: Wrong password rejected with identical error message (401)
+- [ ] T114: Invalid email format rejected (400)
+- [ ] T115: Password too short rejected (400)
+- [ ] T116: Missing fields rejected (400)
+- [ ] T117: Extra fields rejected (400)
+- [ ] T118: Email is case-insensitive (200)
 
 ### Admin Delete Announcement Tests
 
