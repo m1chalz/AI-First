@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "specification nr 057 (the branch is already created): based on spec 048 (not yet merged to main), prepare the specification for implementing the navigation in web app. Navigation bar should look like the design: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=948-3993&m=dev. Lost Pet should navigate to the list of lost pet announcements (the list currently visible at '/')."
 
+## Clarifications
+
+### Session 2025-12-16
+
+- Q: How should the navigation bar adapt on mobile/tablet screens (<768px width)? → A: Desktop-only, defer mobile - hide navigation on mobile, implement in future iteration
+- Q: Should the navigation bar remain fixed at the top of the viewport (sticky) or scroll with page content? → A: Scrolls with page - navigation scrolls off screen as user scrolls down
+- Q: How should navigation handle unsaved changes during announcement creation? → A: Allow navigation, lose data - navigate immediately without warning, all unsaved data is lost
+- Q: What should happen when user clicks the currently active/selected navigation item? → A: No action - page remains at current scroll position, no navigation event triggered
+- Q: Should Home navigate to `/` (showing landing page) or `/home`, given `/` currently shows lost pets list? → A: Home at /, lost pets at /lost-pets only (removes backward compatibility requirement)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Navigate Between Main Sections Using Top Navigation Bar (Priority: P1)
@@ -17,11 +27,11 @@ Users can use the horizontal navigation bar at the top of the screen to quickly 
 
 **Acceptance Scenarios**:
 
-1. **Given** user is on any page in the web app, **When** they click "Home" in the navigation bar, **Then** they are navigated to the landing page at `/` (or `/home`)
+1. **Given** user is on any page in the web app, **When** they click "Home" in the navigation bar, **Then** they are navigated to the landing page at `/`
 2. **Given** user is on any page in the web app, **When** they click "Lost Pet" in the navigation bar, **Then** they are navigated to the lost pet announcements list at `/lost-pets`
 3. **Given** user is on any page in the web app, **When** they click "Found Pet" in the navigation bar, **Then** they are navigated to the found pet announcements list at `/found-pets`
 4. **Given** user is on any page in the web app, **When** they click "Contact Us" in the navigation bar, **Then** they are navigated to the contact page at `/contact`
-5. **Given** user is not logged in, **When** they click "Account" in the navigation bar, **Then** they are navigated to the authentication page at `/account` (or `/login`)
+5. **Given** user is not logged in, **When** they click "Account" in the navigation bar, **Then** they are navigated to the authentication page at `/account`
 6. **Given** user is logged in, **When** they click "Account" in the navigation bar, **Then** they are navigated to the account management page at `/account`
 7. **Given** user is on a specific section, **When** the navigation bar renders, **Then** the current section's navigation item is visually highlighted (active state)
 
@@ -65,21 +75,21 @@ When users navigate between sections, the navigation bar persists and correctly 
 ### Edge Cases
 
 - **What happens when a navigation destination is not yet implemented?**: The navigation item should remain enabled and navigate to a placeholder page displaying "Coming soon" or similar message
-- **How does the navigation bar behave on different screen sizes?**: On desktop (>768px), display full horizontal navigation bar. On mobile/tablet (<768px), consider responsive design (hamburger menu, stacked layout, or simplified navigation) - specific mobile behavior to be determined during implementation
-- **What happens when user clicks the currently active navigation item?**: The page should remain on the current section (no navigation occurs) or scroll to top of the page, following standard web conventions
-- **How does the navigation bar handle very long page content?**: The navigation bar should remain fixed at the top of the viewport (sticky header) so it's always accessible, or scroll with the page following standard web patterns
-- **What happens when user is in the middle of creating an announcement and clicks a navigation item?**: The system should either prevent navigation with a confirmation dialog ("You have unsaved changes. Are you sure you want to leave?") or allow navigation and lose unsaved data - specific behavior to be determined based on user experience considerations
+- **How does the navigation bar behave on different screen sizes?**: Navigation bar is designed for desktop screens (≥768px width). On mobile/tablet (<768px), the navigation bar will be hidden. Mobile responsive navigation will be implemented in a future iteration.
+- **What happens when user clicks the currently active navigation item?**: No action occurs. The page remains at the current scroll position and no navigation event is triggered. This provides clear feedback that the user is already on the selected section.
+- **How does the navigation bar handle very long page content?**: The navigation bar scrolls with the page content. When user scrolls down, the navigation bar moves off screen. User must scroll back to top to access navigation.
+- **What happens when user is in the middle of creating an announcement and clicks a navigation item?**: Navigation occurs immediately without warning. All unsaved announcement data (form fields, uploaded photos, entered text) is lost. User must restart the announcement creation process if they navigate away.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
 - **FR-001**: Web application MUST include a horizontal navigation bar with the following items in order: "Home", "Lost Pet", "Found Pet", "Contact Us", and "Account"
-- **FR-002**: "Home" navigation item MUST navigate to the landing page at `/` or `/home`, accessible without authentication
+- **FR-002**: "Home" navigation item MUST navigate to the landing page at `/`, accessible without authentication
 - **FR-003**: "Lost Pet" navigation item MUST navigate to the lost pet announcements list at `/lost-pets`, accessible without authentication
 - **FR-004**: "Found Pet" navigation item MUST navigate to the found pet announcements list at `/found-pets`, accessible without authentication
 - **FR-005**: "Contact Us" navigation item MUST navigate to the contact page at `/contact`, accessible without authentication
-- **FR-006**: When user is not logged in, "Account" navigation item MUST navigate to the authentication page at `/account` or `/login`
+- **FR-006**: When user is not logged in, "Account" navigation item MUST navigate to the authentication page at `/account`
 - **FR-007**: When user is logged in, "Account" navigation item MUST navigate to the account management page at `/account`
 - **FR-008**: Navigation bar MUST be visible and accessible from all pages in the web application
 - **FR-009**: Navigation bar MUST visually indicate the currently active section (highlighted/selected state)
@@ -92,7 +102,10 @@ When users navigate between sections, the navigation bar persists and correctly 
 - **FR-016**: When a navigation destination is not yet implemented, the navigation item MUST remain enabled and navigate to a placeholder page
 - **FR-017**: Navigation bar MUST update the active state when user navigates between sections (including browser back/forward navigation)
 - **FR-018**: Navigation bar MUST display correct active state when user directly accesses a URL or uses a bookmark
-- **FR-019**: Current route at `/` (root) MUST be remapped to display lost pet announcements list at `/lost-pets`, maintaining backward compatibility
+- **FR-019**: Navigation bar MUST be displayed only on desktop screens (≥768px width) and hidden on mobile/tablet screens (<768px width)
+- **FR-020**: Navigation bar MUST scroll with page content (not fixed/sticky positioning) and move off screen when user scrolls down
+- **FR-021**: Navigation MUST allow immediate navigation away from announcement creation flow without displaying confirmation dialog or warning, resulting in loss of all unsaved data
+- **FR-022**: When user clicks the currently active navigation item, the system MUST NOT trigger any navigation event, page reload, or scroll action - the page remains in its current state
 
 ### Key Entities
 
@@ -111,7 +124,7 @@ When users navigate between sections, the navigation bar persists and correctly 
 - **SC-005**: Navigation bar correctly reflects the current section when user uses browser back/forward buttons or direct URL access
 - **SC-006**: Navigation bar visual design matches Figma wireframes within acceptable tolerance (colors, spacing, typography, icons)
 - **SC-007**: Navigation items provide visual feedback on hover/interaction
-- **SC-008**: Lost pet announcements list is accessible at both `/` (legacy) and `/lost-pets` (new) URLs
+- **SC-008**: Home landing page is accessible at `/` and lost pet announcements list is accessible at `/lost-pets`
 
 ## Assumptions
 
@@ -119,8 +132,8 @@ When users navigate between sections, the navigation bar persists and correctly 
 - **Routing Library**: The web application uses React Router (v6) for client-side routing (confirmed from existing App.tsx).
 - **Icons**: Navigation item icons will be sourced from the Figma design assets or a compatible icon library (e.g., Heroicons, Lucide React, or custom SVG icons matching the design).
 - **Authentication State**: The application has a mechanism to determine user authentication status (session, token, or context) to control Account navigation behavior.
-- **Responsive Design**: Initial implementation focuses on desktop layout (>768px width). Mobile/tablet responsive behavior will be addressed in a future iteration or as part of this implementation if time permits.
-- **Sticky Header**: Navigation bar behavior (fixed/sticky vs scrolling) will follow standard web patterns and may be adjusted based on user testing feedback.
+- **Responsive Design**: Implementation is desktop-only (≥768px width). Navigation bar will be hidden on mobile/tablet screens (<768px). Mobile/tablet responsive navigation (hamburger menu or alternative layout) will be implemented in a future iteration.
+- **Scroll Behavior**: Navigation bar uses default positioning and scrolls with page content. It is not fixed/sticky to the viewport top. Users must scroll to top of page to access navigation when viewing content below the fold.
 - **Landing Page**: The landing page content (Home tab destination) is implemented or will be implemented as part of feature 049-landing-page (referenced in spec 048).
 - **Found Pet Announcements**: The found pet announcements list page exists or will be created as a placeholder similar to the lost pet announcements list.
 - **Contact Page**: The contact page exists or will be created as a placeholder with "Coming soon" message as specified in spec 048.
