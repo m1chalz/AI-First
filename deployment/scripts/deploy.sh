@@ -63,6 +63,29 @@ setup_directories() {
   log_success "Persistent directories created"
 }
 
+setup_env_file() {
+  log_info "Setting up environment configuration..."
+  
+  if [ ! -f "$DEPLOYMENT_DIR/.env" ]; then
+    if [ -f "$DEPLOYMENT_DIR/.env.example" ]; then
+      cp "$DEPLOYMENT_DIR/.env.example" "$DEPLOYMENT_DIR/.env"
+      
+      # Generate secure JWT_SECRET
+      JWT_SECRET=$(openssl rand -base64 32)
+      sed -i.bak "s|JWT_SECRET=.*|JWT_SECRET=$JWT_SECRET|" "$DEPLOYMENT_DIR/.env"
+      rm -f "$DEPLOYMENT_DIR/.env.bak"
+      
+      log_success "Environment file created with secure JWT_SECRET"
+      log_warning "IMPORTANT: Keep your .env file secure and never commit it to version control!"
+    else
+      log_error ".env.example not found. Please create it first."
+      exit 1
+    fi
+  else
+    log_success "Environment file already exists"
+  fi
+}
+
 build_images() {
   log_info "Building Docker images..."
   
@@ -132,6 +155,9 @@ main() {
   echo ""
   
   setup_directories
+  echo ""
+  
+  setup_env_file
   echo ""
   
   build_images

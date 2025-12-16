@@ -32,8 +32,9 @@ services:
     volumes:
       - /var/lib/petspot/db:/app/server/db
       - /var/lib/petspot/images:/app/server/public/images
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
       - DATABASE_PATH=/app/server/db/pets.db
     networks:
       - petspot-network
