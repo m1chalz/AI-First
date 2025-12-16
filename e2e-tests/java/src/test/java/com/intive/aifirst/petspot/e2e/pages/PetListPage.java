@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.e2e.pages;
 
+import com.intive.aifirst.petspot.e2e.utils.DebugScreenshotHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -109,6 +110,7 @@ public class PetListPage {
      * Used for navigation to pet details page.
      */
     public void clickFirstPet() {
+        DebugScreenshotHelper.beforeAction(driver, "click_first_pet");
         List<WebElement> petItems = getPetItems();
         if (!petItems.isEmpty()) {
             petItems.get(0).click();
@@ -121,6 +123,7 @@ public class PetListPage {
      * Clicks the add button to create a new pet announcement.
      */
     public void clickAddButton() {
+        DebugScreenshotHelper.beforeAction(driver, "click_add_button");
         addButton.click();
     }
     
@@ -309,16 +312,32 @@ public class PetListPage {
     // ========================================
     
     /**
-     * Scrolls the pet list to the bottom.
-     * Uses JavaScript to scroll the list container to its maximum height.
+     * Scrolls the page to the bottom.
+     * Uses JavaScript to scroll the window/document (not just the list container).
      */
     public void scrollToBottom() {
+        DebugScreenshotHelper.beforeAction(driver, "scroll_to_bottom");
         try {
-            WebElement petListElement = driver.findElement(petListLocator);
             org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
-            js.executeScript("arguments[0].scrollTop = arguments[0].scrollHeight", petListElement);
+            // Scroll the window/document instead of just the list container
+            js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
         } catch (Exception e) {
             System.err.println("Failed to scroll to bottom: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Scrolls the page down by a specific amount (pixels).
+     * 
+     * @param pixels Number of pixels to scroll down
+     */
+    public void scrollDown(int pixels) {
+        DebugScreenshotHelper.beforeAction(driver, "scroll_down_" + pixels + "px");
+        try {
+            org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+            js.executeScript("window.scrollBy(0, " + pixels + ")");
+        } catch (Exception e) {
+            System.err.println("Failed to scroll down: " + e.getMessage());
         }
     }
     
@@ -365,6 +384,7 @@ public class PetListPage {
      * @param animalId The animal ID to click (e.g., "1", "2", "3")
      */
     public void clickAnimalCard(String animalId) {
+        DebugScreenshotHelper.beforeAction(driver, "click_animal_card_" + animalId);
         try {
             String xpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
             WebElement animalCard = driver.findElement(By.xpath(xpath));

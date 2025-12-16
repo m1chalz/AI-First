@@ -4,10 +4,13 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.HasCdp;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.Map;
 
 /**
  * Manages WebDriver instances with ThreadLocal isolation for parallel test execution.
@@ -102,11 +105,10 @@ public class WebDriverManager {
         options.addArguments("--remote-allow-origins=*");  // Allow remote connections
         options.addArguments("--no-sandbox");  // Required for some environments
         
-        // Block geolocation - this makes the app show ALL announcements (no location filter)
-        // When CDP geolocation mock doesn't work (Chrome version mismatch), blocking is safer
+        // Allow geolocation - we'll mock it via CDP (Chrome DevTools Protocol)
         // 1 = allow, 2 = block
         java.util.Map<String, Object> prefs = new java.util.HashMap<>();
-        prefs.put("profile.default_content_setting_values.geolocation", 2);  // 2 = block
+        prefs.put("profile.default_content_setting_values.geolocation", 1);  // 1 = allow
         options.setExperimentalOption("prefs", prefs);
         
         // Check if we should use Selenium Grid (Docker) or local ChromeDriver
@@ -141,11 +143,15 @@ public class WebDriverManager {
     
     /**
      * Quits the WebDriver instance and removes it from ThreadLocal storage.
+     * Also clears any pending mock geolocation to ensure clean state for next scenario.
      * 
      * <p>This method should be called in @After hooks to ensure proper cleanup.
      * Safe to call even if no driver exists (no-op in that case).
      */
     public static void quitDriver() {
+        // Clear mock geolocation first (before driver is quit)
+        pendingMockGeolocation.remove();
+        
         if (driver.get() != null) {
             driver.get().quit();
             driver.remove();  // Prevent memory leaks
@@ -153,28 +159,68 @@ public class WebDriverManager {
     }
     
     /**
-     * ThreadLocal storage for mock coordinates to apply after page navigation.
+     * ThreadLocal storage for mock coordinates to apply via CDP.
      */
     private static final ThreadLocal<double[]> pendingMockGeolocation = new ThreadLocal<>();
     
     /**
-     * Sets mock geolocation coordinates using JavaScript injection.
-     * This approach works with any Chrome version (no CDP dependency).
+     * Sets mock geolocation coordinates using Chrome DevTools Protocol (CDP).
+     * This sets the geolocation at browser level, persisting across page navigations.
      * 
-     * <p>The coordinates are stored and applied when injectGeolocationMock() is called
-     * after the page starts loading but before the app requests geolocation.
+     * <p>Must be called BEFORE navigating to the page that requests location.
      * 
      * @param latitude GPS latitude coordinate
      * @param longitude GPS longitude coordinate
      */
     public static void setMockGeolocation(double latitude, double longitude) {
         pendingMockGeolocation.set(new double[]{latitude, longitude});
-        System.out.println("Set pending mock geolocation: " + latitude + ", " + longitude);
+        System.out.println("📍 Set pending mock geolocation: " + latitude + ", " + longitude);
+        
+        // Apply immediately if driver exists
+        if (hasDriver()) {
+            applyGeolocationOverride(latitude, longitude);
+        }
+    }
+    
+    /**
+     * Applies geolocation override using Chrome DevTools Protocol via executeCdpCommand.
+     * This works with both local ChromeDriver and RemoteWebDriver (Selenium Grid).
+     */
+    private static void applyGeolocationOverride(double latitude, double longitude) {
+        WebDriver webDriver = driver.get();
+        if (webDriver == null) {
+            System.out.println("⚠️ No driver available for CDP geolocation override");
+            return;
+        }
+        
+        try {
+            // For RemoteWebDriver, we need to augment it to get CDP access
+            WebDriver augmentedDriver = webDriver;
+            if (webDriver instanceof RemoteWebDriver) {
+                augmentedDriver = new Augmenter().augment(webDriver);
+            }
+            
+            if (augmentedDriver instanceof HasCdp hasCdp) {
+                // Use executeCdpCommand which works with any Chrome version
+                Map<String, Object> params = Map.of(
+                    "latitude", latitude,
+                    "longitude", longitude,
+                    "accuracy", 100.0
+                );
+                hasCdp.executeCdpCommand("Emulation.setGeolocationOverride", params);
+                System.out.println("✅ CDP geolocation override set via executeCdpCommand: " + latitude + ", " + longitude);
+            } else {
+                System.out.println("⚠️ Driver does not support CDP - will use JS injection fallback");
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ CDP geolocation override failed: " + e.getMessage());
+            System.out.println("Will fall back to JavaScript injection after page load");
+        }
     }
     
     /**
      * Injects JavaScript to override the browser's geolocation API.
-     * Must be called after page navigation but before the app requests location.
+     * Used as fallback when CDP is not available.
      */
     public static void injectGeolocationMock() {
         double[] coords = pendingMockGeolocation.get();
@@ -187,45 +233,77 @@ public class WebDriverManager {
         if (webDriver instanceof JavascriptExecutor js) {
             try {
                 String script = String.format("""
+                    // Override getCurrentPosition
                     window.navigator.geolocation.getCurrentPosition = function(success, error, options) {
-                        success({
-                            coords: {
-                                latitude: %f,
-                                longitude: %f,
-                                accuracy: 100,
-                                altitude: null,
-                                altitudeAccuracy: null,
-                                heading: null,
-                                speed: null
-                            },
-                            timestamp: Date.now()
-                        });
+                        setTimeout(function() {
+                            success({
+                                coords: {
+                                    latitude: %f,
+                                    longitude: %f,
+                                    accuracy: 100,
+                                    altitude: null,
+                                    altitudeAccuracy: null,
+                                    heading: null,
+                                    speed: null
+                                },
+                                timestamp: Date.now()
+                            });
+                        }, 10);
                     };
+                    // Override watchPosition
                     window.navigator.geolocation.watchPosition = function(success, error, options) {
-                        success({
-                            coords: {
-                                latitude: %f,
-                                longitude: %f,
-                                accuracy: 100,
-                                altitude: null,
-                                altitudeAccuracy: null,
-                                heading: null,
-                                speed: null
-                            },
-                            timestamp: Date.now()
-                        });
+                        setTimeout(function() {
+                            success({
+                                coords: {
+                                    latitude: %f,
+                                    longitude: %f,
+                                    accuracy: 100,
+                                    altitude: null,
+                                    altitudeAccuracy: null,
+                                    heading: null,
+                                    speed: null
+                                },
+                                timestamp: Date.now()
+                            });
+                        }, 10);
                         return 1;
                     };
+                    // Override Permissions API
+                    if (navigator.permissions) {
+                        const originalQuery = navigator.permissions.query.bind(navigator.permissions);
+                        navigator.permissions.query = function(desc) {
+                            if (desc.name === 'geolocation') {
+                                return Promise.resolve({ state: 'granted', onchange: null });
+                            }
+                            return originalQuery(desc);
+                        };
+                    }
                     window.__geolocationMocked = true;
-                    console.log('Geolocation API mocked: %f, %f');
+                    console.log('Geolocation API mocked via JS: %f, %f');
                     """, coords[0], coords[1], coords[0], coords[1], coords[0], coords[1]);
                 
                 js.executeScript(script);
-                System.out.println("Injected geolocation mock via JavaScript: " + coords[0] + ", " + coords[1]);
+                System.out.println("✅ Injected geolocation mock via JavaScript: " + coords[0] + ", " + coords[1]);
             } catch (Exception e) {
-                System.err.println("Warning: JavaScript geolocation mock failed: " + e.getMessage());
+                System.err.println("⚠️ JavaScript geolocation mock failed: " + e.getMessage());
             }
         }
+    }
+    
+    /**
+     * Checks if mock geolocation is set.
+     * @return true if mock coordinates are pending
+     */
+    public static boolean hasMockGeolocation() {
+        return pendingMockGeolocation.get() != null;
+    }
+    
+    /**
+     * Gets the pending mock geolocation coordinates.
+     * @return array of [latitude, longitude] or null if not set
+     */
+    public static double[] getMockGeolocation() {
+        return pendingMockGeolocation.get();
     }
     
     /**
@@ -233,7 +311,24 @@ public class WebDriverManager {
      */
     public static void clearMockGeolocation() {
         pendingMockGeolocation.remove();
-        System.out.println("Cleared mock geolocation");
+        
+        // Try to clear CDP geolocation override if driver exists
+        WebDriver webDriver = driver.get();
+        if (webDriver != null) {
+            try {
+                WebDriver augmentedDriver = webDriver;
+                if (webDriver instanceof RemoteWebDriver) {
+                    augmentedDriver = new Augmenter().augment(webDriver);
+                }
+                if (augmentedDriver instanceof HasCdp hasCdp) {
+                    hasCdp.executeCdpCommand("Emulation.clearGeolocationOverride", Map.of());
+                }
+            } catch (Exception e) {
+                // Ignore - driver may be closed
+            }
+        }
+        System.out.println("🧹 Cleared mock geolocation");
     }
 }
+
 

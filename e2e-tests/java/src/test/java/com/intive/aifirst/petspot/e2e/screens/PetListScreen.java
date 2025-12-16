@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.e2e.screens;
 
+import com.intive.aifirst.petspot.e2e.utils.DebugScreenshotHelper;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -126,6 +127,8 @@ public class PetListScreen {
      * Used for navigation to pet details screen.
      */
     public void tapFirstPet() {
+        DebugScreenshotHelper.beforeAction(driver, "tap_first_pet");
+        
         List<WebElement> petItems = getPetItems();
         if (!petItems.isEmpty()) {
             petItems.get(0).click();
@@ -149,10 +152,13 @@ public class PetListScreen {
      * @param direction "up" or "down"
      */
     private void performSwipeScroll(String direction) {
+        DebugScreenshotHelper.beforeAction(driver, "scroll_" + direction);
+        
         try {
             Dimension size = driver.manage().window().getSize();
             int startX = size.width / 2;
-            int startY, endY;
+            int startY;
+            int endY;
             
             if ("down".equals(direction)) {
                 // Swipe from bottom to top = scroll down (content moves up)
@@ -195,10 +201,13 @@ public class PetListScreen {
      * @param direction "up" or "down"
      */
     private void performScrollSmall(String direction) {
+        DebugScreenshotHelper.beforeAction(driver, "scroll_small_" + direction);
+        
         try {
             Dimension size = driver.manage().window().getSize();
             int startX = size.width / 2;
-            int startY, endY;
+            int startY;
+            int endY;
             
             if ("up".equals(direction)) {
                 startY = size.height / 2;

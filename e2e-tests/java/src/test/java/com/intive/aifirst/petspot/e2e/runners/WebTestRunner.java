@@ -52,7 +52,12 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
             "junit:target/cucumber-web.xml"
 )
 public class WebTestRunner {
-    // No implementation needed - JUnit Platform Suite handles execution
-    // This class serves as a configuration entry point for Cucumber tests
+    
+    // Set skip.app.build BEFORE any hooks run
+    // This static initializer executes when the class is loaded by JUnit
+    static {
+        System.setProperty("skip.app.build", "true");
+        System.out.println("WebTestRunner: Set skip.app.build=true (web tests don't need mobile apps)");
+    }
 }
 

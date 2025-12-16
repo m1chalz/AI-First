@@ -144,6 +144,28 @@ public class TestDataApiHelper {
     }
     
     /**
+     * Gets announcement from API as raw JSON string (for debugging).
+     * 
+     * @param id Announcement ID
+     * @return Raw JSON response with status code
+     * @throws RuntimeException if API call fails
+     */
+    public static String getAnnouncementFromApi(String id) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + API_PATH + "/" + id))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+            
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return "Status: " + response.statusCode() + ", Body: " + response.body();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get announcement from API", e);
+        }
+    }
+    
+    /**
      * Gets an announcement by ID via API.
      * 
      * @param id Announcement UUID

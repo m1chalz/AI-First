@@ -9,7 +9,10 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Step definitions for Report Created Confirmation screen (Spec 047).

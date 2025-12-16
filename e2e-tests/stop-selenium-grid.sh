@@ -43,3 +43,5 @@ if [ -n "$REMAINING" ]; then
     echo "   docker ps --filter 'name=selenium' --filter 'name=seleniarm' -q | xargs docker rm -f"
 fi
 
+
+

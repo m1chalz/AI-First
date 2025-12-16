@@ -76,6 +76,16 @@ public class CommonSteps {
         lastCreatedPetName = petName;
         
         assertNotNull(lastCreatedAnnouncementId, "Announcement should be created");
+        
+        // DEBUG: Verify announcement exists in API immediately after creation
+        System.out.println("🔍 DEBUG: Verifying announcement in API...");
+        try {
+            String apiResponse = TestDataApiHelper.getAnnouncementFromApi(lastCreatedAnnouncementId);
+            System.out.println("✅ DEBUG: Announcement found in API: " + (apiResponse.contains(petName) ? "YES" : "NO"));
+            System.out.println("   Response snippet: " + apiResponse.substring(0, Math.min(200, apiResponse.length())));
+        } catch (Exception e) {
+            System.err.println("❌ DEBUG: Failed to verify announcement in API: " + e.getMessage());
+        }
     }
     
     /**

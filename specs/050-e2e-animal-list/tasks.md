@@ -196,6 +196,41 @@ Test 2 (location filtering + empty state) requires geolocation mocking which nee
 
 ---
 
+## Task 9: iOS Test Infrastructure Issues ⚠️
+
+### Issue 1: Simulator Not Auto-Started
+- **Status**: TODO - investigate
+- **Description**: E2E test does not automatically start iOS Simulator
+- **Impact**: User must manually open Simulator before running tests
+- **Expected**: Test should auto-start simulator or check if running
+- **Action**: Check AppiumDriverManager.java iOS driver creation
+
+### Issue 2: WebDriverAgent Connection Loop
+- **Status**: TODO - investigate  
+- **Description**: After manual simulator start, Appium loops with:
+  ```
+  [XCUITestDriver@86fa] connect ECONNREFUSED 127.0.0.1:8100
+  [XCUITestDriver@c216] Matched '/status' to command name 'getStatus'
+  [XCUITestDriver@c216] Proxying [GET /status] to [GET http://127.0.0.1:8100/status] with no body
+  ```
+- **Impact**: Tests cannot start - Appium cannot connect to WebDriverAgent
+- **Root Cause**: WebDriverAgent not running in simulator on port 8100
+- **Possible Solutions**:
+  - WebDriverAgent needs to be built/installed in simulator
+  - Check Appium XCUITest driver installation: `appium driver list`
+  - Try manual WDA setup: `xcrun simctl install booted <path-to-wda>`
+  - Check if Xcode command line tools configured: `xcode-select -p`
+- **Related**: Cursor sandbox blocks `~/.appium` access (see PROGRESS-2025-12-16.md)
+- **Action**: Must run from external terminal (iTerm/Terminal.app), not Cursor
+
+### Next Steps
+1. Verify Appium XCUITest driver installed: `appium driver list`
+2. Check WebDriverAgent location: `ls ~/.appium/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent/`
+3. Try building WDA manually if needed
+4. Document required pre-setup for iOS E2E tests
+
+---
+
 ## Execution Commands
 
 ```bash

@@ -24,6 +24,28 @@ export interface GeolocationContextValue {
 
 const GeolocationContext = createContext<GeolocationContextValue | null>(null);
 
+/**
+ * Checks for e2e test location override via URL parameters.
+ * Use ?e2eLat=51.1&e2eLng=17.0 to mock geolocation in e2e tests.
+ */
+function getE2ELocationOverride(): Coordinates | null {
+  if (typeof window === 'undefined') return null;
+
+  const params = new URLSearchParams(window.location.search);
+  const e2eLat = params.get('e2eLat');
+  const e2eLng = params.get('e2eLng');
+
+  if (e2eLat && e2eLng) {
+    const lat = parseFloat(e2eLat);
+    const lng = parseFloat(e2eLng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      console.log('[E2E] Using location override from URL:', lat, lng);
+      return { lat, lng };
+    }
+  }
+  return null;
+}
+
 export function GeolocationProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<GeolocationState>({
     coordinates: null,
@@ -59,6 +81,19 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetchLocationOnMount = async () => {
       setState((prev) => ({ ...prev, isLoading: true }));
+
+      // Check for e2e test location override first
+      const e2eOverride = getE2ELocationOverride();
+      if (e2eOverride) {
+        setState((prev) => ({
+          ...prev,
+          coordinates: e2eOverride,
+          error: null,
+          isLoading: false,
+          permissionCheckCompleted: true
+        }));
+        return;
+      }
 
       if (navigator.permissions) {
         try {

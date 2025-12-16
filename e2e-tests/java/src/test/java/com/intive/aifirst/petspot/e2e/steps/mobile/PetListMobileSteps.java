@@ -2,12 +2,18 @@ package com.intive.aifirst.petspot.e2e.steps.mobile;
 
 import com.intive.aifirst.petspot.e2e.screens.PetListScreen;
 import com.intive.aifirst.petspot.e2e.utils.AppiumDriverManager;
+import com.intive.aifirst.petspot.e2e.utils.DebugScreenshotHelper;
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Step definitions for Pet List mobile scenarios (Android + iOS).
@@ -394,13 +400,19 @@ public class PetListMobileSteps {
         System.out.println("Verifying announcement is visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
-        // Check page source for text (no interaction - avoids accidental clicks on mobile)
-        String pageSource = driver.getPageSource();
-        boolean found = pageSource.contains(petName);
+        // Check if element with petName is visible (iOS 18.1 compatible - no getPageSource)
+        var elements = driver.findElements(By.xpath(
+            "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
+        ));
+        boolean found = !elements.isEmpty();
         
-        assertTrue(found, "Should find announcement for " + petName + " in page source");
+        assertTrue(found, "Should find announcement for " + petName + " in UI");
         System.out.println("Verified: Announcement for " + petName + " is visible");
     }
     
@@ -409,13 +421,19 @@ public class PetListMobileSteps {
         System.out.println("Verifying announcement NOT visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
-        // Check page source for text (no interaction)
-        String pageSource = driver.getPageSource();
-        boolean found = pageSource.contains(petName);
+        // Check if element with petName is NOT visible (iOS 18.1 compatible)
+        var elements = driver.findElements(By.xpath(
+            "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
+        ));
+        boolean found = !elements.isEmpty();
         
-        assertFalse(found, "Should NOT find announcement for " + petName + " in page source");
+        assertFalse(found, "Should NOT find announcement for " + petName + " in UI");
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
     }
     
@@ -433,28 +451,47 @@ public class PetListMobileSteps {
         // Scroll through entire list to make sure we've checked everything
         int maxScrolls = 20;
         boolean found = false;
-        String lastPageSource = "";
+        int unchangedScrolls = 0;
         
         for (int i = 0; i < maxScrolls && !found; i++) {
-            String pageSource = driver.getPageSource();
+            // Check if element with petName is visible (iOS 18.1 compatible)
+            var elements = driver.findElements(By.xpath(
+                "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
+            ));
             
-            // Check if element is visible
-            if (pageSource.contains(petName)) {
+            if (!elements.isEmpty()) {
                 found = true;
-                System.out.println("  Scroll " + (i + 1) + ": Found '" + petName + "' in page source!");
+                System.out.println("  Scroll " + (i + 1) + ": Found '" + petName + "' in UI!");
                 break;
             }
             
-            // Check if we've reached the end (page source unchanged)
-            if (pageSource.equals(lastPageSource)) {
-                System.out.println("  Scroll " + (i + 1) + ": Reached end of list (no more content)");
-                break;
+            // Scroll and check if we've reached the end (2 consecutive unchanged scrolls)
+            int beforeCount = driver.findElements(By.xpath("//*[@visible='true' or @displayed='true']")).size();
+            petListScreen.scrollDown();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ie) {
+                // Ignore
             }
-            lastPageSource = pageSource;
+            int afterCount = driver.findElements(By.xpath("//*[@visible='true' or @displayed='true']")).size();
+            
+            if (beforeCount == afterCount) {
+                unchangedScrolls++;
+                if (unchangedScrolls >= 2) {
+                    System.out.println("  Scroll " + (i + 1) + ": Reached end of list (no more content)");
+                    break;
+                }
+            } else {
+                unchangedScrolls = 0;
+            }
             
             System.out.println("  Scroll " + (i + 1) + ": '" + petName + "' not found, scrolling down...");
             petListScreen.scrollDown();
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // Ignore
+            }
         }
         
         if (found) {
@@ -494,7 +531,11 @@ public class PetListMobileSteps {
         System.out.println("Verifying pet details are visible...");
         
         // Wait for pet details screen to load
-        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Look for pet details screen elements
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
@@ -608,7 +649,11 @@ public class PetListMobileSteps {
         System.out.println("Verifying microchip screen is visible...");
         
         // Wait for screen transition
-        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
         boolean found = false;
@@ -659,7 +704,11 @@ public class PetListMobileSteps {
         petListScreen.scrollDown();
         
         // Wait for scroll animation to complete
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         System.out.println("Scrolled down the page");
     }
     
@@ -674,7 +723,11 @@ public class PetListMobileSteps {
         System.out.println("Verifying empty state message is displayed...");
         
         // Wait a bit for the page to fully render
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Check if empty state is displayed
         assertTrue(petListScreen.isEmptyStateDisplayed(),
@@ -698,12 +751,61 @@ public class PetListMobileSteps {
         AppiumDriverManager.restartApp();
         
         // Wait for app to fully restart
-        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Re-initialize screen object
         petListScreen = new PetListScreen(driver);
         
         System.out.println("App restarted successfully");
+    }
+    
+    /**
+     * Uninstalls the application completely.
+     * This kills the app and removes all app data.
+     * 
+     * <p>Maps to Gherkin: "When I uninstall the app"
+     */
+    @When("I uninstall the app")
+    public void iUninstallTheApp() {
+        System.out.println("Uninstalling app...");
+        AppiumDriverManager.uninstallApp();
+    }
+    
+    /**
+     * Installs and launches the application.
+     * 
+     * <p>Maps to Gherkin: "When I install the app"
+     */
+    @When("I install the app")
+    public void iInstallTheApp() {
+        System.out.println("Installing app...");
+        AppiumDriverManager.installApp();
+        
+        // Re-initialize screen object
+        petListScreen = new PetListScreen(driver);
+        
+        System.out.println("App installed and ready for testing");
+    }
+    
+    /**
+     * Reinstalls the application (uninstall + install + launch).
+     * This completely resets app state including permissions and cached data.
+     * 
+     * <p>Maps to Gherkin: "When I reinstall the app"
+     */
+    @When("I reinstall the app")
+    public void iReinstallTheApp() {
+        System.out.println("Reinstalling app to reset state...");
+        AppiumDriverManager.reinstallApp();
+        
+        // Re-initialize screen object
+        petListScreen = new PetListScreen(driver);
+        
+        System.out.println("App reinstalled and ready for testing");
     }
     
     /**
@@ -721,7 +823,11 @@ public class PetListMobileSteps {
         AppiumDriverManager.setDeviceLocation(lat, lng);
         
         // Wait for location to be set
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         System.out.println("Device location set successfully");
     }
@@ -750,6 +856,7 @@ public class PetListMobileSteps {
             if (platformName.contains("android")) {
                 // Look for "Not Now" or "Cancel" button
                 try {
+                    DebugScreenshotHelper.beforeAction(driver, "click_not_now_android");
                     driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                         "new UiSelector().textContains(\"Not Now\")"
                     )).click();
@@ -757,6 +864,7 @@ public class PetListMobileSteps {
                     return;
                 } catch (Exception e1) {
                     try {
+                        DebugScreenshotHelper.beforeAction(driver, "click_cancel_android");
                         driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                             "new UiSelector().textContains(\"Cancel\")"
                         )).click();
@@ -768,17 +876,13 @@ public class PetListMobileSteps {
                 }
             } else { // iOS
                 try {
-                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
-                    System.out.println("Dismissed rationale dialog (Not Now)");
+                    // iOS uses specific accessibilityId from AnnouncementListView.swift
+                    DebugScreenshotHelper.beforeAction(driver, "click_cancel_ios");
+                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("startup.permissionPopup.cancel")).click();
+                    System.out.println("Dismissed rationale dialog (Cancel)");
                     return;
                 } catch (Exception e1) {
-                    try {
-                        driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
-                        System.out.println("Dismissed rationale dialog (Cancel)");
-                        return;
-                    } catch (Exception e2) {
-                        // No dialog present
-                    }
+                    // No dialog present
                 }
             }
             System.out.println("No rationale dialog present");
@@ -800,9 +904,11 @@ public class PetListMobileSteps {
             Thread.sleep(2000); // Wait for dialog to appear
         } catch (InterruptedException e) {}
         
-        // Same logic for both platforms
-        String pageSource = driver.getPageSource();
-        boolean found = pageSource.contains("Location") || pageSource.contains("location");
+        // Check for location dialog elements (iOS 18.1 compatible)
+        var locationElements = driver.findElements(By.xpath(
+            "//*[contains(@label, 'Location') or contains(@label, 'location') or contains(@name, 'Location') or contains(@name, 'location') or contains(@text, 'Location') or contains(@text, 'location')]"
+        ));
+        boolean found = !locationElements.isEmpty();
         
         assertTrue(found, "Location rationale dialog should be visible");
         System.out.println("Verified: Location rationale dialog is displayed");
@@ -817,10 +923,11 @@ public class PetListMobileSteps {
     public void theRationaleDialogShouldHaveSettingsButton() {
         System.out.println("Verifying Settings button in rationale dialog...");
         
-        // Same logic for both platforms
-        String pageSource = driver.getPageSource();
-        boolean found = pageSource.contains("Settings") || pageSource.contains("settings") ||
-                pageSource.contains("Go to Settings");
+        // Check for Settings button elements (iOS 18.1 compatible)
+        var settingsElements = driver.findElements(By.xpath(
+            "//*[contains(@label, 'Settings') or contains(@label, 'settings') or contains(@label, 'Go to Settings') or contains(@name, 'Settings') or contains(@name, 'settings') or contains(@text, 'Settings') or contains(@text, 'settings')]"
+        ));
+        boolean found = !settingsElements.isEmpty();
         
         assertTrue(found, "Rationale dialog should have Settings button");
         System.out.println("Verified: Settings button is present in rationale dialog");
@@ -839,34 +946,41 @@ public class PetListMobileSteps {
         
         if (platformName.contains("android")) {
             try {
+                DebugScreenshotHelper.beforeAction(driver, "click_not_now_android");
                 driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                     "new UiSelector().textContains(\"Not Now\")"
                 )).click();
             } catch (Exception e1) {
                 try {
+                    DebugScreenshotHelper.beforeAction(driver, "click_cancel_android");
                     driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                         "new UiSelector().textContains(\"Cancel\")"
                     )).click();
                 } catch (Exception e2) {
+                    DebugScreenshotHelper.capture(driver, "ERROR_cancel_button_not_found");
                     fail("Could not find dismiss button in rationale dialog");
                 }
             }
         } else { // iOS
             try {
-                driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
-            } catch (Exception e1) {
-                try {
-                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
-                } catch (Exception e2) {
-                    fail("Could not find dismiss button in rationale dialog");
-                }
+                // iOS uses specific accessibilityId from AnnouncementListView.swift
+                DebugScreenshotHelper.beforeAction(driver, "click_cancel_ios");
+                driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("startup.permissionPopup.cancel")).click();
+                System.out.println("Dismissed rationale dialog (Cancel)");
+            } catch (Exception e) {
+                DebugScreenshotHelper.capture(driver, "ERROR_cancel_button_not_found");
+                fail("Could not find Cancel button (startup.permissionPopup.cancel) in rationale dialog");
             }
         }
         
         System.out.println("Dismissed location rationale dialog");
         
         // Wait for dialog to close
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
     }
     
     // ========================================
@@ -885,38 +999,85 @@ public class PetListMobileSteps {
         
         int maxAttempts = 15;
         boolean found = false;
+        int unchangedScrolls = 0;
+        int lastVisibleCount = 0;
         
         for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
             System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
             
-            // Check page source for text (no interaction - avoids accidental clicks)
-            String pageSource = driver.getPageSource();
-            if (pageSource.contains(petName)) {
+            // Check if element with petName is visible (iOS 18.1 compatible - no getPageSource)
+            var elements = driver.findElements(By.xpath(
+                "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
+            ));
+            
+            if (!elements.isEmpty()) {
                 found = true;
-                System.out.println("Found '" + petName + "' in page source after " + (attempt + 1) + " scroll(s)");
+                System.out.println("✅ Found '" + petName + "' in UI after " + (attempt + 1) + " scroll(s)");
                 // Scroll up a bit to ensure element is not hidden behind FAB
                 petListScreen.scrollUpSmall();
-            } else {
-                // Use direct swipe gesture (works better with Compose)
-                petListScreen.scrollDown();
-                try { Thread.sleep(800); } catch (InterruptedException ie) {}
+                break;
             }
+            
+            // Count visible elements before scrolling
+            int visibleCountBefore = driver.findElements(By.xpath("//*")).size();
+            
+            // Scroll down
+            petListScreen.scrollDown();
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException ie) {
+                // Ignore
+            }
+            
+            // Count visible elements after scrolling
+            int visibleCountAfter = driver.findElements(By.xpath("//*")).size();
+            
+            // Detect end of list: if element count didn't change after 2 consecutive scrolls
+            if (Math.abs(visibleCountAfter - visibleCountBefore) < 5) {
+                unchangedScrolls++;
+                System.out.println("  ⚠️  List unchanged (" + unchangedScrolls + "/2)");
+                
+                if (unchangedScrolls >= 2) {
+                    System.out.println("  🛑 Reached end of list (no more content to load)");
+                    break;
+                }
+            } else {
+                unchangedScrolls = 0; // Reset counter if list changed
+            }
+            
+            lastVisibleCount = visibleCountAfter;
         }
         
         if (!found) {
-            // Debug: print what IS visible
-            System.out.println("=== DEBUG: Page source excerpt ===");
-            String pageSource = driver.getPageSource();
-            // Print just element names/texts to see what's visible
-            if (pageSource.length() > 2000) {
-                System.out.println(pageSource.substring(0, 2000));
-            } else {
-                System.out.println(pageSource);
+            // Debug: try to list visible elements
+            System.out.println("=== DEBUG: Visible elements (sample) ===");
+            try {
+                var allElements = driver.findElements(By.xpath("//*[@label or @text or @name]"));
+                System.out.println("Total elements with text: " + allElements.size());
+                
+                int shown = 0;
+                for (var elem : allElements) {
+                    if (shown >= 10) {
+                        break; // Show max 10 elements
+                    }
+                    
+                    String label = elem.getAttribute("label");
+                    String text = elem.getAttribute("text");
+                    String name = elem.getAttribute("name");
+                    String displayText = label != null ? label : (text != null ? text : name);
+                    
+                    if (displayText != null && !displayText.isEmpty() && displayText.length() > 3) {
+                        System.out.println("  - " + displayText.substring(0, Math.min(50, displayText.length())));
+                        shown++;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Could not list visible elements: " + e.getMessage());
             }
             System.out.println("=== END DEBUG ===");
         }
         
-        assertTrue(found, "Should find announcement for '" + petName + "' after scrolling " + maxAttempts + " times");
+        assertTrue(found, "Should find announcement for '" + petName + "' after scrolling");
     }
 }
 

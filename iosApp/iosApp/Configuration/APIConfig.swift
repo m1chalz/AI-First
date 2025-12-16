@@ -3,9 +3,9 @@ import Foundation
 /// API configuration for PetSpot backend
 enum APIConfig {
     /// Base URL for backend API server
-    /// Development: Local server on localhost:3000
+    /// Development: Use 127.0.0.1 for iOS simulator (more reliable than localhost)
     /// Production: Update this constant for production environment
-    static let baseURL = "http://localhost:3000"
+    static let baseURL = "http://127.0.0.1:3000"
     
     /// API version prefix
     static let apiVersion = "/api/v1"

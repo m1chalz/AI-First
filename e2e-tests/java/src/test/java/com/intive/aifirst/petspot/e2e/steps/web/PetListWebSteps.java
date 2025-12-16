@@ -1,6 +1,7 @@
 package com.intive.aifirst.petspot.e2e.steps.web;
 
 import com.intive.aifirst.petspot.e2e.pages.PetListPage;
+import com.intive.aifirst.petspot.e2e.utils.DebugScreenshotHelper;
 import com.intive.aifirst.petspot.e2e.utils.TestConfig;
 import com.intive.aifirst.petspot.e2e.utils.WebDriverManager;
 import io.cucumber.java.en.And;
@@ -16,7 +17,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Step definitions for Pet List web scenarios.
@@ -313,7 +317,7 @@ public class PetListWebSteps {
         // Store animal ID for use in subsequent steps
         this.currentAnimalId = animalId;
         // Just verify the card exists and is visible
-        String xpath = String.format("//*[@data-testid='animalList.item.%s']", animalId);
+        String xpath = String.format("//*[@data-testid='announcementList.item.%s']", animalId);
         org.openqa.selenium.WebElement card = driver.findElement(org.openqa.selenium.By.xpath(xpath));
         assertTrue(card.isDisplayed(), "Animal card " + animalId + " should be visible");
         System.out.println("Verified: Animal card " + animalId + " is visible");
@@ -376,11 +380,25 @@ public class PetListWebSteps {
     @When("I navigate to the pet list page")
     public void iNavigateToThePetListPage() {
         String baseUrl = TestConfig.getWebBaseUrl();
-        driver.get(baseUrl);
-        System.out.println("Navigated to: " + baseUrl);
+        
+        // Check if mock geolocation is set - use URL parameters for e2e testing
+        if (WebDriverManager.hasMockGeolocation()) {
+            double[] coords = WebDriverManager.getMockGeolocation();
+            // Append e2e location override parameters to URL
+            String urlWithLocation = baseUrl + "?e2eLat=" + coords[0] + "&e2eLng=" + coords[1];
+            System.out.println("📍 Navigating with e2e location override: " + urlWithLocation);
+            driver.get(urlWithLocation);
+        } else {
+            driver.get(baseUrl);
+            System.out.println("Navigated to: " + baseUrl);
+        }
         
         // Wait for page to load
         petListPage.waitForPetListVisible(10);
+        
+        // Take debug screenshot after page load
+        DebugScreenshotHelper.capture(driver, "page_loaded" + 
+            (WebDriverManager.hasMockGeolocation() ? "_with_location" : "_no_location"));
     }
     
     @When("I navigate to the pet list page with location {string} {string}")
@@ -472,10 +490,17 @@ public class PetListWebSteps {
         System.out.println("Looking for announcement: " + petName);
         
         // Wait for data to load - need longer wait when multiple announcements are created
-        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
+        
+        // Take debug screenshot before verification
+        DebugScreenshotHelper.capture(driver, "verify_announcement_" + petName.replace(" ", "_"));
         
         // Find announcement by pet name in the list
-        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         
         boolean found = false;
         for (WebElement item : items) {
@@ -495,10 +520,17 @@ public class PetListWebSteps {
         System.out.println("Verifying announcement NOT visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
+        
+        // Take debug screenshot before verification
+        DebugScreenshotHelper.capture(driver, "verify_NOT_visible_" + petName.replace(" ", "_"));
         
         // Find announcement by pet name in the list
-        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         
         boolean found = false;
         for (WebElement item : items) {
@@ -523,10 +555,17 @@ public class PetListWebSteps {
         System.out.println("SOFT ASSERT: Checking if announcement NOT visible: " + petName);
         
         // Wait a bit for data to load
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
+        
+        // Take debug screenshot before soft assertion
+        DebugScreenshotHelper.capture(driver, "soft_assert_NOT_visible_" + petName.replace(" ", "_"));
         
         // Find announcement by pet name in the list
-        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         
         boolean found = false;
         for (WebElement item : items) {
@@ -541,11 +580,12 @@ public class PetListWebSteps {
             // Record failure but don't throw - test continues
             com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addFailure(
                 "I should NOT see the announcement for \"" + petName + "\" (soft assert)",
-                "Found '" + petName + "' but expected NOT to see it (web location filtering pending - spec 053)"
+                "Found '" + petName + "' but expected NOT to see it (location filtering should hide distant announcements)"
             );
         } else {
+            System.out.println("✅ Location filtering working: '" + petName + "' is correctly NOT visible");
             com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addSuccess(
-                "'" + petName + "' is NOT visible"
+                "'" + petName + "' is correctly NOT visible (location filtering works)"
             );
         }
     }
@@ -554,7 +594,7 @@ public class PetListWebSteps {
     public void iTapOnTheAnnouncementFor(String petName) {
         System.out.println("Tapping on announcement: " + petName);
         
-        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         
         for (WebElement item : items) {
             String text = item.getText();
@@ -615,7 +655,11 @@ public class PetListWebSteps {
         }
         
         // Wait for modal to disappear and list to be visible
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         petListPage.waitForPetListVisible(5);
     }
     
@@ -681,10 +725,14 @@ public class PetListWebSteps {
         System.out.println("Verifying order: " + firstPetName + " before " + secondPetName);
         
         // Wait for data to load - need longer wait when multiple announcements are created
-        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Get all announcement items in order
-        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+        List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         
         int firstIndex = -1;
         int secondIndex = -1;
@@ -724,7 +772,11 @@ public class PetListWebSteps {
         petListPage.scrollToBottom();
         
         // Wait for scroll animation to complete
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         System.out.println("Scrolled down the page");
     }
     
@@ -739,7 +791,11 @@ public class PetListWebSteps {
         System.out.println("Verifying empty state message is displayed...");
         
         // Wait a bit for the page to fully render
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Check if empty state is displayed
         assertTrue(petListPage.isEmptyStateDisplayed(),
@@ -755,15 +811,30 @@ public class PetListWebSteps {
      * Refreshes the web page to reload data from API.
      * For web, "restart app" means refreshing the page.
      * 
+     * <p>If no page is loaded yet (current URL is empty or "data:,"), this is a no-op.
+     * The subsequent "navigate to pet list page" step will load fresh data anyway.
+     * 
      * <p>Maps to Gherkin: "When I restart the app"
      */
     @When("I restart the app")
     public void iRestartTheApp() {
+        String currentUrl = driver.getCurrentUrl();
+        
+        // Skip refresh if no page is loaded yet (empty URL or data:, URL)
+        if (currentUrl == null || currentUrl.isEmpty() || currentUrl.startsWith("data:")) {
+            System.out.println("Web: Skipping restart (no page loaded yet). Next navigation will load fresh data.");
+            return;
+        }
+        
         System.out.println("Refreshing page to reload data...");
         driver.navigate().refresh();
         
         // Wait for page to reload
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // Ignore
+        }
         
         // Re-initialize page object
         petListPage = new PetListPage(driver);
@@ -773,15 +844,17 @@ public class PetListWebSteps {
     }
     
     /**
-     * Sets device location - NO-OP for web (location mocking requires spec 053).
-     * This step exists for cross-platform feature file compatibility.
+     * Sets device location using Chrome DevTools Protocol geolocation override.
+     * This enables location-based filtering in the web app.
      * 
      * <p>Maps to Gherkin: "When I set device location to {string} {string}"
      */
     @When("I set device location to {string} {string}")
     public void iSetDeviceLocationTo(String latitude, String longitude) {
-        System.out.println("Web: Skipping device location (spec 053 pending). Would set: " + latitude + ", " + longitude);
-        // TODO: Implement with Selenium CDP when spec 053 is done
+        double lat = Double.parseDouble(latitude);
+        double lng = Double.parseDouble(longitude);
+        System.out.println("📍 Web: Setting device location to: " + lat + ", " + lng);
+        WebDriverManager.setMockGeolocation(lat, lng);
     }
     
     // ========================================
@@ -826,6 +899,7 @@ public class PetListWebSteps {
     /**
      * Scrolls down the list until the specified announcement is visible.
      * Will scroll up to MAX_SCROLL_ATTEMPTS times before failing.
+     * Takes debug screenshots after each scroll to track progress.
      * 
      * <p>Maps to Gherkin: "When I scroll until I see the announcement for {string}"
      */
@@ -836,24 +910,58 @@ public class PetListWebSteps {
         int maxAttempts = 10;
         boolean found = false;
         
+        // DEBUG: Check initial page state
+        List<WebElement> initialItems = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
+        System.out.println("🔍 DEBUG: Initial announcements count: " + initialItems.size());
+        
+        // Take initial screenshot
+        DebugScreenshotHelper.capture(driver, "scroll_START_looking_for_" + petName.replace(" ", "_"));
+        
         for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
             System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
             
             // Check if announcement is visible
-            List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'animalList.item.')]"));
+            List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
             for (WebElement item : items) {
                 if (item.getText().contains(petName)) {
                     found = true;
-                    System.out.println("Found announcement for: " + petName + " after " + (attempt + 1) + " scroll(s)");
+                    System.out.println("✅ Found announcement for: " + petName + " after " + (attempt + 1) + " scroll(s)");
+                    // Scroll the found element into view
+                    ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(
+                        "arguments[0].scrollIntoView({behavior: 'instant', block: 'center'});", item);
+                    try { Thread.sleep(200); } catch (InterruptedException e) { }
+                    // Take screenshot when found (element is now visible)
+                    DebugScreenshotHelper.capture(driver, "scroll_FOUND_" + petName.replace(" ", "_"));
                     break;
                 }
             }
             
             if (!found) {
-                // Scroll down
-                petListPage.scrollToBottom();
-                try { Thread.sleep(500); } catch (InterruptedException e) {}
+                // Scroll down by 500px increments
+                petListPage.scrollDown(500);
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    // Ignore
+                }
+                // Take screenshot after each scroll
+                DebugScreenshotHelper.capture(driver, "scroll_attempt_" + (attempt + 1) + "_for_" + petName.replace(" ", "_"));
             }
+        }
+        
+        // DEBUG: Final state if not found
+        if (!found) {
+            System.err.println("❌ DEBUG: Failed to find '" + petName + "' after " + maxAttempts + " scrolls");
+            List<WebElement> finalItems = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
+            System.err.println("   Final announcements count: " + finalItems.size());
+            System.err.println("   Pet names visible on page:");
+            for (int i = 0; i < Math.min(8, finalItems.size()); i++) {
+                String text = finalItems.get(i).getText();
+                String firstLine = text.split("\n")[0];
+                System.err.println("   - " + firstLine);
+            }
+            // Take final screenshot on failure
+            DebugScreenshotHelper.capture(driver, "scroll_FAILED_to_find_" + petName.replace(" ", "_"));
         }
         
         assertTrue(found, "Should find announcement for " + petName + " after scrolling (max " + maxAttempts + " attempts)");

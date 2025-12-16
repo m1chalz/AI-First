@@ -134,7 +134,11 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <testFailureIgnore>false</testFailureIgnore>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <!-- Enable network access for localhost connections (Appium, Selenium Grid) -->
+                    <argLine>-Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true</argLine>
+                    <!-- Disable test isolation (allows network access) -->
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <useManifestOnlyJar>false</useManifestOnlyJar>
                     <includes>
                         <include>**/*Runner.java</include>
                         <include>**/*Test.java</include>

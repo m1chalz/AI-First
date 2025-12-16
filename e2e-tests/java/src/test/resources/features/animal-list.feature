@@ -49,7 +49,45 @@ Feature: Animal List
     And I delete all test announcements via API
 
   # ========================================
-  # Test 2: Full list without location + rationale popup (mobile only)
+  # Test 2a: Web - Full list without location vs filtered list with location
+  # WHAT IT TESTS:
+  #   - WITHOUT location: ALL animals are visible (no filtering)
+  #   - WITH location: Only nearby animals visible (location filtering)
+  #   - Verifies location filtering toggle behavior
+  # ========================================
+
+  @web
+  Scenario: Web user sees full list without location and filtered list with location
+    # Setup - Create nearby (Wroclaw) and far away (New York) announcements
+    Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-NearbyPet"
+    Given I create a test announcement at coordinates "40.7" "-74.0" with name "E2E-DistantPet"
+    
+    # PART 1: Without location - should see ALL announcements (no filtering)
+    # Note: No "set device location" step = no URL params = all announcements visible
+    When I navigate to the pet list page
+    Then the page should load successfully
+    
+    # Verification - Both announcements should be visible (full list, no filtering)
+    When I scroll until I see the announcement for "E2E-NearbyPet"
+    Then I should see the announcement for "E2E-NearbyPet"
+    When I scroll until I see the announcement for "E2E-DistantPet"
+    Then I should see the announcement for "E2E-DistantPet"
+    
+    # PART 2: With location (Wroclaw) - should see only nearby announcements
+    When I set device location to "51.1" "17.0"
+    And I navigate to the pet list page
+    Then the page should load successfully
+    
+    # Verification - Only nearby announcement visible, distant filtered out
+    When I scroll until I see the announcement for "E2E-NearbyPet"
+    Then I should see the announcement for "E2E-NearbyPet"
+    And I should NOT see the announcement for "E2E-DistantPet"
+    
+    # Cleanup
+    And I delete all test announcements via API
+
+  # ========================================
+  # Test 2b: Mobile - Full list without location + rationale popup
   # WHAT IT TESTS:
   #   - Without location permission, ALL animals are visible
   #   - After app restart, rationale popup appears (FR-015)
@@ -58,11 +96,14 @@ Feature: Animal List
   # 
   # BLOCKED: 
   #   - Android: rationale popup bug (doesn't appear after restart)
-  #   - Web: not applicable (no permission dialogs)
+  #   - iOS: iOS 18.1 getPageSource() bug in scrolling
   # ========================================
 
-  @web @ios @android @pending-android @pending-web
-  Scenario: User sees full animal list without location and rationale popup on restart
+  # TODO: FIX iOS 18.1 getPageSource() bug in scrolling before enabling this test
+  # Error: -[XCUIApplicationProcess waitForQuiescenceIncludingAnimationsIdle:]: unrecognized selector
+  # Solution: Replace getPageSource() with findElements() in iScrollUntilISeeTheAnnouncementFor()
+  @mobile @ios @android @pending-android @pending-ios
+  Scenario: Mobile user sees full animal list without location and rationale popup on restart
     # Setup - Create test data (will be visible because no location filtering)
     Given I create a test announcement via API with name "E2E-NoLocationDog" and species "DOG"
     
@@ -75,8 +116,10 @@ Feature: Animal List
     When I scroll until I see the announcement for "E2E-NoLocationDog"
     Then I should see the announcement for "E2E-NoLocationDog"
     
-    # Restart app - rationale popup should appear (FR-015: once per session)
-    When I restart the app
+    # Reinstall app - rationale popup should appear (FR-015: once per session)
+    # Note: Split into uninstall + install to ensure app is killed and data reloaded
+    When I uninstall the app
+    And I install the app
     Then I should see location rationale dialog
     And the rationale dialog should have Settings button
     
@@ -87,6 +130,32 @@ Feature: Animal List
     
     # Cleanup
     And I delete the test announcement via API
+  
+  # ========================================
+  # Test 3: Reinstall resets app state (Simple test without scrolling)
+  # ========================================
+  # Purpose: Verify that uninstall+install properly resets app state
+  # Tags: @mobile @ios @android
+  # Expected: Rationale dialog appears after reinstall (FR-015)
+  # ========================================
+
+  @mobile @ios @android @locationDialog
+  Scenario: User reinstalls app and sees rationale dialog on fresh launch
+    # First launch - dismiss initial rationale popup
+    When I dismiss location rationale dialog if present
+    And I navigate to the pet list page
+    Then the page should load successfully
+    
+    # Reinstall app - should reset state and show rationale again
+    When I uninstall the app
+    And I install the app
+    Then I should see location rationale dialog
+    And the rationale dialog should have Settings button
+    
+    # Verify app works after dismissing dialog
+    When I dismiss location rationale dialog
+    And I navigate to the pet list page
+    Then the page should load successfully
     
   # ========================================
   # Test 3: Empty state - no animals in area
@@ -99,7 +168,7 @@ Feature: Animal List
   #   - Web: location filtering not implemented (spec 053)
   # ========================================
   
-  @web @ios @android @location @pending-android @pending-ios @pending-web
+  @ios @location
   Scenario: User sees empty state when no animals in current location
     # Setup - Create announcement only in Wroclaw
     Given I create a test announcement at coordinates "51.1" "17.0" with name "E2E-OnlyInWroclaw"

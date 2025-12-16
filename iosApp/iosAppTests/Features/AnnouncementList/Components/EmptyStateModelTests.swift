@@ -15,6 +15,20 @@ final class EmptyStateModelTests: XCTestCase {
         
         // Then
         XCTAssertEqual(model.message, expectedMessage)
+        XCTAssertEqual(model.accessibilityIdentifier, "animalList.emptyState")
+    }
+    
+    func testInit_withCustomAccessibilityIdentifier_shouldSetBothProperties() {
+        // Given
+        let expectedMessage = "Test Message"
+        let expectedIdentifier = "custom.identifier"
+        
+        // When
+        let model = EmptyStateView.Model(message: expectedMessage, accessibilityIdentifier: expectedIdentifier)
+        
+        // Then
+        XCTAssertEqual(model.message, expectedMessage)
+        XCTAssertEqual(model.accessibilityIdentifier, expectedIdentifier)
     }
     
     func testDefault_shouldHaveCorrectMessage() {
@@ -23,6 +37,7 @@ final class EmptyStateModelTests: XCTestCase {
         
         // Then
         XCTAssertFalse(model.message.isEmpty)
+        XCTAssertEqual(model.accessibilityIdentifier, "animalList.emptyState")
         // Note: We don't check exact localized string content to avoid brittle tests,
         // just ensuring it's not empty is sufficient for unit test
     }
@@ -40,6 +55,15 @@ final class EmptyStateModelTests: XCTestCase {
         // Given
         let model1 = EmptyStateView.Model(message: "Message 1")
         let model2 = EmptyStateView.Model(message: "Message 2")
+        
+        // When + Then
+        XCTAssertNotEqual(model1, model2)
+    }
+    
+    func testEquality_whenAccessibilityIdentifiersDiffer_shouldNotBeEqual() {
+        // Given
+        let model1 = EmptyStateView.Model(message: "Message", accessibilityIdentifier: "id1")
+        let model2 = EmptyStateView.Model(message: "Message", accessibilityIdentifier: "id2")
         
         // When + Then
         XCTAssertNotEqual(model1, model2)
