@@ -7,7 +7,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "node --experimental-transform-types --watch ./src/index.ts | npx pino-pretty",
+    "dev": "node --env-file=.env --experimental-transform-types --watch ./src/index.ts | npx pino-pretty",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -16,7 +16,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify": "npm install && npm run test:coverage && npm run lint && npm run format:check",
-    "start": "node --experimental-transform-types ./src/index.ts",
+    "start": "node --env-file=.env --experimental-transform-types ./src/index.ts",
     "knex:add-migration": "knex migrate:make -x ts"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "express": "^5.1.0",
     "file-type": "^21.1.1",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "knex": "^3.1.0",
     "multer": "^2.0.2",
     "pino": "^8.21.0",
@@ -37,6 +38,7 @@
     "@eslint/js": "^9.39.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/knex": "^0.15.2",
     "@types/multer": "^2.0.0",
     "@types/supertest": "^6.0.3",
