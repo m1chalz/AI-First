@@ -29,10 +29,10 @@ describe('UserService', () => {
       const expectedId = '550e8400-e29b-41d4-a716-446655440000';
       mockRepository.create.mockResolvedValue({ id: expectedId });
       mockRepository.findByEmail.mockResolvedValueOnce(null);
-      mockRepository.findByEmail.mockResolvedValueOnce({ id: expectedId, passwordHash: await hashPassword(password) }); // login
+      mockRepository.findByEmail.mockResolvedValueOnce({ id: expectedId, passwordHash: await hashPassword(password) });
 
       // when
-      const result = await underTest.registerUser(email, password);
+      const result = await underTest.registerUser({ email, password });
 
       // then
       expect(result.userId).toBe(expectedId);
@@ -46,11 +46,12 @@ describe('UserService', () => {
   describe('registerUser - duplicate email', () => {
     it('should reject duplicate email', async () => {
       // given
-      const email = 'existing@example.com';
       mockRepository.findByEmail.mockResolvedValue({ id: 'existing-user' });
 
       // when & then
-      await expect(underTest.registerUser(email, 'password123')).rejects.toThrow(ConflictError);
+      await expect(underTest.registerUser({ email: 'existing@example.com', password: 'password123' })).rejects.toThrow(
+        ConflictError
+      );
     });
   });
 
@@ -64,7 +65,7 @@ describe('UserService', () => {
       mockRepository.findByEmail.mockResolvedValue({ id: userId, passwordHash });
 
       // when
-      const result = await underTest.loginUser(email, password);
+      const result = await underTest.loginUser({ email, password });
 
       // then
       expect(result.userId).toBe(userId);
@@ -77,25 +78,24 @@ describe('UserService', () => {
   describe('loginUser - authentication failures', () => {
     it('should throw InvalidCredentialsError for non-existent email', async () => {
       // given
-      const email = 'nonexistent@example.com';
-      const password = 'password123';
       mockRepository.findByEmail.mockResolvedValue(null);
 
       // when & then
-      await expect(underTest.loginUser(email, password)).rejects.toThrow(InvalidCredentialsError);
+      await expect(underTest.loginUser({ email: 'nonexistent@example.com', password: 'password123' })).rejects.toThrow(
+        InvalidCredentialsError
+      );
     });
 
     it('should throw InvalidCredentialsError for incorrect password', async () => {
       // given
-      const email = 'user@example.com';
       const correctPassword = 'correctPassword123';
-      const wrongPassword = 'wrongPassword456';
-      const userId = 'user-123';
       const passwordHash = await hashPassword(correctPassword);
-      mockRepository.findByEmail.mockResolvedValue({ id: userId, passwordHash });
+      mockRepository.findByEmail.mockResolvedValue({ id: 'user-123', passwordHash });
 
       // when & then
-      await expect(underTest.loginUser(email, wrongPassword)).rejects.toThrow(InvalidCredentialsError);
+      await expect(
+        underTest.loginUser({ email: 'user@example.com', password: 'wrongPassword456' })
+      ).rejects.toThrow(InvalidCredentialsError);
     });
 
     it('should return identical error messages for invalid email and wrong password', async () => {
@@ -107,7 +107,7 @@ describe('UserService', () => {
       mockRepository.findByEmail.mockResolvedValueOnce(null);
       let errorForMissingEmail: Error | undefined;
       try {
-        await underTest.loginUser(email, password);
+        await underTest.loginUser({ email, password });
       } catch (e) {
         errorForMissingEmail = e as Error;
       }
@@ -115,7 +115,7 @@ describe('UserService', () => {
       mockRepository.findByEmail.mockResolvedValueOnce({ id: 'user-123', passwordHash });
       let errorForWrongPassword: Error | undefined;
       try {
-        await underTest.loginUser(email, password);
+        await underTest.loginUser({ email, password });
       } catch (e) {
         errorForWrongPassword = e as Error;
       }
@@ -127,16 +127,16 @@ describe('UserService', () => {
   });
 
   describe('loginUser - validation errors', () => {
-    it('should throw ValidationError', async () => {
+    it('should throw ValidationError for invalid email format', async () => {
       // given
-      const invalidEmail = 'not-an-email';
-      const password = 'password123';
       mockValidator.mockImplementation(() => {
         throw new ValidationError('INVALID_FORMAT', 'email format is invalid', 'email');
       });
 
       // when & then
-      await expect(underTest.loginUser(invalidEmail, password)).rejects.toThrow(ValidationError);
+      await expect(underTest.loginUser({ email: 'not-an-email', password: 'password123' })).rejects.toThrow(
+        ValidationError
+      );
     });
   });
 });

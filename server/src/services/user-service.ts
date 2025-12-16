@@ -10,10 +10,11 @@ export class UserService {
   constructor(
     private repository: IUserRepository,
     private validator: (data: AuthRequest) => void
-  ) {}
+  ) { }
 
-  async registerUser(email: string, password: string): Promise<AuthResponse> {
-    this.validator({ email, password });
+  async registerUser(data: AuthRequest): Promise<AuthResponse> {
+    this.validator(data);
+    const { email, password } = data as { email: string; password: string };
 
     const normalizedEmail = email.toLowerCase();
     const existingUser = await this.repository.findByEmail(normalizedEmail);
@@ -24,11 +25,12 @@ export class UserService {
 
     const passwordHash = await hashPassword(password);
     await this.repository.create(normalizedEmail, passwordHash);
-    return this.loginUser(email, password);
+    return this.loginUser(data);
   }
 
-  async loginUser(email: string, password: string): Promise<AuthResponse> {
-    this.validator({ email, password });
+  async loginUser(data: AuthRequest): Promise<AuthResponse> {
+    this.validator(data);
+    const { email, password } = data as { email: string; password: string };
 
     const normalizedEmail = email.toLowerCase();
     const user = await this.repository.findByEmail(normalizedEmail);

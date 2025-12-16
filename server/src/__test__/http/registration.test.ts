@@ -95,5 +95,18 @@ describe('POST /api/v1/users', () => {
       expect(response.status).toBe(409);
       expect(response.body.error.code).toBe('CONFLICT');
     });
+
+    it('should return HTTP 400 with INVALID_FIELD for extra fields', async () => {
+      // given
+      const payload = { email: 'user@example.com', password: 'password123', extraField: 'value' };
+
+      // when
+      const response = await request(server).post('/api/v1/users').send(payload);
+
+      // then
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('INVALID_FIELD');
+      expect(response.body.error.field).toBe('extraField');
+    });
   });
 });

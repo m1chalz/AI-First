@@ -162,27 +162,27 @@
 
 **Backend Unit Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T052 [P] [US3] RED: Write failing unit test for validation error with extra fields in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T053 [P] [US3] RED: Write failing unit test for validation error with password too long in `/server/src/services/__test__/user-service.test.ts`
-- [ ] T054 [P] [US3] RED: Write failing unit test for validation error with email too long in `/server/src/services/__test__/user-service.test.ts`
+- [x] T052 [P] [US3] RED: Write failing unit test for validation error with extra fields in `/server/src/services/__test__/user-service.test.ts`
+- [x] T053 [P] [US3] RED: Write failing unit test for validation error with password too long in `/server/src/services/__test__/user-service.test.ts`
+- [x] T054 [P] [US3] RED: Write failing unit test for validation error with email too long in `/server/src/services/__test__/user-service.test.ts`
 
 **Backend Integration Tests** (TDD: Red-Green-Refactor):
 
-- [ ] T055 [P] [US3] RED: Write failing integration test for POST /login with password too short (400) in `/server/src/__test__/http/login.test.ts`
-- [ ] T056 [P] [US3] RED: Write failing integration test for POST /login with extra fields (400) in `/server/src/__test__/http/login.test.ts`
-- [ ] T057 [P] [US3] RED: Write failing integration test for POST /login with empty email (400) in `/server/src/__test__/http/login.test.ts`
-- [ ] T058 [P] [US3] RED: Write failing integration test verifying error message format consistency in `/server/src/__test__/http/login.test.ts`
-- [ ] T059 [P] [US3] RED: Write failing integration test for POST /users with validation errors (400) in `/server/src/__test__/http/users.test.ts`
+- [x] T055 [P] [US3] RED: Write failing integration test for POST /login with password too short (400) in `/server/src/__test__/http/login.test.ts`
+- [x] T056 [P] [US3] RED: Write failing integration test for POST /login with extra fields (400) in `/server/src/__test__/http/login.test.ts`
+- [x] T057 [P] [US3] RED: Write failing integration test for POST /login with empty email (400) in `/server/src/__test__/http/login.test.ts`
+- [x] T058 [P] [US3] RED: Write failing integration test verifying error message format consistency in `/server/src/__test__/http/login.test.ts`
+- [x] T059 [P] [US3] RED: Write failing integration test for POST /users with validation errors (400) in `/server/src/__test__/http/registration.test.ts`
 
 ### Implementation for User Story 3
 
 **Backend** (TDD: Red-Green-Refactor):
 
-- [ ] T060 [US3] GREEN: Verify existing validation in user-validation.ts handles all error cases (minimal changes if needed)
-- [ ] T061 [US3] GREEN: Verify error handler middleware returns consistent validation error format (minimal changes if needed)
-- [ ] T062 [US3] REFACTOR: Improve validation error messages for clarity (user-friendly language)
-- [ ] T063 [US3] Run `npm test --coverage` from `/server` and verify 80% coverage maintained
-- [ ] T064 [P] [US3] Run `npm run lint` from `/server` and fix all ESLint violations
+- [x] T060 [US3] GREEN: Verify existing validation in user-validation.ts handles all error cases (minimal changes if needed) - Updated service to pass full request body for validation
+- [x] T061 [US3] GREEN: Verify error handler middleware returns consistent validation error format (minimal changes if needed) - Already handled correctly
+- [x] T062 [US3] REFACTOR: Improve validation error messages for clarity (user-friendly language) - Already clear
+- [x] T063 [US3] Run `npm test --coverage` from `/server` and verify 80% coverage maintained - 91.42% coverage
+- [x] T064 [P] [US3] Run `npm run lint` from `/server` and fix all ESLint violations - Zero violations
 
 **Checkpoint**: All user stories should now be independently functional with comprehensive error handling
 

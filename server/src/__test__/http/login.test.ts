@@ -95,17 +95,34 @@ describe('POST /api/v1/users/login', () => {
 
   describe('validation errors', () => {
     it.each([
-      { payload: { password: 'password123' }, field: 'email', scenario: 'missing email' },
-      { payload: { email: 'user@example.com' }, field: 'password', scenario: 'missing password' },
-      { payload: { email: 'not-an-email', password: 'password123' }, field: 'email', scenario: 'invalid email format' },
-      { payload: { email: 'user@example.com', password: 'short' }, field: 'password', scenario: 'password too short' }
-    ])('should return HTTP 400 for $scenario', async ({ payload, field }) => {
+      { payload: { password: 'password123' }, field: 'email', code: 'MISSING_VALUE', scenario: 'missing email' },
+      { payload: { email: 'user@example.com' }, field: 'password', code: 'MISSING_VALUE', scenario: 'missing password' },
+      { payload: { email: '', password: 'password123' }, field: 'email', code: 'INVALID_FORMAT', scenario: 'empty email' },
+      { payload: { email: 'not-an-email', password: 'password123' }, field: 'email', code: 'INVALID_FORMAT', scenario: 'invalid email format' },
+      { payload: { email: 'user@example.com', password: 'short' }, field: 'password', code: 'INVALID_FORMAT', scenario: 'password too short' },
+      { payload: { email: 'user@example.com', password: 'a'.repeat(129) }, field: 'password', code: 'INVALID_FORMAT', scenario: 'password too long' },
+      { payload: { email: 'a'.repeat(250) + '@x.com', password: 'password123' }, field: 'email', code: 'INVALID_FORMAT', scenario: 'email too long' }
+    ])('should return HTTP 400 for $scenario', async ({ payload, field, code }) => {
       // when
       const response = await request(server).post('/api/v1/users/login').send(payload);
 
       // then
       expect(response.status).toBe(400);
       expect(response.body.error.field).toBe(field);
+      expect(response.body.error.code).toBe(code);
+    });
+
+    it('should return HTTP 400 with INVALID_FIELD for extra fields', async () => {
+      // given
+      const payload = { email: 'user@example.com', password: 'password123', extraField: 'value' };
+
+      // when
+      const response = await request(server).post('/api/v1/users/login').send(payload);
+
+      // then
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('INVALID_FIELD');
+      expect(response.body.error.field).toBe('extraField');
     });
   });
 });
