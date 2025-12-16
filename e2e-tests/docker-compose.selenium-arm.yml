@@ -1,0 +1,133 @@
+# Selenium Grid for ARM architecture (Apple Silicon, ARM-based servers)
+# Usage: docker-compose -f docker-compose.selenium-arm.yml up -d
+# Selenium Hub will be available at: http://localhost:4444
+# Grid Console: http://localhost:4444/ui
+
+version: "3.8"
+
+services:
+  seleniarm-event-bus:
+    image: seleniarm/event-bus:latest
+    container_name: seleniarm-event-bus
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "5557:5557"
+    networks:
+      - selenium-grid
+
+  seleniarm-sessions:
+    image: seleniarm/sessions:latest
+    container_name: seleniarm-sessions
+    ports:
+      - "5556:5556"
+    depends_on:
+      - seleniarm-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=seleniarm-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - selenium-grid
+
+  seleniarm-session-queue:
+    image: seleniarm/session-queue:latest
+    container_name: seleniarm-session-queue
+    ports:
+      - "5559:5559"
+    networks:
+      - selenium-grid
+
+  seleniarm-distributor:
+    image: seleniarm/distributor:latest
+    container_name: seleniarm-distributor
+    ports:
+      - "5553:5553"
+    depends_on:
+      - seleniarm-event-bus
+      - seleniarm-sessions
+      - seleniarm-session-queue
+    environment:
+      - SE_EVENT_BUS_HOST=seleniarm-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_SESSIONS_MAP_HOST=seleniarm-sessions
+      - SE_SESSIONS_MAP_PORT=5556
+      - SE_SESSION_QUEUE_HOST=seleniarm-session-queue
+      - SE_SESSION_QUEUE_PORT=5559
+    networks:
+      - selenium-grid
+
+  seleniarm-router:
+    image: seleniarm/router:latest
+    container_name: seleniarm-router
+    ports:
+      - "4444:4444"
+    depends_on:
+      - seleniarm-distributor
+      - seleniarm-sessions
+      - seleniarm-session-queue
+    environment:
+      - SE_DISTRIBUTOR_HOST=seleniarm-distributor
+      - SE_DISTRIBUTOR_PORT=5553
+      - SE_SESSIONS_MAP_HOST=seleniarm-sessions
+      - SE_SESSIONS_MAP_PORT=5556
+      - SE_SESSION_QUEUE_HOST=seleniarm-session-queue
+      - SE_SESSION_QUEUE_PORT=5559
+    networks:
+      - selenium-grid
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chrome:
+    image: seleniarm/node-chromium:latest
+    container_name: seleniarm-chrome
+    shm_size: 2gb
+    depends_on:
+      - seleniarm-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=seleniarm-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - VNC_NO_PASSWORD=1
+    ports:
+      - "5910:5900"  # VNC port for debugging (changed to avoid macOS Screen Sharing conflict)
+    networks:
+      - selenium-grid
+    # Map localhost to host machine - allows browser to access http://localhost:8080 on MacBook
+    extra_hosts:
+      - "localhost:host-gateway"
+
+  firefox:
+    image: seleniarm/node-firefox:latest
+    container_name: seleniarm-firefox
+    shm_size: 2gb
+    depends_on:
+      - seleniarm-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=seleniarm-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - VNC_NO_PASSWORD=1
+    ports:
+      - "5911:5900"  # VNC port for debugging (changed to avoid macOS Screen Sharing conflict)
+    networks:
+      - selenium-grid
+    # Map localhost to host machine - allows browser to access http://localhost:8080 on MacBook
+    extra_hosts:
+      - "localhost:host-gateway"
+
+networks:
+  selenium-grid:
+    name: selenium-grid-arm
+    driver: bridge
+

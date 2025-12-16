@@ -1,0 +1,190 @@
+# Complete QA Environment: Selenium Grid + Backend + Frontend
+# All services run in the same Docker network - no host.docker.internal needed!
+# Usage: docker-compose -f docker-compose.qa-env.yml up -d
+
+version: "3.8"
+
+services:
+  # ========================================
+  # Backend API (Node.js) - QA Configuration
+  # ========================================
+  backend:
+    build:
+      context: ../server
+      dockerfile: Dockerfile.qa  # QA-specific Dockerfile (mirrors standard but with QA context)
+    container_name: qa-backend
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/server/db/pets.db
+    ports:
+      - "3000:3000"  # Expose on standard port (local dev backend must be stopped)
+    volumes:
+      - qa-db-data:/app/server/db
+      - qa-images:/app/server/public/images
+    networks:
+      - qa-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ========================================
+  # Frontend (React) - QA Configuration
+  # ========================================
+  frontend:
+    build:
+      context: ../webApp
+      dockerfile: Dockerfile.qa  # QA-specific Dockerfile with runtime config
+    container_name: qa-frontend
+    environment:
+      # Runtime API URL configuration (no source code changes needed!)
+      - API_BASE_URL=http://backend:3000
+    ports:
+      - "8080:8080"  # Expose on standard port (local dev frontend must be stopped)
+    networks:
+      - qa-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ========================================
+  # Selenium Grid - Hub Components
+  # ========================================
+  selenium-event-bus:
+    image: seleniarm/event-bus:latest
+    container_name: qa-selenium-event-bus
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "5557:5557"
+    networks:
+      - qa-network
+
+  selenium-sessions:
+    image: seleniarm/sessions:latest
+    container_name: qa-selenium-sessions
+    ports:
+      - "5556:5556"
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - qa-network
+
+  selenium-session-queue:
+    image: seleniarm/session-queue:latest
+    container_name: qa-selenium-session-queue
+    ports:
+      - "5559:5559"
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - qa-network
+
+  selenium-distributor:
+    image: seleniarm/distributor:latest
+    container_name: qa-selenium-distributor
+    ports:
+      - "5553:5553"
+    depends_on:
+      - selenium-event-bus
+      - selenium-sessions
+      - selenium-session-queue
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_SESSIONS_MAP_HOST=selenium-sessions
+      - SE_SESSIONS_MAP_PORT=5556
+      - SE_SESSION_QUEUE_HOST=selenium-session-queue
+      - SE_SESSION_QUEUE_PORT=5559
+    networks:
+      - qa-network
+
+  selenium-router:
+    image: seleniarm/router:latest
+    container_name: qa-selenium-router
+    ports:
+      - "4444:4444"
+    depends_on:
+      - selenium-distributor
+      - selenium-sessions
+      - selenium-session-queue
+    environment:
+      - SE_DISTRIBUTOR_HOST=selenium-distributor
+      - SE_DISTRIBUTOR_PORT=5553
+      - SE_SESSIONS_MAP_HOST=selenium-sessions
+      - SE_SESSIONS_MAP_PORT=5556
+      - SE_SESSION_QUEUE_HOST=selenium-session-queue
+      - SE_SESSION_QUEUE_PORT=5559
+    networks:
+      - qa-network
+
+  # ========================================
+  # Selenium Grid - Browser Nodes
+  # ========================================
+  chrome:
+    image: seleniarm/node-chromium:latest
+    container_name: qa-selenium-chrome
+    shm_size: 2gb
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - VNC_NO_PASSWORD=1
+    ports:
+      - "7900:5900"  # VNC port for debugging
+    networks:
+      - qa-network
+
+  firefox:
+    image: seleniarm/node-firefox:latest
+    container_name: qa-selenium-firefox
+    shm_size: 2gb
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - VNC_NO_PASSWORD=1
+    ports:
+      - "7901:5900"  # VNC port for debugging
+    networks:
+      - qa-network
+
+# ========================================
+# Networks and Volumes
+# ========================================
+networks:
+  qa-network:
+    name: qa-network
+    driver: bridge
+
+volumes:
+  qa-db-data:
+    name: qa-db-data
+  qa-images:
+    name: qa-images
+
