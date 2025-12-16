@@ -64,6 +64,9 @@ class PetDetailsCoordinator: CoordinatorInterface {
         let backBarButtonItem = UIBarButtonItem(customView: backButton)
         hostingController.navigationItem.leftBarButtonItem = backBarButtonItem
         
+        // Hide tab bar when pushed (detail screen should take full height)
+        hostingController.hidesBottomBarWhenPushed = true
+        
         navigationController?.pushViewController(hostingController, animated: animated)
     }
     

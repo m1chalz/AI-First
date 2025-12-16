@@ -370,6 +370,12 @@ public enum L10n {
       public static let label = L10n.tr("Localizable", "petDetails.reward.label", fallback: "Reward")
     }
   }
+  public enum Placeholder {
+    /// This feature is under development
+    public static let message = L10n.tr("Localizable", "placeholder.message", fallback: "This feature is under development")
+    /// MARK: - Placeholder Screen
+    public static let title = L10n.tr("Localizable", "placeholder.title", fallback: "Coming soon")
+  }
   public enum ReportMissingPet {
     public enum Button {
       /// Close
@@ -417,6 +423,18 @@ public enum L10n {
     public static let codeCopied = L10n.tr("Localizable", "report_created.code_copied", fallback: "Code copied to clipboard")
     /// MARK: - Report Created Screen (Summary Step 5)
     public static let title = L10n.tr("Localizable", "report_created.title", fallback: "Report created")
+  }
+  public enum Tabs {
+    /// Account
+    public static let account = L10n.tr("Localizable", "tabs.account", fallback: "Account")
+    /// Contact Us
+    public static let contactUs = L10n.tr("Localizable", "tabs.contactUs", fallback: "Contact Us")
+    /// Found Pet
+    public static let foundPet = L10n.tr("Localizable", "tabs.foundPet", fallback: "Found Pet")
+    /// MARK: - Tab Navigation
+    public static let home = L10n.tr("Localizable", "tabs.home", fallback: "Home")
+    /// Lost Pet
+    public static let lostPet = L10n.tr("Localizable", "tabs.lostPet", fallback: "Lost Pet")
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

@@ -152,6 +152,7 @@
 
 // Labels
 "animalDescription.dateLabel" = "Data zaginięcia";
+"animalDescription.petNameLabel" = "Imię zwierzęcia";
 "animalDescription.speciesLabel" = "Gatunek zwierzęcia";
 "animalDescription.raceLabel" = "Rasa zwierzęcia (opcjonalnie)";
 "animalDescription.genderLabel" = "Płeć";
@@ -161,6 +162,7 @@
 "animalDescription.descriptionLabel" = "Dodatkowy opis zwierzęcia (opcjonalnie)";
 
 // Placeholders
+"animalDescription.petNamePlaceholder" = "Imię zwierzęcia (opcjonalnie)";
 "animalDescription.speciesPlaceholder" = "Wybierz opcję";
 "animalDescription.racePlaceholder" = "np. Golden Retriever";
 "animalDescription.agePlaceholder" = "np. 5";
@@ -230,3 +232,18 @@
 
 // Toast message
 "report_created.code_copied" = "Skopiowano kod do schowka";
+
+/* MARK: - Tab Navigation */
+
+// Tab bar items
+"tabs.home" = "Strona główna";
+"tabs.lostPet" = "Zagubiony";
+"tabs.foundPet" = "Znaleziony";
+"tabs.contactUs" = "Kontakt";
+"tabs.account" = "Konto";
+
+/* MARK: - Placeholder Screen */
+
+// Coming soon
+"placeholder.title" = "Wkrótce";
+"placeholder.message" = "Ta funkcja jest w trakcie rozwoju";

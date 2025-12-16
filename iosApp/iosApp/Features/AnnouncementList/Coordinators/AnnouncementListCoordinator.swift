@@ -5,6 +5,11 @@ import SwiftUI
  * Coordinator for Announcement List flow following MVVM-C architecture.
  * Manages navigation and creates UIHostingController for SwiftUI views.
  *
+ * **Root coordinator pattern**: Creates its own UINavigationController in init(),
+ * suitable for use as a tab's root coordinator where navigation controller
+ * is not provided externally. Sub-coordinators (PetDetailsCoordinator,
+ * ReportMissingPetCoordinator) receive this navigation controller as a dependency.
+ *
  * Responsibilities:
  * - Creates and configures AnnouncementListViewModel
  * - Sets up coordinator closures for navigation
@@ -21,12 +26,14 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     private weak var announcementListViewModel: AnnouncementListViewModel?
     
     /**
-     * Initializes coordinator with navigation controller.
+     * Creates AnnouncementListCoordinator with its own navigation controller.
      *
-     * - Parameter navigationController: Navigation controller for managing view stack
+     * **Root coordinator pattern**: This coordinator creates and owns its
+     * UINavigationController, making it suitable for use as a tab's root.
+     * The navigation controller is then shared with sub-coordinators.
      */
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+    init() {
+        self.navigationController = UINavigationController()
     }
     
     /**
@@ -179,4 +186,3 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         print("deinit AnimalListCoordinator")
     }
 }
-
