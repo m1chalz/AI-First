@@ -295,9 +295,9 @@ public class PetListMobileSteps {
     @When("I navigate to the pet list page")
     public void iNavigateToThePetListPage() {
         // App should already show pet list on launch
-        // Wait for list to be visible
-        boolean loaded = petListScreen.waitForPetListVisible(10);
-        assertTrue(loaded, "Pet list should be visible");
+        // Wait for screen to be visible (either pet list OR empty state)
+        boolean loaded = petListScreen.waitForScreenLoaded(10);
+        assertTrue(loaded, "Pet list screen should be visible (list or empty state)");
         System.out.println("Navigated to pet list page");
         
         // Log visible announcements for debugging
@@ -390,8 +390,8 @@ public class PetListMobileSteps {
     
     @Then("the page should load successfully")
     public void thePageShouldLoadSuccessfully() {
-        boolean loaded = petListScreen.waitForPetListVisible(10);
-        assertTrue(loaded, "Pet list screen should load successfully");
+        boolean loaded = petListScreen.waitForScreenLoaded(10);
+        assertTrue(loaded, "Pet list screen should load successfully (list or empty state)");
         System.out.println("Page loaded successfully");
     }
     

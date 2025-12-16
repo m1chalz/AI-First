@@ -93,7 +93,8 @@ public class TestDataApiHelper {
             body.put("sex", data.getOrDefault("sex", "UNKNOWN"));
             body.put("locationLatitude", Double.parseDouble(data.getOrDefault("locationLatitude", "51.1")));
             body.put("locationLongitude", Double.parseDouble(data.getOrDefault("locationLongitude", "17.0")));
-            body.put("lastSeenDate", data.getOrDefault("lastSeenDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE)));
+            // Use yesterday to avoid timezone issues (server may be in UTC)
+            body.put("lastSeenDate", data.getOrDefault("lastSeenDate", LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE)));
             body.put("status", data.getOrDefault("status", "MISSING"));
             
             // Optional fields

@@ -121,6 +121,41 @@ public class PetListScreen {
         }
     }
     
+    /**
+     * Waits for the pet list screen to load (either pet list OR empty state visible).
+     * Use this when navigating to the screen without knowing if there will be pets.
+     * 
+     * @param timeoutSeconds Maximum wait time in seconds
+     * @return true if screen loaded (list or empty state visible), false otherwise
+     */
+    public boolean waitForScreenLoaded(int timeoutSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+            wait.until(driver -> {
+                try {
+                    boolean listVisible = petList.isDisplayed();
+                    if (listVisible) {
+                        System.out.println("Screen loaded: pet list visible");
+                        return true;
+                    }
+                } catch (Exception ignored) {}
+                
+                try {
+                    boolean emptyVisible = emptyStateMessage.isDisplayed();
+                    if (emptyVisible) {
+                        System.out.println("Screen loaded: empty state visible");
+                        return true;
+                    }
+                } catch (Exception ignored) {}
+                
+                return false;
+            });
+            return true;
+        } catch (Exception e) {
+            System.err.println("Screen did not load within " + timeoutSeconds + " seconds");
+            return false;
+        }
+    }
     
     /**
      * Taps on the first pet in the list.

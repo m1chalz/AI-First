@@ -70,7 +70,7 @@ public class AppiumDriverManager {
     // Note: Appium 2.x doesn't use /wd/hub suffix anymore
     private static final String APPIUM_SERVER_URL = System.getProperty(
         "APPIUM_SERVER_URL",
-        System.getenv().getOrDefault("APPIUM_SERVER_URL", "http://0.0.0.0:4723")
+        System.getenv().getOrDefault("APPIUM_SERVER_URL", "http://127.0.0.1:4723")
     );
     
     /** Default implicit wait timeout in seconds */
@@ -323,12 +323,12 @@ public class AppiumDriverManager {
         // Note: Device name must match an available simulator (run: xcrun simctl list devices)
         String iosDeviceName = System.getProperty(
             "IOS_DEVICE_NAME",
-            System.getenv().getOrDefault("IOS_DEVICE_NAME", "iPhone 15")
+            System.getenv().getOrDefault("IOS_DEVICE_NAME", "iPhone 16")
         );
         // Note: Platform version must match an available runtime (run: xcrun simctl list runtimes)
         String iosPlatformVersion = System.getProperty(
             "IOS_PLATFORM_VERSION",
-            System.getenv().getOrDefault("IOS_PLATFORM_VERSION", "18.1")
+            System.getenv().getOrDefault("IOS_PLATFORM_VERSION", "18.0")
         );
 
         options.setPlatformName("iOS");
@@ -346,8 +346,8 @@ public class AppiumDriverManager {
         );
         options.setApp(appPath);
         
-        // Don't reset app - preserve permissions granted via simctl
-        options.setNoReset(true);
+        // Reset app to ensure clean state - permissions will be granted via simctl
+        options.setNoReset(false);
         
         // Disable waiting for app quiescence (fixes animation timeout issues)
         options.setCapability("appium:waitForQuiescence", false);
@@ -368,7 +368,7 @@ public class AppiumDriverManager {
             options.setCapability("appium:permissions", 
                 "{\"" + IOS_BUNDLE_ID + "\": {\"location\": \"yes\"}}");
             
-            System.out.println("iOS: Configured with noReset=true and location permission");
+            System.out.println("iOS: Configured with noReset=false and location permission");
             
             // Also grant via simctl as backup (in case capability doesn't work)
             grantIOSLocationPermission();

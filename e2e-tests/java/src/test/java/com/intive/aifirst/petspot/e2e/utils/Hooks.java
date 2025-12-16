@@ -265,11 +265,23 @@ public class Hooks {
         boolean hasWeb = tags.contains("@web");
         boolean hasMobile = tags.contains("@mobile");
         
-        // Cross-platform scenario (has both @ios and @android) - need runner context
+        // Cross-platform scenario (has both @ios and @android) - detect from runner
         if (hasIos && hasAndroid) {
-            // For cross-platform tests, PLATFORM should be set by runner
-            // Don't override it - runner knows which platform to use
-            System.out.println("Platform: Cross-platform scenario (runner should have set PLATFORM)");
+            // Detect platform from runner class name in Maven test parameter
+            String testRunner = System.getProperty("test");
+            if (testRunner != null) {
+                if (testRunner.toLowerCase().contains("ios")) {
+                    System.setProperty("PLATFORM", "iOS");
+                    System.out.println("Platform detected from runner: iOS (test=" + testRunner + ")");
+                } else if (testRunner.toLowerCase().contains("android")) {
+                    System.setProperty("PLATFORM", "Android");
+                    System.out.println("Platform detected from runner: Android (test=" + testRunner + ")");
+                } else {
+                    System.out.println("Platform: Cross-platform scenario, unknown runner: " + testRunner);
+                }
+            } else {
+                System.out.println("Platform: Cross-platform scenario (no -Dtest runner specified)");
+            }
         } else if (hasIos && !hasAndroid) {
             // iOS-only scenario
             System.setProperty("PLATFORM", "iOS");
