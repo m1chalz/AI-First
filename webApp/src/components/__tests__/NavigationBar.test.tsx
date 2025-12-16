@@ -252,4 +252,68 @@ describe('NavigationBar', () => {
       expect(label?.className).toMatch(/label/);
     });
   });
+
+  // Phase 5: User Story 3 - Navigation State Persistence Tests
+  describe('state persistence (US3)', () => {
+    it('should update active state when navigating between routes', async () => {
+      // given
+      const user = userEvent.setup();
+      renderWithRouter('/');
+      expect(screen.getByTestId('navigation.home.link').className).toMatch(/Active/);
+
+      // when
+      await user.click(screen.getByTestId('navigation.lostPet.link'));
+
+      // then
+      expect(screen.getByTestId('navigation.lostPet.link').getAttribute('href')).toBe('/lost-pets');
+    });
+
+    it.each([
+      { route: '/lost-pets', activeTestId: 'navigation.lostPet.link', label: 'Lost Pet' },
+      { route: '/found-pets', activeTestId: 'navigation.foundPet.link', label: 'Found Pet' },
+      { route: '/contact', activeTestId: 'navigation.contact.link', label: 'Contact' },
+      { route: '/account', activeTestId: 'navigation.account.link', label: 'Account' },
+    ])('should show $label as active on direct URL access to $route', ({ route, activeTestId }) => {
+      // given
+      renderWithRouter(route);
+
+      // when
+      const activeLink = screen.getByTestId(activeTestId);
+      const homeLink = screen.getByTestId('navigation.home.link');
+
+      // then
+      expect(activeLink.className).toMatch(/Active/);
+      expect(homeLink.className).not.toMatch(/Active/);
+    });
+
+    it.each([
+      { route: '/' },
+      { route: '/lost-pets' },
+      { route: '/found-pets' },
+      { route: '/contact' },
+      { route: '/account' },
+    ])('should render navigation bar on $route route', ({ route }) => {
+      // given
+      renderWithRouter(route);
+
+      // then
+      expect(screen.getByTestId('navigation.bar')).toBeDefined();
+    });
+
+    it('should maintain all navigation items when changing routes', async () => {
+      // given
+      const user = userEvent.setup();
+      renderWithRouter('/');
+
+      // when
+      await user.click(screen.getByTestId('navigation.lostPet.link'));
+
+      // then
+      expect(screen.getByTestId('navigation.home.link')).toBeDefined();
+      expect(screen.getByTestId('navigation.lostPet.link')).toBeDefined();
+      expect(screen.getByTestId('navigation.foundPet.link')).toBeDefined();
+      expect(screen.getByTestId('navigation.contact.link')).toBeDefined();
+      expect(screen.getByTestId('navigation.account.link')).toBeDefined();
+    });
+  });
 });

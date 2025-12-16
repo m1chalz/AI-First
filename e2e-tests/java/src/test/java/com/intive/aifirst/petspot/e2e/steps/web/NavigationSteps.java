@@ -204,5 +204,43 @@ public class NavigationSteps {
         assertTrue(page.hasHoverFeedback(page.getNavigationItem(section)),
                 section + " navigation item should show hover feedback");
     }
+
+    // User Story 3 - Navigation State Persistence Step Definitions
+
+    @Then("navigation bar should be visible")
+    public void navigationBarShouldBeVisible() {
+        assertTrue(getNavigationPage().isNavigationBarDisplayed(),
+                "Navigation bar should be visible");
+    }
+
+    @Then("{string} navigation item should not be highlighted")
+    public void navigationItemShouldNotBeHighlighted(String section) {
+        NavigationPage page = getNavigationPage();
+        boolean isActive = switch (section) {
+            case "Home" -> page.isHomeLinkActive();
+            case "Lost Pet" -> page.isLostPetLinkActive();
+            case "Found Pet" -> page.isFoundPetLinkActive();
+            case "Contact Us" -> page.isContactLinkActive();
+            case "Account" -> page.isAccountLinkActive();
+            default -> throw new IllegalArgumentException("Unknown section: " + section);
+        };
+        assertFalse(isActive, section + " navigation item should not be highlighted");
+    }
+
+    @When("user navigates back in browser")
+    public void userNavigatesBackInBrowser() {
+        WebDriverManager.getDriver().navigate().back();
+        getNavigationPage().waitForNavigationBarVisible(10);
+    }
+
+    @Then("all navigation items should be clickable")
+    public void allNavigationItemsShouldBeClickable() {
+        NavigationPage page = getNavigationPage();
+        assertTrue(page.getNavigationItem("Home").isEnabled(), "Home link should be clickable");
+        assertTrue(page.getNavigationItem("Lost Pet").isEnabled(), "Lost Pet link should be clickable");
+        assertTrue(page.getNavigationItem("Found Pet").isEnabled(), "Found Pet link should be clickable");
+        assertTrue(page.getNavigationItem("Contact Us").isEnabled(), "Contact Us link should be clickable");
+        assertTrue(page.getNavigationItem("Account").isEnabled(), "Account link should be clickable");
+    }
 }
 

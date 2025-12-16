@@ -70,3 +70,62 @@ Feature: Web Navigation Bar
     When user hovers over "Lost Pet" navigation item
     Then "Lost Pet" navigation item should show hover feedback
 
+  # User Story 3 - Navigation State Persistence
+  @P3 @US3
+  Scenario: Active state updates when navigating between sections
+    Given user is on the Home page
+    And "Home" navigation item should be highlighted
+    When user clicks "Lost Pet" in the navigation bar
+    Then "Lost Pet" navigation item should be highlighted
+    And "Home" navigation item should not be highlighted
+
+  @P3 @US3
+  Scenario: Active state persists on direct URL access to Lost Pet
+    Given user directly accesses "/lost-pets" URL
+    Then "Lost Pet" navigation item should be highlighted
+    And navigation bar should be visible
+
+  @P3 @US3
+  Scenario: Active state persists on direct URL access to Found Pet
+    Given user directly accesses "/found-pets" URL
+    Then "Found Pet" navigation item should be highlighted
+    And navigation bar should be visible
+
+  @P3 @US3
+  Scenario: Active state persists on direct URL access to Contact
+    Given user directly accesses "/contact" URL
+    Then "Contact Us" navigation item should be highlighted
+    And navigation bar should be visible
+
+  @P3 @US3
+  Scenario: Active state persists on direct URL access to Account
+    Given user directly accesses "/account" URL
+    Then "Account" navigation item should be highlighted
+    And navigation bar should be visible
+
+  @P3 @US3
+  Scenario: Navigation bar remains visible across all routes
+    When user clicks "Lost Pet" in the navigation bar
+    Then navigation bar should be visible
+    When user clicks "Found Pet" in the navigation bar
+    Then navigation bar should be visible
+    When user clicks "Contact Us" in the navigation bar
+    Then navigation bar should be visible
+    When user clicks "Account" in the navigation bar
+    Then navigation bar should be visible
+
+  @P3 @US3
+  Scenario: Active state updates correctly with browser back button
+    Given user is on the Home page
+    When user clicks "Lost Pet" in the navigation bar
+    And user clicks "Found Pet" in the navigation bar
+    And user navigates back in browser
+    Then "Lost Pet" navigation item should be highlighted
+
+  @P3 @US3
+  Scenario: All navigation items remain accessible after navigation
+    Given user is on the Home page
+    When user clicks "Lost Pet" in the navigation bar
+    Then all navigation items should be clickable
+    And navigation bar should display all navigation items
+
