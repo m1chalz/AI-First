@@ -79,11 +79,11 @@ Users can view footer information at the bottom of the landing page, including b
 **Acceptance Scenarios**:
 
 1. **Given** user scrolls to the bottom of the landing page, **When** the footer is visible, **Then** they see three columns: branding with description, quick links, and contact information
-2. **Given** the footer is displayed, **When** user views the branding column, **Then** they see the PetFinder logo and mission statement
+2. **Given** the footer is displayed, **When** user views the branding column, **Then** they see the PetSpot logo and mission statement
 3. **Given** the footer is displayed, **When** user views quick links, **Then** they see links for "Report Lost Pet", "Report Found Pet", and "Search Database" (placeholder only)
 4. **Given** the footer is displayed, **When** user clicks "Report Lost Pet" or "Report Found Pet" links, **Then** they are navigated to the corresponding feature page/tab
 5. **Given** the footer is displayed, **When** user views contact information, **Then** they see email, phone number, and physical address
-6. **Given** the footer is displayed, **When** user views the bottom section, **Then** they see copyright notice "© 2025 PetFinder. All rights reserved." and legal links (Privacy Policy, Terms of Service, Cookie Policy)
+6. **Given** the footer is displayed, **When** user views the bottom section, **Then** they see copyright notice "© 2025 PetSpot. All rights reserved." and legal links (Privacy Policy, Terms of Service, Cookie Policy)
 
 ---
 
@@ -112,7 +112,7 @@ Users can view footer information at the bottom of the landing page, including b
 - **FR-010**: Pet cards MUST be clickable and navigate to the pet details page
 - **FR-011**: "View all →" link MUST navigate to the full announcements list page
 - **FR-012**: Landing page MUST display a footer with dark background containing three columns: branding, quick links, and contact information
-- **FR-013**: Footer branding column MUST display PetFinder logo and mission statement
+- **FR-013**: Footer branding column MUST display PetSpot logo and mission statement
 - **FR-014**: Footer quick links column MUST display three items: "Report Lost Pet" (functional link to feature page/tab), "Report Found Pet" (functional link to feature page/tab), and "Search Database" (non-functional placeholder)
 - **FR-015**: Footer contact column MUST display email (with envelope icon), phone number (with phone icon), and physical address (with location icon)
 - **FR-016**: Footer MUST display a bottom section with copyright notice and legal links (Privacy Policy, Terms of Service, Cookie Policy)
