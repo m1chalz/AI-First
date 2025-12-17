@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.features.reportmissing.ui.photo
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -47,6 +49,7 @@ fun PhotoContent(
         modifier =
             modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .statusBarsPadding()
                 .testTag("reportMissing.photo.content"),
     ) {
