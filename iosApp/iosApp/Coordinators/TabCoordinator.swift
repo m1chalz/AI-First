@@ -185,6 +185,11 @@ final class TabCoordinator {
     /// 1. User taps announcement card on Home tab
     /// 2. HomeCoordinator invokes `onShowPetDetails` closure
     /// 3. This method switches tab and triggers detail screen
+    /// 4. AnnouncementListCoordinator pushes pet detail view
+    ///
+    /// **Back Navigation Behavior**:
+    /// After viewing details, user remains on Lost Pets tab.
+    /// Tapping Home tab returns to landing page.
     ///
     /// - Parameter announcementId: ID of announcement to show details for
     private func showPetDetailsFromHome(_ announcementId: String) {
@@ -197,10 +202,8 @@ final class TabCoordinator {
         // Switch to Lost Pets tab
         _tabBarController.selectedIndex = index
         
-        // Future: lostPetCoordinator.showPetDetails(for: announcementId)
-        // For now, the pet detail screen will be pushed by existing implementation
-        print("Cross-tab navigation: Show pet details for \(announcementId)")
-        _ = lostPetCoordinator // Silence unused variable warning until showPetDetails is implemented
+        // Push pet details screen on Lost Pets tab navigation stack
+        lostPetCoordinator.showPetDetails(for: announcementId)
     }
     
     /// Finds the AnnouncementListCoordinator and its tab index.

@@ -107,11 +107,29 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         navigationController.setViewControllers([hostingController], animated: animated)
     }
     
-    // MARK: - Navigation Methods
+    // MARK: - Public Navigation Methods
+    
+    /**
+     * Shows pet details screen for given announcement ID.
+     * Called from TabCoordinator for cross-tab navigation (Home → Lost Pets).
+     *
+     * **Cross-Tab Navigation Pattern**:
+     * 1. User taps announcement on Home tab
+     * 2. HomeCoordinator invokes `onShowPetDetails` closure
+     * 3. TabCoordinator switches tab and calls this method
+     * 4. This coordinator pushes pet detail screen onto its navigation stack
+     *
+     * - Parameter announcementId: ID of announcement to show details for
+     */
+    func showPetDetails(for announcementId: String) {
+        showAnimalDetails(animalId: announcementId)
+    }
+    
+    // MARK: - Private Navigation Methods
     
     /**
      * Shows animal details screen.
-     * Mocked for now - will create AnimalDetailCoordinator in future.
+     * Internal implementation - use `showPetDetails(for:)` for external calls.
      *
      * - Parameter animalId: ID of selected animal
      */
