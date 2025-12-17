@@ -17,11 +17,15 @@ struct ListHeaderRowView: View {
             
             Spacer()
             
-            // Action button
+            // Action button with chevron
             Button(action: model.onActionTap) {
-                Text(model.actionTitle)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Color(hex: "#155DFC"))
+                HStack(spacing: 4) {
+                    Text(model.actionTitle)
+                        .font(.system(size: 14, weight: .medium))
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .medium))
+                }
+                .foregroundColor(Color(hex: "#155DFC"))
             }
             .accessibilityIdentifier(model.actionAccessibilityId)
         }

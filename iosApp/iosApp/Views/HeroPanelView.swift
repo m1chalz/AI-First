@@ -3,13 +3,13 @@ import SwiftUI
 /// Reusable hero panel view displaying title and two action buttons.
 /// Can be used on any screen requiring a prominent call-to-action section.
 ///
-/// **Design**: Blue-to-purple gradient background with centered title and buttons.
+/// **Design**: Blue-to-purple gradient background with left-aligned title and buttons.
 struct HeroPanelView: View {
     let model: Model
     
     var body: some View {
-        VStack(spacing: 16) {
-            // Title
+        VStack(alignment: .leading, spacing: 16) {
+            // Title (left-aligned like buttons)
             Text(model.title)
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundColor(Color(hex: "#101828"))
