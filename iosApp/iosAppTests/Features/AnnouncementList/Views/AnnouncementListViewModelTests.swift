@@ -15,6 +15,13 @@ final class AnnouncementListViewModelTests: XCTestCase {
         var stubbedAuthorizationStatus: LocationPermissionStatus = .notDetermined
         var stubbedLocation: Coordinate?
         
+        // Stream for LocationPermissionObserving (not used in these ViewModel tests)
+        private let (statusStream, statusStreamContinuation) = AsyncStream<LocationPermissionStatus>.makeStream()
+        
+        var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
+            statusStream
+        }
+        
         var authorizationStatus: LocationPermissionStatus {
             get async { stubbedAuthorizationStatus }
         }

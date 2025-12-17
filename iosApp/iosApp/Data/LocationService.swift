@@ -9,6 +9,15 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     private var permissionContinuation: CheckedContinuation<LocationPermissionStatus, Never>?
     private var locationContinuation: CheckedContinuation<Coordinate?, Never>?
     
+    // MARK: - Authorization Status Stream
+    
+    /// Stream and continuation created together using makeStream() (iOS 17+)
+    private let (statusStream, statusStreamContinuation) = AsyncStream<LocationPermissionStatus>.makeStream()
+    
+    nonisolated var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
+        statusStream
+    }
+    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -67,8 +76,13 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     // MARK: - CLLocationManagerDelegate
     
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = LocationPermissionStatus(from: manager.authorizationStatus)
+        
+        // Emit to stream for real-time observers (nonisolated - continuation is Sendable)
+        statusStreamContinuation.yield(status)
+        
+        // Resume one-shot continuation for requestWhenInUseAuthorization()
         Task {
-            let status = LocationPermissionStatus(from: manager.authorizationStatus)
             await resumePermissionContinuation(with: status)
         }
     }

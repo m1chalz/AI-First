@@ -12,6 +12,13 @@ protocol LocationServiceProtocol {
     /// Observers can use this property to react to permission changes in real-time.
     var authorizationStatus: LocationPermissionStatus { get async }
     
+    /// Stream of authorization status changes.
+    ///
+    /// Emits new status whenever `locationManagerDidChangeAuthorization` is called by iOS.
+    /// Use this to react to permission changes in real-time (e.g., when user responds to system alert).
+    /// Stream never finishes - lives for the lifetime of the service.
+    var authorizationStatusStream: AsyncStream<LocationPermissionStatus> { get }
+    
     /// Requests "When In Use" location permission from user.
     ///
     /// Displays iOS system permission alert if status is `.notDetermined`.

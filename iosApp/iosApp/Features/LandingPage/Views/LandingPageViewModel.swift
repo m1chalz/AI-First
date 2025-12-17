@@ -24,7 +24,7 @@ extension LocationPermissionStatus {
 /// - Creates and configures `AnnouncementCardsListViewModel` with landing page query (limit: 5)
 /// - Handles location permissions via `LocationPermissionHandler`
 /// - Shows permission denied/restricted popup (once per session)
-/// - Manages foreground observer for permission status changes
+/// - Observes real-time permission changes via handler's `startObservingLocationPermissionChanges()`
 /// - Fetches user location and sets query on child ViewModel via `setQuery()`
 /// - Passes through cross-tab navigation closure (`onAnnouncementTapped`)
 ///
@@ -39,6 +39,10 @@ extension LocationPermissionStatus {
 /// 3. Shows permission popup if needed (once per session)
 /// 4. `loadData()` sets `listViewModel.query = queryWithLocation`
 /// 5. Child ViewModel automatically reloads with new query
+///
+/// **Permission Change Handling**:
+/// - Handler observes both real-time stream AND foreground notifications
+/// - Auto-reloads data when permission changes from unauthorized → authorized
 @MainActor
 class LandingPageViewModel: ObservableObject {
     // MARK: - Child Component ViewModel
@@ -107,11 +111,11 @@ class LandingPageViewModel: ObservableObject {
             onAnnouncementTapped: onAnnouncementTapped
         )
         
-        // Observe app returning from background (dynamic permission change handling)
-        locationHandler.startObservingForeground { [weak self] status, didBecomeAuthorized in
-            guard let self = self else { return }
-            // Callback is already dispatched to main thread by handler
+        // Start observing permission changes (real-time stream + foreground notifications)
+        locationHandler.startObservingLocationPermissionChanges { [weak self] status, didBecomeAuthorized in
+            guard let self else { return }
             self.locationPermissionStatus = status
+            
             // Auto-refresh ONLY if permission changed from unauthorized → authorized
             if didBecomeAuthorized {
                 self.loadTask?.cancel()
@@ -124,7 +128,7 @@ class LandingPageViewModel: ObservableObject {
     
     deinit {
         loadTask?.cancel()
-        locationHandler.stopObservingForeground()
+        locationHandler.stopObservingLocationPermissionChanges()
     }
     
     // MARK: - Public Methods

@@ -89,11 +89,10 @@ class AnnouncementListViewModel: ObservableObject {
             onAnnouncementTapped: onAnimalSelected
         )
         
-        // Observe app returning from background (dynamic permission change handling)
+        // Observe permission changes (real-time stream + foreground notifications)
         // Auto-refresh when permission changes from unauthorized → authorized
-        locationHandler.startObservingForeground { [weak self] status, didBecomeAuthorized in
-            guard let self = self else { return }
-            // Callback is already dispatched to main thread by handler
+        locationHandler.startObservingLocationPermissionChanges { [weak self] status, didBecomeAuthorized in
+            guard let self else { return }
             self.locationPermissionStatus = status
             // Auto-refresh ONLY if permission changed from unauthorized → authorized
             if didBecomeAuthorized {
@@ -113,7 +112,7 @@ class AnnouncementListViewModel: ObservableObject {
     deinit {
         // Cancel active task to prevent memory leaks
         loadTask?.cancel()
-        locationHandler.stopObservingForeground()
+        locationHandler.stopObservingLocationPermissionChanges()
     }
     
     // MARK: - Public Methods

@@ -11,6 +11,13 @@ final class LocationPermissionHandlerTests: XCTestCase {
         var requestAuthorizationCalled = false
         var requestLocationCalled = false
         
+        // Stream for LocationPermissionObserving (not used in these handler tests)
+        private let (statusStream, statusStreamContinuation) = AsyncStream<LocationPermissionStatus>.makeStream()
+        
+        var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
+            statusStream
+        }
+        
         var authorizationStatus: LocationPermissionStatus {
             get async { stubbedAuthorizationStatus }
         }
@@ -143,7 +150,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
         var capturedStatus: LocationPermissionStatus?
         var capturedDidBecomeAuthorized: Bool?
         
-        handler.startObservingForeground { status, didBecomeAuthorized in
+        handler.startObservingLocationPermissionChanges { status, didBecomeAuthorized in
             callbackInvoked = true
             capturedStatus = status
             capturedDidBecomeAuthorized = didBecomeAuthorized
@@ -178,10 +185,10 @@ final class LocationPermissionHandlerTests: XCTestCase {
             callbackCount += 1
         }
         
-        handler.startObservingForeground(onStatusChange: callback)
+        handler.startObservingLocationPermissionChanges(onStatusChange: callback)
         
         // When - start observing again with different callback
-        handler.startObservingForeground { _, _ in
+        handler.startObservingLocationPermissionChanges { _, _ in
             XCTFail("Second callback should not be registered")
         }
         
@@ -202,7 +209,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
         )
         
         var callbackCount = 0
-        handler.startObservingForeground { _, _ in
+        handler.startObservingLocationPermissionChanges { _, _ in
             callbackCount += 1
         }
         
@@ -210,13 +217,13 @@ final class LocationPermissionHandlerTests: XCTestCase {
         testNotificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
         try? await Task.sleep(nanoseconds: 100_000_000)
         
-        handler.stopObservingForeground()
+        handler.stopObservingLocationPermissionChanges()
         
         testNotificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
         try? await Task.sleep(nanoseconds: 100_000_000)
         
         // Then - callback called only once (before stop)
-        XCTAssertEqual(callbackCount, 1, "Should stop receiving notifications after stopObservingForeground()")
+        XCTAssertEqual(callbackCount, 1, "Should stop receiving notifications after stopObservingLocationPermissionChanges()")
     }
     
     func testDeinit_removesObserver() async {
@@ -229,7 +236,7 @@ final class LocationPermissionHandlerTests: XCTestCase {
         )
         
         var callbackCount = 0
-        handler?.startObservingForeground { _, _ in
+        handler?.startObservingLocationPermissionChanges { _, _ in
             callbackCount += 1
         }
         
