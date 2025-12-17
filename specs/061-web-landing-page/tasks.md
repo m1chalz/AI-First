@@ -168,45 +168,45 @@
 > **TDD: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Web Component Tests** (Recommended):
-- [ ] T053 [P] [US3] Write component test for `LandingPageCard` in `/webApp/src/components/home/__tests__/LandingPageCard.test.tsx` (Vitest + RTL: verify photo, status badge, location, breed, date render)
-- [ ] T054 [P] [US3] Write component test for `RecentPetsSection` in `/webApp/src/components/home/__tests__/RecentPetsSection.test.tsx` (Vitest + RTL: verify loading state, error state, empty state, pet cards, "View all" link)
+- [X] T053 [P] [US3] Write component test for `LandingPageCard` in `/webApp/src/components/home/__tests__/LandingPageCard.test.tsx` (Vitest + RTL: verify photo, status badge, location, breed, date render)
+- [X] T054 [P] [US3] Write component test for `RecentPetsSection` in `/webApp/src/components/home/__tests__/RecentPetsSection.test.tsx` (Vitest + RTL: verify loading state, error state, empty state, pet cards, "View all" link)
 
 **End-to-End Tests**:
-- [ ] T055 [P] [US3] Write E2E Gherkin scenarios for US3 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify up to 5 MISSING pets display, "View all" link navigates correctly)
-- [ ] T056 [P] [US3] Implement Page Object methods for recent pets section in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java` (findRecentPetsSection, findPetCards, findViewAllLink)
-- [ ] T057 [P] [US3] Implement step definitions for US3 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
+- [X] T055 [P] [US3] Write E2E Gherkin scenarios for US3 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify up to 5 MISSING pets display, "View all" link navigates correctly)
+- [X] T056 [P] [US3] Implement Page Object methods for recent pets section in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/web/LandingPage.java` (findRecentPetsSection, findPetCards, findViewAllLink)
+- [X] T057 [P] [US3] Implement step definitions for US3 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
 
 ### Implementation for User Story 3
 
 **Web Components**:
-- [ ] T058 [P] [US3] Create `LandingPageCard.tsx` in `/webApp/src/components/home/LandingPageCard.tsx` (props: announcement, onClick; display: photo, MISSING badge, location+distance, species/breed, date)
-- [ ] T059 [P] [US3] Create `LandingPageCard.module.css` in `/webApp/src/components/home/LandingPageCard.module.css` (vertical layout, photo at top, compact card for grid)
-- [ ] T060 [US3] Implement photo rendering in `LandingPageCard.tsx` (prepend `config.apiBaseUrl`, handle null with placeholder)
-- [ ] T061 [US3] Implement status badge in `LandingPageCard.tsx` (MISSING = red, use `ANNOUNCEMENT_STATUS_BADGE_COLORS` from types)
-- [ ] T062 [US3] Implement location display in `LandingPageCard.tsx` (use `formatDistance()` from lib, `MdLocationOn` icon)
-- [ ] T063 [US3] Implement species/breed display in `LandingPageCard.tsx` (use `toPascalCase()` from utils, format: "Dog • Golden Retriever")
-- [ ] T064 [US3] Implement date display in `LandingPageCard.tsx` (use `formatRelativeDate()` from lib, `HiOutlineCalendar` icon)
-- [ ] T065 [US3] Implement card click handler in `LandingPageCard.tsx` (navigate to pet details page)
-- [ ] T066 [US3] Create `RecentPetsSection.tsx` in `/webApp/src/components/home/RecentPetsSection.tsx` (use `useAnnouncementList()` hook)
-- [ ] T067 [P] [US3] Create `RecentPetsSection.module.css` in `/webApp/src/components/home/RecentPetsSection.module.css` (section layout, heading styles, cards grid)
-- [ ] T068 [US3] Implement filtering logic in `RecentPetsSection.tsx` (filter for `status === 'MISSING'`)
-- [ ] T069 [US3] Implement sorting logic in `RecentPetsSection.tsx` (sort by `createdAt` descending)
-- [ ] T070 [US3] Implement limiting logic in `RecentPetsSection.tsx` (slice to 5 items)
-- [ ] T071 [US3] Implement loading state in `RecentPetsSection.tsx` (display skeleton loaders or spinner with `data-testid="landing.recentPets.loading"`)
-- [ ] T072 [US3] Implement error state in `RecentPetsSection.tsx` (display "Unable to load recent pets. Please refresh the page to try again." with `data-testid="landing.recentPets.error"`)
-- [ ] T073 [US3] Implement empty state in `RecentPetsSection.tsx` (display "No recent lost pet reports. Check back soon!" with `data-testid="landing.recentPets.emptyState"`)
-- [ ] T074 [US3] Implement "View all →" link in `RecentPetsSection.tsx` (navigate to `/lost-pets` using `AppRoutes.lostPets`)
-- [ ] T075 [US3] Update `LandingPage.tsx` to include `<RecentPetsSection />` between HeroSection and Footer
+- [X] T058 [P] [US3] Create `LandingPageCard.tsx` in `/webApp/src/components/home/LandingPageCard.tsx` (props: announcement, onClick; display: photo, MISSING badge, location+distance, species/breed, date)
+- [X] T059 [P] [US3] Create `LandingPageCard.module.css` in `/webApp/src/components/home/LandingPageCard.module.css` (vertical layout, photo at top, compact card for grid)
+- [X] T060 [US3] Implement photo rendering in `LandingPageCard.tsx` (prepend `config.apiBaseUrl`, handle null with placeholder)
+- [X] T061 [US3] Implement status badge in `LandingPageCard.tsx` (MISSING = red, use `ANNOUNCEMENT_STATUS_BADGE_COLORS` from types)
+- [X] T062 [US3] Implement location display in `LandingPageCard.tsx` (use `formatDistance()` from lib, `MdLocationOn` icon)
+- [X] T063 [US3] Implement species/breed display in `LandingPageCard.tsx` (use `toPascalCase()` from utils, format: "Dog • Golden Retriever")
+- [X] T064 [US3] Implement date display in `LandingPageCard.tsx` (use `formatRelativeDate()` from lib, `HiOutlineCalendar` icon)
+- [X] T065 [US3] Implement card click handler in `LandingPageCard.tsx` (navigate to pet details page)
+- [X] T066 [US3] Create `RecentPetsSection.tsx` in `/webApp/src/components/home/RecentPetsSection.tsx` (use `useAnnouncementList()` hook)
+- [X] T067 [P] [US3] Create `RecentPetsSection.module.css` in `/webApp/src/components/home/RecentPetsSection.module.css` (section layout, heading styles, cards grid)
+- [X] T068 [US3] Implement filtering logic in `RecentPetsSection.tsx` (filter for `status === 'MISSING'`)
+- [X] T069 [US3] Implement sorting logic in `RecentPetsSection.tsx` (sort by `createdAt` descending)
+- [X] T070 [US3] Implement limiting logic in `RecentPetsSection.tsx` (slice to 5 items)
+- [X] T071 [US3] Implement loading state in `RecentPetsSection.tsx` (display skeleton loaders or spinner with `data-testid="landing.recentPets.loading"`)
+- [X] T072 [US3] Implement error state in `RecentPetsSection.tsx` (display "Unable to load recent pets. Please refresh the page to try again." with `data-testid="landing.recentPets.error"`)
+- [X] T073 [US3] Implement empty state in `RecentPetsSection.tsx` (display "No recent lost pet reports. Check back soon!" with `data-testid="landing.recentPets.emptyState"`)
+- [X] T074 [US3] Implement "View all →" link in `RecentPetsSection.tsx` (navigate to `/lost-pets` using `AppRoutes.lostPets`)
+- [X] T075 [US3] Update `LandingPage.tsx` to include `<RecentPetsSection />` between HeroSection and Footer
 
 **Test Identifiers** (MANDATORY):
-- [ ] T076 [P] [US3] Add `data-testid="landing.recentPetsSection"` to recent pets section in `RecentPetsSection.tsx`
-- [ ] T077 [P] [US3] Add `data-testid="landing.recentPets.heading"` to section heading in `RecentPetsSection.tsx`
-- [ ] T078 [P] [US3] Add `data-testid="landing.recentPets.petCard.${announcement.id}"` to each pet card in `LandingPageCard.tsx`
-- [ ] T079 [P] [US3] Add `data-testid="landing.recentPets.viewAllLink.click"` to "View all" link in `RecentPetsSection.tsx`
+- [X] T076 [P] [US3] Add `data-testid="landing.recentPetsSection"` to recent pets section in `RecentPetsSection.tsx`
+- [X] T077 [P] [US3] Add `data-testid="landing.recentPets.heading"` to section heading in `RecentPetsSection.tsx`
+- [X] T078 [P] [US3] Add `data-testid="landing.recentPets.petCard.${announcement.id}"` to each pet card in `LandingPageCard.tsx`
+- [X] T079 [P] [US3] Add `data-testid="landing.recentPets.viewAllLink.click"` to "View all" link in `RecentPetsSection.tsx`
 
 **Quality Checks**:
-- [ ] T080 [US3] Run `npm test` from `/webApp/` and verify all US3 component tests pass
-- [ ] T081 [P] [US3] Run `npm run lint` from `/webApp/` and fix ESLint violations
+- [X] T080 [US3] Run `npm test` from `/webApp/` and verify all US3 component tests pass
+- [X] T081 [P] [US3] Run `npm run lint` from `/webApp/` and fix ESLint violations
 - [ ] T082 [US3] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US3 E2E scenarios pass
 - [ ] T083 [US3] Manual test: Navigate to `/` and verify recent pets section displays up to 5 MISSING pets with correct data
 
@@ -225,26 +225,26 @@
 ### Tests for User Story 4 (MANDATORY) ✅
 
 **End-to-End Tests**:
-- [ ] T084 [P] [US4] Write E2E Gherkin scenarios for US4 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify footer columns, quick links navigation, contact info display)
-- [ ] T085 [P] [US4] Implement Page Object methods for footer in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java` (findFooter, findQuickLink, findContactInfo)
-- [ ] T086 [P] [US4] Implement step definitions for US4 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
+- [X] T084 [P] [US4] Write E2E Gherkin scenarios for US4 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify footer columns, quick links navigation, contact info display)
+- [X] T085 [P] [US4] Implement Page Object methods for footer in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java` (findFooter, findQuickLink, findContactInfo)
+- [X] T086 [P] [US4] Implement step definitions for US4 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
 
 ### Implementation for User Story 4
 
 **Functional Navigation**:
-- [ ] T087 [US4] Implement "Report Lost Pet" link navigation in `Footer.tsx` (use `AppRoutes.reportMissing.microchip` from routes)
-- [ ] T088 [US4] Implement "Report Found Pet" link as placeholder in `Footer.tsx` (use `href="#"` or disabled styling with `isPlaceholder: true`)
-- [ ] T089 [US4] Implement "Search Database" link as placeholder in `Footer.tsx` (use `href="#"` with `isPlaceholder: true` per spec)
-- [ ] T090 [US4] Verify footer legal links (Privacy Policy, Terms of Service, Cookie Policy) are placeholders with `href="#"`
-- [ ] T091 [US4] Verify footer contact information displays with icons (email: `HiOutlineMail`, phone: `HiOutlinePhone`, address: `HiOutlineLocationMarker`)
+- [X] T087 [US4] Implement "Report Lost Pet" link navigation in `Footer.tsx` (use `AppRoutes.reportMissing.microchip` from routes)
+- [X] T088 [US4] Implement "Report Found Pet" link as placeholder in `Footer.tsx` (use `href="#"` or disabled styling with `isPlaceholder: true`)
+- [X] T089 [US4] Implement "Search Database" link as placeholder in `Footer.tsx` (use `href="#"` with `isPlaceholder: true` per spec)
+- [X] T090 [US4] Verify footer legal links (Privacy Policy, Terms of Service, Cookie Policy) are placeholders with `href="#"`
+- [X] T091 [US4] Verify footer contact information displays with icons (email: `HiOutlineMail`, phone: `HiOutlinePhone`, address: `HiOutlineLocationMarker`)
 
 **Test Identifiers** (MANDATORY):
-- [ ] T092 [P] [US4] Add `data-testid="landing.footer.logo"` to footer logo in `Footer.tsx`
-- [ ] T093 [P] [US4] Add `data-testid="landing.footer.contact.email"` to email in `Footer.tsx`
-- [ ] T094 [P] [US4] Add `data-testid="landing.footer.contact.phone"` to phone in `Footer.tsx`
-- [ ] T095 [P] [US4] Add `data-testid="landing.footer.contact.address"` to address in `Footer.tsx`
-- [ ] T096 [P] [US4] Add `data-testid="landing.footer.copyright"` to copyright notice in `Footer.tsx`
-- [ ] T097 [P] [US4] Add `data-testid="landing.footer.legalLink.{id}"` to legal links in `Footer.tsx`
+- [X] T092 [P] [US4] Add `data-testid="landing.footer.logo"` to footer logo in `Footer.tsx`
+- [X] T093 [P] [US4] Add `data-testid="landing.footer.contact.email"` to email in `Footer.tsx`
+- [X] T094 [P] [US4] Add `data-testid="landing.footer.contact.phone"` to phone in `Footer.tsx`
+- [X] T095 [P] [US4] Add `data-testid="landing.footer.contact.address"` to address in `Footer.tsx`
+- [X] T096 [P] [US4] Add `data-testid="landing.footer.copyright"` to copyright notice in `Footer.tsx`
+- [X] T097 [P] [US4] Add `data-testid="landing.footer.legalLink.{id}"` to legal links in `Footer.tsx`
 
 **Quality Checks**:
 - [ ] T098 [US4] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US4 E2E scenarios pass

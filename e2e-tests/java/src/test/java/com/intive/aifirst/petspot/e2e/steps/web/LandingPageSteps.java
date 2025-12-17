@@ -130,5 +130,126 @@ public class LandingPageSteps {
         assertFalse(getLandingPage().areFeatureCardsClickable(),
             "Feature cards should not be clickable");
     }
+
+    // US3 - Recent Pets Section steps
+    @Then("landing page should display the recent pets section")
+    public void landingPageShouldDisplayTheRecentPetsSection() {
+        assertTrue(getLandingPage().isRecentPetsSectionDisplayed(),
+            "Recent pets section should be displayed");
+    }
+
+    @Then("recent pets section should display the heading")
+    public void recentPetsSectionShouldDisplayTheHeading() {
+        assertTrue(getLandingPage().isRecentPetsHeadingDisplayed(),
+            "Recent pets section heading should be displayed");
+    }
+
+    @Then("recent pets section should display the View all link")
+    public void recentPetsSectionShouldDisplayTheViewAllLink() {
+        assertTrue(getLandingPage().isViewAllLinkDisplayed(),
+            "View all link should be displayed");
+    }
+
+    @Then("recent pets section should display at most {int} pet cards")
+    public void recentPetsSectionShouldDisplayAtMostPetCards(int maxCount) {
+        int actualCount = getLandingPage().getRecentPetCardCount();
+        assertTrue(actualCount <= maxCount,
+            "Should display at most " + maxCount + " pet cards, but found " + actualCount);
+    }
+
+    @io.cucumber.java.en.When("user clicks on View all link in recent pets section")
+    public void userClicksOnViewAllLinkInRecentPetsSection() {
+        getLandingPage().clickViewAllLink();
+    }
+
+    @Then("user should be navigated to the lost pets page")
+    public void userShouldBeNavigatedToTheLostPetsPage() {
+        String currentUrl = getLandingPage().getCurrentUrl();
+        assertTrue(currentUrl.contains("/lost-pets"),
+            "Should be navigated to lost pets page, but was: " + currentUrl);
+    }
+
+    // US4 - Footer Information steps
+    @Then("footer should display the logo")
+    public void footerShouldDisplayTheLogo() {
+        assertTrue(getLandingPage().isFooterLogoDisplayed(), "Footer logo should be displayed");
+    }
+
+    @Then("footer should display the tagline")
+    public void footerShouldDisplayTheTagline() {
+        assertTrue(getLandingPage().isFooterTaglineDisplayed(), "Footer tagline should be displayed");
+    }
+
+    @Then("footer should display {string} quick link")
+    public void footerShouldDisplayQuickLink(String linkLabel) {
+        String linkId = getLinkIdFromLabel(linkLabel);
+        assertTrue(getLandingPage().isQuickLinkDisplayed(linkId),
+            "Footer should display '" + linkLabel + "' quick link");
+    }
+
+    @io.cucumber.java.en.When("user clicks on {string} quick link in footer")
+    public void userClicksOnQuickLinkInFooter(String linkLabel) {
+        String linkId = getLinkIdFromLabel(linkLabel);
+        getLandingPage().clickQuickLink(linkId);
+    }
+
+    @Then("user should be navigated to the report missing page")
+    public void userShouldBeNavigatedToTheReportMissingPage() {
+        String currentUrl = getLandingPage().getCurrentUrl();
+        assertTrue(currentUrl.contains("/report-missing"),
+            "Should be navigated to report missing page, but was: " + currentUrl);
+    }
+
+    @Then("{string} quick link should be a placeholder")
+    public void quickLinkShouldBeAPlaceholder(String linkLabel) {
+        String linkId = getLinkIdFromLabel(linkLabel);
+        assertTrue(getLandingPage().isQuickLinkPlaceholder(linkId),
+            "'" + linkLabel + "' quick link should be a placeholder (non-functional)");
+    }
+
+    @Then("footer should display email contact")
+    public void footerShouldDisplayEmailContact() {
+        assertTrue(getLandingPage().isEmailContactDisplayed(), "Footer email contact should be displayed");
+    }
+
+    @Then("footer should display phone contact")
+    public void footerShouldDisplayPhoneContact() {
+        assertTrue(getLandingPage().isPhoneContactDisplayed(), "Footer phone contact should be displayed");
+    }
+
+    @Then("footer should display address contact")
+    public void footerShouldDisplayAddressContact() {
+        assertTrue(getLandingPage().isAddressContactDisplayed(), "Footer address contact should be displayed");
+    }
+
+    @Then("footer should display copyright notice")
+    public void footerShouldDisplayCopyrightNotice() {
+        assertTrue(getLandingPage().isCopyrightDisplayed(), "Footer copyright notice should be displayed");
+    }
+
+    @Then("footer should display {string} legal link")
+    public void footerShouldDisplayLegalLink(String linkLabel) {
+        String linkId = getLegalLinkIdFromLabel(linkLabel);
+        assertTrue(getLandingPage().isLegalLinkDisplayed(linkId),
+            "Footer should display '" + linkLabel + "' legal link");
+    }
+
+    private String getLinkIdFromLabel(String label) {
+        return switch (label) {
+            case "Report Lost Pet" -> "reportLost";
+            case "Report Found Pet" -> "reportFound";
+            case "Search Database" -> "search";
+            default -> label.toLowerCase().replace(" ", "");
+        };
+    }
+
+    private String getLegalLinkIdFromLabel(String label) {
+        return switch (label) {
+            case "Privacy Policy" -> "privacy";
+            case "Terms of Service" -> "terms";
+            case "Cookie Policy" -> "cookies";
+            default -> label.toLowerCase().replace(" ", "");
+        };
+    }
 }
 

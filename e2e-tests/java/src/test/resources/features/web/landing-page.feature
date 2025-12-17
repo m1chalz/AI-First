@@ -60,3 +60,57 @@ Feature: Web Landing Page
   Scenario: Feature cards are not clickable
     Then feature cards should not be clickable
 
+  # User Story 3 - Browse Recently Lost Pets from Landing Page (P2)
+  @P2 @US3
+  Scenario: Recent pets section displays with heading and View all link
+    Then landing page should display the recent pets section
+    And recent pets section should display the heading
+    And recent pets section should display the View all link
+
+  @P2 @US3
+  Scenario: Recent pets section displays up to 5 MISSING pets
+    Then recent pets section should display at most 5 pet cards
+
+  @P2 @US3
+  Scenario: View all link navigates to lost pets page
+    When user clicks on View all link in recent pets section
+    Then user should be navigated to the lost pets page
+
+  # User Story 4 - Access Footer Information (P3)
+  @P3 @US4
+  Scenario: Footer displays branding with logo and tagline
+    Then footer should display the logo
+    And footer should display the tagline
+
+  @P3 @US4
+  Scenario: Footer displays quick links
+    Then footer should display "Report Lost Pet" quick link
+    And footer should display "Report Found Pet" quick link
+    And footer should display "Search Database" quick link
+
+  @P3 @US4
+  Scenario: Report Lost Pet link navigates to report missing page
+    When user clicks on "Report Lost Pet" quick link in footer
+    Then user should be navigated to the report missing page
+
+  @P3 @US4
+  Scenario: Placeholder quick links are not functional
+    Then "Report Found Pet" quick link should be a placeholder
+    And "Search Database" quick link should be a placeholder
+
+  @P3 @US4
+  Scenario: Footer displays contact information
+    Then footer should display email contact
+    And footer should display phone contact
+    And footer should display address contact
+
+  @P3 @US4
+  Scenario: Footer displays copyright notice
+    Then footer should display copyright notice
+
+  @P3 @US4
+  Scenario: Footer displays legal links
+    Then footer should display "Privacy Policy" legal link
+    And footer should display "Terms of Service" legal link
+    And footer should display "Cookie Policy" legal link
+

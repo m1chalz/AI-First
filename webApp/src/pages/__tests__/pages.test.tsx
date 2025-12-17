@@ -17,6 +17,17 @@ vi.mock('../../hooks/use-announcement-list', () => ({
   }))
 }));
 
+vi.mock('../../contexts/GeolocationContext', () => ({
+  useGeolocationContext: vi.fn(() => ({
+    state: {
+      coordinates: { lat: 52.23, lng: 21.01 },
+      error: null,
+      isLoading: false,
+      permissionCheckCompleted: true
+    }
+  }))
+}));
+
 describe('Home', () => {
   it('should render landing page with hero section and recent pets section', () => {
     // when

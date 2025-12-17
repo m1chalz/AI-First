@@ -209,5 +209,158 @@ public class LandingPage {
             return false;
         }
     }
+
+    public boolean isFooterLogoDisplayed() {
+        try {
+            WebElement logo = driver.findElement(By.xpath("//*[@data-testid='landing.footer.logo']"));
+            return logo.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isFooterTaglineDisplayed() {
+        try {
+            WebElement footer = driver.findElement(footerLocator);
+            WebElement tagline = footer.findElement(By.xpath(".//p[contains(@class, 'tagline')]"));
+            return tagline != null && tagline.isDisplayed() && !tagline.getText().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isQuickLinkDisplayed(String linkId) {
+        try {
+            WebElement link = driver.findElement(
+                By.xpath("//*[@data-testid='landing.footer.quickLink." + linkId + "']")
+            );
+            return link.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void clickQuickLink(String linkId) {
+        WebElement link = driver.findElement(
+            By.xpath("//*[@data-testid='landing.footer.quickLink." + linkId + "']")
+        );
+        link.click();
+    }
+
+    public boolean isQuickLinkPlaceholder(String linkId) {
+        try {
+            WebElement link = driver.findElement(
+                By.xpath("//*[@data-testid='landing.footer.quickLink." + linkId + "']")
+            );
+            String tagName = link.getTagName().toLowerCase();
+            // Placeholder links are rendered as <span>, not <a>
+            return tagName.equals("span");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isEmailContactDisplayed() {
+        try {
+            WebElement email = driver.findElement(By.xpath("//*[@data-testid='landing.footer.contact.email']"));
+            return email.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isPhoneContactDisplayed() {
+        try {
+            WebElement phone = driver.findElement(By.xpath("//*[@data-testid='landing.footer.contact.phone']"));
+            return phone.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isAddressContactDisplayed() {
+        try {
+            WebElement address = driver.findElement(By.xpath("//*[@data-testid='landing.footer.contact.address']"));
+            return address.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isCopyrightDisplayed() {
+        try {
+            WebElement copyright = driver.findElement(By.xpath("//*[@data-testid='landing.footer.copyright']"));
+            return copyright.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isLegalLinkDisplayed(String linkId) {
+        try {
+            WebElement link = driver.findElement(
+                By.xpath("//*[@data-testid='landing.footer.legalLink." + linkId + "']")
+            );
+            return link.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Recent Pets Section Methods
+    public boolean isRecentPetsSectionDisplayed() {
+        try {
+            WebElement section = driver.findElement(
+                By.xpath("//*[@data-testid='landing.recentPetsSection']")
+            );
+            return section.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isRecentPetsHeadingDisplayed() {
+        try {
+            WebElement heading = driver.findElement(
+                By.xpath("//*[@data-testid='landing.recentPets.heading']")
+            );
+            return heading.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isViewAllLinkDisplayed() {
+        try {
+            WebElement link = driver.findElement(
+                By.xpath("//*[@data-testid='landing.recentPets.viewAllLink.click']")
+            );
+            return link.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public int getRecentPetCardCount() {
+        try {
+            List<WebElement> cards = driver.findElements(
+                By.xpath("//*[contains(@data-testid, 'landing.recentPets.petCard.')]")
+            );
+            return cards.size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public void clickViewAllLink() {
+        WebElement link = driver.findElement(
+            By.xpath("//*[@data-testid='landing.recentPets.viewAllLink.click']")
+        );
+        link.click();
+    }
+
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
+    }
 }
 
