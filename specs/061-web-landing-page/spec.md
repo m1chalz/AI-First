@@ -130,13 +130,11 @@ Users can view footer information at the bottom of the landing page, including b
 
 ### Measurable Outcomes
 
-- **SC-001**: Landing page loads and displays all sections (hero, feature cards, recent pets, footer) within 3 seconds on a standard broadband connection
-- **SC-002**: When 5 or more MISSING pets exist, exactly 5 most recent MISSING pets are displayed; when fewer exist, all available MISSING pets are shown; FOUND pets are never displayed in this section
-- **SC-003**: Landing page maintains readable layout on screen widths from 768px (tablet) to 1920px+ (desktop) without horizontal scrolling; screens below 768px are not supported
-- **SC-004**: Users can identify the portal's primary purpose within 5 seconds of viewing the hero section
-- **SC-005**: All interactive elements (pet cards, "View all" link, functional footer links) provide visual feedback on hover/focus; non-functional placeholders do not provide interactive feedback
-- **SC-006**: Landing page achieves 90+ Lighthouse accessibility score
-- **SC-007**: Pet cards display all required information without text truncation or overflow on standard screen sizes
+- **SC-001**: When 5 or more MISSING pets exist, exactly 5 most recent MISSING pets are displayed; when fewer exist, all available MISSING pets are shown; FOUND pets are never displayed in this section
+- **SC-002**: Landing page maintains readable layout on screen widths from 768px (tablet) to 1920px+ (desktop) without horizontal scrolling; screens below 768px are not supported
+- **SC-003**: All interactive elements (pet cards, "View all" link, functional footer links) provide visual feedback on hover/focus; non-functional placeholders do not provide interactive feedback
+- **SC-004**: Landing page achieves 90+ Lighthouse accessibility score (run on desktop Chrome, 1920x1080 viewport, no throttling)
+- **SC-005**: Pet cards display all required information without text truncation or overflow on standard screen sizes
 
 ## Assumptions
 
