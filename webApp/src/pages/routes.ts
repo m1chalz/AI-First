@@ -14,6 +14,6 @@ export const AppRoutes = {
     photo: '/report-missing/photo',
     details: '/report-missing/details',
     contact: '/report-missing/contact',
-    summary: '/report-missing/summary',
-  },
+    summary: '/report-missing/summary'
+  }
 } as const;

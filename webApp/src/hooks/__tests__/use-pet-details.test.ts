@@ -71,10 +71,7 @@ describe('useAnnouncementDetails', () => {
     const mockAnnouncement = { id: 'pet-123', petName: 'Buddy' };
     mockGetAnnouncementById.mockResolvedValue(mockAnnouncement);
 
-    const { result, rerender } = renderHook(
-      ({ id }) => useAnnouncementDetails(id),
-      { initialProps: { id: 'pet-123' as string | null } }
-    );
+    const { result, rerender } = renderHook(({ id }) => useAnnouncementDetails(id), { initialProps: { id: 'pet-123' as string | null } });
 
     await waitFor(() => {
       expect(result.current.announcement).toEqual(mockAnnouncement);
@@ -103,4 +100,3 @@ describe('useAnnouncementDetails', () => {
     expect(typeof result.current.retry).toBe('function');
   });
 });
-

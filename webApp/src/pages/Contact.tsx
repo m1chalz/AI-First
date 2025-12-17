@@ -6,4 +6,3 @@ export function Contact() {
     </div>
   );
 }
-

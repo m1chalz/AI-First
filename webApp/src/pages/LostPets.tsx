@@ -3,4 +3,3 @@ import { AnnouncementList } from '../components/AnnouncementList/AnnouncementLis
 export function LostPets() {
   return <AnnouncementList />;
 }
-

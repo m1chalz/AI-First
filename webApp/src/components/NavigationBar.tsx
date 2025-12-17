@@ -8,7 +8,7 @@ const NAVIGATION_ITEMS = [
   { id: 'lostPet', label: 'Lost Pet', icon: HiOutlineSearch, path: AppRoutes.lostPets, testId: 'navigation.lostPet.link' },
   { id: 'foundPet', label: 'Found Pet', icon: HiOutlineLocationMarker, path: AppRoutes.foundPets, testId: 'navigation.foundPet.link' },
   { id: 'contact', label: 'Contact Us', icon: HiOutlineChatAlt2, path: AppRoutes.contact, testId: 'navigation.contact.link' },
-  { id: 'account', label: 'Account', icon: HiOutlineUser, path: AppRoutes.account, testId: 'navigation.account.link' },
+  { id: 'account', label: 'Account', icon: HiOutlineUser, path: AppRoutes.account, testId: 'navigation.account.link' }
 ];
 
 export function NavigationBar() {
@@ -26,9 +26,7 @@ export function NavigationBar() {
             key={item.id}
             to={item.path}
             data-testid={item.testId}
-            className={({ isActive }) =>
-              isActive ? styles.navigationItemActive : styles.navigationItem
-            }
+            className={({ isActive }) => (isActive ? styles.navigationItemActive : styles.navigationItem)}
           >
             <item.icon className={styles.icon} size={20} />
             <span className={styles.label}>{item.label}</span>
@@ -38,4 +36,3 @@ export function NavigationBar() {
     </nav>
   );
 }
-

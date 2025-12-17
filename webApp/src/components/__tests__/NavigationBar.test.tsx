@@ -18,7 +18,7 @@ describe('NavigationBar', () => {
       { testId: 'navigation.lostPet.link', label: 'Lost Pet' },
       { testId: 'navigation.foundPet.link', label: 'Found Pet' },
       { testId: 'navigation.contact.link', label: 'Contact Us' },
-      { testId: 'navigation.account.link', label: 'Account' },
+      { testId: 'navigation.account.link', label: 'Account' }
     ])('should render $label navigation item', ({ testId, label }) => {
       // given
       renderWithRouter();
@@ -54,7 +54,7 @@ describe('NavigationBar', () => {
       { testId: 'navigation.lostPet.link', expectedPath: '/lost-pets' },
       { testId: 'navigation.foundPet.link', expectedPath: '/found-pets' },
       { testId: 'navigation.contact.link', expectedPath: '/contact' },
-      { testId: 'navigation.account.link', expectedPath: '/account' },
+      { testId: 'navigation.account.link', expectedPath: '/account' }
     ])('should have correct href for $testId', ({ testId, expectedPath }) => {
       // given
       renderWithRouter();
@@ -86,7 +86,7 @@ describe('NavigationBar', () => {
       { route: '/lost-pets', activeTestId: 'navigation.lostPet.link', activeLabel: 'Lost Pet' },
       { route: '/found-pets', activeTestId: 'navigation.foundPet.link', activeLabel: 'Found Pet' },
       { route: '/contact', activeTestId: 'navigation.contact.link', activeLabel: 'Contact Us' },
-      { route: '/account', activeTestId: 'navigation.account.link', activeLabel: 'Account' },
+      { route: '/account', activeTestId: 'navigation.account.link', activeLabel: 'Account' }
     ])('should highlight $activeLabel as active on $route', ({ route, activeTestId }) => {
       // given
       renderWithRouter(route);
@@ -99,8 +99,14 @@ describe('NavigationBar', () => {
     });
 
     it.each([
-      { route: '/', inactiveTestIds: ['navigation.lostPet.link', 'navigation.foundPet.link', 'navigation.contact.link', 'navigation.account.link'] },
-      { route: '/lost-pets', inactiveTestIds: ['navigation.home.link', 'navigation.foundPet.link', 'navigation.contact.link', 'navigation.account.link'] },
+      {
+        route: '/',
+        inactiveTestIds: ['navigation.lostPet.link', 'navigation.foundPet.link', 'navigation.contact.link', 'navigation.account.link']
+      },
+      {
+        route: '/lost-pets',
+        inactiveTestIds: ['navigation.home.link', 'navigation.foundPet.link', 'navigation.contact.link', 'navigation.account.link']
+      }
     ])('should not highlight inactive items on $route', ({ route, inactiveTestIds }) => {
       // given
       renderWithRouter(route);
@@ -138,8 +144,8 @@ describe('NavigationBar', () => {
       // then - logo should appear before nav items in DOM order (left side)
       const navBar = screen.getByTestId('navigation.bar');
       const children = Array.from(navBar.children);
-      const logoIndex = children.findIndex(child => child.contains(logoLink));
-      const itemsIndex = children.findIndex(child => child.contains(navItems));
+      const logoIndex = children.findIndex((child) => child.contains(logoLink));
+      const itemsIndex = children.findIndex((child) => child.contains(navItems));
       expect(logoIndex).toBeLessThan(itemsIndex);
     });
 
@@ -161,7 +167,7 @@ describe('NavigationBar', () => {
       { testId: 'navigation.lostPet.link', label: 'Lost Pet' },
       { testId: 'navigation.foundPet.link', label: 'Found Pet' },
       { testId: 'navigation.contact.link', label: 'Contact Us' },
-      { testId: 'navigation.account.link', label: 'Account' },
+      { testId: 'navigation.account.link', label: 'Account' }
     ])('should render icon and label for $label item', ({ testId, label }) => {
       // given
       renderWithRouter();
@@ -181,7 +187,7 @@ describe('NavigationBar', () => {
       { testId: 'navigation.lostPet.link' },
       { testId: 'navigation.foundPet.link' },
       { testId: 'navigation.contact.link' },
-      { testId: 'navigation.account.link' },
+      { testId: 'navigation.account.link' }
     ])('should render icon before label in $testId', ({ testId }) => {
       // given
       renderWithRouter();
@@ -272,7 +278,7 @@ describe('NavigationBar', () => {
       { route: '/lost-pets', activeTestId: 'navigation.lostPet.link', label: 'Lost Pet' },
       { route: '/found-pets', activeTestId: 'navigation.foundPet.link', label: 'Found Pet' },
       { route: '/contact', activeTestId: 'navigation.contact.link', label: 'Contact' },
-      { route: '/account', activeTestId: 'navigation.account.link', label: 'Account' },
+      { route: '/account', activeTestId: 'navigation.account.link', label: 'Account' }
     ])('should show $label as active on direct URL access to $route', ({ route, activeTestId }) => {
       // given
       renderWithRouter(route);
@@ -286,19 +292,16 @@ describe('NavigationBar', () => {
       expect(homeLink.className).not.toMatch(/Active/);
     });
 
-    it.each([
-      { route: '/' },
-      { route: '/lost-pets' },
-      { route: '/found-pets' },
-      { route: '/contact' },
-      { route: '/account' },
-    ])('should render navigation bar on $route route', ({ route }) => {
-      // given
-      renderWithRouter(route);
+    it.each([{ route: '/' }, { route: '/lost-pets' }, { route: '/found-pets' }, { route: '/contact' }, { route: '/account' }])(
+      'should render navigation bar on $route route',
+      ({ route }) => {
+        // given
+        renderWithRouter(route);
 
-      // then
-      expect(screen.getByTestId('navigation.bar')).toBeDefined();
-    });
+        // then
+        expect(screen.getByTestId('navigation.bar')).toBeDefined();
+      }
+    );
 
     it('should maintain all navigation items when changing routes', async () => {
       // given

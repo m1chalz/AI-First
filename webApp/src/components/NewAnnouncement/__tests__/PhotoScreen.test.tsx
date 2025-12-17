@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { PhotoScreen } from '../PhotoScreen';
-import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { AppRoutes } from '../../../pages/routes';
 import { FlowStep } from '../../../models/NewAnnouncementFlow';
 
@@ -62,8 +61,7 @@ vi.mock('../../../hooks/use-photo-upload', () => ({
   })
 }));
 
-const renderWithProviders = (component: React.ReactElement) =>
-  render(<MemoryRouter>{component}</MemoryRouter>);
+const renderWithProviders = (component: React.ReactElement) => render(<MemoryRouter>{component}</MemoryRouter>);
 
 describe('PhotoScreen', () => {
   beforeEach(() => {
@@ -164,4 +162,3 @@ describe('PhotoScreen', () => {
     expect(screen.getByText('2/4')).toBeTruthy();
   });
 });
-

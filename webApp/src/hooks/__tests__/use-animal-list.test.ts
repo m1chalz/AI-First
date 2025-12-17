@@ -176,4 +176,3 @@ describe('useAnnouncementList', () => {
     expect(result.current.geolocationError).toBeNull();
   });
 });
-

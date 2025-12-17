@@ -48,4 +48,3 @@ describe('FoundPets', () => {
     expect(screen.getByText('Coming soon')).toBeTruthy();
   });
 });
-

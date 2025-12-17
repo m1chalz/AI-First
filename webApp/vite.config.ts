@@ -22,11 +22,7 @@ export default defineConfig({
         statements: 80
       },
       include: ['src/**/*.{ts,tsx}'],
-      exclude: [
-        'src/**/*.test.{ts,tsx}',
-        'src/**/*.d.ts',
-        'src/index.tsx'
-      ]
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.d.ts', 'src/index.tsx']
     }
   }
 });
