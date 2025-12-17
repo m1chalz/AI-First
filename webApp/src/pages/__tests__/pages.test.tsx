@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Home } from '../Home';
@@ -6,8 +6,19 @@ import { Account } from '../Account';
 import { Contact } from '../Contact';
 import { FoundPets } from '../FoundPets';
 
+vi.mock('../../hooks/use-announcement-list', () => ({
+  useAnnouncementList: vi.fn(() => ({
+    announcements: [],
+    isLoading: false,
+    error: null,
+    isEmpty: true,
+    loadAnnouncements: vi.fn(),
+    geolocationError: null
+  }))
+}));
+
 describe('Home', () => {
-  it('should render landing page with hero section', () => {
+  it('should render landing page with hero section and recent pets section', () => {
     // when
     render(
       <BrowserRouter>
@@ -17,6 +28,7 @@ describe('Home', () => {
 
     // then
     expect(screen.getByTestId('landing.heroSection')).toBeDefined();
+    expect(screen.getByTestId('landing.recentPetsSection')).toBeDefined();
     expect(screen.getByTestId('landing.footer')).toBeDefined();
   });
 });
