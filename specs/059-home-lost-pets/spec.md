@@ -79,6 +79,8 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 - When no lost pets are available, the system MUST display a proper empty state with a hint to the user that there are no lost pets currently
 - When the backend endpoint is temporarily unavailable, the system MUST display an error message with a manual refresh button
 - When a pet entry has been removed between teaser load and navigation to details, the existing details screen error handling will manage this case
+- When pet photos fail to load, the system MUST display a placeholder image or icon to maintain layout consistency
+- When user has a slow network connection, the system MUST show loading indicators while data is being fetched
 
 ## Requirements *(mandatory)*
 
@@ -92,6 +94,7 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 - **FR-006**: System MUST navigate to the lost pets tab when "View All Lost Pets" button is tapped
 - **FR-007**: System MUST navigate to the lost pets tab and display pet details when a teaser entry is tapped, using the same navigation pattern as the existing list-to-details navigation
 - **FR-008**: System MUST retrieve lost pet data using the existing backend endpoint for announcements
+- **FR-009**: When pet photos fail to load, the system MUST display placeholder images or icons to maintain layout consistency
 
 ### Key Entities *(include if feature involves data)*
 
@@ -106,3 +109,12 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 - **SC-002**: 95% of users successfully navigate from teaser entries to pet details
 - **SC-003**: Lost pets teaser displays accurate, up-to-date information matching the full lost pets list
 - **SC-004**: Home page maintains smooth scrolling performance with the lost pets teaser component
+- **SC-005**: When loading lost pets fails, an error state is displayed in the teaser within 10 seconds of request start
+- **SC-006**: When the user taps retry from the error state, the teaser successfully loads and displays results after connectivity is restored
+
+## Assumptions
+
+- **Backend Sorting**: The backend endpoint for announcements provides data sorted by creation date (newest first), location and number of returned elements as specified in the request parameters
+- **Photo Requirements**: Pet photos are stored in web-compatible formats and accessible via URL. When photos fail to load, placeholder images maintain layout consistency
+- **Network Conditions**: The app handles various network conditions with appropriate loading indicators and error states for slow connections
+- **Data Consistency**: Lost pets teaser uses the same data model and display format as the existing lost pet announcements list to ensure consistency
