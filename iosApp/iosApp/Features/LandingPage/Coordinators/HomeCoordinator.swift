@@ -28,6 +28,16 @@ class HomeCoordinator: CoordinatorInterface {
     /// Closure to handle cross-tab navigation when user taps announcement
     private let onShowPetDetails: (String) -> Void
     
+    // MARK: - Tab Navigation Closures
+    
+    /// Closure to switch to Lost Pet tab (without showing details).
+    /// Set by TabCoordinator during initialization.
+    var onSwitchToLostPetTab: (() -> Void)?
+    
+    /// Closure to switch to Found Pet tab.
+    /// Set by TabCoordinator during initialization.
+    var onSwitchToFoundPetTab: (() -> Void)?
+    
     // MARK: - Initialization
     
     /// Creates HomeCoordinator with its own navigation controller.
@@ -70,6 +80,10 @@ class HomeCoordinator: CoordinatorInterface {
         viewModel.onOpenAppSettings = { [weak self] in
             self?.openAppSettings()
         }
+        
+        // Set tab navigation closures (MVVM-C pattern - coordinator manages navigation)
+        viewModel.onSwitchToLostPetTab = onSwitchToLostPetTab
+        viewModel.onSwitchToFoundPetTab = onSwitchToFoundPetTab
         
         // Create SwiftUI view with ViewModel
         let landingPageView = LandingPageView(viewModel: viewModel)

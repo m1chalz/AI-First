@@ -36,11 +36,11 @@
 
 **Purpose**: Project initialization and localization setup
 
-- [ ] T001 Verify iOS project builds successfully: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`
-- [ ] T002 Create Components directory in `/iosApp/iosApp/Features/LandingPage/Views/Components/`
-- [ ] T003 Create Components test directory in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/`
-- [ ] T004 Add localization strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (5 keys: hero title, 2 button labels, list header title, view all label)
-- [ ] T005 Run swiftgen to generate L10n accessors: `cd iosApp && swiftgen`
+- [X] T001 Verify iOS project builds successfully: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`
+- [X] T002 Create Components directory in `/iosApp/iosApp/Features/LandingPage/Views/Components/`
+- [X] T003 Create Components test directory in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/`
+- [X] T004 Add localization strings to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (5 keys: hero title, 2 button labels, list header title, view all label)
+- [X] T005 Run swiftgen to generate L10n accessors: `cd iosApp && swiftgen`
 
 ---
 
@@ -50,13 +50,13 @@
 
 **⚠️ CRITICAL**: This phase MUST be complete before any user story work can begin
 
-- [ ] T006 Refactor FloatingActionButton.Style enum in `/iosApp/iosApp/Views/FloatingActionButton.swift` to use unified gradient styles (primary = blue, secondary = red/orange)
-- [ ] T007 Add IconSource enum to `/iosApp/iosApp/Views/FloatingActionButton.swift` (asset vs. sfSymbol support)
-- [ ] T008 Add IconPosition enum to `/iosApp/iosApp/Views/FloatingActionButton.swift` (left vs. right)
-- [ ] T009 Update FloatingActionButton body to support icon positioning in `/iosApp/iosApp/Views/FloatingActionButton.swift`
-- [ ] T010 Update FloatingActionButtonModel in `/iosApp/iosApp/Views/FloatingActionButtonModel.swift` to use IconSource and IconPosition
-- [ ] T011 Update existing FloatingActionButton usages to use new API (likely in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementListView.swift`)
-- [ ] T012 Build project and verify no compilation errors: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`
+- [X] T006 Refactor FloatingActionButton.Style enum in `/iosApp/iosApp/Views/FloatingActionButton.swift` to use unified gradient styles (primary = blue, secondary = red/orange)
+- [X] T007 Add IconSource enum to `/iosApp/iosApp/Views/FloatingActionButton.swift` (asset vs. sfSymbol support)
+- [X] T008 Add IconPosition enum to `/iosApp/iosApp/Views/FloatingActionButton.swift` (left vs. right)
+- [X] T009 Update FloatingActionButton body to support icon positioning in `/iosApp/iosApp/Views/FloatingActionButton.swift`
+- [X] T010 Update FloatingActionButtonModel in `/iosApp/iosApp/Views/FloatingActionButtonModel.swift` to use IconSource and IconPosition
+- [X] T011 Update existing FloatingActionButton usages to use new API (likely in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementListView.swift`)
+- [X] T012 Build project and verify no compilation errors: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -76,35 +76,35 @@
 ### Tests for User Story 1 (MANDATORY) ✅
 
 **iOS Unit Tests**:
-- [ ] T013 [P] [US1] Unit test for HeroPanelView_Model initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (default values, localized strings, accessibility IDs)
-- [ ] T014 [P] [US1] Unit test for HeroPanelView_Model closure invocation in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (verify onLostPetTap and onFoundPetTap are called)
-- [ ] T015 [P] [US1] Unit test for HeroPanelView_Model custom initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (SwiftUI preview use case)
-- [ ] T016 [P] [US1] Unit test for ListHeaderRowView_Model initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (default values, localized strings, accessibility IDs)
-- [ ] T017 [P] [US1] Unit test for ListHeaderRowView_Model closure invocation in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (verify onActionTap is called)
-- [ ] T018 [P] [US1] Unit test for ListHeaderRowView_Model custom initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (SwiftUI preview use case)
+- [X] T013 [P] [US1] Unit test for HeroPanelView_Model initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (default values, localized strings, accessibility IDs)
+- [X] T014 [P] [US1] Unit test for HeroPanelView_Model closure invocation in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (verify onLostPetTap and onFoundPetTap are called)
+- [X] T015 [P] [US1] Unit test for HeroPanelView_Model custom initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` (SwiftUI preview use case)
+- [X] T016 [P] [US1] Unit test for ListHeaderRowView_Model initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (default values, localized strings, accessibility IDs)
+- [X] T017 [P] [US1] Unit test for ListHeaderRowView_Model closure invocation in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (verify onActionTap is called)
+- [X] T018 [P] [US1] Unit test for ListHeaderRowView_Model custom initialization in `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` (SwiftUI preview use case)
 
 **End-to-End Tests**:
-- [ ] T019 [P] [US1] Create Gherkin feature file in `/e2e-tests/java/src/test/resources/features/mobile/landing-page-top-panel.feature` with scenario for User Story 1 (see top panel)
-- [ ] T020 [P] [US1] Create LandingPageTopPanelScreen in `/e2e-tests/java/src/test/java/com/petspot/e2e/screens/LandingPageTopPanelScreen.java` (Screen Object Model for iOS)
-- [ ] T021 [US1] Create LandingPageTopPanelSteps in `/e2e-tests/java/src/test/java/com/petspot/e2e/steps/mobile/LandingPageTopPanelSteps.java` (step definitions for US1 scenarios)
+- [X] T019 [P] [US1] Create Gherkin feature file in `/e2e-tests/java/src/test/resources/features/mobile/landing-page-top-panel.feature` with scenario for User Story 1 (see top panel)
+- [X] T020 [P] [US1] Create LandingPageTopPanelScreen in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/LandingPageTopPanelScreen.java` (Screen Object Model for iOS)
+- [X] T021 [US1] Create LandingPageTopPanelSteps in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LandingPageTopPanelSteps.java` (step definitions for US1 scenarios)
 
 ### Implementation for User Story 1
 
 **iOS** (Full Stack Implementation):
 
 **Presentation Models**:
-- [ ] T022 [P] [US1] Create HeroPanelView_Model struct in `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView_Model.swift` (properties: title, button titles, icons, closures, accessibility IDs)
-- [ ] T023 [P] [US1] Create ListHeaderRowView_Model struct in `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView_Model.swift` (properties: title, action title, closure, accessibility IDs)
+- [X] T022 [P] [US1] Create HeroPanelView_Model struct in `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView_Model.swift` (properties: title, button titles, icons, closures, accessibility IDs)
+- [X] T023 [P] [US1] Create ListHeaderRowView_Model struct in `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView_Model.swift` (properties: title, action title, closure, accessibility IDs)
 
 **SwiftUI Views**:
-- [ ] T024 [P] [US1] Create HeroPanelView in `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView.swift` (VStack with title + HStack with 2 FloatingActionButtons using SF Symbols)
-- [ ] T025 [P] [US1] Add SwiftUI Preview for HeroPanelView in same file (no-op closures)
-- [ ] T026 [P] [US1] Create ListHeaderRowView in `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView.swift` (HStack with title Text + "View All" button)
-- [ ] T027 [P] [US1] Add SwiftUI Preview for ListHeaderRowView in same file (no-op closure)
+- [X] T024 [P] [US1] Create HeroPanelView in `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView.swift` (VStack with title + HStack with 2 FloatingActionButtons using SF Symbols)
+- [X] T025 [P] [US1] Add SwiftUI Preview for HeroPanelView in same file (no-op closures)
+- [X] T026 [P] [US1] Create ListHeaderRowView in `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView.swift` (HStack with title Text + "View All" button)
+- [X] T027 [P] [US1] Add SwiftUI Preview for ListHeaderRowView in same file (no-op closure)
 
 **Layout Integration**:
-- [ ] T028 [US1] Modify LandingPageView in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` to wrap content in VStack (hero panel → list header row → existing AnnouncementCardsListView with .frame(maxHeight: .infinity))
-- [ ] T029 [US1] Add accessibility identifiers to all interactive elements per FR-010 (home.hero.title, home.hero.lostPetButton, home.hero.foundPetButton, home.recentReports.title, home.recentReports.viewAll)
+- [X] T028 [US1] Modify LandingPageView in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` to wrap content in VStack (hero panel → list header row → existing AnnouncementCardsListView with .frame(maxHeight: .infinity))
+- [X] T029 [US1] Add accessibility identifiers to all interactive elements per FR-010 (home.hero.title, home.hero.lostPetButton, home.hero.foundPetButton, home.recentReports.title, home.recentReports.viewAll)
 
 **Verification**:
 - [ ] T030 [US1] Build and run on simulator: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`
@@ -132,28 +132,28 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **End-to-End Tests**:
-- [ ] T035 [P] [US2] Add Gherkin scenario for User Story 2 to `/e2e-tests/java/src/test/resources/features/mobile/landing-page-top-panel.feature` (use top panel actions)
-- [ ] T036 [P] [US2] Update LandingPageTopPanelScreen in `/e2e-tests/java/src/test/java/com/petspot/e2e/screens/LandingPageTopPanelScreen.java` to support tab switching verification
-- [ ] T037 [US2] Add step definitions for US2 scenarios to `/e2e-tests/java/src/test/java/com/petspot/e2e/steps/mobile/LandingPageTopPanelSteps.java` (tap buttons, verify tab switches)
+- [X] T035 [P] [US2] Add Gherkin scenario for User Story 2 to `/e2e-tests/java/src/test/resources/features/mobile/landing-page-top-panel.feature` (use top panel actions)
+- [X] T036 [P] [US2] Update LandingPageTopPanelScreen in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/screens/LandingPageTopPanelScreen.java` to support tab switching verification
+- [X] T037 [US2] Add step definitions for US2 scenarios to `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LandingPageTopPanelSteps.java` (tap buttons, verify tab switches)
 
 ### Implementation for User Story 2
 
 **iOS** (Navigation Integration):
 
 **Coordinator Changes**:
-- [ ] T038 [P] [US2] Add tab navigation closure properties to HomeCoordinator in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` (onSwitchToLostPetTab, onSwitchToFoundPetTab)
-- [ ] T039 [US2] Refactor showPetDetailsFromHome to switchToLostPetTab(withAnnouncementId:) in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (optional parameter: nil = only switch tab, non-nil = switch + show details)
-- [ ] T040 [P] [US2] Add switchToFoundPetTab() method to TabCoordinator in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
-- [ ] T041 [US2] Set tab navigation closures on HomeCoordinator during TabCoordinator init in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (wire hero button navigation)
-- [ ] T042 [US2] Update existing list item navigation to use refactored switchToLostPetTab(withAnnouncementId:) in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
+- [X] T038 [P] [US2] Add tab navigation closure properties to HomeCoordinator in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` (onSwitchToLostPetTab, onSwitchToFoundPetTab)
+- [X] T039 [US2] Refactor showPetDetailsFromHome to switchToLostPetTab(withAnnouncementId:) in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (optional parameter: nil = only switch tab, non-nil = switch + show details)
+- [X] T040 [P] [US2] Add switchToFoundPetTab() method to TabCoordinator in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
+- [X] T041 [US2] Set tab navigation closures on HomeCoordinator during TabCoordinator init in `/iosApp/iosApp/Coordinators/TabCoordinator.swift` (wire hero button navigation)
+- [X] T042 [US2] Update existing list item navigation to use refactored switchToLostPetTab(withAnnouncementId:) in `/iosApp/iosApp/Coordinators/TabCoordinator.swift`
 
 **ViewModel Changes**:
-- [ ] T043 [P] [US2] Add tab navigation closure properties to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift` (onSwitchToLostPetTab, onSwitchToFoundPetTab)
-- [ ] T044 [US2] Wire tab navigation closures from HomeCoordinator to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` (set closures in start() method)
+- [X] T043 [P] [US2] Add tab navigation closure properties to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift` (onSwitchToLostPetTab, onSwitchToFoundPetTab)
+- [X] T044 [US2] Wire tab navigation closures from HomeCoordinator to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` (set closures in start() method)
 
 **View Changes**:
-- [ ] T045 [US2] Update LandingPageView to create HeroPanelView_Model with ViewModel closures in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` (onLostPetTap, onFoundPetTap)
-- [ ] T046 [US2] Update LandingPageView to create ListHeaderRowView_Model with ViewModel closure in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` (onActionTap → switches to Lost Pet tab)
+- [X] T045 [US2] Update LandingPageView to create HeroPanelView_Model with ViewModel closures in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` (onLostPetTap, onFoundPetTap)
+- [X] T046 [US2] Update LandingPageView to create ListHeaderRowView_Model with ViewModel closure in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` (onActionTap → switches to Lost Pet tab)
 
 **Verification**:
 - [ ] T047 [US2] Build and run on simulator: `cd iosApp && xcodebuild -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16'`

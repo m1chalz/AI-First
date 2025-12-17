@@ -1,16 +1,17 @@
 import SwiftUI
 
-/// Landing page view for Home tab displaying recent pet announcements.
-/// Composes `AnnouncementCardsListView` (autonomous component) with landing page context.
+/// Landing page view for Home tab displaying hero panel, list header, and recent pet announcements.
+/// Composes new top panel UI with `AnnouncementCardsListView` (autonomous component).
 ///
-/// **Composite View Pattern**:
-/// - List is only part of the screen (future: header, sections, promotions, etc.)
-/// - Delegates list rendering to `AnnouncementCardsListView`
-/// - Child view handles its own empty/error/loading states internally
+/// **Layout (top to bottom)**:
+/// 1. HeroPanelView - "Find Your Pet" title + "Lost Pet" / "Found Pet" buttons
+/// 2. ListHeaderRowView - "Recent Reports" title + "View All" action
+/// 3. AnnouncementCardsListView - scrollable list of pet announcements
 ///
 /// **Navigation**:
 /// - NO NavigationView - coordinator manages UINavigationController
 /// - Navigation bar title set by coordinator via UIHostingController
+/// - Hero button taps trigger tab navigation via ViewModel closures
 ///
 /// **Loading Flow**:
 /// 1. View appears → `.task { await viewModel.loadData() }`
@@ -23,11 +24,38 @@ struct LandingPageView: View {
     
     var body: some View {
         // NO NavigationView - coordinator manages UINavigationController
-        AnnouncementCardsListView(
-            viewModel: viewModel.listViewModel,
-            emptyStateModel: viewModel.emptyStateModel,
-            listAccessibilityId: viewModel.listAccessibilityId
-        )
+        VStack(spacing: 0) {
+            // Hero panel - "Find Your Pet" + action buttons
+            HeroPanelView(
+                model: .landingPage(
+                    onLostPetTap: {
+                        viewModel.onSwitchToLostPetTab?()
+                    },
+                    onFoundPetTap: {
+                        viewModel.onSwitchToFoundPetTab?()
+                    }
+                )
+            )
+            
+            // List header row - "Recent Reports" / "View All"
+            ListHeaderRowView(
+                model: .recentReports(
+                    onViewAllTap: {
+                        viewModel.onSwitchToLostPetTab?()
+                    }
+                )
+            )
+            
+            // Announcement cards list - takes remaining space
+            // IMPORTANT: .frame(maxHeight: .infinity) needed because AnnouncementCardsListView
+            // has its own ScrollView inside - it needs explicit height to work properly
+            AnnouncementCardsListView(
+                viewModel: viewModel.listViewModel,
+                emptyStateModel: viewModel.emptyStateModel,
+                listAccessibilityId: viewModel.listAccessibilityId
+            )
+            .frame(maxHeight: .infinity)
+        }
         .task {
             await viewModel.loadData()
         }
@@ -104,4 +132,3 @@ private class PreviewAnnouncementRepository: AnnouncementRepositoryProtocol {
         throw NSError(domain: "Preview", code: -1)
     }
 }
-

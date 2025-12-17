@@ -59,9 +59,18 @@ final class TabCoordinator {
             repository: container.announcementRepository,
             locationHandler: LocationPermissionHandler(locationService: container.locationService),
             onShowPetDetails: { [weak self] announcementId in
-                self?.showPetDetailsFromHome(announcementId)
+                self?.switchToLostPetTab(withAnnouncementId: announcementId)
             }
         )
+        
+        // Set tab navigation closures on HomeCoordinator (for hero panel buttons)
+        homeCoordinator.onSwitchToLostPetTab = { [weak self] in
+            self?.switchToLostPetTab(withAnnouncementId: nil)
+        }
+        homeCoordinator.onSwitchToFoundPetTab = { [weak self] in
+            self?.switchToFoundPetTab()
+        }
+        
         let lostPetCoordinator = AnnouncementListCoordinator(
             repository: container.announcementRepository,
             locationService: container.locationService,
@@ -178,21 +187,20 @@ final class TabCoordinator {
     
     // MARK: - Cross-Tab Navigation
     
-    /// Handles cross-tab navigation from Home to Pet Details.
-    /// Switches to Lost Pets tab and shows pet detail screen.
+    /// Switches to Lost Pet tab, optionally showing pet details.
     ///
-    /// **Navigation Flow**:
-    /// 1. User taps announcement card on Home tab
-    /// 2. HomeCoordinator invokes `onShowPetDetails` closure
-    /// 3. This method switches tab and triggers detail screen
-    /// 4. AnnouncementListCoordinator pushes pet detail view
+    /// **Use Cases**:
+    /// - Hero "Lost Pet" button: `switchToLostPetTab(withAnnouncementId: nil)` - only switch tab
+    /// - "View All" button: `switchToLostPetTab(withAnnouncementId: nil)` - only switch tab
+    /// - Announcement card tap: `switchToLostPetTab(withAnnouncementId: id)` - switch tab + show details
     ///
     /// **Back Navigation Behavior**:
     /// After viewing details, user remains on Lost Pets tab.
     /// Tapping Home tab returns to landing page.
     ///
-    /// - Parameter announcementId: ID of announcement to show details for
-    private func showPetDetailsFromHome(_ announcementId: String) {
+    /// - Parameter announcementId: Optional ID of announcement to show details for.
+    ///   If nil, only switches tab. If provided, also shows pet details.
+    private func switchToLostPetTab(withAnnouncementId announcementId: String? = nil) {
         // Find AnnouncementListCoordinator and its index
         guard let (index, lostPetCoordinator) = findAnnouncementListCoordinator() else {
             print("Warning: Could not find AnnouncementListCoordinator for cross-tab navigation")
@@ -202,8 +210,36 @@ final class TabCoordinator {
         // Switch to Lost Pets tab
         _tabBarController.selectedIndex = index
         
-        // Push pet details screen on Lost Pets tab navigation stack
-        lostPetCoordinator.showPetDetails(for: announcementId)
+        // Only show details if announcementId provided
+        if let announcementId = announcementId {
+            lostPetCoordinator.showPetDetails(for: announcementId)
+        }
+    }
+    
+    /// Switches to Found Pet tab.
+    ///
+    /// **Use Case**: Hero "Found Pet" button tap
+    private func switchToFoundPetTab() {
+        // Found Pet tab is at index 2 (Home=0, Lost Pet=1, Found Pet=2)
+        guard let foundPetIndex = findFoundPetTabIndex() else {
+            print("Warning: Could not find Found Pet tab index")
+            return
+        }
+        
+        _tabBarController.selectedIndex = foundPetIndex
+    }
+    
+    /// Finds the Found Pet tab index.
+    /// - Returns: Tab index for Found Pet tab or nil if not found
+    private func findFoundPetTabIndex() -> Int? {
+        for (index, coordinator) in childCoordinators.enumerated() {
+            if coordinator is PlaceholderCoordinator,
+               let navController = coordinator.navigationController,
+               navController.tabBarItem.accessibilityIdentifier == "tabs.foundPet" {
+                return index
+            }
+        }
+        return nil
     }
     
     /// Finds the AnnouncementListCoordinator and its tab index.

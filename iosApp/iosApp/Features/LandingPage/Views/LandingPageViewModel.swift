@@ -77,6 +77,12 @@ class LandingPageViewModel: ObservableObject {
     /// Called when user taps "Go to Settings" in permission popup (MVVM-C pattern)
     var onOpenAppSettings: (() -> Void)?
     
+    /// Called when user taps "Lost Pet" button or "View All" (switches to Lost Pet tab)
+    var onSwitchToLostPetTab: (() -> Void)?
+    
+    /// Called when user taps "Found Pet" button (switches to Found Pet tab)
+    var onSwitchToFoundPetTab: (() -> Void)?
+    
     // MARK: - Dependencies
     
     private let locationHandler: LocationPermissionHandler

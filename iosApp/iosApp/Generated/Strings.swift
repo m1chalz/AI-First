@@ -226,6 +226,20 @@ public enum L10n {
       /// Check back later for pet reports in your area.
       public static let message = L10n.tr("Localizable", "landingPage.emptyState.message", fallback: "No recent announcements.\nCheck back later for pet reports in your area.")
     }
+    public enum Hero {
+      /// Found Pet
+      public static let foundPetButton = L10n.tr("Localizable", "landingPage.hero.foundPetButton", fallback: "Found Pet")
+      /// Lost Pet
+      public static let lostPetButton = L10n.tr("Localizable", "landingPage.hero.lostPetButton", fallback: "Lost Pet")
+      /// Find Your Pet
+      public static let title = L10n.tr("Localizable", "landingPage.hero.title", fallback: "Find Your Pet")
+    }
+    public enum ListHeader {
+      /// Recent Reports
+      public static let title = L10n.tr("Localizable", "landingPage.listHeader.title", fallback: "Recent Reports")
+      /// View All
+      public static let viewAll = L10n.tr("Localizable", "landingPage.listHeader.viewAll", fallback: "View All")
+    }
   }
   public enum Location {
     public enum Permission {

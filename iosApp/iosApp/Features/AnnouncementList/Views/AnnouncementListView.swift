@@ -68,7 +68,8 @@ struct AnnouncementListView: View {
                 model: FloatingActionButtonModel(
                     title: L10n.AnnouncementList.Button.reportMissing,
                     style: .primary,
-                    icon: "ic_report_missing_animal"
+                    iconSource: .asset("ic_report_missing_animal"),
+                    iconPosition: .right
                 ),
                 action: { viewModel.reportMissing() }
             )
