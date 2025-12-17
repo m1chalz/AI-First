@@ -39,12 +39,12 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Review existing web app structure in `/webApp/src/` (components, hooks, services, lib, types)
-- [ ] T002 [P] Verify `react-icons` is installed in `/webApp/package.json` (Heroicons and Material Design icons)
-- [ ] T003 [P] Verify existing `useAnnouncementList()` hook in `/webApp/src/hooks/use-announcement-list.ts`
-- [ ] T004 [P] Verify existing `announcementService` in `/webApp/src/services/announcement-service.ts`
-- [ ] T005 [P] Verify existing `Announcement` type in `/webApp/src/types/announcement.ts`
-- [ ] T006 [P] Create `/webApp/src/components/home/` directory for landing page components
+- [X] T001 Review existing web app structure in `/webApp/src/` (components, hooks, services, lib, types)
+- [X] T002 [P] Verify `react-icons` is installed in `/webApp/package.json` (Heroicons and Material Design icons)
+- [X] T003 [P] Verify existing `useAnnouncementList()` hook in `/webApp/src/hooks/use-announcement-list.ts`
+- [X] T004 [P] Verify existing `announcementService` in `/webApp/src/services/announcement-service.ts`
+- [X] T005 [P] Verify existing `Announcement` type in `/webApp/src/types/announcement.ts`
+- [X] T006 [P] Create `/webApp/src/components/home/` directory for landing page components
 
 ---
 
@@ -54,11 +54,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 [P] Create `/webApp/src/lib/date-utils.ts` file (placeholder for date formatting utilities)
-- [ ] T008 [P] Create `/webApp/src/lib/distance-utils.ts` file (placeholder for distance formatting utilities)
-- [ ] T009 [P] Create E2E feature file `/e2e-tests/java/src/test/resources/features/web/landing-page.feature`
-- [ ] T010 [P] Create E2E Page Object `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java`
-- [ ] T011 [P] Create E2E step definitions `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
+- [X] T007 [P] Create `/webApp/src/lib/date-utils.ts` file (placeholder for date formatting utilities)
+- [X] T008 [P] Create `/webApp/src/lib/distance-utils.ts` file (placeholder for distance formatting utilities)
+- [X] T009 [P] Create E2E feature file `/e2e-tests/java/src/test/resources/features/web/landing-page.feature`
+- [X] T010 [P] Create E2E Page Object `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/web/LandingPage.java`
+- [X] T011 [P] Create E2E step definitions `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
