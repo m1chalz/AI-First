@@ -22,7 +22,7 @@ export function App() {
         <Routes>
           <Route path={AppRoutes.home} element={<Home />} />
           <Route path={AppRoutes.lostPets} element={<LostPets />} />
-          <Route path={`${AppRoutes.lostPets}/:announcementId`} element={<LostPets />} />
+          <Route path={AppRoutes.lostPetDetails(':announcementId')} element={<LostPets />} />
           <Route path={AppRoutes.foundPets} element={<FoundPets />} />
           <Route path={AppRoutes.contact} element={<Contact />} />
           <Route path={AppRoutes.account} element={<Account />} />

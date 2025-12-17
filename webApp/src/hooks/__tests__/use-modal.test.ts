@@ -54,11 +54,11 @@ describe('useModal', () => {
       result.current.openModal('pet-456');
     });
 
-    // Then: Should navigate to announcement URL
-    expect(mockNavigate).toHaveBeenCalledWith('/announcement/pet-456');
+    // Then: Should navigate to lost pets details URL
+    expect(mockNavigate).toHaveBeenCalledWith('/lost-pets/pet-456');
   });
 
-  it('should navigate to home when closeModal is called', () => {
+  it('should navigate to lost pets list when closeModal is called', () => {
     // Given: Hook is initialized with an open modal
     mockUseParams.mockReturnValue({ announcementId: 'pet-123' });
     const { result } = renderHook(() => useModal());
@@ -68,8 +68,8 @@ describe('useModal', () => {
       result.current.closeModal();
     });
 
-    // Then: Should navigate to home
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    // Then: Should navigate to lost pets list
+    expect(mockNavigate).toHaveBeenCalledWith('/lost-pets');
   });
 
   it('should navigate to different announcement when openModal called with different ID', () => {
@@ -85,9 +85,9 @@ describe('useModal', () => {
       result.current.openModal('pet-789');
     });
 
-    // Then: Should navigate to both announcement URLs in order
-    expect(mockNavigate).toHaveBeenNthCalledWith(1, '/announcement/pet-123');
-    expect(mockNavigate).toHaveBeenNthCalledWith(2, '/announcement/pet-789');
+    // Then: Should navigate to both lost pets details URLs in order
+    expect(mockNavigate).toHaveBeenNthCalledWith(1, '/lost-pets/pet-123');
+    expect(mockNavigate).toHaveBeenNthCalledWith(2, '/lost-pets/pet-789');
   });
 
   it('should reflect different selectedAnnouncementId when params change', () => {
