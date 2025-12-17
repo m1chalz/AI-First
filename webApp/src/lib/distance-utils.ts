@@ -33,11 +33,7 @@ export function formatLocationOrDistance(
   return formatCoordinatesFn(announcementLat, announcementLng);
 }
 
-function formatDistance(distanceKm: number | undefined): string {
-  if (distanceKm === undefined) {
-    return 'Location unknown';
-  }
-
+function formatDistance(distanceKm: number): string {
   if (distanceKm >= 1) {
     return `${distanceKm.toFixed(1)} km away`;
   }

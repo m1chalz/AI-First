@@ -10,8 +10,8 @@ describe('HeroSection', () => {
     // then
     expect(screen.getByTestId('landing.heroSection')).toBeDefined();
     expect(screen.getByTestId('landing.hero.heading')).toBeDefined();
-    expect(screen.getByText(/Reunite with Your/)).toBeDefined();
-    expect(screen.getByText(/Helping pet owners/)).toBeDefined();
+    expect(screen.getByText(/Reuniting Lost Pets/)).toBeDefined();
+    expect(screen.getByText(/Our portal helps connect/)).toBeDefined();
   });
 
   it.each([

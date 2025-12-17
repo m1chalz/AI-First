@@ -33,9 +33,12 @@ export const RecentPetsSection: React.FC = () => {
     <section className={styles.section} data-testid="landing.recentPetsSection">
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.heading} data-testid="landing.recentPets.heading">
-            Recently Lost Pets
-          </h2>
+          <div className={styles.headerLeft}>
+            <h2 className={styles.heading} data-testid="landing.recentPets.heading">
+              Recently Lost Pets
+            </h2>
+            <p className={styles.subtitle}>Help us reunite these pets with their families</p>
+          </div>
           <Link
             to={AppRoutes.lostPets}
             className={styles.viewAllLink}

@@ -10,6 +10,7 @@ describe('FeatureCard', () => {
       id: 'search',
       icon: MdSearch,
       iconColor: '#3B82F6',
+      iconBgColor: '#DBEAFE',
       title: 'Search Database',
       description: 'Browse through our database of lost and found pets in your area'
     };
@@ -23,7 +24,7 @@ describe('FeatureCard', () => {
 
     const iconContainer = card.querySelector('[class*="iconContainer"]');
     expect(iconContainer).not.toBeNull();
-    expect(iconContainer?.getAttribute('style')).toContain('background-color: rgb(59, 130, 246)');
+    expect(iconContainer?.getAttribute('style')).toContain('background-color: rgb(219, 234, 254)');
     expect(card.querySelector('svg')).not.toBeNull();
 
     expect(screen.getByText('Search Database')).toBeDefined();

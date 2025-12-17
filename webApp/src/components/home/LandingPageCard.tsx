@@ -18,9 +18,6 @@ interface LandingPageCardProps {
 
 export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, userCoordinates, onClick }) => {
   const statusColor = ANNOUNCEMENT_STATUS_BADGE_COLORS[announcement.status];
-  const speciesBreed = announcement.breed
-    ? `${toPascalCase(announcement.species)} • ${announcement.breed}`
-    : toPascalCase(announcement.species);
 
   const locationText = formatLocationOrDistance(
     userCoordinates,
@@ -65,16 +62,24 @@ export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, 
       </div>
 
       <div className={styles.content}>
-        <p className={styles.speciesBreed}>{speciesBreed}</p>
-
-        <div className={styles.infoRow}>
-          <MdLocationOn className={styles.icon} />
-          <span className={styles.infoText}>{locationText}</span>
+        <div className={styles.locationRow}>
+          <MdLocationOn className={styles.locationIcon} />
+          <span className={styles.locationText}>{locationText}</span>
         </div>
 
-        <div className={styles.infoRow}>
-          <HiOutlineCalendar className={styles.icon} />
-          <span className={styles.infoText}>
+        <div className={styles.speciesRow}>
+          <span className={styles.speciesText}>{toPascalCase(announcement.species)}</span>
+          {announcement.breed && (
+            <>
+              <span className={styles.bullet}>•</span>
+              <span className={styles.breedText}>{announcement.breed}</span>
+            </>
+          )}
+        </div>
+
+        <div className={styles.dateRow}>
+          <HiOutlineCalendar className={styles.dateIcon} />
+          <span className={styles.dateText}>
             {formatDateDDMMYYYY(announcement.createdAt)}
           </span>
         </div>

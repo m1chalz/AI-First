@@ -47,7 +47,8 @@ describe('LandingPageCard', () => {
       expectations: {
         testId: 'landing.recentPets.petCard.test-123',
         statusText: 'MISSING',
-        speciesBreed: 'Dog • Golden Retriever',
+        species: 'Dog',
+        breed: 'Golden Retriever',
         hasPhoto: true
       }
     },
@@ -57,7 +58,8 @@ describe('LandingPageCard', () => {
       expectations: {
         testId: 'landing.recentPets.petCard.test-123',
         statusText: 'MISSING',
-        speciesBreed: 'Dog • Golden Retriever',
+        species: 'Dog',
+        breed: 'Golden Retriever',
         hasPhoto: false
       }
     },
@@ -67,7 +69,8 @@ describe('LandingPageCard', () => {
       expectations: {
         testId: 'landing.recentPets.petCard.test-123',
         statusText: 'MISSING',
-        speciesBreed: 'Dog',
+        species: 'Dog',
+        breed: null,
         hasPhoto: true
       }
     }
@@ -79,7 +82,11 @@ describe('LandingPageCard', () => {
     const card = screen.getByTestId(expectations.testId);
     expect(card).toBeDefined();
     expect(screen.getByText(expectations.statusText)).toBeDefined();
-    expect(screen.getByText(expectations.speciesBreed)).toBeDefined();
+    expect(screen.getByText(expectations.species)).toBeDefined();
+
+    if (expectations.breed) {
+      expect(screen.getByText(expectations.breed)).toBeDefined();
+    }
 
     if (expectations.hasPhoto) {
       const img = card.querySelector('img');
