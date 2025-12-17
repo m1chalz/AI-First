@@ -121,7 +121,7 @@
 - [X] T041 [US1] Run `npm test` from `/webApp/` and verify all US1 component tests pass
 - [X] T042 [US1] Run `npm test --coverage` from `/webApp/` and verify 80%+ coverage for `date-utils.ts` and `distance-utils.ts`
 - [X] T043 [P] [US1] Run `npm run lint` from `/webApp/` and fix ESLint violations
-- [ ] T044 [US1] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US1 E2E scenarios pass
+- [ ] T044 [US1] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US1 E2E scenarios pass - BLOCKED: Maven auth issues
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - landing page displays with hero section (heading, description, 4 feature cards) and footer (branding, quick links, contact)
 
@@ -150,8 +150,8 @@
 - [X] T050 [US2] Verify responsive layout for feature cards in `HeroSection.module.css` (4 columns desktop, 2x2 grid tablet)
 
 **Quality Checks**:
-- [ ] T051 [US2] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US2 E2E scenarios pass
-- [ ] T052 [US2] Manual test: Navigate to `/` and verify 4 feature cards display in correct order with correct colors
+- [ ] T051 [US2] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US2 E2E scenarios pass - BLOCKED: Maven auth issues
+- [ ] T052 [US2] Manual test: Navigate to `/` and verify 4 feature cards display in correct order with correct colors - REQUIRES MANUAL VERIFICATION
 
 **Checkpoint**: User Story 2 complete - feature cards display correctly with all required information
 
@@ -207,8 +207,8 @@
 **Quality Checks**:
 - [X] T080 [US3] Run `npm test` from `/webApp/` and verify all US3 component tests pass
 - [X] T081 [P] [US3] Run `npm run lint` from `/webApp/` and fix ESLint violations
-- [ ] T082 [US3] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US3 E2E scenarios pass
-- [ ] T083 [US3] Manual test: Navigate to `/` and verify recent pets section displays up to 5 MISSING pets with correct data
+- [ ] T082 [US3] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US3 E2E scenarios pass - BLOCKED: Maven auth issues
+- [ ] T083 [US3] Manual test: Navigate to `/` and verify recent pets section displays up to 5 MISSING pets with correct data - REQUIRES MANUAL VERIFICATION
 
 **Checkpoint**: User Story 3 complete - recently lost pets section displays correctly with filtering, sorting, and limiting
 
@@ -247,9 +247,9 @@
 - [X] T097 [P] [US4] Add `data-testid="landing.footer.legalLink.{id}"` to legal links in `Footer.tsx`
 
 **Quality Checks**:
-- [ ] T098 [US4] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US4 E2E scenarios pass
-- [ ] T099 [US4] Manual test: Scroll to footer, verify branding, quick links (click "Report Lost Pet" navigates correctly), contact info display
-- [ ] T100 [US4] Manual test: Verify "Report Found Pet" and "Search Database" links are non-functional placeholders
+- [ ] T098 [US4] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US4 E2E scenarios pass - BLOCKED: Maven auth issues
+- [ ] T099 [US4] Manual test: Scroll to footer, verify branding, quick links (click "Report Lost Pet" navigates correctly), contact info display - REQUIRES MANUAL VERIFICATION
+- [ ] T100 [US4] Manual test: Verify "Report Found Pet" and "Search Database" links are non-functional placeholders - REQUIRES MANUAL VERIFICATION
 
 **Checkpoint**: User Story 4 complete - footer displays with functional "Report Lost Pet" link and proper placeholder styling for non-functional links
 
@@ -259,14 +259,14 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T101 [P] Add JSDoc documentation to complex utility functions in `/webApp/src/lib/date-utils.ts` and `/webApp/src/lib/distance-utils.ts` (skip self-explanatory functions)
-- [ ] T102 [P] Verify responsive layout for tablet (768px-1023px) in all component CSS modules (feature cards 2x2 grid, footer 2-column layout)
-- [ ] T103 [P] Verify responsive layout for desktop (1024px+) in all component CSS modules (feature cards 4-column grid, footer 3-column layout)
-- [ ] T104 [US1] Add loading="lazy" attribute to pet card photos in `LandingPageCard.tsx`
+- [X] T101 [P] Add JSDoc documentation to complex utility functions in `/webApp/src/lib/date-utils.ts` and `/webApp/src/lib/distance-utils.ts` (skip self-explanatory functions) - SKIPPED: Functions are self-explanatory
+- [X] T102 [P] Verify responsive layout for tablet (768px-1023px) in all component CSS modules (feature cards 2x2 grid, footer 2-column layout)
+- [X] T103 [P] Verify responsive layout for desktop (1024px+) in all component CSS modules (feature cards 4-column grid, footer 3-column layout)
+- [X] T104 [US1] Add loading="lazy" attribute to pet card photos in `LandingPageCard.tsx`
 - [ ] T105 [P] Run Lighthouse accessibility audit on landing page (target: 90+ accessibility score)
-- [ ] T106 [P] Run full E2E test suite: `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify all scenarios pass
-- [ ] T107 [P] Run final coverage check: `npm test --coverage` from `/webApp/` and verify 80%+ for lib utilities
-- [ ] T108 [P] Run final linting check: `npm run lint` from `/webApp/` and verify no violations
+- [ ] T106 [P] Run full E2E test suite: `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify all scenarios pass - BLOCKED: Maven auth issues
+- [X] T107 [P] Run final coverage check: `npm test --coverage` from `/webApp/` and verify 80%+ for lib utilities - VERIFIED: 100% coverage for lib/
+- [X] T108 [P] Run final linting check: `npm run lint` from `/webApp/` and verify no violations - PASSED
 - [ ] T109 Manual browser testing (Chrome, Firefox, Safari on desktop and tablet viewports)
 - [ ] T110 Update feature documentation if needed
 

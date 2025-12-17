@@ -1,13 +1,11 @@
 /* Figma: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=948-3993 */
 
 :root {
-  --nav-primary-blue: #155dfc;
   --nav-active-bg: #eff6ff;
   --nav-active-text: #155dfc;
   --nav-inactive-text: #4a5565;
   --nav-hover-bg: #f3f4f6;
   --nav-border: #e5e7eb;
-  --nav-text-dark: #101828;
 }
 
 .navigationBar {
@@ -26,29 +24,7 @@
 }
 
 .logoLink {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   text-decoration: none;
-}
-
-.logoIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: var(--nav-primary-blue);
-  border-radius: 10px;
-}
-
-.logoIconImage {
-  color: white;
-}
-
-.logoText {
-  font-size: 16px;
-  color: var(--nav-text-dark);
 }
 
 .navigationItems {

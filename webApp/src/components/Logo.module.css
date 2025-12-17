@@ -1,0 +1,59 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #155dfc;
+  border-radius: 8px;
+}
+
+.icon {
+  color: #ffffff;
+}
+
+.text {
+  font-weight: 600;
+}
+
+.dark {
+  color: #1f2937;
+}
+
+.light {
+  color: #ffffff;
+}
+
+/* Small size (navbar) */
+.small .iconContainer {
+  width: 32px;
+  height: 32px;
+}
+
+.small .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.small .text {
+  font-size: 18px;
+}
+
+/* Medium size (footer) */
+.medium .iconContainer {
+  width: 40px;
+  height: 40px;
+}
+
+.medium .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.medium .text {
+  font-size: 20px;
+}

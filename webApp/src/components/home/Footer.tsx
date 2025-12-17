@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from 'react-icons/hi';
 import { AppRoutes } from '../../pages/routes';
+import { Logo } from '../Logo';
 import styles from './Footer.module.css';
 
 const FOOTER_QUICK_LINKS = [
@@ -28,8 +29,8 @@ export const Footer: React.FC = () => (
         <div className={styles.columns}>
           {/* Branding Column */}
           <div className={styles.column}>
-            <div className={styles.logo} data-testid="landing.footer.logo">
-              🐾 PetSpot
+            <div className={styles.columnTitle} data-testid="landing.footer.logo">
+              <Logo size="medium" variant="light" />
             </div>
             <p className={styles.tagline}>
               Reuniting pets with their families since 2025. Your trusted community platform for lost and found pets.
