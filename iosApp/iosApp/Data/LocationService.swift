@@ -7,7 +7,12 @@ import CoreLocation
 actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private var permissionContinuation: CheckedContinuation<LocationPermissionStatus, Never>?
-    private var locationContinuation: CheckedContinuation<Coordinate?, Never>?
+    
+    // MARK: - Location Request (Multiple Waiters Pattern)
+    
+    /// Multiple callers can wait for the same location request.
+    /// All waiters receive the same result when location arrives.
+    private var locationContinuations: [UUID: CheckedContinuation<Coordinate?, Never>] = [:]
     
     // MARK: - Authorization Status Stream (Broadcast Pattern)
     
@@ -90,15 +95,17 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
             return nil  // Permission not granted
         }
         
+        let id = UUID()
+        let isFirstRequest = locationContinuations.isEmpty
+        
         return await withCheckedContinuation { continuation in
-            // Prevent overwriting existing continuation
-            if locationContinuation != nil {
-                continuation.resume(returning: nil)
-                return
-            }
+            locationContinuations[id] = continuation
             
-            locationContinuation = continuation
-            locationManager.requestLocation()
+            // Only trigger CLLocationManager if this is the first waiter
+            // Subsequent waiters just join the pending request
+            if isFirstRequest {
+                locationManager.requestLocation()
+            }
         }
     }
     
@@ -142,8 +149,11 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     }
     
     private func resumeLocationContinuation(with location: Coordinate?) {
-        locationContinuation?.resume(returning: location)
-        locationContinuation = nil
+        // Resume ALL waiting continuations with the same result
+        for continuation in locationContinuations.values {
+            continuation.resume(returning: location)
+        }
+        locationContinuations.removeAll()
     }
 }
 
