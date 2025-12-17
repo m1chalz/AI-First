@@ -54,14 +54,20 @@ final class TabCoordinator {
         let container = ServiceContainer.shared
         
         // Create child coordinators (root coordinator pattern - each creates own UINavigationController)
+        // Create LocationPermissionHandler inline for HomeCoordinator
         let homeCoordinator = HomeCoordinator(
             repository: container.announcementRepository,
-            locationHandler: container.makeLocationPermissionHandler(),
+            locationHandler: LocationPermissionHandler(locationService: container.locationService),
             onShowPetDetails: { [weak self] announcementId in
                 self?.showPetDetailsFromHome(announcementId)
             }
         )
-        let lostPetCoordinator = AnnouncementListCoordinator()
+        let lostPetCoordinator = AnnouncementListCoordinator(
+            repository: container.announcementRepository,
+            locationService: container.locationService,
+            photoAttachmentCache: container.photoAttachmentCache,
+            announcementSubmissionService: container.announcementSubmissionService
+        )
         let foundPetCoordinator = PlaceholderCoordinator(title: L10n.Tabs.foundPet)
         let contactUsCoordinator = PlaceholderCoordinator(title: L10n.Tabs.contactUs)
         let accountCoordinator = PlaceholderCoordinator(title: L10n.Tabs.account)

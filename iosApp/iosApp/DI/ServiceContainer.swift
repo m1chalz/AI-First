@@ -30,13 +30,5 @@ class ServiceContainer {
     
     /// Announcement repository for fetching announcement data
     lazy var announcementRepository: AnnouncementRepositoryProtocol = AnnouncementRepository()
-    
-    // MARK: - Factory Methods
-    
-    /// Creates new LocationPermissionHandler instance.
-    /// Each ViewModel needs its own handler instance (handler stores callback closure).
-    func makeLocationPermissionHandler() -> LocationPermissionHandler {
-        LocationPermissionHandler(locationService: locationService)
-    }
 }
 
