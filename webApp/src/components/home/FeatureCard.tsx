@@ -20,4 +20,3 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({ id, icon: Icon, iconCo
     <p className={styles.description}>{description}</p>
   </div>
 );
-

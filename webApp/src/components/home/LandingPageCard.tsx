@@ -3,8 +3,7 @@ import { MdLocationOn } from 'react-icons/md';
 import { HiOutlineCalendar } from 'react-icons/hi';
 import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement } from '../../types/announcement';
 import { formatDateDDMMYYYY } from '../../lib/date-utils';
-import { formatLocationOrDistance } from '../../lib/distance-utils';
-import { formatCoordinates } from '../../utils/coordinate-formatter';
+import { formatDistance } from '../../lib/distance-utils';
 import toPascalCase from '../../utils/pascal-case-formatter';
 import config from '../../config/config';
 import type { Coordinates } from '../../types/location';
@@ -18,13 +17,6 @@ interface LandingPageCardProps {
 
 export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, userCoordinates, onClick }) => {
   const statusColor = ANNOUNCEMENT_STATUS_BADGE_COLORS[announcement.status];
-
-  const locationText = formatLocationOrDistance(
-    userCoordinates,
-    announcement.locationLatitude,
-    announcement.locationLongitude,
-    formatCoordinates
-  );
 
   const handleClick = () => onClick(announcement.id);
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -62,10 +54,14 @@ export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, 
       </div>
 
       <div className={styles.content}>
-        <div className={styles.locationRow}>
-          <MdLocationOn className={styles.locationIcon} />
-          <span className={styles.locationText}>{locationText}</span>
-        </div>
+        {userCoordinates && (
+          <div className={styles.locationRow}>
+            <MdLocationOn className={styles.locationIcon} />
+            <span className={styles.locationText}>
+              {formatDistance(userCoordinates, announcement.locationLatitude, announcement.locationLongitude)}
+            </span>
+          </div>
+        )}
 
         <div className={styles.speciesRow}>
           <span className={styles.speciesText}>{toPascalCase(announcement.species)}</span>
@@ -79,9 +75,7 @@ export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, 
 
         <div className={styles.dateRow}>
           <HiOutlineCalendar className={styles.dateIcon} />
-          <span className={styles.dateText}>
-            {formatDateDDMMYYYY(announcement.createdAt)}
-          </span>
+          <span className={styles.dateText}>{formatDateDDMMYYYY(announcement.createdAt)}</span>
         </div>
       </div>
     </div>

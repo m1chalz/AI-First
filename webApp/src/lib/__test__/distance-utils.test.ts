@@ -6,7 +6,7 @@ describe('calculateDistanceKm', () => {
     // same point
     { from: { lat: 52.2297, lng: 21.0122 }, to: { lat: 52.2297, lng: 21.0122 }, expectedApprox: 0 },
     // Warsaw to Krakow (~252 km)
-    { from: { lat: 52.2297, lng: 21.0122 }, to: { lat: 50.0647, lng: 19.9450 }, expectedApprox: 252 },
+    { from: { lat: 52.2297, lng: 21.0122 }, to: { lat: 50.0647, lng: 19.945 }, expectedApprox: 252 },
     // short distance (~1 km)
     { from: { lat: 52.2297, lng: 21.0122 }, to: { lat: 52.2387, lng: 21.0122 }, expectedApprox: 1 }
   ])('calculateDistanceKm($from, $to) should be approximately $expectedApprox km', ({ from, to, expectedApprox }) => {

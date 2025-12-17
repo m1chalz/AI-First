@@ -39,11 +39,7 @@ export const RecentPetsSection: React.FC = () => {
             </h2>
             <p className={styles.subtitle}>Help us reunite these pets with their families</p>
           </div>
-          <Link
-            to={AppRoutes.lostPets}
-            className={styles.viewAllLink}
-            data-testid="landing.recentPets.viewAllLink.click"
-          >
+          <Link to={AppRoutes.lostPets} className={styles.viewAllLink} data-testid="landing.recentPets.viewAllLink.click">
             View all →
           </Link>
         </div>
@@ -83,4 +79,3 @@ export const RecentPetsSection: React.FC = () => {
     </section>
   );
 };
-

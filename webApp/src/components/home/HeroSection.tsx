@@ -46,7 +46,8 @@ export const HeroSection: React.FC = () => (
         Reuniting Lost Pets with Their Families
       </h1>
       <p className={styles.description}>
-        Our portal helps connect pet owners with their lost companions. Report a missing pet, browse found animals, and join our community dedicated to bringing pets home safely.
+        Our portal helps connect pet owners with their lost companions. Report a missing pet, browse found animals, and join our community
+        dedicated to bringing pets home safely.
       </p>
       <div className={styles.cardsGrid}>
         {FEATURE_CARDS.map((card) => (
@@ -64,4 +65,3 @@ export const HeroSection: React.FC = () => (
     </div>
   </section>
 );
-

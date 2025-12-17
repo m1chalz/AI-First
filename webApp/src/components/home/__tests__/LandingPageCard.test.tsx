@@ -28,11 +28,7 @@ const mockAnnouncement: Announcement = {
 
 const mockUserCoordinates: Coordinates = { lat: 52.23, lng: 21.01 };
 
-const renderCard = (
-  announcement = mockAnnouncement,
-  userCoordinates: Coordinates | null = mockUserCoordinates,
-  onClick = vi.fn()
-) =>
+const renderCard = (announcement = mockAnnouncement, userCoordinates: Coordinates | null = mockUserCoordinates, onClick = vi.fn()) =>
   render(
     <BrowserRouter>
       <LandingPageCard announcement={announcement} userCoordinates={userCoordinates} onClick={onClick} />

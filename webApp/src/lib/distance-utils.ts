@@ -5,8 +5,7 @@ export function calculateDistanceKm(from: Coordinates, to: Coordinates): number 
   const dLat = toRad(to.lat - from.lat);
   const dLng = toRad(to.lng - from.lng);
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(from.lat)) * Math.cos(toRad(to.lat)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(toRad(from.lat)) * Math.cos(toRad(to.lat)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -15,25 +14,12 @@ function toRad(deg: number): number {
   return deg * (Math.PI / 180);
 }
 
-export function formatLocationOrDistance(
-  userCoords: Coordinates | null,
-  announcementLat: number | null,
-  announcementLng: number | null,
-  formatCoordinatesFn: (lat: number, lng: number) => string
-): string {
-  if (announcementLat === null || announcementLng === null) {
-    return 'Location unknown';
-  }
-
-  if (userCoords) {
-    const distance = calculateDistanceKm(userCoords, { lat: announcementLat, lng: announcementLng });
-    return formatDistance(distance);
-  }
-
-  return formatCoordinatesFn(announcementLat, announcementLng);
+export function formatDistance(userCoords: Coordinates, announcementLat: number, announcementLng: number): string {
+  const distance = calculateDistanceKm(userCoords, { lat: announcementLat, lng: announcementLng });
+  return formatDistanceWithUnit(distance);
 }
 
-function formatDistance(distanceKm: number): string {
+function formatDistanceWithUnit(distanceKm: number): string {
   if (distanceKm >= 1) {
     return `${distanceKm.toFixed(1)} km away`;
   }

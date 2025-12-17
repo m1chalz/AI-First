@@ -16,4 +16,3 @@ export function Logo({ size = 'small', variant = 'dark' }: LogoProps) {
     </div>
   );
 }
-

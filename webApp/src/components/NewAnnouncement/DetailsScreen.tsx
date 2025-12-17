@@ -27,7 +27,7 @@ export const DetailsScreen: React.FC = () => {
   const handleContinue = () => {
     const isValid = handleSubmit();
     if (isValid) {
-      navigate(AppRoutes.contact);
+      navigate(AppRoutes.reportMissing.contact);
     } else {
       showToast('Please correct the errors below', 5000);
     }

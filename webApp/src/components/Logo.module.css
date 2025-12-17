@@ -8,12 +8,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #155dfc;
-  border-radius: 8px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-sm);
 }
 
 .icon {
-  color: #ffffff;
+  color: var(--color-bg-white);
 }
 
 .text {
@@ -21,11 +21,11 @@
 }
 
 .dark {
-  color: #1f2937;
+  color: var(--color-bg-dark);
 }
 
 .light {
-  color: #ffffff;
+  color: var(--color-bg-white);
 }
 
 /* Small size (navbar) */

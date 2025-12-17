@@ -13,4 +13,3 @@ export const LandingPage: React.FC = () => (
     <Footer />
   </div>
 );
-

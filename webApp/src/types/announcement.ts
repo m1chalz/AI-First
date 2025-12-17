@@ -28,12 +28,12 @@ export interface Announcement {
   description: string | null; // Additional description text
 
   // Location (nullable)
-  locationLatitude: number | null; // Latitude coordinate
-  locationLongitude: number | null; // Longitude coordinate
+  locationLatitude: number; // Latitude coordinate
+  locationLongitude: number; // Longitude coordinate
 
   // Contact information (nullable, at least one should be present)
-  phone: string | null; // Phone number (may be masked by backend)
-  email: string | null; // Email address
+  phone: string; // Phone number (may be masked by backend)
+  email: string; // Email address
 
   // Optional detailed fields (nullable)
   microchipNumber: string | null; // Raw microchip number (formatted in component)

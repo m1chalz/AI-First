@@ -52,8 +52,8 @@ const mockAnnouncements: Announcement[] = [
     petName: 'Whiskers',
     breed: 'Siamese',
     description: 'Shy cat',
-    locationLatitude: 52.2300,
-    locationLongitude: 21.0150,
+    locationLatitude: 52.23,
+    locationLongitude: 21.015,
     phone: null,
     email: null,
     microchipNumber: null,
@@ -238,4 +238,3 @@ describe('RecentPetsSection', () => {
     expect(link.getAttribute('href')).toBe('/lost-pets');
   });
 });
-
