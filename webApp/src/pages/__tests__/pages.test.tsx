@@ -1,18 +1,23 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Home } from '../Home';
 import { Account } from '../Account';
 import { Contact } from '../Contact';
 import { FoundPets } from '../FoundPets';
 
 describe('Home', () => {
-  it('should render welcome message', () => {
-    // Given/When
-    render(<Home />);
+  it('should render landing page with hero section', () => {
+    // when
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
 
-    // Then
-    expect(screen.getByText('Welcome to PetSpot')).toBeTruthy();
-    expect(screen.getByText('Help reunite lost pets with their families')).toBeTruthy();
+    // then
+    expect(screen.getByTestId('landing.heroSection')).toBeDefined();
+    expect(screen.getByTestId('landing.footer')).toBeDefined();
   });
 });
 

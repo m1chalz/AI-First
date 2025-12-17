@@ -75,52 +75,52 @@
 > **TDD: Write these tests FIRST, ensure they FAIL before implementation**
 
 **Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T012 [P] [US1] RED: Write failing unit test for `formatRelativeDate()` in `/webApp/src/lib/__test__/date-utils.test.ts` (Vitest, Given-When-Then: test "2 days ago", "1 week ago", "today", edge cases)
-- [ ] T013 [P] [US1] RED: Write failing unit test for `formatDistance()` in `/webApp/src/lib/__test__/distance-utils.test.ts` (Vitest, Given-When-Then: test "1.5 km away", "500 m away", "Location unknown" for undefined/null)
+- [X] T012 [P] [US1] RED: Write failing unit test for `formatRelativeDate()` in `/webApp/src/lib/__test__/date-utils.test.ts` (Vitest, Given-When-Then: test "2 days ago", "1 week ago", "today", edge cases)
+- [X] T013 [P] [US1] RED: Write failing unit test for `formatDistance()` in `/webApp/src/lib/__test__/distance-utils.test.ts` (Vitest, Given-When-Then: test "1.5 km away", "500 m away", "Location unknown" for undefined/null)
 
 **Web Component Tests** (Recommended):
-- [ ] T014 [P] [US1] Write component test for `FeatureCard` in `/webApp/src/components/home/__tests__/FeatureCard.test.tsx` (Vitest + RTL: verify icon, title, description render)
-- [ ] T015 [P] [US1] Write component test for `HeroSection` in `/webApp/src/components/home/__tests__/HeroSection.test.tsx` (Vitest + RTL: verify heading, description, 4 feature cards)
-- [ ] T016 [P] [US1] Write component test for `Footer` in `/webApp/src/components/home/__tests__/Footer.test.tsx` (Vitest + RTL: verify branding, quick links, contact columns)
-- [ ] T017 [P] [US1] Write component test for `LandingPage` in `/webApp/src/components/home/__tests__/LandingPage.test.tsx` (Vitest + RTL: verify all sections render)
+- [X] T014 [P] [US1] Write component test for `FeatureCard` in `/webApp/src/components/home/__tests__/FeatureCard.test.tsx` (Vitest + RTL: verify icon, title, description render)
+- [X] T015 [P] [US1] Write component test for `HeroSection` in `/webApp/src/components/home/__tests__/HeroSection.test.tsx` (Vitest + RTL: verify heading, description, 4 feature cards)
+- [X] T016 [P] [US1] Write component test for `Footer` in `/webApp/src/components/home/__tests__/Footer.test.tsx` (Vitest + RTL: verify branding, quick links, contact columns)
+- [X] T017 [P] [US1] Write component test for `LandingPage` in `/webApp/src/components/home/__tests__/LandingPage.test.tsx` (Vitest + RTL: verify all sections render)
 
 **End-to-End Tests**:
-- [ ] T018 [P] [US1] Write E2E Gherkin scenarios for US1 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (Given user navigates to "/" → Then landing page displays hero, feature cards, footer)
-- [ ] T019 [P] [US1] Implement Page Object methods for hero section in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java` (findHeroHeading, findFeatureCards, etc.)
-- [ ] T020 [P] [US1] Implement step definitions for US1 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
+- [X] T018 [P] [US1] Write E2E Gherkin scenarios for US1 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (Given user navigates to "/" → Then landing page displays hero, feature cards, footer)
+- [X] T019 [P] [US1] Implement Page Object methods for hero section in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/web/LandingPage.java` (findHeroHeading, findFeatureCards, etc.)
+- [X] T020 [P] [US1] Implement step definitions for US1 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
 
 ### Implementation for User Story 1
 
 **Web Utilities** (TDD: Red-Green-Refactor):
-- [ ] T021 [P] [US1] GREEN: Implement `formatRelativeDate(dateString: string): string` in `/webApp/src/lib/date-utils.ts` (minimal code to pass test: "2 days ago", "1 week ago", "today")
-- [ ] T022 [US1] REFACTOR: Improve `formatRelativeDate()` code quality (extract helpers, simplify logic)
-- [ ] T023 [P] [US1] GREEN: Implement `formatDistance(distanceKm: number | undefined): string` in `/webApp/src/lib/distance-utils.ts` (minimal code to pass test: "1.5 km away", "Location unknown")
-- [ ] T024 [US1] REFACTOR: Improve `formatDistance()` code quality (extract helpers, handle edge cases)
+- [X] T021 [P] [US1] GREEN: Implement `formatRelativeDate(dateString: string): string` in `/webApp/src/lib/date-utils.ts` (minimal code to pass test: "2 days ago", "1 week ago", "today")
+- [X] T022 [US1] REFACTOR: Improve `formatRelativeDate()` code quality (extract helpers, simplify logic)
+- [X] T023 [P] [US1] GREEN: Implement `formatDistance(distanceKm: number | undefined): string` in `/webApp/src/lib/distance-utils.ts` (minimal code to pass test: "1.5 km away", "Location unknown")
+- [X] T024 [US1] REFACTOR: Improve `formatDistance()` code quality (extract helpers, handle edge cases)
 
 **Web Components** (Bottom-Up):
-- [ ] T025 [P] [US1] Create `FeatureCard.tsx` in `/webApp/src/components/home/FeatureCard.tsx` (props: icon, iconColor, title, description)
-- [ ] T026 [P] [US1] Create `FeatureCard.module.css` in `/webApp/src/components/home/FeatureCard.module.css` (card styles, icon background, text styles)
-- [ ] T027 [US1] Create `HeroSection.tsx` in `/webApp/src/components/home/HeroSection.tsx` (heading, description, 4 feature cards in grid)
-- [ ] T028 [US1] Create `HeroSection.module.css` in `/webApp/src/components/home/HeroSection.module.css` (gradient background: linear-gradient(135deg, #EFF6FF, #F3E8FF), responsive grid)
-- [ ] T029 [US1] Define `FEATURE_CARDS` constant in `HeroSection.tsx` (4 cards: Search Database/blue, Report Missing/red, Found a Pet/green, Location Based/purple)
-- [ ] T030 [P] [US1] Create `Footer.tsx` in `/webApp/src/components/home/Footer.tsx` (3 columns: branding, quick links, contact info)
-- [ ] T031 [P] [US1] Create `Footer.module.css` in `/webApp/src/components/home/Footer.module.css` (dark background, 3-column layout, responsive)
-- [ ] T032 [US1] Define `FOOTER_QUICK_LINKS`, `FOOTER_LEGAL_LINKS`, `FOOTER_CONTACT` constants in `Footer.tsx`
-- [ ] T033 [US1] Create `LandingPage.tsx` in `/webApp/src/components/home/LandingPage.tsx` (compose HeroSection + RecentPetsSection + Footer)
-- [ ] T034 [P] [US1] Create `LandingPage.module.css` in `/webApp/src/components/home/LandingPage.module.css` (page layout, section spacing)
-- [ ] T035 [US1] Update `/webApp/src/pages/Home.tsx` to import and render `<LandingPage />` component
+- [X] T025 [P] [US1] Create `FeatureCard.tsx` in `/webApp/src/components/home/FeatureCard.tsx` (props: icon, iconColor, title, description)
+- [X] T026 [P] [US1] Create `FeatureCard.module.css` in `/webApp/src/components/home/FeatureCard.module.css` (card styles, icon background, text styles)
+- [X] T027 [US1] Create `HeroSection.tsx` in `/webApp/src/components/home/HeroSection.tsx` (heading, description, 4 feature cards in grid)
+- [X] T028 [US1] Create `HeroSection.module.css` in `/webApp/src/components/home/HeroSection.module.css` (gradient background: linear-gradient(135deg, #EFF6FF, #F3E8FF), responsive grid)
+- [X] T029 [US1] Define `FEATURE_CARDS` constant in `HeroSection.tsx` (4 cards: Search Database/blue, Report Missing/red, Found a Pet/green, Location Based/purple)
+- [X] T030 [P] [US1] Create `Footer.tsx` in `/webApp/src/components/home/Footer.tsx` (3 columns: branding, quick links, contact info)
+- [X] T031 [P] [US1] Create `Footer.module.css` in `/webApp/src/components/home/Footer.module.css` (dark background, 3-column layout, responsive)
+- [X] T032 [US1] Define `FOOTER_QUICK_LINKS`, `FOOTER_LEGAL_LINKS`, `FOOTER_CONTACT` constants in `Footer.tsx`
+- [X] T033 [US1] Create `LandingPage.tsx` in `/webApp/src/components/home/LandingPage.tsx` (compose HeroSection + RecentPetsSection + Footer)
+- [X] T034 [P] [US1] Create `LandingPage.module.css` in `/webApp/src/components/home/LandingPage.module.css` (page layout, section spacing)
+- [X] T035 [US1] Update `/webApp/src/pages/Home.tsx` to import and render `<LandingPage />` component
 
 **Test Identifiers** (MANDATORY):
-- [ ] T036 [P] [US1] Add `data-testid="landing.heroSection"` to hero section in `HeroSection.tsx`
-- [ ] T037 [P] [US1] Add `data-testid="landing.hero.heading"` to hero heading in `HeroSection.tsx`
-- [ ] T038 [P] [US1] Add `data-testid="landing.hero.featureCard.{id}"` to each feature card in `FeatureCard.tsx`
-- [ ] T039 [P] [US1] Add `data-testid="landing.footer"` to footer in `Footer.tsx`
-- [ ] T040 [P] [US1] Add `data-testid="landing.footer.quickLink.{id}"` to quick links in `Footer.tsx`
+- [X] T036 [P] [US1] Add `data-testid="landing.heroSection"` to hero section in `HeroSection.tsx`
+- [X] T037 [P] [US1] Add `data-testid="landing.hero.heading"` to hero heading in `HeroSection.tsx`
+- [X] T038 [P] [US1] Add `data-testid="landing.hero.featureCard.{id}"` to each feature card in `FeatureCard.tsx`
+- [X] T039 [P] [US1] Add `data-testid="landing.footer"` to footer in `Footer.tsx`
+- [X] T040 [P] [US1] Add `data-testid="landing.footer.quickLink.{id}"` to quick links in `Footer.tsx`
 
 **Quality Checks**:
-- [ ] T041 [US1] Run `npm test` from `/webApp/` and verify all US1 component tests pass
-- [ ] T042 [US1] Run `npm test --coverage` from `/webApp/` and verify 80%+ coverage for `date-utils.ts` and `distance-utils.ts`
-- [ ] T043 [P] [US1] Run `npm run lint` from `/webApp/` and fix ESLint violations
+- [X] T041 [US1] Run `npm test` from `/webApp/` and verify all US1 component tests pass
+- [X] T042 [US1] Run `npm test --coverage` from `/webApp/` and verify 80%+ coverage for `date-utils.ts` and `distance-utils.ts`
+- [X] T043 [P] [US1] Run `npm run lint` from `/webApp/` and fix ESLint violations
 - [ ] T044 [US1] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US1 E2E scenarios pass
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - landing page displays with hero section (heading, description, 4 feature cards) and footer (branding, quick links, contact)
