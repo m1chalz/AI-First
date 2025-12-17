@@ -65,6 +65,7 @@ public class CommonSteps {
     public void createAnnouncementAtCoordinates(String lat, String lng, String petName) {
         Map<String, String> data = new HashMap<>();
         data.put("petName", petName);
+        data.put("breed", petName);  // iOS displays breed field in the card
         data.put("species", "DOG");
         data.put("locationLatitude", lat);
         data.put("locationLongitude", lng);
@@ -97,6 +98,7 @@ public class CommonSteps {
     public void createAnnouncementWithDate(String date, String petName) {
         Map<String, String> data = new HashMap<>();
         data.put("petName", petName);
+        data.put("breed", petName);  // iOS displays breed field in the card
         data.put("species", "DOG");
         data.put("lastSeenDate", date);
         // Include petName in description so it's visible in the card

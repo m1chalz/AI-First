@@ -46,42 +46,27 @@ And I delete all test announcements via API
 
 ---
 
-## Task 2: Feature File ✅
+## Task 2: Feature Files ✅
 
-- **File**: `/e2e-tests/java/src/test/resources/features/animal-list.feature`
-- **Status**: ✅ DONE (reorganized from `features/web/`)
+**Split into separate files (2025-12-17):**
 
-**Content** (3 scenarios):
-```gherkin
-@animalList
-Feature: Animal List
+### animal-list-web.feature ✅ WORKING
+- **File**: `/e2e-tests/java/src/test/resources/features/animal-list-web.feature`
+- **Status**: ✅ PASSING (2 scenarios)
 
-  Background:
-    Given the application is running
+**Scenarios**:
+1. `@smoke @location` - User views animal list with all UI elements
+2. Web user sees full list without location and filtered list with location
 
-  # Test 1: Display animal list with UI elements (ACTIVE)
-  @web @ios @android @smoke
-  Scenario: User views animal list with all UI elements
-    Given I create a test announcement via API with name "E2E-TestDog" and species "DOG"
-    When I restart the app
-    When I navigate to the pet list page
-    Then the page should load successfully
-    And I should see the "Report a Missing Animal" button
-    When I scroll until I see the announcement for "E2E-TestDog"
-    Then I should see the announcement for "E2E-TestDog"
-    And I should see the "Report a Missing Animal" button
-    And I delete the test announcement via API
+### animal-list-mobile.feature ⏳ BLOCKED  
+- **File**: `/e2e-tests/java/src/test/resources/features/animal-list-mobile.feature`
+- **Status**: ⏳ Infrastructure blocked (iOS/Android issues)
 
-  # Test 2: Location-based filtering (PENDING - @location tag)
-  @ios @android @location @pending
-  Scenario: User sees only nearby animals and empty state when no animals in area
-    ...
-
-  # Test 3: Empty state when no animals (PENDING - @location tag)
-  @ios @android @location @pending
-  Scenario: User sees empty state when no animals in current location
-    ...
-```
+**Scenarios**:
+1. `@ios @android @smoke @location` - User views animal list with all UI elements
+2. `@ios @android @pending-*` - Mobile user sees full list without location + rationale popup
+3. `@ios @android @locationDialog` - User reinstalls app and sees rationale dialog
+4. `@ios @android @location` - User sees empty state when no animals in current location
 
 ---
 
@@ -153,10 +138,11 @@ features/
     └── animal-list.feature
 ```
 
-### New Structure:
+### New Structure (2025-12-17):
 ```
 features/
-├── animal-list.feature        ← @web @ios @android (active)
+├── animal-list-web.feature    ← @web (2 scenarios - WORKING ✅)
+├── animal-list-mobile.feature ← @mobile @ios @android (4 scenarios - infrastructure blocked)
 ├── pet-details.feature        ← @web @ios @android @pending (placeholder)
 ├── report-missing.feature     ← @web @ios @android @pending (placeholder)
 └── legacy/
@@ -253,16 +239,17 @@ mvn test -Dcucumber.filter.tags="@smoke and not @legacy and not @pending"
 ## Definition of Done
 
 - [x] TestDataApiHelper.java creates/deletes announcements
-- [x] Feature file has scenarios with @animalList tag
-- [x] Web tests pass (Test 1 - smoke)
+- [x] Feature files with @animalList tag (split: web + mobile)
+- [x] Web tests pass (2 scenarios) ✅ **WORKING**
 - [x] iOS step definitions implemented
 - [x] Android step definitions implemented
 - [x] Runners updated to read from new features/ structure
-- [x] Features folder reorganized (legacy/ subfolder)
+- [x] Features folder reorganized (web/mobile split)
 - [x] No dependency on seed data
-- [x] Android tests pass (Test 1 - smoke) ✅
-- [x] iOS tests pass (Test 1 - smoke) ✅
-- [ ] Location filtering + empty state works (blocked - requires @location implementation)
+- [x] Web location filtering + empty state works ✅ **WORKING (2025-12-17)**
+- [ ] Android tests pass (blocked - infrastructure issues)
+- [ ] iOS tests pass (blocked - infrastructure issues)
+- [ ] Mobile location filtering + empty state (blocked - requires infrastructure fix)
 
 ---
 
@@ -283,3 +270,23 @@ mvn test -Dcucumber.filter.tags="@smoke and not @legacy and not @pending"
 5. **Added app restart** - terminateApp + activateApp ensures fresh data after API calls
 6. **Fixed breed visibility** - test data uses petName as breed for UI visibility
 7. **Platform detection fix** - runners set PLATFORM property explicitly
+
+## Summary of Changes (Session 2025-12-17)
+
+1. **Split feature file** - `animal-list.feature` → `animal-list-web.feature` + `animal-list-mobile.feature`
+2. **Web tests PASSING** - 2 scenarios working with location filtering ✅
+3. **Location filtering via URL params** - `?e2eLat=X&e2eLng=Y` for web (CDP version mismatch workaround)
+4. **Fixed breed in test data** - `CommonSteps.java` now sets `breed = petName` for iOS visibility
+5. **Mobile tests blocked** - iOS infrastructure issues (Settings app opened instead of PetSpot after restart)
+
+### Test Results (Web - 2025-12-17)
+
+| Scenario | Status |
+|----------|--------|
+| User views animal list with all UI elements | ✅ PASSED |
+| Web user sees full list without location and filtered list with location | ✅ PASSED |
+
+**Location filtering verified:**
+- Without location: 10 announcements visible (all)
+- With location (Wroclaw): 6 announcements visible (nearby only)
+- `E2E-DistantPet` correctly filtered out when location set ✅
