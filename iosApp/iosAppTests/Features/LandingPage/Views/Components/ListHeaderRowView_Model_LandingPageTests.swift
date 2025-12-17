@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for ListHeaderRowView.Model.recentReports() factory.
 /// Tests Landing Page specific configuration.

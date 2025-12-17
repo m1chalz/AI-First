@@ -1,5 +1,5 @@
 import XCTest
-@testable import iosApp
+@testable import PetSpot
 
 /// Unit tests for HeroPanelView.Model generic presentation model.
 /// Feature-specific factory tests are in LandingPage feature directory.

@@ -39,13 +39,15 @@ final class HomeCoordinatorTests: XCTestCase {
     // MARK: - Helper Methods
     
     private func makeSUT() -> HomeCoordinator {
-        return HomeCoordinator(
+        let coordinator = HomeCoordinator(
             repository: fakeRepository,
-            locationHandler: locationHandler,
-            onShowPetDetails: { [weak self] announcementId in
-                self?.capturedAnnouncementId = announcementId
-            }
+            locationHandler: locationHandler
         )
+        // Set up the unified tab navigation closure
+        coordinator.onSwitchToLostPetTab = { [weak self] announcementId in
+            self?.capturedAnnouncementId = announcementId
+        }
+        return coordinator
     }
     
     // MARK: - T020: Initialization Tests
@@ -112,55 +114,36 @@ final class HomeCoordinatorTests: XCTestCase {
         XCTAssertEqual(navigationController.viewControllers.count, 1, "Should have exactly one view controller after multiple starts")
     }
     
-    // MARK: - T020: onShowPetDetails Callback Tests
+    // MARK: - T020: onSwitchToLostPetTab Callback Tests
     
-    func test_onShowPetDetails_shouldInvokeClosureWithAnnouncementId() async {
+    func test_onSwitchToLostPetTab_shouldBeSettableAfterInit() async {
         // Given
-        let testAnnouncementId = "test-announcement-123"
-        fakeRepository.stubbedAnnouncements = [
-            Announcement(
-                id: testAnnouncementId,
-                name: "Test Pet",
-                photoUrl: "https://example.com/photo.jpg",
-                coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
-                species: .dog,
-                breed: "Labrador",
-                gender: .male,
-                status: .active,
-                lastSeenDate: "20/11/2025",
-                description: "Test description",
-                email: "test@example.com",
-                phone: "+48123456789"
-            )
-        ]
+        fakeRepository.stubbedAnnouncements = []
         await fakeLocationService.setAuthorizationStatus(.denied)
-        
         sut = makeSUT()
+        
         await sut.start(animated: false)
         
         // Then - Verify closure is set up (indirect test through coordinator creation)
-        // Direct testing would require accessing private ViewModel state
-        // Instead, we verify the coordinator was created with callback capability
-        XCTAssertNotNil(sut.navigationController, "Coordinator should be properly initialized with callback")
+        XCTAssertNotNil(sut.navigationController, "Coordinator should be properly initialized")
         XCTAssertEqual(sut.navigationController?.viewControllers.count, 1, "Should have root view controller")
     }
     
-    func test_onShowPetDetails_whenTriggeredFromLandingPage_shouldPassCorrectId() async throws {
+    func test_onSwitchToLostPetTab_whenSetWithClosure_shouldNotCallImmediately() async throws {
         // Given - Create coordinator with callback capture
-        let testId = "pet-456"
         var capturedId: String?
         
         let coordinator = HomeCoordinator(
             repository: fakeRepository,
-            locationHandler: locationHandler,
-            onShowPetDetails: { announcementId in
-                capturedId = announcementId
-            }
+            locationHandler: locationHandler
         )
+        coordinator.onSwitchToLostPetTab = { announcementId in
+            capturedId = announcementId
+        }
         
         fakeRepository.stubbedAnnouncements = [
             Announcement(
-                id: testId,
+                id: "pet-456",
                 name: "Test Pet",
                 photoUrl: "https://example.com/photo.jpg",
                 coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
@@ -179,11 +162,24 @@ final class HomeCoordinatorTests: XCTestCase {
         // When - Start coordinator
         await coordinator.start(animated: false)
         
-        // Then - Verify the callback mechanism exists
-        // Note: Full integration test would require UI interaction
-        // This unit test verifies the coordinator correctly stores the callback
+        // Then - Verify the callback is not called until user interaction
         XCTAssertNotNil(coordinator.navigationController)
         XCTAssertNil(capturedId, "Callback should not be called until user taps")
+    }
+    
+    func test_onSwitchToFoundPetTab_shouldBeSettableAfterInit() {
+        // Given
+        var foundPetTabCalled = false
+        sut = makeSUT()
+        
+        // When
+        sut.onSwitchToFoundPetTab = {
+            foundPetTabCalled = true
+        }
+        
+        // Then - closure is set (would be called by view interaction)
+        XCTAssertNotNil(sut.onSwitchToFoundPetTab)
+        XCTAssertFalse(foundPetTabCalled, "Should not be called until user interaction")
     }
 }
 
