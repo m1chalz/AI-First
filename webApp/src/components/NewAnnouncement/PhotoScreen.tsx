@@ -4,7 +4,7 @@ import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { usePhotoUpload } from '../../hooks/use-photo-upload';
 import { useToast } from '../../hooks/use-toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { Toast } from '../Toast/Toast';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PhotoUploadCard } from './PhotoUploadCard';
@@ -19,12 +19,12 @@ export function PhotoScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(AppRoutes.microchip);
+    navigate(AppRoutes.reportMissing.microchip);
   };
 
   const { photo, isDragOver, handleFileSelect, handleDrop, handleDragOver, handleDragLeave, removePhoto } = usePhotoUpload(
@@ -42,7 +42,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details
     });
-    navigate(AppRoutes.details);
+    navigate(AppRoutes.reportMissing.details);
   };
 
   const handleBrowseClick = () => {

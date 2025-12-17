@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { DetailsScreen } from '../DetailsScreen';
 import { NewAnnouncementFlowProvider } from '../../../contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from '../../../contexts/GeolocationContext';
-import { AppRoutes } from '../../../routes/routes';
+import { AppRoutes } from '../../../pages/routes';
 
 const mockNavigate = vi.fn();
 
@@ -85,7 +85,7 @@ describe('DetailsScreen', () => {
     const backButton = screen.getByTestId('newAnnouncement.header.backButton.click');
     fireEvent.click(backButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.photo);
+    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.reportMissing.photo);
   });
 
   it('should navigate to Step 4 on successful submit with valid data', () => {
@@ -240,7 +240,7 @@ describe('DetailsScreen', () => {
       render(<DetailsScreen />, { wrapper });
 
       waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.microchip, { replace: true });
+        expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.reportMissing.microchip, { replace: true });
       });
     });
   });

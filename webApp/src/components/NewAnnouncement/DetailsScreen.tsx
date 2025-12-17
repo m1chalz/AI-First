@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDetailsForm } from '../../hooks/use-details-form';
 import { useToast } from '../../hooks/use-toast';
 import { Toast } from '../Toast/Toast';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
 import { PetDescriptionForm } from './AnnouncementDescriptionForm/PetDescriptionForm';
@@ -16,12 +16,12 @@ export const DetailsScreen: React.FC = () => {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(AppRoutes.photo);
+    navigate(AppRoutes.reportMissing.photo);
   };
 
   const handleContinue = () => {

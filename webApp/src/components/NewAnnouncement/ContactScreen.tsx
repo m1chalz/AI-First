@@ -4,7 +4,7 @@ import { useNewAnnouncementFlow } from '../../hooks/use-new-announcement-flow';
 import { useContactForm } from '../../hooks/use-contact-form';
 import { useToast } from '../../hooks/use-toast';
 import { useAnnouncementSubmission } from '../../hooks/use-announcement-submission';
-import { AppRoutes } from '../../routes/routes';
+import { AppRoutes } from '../../pages/routes';
 import { Toast } from '../Toast/Toast';
 import { FlowStep } from '../../models/NewAnnouncementFlow';
 import { NewAnnouncementLayout } from './NewAnnouncementLayout';
@@ -20,13 +20,13 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   useEffect(() => {
     if (announcementId && managementPassword) {
-      navigate(AppRoutes.summary, { state: { announcementId, managementPassword } });
+      navigate(AppRoutes.reportMissing.summary, { state: { announcementId, managementPassword } });
     }
   }, [announcementId, managementPassword, navigate]);
 
@@ -37,7 +37,7 @@ export function ContactScreen() {
   }, [error, showToast]);
 
   const handleBack = () => {
-    navigate(AppRoutes.details);
+    navigate(AppRoutes.reportMissing.details);
   };
 
   const handleContinue = async () => {

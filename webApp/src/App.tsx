@@ -1,31 +1,42 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnnouncementList } from './components/AnnouncementList/AnnouncementList';
 import { MicrochipNumberScreen } from './components/NewAnnouncement/MicrochipNumberScreen';
 import { PhotoScreen } from './components/NewAnnouncement/PhotoScreen';
 import { DetailsScreen } from './components/NewAnnouncement/DetailsScreen';
 import { ContactScreen } from './components/NewAnnouncement/ContactScreen';
 import { SummaryScreen } from './components/NewAnnouncement/SummaryScreen';
+import { NavigationBar } from './components/NavigationBar';
 import { NewAnnouncementFlowProvider } from './contexts/NewAnnouncementFlowContext';
 import { GeolocationProvider } from './contexts/GeolocationContext';
-import { AppRoutes } from './routes/routes';
+import { Home } from './pages/Home';
+import { LostPets } from './pages/LostPets';
+import { FoundPets } from './pages/FoundPets';
+import { Contact } from './pages/Contact';
+import { Account } from './pages/Account';
+import { AppRoutes } from './pages/routes';
 
 export function App() {
   return (
     <GeolocationProvider>
       <BrowserRouter>
+        <NavigationBar />
         <Routes>
-          <Route path="/" element={<AnnouncementList />} />
-          <Route path="/announcement/:announcementId" element={<AnnouncementList />} />
+          <Route path={AppRoutes.home} element={<Home />} />
+          <Route path={AppRoutes.lostPets} element={<LostPets />} />
+          <Route path={AppRoutes.lostPetDetails(':announcementId')} element={<LostPets />} />
+          <Route path={AppRoutes.foundPets} element={<FoundPets />} />
+          <Route path={AppRoutes.contact} element={<Contact />} />
+          <Route path={AppRoutes.account} element={<Account />} />
+
           <Route
-            path={AppRoutes.base}
+            path={AppRoutes.reportMissing.base}
             element={
               <NewAnnouncementFlowProvider>
-                <Navigate to={AppRoutes.microchip} replace />
+                <Navigate to={AppRoutes.reportMissing.microchip} replace />
               </NewAnnouncementFlowProvider>
             }
           />
           <Route
-            path={AppRoutes.microchip}
+            path={AppRoutes.reportMissing.microchip}
             element={
               <NewAnnouncementFlowProvider>
                 <MicrochipNumberScreen />
@@ -33,7 +44,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.photo}
+            path={AppRoutes.reportMissing.photo}
             element={
               <NewAnnouncementFlowProvider>
                 <PhotoScreen />
@@ -41,7 +52,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.details}
+            path={AppRoutes.reportMissing.details}
             element={
               <NewAnnouncementFlowProvider>
                 <DetailsScreen />
@@ -49,7 +60,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.contact}
+            path={AppRoutes.reportMissing.contact}
             element={
               <NewAnnouncementFlowProvider>
                 <ContactScreen />
@@ -57,7 +68,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.summary}
+            path={AppRoutes.reportMissing.summary}
             element={
               <NewAnnouncementFlowProvider>
                 <SummaryScreen />
