@@ -10,18 +10,6 @@ vi.mock('react-router-dom', () => ({
   useParams: vi.fn(() => ({}))
 }));
 
-// Mock the hooks
-vi.mock('../../hooks/use-animal-list', () => ({
-  useAnnouncementList: vi.fn(() => ({
-    announcements: [],
-    isLoading: false,
-    error: null,
-    isEmpty: true,
-    loadAnnouncements: vi.fn(),
-    geolocationError: { code: 1, message: 'Permission denied' } as GeolocationPositionError
-  }))
-}));
-
 vi.mock('../../hooks/use-modal', () => ({
   useModal: vi.fn(() => ({
     isOpen: false,
