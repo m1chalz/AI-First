@@ -7,7 +7,7 @@
 
 ## Summary
 
-Implement a lost pets teaser component on the Android home page that displays up to 5 recently reported lost pets, following MVI architecture patterns and reusing existing navigation and backend integration.
+Implement a lost pets teaser as an **autonomous, reusable feature** on the Android home page that displays up to 5 recently reported lost pets. The teaser is self-contained with its own ViewModel and MVI architecture, enabling reuse in other screens. It reuses the existing `Animal` domain model and `AnimalRepository` with client-side filtering. Home page is implemented as a `LazyColumn` for scrollability.
 
 ## Technical Context
 
@@ -66,9 +66,10 @@ Implement a lost pets teaser component on the Android home page that displays up
   - Coverage target: 80% line + branch coverage per platform
 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories
-  - Mobile: Appium tests in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
-  - All tests written in TypeScript
-  - Page Object Model / Screen Object Model used
+  - Mobile: Java 21 + Maven + Appium + Cucumber in `/e2e-tests/java/`
+  - Features in `/e2e-tests/java/src/test/resources/features/mobile/` (shared iOS/Android)
+  - Screen Object Model in `/e2e-tests/java/src/test/java/.../screens/`
+  - Step definitions in `/e2e-tests/java/src/test/java/.../steps/mobile/`
   - Each user story has at least one E2E test
 
 - [x] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
@@ -149,52 +150,109 @@ specs/[###-feature]/
 
 ```text
 composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
-├── features/home/
-│   └── ui/
-│       └── HomeScreen.kt             # Main home screen composable
-├── features/lostPetsTeaser/
-│   ├── presentation/
-│   │   ├── mvi/
-│   │   │   ├── LostPetsTeaserUiState.kt      # Teaser UiState data classes
-│   │   │   ├── LostPetsTeaserIntent.kt       # Teaser sealed intent classes
-│   │   │   └── LostPetsTeaserEffect.kt       # Teaser UiEffect classes
-│   │   └── viewmodels/
-│   │       └── LostPetsTeaserViewModel.kt    # MVI ViewModel for teaser component
-│   └── ui/
-│       └── LostPetsTeaser.kt         # Teaser component composable
-├── domain/
+├── features/
+│   ├── home/
+│   │   └── ui/
+│   │       └── HomeScreen.kt                 # Main home screen (LazyColumn container)
+│   └── lostPetsTeaser/
+│       ├── presentation/
+│       │   ├── mvi/
+│       │   │   ├── LostPetsTeaserUiState.kt  # Data class with isLoading, error, animals
+│       │   │   ├── LostPetsTeaserIntent.kt   # Sealed interface for user actions
+│       │   │   ├── LostPetsTeaserEffect.kt   # Sealed class for navigation effects
+│       │   │   └── LostPetsTeaserReducer.kt  # Pure reducer functions
+│       │   └── viewmodels/
+│       │       └── LostPetsTeaserViewModel.kt # Autonomous ViewModel for teaser
+│       └── ui/
+│           ├── LostPetsTeaser.kt             # Stateful teaser (gets own ViewModel)
+│           └── LostPetsTeaserContent.kt      # Stateless content with @Preview
+├── composeapp/domain/
 │   ├── models/
-│   │   └── LostPet.kt                # Domain model for lost pet (existing)
+│   │   └── Animal.kt                         # EXISTING - reused, no changes
 │   ├── repositories/
-│   │   └── LostPetsRepository.kt     # Repository interface (extended)
+│   │   └── AnimalRepository.kt               # EXISTING - reused, no changes
 │   └── usecases/
-│       └── GetRecentLostPetsUseCase.kt # Use case for fetching pets
-├── data/repositories/
-│   └── LostPetsRepositoryImpl.kt     # Repository implementation (extended)
-└── di/
-    └── HomeModule.kt                 # Koin DI module
+│       ├── GetAnimalsUseCase.kt              # EXISTING - reused by new use case
+│       └── GetRecentAnimalsUseCase.kt        # NEW - filters MISSING, sorts, limits 5
+├── di/
+│   ├── DomainModule.kt                       # EXISTING - add GetRecentAnimalsUseCase
+│   └── ViewModelModule.kt                    # EXISTING - add LostPetsTeaserViewModel
+└── ui/navigation/
+    └── MainScaffold.kt                       # EXISTING - update HomeRoute.Root composable
 
 composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/
-├── features/home/ui/
-│   └── HomeScreenTest.kt              # Home screen UI tests (if needed)
-├── features/lostPetsTeaser/presentation/viewmodels/
-│   ├── LostPetsTeaserViewModelTest.kt # Teaser ViewModel unit tests
-│   └── LostPetsTeaserReducerTest.kt   # Teaser reducer unit tests
-├── domain/usecases/
-│   └── GetRecentLostPetsUseCaseTest.kt # Use case unit tests
-└── data/repositories/
-    └── LostPetsRepositoryImplTest.kt  # Repository unit tests
+├── features/lostPetsTeaser/presentation/
+│   ├── viewmodels/
+│   │   └── LostPetsTeaserViewModelTest.kt    # ViewModel unit tests
+│   └── mvi/
+│       └── LostPetsTeaserReducerTest.kt      # Reducer unit tests
+└── composeapp/domain/usecases/
+    └── GetRecentAnimalsUseCaseTest.kt        # Use case unit tests
 
-e2e-tests/java/src/test/java/com/intive/petspot/android/
-├── pages/
-│   └── HomePage.java                 # Page Object Model for home screen
-├── screens/
-│   └── LostPetsTeaserScreen.java     # Screen Object Model for teaser
-└── specs/
-    └── HomeLostPetsTeaserSpec.java   # E2E test scenarios
+e2e-tests/java/src/test/
+├── resources/features/mobile/
+│   └── home_lost_pets_teaser.feature         # Gherkin scenarios (shared iOS/Android)
+└── java/com/intive/petspot/
+    ├── screens/
+    │   └── LostPetsTeaserScreen.java         # Screen Object Model for teaser
+    └── steps/mobile/
+        └── HomeLostPetsTeaserSteps.java      # Step definitions
 ```
 
-**Structure Decision**: Android-only implementation with separated feature architecture. Home screen feature (`features/home/`) contains only home-specific UI components. Lost pets teaser is implemented as its own reusable feature (`features/lostPetsTeaser/`) with complete MVI architecture, enabling potential reuse in other screens. Both features follow established project patterns with `presentation/` for MVI classes and `ui/` for composables.
+**Structure Decision**: 
+- **Autonomous teaser feature**: `features/lostPetsTeaser/` is self-contained with its own ViewModel and MVI classes. Can be embedded in any screen via `LostPetsTeaser()` composable.
+- **Reuse existing domain**: Uses existing `Animal` model and `AnimalRepository`. New `GetRecentAnimalsUseCase` handles client-side filtering (MISSING status), sorting (newest first), and limiting (5 items).
+- **Existing DI modules**: ViewModel added to `ViewModelModule.kt`, use case to `DomainModule.kt`. No new module files.
+- **Home as container**: `HomeScreen.kt` is a simple `LazyColumn` that composes the teaser and future components.
+- **E2E tests**: Follow constitution pattern with shared mobile features in `features/mobile/`.
+
+## Key Implementation Notes
+
+### Test Identifiers (Constitution-compliant)
+
+```kotlin
+// Teaser container
+Modifier.testTag("lostPetsTeaser.container")
+
+// Loading state
+Modifier.testTag("lostPetsTeaser.loading")
+
+// Error state
+Modifier.testTag("lostPetsTeaser.error")
+Modifier.testTag("lostPetsTeaser.retryButton")
+
+// Empty state
+Modifier.testTag("lostPetsTeaser.emptyState")
+
+// Pet cards (reuses AnimalCard styling)
+Modifier.testTag("lostPetsTeaser.petCard.${petId}")
+
+// View All button
+Modifier.testTag("lostPetsTeaser.viewAllButton")
+```
+
+### Navigation Strategy
+
+Navigation from teaser uses **effect abstraction** for future deep link support:
+
+```kotlin
+// Teaser emits navigation effects (WHAT to do)
+sealed class LostPetsTeaserEffect {
+    data class NavigateToPetDetails(val petId: String) : LostPetsTeaserEffect()
+    object NavigateToLostPetsList : LostPetsTeaserEffect()
+}
+
+// HomeScreen handles effects (HOW to do it)
+// Current: Tab switch + navigate within LostPet tab
+// Future: Could use deep links without changing teaser
+```
+
+**Navigation behavior**: When user navigates to pet details from teaser:
+1. App switches to Lost Pet tab
+2. Pet details screen opens within that tab
+3. Back navigation returns to Lost Pet list (not Home tab)
+
+This matches iOS behavior (spec 058) for cross-platform consistency.
 
 ## Complexity Tracking
 
@@ -202,5 +260,4 @@ e2e-tests/java/src/test/java/com/intive/petspot/android/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| None | N/A | N/A |

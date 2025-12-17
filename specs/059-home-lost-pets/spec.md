@@ -94,7 +94,9 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 - **FR-006**: System MUST navigate to the lost pets tab when "View All Lost Pets" button is tapped
 - **FR-007**: System MUST navigate to the lost pets tab and display pet details when a teaser entry is tapped, using the same navigation pattern as the existing list-to-details navigation
 - **FR-008**: System MUST retrieve lost pet data using the existing backend endpoint for announcements
-- **FR-009**: When pet photos fail to load, the system MUST display placeholder images or icons to maintain layout consistency
+- **FR-009**: System MUST display a loading indicator while fetching lost pet data from the backend
+- **FR-010**: System MUST filter announcements client-side to show only MISSING status pets, sorted by creation date (newest first), limited to 5 entries
+- **FR-011**: When pet photos fail to load, the system MUST display placeholder images or icons to maintain layout consistency
 
 ### Key Entities *(include if feature involves data)*
 
@@ -114,7 +116,11 @@ As a user who sees an interesting lost pet in the teaser, I want to view full de
 
 ## Assumptions
 
-- **Backend Sorting**: The backend endpoint for announcements provides data sorted by creation date (newest first), location and number of returned elements as specified in the request parameters
-- **Photo Requirements**: Pet photos are stored in web-compatible formats and accessible via URL. When photos fail to load, placeholder images maintain layout consistency
-- **Network Conditions**: The app handles various network conditions with appropriate loading indicators and error states for slow connections
-- **Data Consistency**: Lost pets teaser uses the same data model and display format as the existing lost pet announcements list to ensure consistency
+- **Scope**: This spec covers only the Lost Pets Teaser component of the full landing page. Additional landing page components (description panel, footer, etc. as defined in spec 049) will be implemented in separate iterations or specs.
+- **Navigation Behavior**: When navigating from the teaser to pet details, the user is switched to the Lost Pets tab. Using back navigation from pet details returns to the Lost Pets list, not to the Home tab. This matches iOS behavior (spec 058).
+- **Data Freshness**: Teaser data loads once when the Home screen first appears. No pull-to-refresh or automatic refresh functionality in this iteration.
+- **Reusable Component**: The Lost Pets Teaser is implemented as an autonomous, self-contained feature that can be embedded in any screen, not just the Home page.
+- **Location Filtering (Out of Scope)**: The teaser currently displays the 5 most recent lost pets globally, without filtering by user's location. Location-based filtering (showing nearby lost pets first) is a future enhancement.
+- **Photo Requirements**: Pet photos are stored in web-compatible formats and accessible via URL. When photos fail to load, placeholder images maintain layout consistency.
+- **Network Conditions**: The app handles various network conditions with appropriate loading indicators and error states for slow connections.
+- **Data Consistency**: Lost pets teaser uses the same data model and display format as the existing lost pet announcements list to ensure consistency.
