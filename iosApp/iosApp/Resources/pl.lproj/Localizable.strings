@@ -134,6 +134,13 @@
 "animalPhoto.tile.title" = "Dodaj zdjęcie zwierzęcia";
 "animalPhoto.tile.subtitle" = "JPEG, PNG, HEIC, GIF, WEBP • Max 10MB";
 
+/* MARK: - Location Permission Popup */
+
+"location.permission.popup.title" = "Wymagany dostęp do lokalizacji";
+"location.permission.popup.message" = "Włącz dostęp do lokalizacji w Ustawieniach, aby zobaczyć zwierzęta w pobliżu.";
+"location.permission.popup.settings.button" = "Przejdź do Ustawień";
+"location.permission.popup.cancel.button" = "Anuluj";
+
 /* MARK: - Common */
 
 "common.loading" = "Ładowanie...";
@@ -249,6 +256,15 @@
 
 // Empty state
 "landingPage.emptyState.message" = "Brak ostatnich ogłoszeń.\nSprawdź później, czy pojawiły się zgłoszenia zwierząt w Twojej okolicy.";
+
+// Hero Section
+"landingPage.hero.title" = "Znajdź swojego pupila";
+"landingPage.hero.lostPetButton" = "Zagubiony";
+"landingPage.hero.foundPetButton" = "Znaleziony";
+
+// List Header
+"landingPage.listHeader.title" = "Ostatnie zgłoszenia";
+"landingPage.listHeader.viewAll" = "Wszystkie";
 
 /* MARK: - Placeholder Screen */
 
