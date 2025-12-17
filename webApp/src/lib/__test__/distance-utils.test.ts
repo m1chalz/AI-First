@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { calculateDistanceKm, formatLocationOrDistance } from '../distance-utils';
+import { describe, it, expect } from 'vitest';
+import { calculateDistanceKm, formatDistance } from '../distance-utils';
 
 describe('calculateDistanceKm', () => {
   it.each([
@@ -18,50 +18,41 @@ describe('calculateDistanceKm', () => {
   });
 });
 
-describe('formatLocationOrDistance', () => {
-  const mockFormatCoordinates = vi.fn((lat: number, lng: number) => `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-
-  it.each([
-    // no announcement location
-    { userCoords: { lat: 52.0, lng: 21.0 }, announcementLat: null, announcementLng: null, expected: 'Location unknown' },
-    { userCoords: null, announcementLat: null, announcementLng: 21.0, expected: 'Location unknown' },
-    { userCoords: null, announcementLat: 52.0, announcementLng: null, expected: 'Location unknown' }
-  ])(
-    'returns "Location unknown" when announcement location is incomplete',
-    ({ userCoords, announcementLat, announcementLng, expected }) => {
-      // when
-      const result = formatLocationOrDistance(userCoords, announcementLat, announcementLng, mockFormatCoordinates);
-
-      // then
-      expect(result).toBe(expected);
-    }
-  );
-
-  it('returns formatted distance when user coordinates are available', () => {
+describe('formatDistance', () => {
+  it('returns formatted distance in km when distance >= 1 km', () => {
     // given
     const userCoords = { lat: 52.2297, lng: 21.0122 };
-    const announcementLat = 52.2387;
-    const announcementLng = 21.0122;
+    const announcementLat = 50.0647; // Krakow
+    const announcementLng = 19.945;
 
     // when
-    const result = formatLocationOrDistance(userCoords, announcementLat, announcementLng, mockFormatCoordinates);
+    const result = formatDistance(userCoords, announcementLat, announcementLng);
 
     // then
-    expect(result).toMatch(/^\d+(\.\d+)? (km|m) away$/);
-    expect(mockFormatCoordinates).not.toHaveBeenCalled();
+    expect(result).toMatch(/^\d+\.\d km away$/);
   });
 
-  it('returns formatted coordinates when user coordinates are not available', () => {
+  it('returns formatted distance in meters when distance < 1 km', () => {
     // given
-    const announcementLat = 52.2297;
-    const announcementLng = 21.0122;
-    mockFormatCoordinates.mockClear();
+    const userCoords = { lat: 52.2297, lng: 21.0122 };
+    const announcementLat = 52.23;
+    const announcementLng = 21.0125;
 
     // when
-    const result = formatLocationOrDistance(null, announcementLat, announcementLng, mockFormatCoordinates);
+    const result = formatDistance(userCoords, announcementLat, announcementLng);
 
     // then
-    expect(result).toBe('52.2297, 21.0122');
-    expect(mockFormatCoordinates).toHaveBeenCalledWith(announcementLat, announcementLng);
+    expect(result).toMatch(/^\d+ m away$/);
+  });
+
+  it('returns "0 m away" for same coordinates', () => {
+    // given
+    const userCoords = { lat: 52.2297, lng: 21.0122 };
+
+    // when
+    const result = formatDistance(userCoords, 52.2297, 21.0122);
+
+    // then
+    expect(result).toBe('0 m away');
   });
 });

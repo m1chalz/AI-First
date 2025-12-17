@@ -18,8 +18,8 @@ const MOCK_ANNOUNCEMENT: Announcement = {
   email: 'owner@example.com',
   description: 'Friendly and playful',
   reward: null,
-  locationLatitude: null,
-  locationLongitude: null,
+  locationLatitude: 1,
+  locationLongitude: 1,
   createdAt: '2024-11-25T10:00:00Z',
   updatedAt: '2024-11-25T10:00:00Z'
 };
@@ -206,12 +206,12 @@ describe('AnnouncementDetailsContent - Identification Fields (User Story 2)', ()
         photoUrl: 'https://example.com/photo.jpg',
         status: 'FOUND',
         lastSeenDate: '2024-11-25T10:00:00Z',
-        phone: null,
-        email: null,
+        phone: '123',
+        email: 'mail@mail.com',
         description: null,
         reward: null,
-        locationLatitude: null,
-        locationLongitude: null,
+        locationLatitude: 1,
+        locationLongitude: 1,
         createdAt: '2024-11-25T10:00:00Z',
         updatedAt: '2024-11-25T10:00:00Z'
       };
@@ -257,19 +257,6 @@ describe('AnnouncementDetailsContent - Location & Contact Information (User Stor
       screen.getByText(/52\.2297° N, 21\.0122° E/);
     });
 
-    it('should hide location section when coordinates unavailable', () => {
-      // Given
-      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: null, locationLongitude: null };
-
-      // When
-      render(<AnnouncementDetailsContent announcement={announcement} />);
-
-      // Then
-      // Should not have the location section at all
-      const latLongText = screen.queryByText('Lat / Long');
-      expect(latLongText).toBeNull();
-    });
-
     it('should display map button when coordinates available', () => {
       // Given
       const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: 40.7128, locationLongitude: -74.006 };
@@ -282,31 +269,6 @@ describe('AnnouncementDetailsContent - Location & Contact Information (User Stor
       expect(mapButton).toBeTruthy();
       expect(mapButton.getAttribute('href')).toContain('maps');
       expect(mapButton.getAttribute('target')).toBe('_blank');
-    });
-
-    it('should not display map button when coordinates unavailable', () => {
-      // Given
-      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: null, locationLongitude: null };
-
-      // When
-      render(<AnnouncementDetailsContent announcement={announcement} />);
-
-      // Then
-      const mapButton = screen.queryByTestId('announcementDetails.mapButton.click');
-      expect(mapButton).toBeNull();
-    });
-
-    it('should handle partial coordinates (one null)', () => {
-      // Given
-      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, locationLatitude: 52.2297, locationLongitude: null };
-
-      // When
-      render(<AnnouncementDetailsContent announcement={announcement} />);
-
-      // Then
-      // Should hide location section if either coordinate is null
-      const latLongText = screen.queryByText('Lat / Long');
-      expect(latLongText).toBeNull();
     });
   });
 
@@ -337,22 +299,6 @@ describe('AnnouncementDetailsContent - Location & Contact Information (User Stor
 
       // Then
       screen.getByText(email);
-    });
-
-    it.each([
-      { contact: 'phone' as const, description: 'should display "—" when phone is null' },
-      { contact: 'email' as const, description: 'should display "—" when email is null' }
-    ])('$description', ({ contact }) => {
-      // Given
-      const petUpdates = contact === 'phone' ? { phone: null } : { email: null };
-      const announcement: Announcement = { ...MOCK_ANNOUNCEMENT, ...petUpdates };
-
-      // When
-      render(<AnnouncementDetailsContent announcement={announcement} />);
-
-      // Then
-      const dashes = screen.getAllByText('—');
-      expect(dashes.length).toBeGreaterThan(0);
     });
 
     it('should display both phone and email exactly as received', () => {

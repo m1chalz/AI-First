@@ -99,24 +99,13 @@ describe('LandingPageCard', () => {
     expect(locationText).toBeDefined();
   });
 
-  it('should display coordinates when user coordinates are not available', () => {
+  it('should not display location row when user coordinates are not available', () => {
     // when
     renderCard(mockAnnouncement, null);
 
     // then
-    const locationText = screen.getByText(/52\.22.*, 21\.01.*/);
-    expect(locationText).toBeDefined();
-  });
-
-  it('should display "Location unknown" when announcement has no location', () => {
-    // given
-    const noLocationAnnouncement = { ...mockAnnouncement, locationLatitude: null, locationLongitude: null };
-
-    // when
-    renderCard(noLocationAnnouncement, mockUserCoordinates);
-
-    // then
-    expect(screen.getByText('Location unknown')).toBeDefined();
+    const locationRow = screen.queryByText(/away/);
+    expect(locationRow).toBeNull();
   });
 
   it('should display date in DD/MM/YYYY format', () => {
