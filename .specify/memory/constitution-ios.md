@@ -11,14 +11,19 @@ This document contains all iOS-specific architectural rules and standards. Read 
 open /iosApp in Xcode and build
 
 # Run iOS tests
-xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES
+xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES
 
 # View coverage
 Xcode coverage report
+
+# Run SwiftGen (after adding new strings to Localizable.strings)
+swiftgen
 ```
 
 ## Technology Stack
 
+- **Target**: iOS 18+
+- **Device**: iPhone 16 (for tests and compilation)
 - **Language**: Swift
 - **UI Framework**: SwiftUI
 - **Navigation**: UIKit-based Coordinators
@@ -53,10 +58,11 @@ iOS MUST maintain minimum 80% unit test coverage:
 
 - **Location**: `/iosApp/iosAppTests/`
 - **Framework**: XCTest with Swift Concurrency (async/await)
-- **Run command**: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
+- **Run command**: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
 - **Report**: Xcode coverage report
 - **Scope**: Domain models, ViewModels (ObservableObject with @Published properties)
 - **Coverage target**: 80% line + branch coverage
+- **Import**: Use `@testable import PetSpot` (NOT `@testable import iosApp`)
 
 **Testing Requirements**:
 - MUST test happy path, error cases, and edge cases
@@ -133,7 +139,8 @@ let viewModel = PetListViewModel(
 iOS MUST use Swift Concurrency:
 
 - ViewModels MUST use **Swift Concurrency** (`async`/`await`)
-- MUST NOT use Combine, RxSwift, or PromiseKit for new code
+- MUST NOT use Combine framework anywhere in the codebase
+- MUST NOT use RxSwift or PromiseKit
 - Use `@MainActor` for UI updates
 
 **Example**:
@@ -158,8 +165,8 @@ class PetListViewModel: ObservableObject {
 }
 ```
 
-**Prohibited Patterns**:
-- ❌ Combine framework
+**Prohibited Patterns** (NON-NEGOTIABLE):
+- ❌ **Combine framework** - DO NOT USE anywhere
 - ❌ RxSwift
 - ❌ PromiseKit
 - ❌ Callbacks (except platform APIs that require them)
@@ -275,14 +282,22 @@ All iOS presentation features MUST follow the Model-View-ViewModel-Coordinator (
    - Then in `UIHostingController` for UIKit integration
    - Example: `UIHostingController(rootView: NavigationBackHiding { PetListView(viewModel: viewModel) })`
 
-5. **SwiftUI views remain pure**: Views MUST NOT contain business logic, navigation logic, or
+5. **Navigation title in UIKit**: Navigation bar titles MUST be set in UIKit (coordinator level),
+   NOT in SwiftUI views. Use `hostingController.title = "Screen Title"` or set via `UINavigationItem`.
+
+6. **SwiftUI views remain pure**: Views MUST NOT contain business logic, navigation logic, or
    direct repository calls. Views only render UI based on ViewModel state and trigger ViewModel methods.
 
-6. **Coordinator hierarchy**: Parent coordinators manage child coordinators for nested flows.
+7. **Coordinator hierarchy**: Parent coordinators manage child coordinators for nested flows.
    Child coordinators notify parents via delegation or closures when flow completes.
 
-7. **NO use cases layer**: iOS ViewModels call repositories directly without use case layer.
+8. **NO use cases layer**: iOS ViewModels call repositories directly without use case layer.
    Business logic lives in ViewModels when needed.
+
+### View Naming Convention (MANDATORY)
+
+- SwiftUI view struct names MUST end with `View` suffix (e.g., `PetCardView`, `PetListView`)
+- Exception: Only when explicitly indicated otherwise in specification
 
 ### View Patterns
 
@@ -290,12 +305,24 @@ All iOS presentation features MUST follow the Model-View-ViewModel-Coordinator (
 - Use for screens with network calls, complex state, or business logic
 - ViewModel is `ObservableObject` with `@Published` properties
 - View observes ViewModel via `@StateObject` or `@ObservedObject`
+- ViewModel file: `{ViewName}ViewModel.swift` (e.g., `PetListViewModel.swift`)
 
-**Model pattern** (for simple views with static data):
+**Model pattern** (for subviews/components with static data):
 - Use for reusable components, list items, cards without own state management
 - Define `struct Model` in extension to view struct
+- Model MUST be placed in separate file: `{ViewName}_Model.swift`
 - Model passed via initializer parameter (no `@Published` properties)
 
+**File Structure Example**:
+```
+Views/
+├── PetCardView.swift           # View struct
+├── PetCardView_Model.swift     # Model extension (separate file!)
+├── PetListView.swift           # View struct
+└── PetListViewModel.swift      # ViewModel (ObservableObject)
+```
+
+**PetCardView.swift**:
 ```swift
 struct PetCardView: View {
     let model: Model
@@ -307,7 +334,10 @@ struct PetCardView: View {
         }
     }
 }
+```
 
+**PetCardView_Model.swift**:
+```swift
 extension PetCardView {
     struct Model {
         let name: String
@@ -322,6 +352,32 @@ extension PetCardView {
 - ALL user-facing strings MUST be localized (no hardcoded strings in views)
 - Access localized strings via SwiftGen-generated code: `L10n.petListTitle`
 - String keys defined in `Localizable.strings` files
+
+**String Reuse Policy**:
+- **Common strings** (`done`, `ok`, `close`, `cancel`, etc.) - defined once, reused everywhere
+- **Screen-specific strings** - each string used only in ONE place (no sharing between screens)
+
+**SwiftGen Workflow**:
+1. Add new string to `Localizable.strings` file for ALL languages (files must be kept in sync)
+2. Run `swiftgen` command in terminal
+3. Access via generated `L10n.yourNewString` constant
+
+**Multi-Language Consistency (MANDATORY)**:
+- All `Localizable.strings` files MUST contain the same keys
+- When adding a new string, add it to ALL language files simultaneously
+- Missing keys in any language file will cause runtime issues
+
+```swift
+// Localizable.strings
+"common.done" = "Done";
+"common.cancel" = "Cancel";
+"petList.title" = "My Pets";
+"petList.emptyState" = "No pets found";
+
+// Usage in code
+Text(L10n.Common.done)       // Reusable common string
+Text(L10n.PetList.title)     // Screen-specific string
+```
 
 ### Presentation Model Extensions (MANDATORY)
 
@@ -462,11 +518,15 @@ class PetListCoordinator {
 │   └── Repositories/    - Repository implementations (WITHOUT suffix)
 ├── Coordinators/        - UIKit-based coordinators managing navigation
 ├── Views/               - SwiftUI views + ViewModels
+│   ├── PetListView.swift
+│   ├── PetListViewModel.swift
+│   ├── PetCardView.swift
+│   └── PetCardView_Model.swift   # Subview models in separate files!
 ├── Features/
 │   └── Shared/          - Presentation model extensions (colors, formatting)
 ├── DI/                  - Manual dependency injection setup (ServiceContainer)
 ├── Resources/           - Localizable.strings, assets
-└── Generated/           - SwiftGen generated code
+└── Generated/           - SwiftGen generated code (L10n)
 ```
 
 ## Testing Standards
@@ -477,12 +537,28 @@ class PetListCoordinator {
 - **Framework**: XCTest with Swift Concurrency (async/await)
 - **Scope**: Domain models, ViewModels (ObservableObject), coordinators (optional)
 - **Coverage target**: 80% line + branch coverage
+- **Import**: `@testable import PetSpot` (NOT `@testable import iosApp`)
+- **Device**: iPhone 16 Simulator
 
 **Requirements**:
 - ViewModels MUST have unit tests in `/iosApp/iosAppTests/Features/`
 - ViewModel tests MUST verify `@Published` property updates
 - ViewModel tests MUST verify coordinator callback invocations
 - Model structs (simple data) MAY skip tests if purely data containers
+
+**Test File Template**:
+```swift
+import XCTest
+@testable import PetSpot
+
+final class PetListViewModelTests: XCTestCase {
+    func testLoadPets_whenRepositorySucceeds_shouldUpdatePetsState() async {
+        // Given
+        // When
+        // Then
+    }
+}
+```
 
 ### E2E Tests (MANDATORY)
 
@@ -498,21 +574,27 @@ class PetListCoordinator {
 
 All iOS pull requests MUST:
 
-- [ ] Run unit tests: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES`
+- [ ] Run unit tests: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
 - [ ] Verify 80%+ test coverage in Xcode coverage report
+- [ ] Verify tests use `@testable import PetSpot` (NOT `iosApp`)
 - [ ] Verify new interactive UI elements have `.accessibilityIdentifier()` modifier
 - [ ] Verify screens follow MVVM-C architecture:
   - [ ] UIKit-based coordinators manage navigation
+  - [ ] Navigation titles set in UIKit (NOT in SwiftUI views)
   - [ ] ViewModels conform to `ObservableObject` with `@Published` properties
   - [ ] ViewModels communicate with coordinators via methods or closures
   - [ ] SwiftUI views observe ViewModels (no business/navigation logic)
   - [ ] ViewModels call repositories directly (NO use cases)
+- [ ] Verify NO Combine framework usage anywhere
 - [ ] Verify all new tests follow Given-When-Then structure
 - [ ] Verify all user-facing strings use SwiftGen localization (`L10n.xxx`)
+- [ ] Verify common strings (done/ok/close/cancel) are reused, screen-specific strings are unique
 - [ ] Verify data formatting logic is in ViewModels/Models, not in Views
 - [ ] Verify colors are stored as hex strings in models
+- [ ] Verify SwiftUI view names end with `View` suffix
+- [ ] Verify subview Models are in separate `{ViewName}_Model.swift` files
 
 ---
 
-**Version**: 1.0.0 | **Based on Constitution**: v2.5.10
+**Version**: 1.1.0 | **Based on Constitution**: v3.0.0
 
