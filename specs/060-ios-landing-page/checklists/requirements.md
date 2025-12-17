@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Landing Page Content
+# Specification Quality Checklist: iOS Landing Page - Top UI
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning  
 **Created**: 2025-12-15  
@@ -32,20 +32,16 @@
 ## Validation Summary
 
 **Status**: ✅ PASSED  
-**Date**: 2025-12-15  
+**Date**: 2025-12-17  
 **Result**: All checklist items validated successfully. Specification is ready for `/speckit.clarify` or `/speckit.plan`.
 
 ## Notes
 
-- Specification includes 9 functional requirements (FR-001 through FR-009)
-- 2 user stories prioritized as P1, P2 for independent testing and MVP development
-- 4 measurable success criteria defined (SC-001 through SC-004)
-- 4 edge cases identified and addressed
-- 7 assumptions documented to clarify scope and dependencies
+- Specification covers **only UI above the existing Home list** (hero + “Recent Reports / View All” row). The list itself and its navigation remain explicitly out of scope.
+- 2 user stories prioritized as P1, P1 for independent testing and MVP development
+- Success criteria include navigation checks for Lost Pet / Found Pet / View All, plus a regression check for the existing list behavior.
+- Edge cases include layout priority when vertical space is constrained (shrink list area first because it’s scrollable).
 - No implementation details present - specification remains technology-agnostic
 - All acceptance scenarios follow Given-When-Then format for clear testing criteria
-- **Dependency**: This feature depends on 048-tab-navigation (tab navigation system must be implemented first)
-- **Content focus**: Description panel, top 5 lost pets panel, footer (no navigation - handled by 048)
-- **Backend integration**: Backend provides sorted, limited data (single source of truth)
-- **Display consistency**: Uses same format as existing announcements list
+- **Dependencies**: 054-ios-tab-navigation, 058-ios-landing-page-list
 
