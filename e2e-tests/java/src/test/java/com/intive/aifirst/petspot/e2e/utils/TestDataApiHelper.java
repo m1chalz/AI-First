@@ -268,11 +268,12 @@ public class TestDataApiHelper {
             
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
-            if (response.statusCode() != 201) {
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 System.err.println("Warning: Failed to upload photo. Status: " + response.statusCode() + 
                     ", Body: " + response.body());
             } else {
-                System.out.println("Uploaded placeholder photo for announcement: " + announcementId);
+                System.out.println("Uploaded placeholder photo for announcement: " + announcementId + 
+                    " (status: " + response.statusCode() + ")");
             }
             
         } catch (IOException | InterruptedException e) {

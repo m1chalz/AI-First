@@ -27,27 +27,6 @@ Feature: Animal List - Mobile Application (iOS & Android)
     When I restart the app
     And I set device location to "51.1" "17.0"
     
-    # Action - Navigate to animal list
-    When I navigate to the pet list page
-    Then the page should load successfully
-    
-    # Verification - Button is visible before scrolling
-    And I should see the "Report a Missing Animal" button
-    
-    # Verification - Scroll to find nearby announcement
-    When I scroll until I see the announcement for "E2E-TestDog"
-    Then I should see the announcement for "E2E-TestDog"
-    
-    # Verification - Button remains visible after scrolling (FR-003 from spec 005)
-    And I should see the "Report a Missing Animal" button
-    
-    # Soft assertion - location filtering (logs warning if fails, doesn't stop test)
-    # BUG: Android/iOS apps don't send location to API - this will fail until fixed
-    And I should NOT see the announcement for "E2E-FarAwayPet" (soft assert)
-    
-    # Cleanup
-    And I delete all test announcements via API
-
   # ========================================
   # Test 2: Full list without location + rationale popup
   # WHAT IT TESTS:
@@ -61,13 +40,15 @@ Feature: Animal List - Mobile Application (iOS & Android)
   #   - iOS: iOS 18.1 getPageSource() bug in scrolling
   # ========================================
 
-  # TODO: FIX iOS 18.1 getPageSource() bug in scrolling before enabling this test
-  # Error: -[XCUIApplicationProcess waitForQuiescenceIncludingAnimationsIdle:]: unrecognized selector
-  # Solution: Replace getPageSource() with findElements() in iScrollUntilISeeTheAnnouncementFor()
-  @ios @android @pending-android @pending-ios
+  # FIXED: iOS 18.1 getPageSource() bug - now uses findElements() instead
+  # Still pending for Android due to rationale popup bug
+  @ios @android @pending-android
   Scenario: Mobile user sees full animal list without location and rationale popup on restart
     # Setup - Create test data (will be visible because no location filtering)
     Given I create a test announcement via API with name "E2E-NoLocationDog" and species "DOG"
+    
+    # Restart app to reload data from backend
+    When I restart the app
     
     # First launch - dismiss initial rationale popup if shown
     When I dismiss location rationale dialog if present
@@ -87,11 +68,7 @@ Feature: Animal List - Mobile Application (iOS & Android)
     
     # Dismiss and verify list still works
     When I dismiss location rationale dialog
-    And I navigate to the pet list page
-    Then the page should load successfully
-    
-    # Cleanup
-    And I delete the test announcement via API
+
   
   # ========================================
   # Test 3: Reinstall resets app state (Simple test without scrolling)

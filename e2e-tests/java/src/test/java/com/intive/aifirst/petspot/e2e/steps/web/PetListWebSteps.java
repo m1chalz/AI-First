@@ -24,36 +24,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Step definitions for Pet List web scenarios.
- * 
+ *
  * <p>This class implements Cucumber step definitions (Given/When/Then) for
  * pet list management features on the web platform. Steps are matched to
  * Gherkin scenarios via Cucumber expressions.
- * 
+ *
  * <h2>Architecture:</h2>
  * <ul>
  *   <li>Step Definitions (this class) → implements Given/When/Then methods</li>
  *   <li>Page Objects ({@link PetListPage}) → encapsulates page structure and actions</li>
  *   <li>WebDriverManager → provides WebDriver instance with ThreadLocal isolation</li>
  * </ul>
- * 
+ *
  * <h2>Example Gherkin Mapping:</h2>
  * <pre>
  * Gherkin:  "When I view the web pet list"
  * Method:   viewPetList()
- * 
+ *
  * Gherkin:  "Then I should see at least one pet announcement"
  * Method:   shouldSeeAtLeastOnePet()
  * </pre>
- * 
+ *
  * @see PetListPage
  * @see com.intive.aifirst.petspot.e2e.utils.WebDriverManager
  */
 public class PetListWebSteps {
-    
+
     private WebDriver driver;
     private PetListPage petListPage;
     private String currentAnimalId = "1"; // Track current animal ID from scenario context
-    
+
     /**
      * Constructor - initializes WebDriver and Page Object.
      * Called by Cucumber framework before scenario execution.
@@ -62,14 +62,14 @@ public class PetListWebSteps {
         this.driver = WebDriverManager.getDriver();
         this.petListPage = new PetListPage(driver);
     }
-    
+
     // ========================================
     // Given Steps (Setup / Preconditions)
     // ========================================
-    
+
     /**
      * Navigates to the pet list page.
-     * 
+     *
      * <p>Maps to Gherkin: "Given I am on the pet list page"
      */
     @Given("I am on the pet list page")
@@ -78,10 +78,10 @@ public class PetListWebSteps {
         driver.get(baseUrl);
         System.out.println("Navigated to: " + baseUrl);
     }
-    
+
     /**
      * Waits for the page to finish loading.
-     * 
+     *
      * <p>Maps to Gherkin: "And the page has loaded completely"
      */
     @Given("the page has loaded completely")
@@ -90,14 +90,14 @@ public class PetListWebSteps {
         assertTrue(loaded, "Pet list should be visible after page load");
         System.out.println("Page loaded successfully - pet list is visible");
     }
-    
+
     // ========================================
     // When Steps (Actions)
     // ========================================
-    
+
     /**
      * Views the pet list (placeholder - list should already be visible after navigation).
-     * 
+     *
      * <p>Maps to Gherkin: "When I view the web pet list"
      */
     @When("I view the web pet list")
@@ -106,10 +106,10 @@ public class PetListWebSteps {
         // This step exists for readability in Gherkin scenarios
         System.out.println("Viewing pet list (already loaded)");
     }
-    
+
     /**
      * Clicks on the first pet in the list.
-     * 
+     *
      * <p>Maps to Gherkin: "When I click on the first pet in the list"
      */
     @When("I click on the first pet in the list")
@@ -117,30 +117,30 @@ public class PetListWebSteps {
         petListPage.clickFirstPet();
         System.out.println("Clicked first pet in the list");
     }
-    
+
     // ========================================
     // Then Steps (Assertions / Verification)
     // ========================================
-    
+
     /**
      * Verifies that at least one pet is displayed.
-     * 
+     *
      * <p>Maps to Gherkin: "Then I should see at least one pet announcement"
      */
     @Then("I should see at least one web pet announcement")
     public void shouldSeeAtLeastOnePet() {
-        assertTrue(petListPage.isPetListDisplayed(), 
+        assertTrue(petListPage.isPetListDisplayed(),
             "Pet list should be displayed");
-        assertTrue(petListPage.hasAnyPets(), 
+        assertTrue(petListPage.hasAnyPets(),
             "At least one pet should be visible");
-        
+
         int petCount = petListPage.getPetCount();
         System.out.println("Verified: Found " + petCount + " pet(s)");
     }
-    
+
     /**
      * Verifies that each pet displays complete information.
-     * 
+     *
      * <p>Maps to Gherkin: "And each pet should display name, species, and image"
      */
     @Then("each pet should display name, species, and image")
@@ -149,26 +149,26 @@ public class PetListWebSteps {
             "All pets should display name, species, and image");
         System.out.println("Verified: All pets have complete information");
     }
-    
-    
+
+
     /**
      * Verifies that no pets are displayed (empty state).
-     * 
+     *
      * <p>Maps to Gherkin: "Then I should see no pet announcements"
      */
     @Then("I should see no pet announcements")
     public void shouldSeeNoPets() {
         assertFalse(petListPage.hasAnyPets(),
             "No pets should be visible");
-        
+
         int count = petListPage.getPetCount();
         assertEquals(0, count, "Pet count should be zero");
         System.out.println("Verified: No pets displayed (count = 0)");
     }
-    
+
     /**
      * Verifies that an empty state message is displayed.
-     * 
+     *
      * <p>Maps to Gherkin: "And an empty state message should be displayed"
      */
     @Then("an empty state message should be displayed")
@@ -177,10 +177,10 @@ public class PetListWebSteps {
             "Empty state message should be visible when no results found");
         System.out.println("Verified: Empty state message is displayed");
     }
-    
+
     /**
      * Verifies navigation to pet details page.
-     * 
+     *
      * <p>Maps to Gherkin: "Then I should be navigated to the pet details page"
      */
     @Then("I should be navigated to the pet details page")
@@ -190,12 +190,12 @@ public class PetListWebSteps {
             "Should navigate to pet details page (URL should contain /pets/{id})");
         System.out.println("Verified: Navigated to pet details page: " + currentUrl);
     }
-    
+
     /**
      * Verifies that pet details match the list entry (placeholder).
-     * 
+     *
      * <p>Maps to Gherkin: "And the pet details should match the list entry"
-     * 
+     *
      * <p>Note: Full implementation would require storing pet data from list
      * and comparing with details page. This is a simplified version.
      */
@@ -208,40 +208,40 @@ public class PetListWebSteps {
             "Should be on a pet details page with numeric ID");
         System.out.println("Verified: On valid pet details page");
     }
-    
+
     // ========================================
     // NEW: Steps for simplified feature file
     // ========================================
-    
+
     @Then("the list should contain animal cards")
     public void listShouldContainAnimalCards() {
         System.out.println("Verifying list contains animal cards...");
-        assertTrue(petListPage.getPetCount() > 0, 
+        assertTrue(petListPage.getPetCount() > 0,
             "List should contain at least one animal card");
         System.out.println("Verified: List contains " + petListPage.getPetCount() + " animal cards");
     }
-    
+
     @Then("the add button should be visible")
     public void addButtonShouldBeVisible() {
         System.out.println("Verifying add button is visible...");
-        assertTrue(petListPage.isAddButtonVisible(), 
+        assertTrue(petListPage.isAddButtonVisible(),
             "Add button should be visible on the page");
         System.out.println("Verified: Add button is visible");
     }
-    
+
     @Then("the add button should have text {string}")
     public void addButtonShouldHaveText(String expectedText) {
         System.out.println("Verifying add button text: " + expectedText);
         String actualText = petListPage.getAddButtonText();
-        assertTrue(actualText.contains(expectedText), 
+        assertTrue(actualText.contains(expectedText),
             "Add button should have text '" + expectedText + "' but was '" + actualText + "'");
         System.out.println("Verified: Add button text contains '" + expectedText + "'");
     }
-    
+
     // ========================================
     // Feature 025: New Web Coverage Step Definitions
     // ========================================
-    
+
     // Scenario: Animal card tap triggers navigation
     @When("I click on an animal card with ID {string}")
     public void iClickOnAnimalCardWithID(String animalId) {
@@ -249,7 +249,7 @@ public class PetListWebSteps {
         petListPage.clickAnimalCard(animalId);
         System.out.println("Clicked animal card " + animalId);
     }
-    
+
     @Then("the system should trigger navigation to animal details")
     public void theSystemShouldTriggerNavigationToAnimalDetails() {
         System.out.println("Verifying navigation triggered...");
@@ -260,7 +260,7 @@ public class PetListWebSteps {
             "Navigation should be triggered to animal details (URL: " + currentUrl + ")");
         System.out.println("Verified: Navigation triggered");
     }
-    
+
     @Then("I should see a console log with animal ID {string}")
     public void iShouldSeeConsoleLogWithAnimalID(String animalId) {
         System.out.println("Verifying console log for animal ID: " + animalId);
@@ -271,7 +271,7 @@ public class PetListWebSteps {
             "Console log verified for animal ID: " + animalId + " (navigation occurred)");
         System.out.println("Verified: Console log present");
     }
-    
+
     // Scenario: Report button tap action
     @When("I click the {string} button")
     public void iClickTheButton(String buttonText) {
@@ -279,20 +279,20 @@ public class PetListWebSteps {
         petListPage.clickReportMissingButton();
         System.out.println("Clicked button");
     }
-    
+
     @Then("the system should trigger the report missing animal flow")
     public void theSystemShouldTriggerTheReportMissingAnimalFlow() {
         System.out.println("Verifying report flow triggered...");
         // Verify button click succeeded (button is no longer in focus or navigation occurred)
         // In a real app, this would navigate to report form or open modal
         String currentUrl = driver.getCurrentUrl();
-        boolean flowTriggered = !currentUrl.equals(driver.getCurrentUrl()) || 
+        boolean flowTriggered = !currentUrl.equals(driver.getCurrentUrl()) ||
                                 petListPage.isAddButtonVisible();
         assertTrue(flowTriggered || petListPage.hasAnyPets(),
             "Report flow should be triggered (button click succeeded)");
         System.out.println("Verified: Report flow triggered");
     }
-    
+
     @Then("I should see a console log confirming the action")
     public void iShouldSeeConsoleLogConfirmingTheAction() {
         System.out.println("Verifying console log for action...");
@@ -302,7 +302,7 @@ public class PetListWebSteps {
         assertTrue(true, "Console log confirmed (action executed successfully)");
         System.out.println("Verified: Console log present");
     }
-    
+
     // Scenario: Animal card details display correctly
     @Given("I am on the pet list page with loaded animals")
     public void iAmOnThePetListPageWithLoadedAnimals() {
@@ -310,7 +310,7 @@ public class PetListWebSteps {
         assertTrue(petListPage.hasAnyPets(), "Pet list should have loaded animals");
         System.out.println("Verified: Pet list has animals");
     }
-    
+
     @When("I view an animal card with ID {string}")
     public void iViewAnimalCardWithID(String animalId) {
         System.out.println("Viewing animal card with ID: " + animalId);
@@ -322,17 +322,17 @@ public class PetListWebSteps {
         assertTrue(card.isDisplayed(), "Animal card " + animalId + " should be visible");
         System.out.println("Verified: Animal card " + animalId + " is visible");
     }
-    
+
     @Then("the card should display species, breed, status, date, and location")
     public void theCardShouldDisplaySpeciesBreedStatusDateAndLocation() {
         System.out.println("Verifying card displays all required fields...");
         // Use animal ID from scenario context (set in "I view an animal card with ID {string}")
         boolean hasAllFields = petListPage.cardHasAllRequiredFields(currentAnimalId);
-        assertTrue(hasAllFields, 
+        assertTrue(hasAllFields,
             "Card should display species, breed, status, date, and location");
         System.out.println("Verified: Card has all required fields");
     }
-    
+
     @Then("the status badge should show {string} or {string}")
     public void theStatusBadgeShouldShowOr(String status1, String status2) {
         System.out.println("Verifying status badge shows " + status1 + " or " + status2);
@@ -349,14 +349,14 @@ public class PetListWebSteps {
             "Status badge should show '" + status1 + "' or '" + status2 + "' but was '" + badgeText + "'");
         System.out.println("Verified: Status badge shows " + badgeText);
     }
-    
+
     @Then("the date should be in format {string}")
     public void theDateShouldBeInFormat(String dateFormat) {
         System.out.println("Verifying date format: " + dateFormat);
         // Use animal ID from scenario context
         String dateText = petListPage.getDateText(currentAnimalId);
         assertTrue(dateText.length() > 0, "Date should be present");
-        
+
         // Verify format matches expected pattern
         // DD/MM/YYYY format: matches pattern \d{2}/\d{2}/\d{4}
         if (dateFormat.equals("DD/MM/YYYY")) {
@@ -365,22 +365,22 @@ public class PetListWebSteps {
         }
         System.out.println("Verified: Date format correct (" + dateText + ")");
     }
-    
+
     // ========================================
     // Spec 050: Unified Animal List Steps
     // ========================================
-    
-    @Given("the application is running")
+
+    @Given("web application is running")
     public void theApplicationIsRunning() {
         // Web driver should already be initialized by Hooks
         assertNotNull(driver, "WebDriver should be initialized");
         System.out.println("Application is running (WebDriver ready)");
     }
-    
+
     @When("I navigate to the pet list page")
     public void iNavigateToThePetListPage() {
         String baseUrl = TestConfig.getWebBaseUrl();
-        
+
         // Check if mock geolocation is set - use URL parameters for e2e testing
         if (WebDriverManager.hasMockGeolocation()) {
             double[] coords = WebDriverManager.getMockGeolocation();
@@ -392,30 +392,30 @@ public class PetListWebSteps {
             driver.get(baseUrl);
             System.out.println("Navigated to: " + baseUrl);
         }
-        
+
         // Wait for page to load
         petListPage.waitForPetListVisible(10);
-        
+
         // Take debug screenshot after page load
-        DebugScreenshotHelper.capture(driver, "page_loaded" + 
+        DebugScreenshotHelper.capture(driver, "page_loaded" +
             (WebDriverManager.hasMockGeolocation() ? "_with_location" : "_no_location"));
     }
-    
+
     @When("I navigate to the pet list page with location {string} {string}")
     public void iNavigateToThePetListPageWithLocation(String lat, String lng) {
         double latitude = Double.parseDouble(lat);
         double longitude = Double.parseDouble(lng);
         String baseUrl = TestConfig.getWebBaseUrl();
-        
+
         // Navigate to about:blank first to inject geolocation mock
         driver.get("about:blank");
-        
+
         // Inject geolocation mock via JavaScript before page loads
         String script = String.format("""
             // Store mock coordinates in window object
             window.__mockGeoLat = %f;
             window.__mockGeoLng = %f;
-            
+
             // Override getCurrentPosition
             navigator.geolocation.getCurrentPosition = function(success, error, options) {
                 setTimeout(function() {
@@ -433,7 +433,7 @@ public class PetListWebSteps {
                     });
                 }, 10);
             };
-            
+
             // Override watchPosition
             navigator.geolocation.watchPosition = function(success, error, options) {
                 setTimeout(function() {
@@ -452,7 +452,7 @@ public class PetListWebSteps {
                 }, 10);
                 return 1;
             };
-            
+
             // Override Permissions API to return 'granted'
             if (navigator.permissions) {
                 const originalQuery = navigator.permissions.query.bind(navigator.permissions);
@@ -463,45 +463,45 @@ public class PetListWebSteps {
                     return originalQuery(desc);
                 };
             }
-            
+
             console.log('Geolocation mock injected: ' + window.__mockGeoLat + ', ' + window.__mockGeoLng);
             """, latitude, longitude);
-        
+
         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(script);
         System.out.println("Injected geolocation mock: " + lat + ", " + lng);
-        
+
         // Now navigate to the actual page - the mock should persist
         driver.get(baseUrl);
         System.out.println("Navigated to: " + baseUrl + " with mock geolocation: " + lat + ", " + lng);
-        
+
         // Wait for page to load
         petListPage.waitForPetListVisible(10);
     }
-    
+
     @Then("the page should load successfully")
     public void thePageShouldLoadSuccessfully() {
         boolean loaded = petListPage.waitForPetListVisible(10);
         assertTrue(loaded, "Pet list page should load successfully");
         System.out.println("Page loaded successfully");
     }
-    
+
     @And("I should see the announcement for {string}")
     public void iShouldSeeTheAnnouncementFor(String petName) {
         System.out.println("Looking for announcement: " + petName);
-        
+
         // Wait for data to load - need longer wait when multiple announcements are created
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Take debug screenshot before verification
         DebugScreenshotHelper.capture(driver, "verify_announcement_" + petName.replace(" ", "_"));
-        
+
         // Find announcement by pet name in the list
         List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
-        
+
         boolean found = false;
         for (WebElement item : items) {
             String text = item.getText();
@@ -511,27 +511,27 @@ public class PetListWebSteps {
                 break;
             }
         }
-        
+
         assertTrue(found, "Should find announcement for " + petName + " in the list");
     }
-    
+
     @And("I should NOT see the announcement for {string}")
     public void iShouldNotSeeTheAnnouncementFor(String petName) {
         System.out.println("Verifying announcement NOT visible: " + petName);
-        
+
         // Wait a bit for data to load
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Take debug screenshot before verification
         DebugScreenshotHelper.capture(driver, "verify_NOT_visible_" + petName.replace(" ", "_"));
-        
+
         // Find announcement by pet name in the list
         List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
-        
+
         boolean found = false;
         for (WebElement item : items) {
             String text = item.getText();
@@ -540,11 +540,11 @@ public class PetListWebSteps {
                 break;
             }
         }
-        
+
         assertFalse(found, "Should NOT find announcement for " + petName + " in the list");
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
     }
-    
+
     /**
      * Soft assertion - records failure but doesn't stop the test.
      * Failures are reported at the end of the scenario.
@@ -553,20 +553,20 @@ public class PetListWebSteps {
     @And("I should NOT see the announcement for {string} \\(soft assert\\)")
     public void iShouldNotSeeTheAnnouncementForSoftAssert(String petName) {
         System.out.println("SOFT ASSERT: Checking if announcement NOT visible: " + petName);
-        
+
         // Wait a bit for data to load
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Take debug screenshot before soft assertion
         DebugScreenshotHelper.capture(driver, "soft_assert_NOT_visible_" + petName.replace(" ", "_"));
-        
+
         // Find announcement by pet name in the list
         List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
-        
+
         boolean found = false;
         for (WebElement item : items) {
             String text = item.getText();
@@ -575,7 +575,7 @@ public class PetListWebSteps {
                 break;
             }
         }
-        
+
         if (found) {
             // Record failure but don't throw - test continues
             com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addFailure(
@@ -589,13 +589,13 @@ public class PetListWebSteps {
             );
         }
     }
-    
+
     @When("I tap on the announcement for {string}")
     public void iTapOnTheAnnouncementFor(String petName) {
         System.out.println("Tapping on announcement: " + petName);
-        
+
         List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
-        
+
         for (WebElement item : items) {
             String text = item.getText();
             if (text.contains(petName)) {
@@ -604,17 +604,17 @@ public class PetListWebSteps {
                 return;
             }
         }
-        
+
         throw new RuntimeException("Could not find announcement for: " + petName);
     }
-    
+
     @Then("I should see the pet details")
     public void iShouldSeeThePetDetails() {
         System.out.println("Verifying pet details modal is visible...");
-        
+
         // Wait for pet details modal
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        
+
         try {
             // Look for modal with data-testid="petDetails.modal"
             wait.until(ExpectedConditions.presenceOfElementLocated(
@@ -631,11 +631,11 @@ public class PetListWebSteps {
             }
         }
     }
-    
+
     @When("I go back from pet details")
     public void iGoBackFromPetDetails() {
         System.out.println("Closing pet details modal...");
-        
+
         // Try to find close button for modal (data-testid="petDetails.closeButton.click")
         try {
             WebElement closeButton = driver.findElement(By.xpath("//*[@data-testid='petDetails.closeButton.click']"));
@@ -653,7 +653,7 @@ public class PetListWebSteps {
                 System.out.println("Closed pet details modal via Escape key");
             }
         }
-        
+
         // Wait for modal to disappear and list to be visible
         try {
             Thread.sleep(500);
@@ -662,13 +662,13 @@ public class PetListWebSteps {
         }
         petListPage.waitForPetListVisible(5);
     }
-    
+
     @And("I should see the {string} button")
     public void iShouldSeeTheButton(String buttonText) {
         System.out.println("Looking for button: " + buttonText);
-        
+
         if (buttonText.contains("Report")) {
-            assertTrue(petListPage.isAddButtonVisible(), 
+            assertTrue(petListPage.isAddButtonVisible(),
                 "Should see '" + buttonText + "' button");
             System.out.println("Found button: " + buttonText);
         } else {
@@ -678,11 +678,11 @@ public class PetListWebSteps {
             assertTrue(found, "Should see button with text: " + buttonText);
         }
     }
-    
+
     @When("I tap the {string} button")
     public void iTapTheButton(String buttonText) {
         System.out.println("Tapping button: " + buttonText);
-        
+
         if (buttonText.contains("Report")) {
             petListPage.clickReportMissingButton();
         } else {
@@ -697,13 +697,13 @@ public class PetListWebSteps {
             throw new RuntimeException("Could not find button: " + buttonText);
         }
     }
-    
+
     @Then("I should see the microchip screen")
     public void iShouldSeeTheMicrochipScreen() {
         System.out.println("Verifying microchip screen is visible...");
-        
+
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        
+
         // Look for microchip input or URL change
         try {
             wait.until(ExpectedConditions.or(
@@ -719,24 +719,24 @@ public class PetListWebSteps {
                 "Should be on microchip screen (URL: " + currentUrl + ")");
         }
     }
-    
+
     @Then("the announcement {string} should appear before {string}")
     public void theAnnouncementShouldAppearBefore(String firstPetName, String secondPetName) {
         System.out.println("Verifying order: " + firstPetName + " before " + secondPetName);
-        
+
         // Wait for data to load - need longer wait when multiple announcements are created
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Get all announcement items in order
         List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
-        
+
         int firstIndex = -1;
         int secondIndex = -1;
-        
+
         for (int i = 0; i < items.size(); i++) {
             String text = items.get(i).getText();
             if (text.contains(firstPetName) && firstIndex == -1) {
@@ -746,31 +746,31 @@ public class PetListWebSteps {
                 secondIndex = i;
             }
         }
-        
+
         assertTrue(firstIndex != -1, "Should find announcement for " + firstPetName);
         assertTrue(secondIndex != -1, "Should find announcement for " + secondPetName);
-        assertTrue(firstIndex < secondIndex, 
-            firstPetName + " (index " + firstIndex + ") should appear before " + 
+        assertTrue(firstIndex < secondIndex,
+            firstPetName + " (index " + firstIndex + ") should appear before " +
             secondPetName + " (index " + secondIndex + ")");
-        
-        System.out.println("Verified order: " + firstPetName + " at " + firstIndex + 
+
+        System.out.println("Verified order: " + firstPetName + " at " + firstIndex +
                           " before " + secondPetName + " at " + secondIndex);
     }
-    
+
     // ========================================
     // Spec 050: Scroll and Empty State Steps
     // ========================================
-    
+
     /**
      * Scrolls down the page to verify button visibility while scrolling.
-     * 
+     *
      * <p>Maps to Gherkin: "When I scroll down the page"
      */
     @When("I scroll down the page")
     public void iScrollDownThePage() {
         System.out.println("Scrolling down the page...");
         petListPage.scrollToBottom();
-        
+
         // Wait for scroll animation to complete
         try {
             Thread.sleep(500);
@@ -779,74 +779,74 @@ public class PetListWebSteps {
         }
         System.out.println("Scrolled down the page");
     }
-    
+
     /**
      * Verifies that the empty state message is displayed.
      * Used when no announcements are available in the current location.
-     * 
+     *
      * <p>Maps to Gherkin: "And I should see empty state message"
      */
     @Then("I should see empty state message")
     public void iShouldSeeEmptyStateMessage() {
         System.out.println("Verifying empty state message is displayed...");
-        
+
         // Wait a bit for the page to fully render
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Check if empty state is displayed
         assertTrue(petListPage.isEmptyStateDisplayed(),
             "Empty state message should be visible when no animals in area");
         System.out.println("Verified: Empty state message is displayed");
     }
-    
+
     // ========================================
     // App Restart Step (Web = page refresh)
     // ========================================
-    
+
     /**
      * Refreshes the web page to reload data from API.
      * For web, "restart app" means refreshing the page.
-     * 
+     *
      * <p>If no page is loaded yet (current URL is empty or "data:,"), this is a no-op.
      * The subsequent "navigate to pet list page" step will load fresh data anyway.
-     * 
+     *
      * <p>Maps to Gherkin: "When I restart the app"
      */
     @When("I restart the app")
     public void iRestartTheApp() {
         String currentUrl = driver.getCurrentUrl();
-        
+
         // Skip refresh if no page is loaded yet (empty URL or data:, URL)
         if (currentUrl == null || currentUrl.isEmpty() || currentUrl.startsWith("data:")) {
             System.out.println("Web: Skipping restart (no page loaded yet). Next navigation will load fresh data.");
             return;
         }
-        
+
         System.out.println("Refreshing page to reload data...");
         driver.navigate().refresh();
-        
+
         // Wait for page to reload
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             // Ignore
         }
-        
+
         // Re-initialize page object
         petListPage = new PetListPage(driver);
         petListPage.waitForPetListVisible(10);
-        
+
         System.out.println("Page refreshed successfully");
     }
-    
+
     /**
      * Sets device location using Chrome DevTools Protocol geolocation override.
      * This enables location-based filtering in the web app.
-     * 
+     *
      * <p>Maps to Gherkin: "When I set device location to {string} {string}"
      */
     @When("I set device location to {string} {string}")
@@ -856,12 +856,12 @@ public class PetListWebSteps {
         System.out.println("📍 Web: Setting device location to: " + lat + ", " + lng);
         WebDriverManager.setMockGeolocation(lat, lng);
     }
-    
+
     // ========================================
     // Location Rationale Dialog Steps (NO-OP for Web)
     // Web doesn't have native permission dialogs
     // ========================================
-    
+
     /**
      * Dismisses location rationale dialog - NO-OP for web.
      */
@@ -869,7 +869,7 @@ public class PetListWebSteps {
     public void iDismissLocationRationaleDialogIfPresent() {
         System.out.println("Web: No location rationale dialog (web doesn't have permission dialogs)");
     }
-    
+
     /**
      * Verifies location rationale dialog is visible - NO-OP for web.
      */
@@ -878,7 +878,7 @@ public class PetListWebSteps {
         System.out.println("Web: Skipping rationale dialog check (not applicable to web)");
         // This test should be @pending-web
     }
-    
+
     /**
      * Verifies Settings button in rationale dialog - NO-OP for web.
      */
@@ -887,7 +887,7 @@ public class PetListWebSteps {
         System.out.println("Web: Skipping Settings button check (not applicable to web)");
         // This test should be @pending-web
     }
-    
+
     /**
      * Dismisses location rationale dialog - NO-OP for web.
      */
@@ -895,31 +895,31 @@ public class PetListWebSteps {
     public void iDismissLocationRationaleDialog() {
         System.out.println("Web: No location rationale dialog to dismiss");
     }
-    
+
     /**
      * Scrolls down the list until the specified announcement is visible.
      * Will scroll up to MAX_SCROLL_ATTEMPTS times before failing.
      * Takes debug screenshots after each scroll to track progress.
-     * 
+     *
      * <p>Maps to Gherkin: "When I scroll until I see the announcement for {string}"
      */
     @When("I scroll until I see the announcement for {string}")
     public void iScrollUntilISeeTheAnnouncementFor(String petName) {
         System.out.println("Scrolling to find announcement: " + petName);
-        
+
         int maxAttempts = 10;
         boolean found = false;
-        
+
         // DEBUG: Check initial page state
         List<WebElement> initialItems = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
         System.out.println("🔍 DEBUG: Initial announcements count: " + initialItems.size());
-        
+
         // Take initial screenshot
         DebugScreenshotHelper.capture(driver, "scroll_START_looking_for_" + petName.replace(" ", "_"));
-        
+
         for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
             System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
-            
+
             // Check if announcement is visible
             List<WebElement> items = driver.findElements(By.xpath("//*[starts-with(@data-testid, 'announcementList.item.')]"));
             for (WebElement item : items) {
@@ -935,7 +935,7 @@ public class PetListWebSteps {
                     break;
                 }
             }
-            
+
             if (!found) {
                 // Scroll down by 500px increments
                 petListPage.scrollDown(500);
@@ -948,7 +948,7 @@ public class PetListWebSteps {
                 DebugScreenshotHelper.capture(driver, "scroll_attempt_" + (attempt + 1) + "_for_" + petName.replace(" ", "_"));
             }
         }
-        
+
         // DEBUG: Final state if not found
         if (!found) {
             System.err.println("❌ DEBUG: Failed to find '" + petName + "' after " + maxAttempts + " scrolls");
@@ -963,7 +963,7 @@ public class PetListWebSteps {
             // Take final screenshot on failure
             DebugScreenshotHelper.capture(driver, "scroll_FAILED_to_find_" + petName.replace(" ", "_"));
         }
-        
+
         assertTrue(found, "Should find announcement for " + petName + " after scrolling (max " + maxAttempts + " attempts)");
     }
 }

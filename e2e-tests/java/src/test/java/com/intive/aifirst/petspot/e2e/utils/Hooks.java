@@ -4,6 +4,8 @@ import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -390,22 +392,29 @@ public class Hooks {
      */
     private void captureFailureScreenshot(Scenario scenario) {
         try {
+            byte[] screenshotBytes = null;
+            
             // Try web driver first
             WebDriver webDriver = getWebDriverSafely();
             if (webDriver != null) {
                 ScreenshotUtil.captureScreenshot(webDriver, scenario.getName());
-                return;
+                screenshotBytes = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.BYTES);
+            } else {
+                // Try mobile driver (check both Android and iOS)
+                AppiumDriver appiumDriver = getAppiumDriverSafely();
+                if (appiumDriver != null) {
+                    String platform = AppiumDriverManager.getCurrentPlatform();
+                    ScreenshotUtil.captureScreenshot(appiumDriver, scenario.getName(), platform);
+                    screenshotBytes = appiumDriver.getScreenshotAs(OutputType.BYTES);
+                }
             }
             
-            // Try mobile driver (check both Android and iOS)
-            AppiumDriver appiumDriver = getAppiumDriverSafely();
-            if (appiumDriver != null) {
-                String platform = AppiumDriverManager.getCurrentPlatform();
-                ScreenshotUtil.captureScreenshot(appiumDriver, scenario.getName(), platform);
-                return;
+            // Attach screenshot to Cucumber report
+            if (screenshotBytes != null) {
+                scenario.attach(screenshotBytes, "image/png", "Failure Screenshot");
+            } else {
+                System.err.println("No active driver found - cannot capture screenshot");
             }
-            
-            System.err.println("No active driver found - cannot capture screenshot");
             
         } catch (Exception e) {
             System.err.println("Failed to capture screenshot: " + e.getMessage());
