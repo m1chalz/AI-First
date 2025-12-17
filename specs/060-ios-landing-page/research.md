@@ -22,7 +22,7 @@ This document captures technical decisions for adding a top panel UI (hero secti
 
 **Alternatives Considered**:
 1. **Inline view properties in LandingPageViewModel**: Rejected because it violates separation of concerns (ViewModel should not contain UI-specific formatting). Presentation models keep ViewModels clean and focused on business logic.
-2. **Single monolithic view component**: Rejected because it reduces reusability and testability. Separate components (`HeroPanel`, `ListHeaderRow`) allow independent testing and potential reuse in other screens.
+2. **Single monolithic view component**: Rejected because it reduces reusability and testability. Separate components (`HeroPanelView`, `ListHeaderRowView`) allow independent testing and potential reuse in other screens.
 3. **Observable presentation models**: Rejected because these are static UI configurations (title, button labels) that don't change after initialization. Using `@Published` would add unnecessary complexity.
 
 ---
@@ -30,17 +30,17 @@ This document captures technical decisions for adding a top panel UI (hero secti
 ### Decision 2: Layout Strategy - VStack with Spacer
 
 **Decision**: Modify `LandingPageView.swift` to wrap content in a `VStack` with proper spacing control:
-1. `HeroPanel(model: heroModel)` - top (fixed height)
-2. `ListHeaderRow(model: listHeaderModel)` - middle (fixed height)
+1. `HeroPanelView(model: heroModel)` - top (fixed height)
+2. `ListHeaderRowView(model: listHeaderModel)` - middle (fixed height)
 3. `Spacer(minLength: 0)` - flexible space
 4. Existing `AnnouncementCardsListView` with `.frame(maxHeight: .infinity)` - bottom (takes remaining space, scrollable)
 
 **Layout Code Pattern**:
 ```swift
 VStack(spacing: 0) {
-    HeroPanel(model: heroModel)
+    HeroPanelView(model: heroModel)
     
-    ListHeaderRow(model: listHeaderModel)
+    ListHeaderRowView(model: listHeaderModel)
         .padding(.top, 16)  // gap between hero and list header
     
     // AnnouncementCardsListView needs explicit height to make inner ScrollView work
@@ -112,7 +112,7 @@ var onSwitchToFoundPetTab: (() -> Void)?  // Set by TabCoordinator
 ### Decision 4: Test Strategy
 
 **Decision**: 
-- **Unit tests**: Test presentation models (`HeroPanel_Model`, `ListHeaderRow_Model`) for property initialization and SwiftUI preview data
+- **Unit tests**: Test presentation models (`HeroPanelView_Model`, `ListHeaderRowView_Model`) for property initialization and SwiftUI preview data
 - **E2E tests**: Java/Appium tests for complete user flows (User Story 1: See top panel, User Story 2: Use top panel actions to navigate)
 - **No ViewModel tests**: `LandingPageViewModel` remains unchanged (no new logic to test)
 
@@ -168,33 +168,96 @@ var onSwitchToFoundPetTab: (() -> Void)?  // Set by TabCoordinator
 
 ## Implementation Notes
 
-### Files to Create (8 new files)
-1. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanel_Model.swift` - Presentation model
-2. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanel.swift` - SwiftUI view
-3. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroButton_Model.swift` - Presentation model for hero buttons (icon + text)
-4. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroButton.swift` - SwiftUI view for hero buttons (reusable button component with icon)
-5. `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRow_Model.swift` - Presentation model
-6. `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRow.swift` - SwiftUI view
-7. `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanel_ModelTests.swift` - Unit tests
-8. `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRow_ModelTests.swift` - Unit tests
+### Files to Create (6 new files)
+1. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView_Model.swift` - Presentation model
+2. `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView.swift` - SwiftUI view
+3. `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView_Model.swift` - Presentation model
+4. `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView.swift` - SwiftUI view
+5. `/iosApp/iosAppTests/Features/LandingPage/Views/Components/HeroPanelView_ModelTests.swift` - Unit tests
+6. `/iosApp/iosAppTests/Features/LandingPage/Views/Components/ListHeaderRowView_ModelTests.swift` - Unit tests
 
-### Files to Modify (4 files)
+### Files to Modify (6 files)
 1. `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift` - Add VStack with hero panel + list header row
 2. `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift` - Add tab navigation closure properties
 3. `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` - Add tab navigation closure properties
 4. `/iosApp/iosApp/Coordinators/TabCoordinator.swift` - Refactor `showPetDetailsFromHome` to `switchToLostPetTab(withAnnouncementId:)`, add `switchToFoundPetTab()`, set closures on HomeCoordinator
+5. `/iosApp/iosApp/Views/FloatingActionButton.swift` - Refactor to support IconSource enum, IconPosition enum, unified gradient styles
+6. `/iosApp/iosApp/Views/FloatingActionButtonModel.swift` - Update to use IconSource and IconPosition
 
 ### Files Unchanged (NO modifications per feature spec)
 - List logic in `LandingPageViewModel` remains the same (only adding closure properties for navigation)
 - `AnnouncementCardsListView.swift` - List component unchanged
 - All repository, domain, and data layer files - UI-only feature
 
-### Reusable Pattern Note
-**FloatingActionButton** (existing component in `/iosApp/iosApp/Views/`) inspired the button styling pattern, but **will NOT be reused** directly because:
-- FloatingActionButton is for overlay buttons (floating above content with ZStack)
-- Hero buttons are inline in VStack layout (not floating)
-- Hero buttons have different sizing and positioning requirements
-- However, color scheme (`#FB2C36` for red, `#155DFC` for blue) and shadow style can be reused for consistency
+### Reusable Component: FloatingActionButton
+
+**Decision**: **Reuse and extend** `FloatingActionButton` (existing component in `/iosApp/iosApp/Views/`) for hero panel buttons.
+
+**Refactoring Plan**:
+
+1. **Simplify styles to 2 generic variants**:
+   - `case primary` - Blue gradient (used for Found Pet, affirmative actions)
+   - `case secondary` - Red/orange gradient (used for Lost Pet, alert actions)
+   - Both styles use white foreground color and unified gradient pattern
+
+2. **Add IconSource enum with extension**:
+```swift
+enum IconSource {
+    case asset(String)      // Asset catalog images (existing use case)
+    case sfSymbol(String)   // SF Symbols (new for hero buttons)
+    
+    var image: Image {
+        switch self {
+        case .asset(let name):
+            return Image(name).renderingMode(.template)
+        case .sfSymbol(let name):
+            return Image(systemName: name)
+        }
+    }
+}
+```
+
+3. **Add IconPosition enum**:
+```swift
+enum IconPosition {
+    case left   // Icon before text (default, used in hero buttons)
+    case right  // Icon after text (for future use cases)
+}
+```
+
+4. **Update FloatingActionButtonModel**:
+```swift
+struct FloatingActionButtonModel {
+    let title: String
+    let style: FloatingActionButton.Style
+    let iconSource: FloatingActionButton.IconSource?
+    let iconPosition: FloatingActionButton.IconPosition
+    
+    init(
+        title: String,
+        style: FloatingActionButton.Style,
+        iconSource: FloatingActionButton.IconSource? = nil,
+        iconPosition: FloatingActionButton.IconPosition = .left
+    ) {
+        self.title = title
+        self.style = style
+        self.iconSource = iconSource
+        self.iconPosition = iconPosition
+    }
+}
+```
+
+**Rationale**:
+- ✅ **DRY**: Reuses layout structure (HStack, padding, corner radius, shadow)
+- ✅ **Consistency**: Same button component across announcement list and hero panel
+- ✅ **Extensibility**: Generic style names (primary/secondary) allow usage in any context
+- ✅ **Native icons**: SF Symbols integration via IconSource enum
+- ✅ **Flexibility**: IconPosition supports left/right icon placement for future use cases
+
+**Breaking Change Note**:
+- Existing `FloatingActionButton` usage in announcement list will need minor updates:
+  - Old: `FloatingActionButton(model: FloatingActionButtonModel(title: "...", style: .primary, icon: "asset_name"), ...)`
+  - New: `FloatingActionButton(model: FloatingActionButtonModel(title: "...", style: .primary, iconSource: .asset("asset_name")), ...)`
 
 ---
 

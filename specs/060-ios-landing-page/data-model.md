@@ -16,11 +16,11 @@ Presentation models follow the established iOS pattern: separate `_Model.swift` 
 
 ---
 
-### HeroPanel_Model
+### HeroPanelView_Model
 
 **Purpose**: Holds UI state for the hero section at the top of the Home screen.
 
-**Location**: `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanel_Model.swift`
+**Location**: `/iosApp/iosApp/Features/LandingPage/Views/Components/HeroPanelView_Model.swift`
 
 **Type**: `struct` (immutable)
 
@@ -42,7 +42,7 @@ Presentation models follow the established iOS pattern: separate `_Model.swift` 
 #### Initialization
 
 ```swift
-struct HeroPanel_Model {
+struct HeroPanelView_Model {
     let title: String
     let lostPetButtonTitle: String
     let foundPetButtonTitle: String
@@ -88,17 +88,17 @@ struct HeroPanel_Model {
 
 #### Relationships
 
-- **Used by**: `HeroPanel.swift` (SwiftUI view)
+- **Used by**: `HeroPanelView.swift` (SwiftUI view)
 - **Created by**: `LandingPageView.swift` (initializes model with coordinator closures)
 - **Navigation**: Closures set by `HomeCoordinator` (MVVM-C pattern)
 
 ---
 
-### ListHeaderRow_Model
+### ListHeaderRowView_Model
 
 **Purpose**: Holds UI state for the list header row ("Recent Reports" / "View All") directly above the announcement list.
 
-**Location**: `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRow_Model.swift`
+**Location**: `/iosApp/iosApp/Features/LandingPage/Views/Components/ListHeaderRowView_Model.swift`
 
 **Type**: `struct` (immutable)
 
@@ -115,7 +115,7 @@ struct HeroPanel_Model {
 #### Initialization
 
 ```swift
-struct ListHeaderRow_Model {
+struct ListHeaderRowView_Model {
     let title: String
     let actionTitle: String
     let onActionTap: () -> Void
@@ -146,7 +146,7 @@ struct ListHeaderRow_Model {
 
 #### Relationships
 
-- **Used by**: `ListHeaderRow.swift` (SwiftUI view)
+- **Used by**: `ListHeaderRowView.swift` (SwiftUI view)
 - **Created by**: `LandingPageView.swift` (initializes model with coordinator closure)
 - **Navigation**: Closure set by `HomeCoordinator` (MVVM-C pattern)
 
@@ -167,15 +167,15 @@ struct ListHeaderRow_Model {
 │         LandingPageView                     │
 │  ┌─────────────────────────────────────┐   │
 │  │ Creates models with closures:       │   │
-│  │ - HeroPanel_Model                   │   │
-│  │ - ListHeaderRow_Model               │   │
+│  │ - HeroPanelView_Model               │   │
+│  │ - ListHeaderRowView_Model           │   │
 │  └─────────────────────────────────────┘   │
 └─────────────────────────────────────────────┘
             │                    │
             │ passes             │ passes
             ↓                    ↓
 ┌────────────────────┐   ┌────────────────────┐
-│   HeroPanel        │   │  ListHeaderRow     │
+│   HeroPanelView    │   │  ListHeaderRowView │
 │   (SwiftUI view)   │   │  (SwiftUI view)    │
 │                    │   │                    │
 │ - Displays title   │   │ - Displays title   │
@@ -222,13 +222,13 @@ cd iosApp && swiftgen
 
 **Test Coverage Requirements** (Principle II: 80% coverage):
 
-1. **`HeroPanel_ModelTests.swift`**:
+1. **`HeroPanelView_ModelTests.swift`**:
    - Test default initialization with localized strings
    - Test accessibility identifiers match FR-010 requirements
    - Test closure invocation (verify `onLostPetTap` and `onFoundPetTap` are called)
    - Test custom initialization for SwiftUI previews
 
-2. **`ListHeaderRow_ModelTests.swift`**:
+2. **`ListHeaderRowView_ModelTests.swift`**:
    - Test default initialization with localized strings
    - Test accessibility identifiers match FR-010 requirements
    - Test closure invocation (verify `onActionTap` is called)
@@ -262,12 +262,12 @@ No third-party libraries required (pure SwiftUI + Foundation).
 
 ## Implementation Checklist
 
-- [ ] Create `HeroPanel_Model.swift` with properties and init
-- [ ] Create `ListHeaderRow_Model.swift` with properties and init
+- [ ] Create `HeroPanelView_Model.swift` with properties and init
+- [ ] Create `ListHeaderRowView_Model.swift` with properties and init
 - [ ] Add localization strings to `Localizable.strings`
 - [ ] Run swiftgen to generate `L10n.*` accessors
 - [ ] Create unit tests for both presentation models
-- [ ] Create SwiftUI views (`HeroPanel.swift`, `ListHeaderRow.swift`)
+- [ ] Create SwiftUI views (`HeroPanelView.swift`, `ListHeaderRowView.swift`)
 - [ ] Modify `LandingPageView.swift` to use new models
 - [ ] Extend `HomeCoordinator.swift` to set navigation closures
 - [ ] Run unit tests and verify 80% coverage
@@ -278,8 +278,8 @@ No third-party libraries required (pure SwiftUI + Foundation).
 ## Summary
 
 Two presentation models capture all UI state for the top panel feature:
-1. **HeroPanel_Model**: Hero section with title + two action buttons
-2. **ListHeaderRow_Model**: List header with title + "View All" action
+1. **HeroPanelView_Model**: Hero section with title + two action buttons
+2. **ListHeaderRowView_Model**: List header with title + "View All" action
 
 Both models follow iOS MVVM-C architecture (Principle XI):
 - Immutable structs

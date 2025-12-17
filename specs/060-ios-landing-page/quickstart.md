@@ -67,17 +67,17 @@ Expected result: Build succeeds ✅
 
 ```text
 iosApp/iosApp/Features/LandingPage/Views/Components/
-├── HeroPanel_Model.swift              # Presentation model for hero section
-├── HeroPanel.swift                    # SwiftUI view for hero section
-├── ListHeaderRow_Model.swift          # Presentation model for list header
-└── ListHeaderRow.swift                # SwiftUI view for list header
+├── HeroPanelView_Model.swift          # Presentation model for hero section
+├── HeroPanelView.swift                # SwiftUI view for hero section
+├── ListHeaderRowView_Model.swift      # Presentation model for list header
+└── ListHeaderRowView.swift            # SwiftUI view for list header
 
 iosApp/iosAppTests/Features/LandingPage/Views/Components/
-├── HeroPanel_ModelTests.swift         # Unit tests for HeroPanel_Model
-└── ListHeaderRow_ModelTests.swift     # Unit tests for ListHeaderRow_Model
+├── HeroPanelView_ModelTests.swift     # Unit tests for HeroPanelView_Model
+└── ListHeaderRowView_ModelTests.swift # Unit tests for ListHeaderRowView_Model
 ```
 
-### Existing Files to Modify (4 files)
+### Existing Files to Modify (6 files)
 
 ```text
 iosApp/iosApp/Features/LandingPage/Views/
@@ -89,6 +89,10 @@ iosApp/iosApp/Features/LandingPage/Coordinators/
 
 iosApp/iosApp/Coordinators/
 └── TabCoordinator.swift               # Refactor showPetDetailsFromHome, add switchToFoundPetTab
+
+iosApp/iosApp/Views/
+├── FloatingActionButton.swift         # Refactor to support IconSource, IconPosition, unified gradient styles
+└── FloatingActionButtonModel.swift    # Update to use IconSource and IconPosition
 ```
 
 ### Files to Keep Unchanged (per feature spec)
@@ -130,17 +134,164 @@ swiftgen
 
 Verify: Open `/iosApp/iosApp/Generated/Strings.swift` - you should see new keys.
 
-### Step 3: Create Presentation Models
+### Step 3: Refactor FloatingActionButton (Reusable Component)
 
-Create **`HeroPanel_Model.swift`** and **`ListHeaderRow_Model.swift`** following the structure in `data-model.md`.
+**Files**: 
+- `/iosApp/iosApp/Views/FloatingActionButton.swift`
+- `/iosApp/iosApp/Views/FloatingActionButtonModel.swift`
+
+**Goal**: Extend existing `FloatingActionButton` to support:
+1. Unified gradient styles (primary = blue, secondary = red/orange)
+2. SF Symbols via `IconSource` enum
+3. Icon positioning via `IconPosition` enum
+
+**Step 3a: Update FloatingActionButton.swift**
+
+Replace the existing `Style` enum and add new enums:
+
+```swift
+enum Style {
+    case primary    // Blue gradient
+    case secondary  // Red/orange gradient
+    
+    var background: LinearGradient {
+        switch self {
+        case .primary:
+            return LinearGradient(
+                colors: [Color(hex: "#155DFC"), Color(hex: "#0D47C7")],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        case .secondary:
+            return LinearGradient(
+                colors: [Color(hex: "#FF6B6B"), Color(hex: "#E85555")],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+    }
+    
+    var foregroundColor: Color { .white }
+    
+    var horizontalPadding: CGFloat { 21 }
+    var verticalPadding: CGFloat { 21 }
+}
+
+enum IconPosition {
+    case left
+    case right
+}
+
+enum IconSource {
+    case asset(String)      // Asset catalog images
+    case sfSymbol(String)   // SF Symbols
+    
+    var image: Image {
+        switch self {
+        case .asset(let name):
+            return Image(name).renderingMode(.template)
+        case .sfSymbol(let name):
+            return Image(systemName: name)
+        }
+    }
+}
+```
+
+Update the `body` to support icon positioning:
+
+```swift
+var body: some View {
+    Button(action: action) {
+        HStack(spacing: 8) {
+            // Left icon
+            if model.iconPosition == .left, let iconSource = model.iconSource {
+                iconSource.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 14, height: 14)
+            }
+            
+            Text(model.title)
+                .font(.system(size: 14, weight: .semibold))
+            
+            // Right icon
+            if model.iconPosition == .right, let iconSource = model.iconSource {
+                iconSource.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 14, height: 14)
+            }
+        }
+        .foregroundColor(model.style.foregroundColor)
+        .padding(.horizontal, model.style.horizontalPadding)
+        .padding(.vertical, model.style.verticalPadding)
+        .background(model.style.background)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+    }
+}
+```
+
+**Step 3b: Update FloatingActionButtonModel.swift**
+
+```swift
+struct FloatingActionButtonModel {
+    let title: String
+    let style: FloatingActionButton.Style
+    let iconSource: FloatingActionButton.IconSource?
+    let iconPosition: FloatingActionButton.IconPosition
+    
+    init(
+        title: String,
+        style: FloatingActionButton.Style,
+        iconSource: FloatingActionButton.IconSource? = nil,
+        iconPosition: FloatingActionButton.IconPosition = .left
+    ) {
+        self.title = title
+        self.style = style
+        self.iconSource = iconSource
+        self.iconPosition = iconPosition
+    }
+}
+```
+
+**Step 3c: Update existing usages**
+
+Find existing `FloatingActionButton` usages (likely in `/iosApp/iosApp/Features/AnnouncementList/Views/AnnouncementListView.swift`) and update:
+
+**Before**:
+```swift
+FloatingActionButton(
+    model: FloatingActionButtonModel(title: "...", style: .primary, icon: "asset_name"),
+    action: { ... }
+)
+```
+
+**After**:
+```swift
+FloatingActionButton(
+    model: FloatingActionButtonModel(
+        title: "...", 
+        style: .primary, 
+        iconSource: .asset("asset_name")
+    ),
+    action: { ... }
+)
+```
+
+**Tip**: Build the project after this step to catch any compilation errors from the refactor.
+
+### Step 4: Create Presentation Models
+
+Create **`HeroPanelView_Model.swift`** and **`ListHeaderRowView_Model.swift`** following the structure in `data-model.md`.
 
 **Tip**: Look at existing presentation models for reference:
 - `/iosApp/iosApp/Features/LandingPage/Views/EmptyStateView_Model.swift`
 - `/iosApp/iosApp/Features/ReportMissingPet/Views/AnimalDescription/Components/CoordinateInputView_Model.swift`
 
-### Step 4: Create SwiftUI Views
+### Step 5: Create SwiftUI Views
 
-Create **`HeroPanel.swift`** and **`ListHeaderRow.swift`**.
+Create **`HeroPanelView.swift`** and **`ListHeaderRowView.swift`**.
 
 **Pattern**: Pure SwiftUI views that observe presentation models.
 
@@ -148,8 +299,8 @@ Create **`HeroPanel.swift`** and **`ListHeaderRow.swift`**.
 ```swift
 import SwiftUI
 
-struct HeroPanel: View {
-    let model: HeroPanel_Model
+struct HeroPanelView: View {
+    let model: HeroPanelView_Model
     
     var body: some View {
         VStack(spacing: 16) {
@@ -159,42 +310,28 @@ struct HeroPanel: View {
                 .accessibilityIdentifier(model.titleAccessibilityId)
             
             HStack(spacing: 12) {
-                // Lost Pet button (red, with alert icon)
-                Button(action: model.onLostPetTap) {
-                    HStack(spacing: 8) {
-                        if let icon = model.lostPetButtonIcon {
-                            Image(systemName: icon)
-                                .font(.system(size: 20))
-                        }
-                        Text(model.lostPetButtonTitle)
-                            .font(.system(size: 16))
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .background(Color(hex: "#FB2C36"))
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-                }
+                // Lost Pet button (secondary style = red/orange gradient)
+                FloatingActionButton(
+                    model: FloatingActionButtonModel(
+                        title: model.lostPetButtonTitle,
+                        style: .secondary,
+                        iconSource: .sfSymbol("exclamationmark.triangle"),
+                        iconPosition: .left
+                    ),
+                    action: model.onLostPetTap
+                )
                 .accessibilityIdentifier(model.lostPetButtonAccessibilityId)
                 
-                // Found Pet button (blue, with checkmark icon)
-                Button(action: model.onFoundPetTap) {
-                    HStack(spacing: 8) {
-                        if let icon = model.foundPetButtonIcon {
-                            Image(systemName: icon)
-                                .font(.system(size: 20))
-                        }
-                        Text(model.foundPetButtonTitle)
-                            .font(.system(size: 16))
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .background(Color(hex: "#155DFC"))
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-                }
+                // Found Pet button (primary style = blue gradient)
+                FloatingActionButton(
+                    model: FloatingActionButtonModel(
+                        title: model.foundPetButtonTitle,
+                        style: .primary,
+                        iconSource: .sfSymbol("checkmark"),
+                        iconPosition: .left
+                    ),
+                    action: model.onFoundPetTap
+                )
                 .accessibilityIdentifier(model.foundPetButtonAccessibilityId)
             }
         }
@@ -211,13 +348,20 @@ struct HeroPanel: View {
 }
 
 #Preview {
-    HeroPanel(model: HeroPanel_Model())
+    HeroPanelView(model: HeroPanelView_Model(
+        onLostPetTap: {},
+        onFoundPetTap: {}
+    ))
 }
 ```
 
-**Note**: This example includes the gradient background and button styling from Figma design (node 974:4669). Icons use SF Symbols (`exclamationmark.triangle`, `checkmark`).
+**Note**: This example reuses the existing `FloatingActionButton` component with:
+- `.primary` style (blue gradient) for Found Pet
+- `.secondary` style (red/orange gradient) for Lost Pet
+- SF Symbols icons via `IconSource.sfSymbol(_)`
+- Unified button styling (padding, corner radius, shadow) from existing component
 
-### Step 5: Modify LandingPageView
+### Step 6: Modify LandingPageView
 
 **File**: `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift`
 
@@ -230,13 +374,13 @@ struct LandingPageView: View {
     var body: some View {
         VStack(spacing: 0) {
             // NEW: Hero panel (fixed height)
-            HeroPanel(model: HeroPanel_Model(
+            HeroPanelView(model: HeroPanelView_Model(
                 onLostPetTap: { /* TODO: Set closure from coordinator */ },
                 onFoundPetTap: { /* TODO: Set closure from coordinator */ }
             ))
             
             // NEW: List header row (fixed height)
-            ListHeaderRow(model: ListHeaderRow_Model(
+            ListHeaderRowView(model: ListHeaderRowView_Model(
                 onActionTap: { /* TODO: Set closure from coordinator */ }
             ))
             .padding(.top, 16)  // Gap between hero and list header
@@ -277,7 +421,7 @@ struct LandingPageView: View {
 }
 ```
 
-### Step 6: Add Tab Navigation Closures to HomeCoordinator
+### Step 7: Add Tab Navigation Closures to HomeCoordinator
 
 **File**: `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
 
@@ -346,7 +490,7 @@ homeCoordinator.onSwitchToFoundPetTab = { [weak self] in
 
 **Note**: This reuses existing `showPetDetailsFromHome` pattern with optional parameter.
 
-### Step 7: Wire Closures in LandingPageView
+### Step 8: Wire Closures in LandingPageView
 
 Update `LandingPageView.swift` to create presentation models with coordinator closures:
 
@@ -357,7 +501,7 @@ struct LandingPageView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Hero panel with coordinator closures
-            HeroPanel(model: HeroPanel_Model(
+            HeroPanelView(model: HeroPanelView_Model(
                 onLostPetTap: {
                     viewModel.onSwitchToLostPetTab?()  // Closure set by coordinator
                 },
@@ -367,7 +511,7 @@ struct LandingPageView: View {
             ))
             
             // List header row with "View All" action
-            ListHeaderRow(model: ListHeaderRow_Model(
+            ListHeaderRowView(model: ListHeaderRowView_Model(
                 onActionTap: {
                     viewModel.onSwitchToLostPetTab?()  // "View All" → Lost Pet tab
                 }
@@ -462,7 +606,7 @@ xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 
 
 Or in Xcode:
 - **Product → Test** (⌘U)
-- Or run specific test files: `HeroPanel_ModelTests`, `ListHeaderRow_ModelTests`
+- Or run specific test files: `HeroPanelView_ModelTests`, `ListHeaderRowView_ModelTests`
 
 **Coverage target**: 80% line + branch coverage
 
@@ -505,7 +649,7 @@ View E2E test report:
 2. Check SwiftUI preview: Canvas → Show Preview (⌥⌘↩)
 3. Add background colors to debug layout:
    ```swift
-   HeroPanel(model: heroModel)
+   HeroPanelView(model: heroModel)
        .background(Color.red.opacity(0.3))  // Debug: red tint
    ```
 

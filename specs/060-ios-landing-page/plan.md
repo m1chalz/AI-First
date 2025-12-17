@@ -163,10 +163,10 @@ iosApp/iosApp/Features/LandingPage/
 │   ├── LandingPageView.swift           # MODIFIED: Add hero panel + list header row above AnnouncementCardsListView
 │   ├── LandingPageViewModel.swift      # MODIFIED: Add tab navigation closure properties
 │   └── Components/                     # NEW: Presentation models for new UI components
-│       ├── HeroPanel_Model.swift       # NEW: Presentation model for hero section (title + 2 buttons)
-│       ├── HeroPanel.swift             # NEW: SwiftUI view for hero section
-│       ├── ListHeaderRow_Model.swift   # NEW: Presentation model for "Recent Reports / View All" row
-│       └── ListHeaderRow.swift         # NEW: SwiftUI view for list header row
+│       ├── HeroPanelView_Model.swift   # NEW: Presentation model for hero section (title + 2 buttons)
+│       ├── HeroPanelView.swift         # NEW: SwiftUI view for hero section
+│       ├── ListHeaderRowView_Model.swift # NEW: Presentation model for "Recent Reports / View All" row
+│       └── ListHeaderRowView.swift     # NEW: SwiftUI view for list header row
 
 iosApp/iosApp/Coordinators/
 └── TabCoordinator.swift                # MODIFIED: Refactor showPetDetailsFromHome to switchToLostPetTab(withAnnouncementId:)
@@ -176,8 +176,8 @@ iosApp/iosApp/Coordinators/
 iosApp/iosAppTests/Features/LandingPage/
 ├── Views/
 │   └── Components/                     # NEW: Unit tests for new components
-│       ├── HeroPanel_ModelTests.swift  # NEW: Tests for HeroPanel_Model presentation logic
-│       └── ListHeaderRow_ModelTests.swift  # NEW: Tests for ListHeaderRow_Model presentation logic
+│       ├── HeroPanelView_ModelTests.swift  # NEW: Tests for HeroPanelView_Model presentation logic
+│       └── ListHeaderRowView_ModelTests.swift  # NEW: Tests for ListHeaderRowView_Model presentation logic
 
 e2e-tests/java/
 ├── src/test/resources/features/mobile/
