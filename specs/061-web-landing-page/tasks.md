@@ -138,16 +138,16 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **End-to-End Tests**:
-- [ ] T045 [P] [US2] Write E2E Gherkin scenarios for US2 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify 4 cards visible, correct order, icons/titles/descriptions)
-- [ ] T046 [P] [US2] Implement Page Object methods for feature cards in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/LandingPage.java` (findFeatureCard by id, verifyFeatureCardContent)
-- [ ] T047 [P] [US2] Implement step definitions for US2 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
+- [X] T045 [P] [US2] Write E2E Gherkin scenarios for US2 in `/e2e-tests/java/src/test/resources/features/web/landing-page.feature` (verify 4 cards visible, correct order, icons/titles/descriptions)
+- [X] T046 [P] [US2] Implement Page Object methods for feature cards in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/pages/web/LandingPage.java` (findFeatureCard by id, verifyFeatureCardContent)
+- [X] T047 [P] [US2] Implement step definitions for US2 in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/web/LandingPageSteps.java`
 
 ### Implementation for User Story 2
 
 **Polish**:
-- [ ] T048 [US2] Verify feature card order in `FEATURE_CARDS` constant: Search Database (blue), Report Missing (red), Found a Pet (green), Location Based (purple)
-- [ ] T049 [US2] Verify feature cards are NOT clickable (no onClick handlers, no cursor:pointer styles)
-- [ ] T050 [US2] Verify responsive layout for feature cards in `HeroSection.module.css` (4 columns desktop, 2x2 grid tablet)
+- [X] T048 [US2] Verify feature card order in `FEATURE_CARDS` constant: Search Database (blue), Report Missing (red), Found a Pet (green), Location Based (purple)
+- [X] T049 [US2] Verify feature cards are NOT clickable (no onClick handlers, no cursor:pointer styles)
+- [X] T050 [US2] Verify responsive layout for feature cards in `HeroSection.module.css` (4 columns desktop, 2x2 grid tablet)
 
 **Quality Checks**:
 - [ ] T051 [US2] Run `mvn test -Dtest=WebTestRunner` from `/e2e-tests/java/` and verify US2 E2E scenarios pass

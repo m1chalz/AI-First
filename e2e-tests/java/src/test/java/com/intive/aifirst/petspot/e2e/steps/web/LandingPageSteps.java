@@ -3,9 +3,12 @@ package com.intive.aifirst.petspot.e2e.steps.web;
 import com.intive.aifirst.petspot.e2e.pages.web.LandingPage;
 import com.intive.aifirst.petspot.e2e.utils.TestConfig;
 import com.intive.aifirst.petspot.e2e.utils.WebDriverManager;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.WebDriver;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,6 +74,61 @@ public class LandingPageSteps {
     @Then("footer should display the contact information column")
     public void footerShouldDisplayTheContactInformationColumn() {
         assertTrue(getLandingPage().isFooterContactDisplayed(), "Footer contact information should be displayed");
+    }
+
+    // US2 - Feature Cards steps
+    @Then("feature cards should be displayed in the following order:")
+    public void featureCardsShouldBeDisplayedInTheFollowingOrder(DataTable dataTable) {
+        List<String> expectedOrder = dataTable.asList();
+        List<String> actualOrder = getLandingPage().getFeatureCardTitles();
+        assertEquals(expectedOrder, actualOrder, "Feature cards should be in correct order");
+    }
+
+    @Then("feature card {string} should display title {string}")
+    public void featureCardShouldDisplayTitle(String id, String expectedTitle) {
+        String actualTitle = getLandingPage().getFeatureCardTitle(id);
+        assertEquals(expectedTitle, actualTitle,
+            "Feature card '" + id + "' should display title '" + expectedTitle + "'");
+    }
+
+    @Then("feature card {string} should display a description")
+    public void featureCardShouldDisplayADescription(String id) {
+        assertTrue(getLandingPage().hasFeatureCardDescription(id),
+            "Feature card '" + id + "' should have a description");
+    }
+
+    @Then("feature card {string} should have blue icon color")
+    public void featureCardShouldHaveBlueIconColor(String id) {
+        String color = getLandingPage().getFeatureCardIconColor(id);
+        assertTrue(color.contains("59, 130, 246") || color.contains("#3B82F6") || color.contains("#3b82f6"),
+            "Feature card '" + id + "' should have blue icon color, but was: " + color);
+    }
+
+    @Then("feature card {string} should have red icon color")
+    public void featureCardShouldHaveRedIconColor(String id) {
+        String color = getLandingPage().getFeatureCardIconColor(id);
+        assertTrue(color.contains("239, 68, 68") || color.contains("#EF4444") || color.contains("#ef4444"),
+            "Feature card '" + id + "' should have red icon color, but was: " + color);
+    }
+
+    @Then("feature card {string} should have green icon color")
+    public void featureCardShouldHaveGreenIconColor(String id) {
+        String color = getLandingPage().getFeatureCardIconColor(id);
+        assertTrue(color.contains("16, 185, 129") || color.contains("#10B981") || color.contains("#10b981"),
+            "Feature card '" + id + "' should have green icon color, but was: " + color);
+    }
+
+    @Then("feature card {string} should have purple icon color")
+    public void featureCardShouldHavePurpleIconColor(String id) {
+        String color = getLandingPage().getFeatureCardIconColor(id);
+        assertTrue(color.contains("139, 92, 246") || color.contains("#8B5CF6") || color.contains("#8b5cf6"),
+            "Feature card '" + id + "' should have purple icon color, but was: " + color);
+    }
+
+    @Then("feature cards should not be clickable")
+    public void featureCardsShouldNotBeClickable() {
+        assertFalse(getLandingPage().areFeatureCardsClickable(),
+            "Feature cards should not be clickable");
     }
 }
 

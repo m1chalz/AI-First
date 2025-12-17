@@ -29,5 +29,34 @@ Feature: Web Landing Page
     And footer should display the contact information column
 
   # User Story 2 - Understand Portal Features via Feature Cards (P1)
-  # Note: Additional scenarios will be added in Phase 4
+  @P1 @US2
+  Scenario: Feature cards display in correct order
+    Then feature cards should be displayed in the following order:
+      | Search Database |
+      | Report Missing  |
+      | Found a Pet     |
+      | Location Based  |
+
+  @P1 @US2
+  Scenario Outline: Feature card displays correct content
+    Then feature card "<id>" should display title "<title>"
+    And feature card "<id>" should display a description
+
+    Examples:
+      | id       | title           |
+      | search   | Search Database |
+      | report   | Report Missing  |
+      | found    | Found a Pet     |
+      | location | Location Based  |
+
+  @P1 @US2
+  Scenario: Feature cards have correct icon colors
+    Then feature card "search" should have blue icon color
+    And feature card "report" should have red icon color
+    And feature card "found" should have green icon color
+    And feature card "location" should have purple icon color
+
+  @P1 @US2
+  Scenario: Feature cards are not clickable
+    Then feature cards should not be clickable
 

@@ -94,6 +94,84 @@ public class LandingPage {
         return driver.findElements(featureCardLocator);
     }
 
+    public WebElement getFeatureCardById(String id) {
+        By locator = By.xpath("//*[@data-testid='landing.hero.featureCard." + id + "']");
+        try {
+            return driver.findElement(locator);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getFeatureCardTitle(String id) {
+        WebElement card = getFeatureCardById(id);
+        if (card == null) return "";
+        try {
+            WebElement title = card.findElement(By.tagName("h3"));
+            return title.getText();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public boolean hasFeatureCardDescription(String id) {
+        WebElement card = getFeatureCardById(id);
+        if (card == null) return false;
+        try {
+            WebElement description = card.findElement(By.tagName("p"));
+            return description != null && !description.getText().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getFeatureCardIconColor(String id) {
+        WebElement card = getFeatureCardById(id);
+        if (card == null) return "";
+        try {
+            WebElement iconContainer = card.findElement(By.xpath(".//*[contains(@class, 'iconContainer')]"));
+            String style = iconContainer.getAttribute("style");
+            if (style != null && style.contains("background-color")) {
+                return style;
+            }
+            return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public List<String> getFeatureCardTitles() {
+        List<WebElement> cards = getFeatureCards();
+        return cards.stream()
+            .map(card -> {
+                try {
+                    return card.findElement(By.tagName("h3")).getText();
+                } catch (Exception e) {
+                    return "";
+                }
+            })
+            .toList();
+    }
+
+    public boolean areFeatureCardsClickable() {
+        List<WebElement> cards = getFeatureCards();
+        for (WebElement card : cards) {
+            String tagName = card.getTagName().toLowerCase();
+            if (tagName.equals("a") || tagName.equals("button")) {
+                return true;
+            }
+            String cursor = card.getCssValue("cursor");
+            if ("pointer".equals(cursor)) {
+                return true;
+            }
+            String onclick = card.getAttribute("onclick");
+            if (onclick != null && !onclick.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Footer Methods
     public boolean isFooterDisplayed() {
         try {
