@@ -165,6 +165,6 @@ describe('MicrochipNumberScreen', () => {
     fireEvent.click(continueButton);
 
     // then (should navigate)
-    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.photo);
+    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.reportMissing.photo);
   });
 });

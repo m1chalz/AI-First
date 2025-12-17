@@ -25,7 +25,7 @@ export function MicrochipNumberScreen() {
       microchipNumber: value,
       currentStep: FlowStep.Photo
     });
-    navigate(AppRoutes.photo);
+    navigate(AppRoutes.reportMissing.photo);
   };
 
   const handleBack = () => {

@@ -14,7 +14,7 @@ export function SummaryScreen() {
   // Check if we have a valid announcement
   useEffect(() => {
     if (!managementPassword) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [managementPassword, navigate]);
 

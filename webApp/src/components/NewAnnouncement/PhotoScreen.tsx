@@ -19,12 +19,12 @@ export function PhotoScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(AppRoutes.microchip);
+    navigate(AppRoutes.reportMissing.microchip);
   };
 
   const { photo, isDragOver, handleFileSelect, handleDrop, handleDragOver, handleDragLeave, removePhoto } = usePhotoUpload(
@@ -42,7 +42,7 @@ export function PhotoScreen() {
       photo,
       currentStep: FlowStep.Details
     });
-    navigate(AppRoutes.details);
+    navigate(AppRoutes.reportMissing.details);
   };
 
   const handleBrowseClick = () => {

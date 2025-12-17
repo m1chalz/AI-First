@@ -20,22 +20,23 @@ export function App() {
       <BrowserRouter>
         <NavigationBar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/lost-pets" element={<LostPets />} />
-          <Route path="/lost-pets/:announcementId" element={<LostPets />} />
-          <Route path="/found-pets" element={<FoundPets />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/account" element={<Account />} />
+          <Route path={AppRoutes.home} element={<Home />} />
+          <Route path={AppRoutes.lostPets} element={<LostPets />} />
+          <Route path={`${AppRoutes.lostPets}/:announcementId`} element={<LostPets />} />
+          <Route path={AppRoutes.foundPets} element={<FoundPets />} />
+          <Route path={AppRoutes.contact} element={<Contact />} />
+          <Route path={AppRoutes.account} element={<Account />} />
+
           <Route
-            path={AppRoutes.base}
+            path={AppRoutes.reportMissing.base}
             element={
               <NewAnnouncementFlowProvider>
-                <Navigate to={AppRoutes.microchip} replace />
+                <Navigate to={AppRoutes.reportMissing.microchip} replace />
               </NewAnnouncementFlowProvider>
             }
           />
           <Route
-            path={AppRoutes.microchip}
+            path={AppRoutes.reportMissing.microchip}
             element={
               <NewAnnouncementFlowProvider>
                 <MicrochipNumberScreen />
@@ -43,7 +44,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.photo}
+            path={AppRoutes.reportMissing.photo}
             element={
               <NewAnnouncementFlowProvider>
                 <PhotoScreen />
@@ -51,7 +52,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.details}
+            path={AppRoutes.reportMissing.details}
             element={
               <NewAnnouncementFlowProvider>
                 <DetailsScreen />
@@ -59,7 +60,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.contact}
+            path={AppRoutes.reportMissing.contact}
             element={
               <NewAnnouncementFlowProvider>
                 <ContactScreen />
@@ -67,7 +68,7 @@ export function App() {
             }
           />
           <Route
-            path={AppRoutes.summary}
+            path={AppRoutes.reportMissing.summary}
             element={
               <NewAnnouncementFlowProvider>
                 <SummaryScreen />

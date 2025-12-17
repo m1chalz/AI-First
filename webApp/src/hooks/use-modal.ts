@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { AppRoutes } from '../pages/routes';
 
 export interface UseModalResult {
   isOpen: boolean;
@@ -16,11 +17,11 @@ export function useModal(): UseModalResult {
   const selectedAnnouncementId = announcementId || null;
 
   const openModal = (announcementId: string) => {
-    navigate(`/announcement/${announcementId}`);
+    navigate(AppRoutes.lostPetDetails(announcementId));
   };
 
   const closeModal = () => {
-    navigate('/');
+    navigate(AppRoutes.lostPets);
   };
 
   return {

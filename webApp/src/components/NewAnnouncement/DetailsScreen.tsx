@@ -16,12 +16,12 @@ export const DetailsScreen: React.FC = () => {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   const handleBack = () => {
-    navigate(AppRoutes.photo);
+    navigate(AppRoutes.reportMissing.photo);
   };
 
   const handleContinue = () => {

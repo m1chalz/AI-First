@@ -20,13 +20,13 @@ export function ContactScreen() {
 
   useEffect(() => {
     if (flowState.currentStep === FlowStep.Empty) {
-      navigate(AppRoutes.microchip, { replace: true });
+      navigate(AppRoutes.reportMissing.microchip, { replace: true });
     }
   }, [flowState.currentStep, navigate]);
 
   useEffect(() => {
     if (announcementId && managementPassword) {
-      navigate(AppRoutes.summary, { state: { announcementId, managementPassword } });
+      navigate(AppRoutes.reportMissing.summary, { state: { announcementId, managementPassword } });
     }
   }, [announcementId, managementPassword, navigate]);
 
@@ -37,7 +37,7 @@ export function ContactScreen() {
   }, [error, showToast]);
 
   const handleBack = () => {
-    navigate(AppRoutes.details);
+    navigate(AppRoutes.reportMissing.details);
   };
 
   const handleContinue = async () => {

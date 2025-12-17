@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { useModal } from '../../hooks/use-modal';
+import { AppRoutes } from '../../pages/routes';
 import { MissingLocationPermissionBanner } from '../MissingLocationPermissionBanner/MissingLocationPermissionBanner';
 import { AnnouncementDetailsModal } from '../AnnouncementDetailsModal/AnnouncementDetailsModal';
 import { AnnouncementCard } from './AnnouncementCard';
@@ -26,7 +27,7 @@ export const AnnouncementList: React.FC = () => {
           <div className={styles.headerButtons}>
             <button
               className={styles.primaryButton}
-              onClick={() => navigate('/report-missing/microchip')}
+              onClick={() => navigate(AppRoutes.reportMissing.microchip)}
               data-testid="announcementList.reportMissingButton"
             >
               Report a Missing Animal
