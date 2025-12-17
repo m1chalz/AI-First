@@ -30,6 +30,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
     
     // MARK: - Helper Methods
     
+    /// Captured animal ID from onAnimalSelected callback
+    private var capturedAnimalId: String?
+    
     private func createViewModel(
         repository: AnnouncementRepositoryProtocol,
         locationStatus: LocationPermissionStatus = .authorizedWhenInUse,
@@ -44,9 +47,13 @@ final class AnnouncementListViewModelTests: XCTestCase {
             notificationCenter: NotificationCenter()  // Isolated instance
         )
         
+        capturedAnimalId = nil
         return AnnouncementListViewModel(
             repository: repository,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            onAnimalSelected: { [weak self] animalId in
+                self?.capturedAnimalId = animalId
+            }
         )
     }
     
@@ -54,6 +61,7 @@ final class AnnouncementListViewModelTests: XCTestCase {
     
     /**
      * Tests that loadAnnouncements updates @Published cardViewModels property on success.
+     * After refactoring, loadAnnouncements() triggers async load in child VM via query setter.
      */
     func testLoadAnnouncements_whenRepositorySucceeds_shouldUpdateCardViewModels() async {
         // Given - ViewModel with fake repository returning animals
@@ -63,8 +71,10 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
 
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        // Wait for child VM's async load to complete
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
 
         // Then - cardViewModels should be populated and state updated
         XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
@@ -84,8 +94,10 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
 
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        // Wait for child VM's async load to complete
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
 
         // Then - cardViewModels should be populated and state updated
         XCTAssertEqual(viewModel.cardViewModels.count, 16, "Should have 16 card ViewModels")
@@ -97,26 +109,26 @@ final class AnnouncementListViewModelTests: XCTestCase {
     // MARK: - Test isEmpty Property
     
     /**
-     * Tests isEmpty computed property returns true when no card ViewModels.
+     * Tests isEmpty computed property returns true when repository returns empty list.
+     * After refactoring, state is managed by child listViewModel.
      */
-    func test_isEmpty_whenNoCardViewModelsAndNotLoadingAndNoError_shouldReturnTrue() {
-        // Given - ViewModel with empty cardViewModels list
+    func test_isEmpty_whenRepositoryReturnsEmptyList_shouldReturnTrue() async {
+        // Given - ViewModel with repository returning empty list
         let fakeRepository = FakeAnnouncementRepository(
             animalCount: 0,
             shouldFail: false
         )
         let viewModel = createViewModel(repository: fakeRepository)
         
-        // Manually set state to empty (before loadAnnouncements runs)
-        viewModel.cardViewModels = []
-        viewModel.isLoading = false
-        viewModel.errorMessage = nil
+        // When - loading completes with empty data (wait for child VM async load)
+        await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
-        // When - checking isEmpty
-        let isEmpty = viewModel.isEmpty
-        
-        // Then - should be true
-        XCTAssertTrue(isEmpty, "isEmpty should be true when no card ViewModels, not loading, and no error")
+        // Then - isEmpty should be true (list loaded but empty)
+        XCTAssertTrue(viewModel.isEmpty, "isEmpty should be true when repository returns empty list")
+        XCTAssertTrue(viewModel.cardViewModels.isEmpty, "cardViewModels should be empty")
+        XCTAssertFalse(viewModel.isLoading, "Should not be loading after load completes")
+        XCTAssertNil(viewModel.errorMessage, "Should have no error")
     }
     
     /**
@@ -130,8 +142,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
         )
         let viewModel = createViewModel(repository: fakeRepository)
         
-        // When - card ViewModels are loaded
+        // When - card ViewModels are loaded (wait for child VM async load)
         await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then - isEmpty should be false
         XCTAssertFalse(viewModel.isEmpty, "isEmpty should be false when card ViewModels present")
@@ -140,26 +153,30 @@ final class AnnouncementListViewModelTests: XCTestCase {
     // MARK: - Test selectAnimal Callback
     
     /**
-     * Tests that selectAnimal invokes onAnimalSelected closure.
+     * Tests that tapping announcement card invokes onAnimalSelected closure.
+     * After refactoring, onAnimalSelected is passed to listViewModel via constructor.
      */
-    func testSelectAnimal_shouldInvokeOnAnimalSelectedClosure() {
-        // Given - ViewModel with callback closure
+    func testOnAnnouncementTapped_shouldInvokeOnAnimalSelectedClosure() async {
+        // Given - ViewModel with callback closure (passed in constructor)
         let fakeRepository = FakeAnnouncementRepository(
-            animalCount: 0,
+            animalCount: 3,
             shouldFail: false
         )
         let viewModel = createViewModel(repository: fakeRepository)
         
-        var capturedAnimalId: String?
-        viewModel.onAnimalSelected = { animalId in
-            capturedAnimalId = animalId
-        }
+        // Wait for initial load to complete (child VM async load)
+        await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
-        // When - selectAnimal is called
-        viewModel.selectAnimal(id: "test-animal-123")
+        // When - user taps first announcement card (simulated via cardViewModel action)
+        guard let firstCard = viewModel.cardViewModels.first else {
+            XCTFail("Should have card ViewModels after load")
+            return
+        }
+        firstCard.handleTap()
         
         // Then - closure should be invoked with correct ID
-        XCTAssertEqual(capturedAnimalId, "test-animal-123", "Should invoke closure with correct animal ID")
+        XCTAssertEqual(capturedAnimalId, firstCard.id, "Should invoke closure with correct animal ID")
     }
     
     // MARK: - Test reportMissing Callback
@@ -226,8 +243,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: testLocation
         )
         
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then - cardViewModels should be populated with API data
         XCTAssertEqual(viewModel.cardViewModels.count, 3)
@@ -247,8 +265,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: testLocation
         )
         
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then - currentLocation should be set
         XCTAssertNotNil(viewModel.currentLocation, "currentLocation should not be nil")
@@ -270,8 +289,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
             location: nil
         )
         
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then - currentLocation should be nil, but animals still loaded
         XCTAssertNil(viewModel.currentLocation)
@@ -286,8 +306,9 @@ final class AnnouncementListViewModelTests: XCTestCase {
         let fakeRepository = FakeAnnouncementRepository(animalCount: 0, shouldFail: true)
         let viewModel = createViewModel(repository: fakeRepository)
         
-        // When - loadAnnouncements is called
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then - error state should be set
         XCTAssertNotNil(viewModel.errorMessage)

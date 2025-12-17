@@ -15,8 +15,9 @@ import SwiftUI
 /// **Loading Flow**:
 /// 1. View appears → `.task { await viewModel.loadData() }`
 /// 2. Parent ViewModel fetches location and sets `listViewModel.query`
-/// 3. Child ViewModel loads announcements and updates state
-/// 4. `AnnouncementCardsListView` observes child ViewModel and renders UI
+/// 3. Shows permission popup if needed (once per session)
+/// 4. Child ViewModel loads announcements and updates state
+/// 5. `AnnouncementCardsListView` observes child ViewModel and renders UI
 struct LandingPageView: View {
     @ObservedObject var viewModel: LandingPageViewModel
     
@@ -30,6 +31,26 @@ struct LandingPageView: View {
         .task {
             await viewModel.loadData()
         }
+        // Custom permission denied popup (recovery path)
+        .alert(
+            L10n.Location.Permission.Popup.title,
+            isPresented: $viewModel.showPermissionDeniedAlert,
+            actions: {
+                Button(L10n.Location.Permission.Popup.Settings.button) {
+                    viewModel.openSettings()  // Delegates to ViewModel → Coordinator (MVVM-C pattern)
+                }
+                .accessibilityIdentifier("startup.permissionPopup.goToSettings")
+                
+                Button(L10n.Location.Permission.Popup.Cancel.button, role: .cancel) {
+                    viewModel.continueWithoutLocation()
+                }
+                .accessibilityIdentifier("startup.permissionPopup.cancel")
+            },
+            message: {
+                Text(L10n.Location.Permission.Popup.message)
+                    .accessibilityIdentifier("startup.permissionPopup.message")
+            }
+        )
     }
 }
 

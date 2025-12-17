@@ -52,30 +52,25 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         let locationHandler = container.locationPermissionHandler
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
+        // onAnimalSelected closure is passed to child listViewModel via constructor
         let announcementListViewModel = AnnouncementListViewModel(
             repository: repository,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            onAnimalSelected: { [weak self] animalId in
+                self?.showAnimalDetails(animalId: animalId)
+            }
         )
         
         // Store weak reference for refresh triggering after report sent (User Story 3: T066)
         self.announcementListViewModel = announcementListViewModel
         
-        // Set up coordinator closures for navigation
-        announcementListViewModel.onAnimalSelected = { [weak self] animalId in
-            self?.showAnimalDetails(animalId: animalId)
-        }
-        
+        // Set up coordinator closures for navigation (feature-specific buttons)
         announcementListViewModel.onReportMissing = { [weak self] in
             self?.showReportMissing()
         }
         
         announcementListViewModel.onReportFound = { [weak self] in
             self?.showReportFound()
-        }
-        
-        // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
-        announcementListViewModel.onOpenAppSettings = { [weak self] in
-            self?.openAppSettings()
         }
         
         // Create SwiftUI view with ViewModel
@@ -162,21 +157,6 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         print("Navigate to report found form")
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
-    }
-    
-    // MARK: - User Story 3: Settings Navigation
-    
-    /**
-     * Opens iOS Settings app to this app's permission screen.
-     * Handles system navigation (MVVM-C pattern: Coordinator manages navigation).
-     *
-     * User Story 3: Recovery path for denied permissions.
-     */
-    private func openAppSettings() {
-        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
-            return
-        }
-        UIApplication.shared.open(settingsUrl)
     }
     
     // MARK: - CoordinatorInterface Protocol

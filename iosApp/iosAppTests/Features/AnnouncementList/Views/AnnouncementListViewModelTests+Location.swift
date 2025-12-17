@@ -6,6 +6,9 @@ import XCTest
  * Tests User Story 1: Location-Aware Content for Authorized Users.
  * Uses FakeLocationService and FakeAnnouncementRepository for isolation.
  * Follows Given-When-Then structure per constitution.
+ *
+ * **Note**: Permission popup tests (User Story 3) are in LandingPageViewModelTests
+ * since LandingPage handles the permission popup UI.
  */
 @MainActor
 final class AnnouncementListViewModelLocationTests: XCTestCase {
@@ -45,7 +48,8 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         
         return AnnouncementListViewModel(
             repository: fakeRepository,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            onAnimalSelected: { _ in }  // Not relevant for location tests
         )
     }
     
@@ -105,8 +109,10 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         
         viewModel = createViewModel()
         
-        // When
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        // Wait for child VM's async load to complete
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then
         let passedLocation = fakeRepository.lastLocationParameter
@@ -291,8 +297,10 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         
         viewModel = createViewModel()
         
-        // When
+        // When - loadAnnouncements triggers async load in child VM
         await viewModel.loadAnnouncements()
+        // Wait for child VM's async load to complete
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
         // Then
         XCTAssertEqual(viewModel.locationPermissionStatus, .authorizedWhenInUse, "Should update status to authorized")
@@ -317,138 +325,6 @@ final class AnnouncementListViewModelLocationTests: XCTestCase {
         XCTAssertEqual(viewModel.locationPermissionStatus, .denied, "Should update status to denied")
         XCTAssertNil(viewModel.currentLocation, "Should not have location when permission denied")
         XCTAssertNil(fakeRepository.lastLocationParameter, "Should query without coordinates when permission denied")
-    }
-    
-    // MARK: - User Story 3 Tests: Recovery Path for Denied Permissions
-    
-    // T046: Unit test LocationPermissionStatus.shouldShowCustomPopup extension
-    func test_shouldShowCustomPopup_whenDenied_shouldReturnTrue() {
-        // Given
-        let status = LocationPermissionStatus.denied
-        
-        // When
-        let result = status.shouldShowCustomPopup
-        
-        // Then
-        XCTAssertTrue(result, "Denied status should show custom popup")
-    }
-    
-    func test_shouldShowCustomPopup_whenRestricted_shouldReturnTrue() {
-        // Given
-        let status = LocationPermissionStatus.restricted
-        
-        // When
-        let result = status.shouldShowCustomPopup
-        
-        // Then
-        XCTAssertTrue(result, "Restricted status should show custom popup")
-    }
-    
-    func test_shouldShowCustomPopup_whenAuthorized_shouldReturnFalse() {
-        // Given
-        let status = LocationPermissionStatus.authorizedWhenInUse
-        
-        // When
-        let result = status.shouldShowCustomPopup
-        
-        // Then
-        XCTAssertFalse(result, "Authorized status should not show custom popup")
-    }
-    
-    func test_shouldShowCustomPopup_whenNotDetermined_shouldReturnFalse() {
-        // Given
-        let status = LocationPermissionStatus.notDetermined
-        
-        // When
-        let result = status.shouldShowCustomPopup
-        
-        // Then
-        XCTAssertFalse(result, "NotDetermined status should not show custom popup")
-    }
-    
-    // T047: Unit test AnnouncementListViewModel shows custom popup for denied status
-    func test_loadAnnouncements_whenPermissionDenied_shouldShowCustomPopup() async {
-        // Given
-        await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnnouncements = []
-        
-        viewModel = createViewModel()
-        
-        // When
-        await viewModel.loadAnnouncements()
-        
-        // Then
-        XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission denied")
-    }
-    
-    // T048: Unit test AnnouncementListViewModel shows custom popup for restricted status
-    func test_loadAnnouncements_whenPermissionRestricted_shouldShowCustomPopup() async {
-        // Given
-        await setLocationServiceStatus(.restricted)
-        fakeRepository.stubbedAnnouncements = []
-        
-        viewModel = createViewModel()
-        
-        // When
-        await viewModel.loadAnnouncements()
-        
-        // Then
-        XCTAssertTrue(viewModel.showPermissionDeniedAlert, "Should show custom popup when permission restricted")
-    }
-    
-    // T049: Unit test AnnouncementListViewModel.hasShownPermissionAlert prevents repeated popups in session
-    func test_loadAnnouncements_whenPopupAlreadyShown_shouldNotShowAgain() async {
-        // Given
-        await setLocationServiceStatus(.denied)
-        fakeRepository.stubbedAnnouncements = []
-        
-        viewModel = createViewModel()
-        
-        // When - First call
-        await viewModel.loadAnnouncements()
-        let firstCallShown = viewModel.showPermissionDeniedAlert
-        
-        // Reset alert state but keep session flag
-        viewModel.showPermissionDeniedAlert = false
-        
-        // Second call
-        await viewModel.loadAnnouncements()
-        let secondCallShown = viewModel.showPermissionDeniedAlert
-        
-        // Then
-        XCTAssertTrue(firstCallShown, "Should show popup on first call")
-        XCTAssertFalse(secondCallShown, "Should not show popup again in same session")
-    }
-    
-    // T050: Unit test AnnouncementListViewModel.openSettings() calls coordinator callback
-    func test_openSettings_whenCalled_shouldInvokeCoordinatorCallback() async {
-        // Given
-        var callbackInvoked = false
-        viewModel = createViewModel()
-        viewModel.onOpenAppSettings = {
-            callbackInvoked = true
-        }
-        
-        // When
-        viewModel.openSettings()
-        
-        // Then
-        XCTAssertTrue(callbackInvoked, "Should invoke coordinator callback when openSettings called")
-    }
-    
-    // T051: Unit test AnnouncementListViewModel.continueWithoutLocation() queries without coordinates
-    func test_continueWithoutLocation_whenCalled_shouldQueryWithoutLocation() async {
-        // Given
-        fakeRepository.stubbedAnnouncements = []
-        
-        viewModel = createViewModel()
-        
-        // When
-        await viewModel.continueWithoutLocation()
-        
-        // Then
-        XCTAssertNil(fakeRepository.lastLocationParameter, "Should query without location when continueWithoutLocation called")
-        XCTAssertFalse(viewModel.showPermissionDeniedAlert, "Should dismiss popup")
     }
     
     // MARK: - User Story 4 Tests: Dynamic Permission Change Handling

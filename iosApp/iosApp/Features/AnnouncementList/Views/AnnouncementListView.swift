@@ -2,15 +2,21 @@ import SwiftUI
 
 /**
  * Main SwiftUI view for displaying list of announcements.
- * Follows MVVM-C architecture with ViewModel managing state.
+ * Composes `AnnouncementCardsListView` (autonomous component) with feature-specific UI.
+ *
+ * **Composite View Pattern**:
+ * - Delegates list rendering to `AnnouncementCardsListView` (handles loading/error/empty states)
+ * - Adds feature-specific overlays: floating buttons
+ * - Parent ViewModel handles location fetching and button callbacks
  *
  * Features:
- * - Scrollable list of announcement cards (LazyVStack for performance)
- * - Loading indicator
- * - Error message display
- * - Empty state message
+ * - Scrollable list of announcement cards (via AnnouncementCardsListView)
+ * - Loading indicator (via AnnouncementCardsListView)
+ * - Error message display (via AnnouncementCardsListView)
+ * - Empty state message (via AnnouncementCardsListView)
  * - "Report a Missing Animal" button (fixed at bottom)
- * - Reserved space for future search component
+ *
+ * **Note**: Permission popup is handled by LandingPage (Home tab), not here.
  *
  * Layout per FR-010: This is the primary entry point screen.
  *
@@ -21,77 +27,16 @@ struct AnnouncementListView: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#FAFAFA") // Background color
-                .ignoresSafeArea()
+            // Autonomous list component handles loading/error/empty/list states
+            AnnouncementCardsListView(
+                viewModel: viewModel.listViewModel,
+                emptyStateModel: viewModel.emptyStateModel,
+                listAccessibilityId: viewModel.listAccessibilityId
+            )
             
-            // Content area with scrollable list
-            if viewModel.isLoading {
-                // Loading indicator
-                LoadingView(model: .init(
-                    message: L10n.AnnouncementList.Loading.message,
-                    accessibilityIdentifier: "animalList.loading"
-                ))
-            } else if let errorMessage = viewModel.errorMessage {
-                // Error message
-                ErrorView(model: .init(
-                    title: L10n.AnnouncementList.Error.title,
-                    message: L10n.AnnouncementList.Error.prefix(errorMessage),
-                    onRetry: {
-                        Task {
-                            await viewModel.loadAnnouncements()
-                        }
-                    },
-                    accessibilityIdentifier: "animalList.error"
-                ))
-            } else if viewModel.isEmpty {
-                // Empty state
-                EmptyStateView(model: .default)
-            } else {
-                // Animal list
-                ScrollView {
-                    LazyVStack(spacing: 8) { // 8pt gap per Figma
-                        // Reserved space for search component (FR-004)
-                        Color.clear
-                            .frame(height: 56) // 48-56pt height per spec
-                        
-                        // Animal cards
-                        ForEach(viewModel.cardViewModels, id: \.id) { cardViewModel in
-                            AnnouncementCardView(viewModel: cardViewModel)
-                        }
-                        
-                        // Bottom spacing for floating buttons
-                        Color.clear
-                            .frame(height: 200)
-                    }
-                    .padding(.horizontal, 16)
-                }
-                .accessibilityIdentifier("animalList.list")
-            }
-            
+            // Feature-specific overlay: floating action buttons
             floatingButtonsSection
         }
-        // User Story 3: Custom permission denied popup (recovery path)
-        .alert(
-            L10n.Location.Permission.Popup.title,
-            isPresented: $viewModel.showPermissionDeniedAlert,
-            actions: {
-                Button(L10n.Location.Permission.Popup.Settings.button) {
-                    viewModel.openSettings()  // Delegates to ViewModel → Coordinator (MVVM-C pattern)
-                }
-                .accessibilityIdentifier("startup.permissionPopup.goToSettings")
-                
-                Button(L10n.Location.Permission.Popup.Cancel.button, role: .cancel) {
-                    Task {
-                        await viewModel.continueWithoutLocation()
-                    }
-                }
-                .accessibilityIdentifier("startup.permissionPopup.cancel")
-            },
-            message: {
-                Text(L10n.Location.Permission.Popup.message)
-                    .accessibilityIdentifier("startup.permissionPopup.message")
-            }
-        )
     }
     
     // MARK: - Floating Buttons Section
