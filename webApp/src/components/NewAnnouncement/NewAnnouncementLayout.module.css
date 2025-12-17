@@ -123,8 +123,8 @@
   line-height: 28px;
   font-family: Georgia, serif;
   color: rgba(255, 255, 255, 0.25);
-  background-color: rgba(251, 115, 24, 1);
-  border: none;
+  background-color: rgba(251, 24, 157, 1);
+  border: 1px solid rgba(0, 0, 0, 1);
   border-radius: 10px;
   cursor: pointer;
   text-align: left;
