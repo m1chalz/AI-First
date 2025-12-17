@@ -27,10 +27,8 @@ This directory contains the **unified E2E testing infrastructure** for PetSpot u
 │       │       └── utils/          # Utilities (drivers, helpers)
 │       └── resources/
 │           └── features/           # Gherkin feature files (.feature)
-│               ├── animal-list.feature      # @web @ios @android
-│               ├── pet-details.feature      # @web @ios @android
-│               ├── report-missing.feature   # @web @ios @android
-│               └── legacy/                  # Old tests (to be removed)
+│               ├── web/            # Web test scenarios
+│               └── mobile/         # Mobile test scenarios
 │
 └── README.md                       # This file
 ```
@@ -90,6 +88,8 @@ mvn test -Dtest=WebTestRunner
 - If Chrome crashes on startup, update dependencies in `pom.xml` to latest Selenium version
 - Current working versions (Dec 2025): Selenium 4.27.0, WebDriverManager 5.9.2
 
+<<<<<<< HEAD
+=======
 #### 3.1 Selenium Grid (Recommended for parallel/CI execution)
 
 **Option A: All-in-One Docker (Easiest - Everything in Docker)**
@@ -204,151 +204,11 @@ WebDriver driver = new RemoteWebDriver(
 # Stop Grid
 ./stop-selenium-grid.sh
 ```
-### 4. Mobile Tests Auto-Build Feature ✨
 
-**NEW**: Mobile apps are now built automatically before tests!
+>>>>>>> 3a61d86 (feat(e2e): add Docker Selenium Grid with complete QA environment)
+### 4. Android Tests Setup (Appium + UiAutomator2)
 
-The test framework automatically:
-- ✅ Uninstalls old app from device/simulator
-- ✅ Builds fresh app (iOS + Android in parallel)
-- ✅ Copies app to `e2e-tests/java/apps/`
-- ✅ Starts Appium server if not running
-
-**To skip auto-build** (use existing apps):
-```bash
-mvn test -Dtest=IosTestRunner -Dskip.app.build=true
-```
-
-**Requirements**:
-- iOS: Xcode with command-line tools
-- Android: Gradle (via `./gradlew`)
-
----
-
-### 4.1. Debug Screenshots (Development Feature) 📸
-
-**NEW**: Automatically capture screenshots before EVERY UI interaction!
-
-Debug mode takes screenshots **automatically** before:
-- ✅ **Every click/tap** (`tapFirstPet()`, button clicks)
-- ✅ **Every scroll** (`scrollDown()`, `scrollUpSmall()`)
-- ✅ **Dialog dismissals** (Cancel, Settings buttons)
-
-**Enable debug mode:**
-```bash
-# Enable debug screenshots
-mvn test -Dtest=IosTestRunner -Ddebug.screenshots=true
-
-# With auto-build disabled (for faster iteration)
-mvn test -Dtest=IosTestRunner -Ddebug.screenshots=true -Dskip.app.build=true
-```
-
-**Screenshots saved to**: `target/debug-screenshots/`
-
-**Filename format**: `001_20251216-152304-567_scroll_down.png`
-- `001` - Sequential counter (resets per scenario)
-- `20251216` - Date (YYYYMMDD)
-- `152304` - Time (HHmmss)
-- `567` - Milliseconds (for precise timing)
-- `scroll_down` - Action description
-
-**Benefits of this format:**
-- ✅ **Chronologically sortable**: Files sort correctly in file explorer
-- ✅ **Calculate time differences**: See how long between actions (e.g., 500ms between scrolls)
-- ✅ **Multi-day debugging**: Date prefix helps when debugging tests that run overnight
-
-**Automatic screenshot actions**:
-- `tap_first_pet` - Before clicking first announcement
-- `scroll_down` / `scroll_up` - Before each scroll
-- `scroll_small_up` - Before small scroll adjustments
-- `click_cancel_ios` / `click_not_now_android` - Before dialog dismissals
-
-**Use cases**:
-- ✅ **Debug test failures**: See exact screen state before each action
-- ✅ **Verify button clicks**: Ensure tests click correct elements (not Settings!)
-- ✅ **Investigate iOS dialogs**: Check which dialog was visible before dismissal
-- ✅ **Understand test flow**: Visual timeline of test execution
-- ✅ **Scroll debugging**: See why scrolling stopped or didn't find elements
-
-**Performance impact**: Adds ~200-500ms per action. **Only use for debugging**, not for CI/regular runs.
-
-**Architecture**: Debug screenshots are integrated directly into `PetListScreen` methods, so they work automatically for all tests without code changes.
-
----
-
-### 4.2 Backend Auto-Start Feature 🚀 (Mobile Tests Only)
-
-**NEW**: Backend now starts automatically in Docker for **mobile tests** (iOS/Android)!
-
-**Important distinction:**
-- 🤖 **Mobile tests** (`@ios`, `@android`, `@mobile`) → Backend auto-starts in Docker (single container)
-- 🌐 **Web tests** (`@web`) → Use full Docker QA environment (backend + frontend + Selenium Grid)
-
-**Why Docker for mobile tests?**
-- ✅ **No local setup**: No `npm install` or Node.js dependencies needed
-- ✅ **Consistent**: Same Dockerfile.qa as QA environment
-- ✅ **Fast**: Docker image cached, starts in ~5 seconds
-- ✅ **Clean**: Isolated database, no conflicts with dev backend
-- ✅ **iOS compatible**: iOS simulator connects to `127.0.0.1:3000` → Docker on host
-  - **Why `127.0.0.1` not `localhost`?** iOS simulator requires explicit IP address for reliable connectivity
-  - iOS app is configured with `http://127.0.0.1:3000` in `iosApp/iosApp/Configuration/APIConfig.swift`
-
-**For mobile tests**, the framework automatically:
-1. ✅ **Checks** if backend is responding at `http://localhost:3000`
-2. ✅ **Starts** backend Docker container (`docker-compose up -d backend`) if not running
-3. ✅ **Waits** for backend to be healthy (up to 30 seconds)
-4. ✅ **Stops** container after tests complete
-
-**No manual backend startup needed for mobile tests!**
-
-```bash
-# Mobile: Backend auto-starts in Docker (no setup needed!)
-mvn test -Dtest=IosTestRunner
-mvn test -Dtest=AndroidTestRunner
-
-# Web: Use full Docker QA environment
-docker-compose -f docker-compose.qa-env.yml up -d
-mvn test -Dtest=WebTestRunner -Dwebdriver.remote=true
-```
-
-**Debug backend issues:**
-```bash
-# View backend logs
-docker logs qa-backend
-
-# Check backend status
-curl http://localhost:3000/api/announcements
-
-# Stop backend manually
-cd e2e-tests && docker-compose -f docker-compose.qa-env.yml stop backend
-```
-
-**How it works:**
-- Backend is started in the background via `npm run dev`
-- Health check: GET request to `/api/announcements`
-- If backend was already running, it's left untouched
-- If tests started backend, it's stopped after tests complete
-
-**Check backend status:**
-```bash
-# View backend logs
-tail -f e2e-tests/java/target/backend.log
-
-# Check if backend is running
-curl http://localhost:3000/api/announcements
-```
-
-**Benefits:**
-- ✅ **No manual setup**: Tests are self-sufficient
-- ✅ **CI/CD friendly**: Runs without manual intervention
-- ✅ **Developer friendly**: No need to remember to start backend
-- ✅ **Failure detection**: Clear error messages if backend fails to start
-
----
-
-### 5. Android Tests Setup (Appium + UiAutomator2)
-
-#### 5.1 Install Android SDK
+#### 4.1 Install Android SDK
 
 ```bash
 # macOS - Android Studio installs SDK automatically
@@ -359,7 +219,7 @@ export ANDROID_HOME=~/Library/Android/sdk
 export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH
 ```
 
-#### 5.2 Install Appium 2.x
+#### 4.2 Install Appium 2.x
 
 ```bash
 # Install Appium globally
@@ -374,9 +234,7 @@ appium driver list
 # Should show: uiautomator2 [installed], xcuitest [installed]
 ```
 
-**NEW**: Appium now auto-starts if not running! No need to run `appium` manually.
-
-#### 5.3 Prepare Android APK (Optional - Auto-built)
+#### 4.3 Prepare Android APK
 
 ```bash
 # Build Android APK
@@ -388,7 +246,7 @@ cp composeApp/build/outputs/apk/debug/composeApp-debug.apk \
    e2e-tests/java/apps/petspot-android.apk
 ```
 
-#### 5.4 Start Android Emulator
+#### 4.4 Start Android Emulator
 
 ```bash
 # List available emulators
@@ -402,20 +260,43 @@ adb devices
 # Should show: emulator-5554  device
 ```
 
-#### 5.5 Run Android Tests
+#### 4.5 Start Appium Server
+
+**IMPORTANT**: Appium MUST have `ANDROID_HOME` set!
+
+```bash
+# Start Appium with ANDROID_HOME
+export ANDROID_HOME=~/Library/Android/sdk
+appium
+
+# Verify Appium is running
+curl http://localhost:4723/status
+# Should return: {"value":{"ready":true,...}}
+```
+
+#### 4.6 Run Android Tests
 
 ```bash
 cd e2e-tests/java
 mvn test -Dtest=AndroidTestRunner
 ```
 
-### 6. iOS Tests Setup (Appium + XCUITest)
+### 5. iOS Tests Setup (Appium + XCUITest)
 
-#### 6.1 Requirements (macOS only)
+#### 5.1 Requirements (macOS only)
 - Xcode installed with Command Line Tools
 - iOS Simulator available
 
-#### 6.2 Start iOS Simulator
+#### 5.2 Prepare iOS App
+
+```bash
+# Build iOS app in Xcode or via command line
+# Copy .app bundle to e2e-tests
+cp -r iosApp/build/Debug-iphonesimulator/iosApp.app \
+   e2e-tests/java/apps/petspot-ios.app
+```
+
+#### 5.3 Start iOS Simulator
 
 ```bash
 open -a Simulator
@@ -423,14 +304,12 @@ open -a Simulator
 xcrun simctl boot "iPhone 15"
 ```
 
-#### 6.3 Run iOS Tests
+#### 5.4 Run iOS Tests
 
 ```bash
 cd e2e-tests/java
 mvn test -Dtest=IosTestRunner
 ```
-
-**Note**: iOS app is auto-built before tests. No manual build needed!
 
 ---
 
@@ -446,8 +325,7 @@ mvn clean compile test-compile
 ### Run Web Tests
 
 ```bash
-# Backend auto-starts if not running!
-# Ensure webApp (port 8080) is running manually:
+# Ensure backend (port 3000) and webApp (port 8080) are running!
 mvn test -Dtest=WebTestRunner
 ```
 
@@ -541,43 +419,16 @@ Scenario: View animal list
 
 ## Cucumber Tags
 
-### Platform Tags
 | Tag | Description |
 |-----|-------------|
 | `@web` | Web platform tests |
 | `@ios` | iOS platform tests |
 | `@android` | Android platform tests |
 | `@mobile` | All mobile tests (iOS + Android) |
-
-### Feature Tags
-| Tag | Description |
-|-----|-------------|
-| `@animalList` | Animal list feature tests |
-| `@petDetails` | Pet details feature tests |
-| `@reportMissing` | Report missing flow tests |
-
-### Status Tags
-| Tag | Description |
-|-----|-------------|
 | `@smoke` | Smoke tests (fast, critical paths) |
-| `@pending` | Tests waiting for infrastructure (e.g., geolocation mocking) |
-| `@legacy` | Old tests to be removed after migration |
-
-### Tag Filtering
-```bash
-# Run only active tests (exclude pending and legacy)
-mvn test -Dtest=WebTestRunner
-# Default filter: @web and not @pending and not @legacy
-
-# Run specific feature
-mvn test -Dcucumber.filter.tags="@animalList"
-
-# Run smoke tests only
-mvn test -Dcucumber.filter.tags="@smoke and not @legacy"
-
-# Run pending tests (for development)
-mvn test -Dcucumber.filter.tags="@pending"
-```
+| `@animal-list` | Animal list feature tests |
+| `@pet-details` | Pet details feature tests |
+| `@report-missing` | Report missing flow tests |
 
 ---
 
@@ -762,63 +613,8 @@ mvn test -Dtest=IosTestRunner -DPLATFORM=iOS
 
 ---
 
-## Current Development Status (Dec 16, 2025)
-
-### ✅ Working Features
-
-1. **@locationDialog Tag** - Controls iOS location permission dialogs
-   - When present: Shows real system permission popup (for testing permission flows)
-   - When absent: Auto-grants permissions silently (for tests not testing permissions)
-   
-2. **Auto-Build Mobile Apps** - Automatically uninstalls, builds, and installs iOS/Android apps
-   - Skip with: `-Dskip.app.build=true`
-   - Builds in parallel for speed
-   - Apps copied to `e2e-tests/java/apps/`
-
-3. **Debug Screenshots** - Captures screenshots before every interaction
-   - Enable with: `-Ddebug.screenshots=true`
-   - Saved to: `target/debug-screenshots/`
-   - Filename format: `[counter]_[YYYYMMDD-HHmmss-SSS]_[action_name].png`
-
-4. **App Reinstall** - Separate uninstall + install for clean state
-   - Used for: `I uninstall the app` / `I install the app` steps
-   - iOS: Resets location permissions when `@locationDialog` tag present
-
-### ⚠️ Known Issues
-
-#### Cursor Sandbox Blocks Appium + Maven Network (SOLVED - Dec 16, 2025)
-
-**Symptoms:**
-```
-java.net.ConnectException: Operation not permitted
-Appium: EPERM: operation not permitted, open '~/.appium/...'
-```
-
-**Root Cause**: Cursor terminal sandbox blocks:
-1. Appium write access to `~/.appium`
-2. Maven network connections to `localhost:4723`
-
-**Solution**: ✅ **Run mobile tests from EXTERNAL terminal** (iTerm/Terminal.app), NOT from Cursor!
-
-```bash
-# Terminal 1 (External) - Start Appium
-appium --address 127.0.0.1
-
-# Terminal 2 (External) - Run tests
-cd /path/to/AI-First/e2e-tests/java
-mvn test -Dtest=IosTestRunner -DPLATFORM=iOS \
-  -Dcucumber.filter.tags="@locationDialog" \
-  -Dskip.app.build=true \
-  -Ddebug.screenshots=true
-```
-
-**Note**: Web tests work fine from Cursor terminal (Selenium Grid in Docker doesn't have sandbox issues)
-
----
-
 ## References
 
 - [Spec 016: E2E Java Migration](../specs/016-e2e-java-migration/) - Original Java stack setup
 - [Spec 025: Remove TypeScript E2E](../specs/025-java-e2e-coverage/) - TypeScript removal
-- [Spec 050: E2E Animal List](../specs/050-e2e-animal-list/) - Current: iOS geolocation tests
 - [Constitution](../.specify/memory/constitution.md) - Principle XII: End-to-End Testing

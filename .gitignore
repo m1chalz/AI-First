@@ -55,3 +55,6 @@ target/
 e2e-tests/java/apps/*.apk
 e2e-tests/java/apps/*.app/
 server/public/images/*.jpeg
+
+# Appium Inspector (personal tool configs)
+appium-inspector*.json

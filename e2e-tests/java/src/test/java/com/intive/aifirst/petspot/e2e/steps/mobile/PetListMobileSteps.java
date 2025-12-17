@@ -2,51 +2,45 @@ package com.intive.aifirst.petspot.e2e.steps.mobile;
 
 import com.intive.aifirst.petspot.e2e.screens.PetListScreen;
 import com.intive.aifirst.petspot.e2e.utils.AppiumDriverManager;
-import com.intive.aifirst.petspot.e2e.utils.DebugScreenshotHelper;
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Step definitions for Pet List mobile scenarios (Android + iOS).
- *
+ * 
  * <p>This class implements Cucumber step definitions (Given/When/Then) for
  * pet list management features on mobile platforms. Steps are platform-agnostic
  * and work for both Android and iOS using the Screen Object Model with dual annotations.
- *
+ * 
  * <h2>Architecture:</h2>
  * <ul>
  *   <li>Step Definitions (this class) → implements Given/When/Then methods</li>
  *   <li>Screen Objects ({@link PetListScreen}) → encapsulates screen structure with dual annotations</li>
  *   <li>AppiumDriverManager → provides AppiumDriver with platform detection</li>
  * </ul>
- *
+ * 
  * <h2>Example Gherkin Mapping:</h2>
  * <pre>
  * Gherkin:  "When I view the pet list"
  * Method:   viewPetList()
- *
+ * 
  * Gherkin:  "Then I should see at least one pet announcement"
  * Method:   shouldSeeAtLeastOnePet()
  * </pre>
- *
+ * 
  * @see PetListScreen
  * @see com.intive.aifirst.petspot.e2e.utils.AppiumDriverManager
  */
 public class PetListMobileSteps {
-
+    
     private AppiumDriver driver;
     private PetListScreen petListScreen;
     private String currentPlatform;
-
+    
     /**
      * Constructor - initializes AppiumDriver and Screen Object.
      * Platform is determined dynamically from Cucumber tags (@android or @ios).
@@ -54,16 +48,16 @@ public class PetListMobileSteps {
     public PetListMobileSteps() {
         // Platform will be set in @Before hook or Background step
     }
-
+    
     // ========================================
     // Given Steps (Setup / Preconditions)
     // ========================================
-
+    
     /**
      * Launches the mobile app for the current platform.
-     *
+     * 
      * <p>Maps to Gherkin: "Given I have launched the mobile app"
-     *
+     * 
      * <p>Platform detection: Determines Android/iOS from Cucumber scenario tags
      */
     @Given("I have launched the mobile app")
@@ -80,10 +74,10 @@ public class PetListMobileSteps {
             throw new RuntimeException("App launch failed", e);
         }
     }
-
+    
     /**
      * Waits for the pet list screen to be visible.
-     *
+     * 
      * <p>Maps to Gherkin: "And I am on the pet list screen"
      */
     @Given("I am on the pet list screen")
@@ -92,14 +86,14 @@ public class PetListMobileSteps {
         assertTrue(loaded, "Pet list screen should be visible after app launch");
         System.out.println("Pet list screen loaded successfully");
     }
-
+    
     // ========================================
     // When Steps (Actions)
     // ========================================
-
+    
     /**
      * Views the pet list (placeholder - list should already be visible after navigation).
-     *
+     * 
      * <p>Maps to Gherkin: "When I view the pet list"
      */
     @When("I view the pet list")
@@ -108,13 +102,13 @@ public class PetListMobileSteps {
         // This step exists for readability in Gherkin scenarios
         System.out.println("Viewing pet list (already loaded)");
     }
-
+    
     // NOTE: "I tap on the first pet in the list" step moved to PetDetailsMobileSteps
     // to avoid duplicate step definition and provide proper PetDetailsScreen initialization
-
+    
     /**
      * Scrolls down the pet list.
-     *
+     * 
      * <p>Maps to Gherkin: "When I scroll down the pet list"
      */
     @When("I scroll down the pet list")
@@ -122,30 +116,30 @@ public class PetListMobileSteps {
         petListScreen.scrollDown();
         System.out.println("Scrolled down pet list");
     }
-
+    
     // ========================================
     // Then Steps (Assertions / Verification)
     // ========================================
-
+    
     /**
      * Verifies that at least one pet is displayed.
-     *
+     * 
      * <p>Maps to Gherkin: "Then I should see at least one pet announcement"
      */
     @Then("I should see at least one pet announcement")
     public void shouldSeeAtLeastOnePet() {
-        assertTrue(petListScreen.isPetListDisplayed(),
+        assertTrue(petListScreen.isPetListDisplayed(), 
             "Pet list should be displayed");
-        assertTrue(petListScreen.hasAnyPets(),
+        assertTrue(petListScreen.hasAnyPets(), 
             "At least one pet should be visible");
-
+        
         int petCount = petListScreen.getPetCount();
         System.out.println("Verified: Found " + petCount + " pet(s)");
     }
-
+    
     /**
      * Verifies that each pet displays complete information.
-     *
+     * 
      * <p>Maps to Gherkin: "And each pet should display name, species, and image"
      */
     @Then("each pet should display name, species, and image")
@@ -154,11 +148,11 @@ public class PetListMobileSteps {
             "All pets should display name, species, and image");
         System.out.println("Verified: All pets have complete information");
     }
-
-
+    
+    
     /**
      * Verifies that the Android keyboard is hidden.
-     *
+     * 
      * <p>Maps to Gherkin: "And the Android keyboard should be hidden"
      */
     @Then("the Android keyboard should be hidden")
@@ -167,10 +161,10 @@ public class PetListMobileSteps {
         petListScreen.hideKeyboard();
         System.out.println("Verified: Android keyboard is hidden");
     }
-
+    
     /**
      * Verifies that the iOS keyboard is dismissed.
-     *
+     * 
      * <p>Maps to Gherkin: "And the iOS keyboard should be dismissed"
      */
     @Then("the iOS keyboard should be dismissed")
@@ -179,10 +173,10 @@ public class PetListMobileSteps {
         petListScreen.hideKeyboard();
         System.out.println("Verified: iOS keyboard is dismissed");
     }
-
+    
     /**
      * Verifies that more pet announcements loaded after scrolling.
-     *
+     * 
      * <p>Maps to Gherkin: "Then more pet announcements should load"
      */
     @Then("more pet announcements should load")
@@ -193,12 +187,12 @@ public class PetListMobileSteps {
             "Pets should still be visible after scrolling");
         System.out.println("Verified: Pet list still displays announcements after scroll");
     }
-
+    
     /**
      * Verifies that a pet at the specified position is displayed.
-     *
+     * 
      * <p>Maps to Gherkin: "And I should see pet announcement at position {int}"
-     *
+     * 
      * @param position Pet position (1-indexed)
      */
     @Then("I should see pet announcement at position {int}")
@@ -207,25 +201,25 @@ public class PetListMobileSteps {
             "Pet announcement at position " + position + " should be visible");
         System.out.println("Verified: Pet at position " + position + " is displayed");
     }
-
+    
     /**
      * Verifies that no pets are displayed (empty state).
-     *
+     * 
      * <p>Maps to Gherkin: "Then I should see no pet announcements"
      */
     @Then("I should see no pet announcements")
     public void shouldSeeNoPets() {
         assertFalse(petListScreen.hasAnyPets(),
             "No pets should be visible");
-
+        
         int count = petListScreen.getPetCount();
         assertEquals(0, count, "Pet count should be zero");
         System.out.println("Verified: No pets displayed (count = 0)");
     }
-
+    
     /**
      * Verifies that an empty state message is displayed.
-     *
+     * 
      * <p>Maps to Gherkin: "And an empty state message should be displayed"
      */
     @Then("an empty state message should be displayed")
@@ -234,14 +228,14 @@ public class PetListMobileSteps {
             "Empty state message should be visible when no results found");
         System.out.println("Verified: Empty state message is displayed");
     }
-
+    
     // Note: "I should navigate to the pet details screen" step is defined in PetDetailsMobileSteps
-
+    
     /**
      * Verifies that pet details match the list entry (placeholder).
-     *
+     * 
      * <p>Maps to Gherkin: "And the pet details should match the list entry"
-     *
+     * 
      * <p>Note: Full implementation would require storing pet data from list
      * and comparing with details screen. This is a simplified version.
      */
@@ -251,14 +245,14 @@ public class PetListMobileSteps {
         System.out.println("Verified: Pet details screen is displayed");
         // TODO: Implement detailed comparison with PetDetailsScreen
     }
-
+    
     // ========================================
     // Helper Methods
     // ========================================
-
+    
     /**
      * Detects the current platform from environment or Cucumber tags.
-     *
+     * 
      * @return "Android" or "iOS"
      */
     private String detectPlatformFromEnvironment() {
@@ -267,20 +261,20 @@ public class PetListMobileSteps {
         if (platform == null) {
             platform = System.getenv("PLATFORM");
         }
-
+        
         // Default to Android if not specified
         if (platform == null || platform.isEmpty()) {
             System.out.println("No PLATFORM specified, defaulting to Android");
             platform = "Android";
         }
-
+        
         return platform;
     }
-
+    
     // ========================================
     // Spec 050: Unified Animal List Steps
     // ========================================
-
+    
     @Given("the application is running")
     public void theApplicationIsRunning() {
         // Initialize driver if not already done
@@ -291,19 +285,19 @@ public class PetListMobileSteps {
         }
         System.out.println("Application is running (" + currentPlatform + ")");
     }
-
+    
     @When("I navigate to the pet list page")
     public void iNavigateToThePetListPage() {
         // App should already show pet list on launch
-        // Wait for screen to be visible (either pet list OR empty state)
-        boolean loaded = petListScreen.waitForScreenLoaded(10);
-        assertTrue(loaded, "Pet list screen should be visible (list or empty state)");
+        // Wait for list to be visible
+        boolean loaded = petListScreen.waitForPetListVisible(10);
+        assertTrue(loaded, "Pet list should be visible");
         System.out.println("Navigated to pet list page");
-
+        
         // Log visible announcements for debugging
         logVisibleAnnouncements();
     }
-
+    
     /**
      * Logs all visible announcements on the current screen for debugging.
      */
@@ -312,15 +306,15 @@ public class PetListMobileSteps {
         try {
             String pageSource = driver.getPageSource();
             String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+            
             // Extract announcement info from page source
             java.util.List<String> announcements = new java.util.ArrayList<>();
-
+            
             if (platformName.contains("android")) {
                 // Look for text elements that might be pet names/breeds
                 // Android Compose uses content-description for accessibility
                 java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-                    "text=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"",
+                    "text=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"", 
                     java.util.regex.Pattern.CASE_INSENSITIVE
                 );
                 java.util.regex.Matcher matcher = pattern.matcher(pageSource);
@@ -330,7 +324,7 @@ public class PetListMobileSteps {
                         announcements.add(text);
                     }
                 }
-
+                
                 // Also look for content-desc
                 pattern = java.util.regex.Pattern.compile(
                     "content-desc=\"([^\"]*(?:DOG|CAT|E2E-)[^\"]*)\"",
@@ -356,7 +350,7 @@ public class PetListMobileSteps {
                     }
                 }
             }
-
+            
             if (announcements.isEmpty()) {
                 System.out.println("  (no announcements detected or page still loading)");
             } else {
@@ -365,20 +359,20 @@ public class PetListMobileSteps {
                     System.out.println("    " + (i + 1) + ". " + announcements.get(i));
                 }
             }
-
+            
             // Check for specific test data
             boolean hasTestDog = pageSource.contains("E2E-TestDog");
             boolean hasFarAwayPet = pageSource.contains("E2E-FarAwayPet");
             System.out.println("\n  Test data check:");
             System.out.println("    - E2E-TestDog: " + (hasTestDog ? "✅ VISIBLE" : "❌ NOT VISIBLE"));
             System.out.println("    - E2E-FarAwayPet: " + (hasFarAwayPet ? "⚠️ VISIBLE (should NOT be!)" : "✅ NOT VISIBLE (correct)"));
-
+            
         } catch (Exception e) {
             System.out.println("  (failed to extract announcements: " + e.getMessage() + ")");
         }
         System.out.println("============================================\n");
     }
-
+    
     @When("I navigate to the pet list page with location {string} {string}")
     public void iNavigateToThePetListPageWithLocation(String lat, String lng) {
         // For mobile, location would be set via GPS mock or app settings
@@ -387,113 +381,82 @@ public class PetListMobileSteps {
         boolean loaded = petListScreen.waitForPetListVisible(10);
         assertTrue(loaded, "Pet list should be visible");
     }
-
+    
     @Then("the page should load successfully")
     public void thePageShouldLoadSuccessfully() {
-        boolean loaded = petListScreen.waitForScreenLoaded(10);
-        assertTrue(loaded, "Pet list screen should load successfully (list or empty state)");
+        boolean loaded = petListScreen.waitForPetListVisible(10);
+        assertTrue(loaded, "Pet list screen should load successfully");
         System.out.println("Page loaded successfully");
     }
-
+    
     @Then("I should see the announcement for {string}")
     public void iShouldSeeTheAnnouncementFor(String petName) {
         System.out.println("Verifying announcement is visible: " + petName);
-
+        
         // Wait a bit for data to load
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
-        // Check if element with petName is visible (iOS 18.1 compatible - no getPageSource)
-        var elements = driver.findElements(By.xpath(
-            "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
-        ));
-        boolean found = !elements.isEmpty();
-
-        assertTrue(found, "Should find announcement for " + petName + " in UI");
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Check page source for text (no interaction - avoids accidental clicks on mobile)
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains(petName);
+        
+        assertTrue(found, "Should find announcement for " + petName + " in page source");
         System.out.println("Verified: Announcement for " + petName + " is visible");
     }
-
+    
     @Then("I should NOT see the announcement for {string}")
     public void iShouldNotSeeTheAnnouncementFor(String petName) {
         System.out.println("Verifying announcement NOT visible: " + petName);
-
+        
         // Wait a bit for data to load
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
-        // Check if element with petName is NOT visible (iOS 18.1 compatible)
-        var elements = driver.findElements(By.xpath(
-            "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
-        ));
-        boolean found = !elements.isEmpty();
-
-        assertFalse(found, "Should NOT find announcement for " + petName + " in UI");
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
+        // Check page source for text (no interaction)
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains(petName);
+        
+        assertFalse(found, "Should NOT find announcement for " + petName + " in page source");
         System.out.println("Verified: Announcement for " + petName + " is NOT visible");
     }
-
+    
     /**
      * Soft assertion - records failure but doesn't stop the test.
      * Scrolls through the ENTIRE list to verify element is truly not visible.
      * Failures are reported at the end of the scenario.
-     *
+     * 
      * <p>Maps to Gherkin: "And I should NOT see the announcement for {string} (soft assert)"
      */
     @Then("I should NOT see the announcement for {string} \\(soft assert\\)")
     public void iShouldNotSeeTheAnnouncementForSoftAssert(String petName) {
         System.out.println("SOFT ASSERT: Scrolling through entire list to check if '" + petName + "' is NOT visible");
-
+        
         // Scroll through entire list to make sure we've checked everything
         int maxScrolls = 20;
         boolean found = false;
-        int unchangedScrolls = 0;
-
+        String lastPageSource = "";
+        
         for (int i = 0; i < maxScrolls && !found; i++) {
-            // Check if element with petName is visible (iOS 18.1 compatible)
-            var elements = driver.findElements(By.xpath(
-                "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
-            ));
-
-            if (!elements.isEmpty()) {
+            String pageSource = driver.getPageSource();
+            
+            // Check if element is visible
+            if (pageSource.contains(petName)) {
                 found = true;
-                System.out.println("  Scroll " + (i + 1) + ": Found '" + petName + "' in UI!");
+                System.out.println("  Scroll " + (i + 1) + ": Found '" + petName + "' in page source!");
                 break;
             }
-
-            // Scroll and check if we've reached the end (2 consecutive unchanged scrolls)
-            int beforeCount = driver.findElements(By.xpath("//*[@visible='true' or @displayed='true']")).size();
-            petListScreen.scrollDown();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ie) {
-                // Ignore
+            
+            // Check if we've reached the end (page source unchanged)
+            if (pageSource.equals(lastPageSource)) {
+                System.out.println("  Scroll " + (i + 1) + ": Reached end of list (no more content)");
+                break;
             }
-            int afterCount = driver.findElements(By.xpath("//*[@visible='true' or @displayed='true']")).size();
-
-            if (beforeCount == afterCount) {
-                unchangedScrolls++;
-                if (unchangedScrolls >= 2) {
-                    System.out.println("  Scroll " + (i + 1) + ": Reached end of list (no more content)");
-                    break;
-                }
-            } else {
-                unchangedScrolls = 0;
-            }
-
+            lastPageSource = pageSource;
+            
             System.out.println("  Scroll " + (i + 1) + ": '" + petName + "' not found, scrolling down...");
             petListScreen.scrollDown();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // Ignore
-            }
+            try { Thread.sleep(500); } catch (InterruptedException e) {}
         }
-
+        
         if (found) {
             // Record failure but don't throw - test continues
             com.intive.aifirst.petspot.e2e.utils.SoftAssertContext.addFailure(
@@ -506,13 +469,13 @@ public class PetListMobileSteps {
             );
         }
     }
-
+    
     @When("I tap on the announcement for {string}")
     public void iTapOnTheAnnouncementFor(String petName) {
         System.out.println("Tapping on announcement: " + petName);
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+        
         if (platformName.contains("android")) {
             driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                 "new UiSelector().textContains(\"" + petName + "\")"
@@ -522,25 +485,21 @@ public class PetListMobileSteps {
                 "//*[contains(@label, '" + petName + "') or contains(@value, '" + petName + "')]"
             )).click();
         }
-
+        
         System.out.println("Tapped announcement for: " + petName);
     }
-
+    
     @Then("I should see the pet details")
     public void iShouldSeeThePetDetails() {
         System.out.println("Verifying pet details are visible...");
-
+        
         // Wait for pet details screen to load
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        
         // Look for pet details screen elements
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
         boolean found = false;
-
+        
         if (platformName.contains("android")) {
             try {
                 // Look for any details-related element
@@ -562,17 +521,17 @@ public class PetListMobileSteps {
                 found = true; // Assume success if no error on tap
             }
         }
-
+        
         assertTrue(found, "Should see pet details screen");
         System.out.println("Pet details are visible");
     }
-
+    
     @When("I go back from pet details")
     public void iGoBackFromPetDetails() {
         System.out.println("Going back from pet details...");
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+        
         if (platformName.contains("android")) {
             // Android: Press back button
             driver.navigate().back();
@@ -587,19 +546,19 @@ public class PetListMobileSteps {
                 driver.navigate().back();
             }
         }
-
+        
         // Wait for list to be visible again
         petListScreen.waitForPetListVisible(5);
         System.out.println("Returned to pet list");
     }
-
+    
     @Then("I should see the {string} button")
     public void iShouldSeeTheButton(String buttonText) {
         System.out.println("Looking for button: " + buttonText);
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
         boolean found = false;
-
+        
         if (platformName.contains("android")) {
             try {
                 // Search for any element containing "Report" text (Compose buttons are not android.widget.Button)
@@ -620,17 +579,17 @@ public class PetListMobileSteps {
                 found = false;
             }
         }
-
+        
         assertTrue(found, "Should see '" + buttonText + "' button");
         System.out.println("Found button: " + buttonText);
     }
-
+    
     @When("I tap the {string} button")
     public void iTapTheButton(String buttonText) {
         System.out.println("Tapping button: " + buttonText);
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+        
         if (platformName.contains("android")) {
             driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                 "new UiSelector().className(\"android.widget.Button\").textContains(\"Report\")"
@@ -640,24 +599,20 @@ public class PetListMobileSteps {
                 "animalList.reportMissingButton"
             )).click();
         }
-
+        
         System.out.println("Tapped button: " + buttonText);
     }
-
+    
     @Then("I should see the microchip screen")
     public void iShouldSeeTheMicrochipScreen() {
         System.out.println("Verifying microchip screen is visible...");
-
+        
         // Wait for screen transition
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
         boolean found = false;
-
+        
         if (platformName.contains("android")) {
             try {
                 // Look for microchip-related elements
@@ -684,179 +639,117 @@ public class PetListMobileSteps {
                 found = false;
             }
         }
-
+        
         assertTrue(found, "Should see microchip screen");
         System.out.println("Microchip screen is visible");
     }
-
+    
     // ========================================
     // Spec 050: Scroll and Empty State Steps
     // ========================================
-
+    
     /**
      * Scrolls down the page to verify button visibility while scrolling.
-     *
+     * 
      * <p>Maps to Gherkin: "When I scroll down the page"
      */
     @When("I scroll down the page")
     public void iScrollDownThePage() {
         System.out.println("Scrolling down the page...");
         petListScreen.scrollDown();
-
+        
         // Wait for scroll animation to complete
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
         System.out.println("Scrolled down the page");
     }
-
+    
     /**
      * Verifies that the empty state message is displayed.
      * Used when no announcements are available in the current location.
-     *
+     * 
      * <p>Maps to Gherkin: "And I should see empty state message"
      */
     @Then("I should see empty state message")
     public void iShouldSeeEmptyStateMessage() {
         System.out.println("Verifying empty state message is displayed...");
-
+        
         // Wait a bit for the page to fully render
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        
         // Check if empty state is displayed
         assertTrue(petListScreen.isEmptyStateDisplayed(),
             "Empty state message should be visible when no animals in area");
         System.out.println("Verified: Empty state message is displayed");
     }
-
+    
     // ========================================
     // App Restart and Location Mocking Steps
     // ========================================
-
+    
     /**
      * Restarts the mobile app to reload data from API.
      * Useful after creating test data via API.
-     *
+     * 
      * <p>Maps to Gherkin: "When I restart the app"
      */
     @When("I restart the app")
     public void iRestartTheApp() {
         System.out.println("Restarting app to reload data...");
         AppiumDriverManager.restartApp();
-
+        
         // Wait for app to fully restart
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        
         // Re-initialize screen object
         petListScreen = new PetListScreen(driver);
-
+        
         System.out.println("App restarted successfully");
     }
-
-    /**
-     * Uninstalls the application completely.
-     * This kills the app and removes all app data.
-     *
-     * <p>Maps to Gherkin: "When I uninstall the app"
-     */
-    @When("I uninstall the app")
-    public void iUninstallTheApp() {
-        System.out.println("Uninstalling app...");
-        AppiumDriverManager.uninstallApp();
-    }
-
-    /**
-     * Installs and launches the application.
-     *
-     * <p>Maps to Gherkin: "When I install the app"
-     */
-    @When("I install the app")
-    public void iInstallTheApp() {
-        System.out.println("Installing app...");
-        AppiumDriverManager.installApp();
-
-        // Re-initialize screen object
-        petListScreen = new PetListScreen(driver);
-
-        System.out.println("App installed and ready for testing");
-    }
-
-    /**
-     * Reinstalls the application (uninstall + install + launch).
-     * This completely resets app state including permissions and cached data.
-     *
-     * <p>Maps to Gherkin: "When I reinstall the app"
-     */
-    @When("I reinstall the app")
-    public void iReinstallTheApp() {
-        System.out.println("Reinstalling app to reset state...");
-        AppiumDriverManager.reinstallApp();
-
-        // Re-initialize screen object
-        petListScreen = new PetListScreen(driver);
-
-        System.out.println("App reinstalled and ready for testing");
-    }
-
+    
     /**
      * Sets the device's simulated GPS location.
      * Requires @location tag on scenario to grant location permission.
-     *
+     * 
      * <p>Maps to Gherkin: "And I set device location to {string} {string}"
      */
     @When("I set device location to {string} {string}")
     public void iSetDeviceLocationTo(String latitude, String longitude) {
         double lat = Double.parseDouble(latitude);
         double lng = Double.parseDouble(longitude);
-
+        
         System.out.println("Setting device location to: " + lat + ", " + lng);
         AppiumDriverManager.setDeviceLocation(lat, lng);
-
+        
         // Wait for location to be set
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
         System.out.println("Device location set successfully");
     }
-
+    
     // ========================================
     // Location Rationale Dialog Steps
     // ========================================
-
+    
     /**
      * Dismisses the location rationale dialog if it's currently displayed.
      * This handles both Educational and Informational dialogs.
-     *
+     * 
      * <p>Maps to Gherkin: "When I dismiss location rationale dialog if present"
      */
     @When("I dismiss location rationale dialog if present")
     public void iDismissLocationRationaleDialogIfPresent() {
         System.out.println("Checking for location rationale dialog...");
-
+        
         try {
             Thread.sleep(2000); // Wait for dialog to appear
         } catch (InterruptedException e) {}
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+        
         try {
             if (platformName.contains("android")) {
                 // Look for "Not Now" or "Cancel" button
                 try {
-                    DebugScreenshotHelper.beforeAction(driver, "click_not_now_android");
                     driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                         "new UiSelector().textContains(\"Not Now\")"
                     )).click();
@@ -864,7 +757,6 @@ public class PetListMobileSteps {
                     return;
                 } catch (Exception e1) {
                     try {
-                        DebugScreenshotHelper.beforeAction(driver, "click_cancel_android");
                         driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                             "new UiSelector().textContains(\"Cancel\")"
                         )).click();
@@ -876,13 +768,17 @@ public class PetListMobileSteps {
                 }
             } else { // iOS
                 try {
-                    // iOS uses specific accessibilityId from AnnouncementListView.swift
-                    DebugScreenshotHelper.beforeAction(driver, "click_cancel_ios");
-                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("startup.permissionPopup.cancel")).click();
-                    System.out.println("Dismissed rationale dialog (Cancel)");
+                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
+                    System.out.println("Dismissed rationale dialog (Not Now)");
                     return;
                 } catch (Exception e1) {
-                    // No dialog present
+                    try {
+                        driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
+                        System.out.println("Dismissed rationale dialog (Cancel)");
+                        return;
+                    } catch (Exception e2) {
+                        // No dialog present
+                    }
                 }
             }
             System.out.println("No rationale dialog present");
@@ -890,204 +786,137 @@ public class PetListMobileSteps {
             System.out.println("No rationale dialog found: " + e.getMessage());
         }
     }
-
+    
     /**
      * Verifies that the location rationale dialog is displayed.
-     *
+     * 
      * <p>Maps to Gherkin: "Then I should see location rationale dialog"
      */
     @Then("I should see location rationale dialog")
     public void iShouldSeeLocationRationaleDialog() {
         System.out.println("Verifying location rationale dialog is visible...");
-
+        
         try {
-            Thread.sleep(6000); // Wait for dialog to appear
+            Thread.sleep(2000); // Wait for dialog to appear
         } catch (InterruptedException e) {}
-
-        // Check for dialog by TEXT MESSAGE (safer - doesn't trigger button activation in iOS 18.1)
-        // Looking for dialog message text instead of buttons
-        var messageElements = driver.findElements(By.xpath(
-            "//*[contains(@label, 'Enable location') or contains(@label, 'location access') or contains(@name, 'Enable location') or contains(@value, 'Enable location')]"
-        ));
-
-        boolean found = !messageElements.isEmpty();
-
-        assertTrue(found, "Location rationale dialog should be visible (message text should be present)");
+        
+        // Same logic for both platforms
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains("Location") || pageSource.contains("location");
+        
+        assertTrue(found, "Location rationale dialog should be visible");
         System.out.println("Verified: Location rationale dialog is displayed");
-
-        // Screenshot AFTER verification
-        DebugScreenshotHelper.capture(driver, "rationale_dialog_verified");
     }
-
+    
     /**
      * Verifies that the rationale dialog has a Settings button.
-     *
+     * 
      * <p>Maps to Gherkin: "And the rationale dialog should have Settings button"
      */
     @Then("the rationale dialog should have Settings button")
     public void theRationaleDialogShouldHaveSettingsButton() {
         System.out.println("Verifying Settings button in rationale dialog...");
-
-        // Check for Settings button by TEXT ONLY (XCUIElementTypeButton with "Go to Settings" label)
-        // iOS 18.1 bug: ANY interaction with button element (even findElements) activates it!
-        // So we just check if button with this text exists, without touching it
-        var settingsButtonText = driver.findElements(By.xpath(
-            "//XCUIElementTypeButton[@label='Go to Settings' or contains(@label, 'Settings')]"
-        ));
-
-        boolean found = !settingsButtonText.isEmpty();
-
+        
+        // Same logic for both platforms
+        String pageSource = driver.getPageSource();
+        boolean found = pageSource.contains("Settings") || pageSource.contains("settings") ||
+                pageSource.contains("Go to Settings");
+        
         assertTrue(found, "Rationale dialog should have Settings button");
-        System.out.println("Verified: Settings button is present in rationale dialog (found " + settingsButtonText.size() + " element(s))");
-
-        DebugScreenshotHelper.capture(driver, "settings_button_verified");
+        System.out.println("Verified: Settings button is present in rationale dialog");
     }
-
+    
     /**
      * Dismisses the location rationale dialog (expects it to be present).
-     *
+     * 
      * <p>Maps to Gherkin: "When I dismiss location rationale dialog"
      */
     @When("I dismiss location rationale dialog")
     public void iDismissLocationRationaleDialog() {
         System.out.println("Dismissing location rationale dialog...");
-
+        
         String platformName = driver.getCapabilities().getPlatformName().toString().toLowerCase();
-
+        
         if (platformName.contains("android")) {
             try {
-                DebugScreenshotHelper.beforeAction(driver, "click_not_now_android");
                 driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                     "new UiSelector().textContains(\"Not Now\")"
                 )).click();
             } catch (Exception e1) {
                 try {
-                    DebugScreenshotHelper.beforeAction(driver, "click_cancel_android");
                     driver.findElement(io.appium.java_client.AppiumBy.androidUIAutomator(
                         "new UiSelector().textContains(\"Cancel\")"
                     )).click();
                 } catch (Exception e2) {
-                    DebugScreenshotHelper.capture(driver, "ERROR_cancel_button_not_found");
                     fail("Could not find dismiss button in rationale dialog");
                 }
             }
         } else { // iOS
             try {
-                // iOS uses specific accessibilityId from AnnouncementListView.swift
-                DebugScreenshotHelper.beforeAction(driver, "click_cancel_ios");
-                driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("startup.permissionPopup.cancel")).click();
-                System.out.println("Dismissed rationale dialog (Cancel)");
-            } catch (Exception e) {
-                DebugScreenshotHelper.capture(driver, "ERROR_cancel_button_not_found");
-                fail("Could not find Cancel button (startup.permissionPopup.cancel) in rationale dialog");
+                driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Not Now")).click();
+            } catch (Exception e1) {
+                try {
+                    driver.findElement(io.appium.java_client.AppiumBy.accessibilityId("Cancel")).click();
+                } catch (Exception e2) {
+                    fail("Could not find dismiss button in rationale dialog");
+                }
             }
         }
-
+        
         System.out.println("Dismissed location rationale dialog");
-
+        
         // Wait for dialog to close
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
     }
-
+    
     // ========================================
     // Scroll Steps
     // ========================================
-
+    
     /**
      * Scrolls down the list until the specified announcement is visible.
      * Uses direct swipe gestures which work better with Compose LazyColumn.
-     *
+     * 
      * <p>Maps to Gherkin: "When I scroll until I see the announcement for {string}"
      */
     @When("I scroll until I see the announcement for {string}")
     public void iScrollUntilISeeTheAnnouncementFor(String petName) {
         System.out.println("Scrolling to find announcement: " + petName);
-
+        
         int maxAttempts = 15;
         boolean found = false;
-        int unchangedScrolls = 0;
-        int lastVisibleCount = 0;
-
+        
         for (int attempt = 0; attempt < maxAttempts && !found; attempt++) {
             System.out.println("Scroll attempt " + (attempt + 1) + "/" + maxAttempts);
-
-            // Check if element with petName is visible (iOS 18.1 compatible - no getPageSource)
-            var elements = driver.findElements(By.xpath(
-                "//*[contains(@label, '" + petName + "') or contains(@name, '" + petName + "') or contains(@value, '" + petName + "') or contains(@text, '" + petName + "')]"
-            ));
-
-            if (!elements.isEmpty()) {
+            
+            // Check page source for text (no interaction - avoids accidental clicks)
+            String pageSource = driver.getPageSource();
+            if (pageSource.contains(petName)) {
                 found = true;
-                System.out.println("✅ Found '" + petName + "' in UI after " + (attempt + 1) + " scroll(s)");
+                System.out.println("Found '" + petName + "' in page source after " + (attempt + 1) + " scroll(s)");
                 // Scroll up a bit to ensure element is not hidden behind FAB
                 petListScreen.scrollUpSmall();
-                break;
-            }
-
-            // Count visible elements before scrolling
-            int visibleCountBefore = driver.findElements(By.xpath("//*")).size();
-
-            // Scroll down
-            petListScreen.scrollDown();
-            try {
-                Thread.sleep(800);
-            } catch (InterruptedException ie) {
-                // Ignore
-            }
-
-            // Count visible elements after scrolling
-            int visibleCountAfter = driver.findElements(By.xpath("//*")).size();
-
-            // Detect end of list: if element count didn't change after 2 consecutive scrolls
-            if (Math.abs(visibleCountAfter - visibleCountBefore) < 5) {
-                unchangedScrolls++;
-                System.out.println("  ⚠️  List unchanged (" + unchangedScrolls + "/2)");
-
-                if (unchangedScrolls >= 2) {
-                    System.out.println("  🛑 Reached end of list (no more content to load)");
-                    break;
-                }
             } else {
-                unchangedScrolls = 0; // Reset counter if list changed
+                // Use direct swipe gesture (works better with Compose)
+                petListScreen.scrollDown();
+                try { Thread.sleep(800); } catch (InterruptedException ie) {}
             }
-
-            lastVisibleCount = visibleCountAfter;
         }
-
+        
         if (!found) {
-            // Debug: try to list visible elements
-            System.out.println("=== DEBUG: Visible elements (sample) ===");
-            try {
-                var allElements = driver.findElements(By.xpath("//*[@label or @text or @name]"));
-                System.out.println("Total elements with text: " + allElements.size());
-
-                int shown = 0;
-                for (var elem : allElements) {
-                    if (shown >= 10) {
-                        break; // Show max 10 elements
-                    }
-
-                    String label = elem.getAttribute("label");
-                    String text = elem.getAttribute("text");
-                    String name = elem.getAttribute("name");
-                    String displayText = label != null ? label : (text != null ? text : name);
-
-                    if (displayText != null && !displayText.isEmpty() && displayText.length() > 3) {
-                        System.out.println("  - " + displayText.substring(0, Math.min(50, displayText.length())));
-                        shown++;
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Could not list visible elements: " + e.getMessage());
+            // Debug: print what IS visible
+            System.out.println("=== DEBUG: Page source excerpt ===");
+            String pageSource = driver.getPageSource();
+            // Print just element names/texts to see what's visible
+            if (pageSource.length() > 2000) {
+                System.out.println(pageSource.substring(0, 2000));
+            } else {
+                System.out.println(pageSource);
             }
             System.out.println("=== END DEBUG ===");
         }
-
-        assertTrue(found, "Should find announcement for '" + petName + "' after scrolling");
+        
+        assertTrue(found, "Should find announcement for '" + petName + "' after scrolling " + maxAttempts + " times");
     }
 }
 
