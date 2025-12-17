@@ -90,13 +90,6 @@
   line-height: 24px;
 }
 
-.distanceText {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  color: #4a5565;
-  line-height: 24px;
-}
-
 .speciesRow {
   display: flex;
   align-items: center;
@@ -140,33 +133,3 @@
   color: #6a7282;
   line-height: 24px;
 }
-
-/* Legacy classes for compatibility */
-.speciesBreed {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
-}
-
-.infoRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.icon {
-  width: 14px;
-  height: 14px;
-  color: #6b7280;
-  flex-shrink: 0;
-}
-
-.infoText {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  color: #6b7280;
-  line-height: 24px;
-}
-

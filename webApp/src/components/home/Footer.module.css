@@ -21,13 +21,6 @@
   flex-direction: column;
 }
 
-.logo {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
 .tagline {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 14px;
