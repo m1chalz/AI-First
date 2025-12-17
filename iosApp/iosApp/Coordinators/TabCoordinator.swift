@@ -54,18 +54,14 @@ final class TabCoordinator {
         let container = ServiceContainer.shared
         
         // Create child coordinators (root coordinator pattern - each creates own UINavigationController)
-        // Create LocationPermissionHandler inline for HomeCoordinator
         let homeCoordinator = HomeCoordinator(
             repository: container.announcementRepository,
-            locationHandler: LocationPermissionHandler(locationService: container.locationService),
-            onShowPetDetails: { [weak self] announcementId in
-                self?.switchToLostPetTab(withAnnouncementId: announcementId)
-            }
+            locationHandler: LocationPermissionHandler(locationService: container.locationService)
         )
         
-        // Set tab navigation closures on HomeCoordinator (for hero panel buttons)
-        homeCoordinator.onSwitchToLostPetTab = { [weak self] in
-            self?.switchToLostPetTab(withAnnouncementId: nil)
+        // Set unified tab navigation closure (handles both hero buttons and card taps)
+        homeCoordinator.onSwitchToLostPetTab = { [weak self] announcementId in
+            self?.switchToLostPetTab(withAnnouncementId: announcementId)
         }
         homeCoordinator.onSwitchToFoundPetTab = { [weak self] in
             self?.switchToFoundPetTab()

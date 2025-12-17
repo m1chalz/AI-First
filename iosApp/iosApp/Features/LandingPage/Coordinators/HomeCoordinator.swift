@@ -25,14 +25,13 @@ class HomeCoordinator: CoordinatorInterface {
     private let repository: AnnouncementRepositoryProtocol
     private let locationHandler: LocationPermissionHandler
     
-    /// Closure to handle cross-tab navigation when user taps announcement
-    private let onShowPetDetails: (String) -> Void
-    
     // MARK: - Tab Navigation Closures
     
-    /// Closure to switch to Lost Pet tab (without showing details).
+    /// Closure to switch to Lost Pet tab with optional announcement ID.
+    /// - nil: Just switch tab (hero button, "View All")
+    /// - id: Switch tab and show pet details (announcement card tap)
     /// Set by TabCoordinator during initialization.
-    var onSwitchToLostPetTab: (() -> Void)?
+    var onSwitchToLostPetTab: ((String?) -> Void)?
     
     /// Closure to switch to Found Pet tab.
     /// Set by TabCoordinator during initialization.
@@ -48,17 +47,13 @@ class HomeCoordinator: CoordinatorInterface {
     /// - Parameters:
     ///   - repository: Repository for fetching announcements
     ///   - locationHandler: Handler for location permissions
-    ///   - onShowPetDetails: Closure invoked when user taps announcement card.
-    ///     TabCoordinator provides this closure to handle cross-tab navigation.
     init(
         repository: AnnouncementRepositoryProtocol,
-        locationHandler: LocationPermissionHandler,
-        onShowPetDetails: @escaping (String) -> Void
+        locationHandler: LocationPermissionHandler
     ) {
         self.navigationController = UINavigationController()
         self.repository = repository
         self.locationHandler = locationHandler
-        self.onShowPetDetails = onShowPetDetails
     }
     
     // MARK: - CoordinatorInterface Methods
@@ -70,10 +65,13 @@ class HomeCoordinator: CoordinatorInterface {
         guard let navigationController = navigationController else { return }
         
         // Create ViewModel with injected dependencies
+        // onAnnouncementTapped uses the same closure as hero button (with id)
         let viewModel = LandingPageViewModel(
             repository: repository,
             locationHandler: locationHandler,
-            onAnnouncementTapped: onShowPetDetails
+            onAnnouncementTapped: { [weak self] id in
+                self?.onSwitchToLostPetTab?(id)
+            }
         )
         
         // Set coordinator callback for Settings navigation (MVVM-C pattern)
@@ -117,4 +115,3 @@ class HomeCoordinator: CoordinatorInterface {
         print("deinit HomeCoordinator")
     }
 }
-

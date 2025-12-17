@@ -77,8 +77,10 @@ class LandingPageViewModel: ObservableObject {
     /// Called when user taps "Go to Settings" in permission popup (MVVM-C pattern)
     var onOpenAppSettings: (() -> Void)?
     
-    /// Called when user taps "Lost Pet" button or "View All" (switches to Lost Pet tab)
-    var onSwitchToLostPetTab: (() -> Void)?
+    /// Called when user taps "Lost Pet" button, "View All", or announcement card.
+    /// - nil: Just switch to Lost Pet tab (hero button, "View All")
+    /// - id: Switch to Lost Pet tab and show pet details (announcement card tap)
+    var onSwitchToLostPetTab: ((String?) -> Void)?
     
     /// Called when user taps "Found Pet" button (switches to Found Pet tab)
     var onSwitchToFoundPetTab: (() -> Void)?
@@ -190,4 +192,3 @@ class LandingPageViewModel: ObservableObject {
         listViewModel.query = queryWithoutLocation
     }
 }
-

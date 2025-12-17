@@ -29,7 +29,7 @@ struct LandingPageView: View {
             HeroPanelView(
                 model: .landingPage(
                     onLostPetTap: {
-                        viewModel.onSwitchToLostPetTab?()
+                        viewModel.onSwitchToLostPetTab?(nil)
                     },
                     onFoundPetTap: {
                         viewModel.onSwitchToFoundPetTab?()
@@ -41,7 +41,7 @@ struct LandingPageView: View {
             ListHeaderRowView(
                 model: .recentReports(
                     onViewAllTap: {
-                        viewModel.onSwitchToLostPetTab?()
+                        viewModel.onSwitchToLostPetTab?(nil)
                     }
                 )
             )
