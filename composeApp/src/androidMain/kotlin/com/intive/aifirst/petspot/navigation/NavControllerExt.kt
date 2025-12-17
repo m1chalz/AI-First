@@ -2,6 +2,7 @@ package com.intive.aifirst.petspot.navigation
 
 import android.util.Log
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptionsBuilder
 
 // Extension functions for type-safe navigation with NavController.
@@ -11,12 +12,26 @@ import androidx.navigation.NavOptionsBuilder
 // making navigation more explicit and preventing typos in route strings.
 
 /**
- * Navigate to Animal List screen.
+ * Switch to Lost Pet tab with proper back stack handling.
+ * Uses saveState/restoreState for back stack preservation (tab switching pattern).
+ */
+fun NavController.navigateToLostPetTab() {
+    navigate(TabRoute.LostPet) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+/**
+ * Navigate to Lost Pet List screen (within Lost Pet tab).
  *
  * @param builder Optional navigation options (e.g., popUpTo, launchSingleTop)
  */
-fun NavController.navigateToAnimalList(builder: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(NavRoute.AnimalList, builder)
+fun NavController.navigateToLostPetList(builder: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(LostPetRoute.List, builder)
 }
 
 /**

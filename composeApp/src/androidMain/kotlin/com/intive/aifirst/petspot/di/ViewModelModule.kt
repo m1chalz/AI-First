@@ -3,6 +3,7 @@ package com.intive.aifirst.petspot.di
 import android.content.ClipboardManager
 import android.content.Context
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
+import com.intive.aifirst.petspot.features.lostPetsTeaser.presentation.viewmodels.LostPetsTeaserViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.AnimalDescriptionViewModel
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.ChipNumberViewModel
@@ -41,6 +42,9 @@ val viewModelModule =
         // AnimalListViewModel: GetAnimalsUseCase (required) + location use cases (optional)
         viewModel { AnimalListViewModel(get(), getOrNull(), getOrNull()) }
         viewModel { PetDetailsViewModel(get()) }
+
+        // Lost Pets Teaser (autonomous component for Home screen)
+        viewModel { LostPetsTeaserViewModel(get()) }
 
         // Report Missing flow
         // Legacy shared ViewModel (used by Photo, Description, ContactDetails, Summary screens)
