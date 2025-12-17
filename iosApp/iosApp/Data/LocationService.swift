@@ -9,13 +9,42 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     private var permissionContinuation: CheckedContinuation<LocationPermissionStatus, Never>?
     private var locationContinuation: CheckedContinuation<Coordinate?, Never>?
     
-    // MARK: - Authorization Status Stream
+    // MARK: - Authorization Status Stream (Broadcast Pattern)
     
-    /// Stream and continuation created together using makeStream() (iOS 17+)
-    private let (statusStream, statusStreamContinuation) = AsyncStream<LocationPermissionStatus>.makeStream()
+    /// Active stream continuations - each subscriber gets own continuation.
+    /// Using UUID keys for safe add/remove without Hashable requirement on Continuation.
+    private var statusContinuations: [UUID: AsyncStream<LocationPermissionStatus>.Continuation] = [:]
     
+    /// Creates new stream for authorization status changes.
+    /// Each caller gets independent stream - all subscribers receive all values (broadcast).
+    /// Stream lives until subscriber's Task is cancelled or stream is deallocated.
     nonisolated var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
-        statusStream
+        let id = UUID()
+        return AsyncStream { continuation in
+            // Register continuation when stream is created
+            let setupTask = Task { await self.addStatusContinuation(id: id, continuation: continuation) }
+            
+            // Cleanup when stream ends (Task cancelled, finish(), or deallocation)
+            continuation.onTermination = { _ in
+                setupTask.cancel()
+                Task { await self.removeStatusContinuation(id: id) }
+            }
+        }
+    }
+    
+    private func addStatusContinuation(id: UUID, continuation: AsyncStream<LocationPermissionStatus>.Continuation) {
+        statusContinuations[id] = continuation
+    }
+    
+    private func removeStatusContinuation(id: UUID) {
+        statusContinuations.removeValue(forKey: id)
+    }
+    
+    /// Broadcasts status to all active stream subscribers.
+    private func broadcastStatus(_ status: LocationPermissionStatus) {
+        for continuation in statusContinuations.values {
+            continuation.yield(status)
+        }
     }
     
     override init() {
@@ -78,12 +107,10 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = LocationPermissionStatus(from: manager.authorizationStatus)
         
-        // Emit to stream for real-time observers (nonisolated - continuation is Sendable)
-        statusStreamContinuation.yield(status)
-        
-        // Resume one-shot continuation for requestWhenInUseAuthorization()
+        // Broadcast to all stream subscribers + resume one-shot continuation
         Task {
-            await resumePermissionContinuation(with: status)
+            await self.broadcastStatus(status)
+            await self.resumePermissionContinuation(with: status)
         }
     }
     

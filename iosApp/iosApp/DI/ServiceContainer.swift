@@ -21,10 +21,6 @@ class ServiceContainer {
     
     /// Disk cache for photo attachments within Report Missing Pet flow
     lazy var photoAttachmentCache: PhotoAttachmentCacheProtocol = PhotoAttachmentCache()
-
-    /// Location permission handler (shared across ViewModels for consistent permission management)
-    lazy var locationPermissionHandler: LocationPermissionHandler =
-        LocationPermissionHandler(locationService: locationService)
     
     /// Announcement submission service for 2-step submission orchestration
     lazy var announcementSubmissionService: AnnouncementSubmissionServiceProtocol =
@@ -34,5 +30,13 @@ class ServiceContainer {
     
     /// Announcement repository for fetching announcement data
     lazy var announcementRepository: AnnouncementRepositoryProtocol = AnnouncementRepository()
+    
+    // MARK: - Factory Methods
+    
+    /// Creates new LocationPermissionHandler instance.
+    /// Each ViewModel needs its own handler instance (handler stores callback closure).
+    func makeLocationPermissionHandler() -> LocationPermissionHandler {
+        LocationPermissionHandler(locationService: locationService)
+    }
 }
 

@@ -157,6 +157,7 @@ class LandingPageViewModel: ObservableObject {
         
         // Set query on child ViewModel (triggers automatic reload)
         let queryWithLocation = AnnouncementListQuery.landingPageQuery(location: result.location)
+        print("[msz] LandingPageViewModel loadData query \(result.location)")
         listViewModel.query = queryWithLocation
     }
     

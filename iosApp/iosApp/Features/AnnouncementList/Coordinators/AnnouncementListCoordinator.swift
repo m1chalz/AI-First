@@ -49,7 +49,7 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         // TODO: change this! pass container in init!
         let container = ServiceContainer.shared
         let repository = container.announcementRepository
-        let locationHandler = container.locationPermissionHandler
+        let locationHandler = container.makeLocationPermissionHandler()
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
         // onAnimalSelected closure is passed to child listViewModel via constructor

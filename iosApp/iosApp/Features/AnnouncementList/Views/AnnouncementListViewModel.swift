@@ -139,6 +139,7 @@ class AnnouncementListViewModel: ObservableObject {
         
         // Set query on child ViewModel (triggers automatic reload)
         let queryWithLocation = AnnouncementListQuery.defaultQuery(location: result.location)
+        print("[msz] AnnouncementListViewModel loadData query \(result.location)")
         listViewModel.query = queryWithLocation
     }
     

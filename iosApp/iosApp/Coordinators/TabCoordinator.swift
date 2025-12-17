@@ -56,7 +56,7 @@ final class TabCoordinator {
         // Create child coordinators (root coordinator pattern - each creates own UINavigationController)
         let homeCoordinator = HomeCoordinator(
             repository: container.announcementRepository,
-            locationHandler: container.locationPermissionHandler,
+            locationHandler: container.makeLocationPermissionHandler(),
             onShowPetDetails: { [weak self] announcementId in
                 self?.showPetDetailsFromHome(announcementId)
             }

@@ -130,7 +130,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let toastScheduler = ToastScheduler()
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: ServiceContainer.shared.locationPermissionHandler,
+            locationHandler: ServiceContainer.shared.makeLocationPermissionHandler(),
             toastScheduler: toastScheduler
         )
         
