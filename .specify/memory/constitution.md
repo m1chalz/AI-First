@@ -2,7 +2,18 @@
 
 <!--
 Sync Impact Report:
-Version change: 2.5.9 → 2.5.10
+Version change: 2.5.10 → 2.5.11
+PATCH: Added estimation guidelines for story points (SP)
+
+Changes (v2.5.11):
+- ADDED: Principle XV "Estimation Guidelines (Story Points)" - story point scale, estimation gates, AI baseline + human review workflow
+
+Rationale:
+- Establishes consistent estimation process and a shared story point scale
+- Ensures estimation is based on complete SPEC/PLAN/TASKS artifacts
+- Clarifies AI vs human responsibilities and when features must be split
+
+Previous version (v2.5.10):
 PATCH: Added code formatting requirement for backend and webapp (format code at end of each task)
 
 Changes (v2.5.10):
@@ -1997,6 +2008,94 @@ Performance verification and optimization are NOT concerns for this project:
 performance. Eliminating performance concerns simplifies development, reduces unnecessary
 optimization efforts, and allows focus on delivering features that work correctly and are
 easy to maintain.
+
+### XV. Estimation Guidelines (Story Points) (NON-NEGOTIABLE)
+
+**1. Estimation Method**:
+- The team estimates features using story points (SP).
+- Story points represent relative complexity, not time.
+- AI provides a baseline estimate, and humans always have the final decision.
+- If a feature cannot be estimated confidently, the SPEC or PLAN MUST be refined first.
+
+**2. Story Point Scale**:
+- Use the Fibonacci scale: `1, 2, 3, 5, 8, 13, 20, 40`
+- Interpretation:
+  - **1–2 SP**: Very small changes, trivial logic, minimal UI, no dependencies.
+  - **3–5 SP**: Small, well-understood features; limited scope; low risk.
+  - **8 SP**: Medium features; new UI + backend logic; single integration.
+  - **13 SP**: Complex features; multiple flows; DB changes; non-trivial refactors.
+  - **20–40 SP**: Too large; MUST be split before implementation.
+
+**3. Feature Size Constraints**:
+- A feature MUST be deliverable within a single sprint.
+- If estimation results in **20 SP or more**, the feature MUST be broken into smaller features.
+- Large unknowns or unclear scope MUST trigger SPEC/PLAN refinement before estimation.
+
+**4. Inputs Required for Estimation**:
+- A feature MAY be estimated only when all three artifacts exist and are clear:
+  - **SPEC**: user goals, flows, acceptance criteria
+  - **PLAN**: architecture decisions, integrations, constraints
+  - **TASKS**: clear breakdown of work items
+- If any of the above is missing or vague, estimation is **blocked**.
+
+**5. AI Baseline Estimation Procedure**:
+- When estimating a feature, AI MUST:
+  - Read the SPEC, PLAN, and TASKS.
+  - Identify complexity drivers, including:
+    - UI complexity
+    - Backend logic
+    - Data model changes
+    - Integrations
+    - External dependencies
+    - Unknowns and risks
+  - Propose a story point estimate using the Fibonacci scale.
+  - Provide reasoning and call out any concerns that may require splitting.
+  - Suggest a revised task breakdown if needed.
+- Humans will review and either confirm, adjust, or split.
+
+**6. Human Review Guidelines**:
+- During refinement, the team SHOULD:
+  - Validate assumptions behind integrations.
+  - Confirm design readiness (or add design tasks).
+  - Check number and diversity of tasks.
+  - Identify hidden flows or state transitions not captured in SPEC.
+  - Add any missing risks.
+  - Adjust story points accordingly.
+- The final estimate is recorded in the backlog.
+
+**7. Using Tasks to Validate Estimates**:
+- Tasks are NOT estimated individually in SP. They inform the feature estimate:
+  - **1–4 simple tasks** → likely **3–5 SP**
+  - **5–8 mixed tasks** → likely **5–8 SP**
+  - **9–12 tasks with backend + integration** → likely **8–13 SP**
+  - **12+ tasks or multiple domains** → likely needs splitting
+- Tasks MUST be small, clear, atomic.
+
+**8. Estimation Assumptions**:
+- Every estimate MUST include explicit assumptions, e.g.:
+  - API availability
+  - Design delivery
+  - Feature flags
+  - Reuse of existing modules
+  - Performance constraints
+- Assumptions are stored in SPEC or PLAN.
+
+**9. Feedback Loop for Improving Estimation**:
+- After completing a feature:
+  - Compare estimated SP vs actual complexity/effort.
+  - Identify patterns of under- or over-estimation.
+  - Update these constitution rules if needed.
+  - AI incorporates updated heuristics in future estimates.
+
+**10. When to Split a Feature**:
+- A feature MUST be split if any of the following apply:
+  - It exceeds **13 SP**
+  - Requirements or flows are unclear
+  - Design not ready and significant UI work expected
+  - More than one integration with unknown behaviour
+  - Touches critical architecture
+  - Cross-team dependencies
+- Splitting improves flow, reduces risk, and increases forecasting accuracy.
 
 ## Platform Architecture Rules
 
