@@ -20,6 +20,8 @@ A user opens the landing page and wants to quickly see whether there are missing
 1. **Given** the landing page is displayed, **When** the user scrolls the main content, **Then** a map preview is displayed between the Description panel and the Recently Lost Pets panel
 2. **Given** the user has granted location permission, **When** the landing page loads, **Then** the map preview represents an area of approximately 10 km radius around the user's current location
 3. **Given** the map preview is shown, **When** the user views it, **Then** it is clearly identified as a static preview (non-interactive)
+4. **Given** missing pet announcements exist within the represented area, **When** the preview is shown, **Then** pins are visible on the preview at the approximate last-seen locations
+5. **Given** pins are visible on the preview, **When** the user taps a pin (or the preview), **Then** no pin details are opened and no interaction occurs (static preview)
 
 ---
 
@@ -43,6 +45,7 @@ A user who has not granted location permission wants to understand why it is req
 - **No location available**: If device location services are disabled or unavailable, treat as “location not allowed” and show the permission/help information state
 - **Slow network**: Show a loading indicator while the preview is loading
 - **Failed preview load**: Show a user-friendly error state with retry in the preview area
+- **Many pins**: Pins can overlap visually; the preview remains non-interactive (no selection required)
 - **User moves location**: The represented 10 km radius uses the location at the time of entering the landing page; it does not constantly update while the user remains on the landing page
 
 ## Requirements *(mandatory)*
@@ -51,6 +54,7 @@ A user who has not granted location permission wants to understand why it is req
 
 - **FR-001**: The landing page MUST display a map preview between the Description panel and the Recently Lost Pets panel
 - **FR-002**: The map preview MUST be a static image (non-interactive)
+- **FR-003**: The map preview MUST display pins for missing pet announcements within the represented area (pins are visual only; no interaction)
 - **FR-004**: When the landing page is entered and location permission is granted, the represented area MUST cover approximately a 10 km radius around the user's current location
 - **FR-005**: If the user has not allowed the app to access location, the map preview area MUST display information that location consent is required to display the map
 - **FR-006**: The location-consent information state MUST include a button that allows the user to grant consent
@@ -76,4 +80,4 @@ A user who has not granted location permission wants to understand why it is req
 - Missing pet announcements include last-seen coordinates suitable for pin placement.
 - The landing page already contains distinct Description and Recently Lost Pets panels.
 - The default radius of 10 km is acceptable as a first version for “nearby” on mobile.
-- This specification does not include fullscreen interactive map, pins, or pop-ups; those behaviors are defined in a separate specification.
+- This specification does not include fullscreen interactive map or pop-ups; those behaviors are defined in a separate specification.
