@@ -2,7 +2,8 @@
 
 **Feature Branch**: `059-home-lost-pets`
 **Created**: 2025-12-16
-**Status**: Draft
+**Updated**: 2025-12-18
+**Status**: Implemented
 **Input**: User description: "Assumption: The spec and changes from branch 056 are merged before work on this spec starts. This spec is Android platform only.
 
 I'd like to have a proper screen implementation for Home page (landing page). The page is a scrollable container (vertically) with various components. For now, only one component should be added - lost pets teaser / component.
@@ -15,6 +16,35 @@ Lost pets component:
 - The elements should be sorted by the time of addition (newest at the top)
 
 Existing BE endpoint for getting announcements should be used."
+
+## Design Update (2025-12-18)
+
+**Figma Source**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=974-4667
+
+### Changes from Original Spec
+
+1. **Removed**: "View All Lost Pets" button below the teaser list
+2. **Removed**: "Recently Lost Pets" title above teaser list  
+3. **Added**: Header row with "Recent Reports" (left) and "View All >" link (right, blue text)
+4. **Added**: New "Find Your Pet" hero section above the teaser:
+   - Title: "Find Your Pet"
+   - Two buttons side-by-side:
+     - "Lost Pet" (red #FB2C36) - navigates to Lost Pet tab
+     - "Found Pet" (blue #155DFC) - navigates to Found Pet tab
+   - Gray background (#F9FAFB)
+   - Rounded corners (16dp) with shadow
+
+### Component Structure
+
+```
+HomeScreen (LazyColumn)
+├── FindYourPetHero
+│   ├── "Find Your Pet" title
+│   └── [Lost Pet] [Found Pet] buttons
+└── LostPetsTeaser
+    ├── "Recent Reports" + "View All >" header
+    └── Pet cards (max 5)
+```
 
 ## Clarifications
 

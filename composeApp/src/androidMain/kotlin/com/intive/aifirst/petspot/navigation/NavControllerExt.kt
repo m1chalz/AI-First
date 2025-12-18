@@ -26,6 +26,20 @@ fun NavController.navigateToLostPetTab() {
 }
 
 /**
+ * Switch to Found Pet tab with proper back stack handling.
+ * Uses saveState/restoreState for back stack preservation (tab switching pattern).
+ */
+fun NavController.navigateToFoundPetTab() {
+    navigate(TabRoute.FoundPet) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+/**
  * Navigate to Lost Pet List screen (within Lost Pet tab).
  *
  * @param builder Optional navigation options (e.g., popUpTo, launchSingleTop)

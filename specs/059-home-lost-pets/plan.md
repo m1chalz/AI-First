@@ -9,6 +9,10 @@
 
 Implement a lost pets teaser as an **autonomous, reusable feature** on the Android home page that displays up to 5 recently reported lost pets. The teaser is self-contained with its own ViewModel and MVI architecture, enabling reuse in other screens. It reuses the existing `Animal` domain model and `AnimalRepository` with client-side filtering. Home page is implemented as a `LazyColumn` for scrollability.
 
+### Design Update (2025-12-18)
+
+Added "Find Your Pet" hero section with quick navigation buttons to Lost Pet and Found Pet tabs. Updated teaser header from "Recently Lost Pets" title to "Recent Reports" with inline "View All" link. Removed the bottom "View All Lost Pets" button.
+
 ## Technical Context
 
 **Language/Version**: Kotlin 2.2.20 (Android target)
@@ -153,7 +157,8 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 ├── features/
 │   ├── home/
 │   │   └── ui/
-│   │       └── HomeScreen.kt                 # Main home screen (LazyColumn container)
+│   │       ├── HomeScreen.kt                 # Main home screen (LazyColumn container)
+│   │       └── FindYourPetHero.kt            # NEW: Hero section with Lost/Found Pet buttons
 │   └── lostPetsTeaser/
 │       ├── presentation/
 │       │   ├── mvi/

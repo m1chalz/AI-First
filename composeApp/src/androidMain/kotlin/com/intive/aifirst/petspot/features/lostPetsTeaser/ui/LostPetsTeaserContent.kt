@@ -1,12 +1,16 @@
 package com.intive.aifirst.petspot.features.lostPetsTeaser.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,14 +58,42 @@ fun LostPetsTeaserContent(
                 .testTag("lostPetsTeaser.container"),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        // Section Header
-        Text(
-            text = "Recently Lost Pets",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF101828),
-            modifier = Modifier.padding(horizontal = 24.dp),
-        )
+        // Section Header with "Recent Reports" and "View All" link
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Recent Reports",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF101828),
+            )
+            Row(
+                modifier =
+                    Modifier
+                        .clickable(onClick = onViewAllClicked)
+                        .testTag("lostPetsTeaser.viewAllButton"),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "View All",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF155DFC),
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = Color(0xFF155DFC),
+                )
+            }
+        }
 
         when {
             // Loading State
@@ -140,26 +172,6 @@ fun LostPetsTeaserContent(
                             modifier = Modifier.testTag("lostPetsTeaser.petCard"),
                         )
                     }
-                }
-
-                // View All Button
-                Button(
-                    onClick = onViewAllClicked,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                            .testTag("lostPetsTeaser.viewAllButton"),
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = ReportMissingColors.PrimaryBlue,
-                        ),
-                ) {
-                    Text(
-                        text = "View All Lost Pets",
-                        color = Color.White,
-                        fontWeight = FontWeight.Medium,
-                    )
                 }
             }
         }

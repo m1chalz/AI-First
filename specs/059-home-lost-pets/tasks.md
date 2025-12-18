@@ -3,6 +3,19 @@
 **Input**: Design documents from `/specs/059-home-lost-pets/`
 **Prerequisites**: plan.md, spec.md, data-model.md, research.md
 
+## Design Update Tasks (2025-12-18)
+
+**Figma Source**: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=974-4667
+
+- [x] T047 Create `FindYourPetHero.kt` component in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/home/ui/`
+- [x] T048 Add `navigateToFoundPetTab()` extension in `NavControllerExt.kt`
+- [x] T049 Update `LostPetsTeaserContent.kt`: Replace "Recently Lost Pets" title with "Recent Reports" + "View All" header row
+- [x] T050 Update `LostPetsTeaserContent.kt`: Remove "View All Lost Pets" button at bottom
+- [x] T051 Update `HomeScreen.kt`: Add `FindYourPetHero` component above `LostPetsTeaser`
+- [x] T052 Update specs (spec.md, plan.md, tasks.md) with design changes
+
+---
+
 **Tests**: Test requirements for this project:
 
 **MANDATORY - Android Unit Tests**:
