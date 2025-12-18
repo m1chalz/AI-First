@@ -36,13 +36,13 @@
 
 **Purpose**: Install dependencies and create basic project structure
 
-- [ ] T001 [P] Install leaflet package in `/webApp/package.json` (`npm install leaflet react-leaflet`)
-- [ ] T002 [P] Install TypeScript definitions in `/webApp/package.json` (`npm install -D @types/leaflet`)
-- [ ] T003 Verify installation with `npm list leaflet react-leaflet` (from webApp/)
-- [ ] T004 Create directory structure `/webApp/src/components/map/` with subdirectory `__tests__/`
-- [ ] T005 Create directory structure `/webApp/src/hooks/` with subdirectory `__test__/`
-- [ ] T006 Create directory `/webApp/src/types/` for TypeScript interfaces
-- [ ] T007 Create directory `/e2e-tests/web/specs/` for E2E tests
+- [x] T001 [P] Install leaflet package in `/webApp/package.json` (`npm install leaflet react-leaflet`)
+- [x] T002 [P] Install TypeScript definitions in `/webApp/package.json` (`npm install -D @types/leaflet`)
+- [x] T003 Verify installation with `npm list leaflet react-leaflet` (from webApp/)
+- [x] T004 Create directory structure `/webApp/src/components/map/` with subdirectory `__tests__/`
+- [x] T005 Create directory structure `/webApp/src/hooks/` with subdirectory `__test__/`
+- [x] T006 Create directory `/webApp/src/types/` for TypeScript interfaces
+- [x] T007 Create directory `/e2e-tests/web/specs/` for E2E tests
 
 ---
 
@@ -52,8 +52,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Copy TypeScript interfaces from `/specs/063-web-map-view/contracts/map-component.interface.ts` to `/webApp/src/types/map.ts`
-- [ ] T009 Verify TypeScript compilation with `npm run build` (from webApp/)
+- [x] T008 Copy TypeScript interfaces from `/specs/063-web-map-view/contracts/map-component.interface.ts` to `/webApp/src/types/map.ts`
+- [x] T009 Verify TypeScript compilation with `npm run build` (from webApp/)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
