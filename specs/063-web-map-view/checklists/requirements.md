@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Web Map View of Lost Pets
+# Specification Quality Checklist: Web Map Component on Landing Page
   
 **Purpose**: Validate specification completeness and quality before proceeding to planning  
 **Created**: 2025-12-18  
