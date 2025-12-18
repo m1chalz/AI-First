@@ -13,12 +13,12 @@ A user opens the landing page and wants to quickly see whether there are missing
 
 **Why this priority**: This is the core value of the feature on mobile: providing immediate, location-based awareness directly on the landing page.
 
-**Independent Test**: Can be tested by opening the landing page with location permission granted and verifying that a map preview appears in the correct place and reflects a ~3 km radius around the user.
+**Independent Test**: Can be tested by opening the landing page with location permission granted and verifying that a map preview appears in the correct place and reflects a ~10 km radius around the user.
 
 **Acceptance Scenarios**:
 
 1. **Given** the landing page is displayed, **When** the user scrolls the main content, **Then** a map preview is displayed between the Description panel and the Recently Lost Pets panel
-2. **Given** the user has granted location permission, **When** the landing page loads, **Then** the map preview represents an area of approximately 3 km radius around the user's current location
+2. **Given** the user has granted location permission, **When** the landing page loads, **Then** the map preview represents an area of approximately 10 km radius around the user's current location
 3. **Given** the map preview is shown, **When** the user views it, **Then** it is clearly identified as a static preview (non-interactive)
 
 ---
@@ -43,7 +43,7 @@ A user who has not granted location permission wants to understand why it is req
 - **No location available**: If device location services are disabled or unavailable, treat as “location not allowed” and show the permission/help information state
 - **Slow network**: Show a loading indicator while the preview is loading
 - **Failed preview load**: Show a user-friendly error state with retry in the preview area
-- **User moves location**: The represented 3 km radius uses the location at the time of entering the landing page; it does not constantly update while the user remains on the landing page
+- **User moves location**: The represented 10 km radius uses the location at the time of entering the landing page; it does not constantly update while the user remains on the landing page
 
 ## Requirements *(mandatory)*
 
@@ -51,7 +51,7 @@ A user who has not granted location permission wants to understand why it is req
 
 - **FR-001**: The landing page MUST display a map preview between the Description panel and the Recently Lost Pets panel
 - **FR-002**: The map preview MUST be a static image (non-interactive)
-- **FR-004**: When the landing page is entered and location permission is granted, the represented area MUST cover approximately a 3 km radius around the user's current location
+- **FR-004**: When the landing page is entered and location permission is granted, the represented area MUST cover approximately a 10 km radius around the user's current location
 - **FR-005**: If the user has not allowed the app to access location, the map preview area MUST display information that location consent is required to display the map
 - **FR-006**: The location-consent information state MUST include a button that allows the user to grant consent
 - **FR-007**: The preview area MUST clearly communicate that the preview is not interactive
@@ -68,12 +68,12 @@ A user who has not granted location permission wants to understand why it is req
 ### Measurable Outcomes
 
 - **SC-001**: Users can see the landing page map preview within 3 seconds of landing page load under normal network conditions
-- **SC-002**: When location permission is granted, the initial represented area is centered on the user's location and covers ~3 km radius (verified in QA)
+- **SC-002**: When location permission is granted, the initial represented area is centered on the user's location and covers ~10 km radius (verified in QA)
 - **SC-003**: 90% of users in usability testing understand that the landing page map is a static preview (non-interactive)
 
 ## Assumptions
 
 - Missing pet announcements include last-seen coordinates suitable for pin placement.
 - The landing page already contains distinct Description and Recently Lost Pets panels.
-- The default radius of 3 km is acceptable as a first version for “nearby” on mobile.
+- The default radius of 10 km is acceptable as a first version for “nearby” on mobile.
 - This specification does not include fullscreen interactive map, pins, or pop-ups; those behaviors are defined in a separate specification.
