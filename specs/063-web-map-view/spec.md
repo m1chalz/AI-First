@@ -56,7 +56,7 @@ A user who has not granted location permission wants to understand why it is req
 
 - **FR-001**: The landing page MUST display an interactive map between the Description panel and the Recently Lost Pets panel
 - **FR-002**: When the landing page is entered and the user's location is successfully obtained (permission granted), the map MUST center on the user's current location
-- **FR-003**: The initial map viewport MUST cover approximately a 10 km radius around the user's current location
+- **FR-003**: The initial map viewport MUST cover approximately a 10 km radius around the user's current location using zoom level 13
 - **FR-004**: If the user has not allowed location access, the map area MUST display an informational message explaining that location consent is required to display the map
 - **FR-005**: The informational message MUST include a consent button allowing the user to grant location permission
 - **FR-006**: Users MUST be able to zoom in/out and pan (drag) the map
@@ -64,7 +64,9 @@ A user who has not granted location permission wants to understand why it is req
 - **FR-008**: When the user activates retry after a map-load failure, the system MUST re-attempt loading the map without requiring a full page reload
 - **FR-009**: When location permission is granted but the user's location cannot be obtained (e.g., timeout or location services disabled), the system MUST display the map in fallback mode (not centered on the user's current location) and show a user-friendly message with a retry action to re-attempt location retrieval
 - **FR-010**: In fallback mode, the map MUST center on the user's most recently known location if available; otherwise it MUST center on a default fallback location
-- **FR-011**: The default fallback location MUST be Wrocław, PL
+- **FR-011**: The default fallback location MUST be Wrocław, PL (coordinates: 51.1079, 17.0385)
+- **FR-012**: The map component MUST have a fixed height of 400px
+- **FR-013**: The map MUST display attribution/copyright notices for OpenStreetMap and Leaflet (required by OSM license)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -75,9 +77,8 @@ A user who has not granted location permission wants to understand why it is req
 
 ### Measurable Outcomes
 
-- **SC-001**: Users with location permission can see the map within 3 seconds of landing page load under normal network conditions
-- **SC-002**: The initial viewport centers on the user and covers ~10 km radius (verified in QA)
-- **SC-003**: Users can zoom/pan without perceivable UI freezing during interaction
+- **SC-001**: The initial viewport centers on the user and covers ~10 km radius (verified in QA)
+- **SC-002**: Users can zoom/pan without perceivable UI freezing during interaction
 
 ## Clarifications
 
@@ -85,11 +86,17 @@ A user who has not granted location permission wants to understand why it is req
 
 - Q: Should the map allow panning (dragging), or only zoom? → A: Zoom + pan.
 - Q: What should the Retry action do after a map load failure? → A: Retry re-attempts loading the map without a full page reload.
-- Q: What should happen when location is unavailable even though permission is granted? → A: Show the map in fallback mode with message “Unable to get location” and a retry action to re-attempt location retrieval.
+- Q: What should happen when location is unavailable even though permission is granted? → A: Show the map in fallback mode with message "Unable to get location" and a retry action to re-attempt location retrieval.
 - Q: What should the map center on in fallback mode when location is unavailable? → A: Center on the user's most recently known location if available; otherwise use a default fallback location.
 - Q: What is the default fallback location when no last-known location exists? → A: Wrocław, PL.
+- Q: Which map library/provider should be used for the interactive map component? → A: Leaflet.js + OpenStreetMap
+- Q: What should be the height of the map component on the landing page? → A: 400px fixed height
+- Q: What zoom level should the map use to display approximately a 10 km radius viewport? → A: Zoom level 13
+- Q: Should the map display attribution/copyright notices for OpenStreetMap and Leaflet? → A: Yes, display attribution
+- Q: What are the exact coordinates for the default fallback location (Wrocław, PL)? → A: 51.1079, 17.0385
 
 ## Assumptions
 
 - The landing page already contains distinct Description and Recently Lost Pets panels.
 - This specification includes only the map component; no pins or pin-driven pop-ups are displayed as part of this feature.
+- The map implementation will use Leaflet.js library with OpenStreetMap tiles (open source, no API key required, good React integration via react-leaflet).
