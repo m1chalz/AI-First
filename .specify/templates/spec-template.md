@@ -113,3 +113,50 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Estimation *(mandatory)*
+
+<!--
+  ESTIMATION METHODOLOGY: See `.specify/memory/estimation-methodology.md` for full details.
+  
+  Story Point Definition: 1 SP = Effort to implement across ALL platforms with 80% test coverage.
+  Anchor: Pet Details Screen = 3 SP (medium complexity)
+  Budget Formula: SP × 4 days × 1.3 (risk buffer)
+-->
+
+### Initial Estimate
+
+- **Story Points**: [1|2|3|5|8|13 - Fibonacci ONLY, no other values!]
+- **Initial Budget**: [SP × 4 × 1.3 = X days]
+- **Confidence**: ±50%
+- **Anchor Comparison**: [Compare to Pet Details (3 SP) - simpler/similar/more complex because...]
+
+### Re-Estimation (Updated After Each Phase)
+
+| Phase | SP | Days | Confidence | Key Discovery |
+|-------|-----|------|------------|---------------|
+| Initial | [from above] | [from above] | ±50% | Gut feel from feature title |
+| After SPEC | — | — | ±30% | [Update when spec.md complete] |
+| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After TASKS | — | — | ±15% | [Update when tasks.md complete] |
+
+### Per-Platform Breakdown (After TASKS)
+
+| Platform | Tasks | Days | Notes |
+|----------|-------|------|-------|
+| Backend | — | — | [Fill after tasks.md] |
+| iOS | — | — | [Fill after tasks.md] |
+| Android | — | — | [Fill after tasks.md] |
+| Web | — | — | [Fill after tasks.md] |
+| **Total** | | **—** | |
+
+### Variance Tracking
+
+| Metric | Initial | Final | Variance |
+|--------|---------|-------|----------|
+| **Story Points** | [X SP] | [Y SP] | [Calculate: (Y - X) / X × 100%] |
+| **Budget (days)** | [X days] | [Y days] | [Calculate: (Y - X) / X × 100%] |
+
+**Variance Reasons**: [Why was estimate different? Reuse? Native APIs? Backend already done?]
+
+**Learning for Future Estimates**: [What pattern should the team apply to similar features?]
