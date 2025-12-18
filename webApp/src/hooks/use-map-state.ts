@@ -43,10 +43,7 @@ function determineCenter(coordinates: Coordinates | null): Coordinates {
   return config.map.fallbackLocation;
 }
 
-function determineError(
-  geolocationError: GeolocationPositionError | null,
-  mapLoadError: boolean
-): MapError | null {
+function determineError(geolocationError: GeolocationPositionError | null, mapLoadError: boolean): MapError | null {
   if (mapLoadError) {
     return createMapError('MAP_LOAD_FAILED');
   }

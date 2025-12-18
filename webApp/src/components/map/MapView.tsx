@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import { useMapState } from '../../hooks/use-map-state';
 import config from '../../config/config';
 import { MapErrorState } from './MapErrorState';
+import { MapPermissionPrompt } from './MapPermissionPrompt';
 import styles from './MapView.module.css';
 
 export function MapView() {
@@ -18,8 +19,8 @@ export function MapView() {
 
   if (showPermissionPrompt) {
     return (
-      <div className={styles.container} data-testid="landingPage.map.permissionPrompt">
-        <p>Permission prompt placeholder</p>
+      <div className={styles.container}>
+        <MapPermissionPrompt />
       </div>
     );
   }

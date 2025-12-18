@@ -96,4 +96,26 @@ describe('MapView', () => {
       expect(screen.getByTestId('landingPage.map')).toBeDefined();
     });
   });
+
+  describe('when permission prompt should show', () => {
+    it('should render MapPermissionPrompt when showPermissionPrompt is true', () => {
+      // given
+      mockUseMapState.mockReturnValue({
+        center: { lat: 0, lng: 0 },
+        zoom: 13,
+        isLoading: false,
+        error: null,
+        showPermissionPrompt: true,
+        handleRequestPermission: vi.fn(),
+        handleMapLoadError: vi.fn()
+      });
+
+      // when
+      render(<MapView />);
+
+      // then
+      expect(screen.getByTestId('landingPage.map.permissionPrompt')).toBeDefined();
+      expect(screen.getByText('Location Access Required')).toBeDefined();
+    });
+  });
 });
