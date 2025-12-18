@@ -72,15 +72,15 @@ Android MUST maintain minimum 80% unit test coverage:
 **Interface definition** (`/composeApp/src/androidMain/.../domain/repositories/`):
 ```kotlin
 interface PetRepository {
-    suspend fun getPets(): Result<List<Pet>>
-    suspend fun getPetById(id: String): Result<Pet>
+    suspend fun getPets(): List<Pet>
+    suspend fun getPetById(id: String): Pet
 }
 ```
 
 **Implementation** (`/composeApp/src/androidMain/.../data/repositories/`):
 ```kotlin
 class PetRepositoryImpl(private val api: PetApi) : PetRepository {
-    override suspend fun getPets(): Result<List<Pet>> = /* implementation */
+    override suspend fun getPets(): List<Pet> = /* implementation */
 }
 ```
 
@@ -154,13 +154,13 @@ class PetListViewModel(
 All interactive UI elements MUST have stable test identifiers:
 
 - Use `testTag` modifier on all interactive composables
-- Naming convention: `{screen}.{element}.{action}` (e.g., `petList.addButton.click`)
+- Naming convention: `{screen}.{element}` (e.g., `petList.addButton`)
 
 **Example**:
 ```kotlin
 Button(
     onClick = { /* ... */ },
-    modifier = Modifier.testTag("petList.addButton.click")
+    modifier = Modifier.testTag("petList.addButton")
 ) {
     Text("Add Pet")
 }
@@ -169,7 +169,7 @@ LazyColumn(modifier = Modifier.testTag("petList.list")) {
     items(pets) { pet ->
         PetItem(
             pet = pet,
-            modifier = Modifier.testTag("petList.item.${pet.id}")
+            modifier = Modifier.testTag("petList.item")
         )
     }
 }
@@ -178,8 +178,7 @@ LazyColumn(modifier = Modifier.testTag("petList.list")) {
 **Requirements**:
 - MUST be unique within a screen/page
 - MUST be stable (not change between test runs)
-- MUST NOT use dynamic values EXCEPT for list item IDs
-- Lists/collections MUST use stable IDs (database ID, not array index)
+- MUST NOT use dynamic values (UI tests fetch list items by index)
 
 ### Public API Documentation
 
@@ -213,10 +212,10 @@ data class Pet(
  */
 interface PetRepository {
     // NO DOCUMENTATION - Method name is self-explanatory
-    suspend fun getPets(): Result<List<Pet>>
+    suspend fun getPets(): List<Pet>
     
     /** Saves pet and invalidates related caches. */
-    suspend fun savePet(pet: Pet): Result<Unit>
+    suspend fun savePet(pet: Pet)
 }
 ```
 
