@@ -21,10 +21,6 @@ class ServiceContainer {
     
     /// Disk cache for photo attachments within Report Missing Pet flow
     lazy var photoAttachmentCache: PhotoAttachmentCacheProtocol = PhotoAttachmentCache()
-
-    /// Location permission handler (shared across ViewModels for consistent permission management)
-    lazy var locationPermissionHandler: LocationPermissionHandler =
-        LocationPermissionHandler(locationService: locationService)
     
     /// Announcement submission service for 2-step submission orchestration
     lazy var announcementSubmissionService: AnnouncementSubmissionServiceProtocol =

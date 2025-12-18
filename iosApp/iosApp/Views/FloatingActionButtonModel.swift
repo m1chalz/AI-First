@@ -7,12 +7,18 @@ import Foundation
 struct FloatingActionButtonModel {
     let title: String
     let style: FloatingActionButton.Style
-    let icon: String?
+    let iconSource: FloatingActionButton.IconSource?
+    let iconPosition: FloatingActionButton.IconPosition
     
-    init(title: String, style: FloatingActionButton.Style, icon: String? = nil) {
+    init(
+        title: String,
+        style: FloatingActionButton.Style,
+        iconSource: FloatingActionButton.IconSource? = nil,
+        iconPosition: FloatingActionButton.IconPosition = .left
+    ) {
         self.title = title
         self.style = style
-        self.icon = icon
+        self.iconSource = iconSource
+        self.iconPosition = iconPosition
     }
 }
-

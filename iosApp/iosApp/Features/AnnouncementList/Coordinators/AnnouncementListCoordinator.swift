@@ -25,14 +25,36 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     /// UIHostingController/SwiftUI holds the strong reference
     private weak var announcementListViewModel: AnnouncementListViewModel?
     
+    // MARK: - Dependencies
+    
+    private let repository: AnnouncementRepositoryProtocol
+    private let locationService: LocationServiceProtocol
+    private let photoAttachmentCache: PhotoAttachmentCacheProtocol
+    private let announcementSubmissionService: AnnouncementSubmissionServiceProtocol
+    
     /**
      * Creates AnnouncementListCoordinator with its own navigation controller.
      *
      * **Root coordinator pattern**: This coordinator creates and owns its
      * UINavigationController, making it suitable for use as a tab's root.
      * The navigation controller is then shared with sub-coordinators.
+     *
+     * - Parameters:
+     *   - repository: Repository for fetching announcements
+     *   - locationService: Service for location operations
+     *   - photoAttachmentCache: Cache for photo attachments in report flow
+     *   - announcementSubmissionService: Service for submitting announcements
      */
-    init() {
+    init(
+        repository: AnnouncementRepositoryProtocol,
+        locationService: LocationServiceProtocol,
+        photoAttachmentCache: PhotoAttachmentCacheProtocol,
+        announcementSubmissionService: AnnouncementSubmissionServiceProtocol
+    ) {
+        self.repository = repository
+        self.locationService = locationService
+        self.photoAttachmentCache = photoAttachmentCache
+        self.announcementSubmissionService = announcementSubmissionService
         self.navigationController = UINavigationController()
     }
     
@@ -45,36 +67,29 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     func start(animated: Bool) async {
         guard let navigationController = navigationController else { return }
         
-        // Get dependencies from DI container
-        let container = ServiceContainer.shared
-        let repository = container.announcementRepository
-        let locationHandler = container.locationPermissionHandler
+        // Create LocationPermissionHandler inline (each ViewModel needs its own instance)
+        let locationHandler = LocationPermissionHandler(locationService: locationService)
         
         // Create ViewModel with dependencies (iOS MVVM-C: ViewModels call repositories directly)
+        // onAnimalSelected closure is passed to child listViewModel via constructor
         let announcementListViewModel = AnnouncementListViewModel(
             repository: repository,
-            locationHandler: locationHandler
+            locationHandler: locationHandler,
+            onAnimalSelected: { [weak self] animalId in
+                self?.showAnimalDetails(animalId: animalId)
+            }
         )
         
         // Store weak reference for refresh triggering after report sent (User Story 3: T066)
         self.announcementListViewModel = announcementListViewModel
         
-        // Set up coordinator closures for navigation
-        announcementListViewModel.onAnimalSelected = { [weak self] animalId in
-            self?.showAnimalDetails(animalId: animalId)
-        }
-        
+        // Set up coordinator closures for navigation (feature-specific buttons)
         announcementListViewModel.onReportMissing = { [weak self] in
             self?.showReportMissing()
         }
         
         announcementListViewModel.onReportFound = { [weak self] in
             self?.showReportFound()
-        }
-        
-        // User Story 3: Set coordinator callback for Settings navigation (MVVM-C pattern)
-        announcementListViewModel.onOpenAppSettings = { [weak self] in
-            self?.openAppSettings()
         }
         
         // Create SwiftUI view with ViewModel
@@ -92,11 +107,29 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         navigationController.setViewControllers([hostingController], animated: animated)
     }
     
-    // MARK: - Navigation Methods
+    // MARK: - Public Navigation Methods
+    
+    /**
+     * Shows pet details screen for given announcement ID.
+     * Called from TabCoordinator for cross-tab navigation (Home → Lost Pets).
+     *
+     * **Cross-Tab Navigation Pattern**:
+     * 1. User taps announcement on Home tab
+     * 2. HomeCoordinator invokes `onShowPetDetails` closure
+     * 3. TabCoordinator switches tab and calls this method
+     * 4. This coordinator pushes pet detail screen onto its navigation stack
+     *
+     * - Parameter announcementId: ID of announcement to show details for
+     */
+    func showPetDetails(for announcementId: String) {
+        showAnimalDetails(animalId: announcementId)
+    }
+    
+    // MARK: - Private Navigation Methods
     
     /**
      * Shows animal details screen.
-     * Mocked for now - will create AnimalDetailCoordinator in future.
+     * Internal implementation - use `showPetDetails(for:)` for external calls.
      *
      * - Parameter animalId: ID of selected animal
      */
@@ -105,9 +138,6 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         print("Navigate to animal details: \(animalId)")
         // Future: let detailCoordinator = AnimalDetailCoordinator(...)
         // Future: detailCoordinator.start()
-        
-        // Create repository (should use DI container in future)
-        let repository = AnnouncementRepository()
 
         let coordinator = PetDetailsCoordinator(
             navigationController: navigationController,
@@ -131,9 +161,12 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     private func showReportMissing() {
         guard let navigationController = navigationController else { return }
         
-        // Create child coordinator
+        // Create child coordinator with injected dependencies
         let reportCoordinator = ReportMissingPetCoordinator(
-            parentNavigationController: navigationController
+            parentNavigationController: navigationController,
+            locationService: locationService,
+            photoAttachmentCache: photoAttachmentCache,
+            announcementSubmissionService: announcementSubmissionService
         )
         reportCoordinator.parentCoordinator = self
         
@@ -161,21 +194,6 @@ class AnnouncementListCoordinator: CoordinatorInterface {
         print("Navigate to report found form")
         // Future: let reportCoordinator = ReportFoundCoordinator(...)
         // Future: reportCoordinator.start()
-    }
-    
-    // MARK: - User Story 3: Settings Navigation
-    
-    /**
-     * Opens iOS Settings app to this app's permission screen.
-     * Handles system navigation (MVVM-C pattern: Coordinator manages navigation).
-     *
-     * User Story 3: Recovery path for denied permissions.
-     */
-    private func openAppSettings() {
-        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
-            return
-        }
-        UIApplication.shared.open(settingsUrl)
     }
     
     // MARK: - CoordinatorInterface Protocol

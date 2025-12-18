@@ -50,9 +50,29 @@ final class TabCoordinator {
     init() {
         _tabBarController = UITabBarController()
         
+        // Get shared dependencies from DI container
+        let container = ServiceContainer.shared
+        
         // Create child coordinators (root coordinator pattern - each creates own UINavigationController)
-        let homeCoordinator = PlaceholderCoordinator(title: L10n.Tabs.home)
-        let lostPetCoordinator = AnnouncementListCoordinator()
+        let homeCoordinator = HomeCoordinator(
+            repository: container.announcementRepository,
+            locationHandler: LocationPermissionHandler(locationService: container.locationService)
+        )
+        
+        // Set unified tab navigation closure (handles both hero buttons and card taps)
+        homeCoordinator.onSwitchToLostPetTab = { [weak self] announcementId in
+            self?.switchToLostPetTab(withAnnouncementId: announcementId)
+        }
+        homeCoordinator.onSwitchToFoundPetTab = { [weak self] in
+            self?.switchToFoundPetTab()
+        }
+        
+        let lostPetCoordinator = AnnouncementListCoordinator(
+            repository: container.announcementRepository,
+            locationService: container.locationService,
+            photoAttachmentCache: container.photoAttachmentCache,
+            announcementSubmissionService: container.announcementSubmissionService
+        )
         let foundPetCoordinator = PlaceholderCoordinator(title: L10n.Tabs.foundPet)
         let contactUsCoordinator = PlaceholderCoordinator(title: L10n.Tabs.contactUs)
         let accountCoordinator = PlaceholderCoordinator(title: L10n.Tabs.account)
@@ -159,6 +179,74 @@ final class TabCoordinator {
         )
         tabBarItem.accessibilityIdentifier = accessibilityIdentifier
         navigationController.tabBarItem = tabBarItem
+    }
+    
+    // MARK: - Cross-Tab Navigation
+    
+    /// Switches to Lost Pet tab, optionally showing pet details.
+    ///
+    /// **Use Cases**:
+    /// - Hero "Lost Pet" button: `switchToLostPetTab(withAnnouncementId: nil)` - only switch tab
+    /// - "View All" button: `switchToLostPetTab(withAnnouncementId: nil)` - only switch tab
+    /// - Announcement card tap: `switchToLostPetTab(withAnnouncementId: id)` - switch tab + show details
+    ///
+    /// **Back Navigation Behavior**:
+    /// After viewing details, user remains on Lost Pets tab.
+    /// Tapping Home tab returns to landing page.
+    ///
+    /// - Parameter announcementId: Optional ID of announcement to show details for.
+    ///   If nil, only switches tab. If provided, also shows pet details.
+    private func switchToLostPetTab(withAnnouncementId announcementId: String? = nil) {
+        // Find AnnouncementListCoordinator and its index
+        guard let (index, lostPetCoordinator) = findAnnouncementListCoordinator() else {
+            print("Warning: Could not find AnnouncementListCoordinator for cross-tab navigation")
+            return
+        }
+        
+        // Switch to Lost Pets tab
+        _tabBarController.selectedIndex = index
+        
+        // Only show details if announcementId provided
+        if let announcementId = announcementId {
+            lostPetCoordinator.showPetDetails(for: announcementId)
+        }
+    }
+    
+    /// Switches to Found Pet tab.
+    ///
+    /// **Use Case**: Hero "Found Pet" button tap
+    private func switchToFoundPetTab() {
+        // Found Pet tab is at index 2 (Home=0, Lost Pet=1, Found Pet=2)
+        guard let foundPetIndex = findFoundPetTabIndex() else {
+            print("Warning: Could not find Found Pet tab index")
+            return
+        }
+        
+        _tabBarController.selectedIndex = foundPetIndex
+    }
+    
+    /// Finds the Found Pet tab index.
+    /// - Returns: Tab index for Found Pet tab or nil if not found
+    private func findFoundPetTabIndex() -> Int? {
+        for (index, coordinator) in childCoordinators.enumerated() {
+            if coordinator is PlaceholderCoordinator,
+               let navController = coordinator.navigationController,
+               navController.tabBarItem.accessibilityIdentifier == "tabs.foundPet" {
+                return index
+            }
+        }
+        return nil
+    }
+    
+    /// Finds the AnnouncementListCoordinator and its tab index.
+    /// - Returns: Tuple of (index, coordinator) or nil if not found
+    private func findAnnouncementListCoordinator() -> (Int, AnnouncementListCoordinator)? {
+        for (index, coordinator) in childCoordinators.enumerated() {
+            if let announcementListCoordinator = coordinator as? AnnouncementListCoordinator {
+                return (index, announcementListCoordinator)
+            }
+        }
+        return nil
     }
     
     /// Configures tab bar appearance with design system colors.

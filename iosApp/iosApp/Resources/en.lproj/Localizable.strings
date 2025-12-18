@@ -249,6 +249,23 @@
 "tabs.contactUs" = "Contact Us";
 "tabs.account" = "Account";
 
+/* MARK: - Landing Page (Home Tab) */
+
+// Navigation
+"landingPage.navigationTitle" = "Home";
+
+// Empty state
+"landingPage.emptyState.message" = "No recent announcements.\nCheck back later for pet reports in your area.";
+
+// Hero Section
+"landingPage.hero.title" = "Find Your Pet";
+"landingPage.hero.lostPetButton" = "Lost Pet";
+"landingPage.hero.foundPetButton" = "Found Pet";
+
+// List Header
+"landingPage.listHeader.title" = "Recent Reports";
+"landingPage.listHeader.viewAll" = "View All";
+
 /* MARK: - Placeholder Screen */
 
 // Coming soon

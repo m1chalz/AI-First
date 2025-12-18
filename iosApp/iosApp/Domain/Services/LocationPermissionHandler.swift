@@ -17,7 +17,9 @@ class LocationPermissionHandler {
     // MARK: - State
     
     private var foregroundObserver: NSObjectProtocol?
+    private var streamObserverTask: Task<Void, Never>?
     private var lastKnownStatus: LocationPermissionStatus?
+    private var onStatusChangeCallback: ((_ status: LocationPermissionStatus, _ didBecomeAuthorized: Bool) -> Void)?
     
     // MARK: - Initialization
     
@@ -42,7 +44,7 @@ class LocationPermissionHandler {
     }
     
     deinit {
-        stopObservingForeground()
+        stopObservingLocationPermissionChanges()
     }
     
     // MARK: - Public API
@@ -101,41 +103,77 @@ class LocationPermissionHandler {
         return (status: currentStatus, didBecomeAuthorized: didBecomeAuthorized)
     }
     
-    // MARK: - Foreground Observer (opt-in)
+    // MARK: - Permission Change Observer (opt-in)
     
-    /// Starts observing app foreground events.
-    /// When app returns to foreground, checks permission status and invokes callback.
-    /// Call this from ViewModel that needs dynamic permission change handling.
+    /// Starts observing location permission changes from TWO sources:
+    /// 1. **Real-time stream**: When user responds to system permission dialog
+    /// 2. **Foreground notification**: When app returns from background (user may have changed permissions in Settings)
     ///
+    /// Call this from ViewModel that needs dynamic permission change handling.
     /// Separated from init for better testability and explicit opt-in.
     ///
-    /// - Parameter onStatusChange: Callback invoked with status and change detection when app enters foreground
-    func startObservingForeground(onStatusChange: @escaping (_ status: LocationPermissionStatus, _ didBecomeAuthorized: Bool) -> Void) {
-        guard foregroundObserver == nil else { return }  // Prevent double registration
+    /// - Parameter onStatusChange: Callback invoked on MainActor with status and change detection
+    func startObservingLocationPermissionChanges(
+        onStatusChange: @escaping (_ status: LocationPermissionStatus, _ didBecomeAuthorized: Bool) -> Void
+    ) {
+        // Prevent double registration
+        guard foregroundObserver == nil && streamObserverTask == nil else { return }
         
+        onStatusChangeCallback = onStatusChange
+        
+        // Source 1: Real-time stream from LocationService (user responds to system dialog)
+        let stream = locationService.authorizationStatusStream
+        streamObserverTask = Task { [weak self] in
+            var previousStatus: LocationPermissionStatus?
+            
+            for await status in stream {
+                guard !Task.isCancelled else { break }
+                guard let self else { break }
+                
+                // Detect unauthorized → authorized transition
+                let wasUnauthorized = previousStatus.map { !$0.isAuthorized } ?? true
+                let didBecomeAuthorized = wasUnauthorized && status.isAuthorized
+                
+                previousStatus = status
+                self.lastKnownStatus = status
+                
+                // Invoke callback on MainActor
+                await MainActor.run {
+                    self.onStatusChangeCallback?(status, didBecomeAuthorized)
+                }
+            }
+        }
+        
+        // Source 2: Foreground notification (app returns from Settings)
         foregroundObserver = notificationCenter.addObserver(
             forName: UIApplication.willEnterForegroundNotification,
             object: nil,
             queue: .main
         ) { [weak self] _ in
             Task { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 let result = await self.checkPermissionStatusChange()
-                // Callback will be invoked by ViewModel on main thread
                 await MainActor.run {
-                    onStatusChange(result.status, result.didBecomeAuthorized)
+                    self.onStatusChangeCallback?(result.status, result.didBecomeAuthorized)
                 }
             }
         }
     }
     
-    /// Stops observing foreground events.
+    /// Stops observing location permission changes.
     /// Call this in ViewModel deinit or when observation is no longer needed.
-    func stopObservingForeground() {
+    func stopObservingLocationPermissionChanges() {
+        // Stop stream observer
+        streamObserverTask?.cancel()
+        streamObserverTask = nil
+        
+        // Stop foreground observer
         if let observer = foregroundObserver {
             notificationCenter.removeObserver(observer)
             foregroundObserver = nil
         }
+        
+        onStatusChangeCallback = nil
     }
 }
 

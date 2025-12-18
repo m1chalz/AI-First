@@ -25,10 +25,23 @@ import SwiftUI
 struct AnnouncementCardView: View {
     @ObservedObject var viewModel: AnnouncementCardViewModel
     
-    var body: some View {
-        HStack(alignment: .center, spacing: 10) {
-            // Photo (63pt circular)
-            AsyncImage(url: URL(string: viewModel.photoUrl)) { phase in
+    // MARK: - Computed Properties
+    
+    /// Computed photo URL - returns nil for empty or invalid URLs (FR-016).
+    /// When nil, shows placeholder instead of attempting to load.
+    private var photoURL: URL? {
+        let urlString = viewModel.photoUrl
+        guard !urlString.isEmpty else { return nil }
+        return URL(string: urlString)
+    }
+    
+    /// Photo view that handles empty/invalid URLs gracefully (FR-016).
+    /// Shows placeholder pawprint when URL is invalid instead of infinite loading spinner.
+    @ViewBuilder
+    private var photoView: some View {
+        if let url = photoURL {
+            // Valid URL - attempt to load with AsyncImage
+            AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:
                     // Loading placeholder
@@ -47,18 +60,34 @@ struct AnnouncementCardView: View {
                         .clipShape(Circle())
                 case .failure:
                     // Error placeholder
-                    ZStack {
-                        Circle()
-                            .fill(Color(hex: "#EEEEEE"))
-                            .frame(width: 63, height: 63)
-                        Image(systemName: "pawprint.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color(hex: "#93A2B4"))
-                    }
+                    placeholderImage
                 @unknown default:
                     EmptyView()
                 }
             }
+        } else {
+            // Invalid/empty URL - show placeholder immediately (FR-016)
+            placeholderImage
+        }
+    }
+    
+    /// Placeholder image shown when photo cannot be loaded.
+    private var placeholderImage: some View {
+        ZStack {
+            Circle()
+                .fill(Color(hex: "#EEEEEE"))
+                .frame(width: 63, height: 63)
+            Image(systemName: "pawprint.fill")
+                .font(.system(size: 24))
+                .foregroundColor(Color(hex: "#93A2B4"))
+        }
+    }
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            // Photo (63pt circular)
+            // FR-016: Prevent infinite loading for empty/invalid photo URLs
+            photoView
             
             // Animal info column (location + species/breed)
             VStack(alignment: .leading, spacing: 8) {

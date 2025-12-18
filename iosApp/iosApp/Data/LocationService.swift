@@ -7,7 +7,50 @@ import CoreLocation
 actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private var permissionContinuation: CheckedContinuation<LocationPermissionStatus, Never>?
-    private var locationContinuation: CheckedContinuation<Coordinate?, Never>?
+    
+    // MARK: - Location Request (Multiple Waiters Pattern)
+    
+    /// Multiple callers can wait for the same location request.
+    /// All waiters receive the same result when location arrives.
+    private var locationContinuations: [UUID: CheckedContinuation<Coordinate?, Never>] = [:]
+    
+    // MARK: - Authorization Status Stream (Broadcast Pattern)
+    
+    /// Active stream continuations - each subscriber gets own continuation.
+    /// Using UUID keys for safe add/remove without Hashable requirement on Continuation.
+    private var statusContinuations: [UUID: AsyncStream<LocationPermissionStatus>.Continuation] = [:]
+    
+    /// Creates new stream for authorization status changes.
+    /// Each caller gets independent stream - all subscribers receive all values (broadcast).
+    /// Stream lives until subscriber's Task is cancelled or stream is deallocated.
+    nonisolated var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
+        let id = UUID()
+        return AsyncStream { continuation in
+            // Register continuation when stream is created
+            let setupTask = Task { await self.addStatusContinuation(id: id, continuation: continuation) }
+            
+            // Cleanup when stream ends (Task cancelled, finish(), or deallocation)
+            continuation.onTermination = { _ in
+                setupTask.cancel()
+                Task { await self.removeStatusContinuation(id: id) }
+            }
+        }
+    }
+    
+    private func addStatusContinuation(id: UUID, continuation: AsyncStream<LocationPermissionStatus>.Continuation) {
+        statusContinuations[id] = continuation
+    }
+    
+    private func removeStatusContinuation(id: UUID) {
+        statusContinuations.removeValue(forKey: id)
+    }
+    
+    /// Broadcasts status to all active stream subscribers.
+    private func broadcastStatus(_ status: LocationPermissionStatus) {
+        for continuation in statusContinuations.values {
+            continuation.yield(status)
+        }
+    }
     
     override init() {
         super.init()
@@ -52,24 +95,29 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
             return nil  // Permission not granted
         }
         
+        let id = UUID()
+        let isFirstRequest = locationContinuations.isEmpty
+        
         return await withCheckedContinuation { continuation in
-            // Prevent overwriting existing continuation
-            if locationContinuation != nil {
-                continuation.resume(returning: nil)
-                return
-            }
+            locationContinuations[id] = continuation
             
-            locationContinuation = continuation
-            locationManager.requestLocation()
+            // Only trigger CLLocationManager if this is the first waiter
+            // Subsequent waiters just join the pending request
+            if isFirstRequest {
+                locationManager.requestLocation()
+            }
         }
     }
     
     // MARK: - CLLocationManagerDelegate
     
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = LocationPermissionStatus(from: manager.authorizationStatus)
+        
+        // Broadcast to all stream subscribers + resume one-shot continuation
         Task {
-            let status = LocationPermissionStatus(from: manager.authorizationStatus)
-            await resumePermissionContinuation(with: status)
+            await self.broadcastStatus(status)
+            await self.resumePermissionContinuation(with: status)
         }
     }
     
@@ -101,8 +149,11 @@ actor LocationService: NSObject, CLLocationManagerDelegate, LocationServiceProto
     }
     
     private func resumeLocationContinuation(with location: Coordinate?) {
-        locationContinuation?.resume(returning: location)
-        locationContinuation = nil
+        // Resume ALL waiting continuations with the same result
+        for continuation in locationContinuations.values {
+            continuation.resume(returning: location)
+        }
+        locationContinuations.removeAll()
     }
 }
 

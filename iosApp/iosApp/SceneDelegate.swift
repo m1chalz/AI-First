@@ -32,6 +32,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = coordinator.tabBarController
         window.makeKeyAndVisible()
         
+        // Request location permission at app launch (non-blocking, fire-and-forget)
+        // Create LocationService inline - this is a one-time startup operation
+        Task {
+            let locationService = LocationService()
+            _ = await locationService.requestWhenInUseAuthorization()
+        }
+        
         // Start coordinator asynchronously to populate tab content
         Task { @MainActor in
             await coordinator.start(animated: false)

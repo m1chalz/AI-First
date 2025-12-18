@@ -26,6 +26,15 @@ actor FakeLocationService: LocationServiceProtocol {
     /// Tracks if requestLocation() was called
     var requestLocationCalled = false
     
+    // MARK: - Authorization Status Stream (required by protocol)
+    
+    /// Empty stream - handler tests use foreground notifications, not stream
+    private let (statusStream, _) = AsyncStream<LocationPermissionStatus>.makeStream()
+    
+    nonisolated var authorizationStatusStream: AsyncStream<LocationPermissionStatus> {
+        statusStream
+    }
+    
     // MARK: - LocationServiceProtocol Implementation
     
     var authorizationStatus: LocationPermissionStatus {

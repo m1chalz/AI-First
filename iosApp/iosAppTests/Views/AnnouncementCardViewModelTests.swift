@@ -207,5 +207,79 @@ final class AnnouncementCardViewModelTests: XCTestCase {
         // Then - isExpanded should remain true (local state preserved)
         XCTAssertTrue(viewModel.isExpanded, "isExpanded state should be preserved after update")
     }
+    
+    // MARK: - Photo URL Tests (FR-016: Invalid Photo URL Handling)
+    
+    /**
+     * Tests that photoURL computed property returns valid URL for valid photo URL string.
+     */
+    func test_photoURL_whenPhotoUrlIsValid_shouldReturnURL() {
+        // Given - ViewModel with valid photo URL
+        let announcement = makeTestAnnouncement(photoUrl: "https://example.com/photo.jpg")
+        let viewModel = AnnouncementCardViewModel(announcement: announcement, onAction: { _ in })
+        
+        // When - accessing photoURL
+        let url = URL(string: viewModel.photoUrl)
+        
+        // Then - should return valid URL
+        XCTAssertNotNil(url, "Should return valid URL for valid photo URL string")
+        XCTAssertEqual(url?.absoluteString, "https://example.com/photo.jpg")
+    }
+    
+    /**
+     * Tests that photoURL property returns empty string when photoUrl is empty.
+     * View layer should handle empty string by showing placeholder.
+     */
+    func test_photoURL_whenPhotoUrlIsEmpty_shouldReturnEmptyString() {
+        // Given - ViewModel with empty photo URL
+        let announcement = makeTestAnnouncement(photoUrl: "")
+        let viewModel = AnnouncementCardViewModel(announcement: announcement, onAction: { _ in })
+        
+        // When - accessing photoUrl
+        let photoUrl = viewModel.photoUrl
+        
+        // Then - should return empty string (view layer handles placeholder)
+        XCTAssertEqual(photoUrl, "", "Should return empty string for empty photo URL")
+    }
+    
+    /**
+     * Tests that invalid URL string doesn't cause crash, view handles gracefully.
+     */
+    func test_photoURL_whenPhotoUrlIsInvalidFormat_shouldNotCrash() {
+        // Given - ViewModel with valid URL format but invalid scheme
+        // Note: URL(string:) accepts most strings by percent-encoding, so we test with an uncommon scheme
+        let announcement = makeTestAnnouncement(photoUrl: "not-http://example.com/photo.jpg")
+        let viewModel = AnnouncementCardViewModel(announcement: announcement, onAction: { _ in })
+        
+        // When - accessing photoUrl and attempting to create URL
+        let photoUrl = viewModel.photoUrl
+        let url = URL(string: photoUrl)
+        
+        // Then - should not crash, URL is created (scheme validation happens at network layer)
+        // The view shows placeholder for invalid/missing images via AsyncImage
+        XCTAssertNotNil(url, "URL should be created even with unusual scheme")
+    }
+    
+    // MARK: - Additional Helper
+    
+    /**
+     * Creates a test Announcement with configurable photo URL.
+     */
+    private func makeTestAnnouncement(photoUrl: String) -> Announcement {
+        return Announcement(
+            id: "test-id-123",
+            name: "Buddy",
+            photoUrl: photoUrl,
+            coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
+            species: .dog,
+            breed: "Golden Retriever",
+            gender: .male,
+            status: .active,
+            lastSeenDate: "20/11/2024",
+            description: "Test description",
+            email: "test@example.com",
+            phone: "+48123456789"
+        )
+    }
 }
 

@@ -18,12 +18,30 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
     private let parentNavigationController: UINavigationController
     private var flowState: ReportMissingPetFlowState?
     
+    // MARK: - Dependencies
+    
+    private let locationService: LocationServiceProtocol
+    private let photoAttachmentCache: PhotoAttachmentCacheProtocol
+    private let announcementSubmissionService: AnnouncementSubmissionServiceProtocol
+    
     // MARK: - Initialization
     
     /// Creates coordinator for missing pet report flow.
-    /// - Parameter parentNavigationController: Parent navigation controller to present modal from
-    init(parentNavigationController: UINavigationController) {
+    /// - Parameters:
+    ///   - parentNavigationController: Parent navigation controller to present modal from
+    ///   - locationService: Service for location operations
+    ///   - photoAttachmentCache: Cache for photo attachments
+    ///   - announcementSubmissionService: Service for submitting announcements
+    init(
+        parentNavigationController: UINavigationController,
+        locationService: LocationServiceProtocol,
+        photoAttachmentCache: PhotoAttachmentCacheProtocol,
+        announcementSubmissionService: AnnouncementSubmissionServiceProtocol
+    ) {
         self.parentNavigationController = parentNavigationController
+        self.locationService = locationService
+        self.photoAttachmentCache = photoAttachmentCache
+        self.announcementSubmissionService = announcementSubmissionService
     }
     
     // MARK: - CoordinatorInterface
@@ -42,7 +60,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         // Create FlowState as coordinator property (owned by coordinator lifecycle)
         // This state object will be injected into all ViewModels
         let flowState = ReportMissingPetFlowState(
-            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache
+            photoAttachmentCache: photoAttachmentCache
         )
         self.flowState = flowState
         
@@ -95,7 +113,7 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         let toastScheduler = ToastScheduler()
         let viewModel = PhotoViewModel(
             flowState: flowState,
-            photoAttachmentCache: ServiceContainer.shared.photoAttachmentCache,
+            photoAttachmentCache: photoAttachmentCache,
             toastScheduler: toastScheduler
         )
         
@@ -128,9 +146,11 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
               let modalNavController = navigationController else { return }
         
         let toastScheduler = ToastScheduler()
+        // Create LocationPermissionHandler inline (each ViewModel needs its own instance)
+        let locationHandler = LocationPermissionHandler(locationService: locationService)
         let viewModel = AnimalDescriptionViewModel(
             flowState: flowState,
-            locationHandler: ServiceContainer.shared.locationPermissionHandler,
+            locationHandler: locationHandler,
             toastScheduler: toastScheduler
         )
         
@@ -162,9 +182,8 @@ class ReportMissingPetCoordinator: CoordinatorInterface {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
-        let submissionService = ServiceContainer.shared.announcementSubmissionService
         let viewModel = ContactDetailsViewModel(
-            submissionService: submissionService,
+            submissionService: announcementSubmissionService,
             flowState: flowState
         )
         
