@@ -3,7 +3,7 @@
 **Feature Branch**: `063-web-map-view`  
 **Created**: 2025-12-18  
 **Status**: Draft  
-**Input**: User description: "Split part 1/2: Add interactive map component to landing page (between Description and Recently Lost Pets) with location permission gating, initial ~3 km viewport around user, and zoom controls. (Pins and pop-ups moved to a separate spec.)"
+**Input**: User description: "Split part 1/2: Add interactive map component to landing page (between Description and Recently Lost Pets) with location permission gating, initial ~3 km viewport around user, and zoom controls."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -11,7 +11,7 @@
 
 A user visiting the landing page wants to see an interactive map placed between the Description panel and the Recently Lost Pets panel, so they can orient themselves to the location-based experience.
 
-**Why this priority**: This establishes the landing-page layout and map experience entry point. Without the map component in place, pins/details cannot be delivered.
+**Why this priority**: This establishes the landing-page layout and map experience entry point.
 
 **Independent Test**: Can be tested by opening the landing page with location permission granted and verifying that the map is positioned correctly, centers on the user, and supports zooming.
 
@@ -45,7 +45,7 @@ A user who has not granted location permission wants to understand why it is req
 
 - **No geolocation support**: If the browser does not support location, show the informational state (no crash)
 - **Location unavailable**: If location retrieval fails (timeout/GPS off), show the informational state or a user-friendly fallback message
-- **Slow network**: Show a loading indicator while map and/or pins are loading
+- **Slow network**: Show a loading indicator while the map is loading
 - **Failed map load**: Show a user-friendly error state with retry action in the map area
  - **Landing page layout**: Map retains its placement between the Description and Recently Lost Pets panels across common screen sizes
 
@@ -77,4 +77,4 @@ A user who has not granted location permission wants to understand why it is req
 ## Assumptions
 
 - The landing page already contains distinct Description and Recently Lost Pets panels.
-- This specification does not include pins or pop-ups; those behaviors are defined in `064-web-map-pins`.
+- This specification includes only the map component; no pins or pin-driven pop-ups are displayed as part of this feature.
