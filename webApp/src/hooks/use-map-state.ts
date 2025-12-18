@@ -1,14 +1,46 @@
 import { useState, useCallback } from 'react';
 import { useGeolocationContext } from '../contexts/GeolocationContext';
-import { MAP_CONFIG, createMapError } from '../types/map';
-import type { UseMapStateReturn, MapError } from '../types/map';
+import config from '../config/config';
 import type { Coordinates } from '../types/location';
+
+type MapErrorType = 'PERMISSION_DENIED' | 'PERMISSION_NOT_REQUESTED' | 'LOCATION_UNAVAILABLE' | 'MAP_LOAD_FAILED';
+
+export interface MapError {
+  type: MapErrorType;
+  message: string;
+  showFallbackMap: boolean;
+}
+
+const ERROR_MESSAGES: Record<MapErrorType, string> = {
+  PERMISSION_NOT_REQUESTED: 'Location permission is required to display the map.',
+  PERMISSION_DENIED: 'Location access was denied. Please enable location in your browser settings.',
+  LOCATION_UNAVAILABLE: 'Unable to get your location. Please refresh the page to try again.',
+  MAP_LOAD_FAILED: 'Failed to load map. Please refresh the page to try again.'
+};
+
+function createMapError(type: MapErrorType): MapError {
+  return {
+    type,
+    message: ERROR_MESSAGES[type],
+    showFallbackMap: type === 'LOCATION_UNAVAILABLE'
+  };
+}
+
+interface UseMapStateReturn {
+  center: Coordinates;
+  zoom: number;
+  isLoading: boolean;
+  error: MapError | null;
+  showPermissionPrompt: boolean;
+  handleRequestPermission: () => void;
+  handleMapLoadError: () => void;
+}
 
 function determineCenter(coordinates: Coordinates | null): Coordinates {
   if (coordinates) {
     return coordinates;
   }
-  return MAP_CONFIG.FALLBACK_LOCATION;
+  return config.map.fallbackLocation;
 }
 
 function determineError(
@@ -70,7 +102,7 @@ export function useMapState(): UseMapStateReturn {
 
   return {
     center,
-    zoom: MAP_CONFIG.DEFAULT_ZOOM,
+    zoom: config.map.defaultZoom,
     isLoading: geolocation.isLoading,
     error,
     showPermissionPrompt,

@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMapState } from '../../hooks/use-map-state';
-import { MAP_CONFIG } from '../../types/map';
+import config from '../../config/config';
 import { MapErrorState } from './MapErrorState';
 import styles from './MapView.module.css';
 
@@ -40,7 +40,7 @@ export function MapView() {
         </div>
       )}
       <MapContainer center={[center.lat, center.lng]} zoom={zoom} className={styles.map} data-testid="landingPage.map">
-        <TileLayer url={MAP_CONFIG.TILE_LAYER_URL} attribution={MAP_CONFIG.ATTRIBUTION} />
+        <TileLayer url={config.map.tileLayerUrl} attribution={config.map.attribution} />
       </MapContainer>
     </div>
   );

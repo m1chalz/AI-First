@@ -1,4 +1,4 @@
-import type { MapError } from '../../types/map';
+import type { MapError } from '../../hooks/use-map-state';
 import styles from './MapErrorState.module.css';
 
 export function MapErrorState({ error }: { error: MapError }) {

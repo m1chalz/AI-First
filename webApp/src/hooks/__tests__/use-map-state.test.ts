@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useMapState } from '../use-map-state';
-import { MAP_CONFIG } from '../../types/map';
+import config from '../../config/config';
 
 vi.mock('../../contexts/GeolocationContext', () => ({
   useGeolocationContext: vi.fn()
@@ -37,7 +37,7 @@ describe('useMapState', () => {
         expect(result.current.isLoading).toBe(false);
       });
       expect(result.current.center).toEqual(userLocation);
-      expect(result.current.zoom).toBe(MAP_CONFIG.DEFAULT_ZOOM);
+      expect(result.current.zoom).toBe(config.map.defaultZoom);
       expect(result.current.error).toBeNull();
       expect(result.current.showPermissionPrompt).toBe(false);
     });
@@ -70,7 +70,7 @@ describe('useMapState', () => {
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false);
       });
-      expect(result.current.center).toEqual(MAP_CONFIG.FALLBACK_LOCATION);
+      expect(result.current.center).toEqual(config.map.fallbackLocation);
       expect(result.current.error?.type).toBe('LOCATION_UNAVAILABLE');
       expect(result.current.error?.showFallbackMap).toBe(true);
       expect(result.current.showPermissionPrompt).toBe(false);

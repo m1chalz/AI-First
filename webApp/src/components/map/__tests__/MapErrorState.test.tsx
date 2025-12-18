@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MapErrorState } from '../MapErrorState';
-import type { MapError } from '../../../types/map';
+import type { MapError } from '../../../hooks/use-map-state';
 
 describe('MapErrorState', () => {
   it('should display error message and have correct testid', () => {
