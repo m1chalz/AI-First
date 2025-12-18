@@ -54,12 +54,12 @@ A user who has not granted location permission wants to understand why it is req
 ### Functional Requirements
 
 - **FR-001**: The landing page MUST display an interactive map between the Description panel and the Recently Lost Pets panel
-- **FR-003**: When the landing page is entered and location permission is granted, the map MUST center on the user's current location
-- **FR-004**: The initial map viewport MUST cover approximately a 3 km radius around the user's current location
-- **FR-005**: If the user has not allowed location access, the map area MUST display an informational message explaining that location consent is required to display the map
-- **FR-006**: The informational message MUST include a consent button allowing the user to grant location permission
-- **FR-007**: Users MUST be able to zoom in and zoom out of the map
-- **FR-008**: When loading the map fails, the map area MUST display a user-friendly error state with a retry action
+- **FR-002**: When the landing page is entered and location permission is granted, the map MUST center on the user's current location
+- **FR-003**: The initial map viewport MUST cover approximately a 3 km radius around the user's current location
+- **FR-004**: If the user has not allowed location access, the map area MUST display an informational message explaining that location consent is required to display the map
+- **FR-005**: The informational message MUST include a consent button allowing the user to grant location permission
+- **FR-006**: Users MUST be able to zoom in and zoom out of the map
+- **FR-007**: When loading the map fails, the map area MUST display a user-friendly error state with a retry action
 
 ### Key Entities *(include if feature involves data)*
 
@@ -76,6 +76,5 @@ A user who has not granted location permission wants to understand why it is req
 
 ## Assumptions
 
-- Lost pet announcements include last-seen coordinates suitable for pin placement.
-- Only “missing” announcements are shown on the map for the initial version.
 - The landing page already contains distinct Description and Recently Lost Pets panels.
+- This specification does not include pins or pop-ups; those behaviors are defined in `064-web-map-pins`.
