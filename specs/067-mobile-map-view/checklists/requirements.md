@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Mobile Landing Page Static Map Preview
+# Specification Quality Checklist: iOS Landing Page Static Map Preview
   
 **Purpose**: Validate specification completeness and quality before proceeding to planning  
 **Created**: 2025-12-18  

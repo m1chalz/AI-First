@@ -1,4 +1,4 @@
-# Feature Specification: Mobile Landing Page Static Map Preview
+# Feature Specification: iOS Landing Page Static Map Preview
 
 **Feature Branch**: `067-mobile-map-view`  
 **Created**: 2025-12-18  
@@ -9,9 +9,9 @@
 
 ### User Story 1 - See Nearby Lost Pets (Preview on Landing Page) (Priority: P1)
 
-A user opens the landing page and wants to quickly see whether there are missing pets nearby. The landing page contains a map preview placed between the Description panel and the Recently Lost Pets panel.
+A user opens the iOS landing page and wants to quickly see whether there are missing pets nearby. The landing page contains a map preview placed between the Description panel and the Recently Lost Pets panel.
 
-**Why this priority**: This is the core value of the feature on mobile: providing immediate, location-based awareness directly on the landing page.
+**Why this priority**: This is the core value of the feature on iOS: providing immediate, location-based awareness directly on the landing page.
 
 **Independent Test**: Can be tested by opening the landing page with location permission granted and verifying that a map preview appears in the correct place and reflects a ~10 km radius around the user.
 
@@ -43,7 +43,7 @@ A user who has not granted location permission wants to understand why it is req
 
 ### Edge Cases
 
-- **No location available**: If device location services are disabled or unavailable, treat as “location not allowed” and show the permission/help information state
+- **No location available**: If iOS Location Services are disabled/unavailable, treat as “location not allowed” and show the permission/help information state
 - **Slow network**: Show a loading indicator while the preview is loading
 - **Failed preview load**: Show a user-friendly error state with retry in the preview area
 - **Many pins**: Pins can overlap visually; the preview remains non-interactive (no selection required)
@@ -62,6 +62,7 @@ A user who has not granted location permission wants to understand why it is req
 - **FR-007**: The preview MUST be non-interactive; tapping the preview or pins MUST perform no action (no-op) and MUST NOT open details or navigate
 - **FR-008**: When loading the map preview fails, the preview area MUST show a user-friendly error state with a retry action
 - **FR-009**: When the user activates retry after a preview load failure, the system MUST re-attempt loading the preview without requiring an app restart
+- **FR-010**: This specification MUST be implemented for iOS only (Android and Web are explicitly out of scope)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -81,7 +82,7 @@ A user who has not granted location permission wants to understand why it is req
 
 - Missing pet announcements include last-seen coordinates suitable for pin placement.
 - The landing page already contains distinct Description and Recently Lost Pets panels.
-- The default radius of 10 km is acceptable as a first version for “nearby” on mobile.
+- The default radius of 10 km is acceptable as a first version for “nearby” on iOS.
 - This specification does not include fullscreen interactive map or pop-ups; those behaviors are defined in a separate specification.
 
 ## Clarifications
