@@ -160,7 +160,7 @@ All interactive UI elements MUST have stable test identifiers for E2E testing:
 
 | Platform | Attribute | Example |
 |----------|-----------|---------|
-| Android | `Modifier.testTag()` | `petList.addButton.click` |
+| Android | `Modifier.testTag()` | `petList.addButton` |
 | iOS | `.accessibilityIdentifier()` | `petList.addButton` |
 | Web | `data-testid` | `petList.addButton.click` |
 
