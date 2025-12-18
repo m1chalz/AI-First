@@ -45,9 +45,9 @@ A user who has not granted location permission wants to understand why it is req
 ### Edge Cases
 
 - **No geolocation support**: If the browser does not support location, show the informational state (no crash)
-- **Location unavailable**: If location retrieval fails (timeout/GPS off), show the map in fallback mode centered on the user's most recently known location (if available); otherwise use a default fallback location. Show a user-friendly message “Unable to get location” and a retry action to re-attempt location retrieval
+- **Location unavailable**: If location retrieval fails (timeout/GPS off), show the map in fallback mode (Wrocław, PL). Show a user-friendly message "Unable to get location. Please refresh the page to try again."
 - **Slow network**: Show a loading indicator while the map is loading
-- **Failed map load**: Show a user-friendly error state with retry action in the map area (retry re-attempts map load without a full page reload)
+- **Failed map load**: Show a user-friendly error state with message "Failed to load map. Please refresh the page to try again."
  - **Landing page layout**: Map retains its placement between the Description and Recently Lost Pets panels across common screen sizes
 
 ## Requirements *(mandatory)*
@@ -60,9 +60,8 @@ A user who has not granted location permission wants to understand why it is req
 - **FR-004**: If the user has not allowed location access, the map area MUST display an informational message explaining that location consent is required to display the map
 - **FR-005**: The informational message MUST include a consent button allowing the user to grant location permission
 - **FR-006**: Users MUST be able to zoom in/out and pan (drag) the map
-- **FR-007**: When loading the map fails, the map area MUST display a user-friendly error state with a retry action
-- **FR-008**: When the user activates retry after a map-load failure, the system MUST re-attempt loading the map without requiring a full page reload
-- **FR-009**: When location permission is granted but the user's location cannot be obtained (e.g., timeout or location services disabled), the system MUST display the map in fallback mode (not centered on the user's current location) and show a user-friendly message with a retry action to re-attempt location retrieval
+- **FR-007**: When loading the map fails, the map area MUST display a user-friendly error state with message "Failed to load map. Please refresh the page to try again."
+- **FR-008**: When location permission is granted but the user's location cannot be obtained (e.g., timeout or location services disabled), the system MUST display the map in fallback mode (centered on Wrocław, PL) and show a user-friendly message "Unable to get location. Please refresh the page to try again."
 - **FR-010**: In fallback mode, the map MUST center on the user's most recently known location if available; otherwise it MUST center on a default fallback location
 - **FR-011**: The default fallback location MUST be Wrocław, PL (coordinates: 51.1079, 17.0385)
 - **FR-012**: The map component MUST have a fixed height of 400px
@@ -85,8 +84,8 @@ A user who has not granted location permission wants to understand why it is req
 ### Session 2025-12-18
 
 - Q: Should the map allow panning (dragging), or only zoom? → A: Zoom + pan.
-- Q: What should the Retry action do after a map load failure? → A: Retry re-attempts loading the map without a full page reload.
-- Q: What should happen when location is unavailable even though permission is granted? → A: Show the map in fallback mode with message "Unable to get location" and a retry action to re-attempt location retrieval.
+- Q: What should happen after a map load failure? → A: Show error message "Failed to load map. Please refresh the page to try again."
+- Q: What should happen when location is unavailable even though permission is granted? → A: Show the map in fallback mode with message "Unable to get location. Please refresh the page to try again."
 - Q: What should the map center on in fallback mode when location is unavailable? → A: Center on the user's most recently known location if available; otherwise use a default fallback location.
 - Q: What is the default fallback location when no last-known location exists? → A: Wrocław, PL.
 - Q: Which map library/provider should be used for the interactive map component? → A: Leaflet.js + OpenStreetMap
