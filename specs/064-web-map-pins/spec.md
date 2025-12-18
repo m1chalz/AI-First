@@ -19,8 +19,8 @@ A user viewing the landing page map wants to see pins for missing animals in the
 **Acceptance Scenarios**:
 
 1. **Given** the landing page map is displayed, **When** missing animal announcements exist in the visible map area, **Then** pins are displayed at each missing animal’s last-seen location
-2. **Given** the landing page map is displayed, **When** no missing animal announcements exist in the visible map area, **Then** the map displays without pins and shows an empty-state message
-3. **Given** the user zooms or pans the map, **When** the visible area changes, **Then** pins update to reflect missing animals in the newly visible area
+2. **Given** the landing page map is displayed, **When** no missing animal announcements exist in the visible map area, **Then** the map displays without pins and without an empty-state message
+3. **Given** the user zooms or pans the map, **When** the user finishes the interaction, **Then** pins update to reflect missing animals in the newly visible area
 4. **Given** missing animal announcements have invalid or missing coordinates, **When** pins are rendered, **Then** those announcements are not displayed as pins
 
 ---
@@ -62,6 +62,7 @@ A user wants the map to remain understandable when pins are loading or when load
 - **Duplicate coordinates**: Multiple missing animals at the same coordinates remain discoverable (e.g., selection still works)
 - **Stale announcements**: If an announcement is removed/marked found, its pin is not shown on next refresh/load
 - **Slow images**: If the pet photo loads slowly, the pop-up still opens and shows a placeholder until the image loads
+- **Missing images**: If a pet photo is missing or cannot be loaded, the pop-up shows a placeholder image and remains usable
 
 ## Requirements *(mandatory)*
 
@@ -70,13 +71,15 @@ A user wants the map to remain understandable when pins are loading or when load
 - **FR-001**: The system MUST display pins for missing animals on the landing page map component
 - **FR-002**: Pins MUST be positioned using each missing animal’s last-seen coordinates
 - **FR-003**: Only active missing-animal announcements (status “missing”) MUST be shown as pins
-- **FR-004**: When the visible map area changes (zoom/pan), the system MUST update pins to reflect missing animals in the visible area
+- **FR-004**: When the visible map area changes (zoom/pan), the system MUST update pins after the user finishes the interaction to reflect missing animals in the visible area
 - **FR-005**: When the user clicks a pin, the system MUST display a pop-up with details of the selected missing animal
 - **FR-006**: The pop-up MUST include at minimum: pet photo, pet name, species/type, last-seen date, description, and a way to contact the owner
+- **FR-011**: The pop-up contact information MUST include phone number and email address when available
+- **FR-012**: If the pet photo is missing or fails to load, the pop-up MUST display a placeholder image
 - **FR-007**: The pop-up MUST be dismissible and must not navigate away from the landing page by default
 - **FR-008**: When pin loading is in progress, the system MUST show a loading indicator in the map area
 - **FR-009**: When pin loading fails, the system MUST show a user-friendly error state with a retry action
-- **FR-010**: When the user activates retry, the system MUST attempt to load pins again
+- **FR-010**: When the user activates retry, the system MUST re-attempt loading pins for the current map viewport without requiring a full landing page reload
 
 ### Key Entities *(include if feature involves data)*
 
@@ -96,3 +99,13 @@ A user wants the map to remain understandable when pins are loading or when load
 
 - Missing animal announcements include last-seen coordinates suitable for pin placement.
 - The landing page map component exists and is stable (provided by 063-web-map-view).
+
+## Clarifications
+
+### Session 2025-12-18
+
+- Q: When should pins refresh after zoom/pan? → A: Refresh after the user finishes the interaction (not continuously during pan/zoom).
+- Q: What contact information should be displayed in the pop-up? → A: Phone number and email address.
+- Q: How should missing pet photos be handled in the pop-up? → A: Show a placeholder image.
+- Q: What should be shown when there are no pins in the visible map area? → A: Show the map without pins and without an empty-state message.
+- Q: What should the Retry action do after pin loading fails? → A: Retry re-attempts loading pins for the current viewport without a full landing page reload.
