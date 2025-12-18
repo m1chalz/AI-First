@@ -1,0 +1,32 @@
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.map {
+  height: 400px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  z-index: 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background-color: var(--color-bg-gray-100);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+}
+
+.errorBanner {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  color: #856404;
+  font-size: 0.875rem;
+}
