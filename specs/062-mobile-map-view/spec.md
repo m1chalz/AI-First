@@ -19,9 +19,10 @@ A user opens the landing page and wants to quickly see whether there are missing
 
 1. **Given** the landing page is displayed, **When** the user scrolls the main content, **Then** a map preview is displayed between the Description panel and the Recently Lost Pets panel
 2. **Given** the user has granted location permission, **When** the landing page loads, **Then** the map preview represents an area of approximately 10 km radius around the user's current location
-3. **Given** the map preview is shown, **When** the user views it, **Then** it is clearly identified as a static preview (non-interactive)
+3. **Given** the map preview is shown, **When** the user views it, **Then** it is presented as a static preview without explicit instructional text
 4. **Given** missing pet announcements exist within the represented area, **When** the preview is shown, **Then** pins are visible on the preview at the approximate last-seen locations
-5. **Given** pins are visible on the preview, **When** the user taps a pin (or the preview), **Then** no pin details are opened and no interaction occurs (static preview)
+5. **Given** pins are visible on the preview, **When** the user taps a pin (or the preview), **Then** nothing happens (no-op) and no details are opened (static preview)
+6. **Given** no missing pet announcements exist within the represented area, **When** the preview is shown, **Then** the preview is shown without pins and without an empty-state message
 
 ---
 
@@ -58,8 +59,9 @@ A user who has not granted location permission wants to understand why it is req
 - **FR-004**: When the landing page is entered and location permission is granted, the represented area MUST cover approximately a 10 km radius around the user's current location
 - **FR-005**: If the user has not allowed the app to access location, the map preview area MUST display information that location consent is required to display the map
 - **FR-006**: The location-consent information state MUST include a button that allows the user to grant consent
-- **FR-007**: The preview area MUST clearly communicate that the preview is not interactive
+- **FR-007**: The preview MUST be non-interactive; tapping the preview or pins MUST perform no action (no-op) and MUST NOT open details or navigate
 - **FR-008**: When loading the map preview fails, the preview area MUST show a user-friendly error state with a retry action
+- **FR-009**: When the user activates retry after a preview load failure, the system MUST re-attempt loading the preview without requiring an app restart
 
 ### Key Entities *(include if feature involves data)*
 
@@ -81,3 +83,13 @@ A user who has not granted location permission wants to understand why it is req
 - The landing page already contains distinct Description and Recently Lost Pets panels.
 - The default radius of 10 km is acceptable as a first version for “nearby” on mobile.
 - This specification does not include fullscreen interactive map or pop-ups; those behaviors are defined in a separate specification.
+
+## Clarifications
+
+### Session 2025-12-18
+
+- Q: What exact text should be shown on the static preview to discourage tapping? → A: No text (visual-only preview).
+- Q: What should happen when the user taps the preview or a pin? → A: Nothing happens (no-op).
+- Q: What should be shown when there are no announcements within the 10 km preview area? → A: Show the preview without pins and without an empty-state message.
+- Q: What should the location-consent informational message and button say? → A: Message “Location required.” with button “Enable”.
+- Q: What should the Retry action do after a preview load failure? → A: Retry re-attempts loading the preview without requiring an app restart.
