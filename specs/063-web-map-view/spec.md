@@ -3,7 +3,7 @@
 **Feature Branch**: `063-web-map-view`  
 **Created**: 2025-12-18  
 **Status**: Draft  
-**Input**: User description: "Split part 1/2: Add interactive map component to landing page (between Description and Recently Lost Pets) with location permission gating, initial ~3 km viewport around user, and zoom controls."
+**Input**: User description: "Split part 1/2: Add interactive map component to landing page (between Description and Recently Lost Pets) with location permission gating, initial ~10 km viewport around user, and zoom controls."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -18,9 +18,10 @@ A user visiting the landing page wants to see an interactive map placed between 
 **Acceptance Scenarios**:
 
 1. **Given** the landing page is displayed, **When** the user views the main content, **Then** an interactive map is displayed between the Description panel and the Recently Lost Pets panel
-2. **Given** the user has granted location permission, **When** the landing page loads, **Then** the map is centered on the user's current location
-3. **Given** the landing page loads with location permission granted, **When** the map finishes loading, **Then** the initial viewport covers approximately a 3 km radius around the user's location
+2. **Given** the user has granted location permission and location is successfully obtained, **When** the landing page loads, **Then** the map is centered on the user's current location
+3. **Given** the landing page loads and location is successfully obtained, **When** the map finishes loading, **Then** the initial viewport covers approximately a 10 km radius around the user's location
 4. **Given** the map is displayed, **When** the user uses zoom controls, **Then** the map zoom level changes accordingly
+5. **Given** the map is displayed, **When** the user drags the map, **Then** the map pans to show a different area
 
 ---
 
@@ -44,9 +45,9 @@ A user who has not granted location permission wants to understand why it is req
 ### Edge Cases
 
 - **No geolocation support**: If the browser does not support location, show the informational state (no crash)
-- **Location unavailable**: If location retrieval fails (timeout/GPS off), show the informational state or a user-friendly fallback message
+- **Location unavailable**: If location retrieval fails (timeout/GPS off), show the map in fallback mode centered on the user's most recently known location (if available); otherwise use a default fallback location. Show a user-friendly message “Unable to get location” and a retry action to re-attempt location retrieval
 - **Slow network**: Show a loading indicator while the map is loading
-- **Failed map load**: Show a user-friendly error state with retry action in the map area
+- **Failed map load**: Show a user-friendly error state with retry action in the map area (retry re-attempts map load without a full page reload)
  - **Landing page layout**: Map retains its placement between the Description and Recently Lost Pets panels across common screen sizes
 
 ## Requirements *(mandatory)*
@@ -54,12 +55,16 @@ A user who has not granted location permission wants to understand why it is req
 ### Functional Requirements
 
 - **FR-001**: The landing page MUST display an interactive map between the Description panel and the Recently Lost Pets panel
-- **FR-002**: When the landing page is entered and location permission is granted, the map MUST center on the user's current location
-- **FR-003**: The initial map viewport MUST cover approximately a 3 km radius around the user's current location
+- **FR-002**: When the landing page is entered and the user's location is successfully obtained (permission granted), the map MUST center on the user's current location
+- **FR-003**: The initial map viewport MUST cover approximately a 10 km radius around the user's current location
 - **FR-004**: If the user has not allowed location access, the map area MUST display an informational message explaining that location consent is required to display the map
 - **FR-005**: The informational message MUST include a consent button allowing the user to grant location permission
-- **FR-006**: Users MUST be able to zoom in and zoom out of the map
+- **FR-006**: Users MUST be able to zoom in/out and pan (drag) the map
 - **FR-007**: When loading the map fails, the map area MUST display a user-friendly error state with a retry action
+- **FR-008**: When the user activates retry after a map-load failure, the system MUST re-attempt loading the map without requiring a full page reload
+- **FR-009**: When location permission is granted but the user's location cannot be obtained (e.g., timeout or location services disabled), the system MUST display the map in fallback mode (not centered on the user's current location) and show a user-friendly message with a retry action to re-attempt location retrieval
+- **FR-010**: In fallback mode, the map MUST center on the user's most recently known location if available; otherwise it MUST center on a default fallback location
+- **FR-011**: The default fallback location MUST be Wrocław, PL
 
 ### Key Entities *(include if feature involves data)*
 
@@ -71,8 +76,18 @@ A user who has not granted location permission wants to understand why it is req
 ### Measurable Outcomes
 
 - **SC-001**: Users with location permission can see the map within 3 seconds of landing page load under normal network conditions
-- **SC-002**: The initial viewport centers on the user and covers ~3 km radius (verified in QA)
+- **SC-002**: The initial viewport centers on the user and covers ~10 km radius (verified in QA)
 - **SC-003**: Users can zoom/pan without perceivable UI freezing during interaction
+
+## Clarifications
+
+### Session 2025-12-18
+
+- Q: Should the map allow panning (dragging), or only zoom? → A: Zoom + pan.
+- Q: What should the Retry action do after a map load failure? → A: Retry re-attempts loading the map without a full page reload.
+- Q: What should happen when location is unavailable even though permission is granted? → A: Show the map in fallback mode with message “Unable to get location” and a retry action to re-attempt location retrieval.
+- Q: What should the map center on in fallback mode when location is unavailable? → A: Center on the user's most recently known location if available; otherwise use a default fallback location.
+- Q: What is the default fallback location when no last-known location exists? → A: Wrocław, PL.
 
 ## Assumptions
 
