@@ -1,0 +1,83 @@
+import React from 'react';
+import { MdLocationOn } from 'react-icons/md';
+import { HiOutlineCalendar } from 'react-icons/hi';
+import { ANNOUNCEMENT_STATUS_BADGE_COLORS, type Announcement } from '../../types/announcement';
+import { formatDateDDMMYYYY } from '../../lib/date-utils';
+import { formatDistance } from '../../lib/distance-utils';
+import toPascalCase from '../../utils/pascal-case-formatter';
+import config from '../../config/config';
+import type { Coordinates } from '../../types/location';
+import styles from './LandingPageCard.module.css';
+
+interface LandingPageCardProps {
+  announcement: Announcement;
+  userCoordinates: Coordinates | null;
+  onClick: (id: string) => void;
+}
+
+export const LandingPageCard: React.FC<LandingPageCardProps> = ({ announcement, userCoordinates, onClick }) => {
+  const statusColor = ANNOUNCEMENT_STATUS_BADGE_COLORS[announcement.status];
+
+  const handleClick = () => onClick(announcement.id);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick(announcement.id);
+    }
+  };
+
+  return (
+    <div
+      className={styles.card}
+      data-testid={`landing.recentPets.petCard.${announcement.id}`}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+    >
+      <div className={styles.photoContainer}>
+        {announcement.photoUrl ? (
+          <img
+            src={`${config.apiBaseUrl}${announcement.photoUrl}`}
+            alt={announcement.petName || 'Pet photo'}
+            className={styles.photo}
+            loading="lazy"
+          />
+        ) : (
+          <div className={styles.photoPlaceholder}>
+            <span aria-hidden="true">🐾</span>
+          </div>
+        )}
+        <span className={styles.statusBadge} style={{ backgroundColor: statusColor }}>
+          {announcement.status}
+        </span>
+      </div>
+
+      <div className={styles.content}>
+        {userCoordinates && (
+          <div className={styles.locationRow}>
+            <MdLocationOn className={styles.locationIcon} />
+            <span className={styles.locationText}>
+              {formatDistance(userCoordinates, announcement.locationLatitude, announcement.locationLongitude)}
+            </span>
+          </div>
+        )}
+
+        <div className={styles.speciesRow}>
+          <span className={styles.speciesText}>{toPascalCase(announcement.species)}</span>
+          {announcement.breed && (
+            <>
+              <span className={styles.bullet}>•</span>
+              <span className={styles.breedText}>{announcement.breed}</span>
+            </>
+          )}
+        </div>
+
+        <div className={styles.dateRow}>
+          <HiOutlineCalendar className={styles.dateIcon} />
+          <span className={styles.dateText}>{formatDateDDMMYYYY(announcement.createdAt)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};

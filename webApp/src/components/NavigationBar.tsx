@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { HiOutlineHome, HiOutlineSearch, HiOutlineLocationMarker, HiOutlineChatAlt2, HiOutlineUser } from 'react-icons/hi';
 import { AppRoutes } from '../pages/routes';
+import { Logo } from './Logo';
 import styles from './NavigationBar.module.css';
 
 const NAVIGATION_ITEMS = [
@@ -15,10 +16,7 @@ export function NavigationBar() {
   return (
     <nav className={styles.navigationBar} data-testid="navigation.bar">
       <NavLink to={AppRoutes.home} className={styles.logoLink} data-testid="navigation.logo.link">
-        <div className={styles.logoIcon}>
-          <HiOutlineSearch className={styles.logoIconImage} size={20} />
-        </div>
-        <span className={styles.logoText}>PetSpot</span>
+        <Logo size="small" />
       </NavLink>
       <div className={styles.navigationItems}>
         {NAVIGATION_ITEMS.map((item) => (

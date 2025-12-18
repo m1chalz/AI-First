@@ -1,18 +1,46 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { Home } from '../Home';
 import { Account } from '../Account';
 import { Contact } from '../Contact';
 import { FoundPets } from '../FoundPets';
 
-describe('Home', () => {
-  it('should render welcome message', () => {
-    // Given/When
-    render(<Home />);
+vi.mock('../../hooks/use-announcement-list', () => ({
+  useAnnouncementList: vi.fn(() => ({
+    announcements: [],
+    isLoading: false,
+    error: null,
+    isEmpty: true,
+    loadAnnouncements: vi.fn(),
+    geolocationError: null
+  }))
+}));
 
-    // Then
-    expect(screen.getByText('Welcome to PetSpot')).toBeTruthy();
-    expect(screen.getByText('Help reunite lost pets with their families')).toBeTruthy();
+vi.mock('../../contexts/GeolocationContext', () => ({
+  useGeolocationContext: vi.fn(() => ({
+    state: {
+      coordinates: { lat: 52.23, lng: 21.01 },
+      error: null,
+      isLoading: false,
+      permissionCheckCompleted: true
+    }
+  }))
+}));
+
+describe('Home', () => {
+  it('should render landing page with hero section and recent pets section', () => {
+    // when
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+
+    // then
+    expect(screen.getByTestId('landing.heroSection')).toBeDefined();
+    expect(screen.getByTestId('landing.recentPetsSection')).toBeDefined();
+    expect(screen.getByTestId('landing.footer')).toBeDefined();
   });
 });
 

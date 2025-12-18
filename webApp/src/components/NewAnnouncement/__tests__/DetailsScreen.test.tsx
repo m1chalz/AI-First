@@ -116,7 +116,7 @@ describe('DetailsScreen', () => {
     const continueButton = screen.getByTestId('details.continue.click');
     fireEvent.click(continueButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.contact);
+    expect(mockNavigate).toHaveBeenCalledWith(AppRoutes.reportMissing.contact);
   });
 
   it('should integrate useAnimalDescriptionForm hook', () => {

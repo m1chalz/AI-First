@@ -1,0 +1,140 @@
+.section {
+  padding: 64px 32px;
+  background-color: var(--color-bg-white);
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-text-dark);
+  margin: 0;
+  line-height: 30px;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 24px;
+}
+
+.viewAllLink {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-primary);
+  text-decoration: none;
+  line-height: 24px;
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+}
+
+.loadingContainer,
+.errorContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-bg-gray-200);
+  border-top-color: var(--color-primary-hover);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText,
+.errorText,
+.emptyText {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.errorText {
+  color: var(--color-error);
+}
+
+/* Tablet: 3 columns */
+@media (max-width: 1023px) {
+  .section {
+    padding: 48px 24px;
+  }
+
+  .heading {
+    font-size: 28px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Mobile: 2 columns */
+@media (max-width: 767px) {
+  .section {
+    padding: 32px 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Small mobile: 1 column */
+@media (max-width: 479px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
