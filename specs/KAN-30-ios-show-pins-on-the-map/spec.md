@@ -74,10 +74,9 @@ A user sees pins on the map preview and may wonder if they can interact with the
 
 ### Measurable Outcomes
 
-- **SC-001**: When missing pet announcements exist within the represented area, users can see pins on the map preview within 3 seconds of landing page load under normal network conditions
-- **SC-002**: 95% of pins are displayed at coordinates within 100 meters of the actual last-seen location stored in the missing pet announcement (verified in QA testing)
-- **SC-003**: When users tap on pins or the map preview, no action occurs and no navigation/pop-ups are triggered (100% of tap interactions result in no-op)
-- **SC-004**: Users in usability testing understand that the map preview with pins is non-interactive (90% recognition rate)
+- **SC-001**: 95% of pins are displayed at coordinates within 100 meters of the actual last-seen location stored in the missing pet announcement (verified in QA testing)
+- **SC-002**: When users tap on pins or the map preview, no action occurs and no navigation/pop-ups are triggered (100% of tap interactions result in no-op)
+- **SC-003**: Users in usability testing understand that the map preview with pins is non-interactive (90% recognition rate)
 
 ## Assumptions
 
