@@ -16,8 +16,9 @@ Implement a static map preview component for the Android landing page (HomeScree
 **Target Platform**: Android (minSdk defined in project)  
 **Project Type**: Mobile (Android)  
 **Performance Goals**: N/A (Performance is not a concern for this project - see Principle XIV)  
-**Constraints**: Requires `ACCESS_COARSE_LOCATION` permission  
-**Scale/Scope**: Single feature module integration into existing HomeScreen
+**Constraints**: Requires `ACCESS_COARSE_LOCATION` permission (already declared in manifest)  
+**Scale/Scope**: Single feature module integration into existing HomeScreen  
+**Reuse**: Existing location infrastructure (`GetCurrentLocationUseCase`, `CheckLocationPermissionUseCase`, `LocationCoordinates`)
 
 ## Constitution Check
 
@@ -120,37 +121,47 @@ specs/067-android-landing-map-preview/
 
 ```text
 composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
+├── domain/                            # EXISTING: Reuse location infrastructure
+│   ├── models/
+│   │   ├── LocationCoordinates.kt     # REUSE: Domain location model
+│   │   └── PermissionStatus.kt        # REUSE: Permission state sealed class
+│   ├── usecases/
+│   │   ├── GetCurrentLocationUseCase.kt     # REUSE: Two-stage location fetch
+│   │   └── CheckLocationPermissionUseCase.kt # REUSE: Permission checking
+│   └── repositories/
+│       └── LocationRepository.kt      # REUSE: Location repository interface
 ├── features/
 │   └── mapPreview/                    # NEW: Map preview feature module
 │       ├── domain/
 │       │   ├── models/
-│       │   │   └── MapPin.kt          # Domain model for map pins
+│       │   │   └── MapPin.kt          # NEW: Domain model for map pins
 │       │   ├── repositories/
-│       │   │   └── MapPreviewRepository.kt    # Repository interface
+│       │   │   └── MapPreviewRepository.kt    # NEW: Repository interface
 │       │   └── usecases/
-│       │       └── GetNearbyAnnouncementsUseCase.kt  # Use case
+│       │       └── GetNearbyAnnouncementsUseCase.kt  # NEW: Use case
 │       ├── data/
 │       │   └── repositories/
-│       │       └── MapPreviewRepositoryImpl.kt  # Repository implementation
+│       │       └── MapPreviewRepositoryImpl.kt  # NEW: Repository implementation
 │       ├── presentation/
 │       │   ├── mvi/
-│       │   │   ├── MapPreviewUiState.kt     # Immutable UI state
-│       │   │   ├── MapPreviewIntent.kt       # Sealed user intents
-│       │   │   ├── MapPreviewEffect.kt       # One-off effects (if needed)
-│       │   │   └── MapPreviewReducer.kt      # Pure reducer functions
+│       │   │   ├── MapPreviewUiState.kt     # NEW: Immutable UI state
+│       │   │   ├── MapPreviewIntent.kt       # NEW: Sealed user intents
+│       │   │   ├── MapPreviewEffect.kt       # NEW: One-off effects (if needed)
+│       │   │   └── MapPreviewReducer.kt      # NEW: Pure reducer functions
 │       │   └── viewmodels/
-│       │       └── MapPreviewViewModel.kt    # MVI ViewModel
+│       │       └── MapPreviewViewModel.kt    # NEW: MVI ViewModel
 │       └── ui/
-│           ├── MapPreviewSection.kt          # Stateful composable (state host)
-│           ├── MapPreviewContent.kt          # Stateless composable (pure UI)
-│           ├── MapPreviewLegend.kt           # Legend component
-│           ├── MapPreviewOverlay.kt          # "Tap to view" overlay
-│           └── PermissionRequestContent.kt   # Permission request UI
+│           ├── MapPreviewSection.kt          # NEW: Stateful composable (state host)
+│           ├── MapPreviewContent.kt          # NEW: Stateless composable (pure UI)
+│           ├── MapPreviewLegend.kt           # NEW: Legend component
+│           ├── MapPreviewOverlay.kt          # NEW: "Tap to view" overlay
+│           └── PermissionRequestContent.kt   # NEW: Permission request UI
 ├── features/
 │   └── home/
 │       └── ui/
 │           └── HomeScreen.kt          # MODIFIED: Add MapPreviewSection
 ├── di/
+│   ├── LocationModule.kt              # EXISTING: Already has location dependencies
 │   └── MapPreviewModule.kt            # NEW: Koin module for map preview
 └── PetSpotApp.kt                      # MODIFIED: Register mapPreviewModule
 
@@ -177,14 +188,20 @@ composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPre
 | `AnnouncementDto` | `data/api/dto/AnnouncementDto.kt` | Has `locationLatitude`, `locationLongitude`, `status` fields |
 | `AnimalStatus` | `domain/models/AnimalStatus.kt` | LOST/FOUND enum for pin colors |
 | `HomeScreen` | `features/home/ui/HomeScreen.kt` | Add `MapPreviewSection` between hero and teaser |
+| `GetCurrentLocationUseCase` | `domain/usecases/GetCurrentLocationUseCase.kt` | Two-stage location fetch (cached + fresh) |
+| `CheckLocationPermissionUseCase` | `domain/usecases/CheckLocationPermissionUseCase.kt` | Permission status checking |
+| `LocationCoordinates` | `domain/models/LocationCoordinates.kt` | Domain model with validation |
+| `PermissionStatus` | `domain/models/PermissionStatus.kt` | Rich permission state (NotRequested, Granted, Denied) |
+| `locationModule` | `di/LocationModule.kt` | Koin module with location dependencies |
 
 ### New Dependencies Required
 
 | Dependency | Purpose | Gradle Artifact |
 |------------|---------|-----------------|
 | Google Maps Compose | Map rendering in Compose | `com.google.maps.android:maps-compose:4.x.x` |
-| Google Play Services Location | Location services | `com.google.android.gms:play-services-location:21.x.x` |
-| Accompanist Permissions | Permission handling | `com.google.accompanist:accompanist-permissions:0.x.x` |
+| Accompanist Permissions | Permission request UI flow | `com.google.accompanist:accompanist-permissions:0.x.x` |
+
+**Note**: Google Play Services Location is NOT needed - existing code uses native `LocationManager`.
 
 ### API Integration
 

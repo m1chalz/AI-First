@@ -26,14 +26,24 @@ data class MapPin(
 | `longitude` | Double | GPS longitude | Required, -180 to 180 |
 | `isMissing` | Boolean | Pet status (LOST vs FOUND) | Required |
 
-### UserLocation
+### LocationCoordinates (EXISTING - REUSE)
 
-Represents the user's current location.
+Represents the user's current location. **Already exists** in the codebase.
 
 ```kotlin
-// Can use com.google.android.gms.maps.model.LatLng directly
-// or create a domain wrapper if needed for testability
-typealias UserLocation = LatLng
+// EXISTING: domain/models/LocationCoordinates.kt
+data class LocationCoordinates(
+    val latitude: Double,
+    val longitude: Double,
+) {
+    init {
+        require(latitude in -90.0..90.0) { "Latitude must be between -90.0 and 90.0" }
+        require(longitude in -180.0..180.0) { "Longitude must be between -180.0 and 180.0" }
+    }
+}
+
+// Extension for Google Maps integration
+fun LocationCoordinates.toLatLng(): LatLng = LatLng(latitude, longitude)
 ```
 
 ---
@@ -234,30 +244,43 @@ class GetNearbyAnnouncementsUseCase(
 
 ### MapPreviewModule
 
-Dependency injection configuration.
+Dependency injection configuration. **Reuses existing `locationModule` dependencies.**
 
 ```kotlin
 // Location: di/MapPreviewModule.kt
 val mapPreviewModule = module {
-    // Repository
+    // Repository (NEW)
     single<MapPreviewRepository> { 
-        MapPreviewRepositoryImpl(get()) 
+        MapPreviewRepositoryImpl(get()) // get() injects AnnouncementApiClient
     }
     
-    // Use Case
+    // Use Case (NEW)
     factory { 
         GetNearbyAnnouncementsUseCase(get()) 
     }
     
-    // Location Provider
-    single { 
-        LocationProvider(androidContext()) 
-    }
-    
-    // ViewModel
+    // ViewModel (NEW)
+    // Injects existing GetCurrentLocationUseCase + CheckLocationPermissionUseCase from locationModule
     viewModel { 
-        MapPreviewViewModel(get(), get()) 
+        MapPreviewViewModel(
+            getCurrentLocationUseCase = get(),      // FROM locationModule
+            checkLocationPermissionUseCase = get(), // FROM locationModule
+            getNearbyAnnouncementsUseCase = get()   // FROM mapPreviewModule
+        )
     }
+}
+```
+
+### Existing locationModule (REUSE)
+
+```kotlin
+// EXISTING: di/LocationModule.kt - no changes needed
+val locationModule = module {
+    single { androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    single<PermissionChecker> { AndroidPermissionChecker(androidContext()) }
+    single<LocationRepository> { LocationRepositoryImpl(get()) }
+    factory { GetCurrentLocationUseCase(get()) }
+    factory { CheckLocationPermissionUseCase(get()) }
 }
 ```
 

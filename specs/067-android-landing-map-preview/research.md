@@ -8,8 +8,8 @@
 | Topic | Decision | Confidence |
 |-------|----------|------------|
 | Map SDK | Google Maps Compose (`com.google.maps.android:maps-compose`) | High |
-| Permission Handling | Accompanist Permissions | High |
-| Location Services | Google Play Services Location | High |
+| Permission Handling | Accompanist Permissions (UI) + existing `CheckLocationPermissionUseCase` (logic) | High |
+| Location Services | **REUSE EXISTING** `GetCurrentLocationUseCase` with native `LocationManager` | High |
 | API Integration | Reuse existing `AnnouncementApiClient` | High |
 
 ---
@@ -155,43 +155,65 @@ implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 ## 3. Location Services
 
 ### Decision
-Use Google Play Services Location (`FusedLocationProviderClient`) for obtaining user location.
+**REUSE EXISTING** `GetCurrentLocationUseCase` with native `LocationManager` (no Play Services dependency).
 
 ### Rationale
-- Battery-efficient location retrieval
-- Combines GPS, Wi-Fi, and cell tower data
-- Standard Android pattern for location
-- Already available via Play Services
+- Already implemented and tested in the codebase
+- Uses native Android `LocationManager` (no Google Play Services dependency)
+- Two-stage approach: cached location first, then fresh request with timeout
+- Already integrated with Koin via `locationModule`
 
-### Implementation Pattern
+### Existing Implementation
 
 ```kotlin
-class LocationProvider(private val context: Context) {
-    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    
-    @SuppressLint("MissingPermission")
-    suspend fun getLastLocation(): Result<LatLng> = suspendCancellableCoroutine { cont ->
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    cont.resume(Result.success(LatLng(location.latitude, location.longitude)))
-                } else {
-                    cont.resume(Result.failure(LocationNotFoundException()))
-                }
-            }
-            .addOnFailureListener { exception ->
-                cont.resume(Result.failure(exception))
-            }
+// Already exists: domain/usecases/GetCurrentLocationUseCase.kt
+class GetCurrentLocationUseCase(
+    private val locationRepository: LocationRepository,
+    private val defaultTimeoutMs: Long = DEFAULT_TIMEOUT_MS,
+) {
+    suspend operator fun invoke(): Result<LocationCoordinates?> = runCatching {
+        // Stage 1: Try cached location first (instant)
+        val cachedLocation = locationRepository.getLastKnownLocation()
+        if (cachedLocation != null) {
+            return@runCatching cachedLocation
+        }
+        // Stage 2: Request fresh location with timeout
+        locationRepository.requestFreshLocation(defaultTimeoutMs)
     }
 }
 ```
 
-### Dependencies Required
+### Usage in MapPreviewViewModel
 
 ```kotlin
-// build.gradle.kts (module level)
-implementation("com.google.android.gms:play-services-location:21.1.0")
+// In MapPreviewViewModel
+private fun loadLocation() = viewModelScope.launch {
+    val locationResult = getCurrentLocationUseCase()
+    locationResult.fold(
+        onSuccess = { coords ->
+            if (coords != null) {
+                loadPins(coords.latitude, coords.longitude)
+            } else {
+                _state.update { it.copy(error = MapPreviewError.LocationNotAvailable) }
+            }
+        },
+        onFailure = { error ->
+            _state.update { it.copy(error = MapPreviewError.LocationNotAvailable) }
+        }
+    )
+}
 ```
+
+### Conversion to Google Maps LatLng
+
+```kotlin
+// Extension function for Google Maps integration
+fun LocationCoordinates.toLatLng(): LatLng = LatLng(latitude, longitude)
+```
+
+### Dependencies Required
+
+**NONE** - existing `locationModule` already provides all dependencies.
 
 ---
 
@@ -318,16 +340,28 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:4.4.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     
-    // Location Services (NEW)
-    implementation("com.google.android.gms:play-services-location:21.1.0")
-    
-    // Accompanist Permissions (NEW)
+    // Accompanist Permissions (NEW) - for UI permission request flow
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
     
+    // Location Services - NOT NEEDED (using existing LocationManager-based code)
+    // implementation("com.google.android.gms:play-services-location:21.1.0")  // SKIP
+    
     // Existing dependencies (no changes)
-    // - Koin, Ktor, Compose, etc.
+    // - Koin, Ktor, Compose, LocationModule, etc.
 }
 ```
+
+### Reused Existing Infrastructure
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| `GetCurrentLocationUseCase` | `domain/usecases/` | Two-stage location fetch |
+| `CheckLocationPermissionUseCase` | `domain/usecases/` | Permission status check |
+| `LocationRepository` | `domain/repositories/` | Location abstraction |
+| `LocationRepositoryImpl` | `data/repositories/` | Native LocationManager impl |
+| `LocationCoordinates` | `domain/models/` | Domain model with validation |
+| `PermissionStatus` | `domain/models/` | Rich permission states |
+| `locationModule` | `di/` | Koin DI configuration |
 
 ---
 

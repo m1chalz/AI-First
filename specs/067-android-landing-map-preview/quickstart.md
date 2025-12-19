@@ -21,15 +21,15 @@ Add to `composeApp/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    // Google Maps Compose
+    // Google Maps Compose (NEW)
     implementation("com.google.maps.android:maps-compose:4.4.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     
-    // Location Services
-    implementation("com.google.android.gms:play-services-location:21.1.0")
-    
-    // Accompanist Permissions
+    // Accompanist Permissions (NEW) - for UI permission request
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    
+    // Location Services - NOT NEEDED (reusing existing LocationManager-based code)
+    // The app already has: GetCurrentLocationUseCase, CheckLocationPermissionUseCase, locationModule
 }
 ```
 
@@ -68,17 +68,26 @@ mkdir -p composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/featur
 
 Follow this order for incremental development:
 
+### Phase 0: Verify Existing Infrastructure
+
+**Existing code to reuse** (no changes needed):
+- `GetCurrentLocationUseCase` - location fetching
+- `CheckLocationPermissionUseCase` - permission checking
+- `LocationCoordinates` - domain model
+- `PermissionStatus` - permission states
+- `locationModule` - Koin dependencies
+
 ### Phase 1: Domain Layer
 
-1. **MapPin.kt** - Domain model
-2. **MapPreviewRepository.kt** - Repository interface
-3. **GetNearbyAnnouncementsUseCase.kt** - Business logic
+1. **MapPin.kt** - NEW domain model for map pins
+2. **MapPreviewRepository.kt** - NEW repository interface
+3. **GetNearbyAnnouncementsUseCase.kt** - NEW business logic
 4. **Unit tests** for use case
 
 ### Phase 2: Data Layer
 
-1. **MapPreviewRepositoryImpl.kt** - Repository implementation
-2. **LocationProvider.kt** - Location service wrapper
+1. **MapPreviewRepositoryImpl.kt** - NEW repository implementation
+2. **LocationCoordinates.toLatLng()** - Extension function for Google Maps
 3. **Unit tests** for repository
 
 ### Phase 3: Presentation Layer (MVI)
