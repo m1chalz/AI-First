@@ -27,6 +27,9 @@
 
   /* Colors - Status */
   --color-error: #ef4444;
+  --color-warning-bg: #fff3cd;
+  --color-warning-border: #ffc107;
+  --color-warning-text: #856404;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
@@ -42,10 +45,15 @@
   --radius-lg: 14px;
   --radius-xl: 16px;
   --radius-full: 9999px;
+
+  /* Component Heights */
+  --map-height: 500px;
+  --map-height-tablet: 400px;
+  --map-height-mobile: 300px;
 }
 
 body {
   font-family: var(--font-family);
   margin: 0;
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-gray-50);
 }
