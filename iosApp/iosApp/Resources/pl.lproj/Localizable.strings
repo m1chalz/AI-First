@@ -271,3 +271,8 @@
 // Coming soon
 "placeholder.title" = "Wkrótce";
 "placeholder.message" = "Ta funkcja jest w trakcie rozwoju";
+
+/* MARK: - Map Preview */
+
+"mapPreview.permission.message" = "Włącz lokalizację, aby zobaczyć okolicę.";
+"mapPreview.permission.settingsButton" = "Przejdź do Ustawień";

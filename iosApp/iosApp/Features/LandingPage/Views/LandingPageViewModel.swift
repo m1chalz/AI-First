@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import MapKit
 
 // MARK: - LocationPermissionStatus Presentation Extension
 
@@ -71,6 +72,15 @@ class LandingPageViewModel: ObservableObject {
     
     /// Controls custom permission denied popup display (recovery path)
     @Published var showPermissionDeniedAlert = false
+    
+    // MARK: - Map Preview Properties
+    
+    /// Model for MapPreviewView component.
+    /// Updated by `loadData()` based on location permission and current location.
+    /// - `.loading`: Initial state before location determined
+    /// - `.map`: User location available, shows map centered on location
+    /// - `.permissionRequired`: Location denied/restricted, shows settings prompt
+    @Published var mapPreviewModel: MapPreviewView.Model = .loading
     
     // MARK: - Coordinator Closures (Navigation)
     
@@ -166,6 +176,35 @@ class LandingPageViewModel: ObservableObject {
         // Set query on child ViewModel (triggers automatic reload)
         let queryWithLocation = AnnouncementListQuery.landingPageQuery(location: result.location)
         listViewModel.query = queryWithLocation
+        
+        // Update map preview model based on location availability
+        updateMapPreviewModel(location: result.location)
+    }
+    
+    // MARK: - Map Preview Methods
+    
+    /// Updates map preview model based on location availability.
+    /// - Parameter location: User's current location (nil if unavailable)
+    private func updateMapPreviewModel(location: Coordinate?) {
+        guard let location else {
+            mapPreviewModel = .permissionRequired(
+                message: L10n.MapPreview.Permission.message,
+                onGoToSettings: { [weak self] in self?.openSettings() }
+            )
+            return
+        }
+        
+        mapPreviewModel = .map(
+            region: location.mapRegion(),
+            onTap: { [weak self] in self?.handleMapTap() }
+        )
+    }
+    
+    /// Handles tap on map preview. Currently logs to console.
+    /// Future: Will navigate to fullscreen map view.
+    private func handleMapTap() {
+        print("[LandingPage] Map preview tapped")
+        // Future: coordinator?.showFullscreenMap()
     }
     
     /// Refreshes data with updated location.

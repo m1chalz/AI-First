@@ -1,12 +1,13 @@
 import SwiftUI
 
-/// Landing page view for Home tab displaying hero panel, list header, and recent pet announcements.
+/// Landing page view for Home tab displaying hero panel, map preview, list header, and recent pet announcements.
 /// Uses single ScrollView for continuous scrolling of all sections.
 ///
 /// **Layout (top to bottom)**:
 /// 1. HeroPanelView - "Find Your Pet" title + "Lost Pet" / "Found Pet" buttons
-/// 2. ListHeaderRowView - "Recent Reports" title + "View All" action
-/// 3. AnnouncementCardsListView - announcement cards (inline content, no nested scroll)
+/// 2. MapPreviewView - Static map centered on user location (16:9 aspect ratio)
+/// 3. ListHeaderRowView - "Recent Reports" title + "View All" action
+/// 4. AnnouncementCardsListView - announcement cards (inline content, no nested scroll)
 ///
 /// **Scroll Architecture**:
 /// - Single outer ScrollView with LazyVStack containing all sections
@@ -43,6 +44,12 @@ struct LandingPageView: View {
                         }
                     )
                 )
+                
+                // Map preview - static map centered on user location
+                MapPreviewView(model: viewModel.mapPreviewModel)
+                    .aspectRatio(16/9, contentMode: .fit)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
                 
                 // List header row - "Recent Reports" / "View All"
                 ListHeaderRowView(

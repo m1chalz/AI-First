@@ -349,6 +349,125 @@ final class LandingPageViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentLocation?.longitude, expectedLocation.longitude)
     }
     
+    // MARK: - Map Preview Tests (T013-T015a)
+    
+    // T013: loadData with authorized location should set .map model
+    func test_loadData_whenLocationAuthorized_shouldSetMapPreviewModelWithCorrectRegion() async {
+        // Given
+        let expectedLocation = Coordinate(latitude: 52.23, longitude: 21.01)
+        await fakeLocationService.setStubbedAuthorizationStatus(.authorizedWhenInUse)
+        await fakeLocationService.setStubbedLocation(expectedLocation)
+        fakeRepository.stubbedAnnouncements = []
+        
+        sut = makeSUT()
+        
+        // When
+        await sut.loadData()
+        
+        // Then
+        if case .map(let region, _) = sut.mapPreviewModel {
+            XCTAssertEqual(region.center.latitude, 52.23, accuracy: 0.01)
+            XCTAssertEqual(region.center.longitude, 21.01, accuracy: 0.01)
+        } else {
+            XCTFail("Expected .map state, got \(sut.mapPreviewModel)")
+        }
+    }
+    
+    // T014: loadData with denied location should set .permissionRequired model
+    func test_loadData_whenLocationDenied_shouldSetPermissionRequiredModel() async {
+        // Given
+        await fakeLocationService.setStubbedAuthorizationStatus(.denied)
+        await fakeLocationService.setStubbedLocation(nil)
+        fakeRepository.stubbedAnnouncements = []
+        
+        sut = makeSUT()
+        
+        // When
+        await sut.loadData()
+        
+        // Then
+        if case .permissionRequired(let message, _) = sut.mapPreviewModel {
+            XCTAssertEqual(message, L10n.MapPreview.Permission.message)
+        } else {
+            XCTFail("Expected .permissionRequired state, got \(sut.mapPreviewModel)")
+        }
+    }
+    
+    // T015: handleMapTap should be callable (manual verification via console output)
+    func test_mapTap_whenMapModelSet_shouldHaveCallableOnTapClosure() async {
+        // Given
+        let expectedLocation = Coordinate(latitude: 52.23, longitude: 21.01)
+        await fakeLocationService.setStubbedAuthorizationStatus(.authorizedWhenInUse)
+        await fakeLocationService.setStubbedLocation(expectedLocation)
+        fakeRepository.stubbedAnnouncements = []
+        
+        sut = makeSUT()
+        await sut.loadData()
+        
+        // When - extract and call onTap (should not crash, logs to console)
+        if case .map(_, let onTap) = sut.mapPreviewModel {
+            // Then - onTap closure should be callable without crash
+            onTap()  // Should print "[LandingPage] Map preview tapped"
+        } else {
+            XCTFail("Expected .map state with onTap closure")
+        }
+    }
+    
+    // T015a: Map component should never call requestWhenInUseAuthorization
+    func test_loadData_whenMapPreviewSetup_shouldNotRequestPermissionAgain() async {
+        // Given - already authorized
+        await fakeLocationService.setStubbedAuthorizationStatus(.authorizedWhenInUse)
+        await fakeLocationService.setStubbedLocation(Coordinate(latitude: 52.23, longitude: 21.01))
+        fakeRepository.stubbedAnnouncements = []
+        
+        sut = makeSUT()
+        
+        // Reset the flag after initial setup (LocationPermissionHandler may have checked status)
+        await fakeLocationService.reset()
+        
+        // When - loadData is called (should use existing permissions, not request new ones)
+        await sut.loadData()
+        
+        // Then - requestWhenInUseAuthorization should NOT be called when already authorized
+        let requestAuthCalled = await fakeLocationService.requestAuthorizationCalled
+        XCTAssertFalse(requestAuthCalled, "Map preview should not trigger permission request when already authorized")
+    }
+    
+    func test_mapPreviewModel_initialState_shouldBeLoading() {
+        // Given & When
+        sut = makeSUT()
+        
+        // Then
+        if case .loading = sut.mapPreviewModel {
+            // Expected
+        } else {
+            XCTFail("Initial mapPreviewModel should be .loading, got \(sut.mapPreviewModel)")
+        }
+    }
+    
+    func test_permissionRequired_whenGoToSettingsTapped_shouldCallOpenSettings() async {
+        // Given
+        await fakeLocationService.setStubbedAuthorizationStatus(.denied)
+        await fakeLocationService.setStubbedLocation(nil)
+        fakeRepository.stubbedAnnouncements = []
+        
+        var openSettingsCalled = false
+        sut = makeSUT()
+        sut.onOpenAppSettings = {
+            openSettingsCalled = true
+        }
+        
+        await sut.loadData()
+        
+        // When
+        if case .permissionRequired(_, let onGoToSettings) = sut.mapPreviewModel {
+            onGoToSettings()
+        }
+        
+        // Then
+        XCTAssertTrue(openSettingsCalled, "onGoToSettings should trigger openSettings callback")
+    }
+    
     // MARK: - Private Helpers
     
     private func makeTestAnnouncement(id: String) -> Announcement {

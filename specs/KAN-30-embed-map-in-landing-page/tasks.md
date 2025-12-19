@@ -26,10 +26,10 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 
 **Purpose**: Basic infrastructure for map preview component
 
-- [ ] T001 [P] Add English localization strings in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (mapPreview.permission.message, mapPreview.permission.settingsButton)
-- [ ] T002 [P] Add Polish localization strings in `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (mapPreview.permission.message, mapPreview.permission.settingsButton)
-- [ ] T003 Run `cd iosApp && swiftgen` to regenerate localization constants
-- [ ] T004 Add `mapRegion()` helper extension to `/iosApp/iosApp/Domain/Models/Coordinate.swift` (creates MKCoordinateRegion with 10km radius)
+- [X] T001 [P] Add English localization strings in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` (mapPreview.permission.message, mapPreview.permission.settingsButton)
+- [X] T002 [P] Add Polish localization strings in `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings` (mapPreview.permission.message, mapPreview.permission.settingsButton)
+- [X] T003 Run `cd iosApp && swiftgen` to regenerate localization constants
+- [X] T004 Add `mapRegion()` helper extension to `/iosApp/iosApp/Domain/Models/Coordinate.swift` (creates MKCoordinateRegion with 10km radius)
 
 **Checkpoint**: Localization and domain extensions ready
 
@@ -40,16 +40,16 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 **Purpose**: MapPreviewView with its Model enum
 
 **iOS Unit Tests** (TDD - Write FIRST, ensure they FAIL):
-- [ ] T005 [P] Unit test for MapPreviewView.Model Equatable in `/iosApp/iosAppTests/Features/LandingPage/MapPreviewView_ModelTests.swift` (test .loading, .map, .permissionRequired equality)
-- [ ] T006 [P] Unit test for Coordinate.mapRegion() helper in `/iosApp/iosAppTests/Domain/Models/CoordinateTests.swift` (verify 20km span calculation)
+- [X] T005 [P] Unit test for MapPreviewView.Model Equatable in `/iosApp/iosAppTests/Features/LandingPage/MapPreviewView_ModelTests.swift` (test .loading, .map, .permissionRequired equality)
+- [X] T006 [P] Unit test for Coordinate.mapRegion() helper in `/iosApp/iosAppTests/Domain/Models/CoordinateTests.swift` (verify 20km span calculation)
 
 **Implementation**:
-- [ ] T007 Create MapPreviewView.Model enum in `/iosApp/iosApp/Features/LandingPage/Views/Components/MapPreviewView_Model.swift` (3 cases: loading, map with region+onTap, permissionRequired with message+onGoToSettings)
-- [ ] T008 Implement Equatable for MapPreviewView.Model (compare by coordinates and messages, ignore closures)
-- [ ] T009 Create MapPreviewView in `/iosApp/iosApp/Features/LandingPage/Views/Components/MapPreviewView.swift` (SwiftUI Map with interactionModes: [], overlay with tap gesture)
-- [ ] T010 Add accessibility identifiers to MapPreviewView elements (.accessibilityIdentifier("landingPage.mapPreview"), "landingPage.mapPreview.settings")
-- [ ] T011 Add SwiftDoc to MapPreviewView.Model (document each case purpose)
-- [ ] T012 Add SwiftDoc to MapPreviewView (document component purpose and interaction pattern)
+- [X] T007 Create MapPreviewView.Model enum in `/iosApp/iosApp/Features/LandingPage/Views/Components/MapPreviewView_Model.swift` (3 cases: loading, map with region+onTap, permissionRequired with message+onGoToSettings)
+- [X] T008 Implement Equatable for MapPreviewView.Model (compare by coordinates and messages, ignore closures)
+- [X] T009 Create MapPreviewView in `/iosApp/iosApp/Features/LandingPage/Views/Components/MapPreviewView.swift` (SwiftUI Map with interactionModes: [], overlay with tap gesture)
+- [X] T010 Add accessibility identifiers to MapPreviewView elements (.accessibilityIdentifier("landingPage.mapPreview"), "landingPage.mapPreview.settings")
+- [X] T011 Add SwiftDoc to MapPreviewView.Model (document each case purpose)
+- [X] T012 Add SwiftDoc to MapPreviewView (document component purpose and interaction pattern)
 
 **Checkpoint**: MapPreviewView component ready, tests pass
 
@@ -60,18 +60,18 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 **Purpose**: Integrate map preview logic into LandingPageViewModel
 
 **iOS Unit Tests** (TDD - Write FIRST, ensure they FAIL):
-- [ ] T013 [P] Unit test: loadData with authorized location should set .map model in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (assert mapPreviewModel has correct region)
-- [ ] T014 [P] Unit test: loadData with denied location should set .permissionRequired model in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (assert permissionRequired state)
-- [ ] T015 [P] Unit test: handleMapTap should log to console in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (manual verification via console output)
-- [ ] T015a [P] Unit test: map component should never call requestWhenInUseAuthorization in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (verify LocationService spy never received permission request call)
+- [X] T013 [P] Unit test: loadData with authorized location should set .map model in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (assert mapPreviewModel has correct region)
+- [X] T014 [P] Unit test: loadData with denied location should set .permissionRequired model in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (assert permissionRequired state)
+- [X] T015 [P] Unit test: handleMapTap should log to console in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (manual verification via console output)
+- [X] T015a [P] Unit test: map component should never call requestWhenInUseAuthorization in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift` (verify LocationService spy never received permission request call)
 
 **Implementation**:
-- [ ] T016 Add `@Published var mapPreviewModel: MapPreviewView.Model = .loading` property to `/iosApp/iosApp/Features/LandingPage/LandingPageViewModel.swift`
-- [ ] T017 Implement `updateMapPreviewModel(location:)` private method in LandingPageViewModel (sets .map if location available, .permissionRequired otherwise)
-- [ ] T018 Implement `handleMapTap()` private method in LandingPageViewModel (prints log message for now)
-- [ ] T019 Modify `loadData()` in LandingPageViewModel to call `updateMapPreviewModel` after location permissions resolved
-- [ ] T020 Add SwiftDoc to mapPreviewModel property (document purpose and state flow)
-- [ ] T021 Add SwiftDoc to updateMapPreviewModel and handleMapTap methods (document behavior)
+- [X] T016 Add `@Published var mapPreviewModel: MapPreviewView.Model = .loading` property to `/iosApp/iosApp/Features/LandingPage/LandingPageViewModel.swift`
+- [X] T017 Implement `updateMapPreviewModel(location:)` private method in LandingPageViewModel (sets .map if location available, .permissionRequired otherwise)
+- [X] T018 Implement `handleMapTap()` private method in LandingPageViewModel (prints log message for now)
+- [X] T019 Modify `loadData()` in LandingPageViewModel to call `updateMapPreviewModel` after location permissions resolved
+- [X] T020 Add SwiftDoc to mapPreviewModel property (document purpose and state flow)
+- [X] T021 Add SwiftDoc to updateMapPreviewModel and handleMapTap methods (document behavior)
 
 **Checkpoint**: ViewModel logic complete, unit tests pass, 80% coverage verified
 
@@ -81,8 +81,8 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 
 **Purpose**: Add MapPreviewView to LandingPageView layout
 
-- [ ] T022 Add MapPreviewView between HeroPanelView and ListHeaderRowView in `/iosApp/iosApp/Features/LandingPage/LandingPageView.swift` (16:9 aspect ratio, horizontal padding 16pt, vertical padding 16pt)
-- [ ] T023 Pass `viewModel.mapPreviewModel` to MapPreviewView
+- [X] T022 Add MapPreviewView between HeroPanelView and ListHeaderRowView in `/iosApp/iosApp/Features/LandingPage/LandingPageView.swift` (16:9 aspect ratio, horizontal padding 16pt, vertical padding 16pt)
+- [X] T023 Pass `viewModel.mapPreviewModel` to MapPreviewView
 
 **Checkpoint**: Map preview visible in LandingPage, all states render correctly
 
@@ -92,7 +92,7 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 
 **Purpose**: Final checks and manual testing
 
-- [ ] T024 Run unit tests: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
+- [X] T024 Run unit tests: `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
 - [ ] T025 Verify 80% code coverage for LandingPageViewModel and MapPreviewView components
 - [ ] T026 Manual test: Map preview appears between Hero panel and Recent Reports
 - [ ] T027 Manual test: Map shows 16:9 aspect ratio, full width minus padding
@@ -104,7 +104,7 @@ description: "Task list for iOS Map Preview Component (KAN-30)"
 - [ ] T033 Manual test: Accessibility identifiers present for E2E testing
 - [ ] T033a Manual test: App background/foreground transition preserves map state (map region remains unchanged)
 - [ ] T034 [P] Run SwiftLint and fix violations (if configured)
-- [ ] T035 Update quickstart.md if any implementation details changed
+- [X] T035 Update quickstart.md if any implementation details changed
 
 **Checkpoint**: Feature complete and verified ✅
 

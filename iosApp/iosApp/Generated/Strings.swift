@@ -259,6 +259,14 @@ public enum L10n {
       }
     }
   }
+  public enum MapPreview {
+    public enum Permission {
+      /// MARK: - Map Preview
+      public static let message = L10n.tr("Localizable", "mapPreview.permission.message", fallback: "Enable location to see nearby area.")
+      /// Go to Settings
+      public static let settingsButton = L10n.tr("Localizable", "mapPreview.permission.settingsButton", fallback: "Go to Settings")
+    }
+  }
   public enum MicrochipNumber {
     /// Continue
     public static let continueButton = L10n.tr("Localizable", "microchipNumber.continueButton", fallback: "Continue")
