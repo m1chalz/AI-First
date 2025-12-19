@@ -276,3 +276,4 @@
 
 "mapPreview.permission.message" = "Enable location to see nearby area.";
 "mapPreview.permission.settingsButton" = "Go to Settings";
+"mapPreview.tapHint" = "Tap to view interactive map";

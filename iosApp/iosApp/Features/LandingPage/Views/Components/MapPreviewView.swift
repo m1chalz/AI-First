@@ -53,19 +53,37 @@ struct MapPreviewView: View {
         pins: [PinModel],
         onTap: @escaping () -> Void
     ) -> some View {
-        Map(initialPosition: .region(region), interactionModes: []) {
-            ForEach(pins) { pin in
-                Marker("", coordinate: pin.clLocationCoordinate)
-                    .tint(.red)
+        ZStack {
+            Map(initialPosition: .region(region), interactionModes: []) {
+                ForEach(pins) { pin in
+                    Marker("", coordinate: pin.clLocationCoordinate)
+                        .tint(.red)
+                }
             }
+            .disabled(true)
+            .allowsHitTesting(false)
+            
+            // Centered tap hint bubble
+            tapHintBubble
         }
-        .disabled(true)
-        .allowsHitTesting(false)
         .overlay {
             Color.clear
                 .contentShape(Rectangle())
                 .onTapGesture { onTap() }
         }
+    }
+    
+    private var tapHintBubble: some View {
+        Text(L10n.MapPreview.tapHint)
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(.primary)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                Capsule()
+                    .fill(Color(.systemBackground))
+                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+            )
     }
     
     private func permissionView(message: String, onGoToSettings: @escaping () -> Void) -> some View {

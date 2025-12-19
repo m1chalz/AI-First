@@ -276,3 +276,4 @@
 
 "mapPreview.permission.message" = "Włącz lokalizację, aby zobaczyć okolicę.";
 "mapPreview.permission.settingsButton" = "Przejdź do Ustawień";
+"mapPreview.tapHint" = "Dotknij, aby zobaczyć mapę";

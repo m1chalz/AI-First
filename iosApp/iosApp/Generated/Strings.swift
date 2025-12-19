@@ -260,6 +260,8 @@ public enum L10n {
     }
   }
   public enum MapPreview {
+    /// Tap to view interactive map
+    public static let tapHint = L10n.tr("Localizable", "mapPreview.tapHint", fallback: "Tap to view interactive map")
     public enum Permission {
       /// MARK: - Map Preview
       public static let message = L10n.tr("Localizable", "mapPreview.permission.message", fallback: "Enable location to see nearby area.")
