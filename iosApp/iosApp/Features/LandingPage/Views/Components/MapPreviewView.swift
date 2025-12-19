@@ -33,8 +33,8 @@ struct MapPreviewView: View {
         case .loading:
             loadingView
             
-        case .map(let region, let onTap):
-            mapView(region: region, onTap: onTap)
+        case .map(let region, let pins, let onTap):
+            mapView(region: region, pins: pins, onTap: onTap)
             
         case .permissionRequired(let message, let onGoToSettings):
             permissionView(message: message, onGoToSettings: onGoToSettings)
@@ -48,15 +48,24 @@ struct MapPreviewView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    private func mapView(region: MKCoordinateRegion, onTap: @escaping () -> Void) -> some View {
-        Map(coordinateRegion: .constant(region), interactionModes: [])
-            .disabled(true)
-            .allowsHitTesting(false)
-            .overlay {
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture { onTap() }
+    private func mapView(
+        region: MKCoordinateRegion,
+        pins: [PinModel],
+        onTap: @escaping () -> Void
+    ) -> some View {
+        Map(initialPosition: .region(region), interactionModes: []) {
+            ForEach(pins) { pin in
+                Marker("", coordinate: pin.clLocationCoordinate)
+                    .tint(.red)
             }
+        }
+        .disabled(true)
+        .allowsHitTesting(false)
+        .overlay {
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture { onTap() }
+        }
     }
     
     private func permissionView(message: String, onGoToSettings: @escaping () -> Void) -> some View {
@@ -96,6 +105,20 @@ struct MapPreviewView: View {
                 latitudinalMeters: 20_000,
                 longitudinalMeters: 20_000
             ),
+            pins: [
+                MapPreviewView.PinModel(
+                    id: "1",
+                    coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122)
+                ),
+                MapPreviewView.PinModel(
+                    id: "2",
+                    coordinate: Coordinate(latitude: 52.2350, longitude: 21.0200)
+                ),
+                MapPreviewView.PinModel(
+                    id: "3",
+                    coordinate: Coordinate(latitude: 52.2200, longitude: 21.0050)
+                )
+            ],
             onTap: { print("Map tapped") }
         )
     )

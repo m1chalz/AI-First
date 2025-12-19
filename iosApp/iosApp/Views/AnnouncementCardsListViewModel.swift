@@ -38,13 +38,8 @@ class AnnouncementCardsListViewModel: ObservableObject {
     // MARK: - Query Configuration
     
     /// Query configuration - nil means "don't fetch yet".
-    /// Setting triggers automatic reload.
-    var query: AnnouncementListQuery? {
-        didSet {
-            loadTask?.cancel()
-            loadTask = Task { await loadAnnouncements() }
-        }
-    }
+    /// Use `loadWithQuery(_:)` to set query and load data.
+    private var query: AnnouncementListQuery?
     
     // MARK: - Task Management
     
@@ -70,6 +65,18 @@ class AnnouncementCardsListViewModel: ObservableObject {
     
     deinit {
         loadTask?.cancel()
+    }
+    
+    // MARK: - Public Methods
+    
+    /// Sets query and loads announcements.
+    /// Awaits until loading completes, so caller can use results immediately after.
+    ///
+    /// - Parameter query: Query configuration for filtering and sorting
+    func loadWithQuery(_ query: AnnouncementListQuery) async {
+        loadTask?.cancel()
+        self.query = query
+        await loadAnnouncements()
     }
     
     // MARK: - User Actions

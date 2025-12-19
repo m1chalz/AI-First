@@ -32,14 +32,14 @@ extension LocationPermissionStatus {
 /// **Autonomous Component Pattern**:
 /// - LandingPageViewModel manages permissions and coordinates list loading
 /// - All list state (`cardViewModels`, `isLoading`, `errorMessage`) managed by `listViewModel`
-/// - Parent can trigger reload via `listViewModel.query = ...`
+/// - Parent triggers reload via `await listViewModel.loadWithQuery(...)`
 ///
 /// **Loading Flow**:
 /// 1. LandingPageView has `.task { await viewModel.loadData() }`
 /// 2. `loadData()` fetches location from LocationPermissionHandler
 /// 3. Shows permission popup if needed (once per session)
-/// 4. `loadData()` sets `listViewModel.query = queryWithLocation`
-/// 5. Child ViewModel automatically reloads with new query
+/// 4. `loadData()` calls `await listViewModel.loadWithQuery(...)` and waits for completion
+/// 5. Updates map preview with pins from loaded announcements
 ///
 /// **Permission Change Handling**:
 /// - Handler observes both real-time stream AND foreground notifications
@@ -158,7 +158,8 @@ class LandingPageViewModel: ObservableObject {
     /// 1. Requests location from LocationPermissionHandler
     /// 2. Updates location state and shows permission popup if needed
     /// 3. Creates landing page query with location (or nil if unavailable)
-    /// 4. Sets query on child ViewModel (triggers automatic reload)
+    /// 4. Loads announcements via child ViewModel (awaits completion)
+    /// 5. Updates map preview with pins from loaded announcements
     func loadData() async {
         // Parent handles location permissions
         let result = await locationHandler.requestLocationWithPermissions()
@@ -173,17 +174,28 @@ class LandingPageViewModel: ObservableObject {
             hasShownPermissionAlert = true
         }
         
-        // Set query on child ViewModel (triggers automatic reload)
+        // Load announcements and wait for completion
         let queryWithLocation = AnnouncementListQuery.landingPageQuery(location: result.location)
-        listViewModel.query = queryWithLocation
+        await listViewModel.loadWithQuery(queryWithLocation)
         
-        // Update map preview model based on location availability
+        // Update map preview model with pins from loaded announcements
         updateMapPreviewModel(location: result.location)
     }
     
     // MARK: - Map Preview Methods
     
-    /// Updates map preview model based on location availability.
+    /// Updates map preview model based on location availability and loaded announcements.
+    ///
+    /// Creates pin models from `listViewModel.cardViewModels` for map display.
+    /// Each announcement becomes a pin at its coordinate location.
+    ///
+    /// **Prerequisites**: Call AFTER `listViewModel.loadWithQuery()` completes,
+    /// otherwise `cardViewModels` will be empty and no pins will appear.
+    ///
+    /// **State transitions**:
+    /// - Location available → `.map(region:pins:onTap:)` with pins from announcements
+    /// - Location unavailable → `.permissionRequired(message:onGoToSettings:)`
+    ///
     /// - Parameter location: User's current location (nil if unavailable)
     private func updateMapPreviewModel(location: Coordinate?) {
         guard let location else {
@@ -194,8 +206,17 @@ class LandingPageViewModel: ObservableObject {
             return
         }
         
+        // Create pin models from loaded announcements
+        let pins = listViewModel.cardViewModels.map { cardVM in
+            MapPreviewView.PinModel(
+                id: cardVM.id,
+                coordinate: cardVM.announcement.coordinate
+            )
+        }
+        
         mapPreviewModel = .map(
             region: location.mapRegion(),
+            pins: pins,
             onTap: { [weak self] in self?.handleMapTap() }
         )
     }
@@ -222,12 +243,14 @@ class LandingPageViewModel: ObservableObject {
     }
     
     /// Continues without location when user dismisses permission popup.
-    /// Sets query without location on child ViewModel (triggers reload).
+    /// Loads announcements without location on child ViewModel.
     func continueWithoutLocation() {
         showPermissionDeniedAlert = false
         
-        // Set query without location on child ViewModel (triggers automatic reload)
+        // Load announcements without location
         let queryWithoutLocation = AnnouncementListQuery.landingPageQuery(location: nil)
-        listViewModel.query = queryWithoutLocation
+        Task {
+            await listViewModel.loadWithQuery(queryWithoutLocation)
+        }
     }
 }

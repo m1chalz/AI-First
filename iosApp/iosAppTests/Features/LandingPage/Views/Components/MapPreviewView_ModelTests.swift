@@ -27,8 +27,8 @@ final class MapPreviewView_ModelTests: XCTestCase {
             latitudinalMeters: 20_000,
             longitudinalMeters: 20_000
         )
-        let model1 = MapPreviewView.Model.map(region: region, onTap: { })
-        let model2 = MapPreviewView.Model.map(region: region, onTap: { })
+        let model1 = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
+        let model2 = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
         
         // When / Then
         XCTAssertEqual(model1, model2, "Map states with same region should be equal (closures ignored)")
@@ -46,8 +46,8 @@ final class MapPreviewView_ModelTests: XCTestCase {
             latitudinalMeters: 20_000,
             longitudinalMeters: 20_000
         )
-        let model1 = MapPreviewView.Model.map(region: region1, onTap: { })
-        let model2 = MapPreviewView.Model.map(region: region2, onTap: { })
+        let model1 = MapPreviewView.Model.map(region: region1, pins: [], onTap: { })
+        let model2 = MapPreviewView.Model.map(region: region2, pins: [], onTap: { })
         
         // When / Then
         XCTAssertNotEqual(model1, model2, "Map states with different regions should not be equal")
@@ -85,6 +85,85 @@ final class MapPreviewView_ModelTests: XCTestCase {
         XCTAssertNotEqual(model1, model2, "Permission states with different messages should not be equal")
     }
     
+    // MARK: - T005: Map State with Pins Equality Tests
+    
+    func test_map_equatable_whenSameRegionAndPins_shouldBeEqual() {
+        // Given
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 52.23, longitude: 21.01),
+            latitudinalMeters: 20_000,
+            longitudinalMeters: 20_000
+        )
+        let pins = [
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01)),
+            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02))
+        ]
+        
+        let model1 = MapPreviewView.Model.map(region: region, pins: pins, onTap: { })
+        let model2 = MapPreviewView.Model.map(region: region, pins: pins, onTap: { })
+        
+        // When / Then
+        XCTAssertEqual(model1, model2, "Map states with same region and pins should be equal")
+    }
+    
+    func test_map_equatable_whenDifferentPins_shouldNotBeEqual() {
+        // Given
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 52.23, longitude: 21.01),
+            latitudinalMeters: 20_000,
+            longitudinalMeters: 20_000
+        )
+        let pins1 = [
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01))
+        ]
+        let pins2 = [
+            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02))
+        ]
+        
+        let model1 = MapPreviewView.Model.map(region: region, pins: pins1, onTap: { })
+        let model2 = MapPreviewView.Model.map(region: region, pins: pins2, onTap: { })
+        
+        // When / Then
+        XCTAssertNotEqual(model1, model2, "Map states with different pins should not be equal")
+    }
+    
+    func test_map_equatable_whenEmptyVsNonEmptyPins_shouldNotBeEqual() {
+        // Given
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 52.23, longitude: 21.01),
+            latitudinalMeters: 20_000,
+            longitudinalMeters: 20_000
+        )
+        let pins = [
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01))
+        ]
+        
+        let model1 = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
+        let model2 = MapPreviewView.Model.map(region: region, pins: pins, onTap: { })
+        
+        // When / Then
+        XCTAssertNotEqual(model1, model2, "Map with empty pins should not equal map with pins")
+    }
+    
+    func test_map_defaultPins_shouldBeEmptyArray() {
+        // Given
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 52.23, longitude: 21.01),
+            latitudinalMeters: 20_000,
+            longitudinalMeters: 20_000
+        )
+        
+        // When - using explicit empty pins (default value behavior)
+        let model = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
+        
+        // Then - should have empty pins
+        if case .map(_, let pins, _) = model {
+            XCTAssertTrue(pins.isEmpty, "Default pins should be empty array")
+        } else {
+            XCTFail("Expected .map case")
+        }
+    }
+    
     // MARK: - Cross-State Equality Tests
     
     func test_equatable_whenDifferentCases_shouldNotBeEqual() {
@@ -95,7 +174,7 @@ final class MapPreviewView_ModelTests: XCTestCase {
             latitudinalMeters: 20_000,
             longitudinalMeters: 20_000
         )
-        let mapModel = MapPreviewView.Model.map(region: region, onTap: { })
+        let mapModel = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
         let permissionModel = MapPreviewView.Model.permissionRequired(
             message: "Enable location",
             onGoToSettings: { }
