@@ -149,9 +149,9 @@
 ### Tests for User Story 3 (MANDATORY) ✅
 
 **Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T046 [P] [US3] RED: Write failing unit test for `useMapPins` loading state in `/webApp/src/hooks/__test__/use-map-pins.test.ts` (test: loading is true during fetch, false after success/error)
-- [ ] T047 [P] [US3] RED: Write failing unit test for `useMapPins` error state in `/webApp/src/hooks/__test__/use-map-pins.test.ts` (test: error is set when fetch fails, error is null on success)
-- [ ] T048 [P] [US3] RED: Write failing component test for loading/error UI in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: renders loading spinner when loading=true, renders error message when error is set, retry button calls retry function)
+- [X] T046 [P] [US3] RED: Write failing unit test for `useMapPins` loading state in `/webApp/src/hooks/__test__/use-map-pins.test.ts` (test: loading is true during fetch, false after success/error)
+- [X] T047 [P] [US3] RED: Write failing unit test for `useMapPins` error state in `/webApp/src/hooks/__test__/use-map-pins.test.ts` (test: error is set when fetch fails, error is null on success)
+- [X] T048 [P] [US3] RED: Write failing component test for loading/error UI in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: renders loading spinner when loading=true, renders error message when error is set, retry button calls retry function)
 
 **End-to-End Tests**:
 - [ ] T049 [P] [US3] Add Gherkin scenario to `/e2e-tests/java/src/test/resources/features/web/064-web-map-pins.feature` (Scenario: Handle pin loading errors with retry)
@@ -161,13 +161,13 @@
 ### Implementation for User Story 3
 
 **Web** (Full Stack Implementation - TDD: Red-Green-Refactor):
-- [ ] T052 [US3] GREEN: Update `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T048 - render loading overlay when loading=true, render error overlay when error is set, add retry button that re-triggers fetch)
-- [ ] T053 [US3] REFACTOR: Extract loading and error overlays to separate components in `/webApp/src/components/map/` (MapPinLoadingOverlay.tsx, MapPinErrorOverlay.tsx) if they have >10 lines each
-- [ ] T054 [US3] Add `data-testid` attributes to loading/error elements (`landingPage.map.pinsLoading`, `landingPage.map.pinsError`, `landingPage.map.pinsRetry`)
-- [ ] T055 [US3] Add CSS styling for loading/error overlays (position in top-right corner, semi-transparent background, does not obscure map controls)
-- [ ] T056 [US3] Implement retry mechanism in `useMapPins` hook (add retry counter to dependencies, increment on retry button click, triggers re-fetch)
-- [ ] T057 [US3] Run `npm test --coverage` and verify 80% coverage maintained for `use-map-pins` and `MapPinLayer`
-- [ ] T058 [P] [US3] Run `npm run lint` and fix ESLint violations
+- [X] T052 [US3] GREEN: Update `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T048 - render loading overlay when loading=true, render error overlay when error is set, add retry button that re-triggers fetch)
+- [X] T053 [US3] REFACTOR: Extract loading and error overlays to separate components in `/webApp/src/components/map/` (MapPinLoadingOverlay.tsx, MapPinErrorOverlay.tsx) if they have >10 lines each
+- [X] T054 [US3] Add `data-testid` attributes to loading/error elements (`landingPage.map.pinsLoading`, `landingPage.map.pinsError`, `landingPage.map.pinsRetry`)
+- [X] T055 [US3] Add CSS styling for loading/error overlays (position in top-right corner, semi-transparent background, does not obscure map controls)
+- [X] T056 [US3] Implement retry mechanism in `useMapPins` hook (add retry counter to dependencies, increment on retry button click, triggers re-fetch)
+- [X] T057 [US3] Run `npm test --coverage` and verify 80% coverage maintained for `use-map-pins` and `MapPinLayer`
+- [X] T058 [P] [US3] Run `npm run lint` and fix ESLint violations
 - [ ] T059 [US3] Run E2E tests for US3: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
 - [ ] T060 [US3] Manual testing: Throttle network (DevTools), verify loading indicator, stop backend server, verify error message and retry button
 
