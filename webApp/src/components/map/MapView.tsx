@@ -4,6 +4,7 @@ import { useMapState } from '../../hooks/use-map-state';
 import config from '../../config/config';
 import { MapErrorState } from './MapErrorState';
 import { MapPermissionPrompt } from './MapPermissionPrompt';
+import { MapPinLayer } from './MapPinLayer';
 import styles from './MapView.module.css';
 
 function MapHeader() {
@@ -64,6 +65,7 @@ export function MapView() {
         )}
         <MapContainer center={[center.lat, center.lng]} zoom={zoom} className={styles.map} data-testid="landingPage.map">
           <TileLayer url={config.map.tileLayerUrl} attribution={config.map.attribution} />
+          <MapPinLayer userLocation={center} />
         </MapContainer>
       </div>
     </section>

@@ -63,10 +63,10 @@ vi.mock('leaflet', () => ({
 }));
 
 vi.mock('react-leaflet', () => ({
-  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map-container">{children}</div>,
-  TileLayer: () => <div data-testid="tile-layer" />,
-  Marker: ({ children }: { children?: React.ReactNode }) => <div data-testid="marker">{children}</div>,
-  Popup: ({ children }: { children: React.ReactNode }) => <div data-testid="popup">{children}</div>,
+  MapContainer: vi.fn(({ children }) => children),
+  TileLayer: vi.fn(() => null),
+  Marker: vi.fn(({ children }) => children),
+  Popup: vi.fn(({ children }) => children),
   useMap: vi.fn(() => mockMap()),
   useMapEvents: vi.fn()
 }));

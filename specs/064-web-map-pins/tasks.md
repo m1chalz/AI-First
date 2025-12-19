@@ -74,9 +74,9 @@
 > **NOTE: Write these tests FIRST (TDD workflow), ensure they FAIL before implementation**
 
 **Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T011 [P] [US1] RED: Write failing unit test for `useMapPins` hook in `/webApp/src/hooks/__test__/use-map-pins.test.ts` (test: returns empty pins initially, fetches pins when userLocation provided, handles AbortController cleanup)
-- [ ] T012 [P] [US1] RED: Write failing unit test for `createPinIcon` helper in `/webApp/src/lib/__test__/map-pin-helpers.test.ts` (test: returns Leaflet divIcon with correct color for missing/found status)
-- [ ] T013 [P] [US1] RED: Write failing component test for `MapPinLayer` in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: renders markers for each pin, calls API with userLocation)
+- [X] T011 [P] [US1] RED: Write failing unit test for `useMapPins` hook in `/webApp/src/hooks/__tests__/use-map-pins.test.ts` (test: returns empty pins initially, fetches pins when userLocation provided, handles AbortController cleanup)
+- [X] T012 [P] [US1] RED: Write failing unit test for `createPinIcon` helper in `/webApp/src/lib/__test__/map-pin-helpers.test.ts` (test: returns Leaflet divIcon with correct color for missing/found status)
+- [X] T013 [P] [US1] RED: Write failing component test for `MapPinLayer` in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: renders markers for each pin, calls API with userLocation)
 
 **End-to-End Tests**:
 - [ ] T014 [P] [US1] Create Gherkin feature file in `/e2e-tests/java/src/test/resources/features/web/064-web-map-pins.feature` (Scenario: Display pins on landing page map)
@@ -86,18 +86,18 @@
 ### Implementation for User Story 1
 
 **Web** (Full Stack Implementation - TDD: Red-Green-Refactor):
-- [ ] T017 [P] [US1] Create `PetPin` TypeScript interface in `/webApp/src/models/pet-pin.ts` (id, name, species, status, latitude, longitude, photoUrl, phoneNumber, email, createdAt)
-- [ ] T018 [P] [US1] Create `MapPinsState` TypeScript interface in `/webApp/src/models/map-pins-state.ts` (pins, loading, error)
-- [ ] T019 [US1] GREEN: Implement `createPinIcon` helper in `/webApp/src/lib/map-pin-helpers.ts` (minimal code to pass test T012 - use L.divIcon with SVG teardrop, color based on status: red #EF4444 for missing, blue #155DFC for found, white symbol: ! for missing, ✓ for found)
-- [ ] T020 [US1] REFACTOR: Improve `createPinIcon` code quality (extract SVG template, apply Clean Code principles)
-- [ ] T021 [US1] GREEN: Implement `useMapPins` hook in `/webApp/src/hooks/use-map-pins.ts` (minimal code to pass test T011 - accept userLocation param, fetch from `/api/v1/announcements?lat=X&lng=Y&range=10`, inline transformation to PetPin, return {pins, loading, error}, use AbortController)
-- [ ] T022 [US1] REFACTOR: Improve `useMapPins` code quality (extract error handling, apply Clean Code principles)
-- [ ] T023 [US1] GREEN: Implement `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T013 - call useMapPins hook, map pins to React-Leaflet <Marker> components with createPinIcon, render loading/error overlays)
-- [ ] T024 [US1] REFACTOR: Improve `MapPinLayer` code quality (extract loading/error UI to separate components if needed)
-- [ ] T025 [US1] Add `data-testid` attributes to all interactive elements in MapPinLayer (each marker: `landingPage.map.pin.{petId}`, loading: `landingPage.map.pinsLoading`, error: `landingPage.map.pinsError`)
-- [ ] T026 [US1] Integrate `MapPinLayer` into existing landing page map component (render within map container, pass userLocation from map center)
+- [X] T017 [P] [US1] Create `PetPin` TypeScript interface in `/webApp/src/models/pet-pin.ts` (id, name, species, status, latitude, longitude, photoUrl, phoneNumber, email, createdAt)
+- [X] T018 [P] [US1] Create `MapPinsState` TypeScript interface in `/webApp/src/models/map-pins-state.ts` (pins, loading, error)
+- [X] T019 [US1] GREEN: Implement `createPinIcon` helper in `/webApp/src/lib/map-pin-helpers.ts` (minimal code to pass test T012 - use L.divIcon with SVG teardrop, color based on status: red #EF4444 for missing, blue #155DFC for found, white symbol: ! for missing, ✓ for found)
+- [X] T020 [US1] REFACTOR: Improve `createPinIcon` code quality (extract SVG template, apply Clean Code principles)
+- [X] T021 [US1] GREEN: Implement `useMapPins` hook in `/webApp/src/hooks/use-map-pins.ts` (minimal code to pass test T011 - accept userLocation param, fetch from `/api/v1/announcements?lat=X&lng=Y&range=10`, inline transformation to PetPin, return {pins, loading, error}, use AbortController)
+- [X] T022 [US1] REFACTOR: Improve `useMapPins` code quality (extract error handling, apply Clean Code principles)
+- [X] T023 [US1] GREEN: Implement `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T013 - call useMapPins hook, map pins to React-Leaflet <Marker> components with createPinIcon, render loading/error overlays)
+- [X] T024 [US1] REFACTOR: Improve `MapPinLayer` code quality (extract loading/error UI to separate components if needed)
+- [X] T025 [US1] Add `data-testid` attributes to all interactive elements in MapPinLayer (each marker: `landingPage.map.pin.{petId}`, loading: `landingPage.map.pinsLoading`, error: `landingPage.map.pinsError`)
+- [X] T026 [US1] Integrate `MapPinLayer` into existing landing page map component (render within map container, pass userLocation from map center)
 - [ ] T027 [P] [US1] Add JSDoc documentation to `useMapPins` hook (document params, return values, AbortController cleanup)
-- [ ] T028 [US1] Run `npm test --coverage` and verify 80% coverage for `use-map-pins` and `map-pin-helpers`
+- [X] T028 [US1] Run `npm test --coverage` and verify 80% coverage for `use-map-pins` and `map-pin-helpers`
 - [ ] T029 [P] [US1] Run `npm run lint` and fix ESLint violations
 - [ ] T030 [US1] Run E2E tests for US1: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
 - [ ] T031 [US1] Manual testing: Open landing page, verify pins appear, zoom/pan and verify pins update
