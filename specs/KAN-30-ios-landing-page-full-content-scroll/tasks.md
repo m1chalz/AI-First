@@ -41,11 +41,11 @@
 
 **Purpose**: Verify prerequisites and project readiness
 
-- [ ] T001 Verify Xcode with iOS 18 SDK is installed and configured
-- [ ] T002 Verify iPhone 16 Simulator is configured and accessible
-- [ ] T003 Verify branch `KAN-30-ios-landing-page-full-content-scroll` is checked out
-- [ ] T004 Verify iOS project builds successfully in current state
-- [ ] T005 Verify E2E test infrastructure is functional (Appium + Maven + Java 21)
+- [x] T001 Verify Xcode with iOS 18 SDK is installed and configured
+- [x] T002 Verify iPhone 16 Simulator is configured and accessible
+- [x] T003 Verify branch `KAN-30-ios-landing-page-full-content-scroll` is checked out
+- [x] T004 Verify iOS project builds successfully in current state
+- [x] T005 Verify E2E test infrastructure is functional (Appium + Maven + Java 21)
 
 ---
 
@@ -73,12 +73,12 @@
 
 **End-to-End Tests**:
 
-- [ ] T010 [P] [US1] [US2] Create E2E feature file in `/e2e-tests/java/src/test/resources/features/mobile/landing-page-scroll.feature` (Gherkin scenarios per quickstart.md)
-- [ ] T011 [P] [US1] [US2] Create E2E step definitions in `/e2e-tests/java/src/test/java/com/petspot/e2e/steps/mobile/LandingPageScrollSteps.java` (Java + Appium)
-- [ ] T012 [US1] Scenario: "Scroll entire landing page content continuously" (verify hero/header/list scroll together, no nested scroll)
-- [ ] T013 [US2] Scenario: "Interactive elements work during and after scrolling" (tap card after scrolling, verify navigation)
-- [ ] T014 [US1] Scenario: "Scroll position preserved during state changes" (scroll down, trigger reload, verify position maintained)
-- [ ] T015 [US1] Scenario: "Short content does not cause blank space" (edge case: 2 announcements, verify no excessive blank space)
+- [x] T010 [P] [US1] [US2] Create E2E feature file in `/e2e-tests/java/src/test/resources/features/mobile/landing-page-scroll.feature` (Gherkin scenarios per quickstart.md)
+- [x] T011 [P] [US1] [US2] Create E2E step definitions in `/e2e-tests/java/src/test/java/com/intive/aifirst/petspot/e2e/steps/mobile/LandingPageScrollSteps.java` (Java + Appium)
+- [x] T012 [US1] Scenario: "Scroll entire landing page content continuously" (verify hero/header/list scroll together, no nested scroll)
+- [x] T013 [US2] Scenario: "Interactive elements work during and after scrolling" (tap card after scrolling, verify navigation)
+- [x] T014 [US1] Scenario: "Scroll position preserved during state changes" (scroll down, trigger reload, verify position maintained)
+- [x] T015 [US1] Scenario: "Short content does not cause blank space" (edge case: 2 announcements, verify no excessive blank space)
 - [ ] T016 [US1] [US2] Run E2E tests: `cd /e2e-tests/java && mvn test -Dtest=IosTestRunner`
 - [ ] T017 [US1] [US2] Verify all E2E scenarios pass (view report at `/e2e-tests/java/target/cucumber-reports/ios/index.html`)
 
@@ -88,14 +88,14 @@
 
 > **CRITICAL**: This is UI-only refactoring. NO changes to ViewModels, Coordinators, Repositories, Domain models, or DI setup.
 
-- [ ] T018 [US1] [US2] Modify LandingPageView.swift at `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift`:
+- [x] T018 [US1] [US2] Modify LandingPageView.swift at `/iosApp/iosApp/Features/LandingPage/Views/LandingPageView.swift`:
   - Replace `VStack` with `ScrollView { LazyVStack(spacing: 0) { ... } }`
   - Remove `.frame(maxHeight: .infinity)` from AnnouncementCardsListView
   - Add `hasOwnScrollView: false` parameter to AnnouncementCardsListView
   - Update SwiftDoc comments to reflect single ScrollView architecture
   - Preserve all existing modifiers (`.task`, `.alert`) and subviews (hero, header, list in same order)
 
-- [ ] T019 [US1] [US2] Modify AnnouncementCardsListView.swift at `/iosApp/iosApp/Views/AnnouncementCardsListView.swift`:
+- [x] T019 [US1] [US2] Modify AnnouncementCardsListView.swift at `/iosApp/iosApp/Views/AnnouncementCardsListView.swift`:
   - Add `hasOwnScrollView: Bool = true` parameter (default: true for backwards compatibility)
   - Add explicit `init` with `hasOwnScrollView` parameter
   - Extract `listContent` as computed property (LazyVStack with announcement cards)
@@ -103,9 +103,9 @@
   - Update SwiftDoc comments to document autonomous component pattern and scroll behavior
   - Preserve all existing state rendering (ZStack with loading/error/empty/success states)
 
-- [ ] T020 [P] [US1] [US2] Add SwiftDoc documentation to LandingPageView and AnnouncementCardsListView (update existing comments to reflect scroll architecture changes)
+- [x] T020 [P] [US1] [US2] Add SwiftDoc documentation to LandingPageView and AnnouncementCardsListView (update existing comments to reflect scroll architecture changes)
 
-- [ ] T021 [US1] [US2] Verify existing accessibility identifiers preserved (no changes to identifiers, verify manually in code review):
+- [x] T021 [US1] [US2] Verify existing accessibility identifiers preserved (no changes to identifiers, verify manually in code review):
   - `landingPage.heroPanel.*` (hero buttons)
   - `landingPage.listHeader.*` (list header actions)
   - `landingPage.announcementList.list` (list container)
