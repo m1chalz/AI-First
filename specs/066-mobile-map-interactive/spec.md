@@ -51,8 +51,8 @@ A user wants to see pins for missing animals in the visible map area so they can
 **Acceptance Scenarios**:
 
 1. **Given** the fullscreen map is open, **When** missing animal announcements exist in the visible area, **Then** pins are displayed at each missing animal’s last-seen location
-2. **Given** the fullscreen map is open, **When** no missing animal announcements exist in the visible area, **Then** the map shows an empty-state message
-3. **Given** the user changes the visible area (pan/zoom), **When** the map view updates, **Then** pins update to reflect missing animals in the visible area
+2. **Given** the fullscreen map is open, **When** no missing animal announcements exist in the visible area, **Then** the map is shown without pins and without an empty-state message
+3. **Given** the user changes the visible area (pan/zoom), **When** the user finishes the interaction, **Then** pins update to reflect missing animals in the visible area
 
 ---
 
@@ -78,6 +78,7 @@ A user wants to tap a pin and see a pop-up with details of the missing animal so
 - **Invalid coordinates**: Announcements with missing/invalid coordinates are not shown as pins
 - **High pin density**: Pins remain tappable even when close together
 - **Duplicate coordinates**: Multiple animals at the same coordinates remain discoverable (selection does not block access)
+- **Missing images**: If a pet photo is missing or fails to load, the details pop-up shows a placeholder image and remains usable
 
 ## Requirements *(mandatory)*
 
@@ -89,13 +90,15 @@ A user wants to tap a pin and see a pop-up with details of the missing animal so
 - **FR-004**: The fullscreen interactive map MUST support panning to display another area
 - **FR-005**: The fullscreen interactive map MUST display pins for missing animals in the visible map area
 - **FR-006**: Pins MUST be positioned using each missing animal’s last-seen coordinates
-- **FR-007**: When the visible map area changes (zoom/pan), pins MUST update to reflect missing animals in the visible area
+- **FR-007**: When the visible map area changes (zoom/pan), pins MUST update after the user finishes the interaction to reflect missing animals in the visible area
 - **FR-008**: Only missing-animal announcements (status “missing”) MUST be displayed as pins
 - **FR-009**: When the user taps a pin, the application MUST show a details pop-up for that missing animal
 - **FR-010**: The details pop-up MUST include at minimum: pet photo, pet name, species/type, last-seen date, description, and a way to contact the owner
+- **FR-014**: The pop-up contact information MUST include phone number and email address when available
+- **FR-015**: If the pet photo is missing or fails to load, the details pop-up MUST display a placeholder image
 - **FR-011**: The details pop-up MUST be dismissible and must not close fullscreen mode
 - **FR-012**: When loading pins fails, fullscreen mode MUST show a user-friendly error state with a retry action
-- **FR-013**: When retry is activated, the system MUST attempt to load pins again
+- **FR-013**: When retry is activated, the system MUST re-attempt loading pins for the current map viewport without requiring an app restart
 
 ### Key Entities *(include if feature involves data)*
 
@@ -116,3 +119,13 @@ A user wants to tap a pin and see a pop-up with details of the missing animal so
 
 - Missing animal announcements include last-seen coordinates suitable for pin placement.
 - The landing page preview (spec 062) exists and provides the entry point into fullscreen mode.
+
+## Clarifications
+
+### Session 2025-12-18
+
+- Q: When should pins refresh after pan/zoom in fullscreen mode? → A: Refresh after the user finishes the interaction (not continuously during pan/zoom).
+- Q: What should be shown when there are no pins in the visible area? → A: Show the map without pins and without an empty-state message.
+- Q: What should Retry do after pin loading fails? → A: Retry reloads pins for the current viewport without restarting the app.
+- Q: What contact information should be displayed in the pop-up? → A: Phone number and email address.
+- Q: How should missing pet photos be handled in the pop-up? → A: Show a placeholder image.
