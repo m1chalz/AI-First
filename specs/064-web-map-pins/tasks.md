@@ -96,9 +96,9 @@
 - [X] T024 [US1] REFACTOR: Improve `MapPinLayer` code quality (extract loading/error UI to separate components if needed)
 - [X] T025 [US1] Add `data-testid` attributes to all interactive elements in MapPinLayer (each marker: `landingPage.map.pin.{petId}`, loading: `landingPage.map.pinsLoading`, error: `landingPage.map.pinsError`)
 - [X] T026 [US1] Integrate `MapPinLayer` into existing landing page map component (render within map container, pass userLocation from map center)
-- [ ] T027 [P] [US1] Add JSDoc documentation to `useMapPins` hook (document params, return values, AbortController cleanup)
+- [X] T027 [P] [US1] Add JSDoc documentation to `useMapPins` hook (document params, return values, AbortController cleanup)
 - [X] T028 [US1] Run `npm test --coverage` and verify 80% coverage for `use-map-pins` and `map-pin-helpers`
-- [ ] T029 [P] [US1] Run `npm run lint` and fix ESLint violations
+- [X] T029 [P] [US1] Run `npm run lint` and fix ESLint violations
 - [ ] T030 [US1] Run E2E tests for US1: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
 - [ ] T031 [US1] Manual testing: Open landing page, verify pins appear, zoom/pan and verify pins update
 
@@ -179,12 +179,12 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T061 [P] Add comprehensive JSDoc to all exported functions in `/webApp/src/hooks/` and `/webApp/src/lib/` (only where purpose is not obvious from name)
-- [ ] T062 [P] Code cleanup: Remove console.logs, unused imports, dead code across all new files
-- [ ] T063 [P] Verify all test identifiers follow convention in FR-013 (landingPage.map.pin.{petId}, landingPage.map.popup, etc.)
-- [ ] T064 [P] Run full test suite: `npm test --coverage` and verify 80% coverage across all new files
+- [X] T061 [P] Add comprehensive JSDoc to all exported functions in `/webApp/src/hooks/` and `/webApp/src/lib/` (only where purpose is not obvious from name)
+- [X] T062 [P] Code cleanup: Remove console.logs, unused imports, dead code across all new files
+- [X] T063 [P] Verify all test identifiers follow convention in FR-013 (landingPage.map.pin.{petId}, landingPage.map.popup, etc.)
+- [X] T064 [P] Run full test suite: `npm test --coverage` and verify 80% coverage across all new files
 - [ ] T065 [P] Run full E2E suite: `mvn test -Dtest=WebTestRunner` and verify all scenarios pass
-- [ ] T066 [P] Verify pin markers match Figma design (colors: red #EF4444 for missing, blue #155DFC for found, teardrop shape, white border, drop shadow)
+- [X] T066 [P] Verify pin markers match Figma design (colors: red #EF4444 for missing, blue #155DFC for found, teardrop shape, white border, drop shadow)
 - [ ] T067 [P] Cross-browser testing: Test in Chrome, Firefox, Safari, Edge (latest 2 versions)
 - [ ] T068 [P] Accessibility audit: Verify pins and pop-ups have proper ARIA labels and keyboard navigation
 - [ ] T069 [P] Run quickstart.md validation: Follow steps in `/specs/064-web-map-pins/quickstart.md` and verify all commands work

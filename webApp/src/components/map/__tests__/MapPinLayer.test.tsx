@@ -3,25 +3,28 @@ import { render, screen } from '@testing-library/react';
 import { MapPinLayer } from '../MapPinLayer';
 import type { Announcement } from '../../../types/announcement';
 
+vi.mock('leaflet', () => ({
+  default: {
+    divIcon: vi.fn(() => ({ options: { className: 'pet-pin-marker' } }))
+  }
+}));
+
 vi.mock('../../../hooks/use-announcement-list', () => ({
   useAnnouncementList: vi.fn()
 }));
 
-import { useAnnouncementList } from '../../../hooks/use-announcement-list';
-
-const mockUseAnnouncementList = vi.mocked(useAnnouncementList);
-
 vi.mock('react-leaflet', () => ({
   Marker: vi.fn(({ children, position, icon }) => (
-    <div
-      data-testid={`marker-${position[0]}-${position[1]}`}
-      data-icon={icon?.options?.className}
-    >
+    <div data-testid={`marker-${position[0]}-${position[1]}`} data-icon={icon?.options?.className}>
       {children}
     </div>
   )),
   Popup: vi.fn(({ children }) => <div data-testid="popup">{children}</div>)
 }));
+
+import { useAnnouncementList } from '../../../hooks/use-announcement-list';
+
+const mockUseAnnouncementList = vi.mocked(useAnnouncementList);
 
 const createAnnouncement = (overrides = {}): Announcement => ({
   id: 'pin-1',

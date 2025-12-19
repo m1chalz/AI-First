@@ -29,7 +29,7 @@ const FOUND_PIN_ICON = createIcon(ANNOUNCEMENT_STATUS_BADGE_COLORS.FOUND, '✓')
 
 export function MapPinLayer() {
   const { announcements, isLoading, error } = useAnnouncementList();
-  const pins = announcements.filter(a => a.status !== 'CLOSED');
+  const pins = announcements.filter((a) => a.status !== 'CLOSED');
 
   return (
     <>
@@ -45,7 +45,7 @@ export function MapPinLayer() {
         </div>
       )}
 
-      {pins.map(pin => (
+      {pins.map((pin) => (
         <Marker
           key={pin.id}
           position={[pin.locationLatitude, pin.locationLongitude]}
@@ -59,24 +59,23 @@ export function MapPinLayer() {
                   src={`${config.apiBaseUrl}${pin.photoUrl}`}
                   alt={pin.petName || 'Unknown'}
                   className={styles.popupImage}
-                  onError={e => {
+                  onError={(e) => {
                     e.currentTarget.style.display = 'none';
-                    (e.currentTarget.parentElement?.querySelector(`.${styles.popupImagePlaceholder}`) as HTMLElement)?.classList.remove(styles.hidden);
+                    (e.currentTarget.parentElement?.querySelector(`.${styles.popupImagePlaceholder}`) as HTMLElement)?.classList.remove(
+                      styles.hidden
+                    );
                   }}
                 />
-                <div className={`${styles.popupImagePlaceholder} ${styles.hidden}`}>
-                  🐾
-                </div>
-                <span
-                  className={styles.statusBadge}
-                  style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}
-                >
+                <div className={`${styles.popupImagePlaceholder} ${styles.hidden}`}>🐾</div>
+                <span className={styles.statusBadge} style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}>
                   {pin.status}
                 </span>
               </div>
               <div className={styles.popupContent}>
                 <h3 className={styles.popupName}>{pin.petName || 'Unknown'}</h3>
-                <p className={styles.popupInfo}>{toPascalCase(pin.species)} | {formatDate(pin.lastSeenDate)}</p>
+                <p className={styles.popupInfo}>
+                  {toPascalCase(pin.species)} | {formatDate(pin.lastSeenDate)}
+                </p>
                 {pin.description && (
                   <p className={styles.popupDescription} data-testid="landingPage.map.popup.description">
                     {pin.description}
