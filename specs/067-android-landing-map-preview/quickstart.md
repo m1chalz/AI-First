@@ -21,15 +21,13 @@ Add to `composeApp/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    // Google Maps Compose (NEW)
-    implementation("com.google.maps.android:maps-compose:4.4.1")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    // Google Maps Compose (NEW - only new dependency needed)
+    implementation("com.google.maps.android:maps-compose:6.12.2")
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
     
-    // Accompanist Permissions (NEW) - for UI permission request
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
-    
-    // Location Services - NOT NEEDED (reusing existing LocationManager-based code)
-    // The app already has: GetCurrentLocationUseCase, CheckLocationPermissionUseCase, locationModule
+    // Already in project - NO CHANGES NEEDED:
+    // - accompanist-permissions (v0.37.3) - used in AnimalListScreen
+    // - Location services via native LocationManager (locationModule)
 }
 ```
 

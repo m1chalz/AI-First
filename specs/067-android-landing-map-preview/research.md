@@ -77,8 +77,8 @@ fun MapPreviewContent(
 
 ```kotlin
 // build.gradle.kts (module level)
-implementation("com.google.maps.android:maps-compose:4.4.1")
-implementation("com.google.android.gms:play-services-maps:18.2.0")
+implementation("com.google.maps.android:maps-compose:6.12.2")
+implementation("com.google.android.gms:play-services-maps:19.2.0")
 ```
 
 ### Zoom Calculation for 10km Radius
@@ -94,13 +94,14 @@ private fun calculateZoomFor10Km(): Float = 12f
 ## 2. Location Permission Handling
 
 ### Decision
-Use Accompanist Permissions library for declarative permission handling in Compose.
+**REUSE EXISTING** Accompanist Permissions setup from `AnimalListScreen`.
 
 ### Rationale
+- Already in project: `accompanist-permissions:0.37.3`
+- Already used in `AnimalListScreen.kt` with `rememberMultiplePermissionsState`
 - Compose-native API using `rememberPermissionState`
 - Handles permission rationale automatically
 - Integrates with composable lifecycle
-- Widely adopted pattern in the community
 
 ### Implementation Pattern
 
@@ -145,9 +146,11 @@ fun MapPreviewSection(
 
 ### Dependencies Required
 
+**NONE** - already in project:
+
 ```kotlin
-// build.gradle.kts (module level)
-implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+// Already in composeApp/build.gradle.kts
+implementation(libs.accompanist.permissions)  // v0.37.3
 ```
 
 ---
@@ -336,18 +339,13 @@ fun handleError(error: Throwable): MapPreviewUiState = when (error) {
 ```kotlin
 // build.gradle.kts (:composeApp)
 dependencies {
-    // Google Maps Compose (NEW)
-    implementation("com.google.maps.android:maps-compose:4.4.1")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    // Google Maps Compose (NEW - ONLY NEW DEPENDENCY)
+    implementation("com.google.maps.android:maps-compose:6.12.2")
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
     
-    // Accompanist Permissions (NEW) - for UI permission request flow
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
-    
-    // Location Services - NOT NEEDED (using existing LocationManager-based code)
-    // implementation("com.google.android.gms:play-services-location:21.1.0")  // SKIP
-    
-    // Existing dependencies (no changes)
-    // - Koin, Ktor, Compose, LocationModule, etc.
+    // ALREADY IN PROJECT - no changes needed:
+    // - libs.accompanist.permissions (v0.37.3) - used in AnimalListScreen
+    // - Koin, Ktor, Compose, locationModule, etc.
 }
 ```
 

@@ -198,10 +198,11 @@ composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPre
 
 | Dependency | Purpose | Gradle Artifact |
 |------------|---------|-----------------|
-| Google Maps Compose | Map rendering in Compose | `com.google.maps.android:maps-compose:4.x.x` |
-| Accompanist Permissions | Permission request UI flow | `com.google.accompanist:accompanist-permissions:0.x.x` |
+| Google Maps Compose | Map rendering in Compose | `com.google.maps.android:maps-compose:6.12.2` + `play-services-maps:19.2.0` |
 
-**Note**: Google Play Services Location is NOT needed - existing code uses native `LocationManager`.
+**Already in project** (no changes needed):
+- `accompanist-permissions` (v0.37.3) - already used in `AnimalListScreen` for location permissions
+- Location services - using native `LocationManager` via existing `locationModule`
 
 ### API Integration
 
