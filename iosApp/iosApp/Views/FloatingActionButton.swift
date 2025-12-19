@@ -98,6 +98,7 @@ struct FloatingActionButton: View {
                 }
             }
             .foregroundColor(model.style.foregroundColor)
+            .frame(maxWidth: model.expandsHorizontally ? .infinity : nil)
             .padding(.horizontal, model.style.horizontalPadding)
             .padding(.vertical, model.style.verticalPadding)
             .background(model.style.background)

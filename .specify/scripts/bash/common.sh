@@ -72,9 +72,11 @@ check_feature_branch() {
         return 0
     fi
 
-    if [[ ! "$branch" =~ ^[0-9]{3}- ]]; then
+    # Accept either numeric feature branches (e.g. 001-feature-name) or Jira-style feature branches
+    # (e.g. KAN-30-ios-landing-page-map-view). Both map to a specs/ directory.
+    if [[ ! "$branch" =~ ^[0-9]{3}- ]] && [[ ! "$branch" =~ ^[A-Z]+-[0-9]+- ]]; then
         echo "ERROR: Not on a feature branch. Current branch: $branch" >&2
-        echo "Feature branches should be named like: 001-feature-name" >&2
+        echo "Feature branches should be named like: 001-feature-name OR KAN-30-feature-name" >&2
         return 1
     fi
 

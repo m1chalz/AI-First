@@ -76,5 +76,42 @@ final class CoordinateTests: XCTestCase {
         XCTAssertEqual(minLon.longitude, -180.0, accuracy: 0.0001)
         XCTAssertEqual(maxLon.longitude, 180.0, accuracy: 0.0001)
     }
+    
+    // MARK: - Map Region Helper Tests (T006)
+    
+    func test_mapRegion_whenCalled_shouldCreateRegionWithCorrectCenter() {
+        // Given
+        let coordinate = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        
+        // When
+        let region = coordinate.mapRegion()
+        
+        // Then
+        XCTAssertEqual(region.center.latitude, 52.2297, accuracy: 0.0001)
+        XCTAssertEqual(region.center.longitude, 21.0122, accuracy: 0.0001)
+    }
+    
+    func test_mapRegion_whenCalledWithDefaultRadius_shouldCreate20kmSpan() {
+        // Given
+        let coordinate = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        
+        // When
+        let region = coordinate.mapRegion()  // Default: 10km radius = 20km span
+        
+        // Then - Span should be approximately 20km
+        // At 52° latitude, 1° latitude ≈ 111km, so 20km ≈ 0.18°
+        XCTAssertEqual(region.span.latitudeDelta, 0.18, accuracy: 0.05)
+    }
+    
+    func test_mapRegion_whenCalledWithCustomRadius_shouldScaleSpanAccordingly() {
+        // Given
+        let coordinate = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        
+        // When
+        let region = coordinate.mapRegion(radiusMeters: 5_000)  // 5km radius = 10km span
+        
+        // Then - Span should be approximately 10km (half of default)
+        XCTAssertEqual(region.span.latitudeDelta, 0.09, accuracy: 0.03)
+    }
 }
 

@@ -14,6 +14,9 @@ struct AnnouncementListQuery: Equatable {
     /// User's current location for enabling location coordinate display (nil = no location)
     let location: Coordinate?
     
+    /// Search radius in kilometers for geographic filtering (FR-001)
+    let range: Int
+    
     /// Sorting options for announcement list
     enum SortOption: Equatable {
         /// Newest announcements first (default)
@@ -28,16 +31,16 @@ struct AnnouncementListQuery: Equatable {
     
     /// Creates default query: all announcements sorted by creation date (newest first)
     /// - Parameter location: Optional user location for displaying coordinates
-    /// - Returns: Query configuration for full announcement list
+    /// - Returns: Query configuration for full announcement list with 100 km range
     static func defaultQuery(location: Coordinate?) -> AnnouncementListQuery {
-        AnnouncementListQuery(limit: nil, sortBy: .createdAtDescending, location: location)
+        AnnouncementListQuery(limit: nil, sortBy: .createdAtDescending, location: location, range: 100)
     }
     
-    /// Creates landing page query: 5 most recent announcements
+    /// Creates landing page query: 5 most recent announcements within 10 km radius
     /// - Parameter location: Optional user location for displaying coordinates
-    /// - Returns: Query configuration for landing page (limited to 5 items)
+    /// - Returns: Query configuration for landing page (limited to 5 items, 10 km range per FR-001)
     static func landingPageQuery(location: Coordinate?) -> AnnouncementListQuery {
-        AnnouncementListQuery(limit: 5, sortBy: .createdAtDescending, location: location)
+        AnnouncementListQuery(limit: 5, sortBy: .createdAtDescending, location: location, range: 10)
     }
 }
 

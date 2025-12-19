@@ -18,13 +18,15 @@ extension HeroPanelView.Model {
                 title: L10n.LandingPage.Hero.lostPetButton,
                 style: .secondary,
                 iconSource: .sfSymbol("exclamationmark.triangle"),
-                iconPosition: .left
+                iconPosition: .left,
+                expandsHorizontally: true
             ),
             rightButton: FloatingActionButtonModel(
                 title: L10n.LandingPage.Hero.foundPetButton,
                 style: .primary,
                 iconSource: .sfSymbol("checkmark"),
-                iconPosition: .left
+                iconPosition: .left,
+                expandsHorizontally: true
             ),
             onLeftButtonTap: onLostPetTap,
             onRightButtonTap: onFoundPetTap,
