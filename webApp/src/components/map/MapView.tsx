@@ -65,7 +65,7 @@ export function MapView() {
         )}
         <MapContainer center={[center.lat, center.lng]} zoom={zoom} className={styles.map} data-testid="landingPage.map">
           <TileLayer url={config.map.tileLayerUrl} attribution={config.map.attribution} />
-          <MapPinLayer userLocation={center} />
+          <MapPinLayer />
         </MapContainer>
       </div>
     </section>

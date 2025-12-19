@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react';
 import { MapPinLayer } from '../MapPinLayer';
 import type { Announcement } from '../../../types/announcement';
 
-vi.mock('../../../hooks/use-map-pins', () => ({
-  useMapPins: vi.fn()
+vi.mock('../../../hooks/use-announcement-list', () => ({
+  useAnnouncementList: vi.fn()
 }));
 
-import { useMapPins } from '../../../hooks/use-map-pins';
+import { useAnnouncementList } from '../../../hooks/use-announcement-list';
 
-const mockUseMapPins = vi.mocked(useMapPins);
+const mockUseAnnouncementList = vi.mocked(useAnnouncementList);
 
 vi.mock('react-leaflet', () => ({
   Marker: vi.fn(({ children, position, icon }) => (
@@ -23,28 +23,31 @@ vi.mock('react-leaflet', () => ({
   Popup: vi.fn(({ children }) => <div data-testid="popup">{children}</div>)
 }));
 
-const mockPins: Announcement[] = [
-  {
-    id: 'pin-1',
-    petName: 'Buddy',
-    species: 'DOG',
-    status: 'MISSING',
-    sex: 'MALE',
-    locationLatitude: 52.23,
-    locationLongitude: 21.01,
-    photoUrl: 'http://example.com/buddy.jpg',
-    phone: '+48123456789',
-    email: 'buddy@example.com',
-    lastSeenDate: '2025-01-01',
-    description: 'A friendly golden retriever',
-    breed: null,
-    microchipNumber: null,
-    age: null,
-    reward: null,
-    createdAt: null,
-    updatedAt: null
-  },
-  {
+const createAnnouncement = (overrides = {}): Announcement => ({
+  id: 'pin-1',
+  petName: 'Buddy',
+  species: 'DOG',
+  status: 'MISSING',
+  sex: 'MALE',
+  locationLatitude: 52.23,
+  locationLongitude: 21.01,
+  photoUrl: 'http://example.com/buddy.jpg',
+  phone: '+48123456789',
+  email: 'buddy@example.com',
+  lastSeenDate: '2025-01-01',
+  description: 'A friendly golden retriever',
+  breed: null,
+  microchipNumber: null,
+  age: null,
+  reward: null,
+  createdAt: null,
+  updatedAt: null,
+  ...overrides
+});
+
+const mockAnnouncements: Announcement[] = [
+  createAnnouncement(),
+  createAnnouncement({
     id: 'pin-2',
     petName: 'Whiskers',
     species: 'CAT',
@@ -56,14 +59,8 @@ const mockPins: Announcement[] = [
     phone: '+48987654321',
     email: 'whiskers@example.com',
     lastSeenDate: '2025-01-02',
-    description: 'Black cat with white paws',
-    breed: null,
-    microchipNumber: null,
-    age: null,
-    reward: null,
-    createdAt: null,
-    updatedAt: null
-  }
+    description: 'Black cat with white paws'
+  })
 ];
 
 describe('MapPinLayer', () => {
@@ -71,49 +68,38 @@ describe('MapPinLayer', () => {
     vi.clearAllMocks();
   });
 
-  it('renders markers for each pin', () => {
+  it('renders markers for each announcement', () => {
     // given
-    mockUseMapPins.mockReturnValue({
-      pins: mockPins,
-      loading: false,
-      error: null
+    mockUseAnnouncementList.mockReturnValue({
+      announcements: mockAnnouncements,
+      isLoading: false,
+      error: null,
+      isEmpty: false,
+      loadAnnouncements: vi.fn(),
+      geolocationError: null
     });
-    const userLocation = { lat: 52.2297, lng: 21.0122 };
 
     // when
-    render(<MapPinLayer userLocation={userLocation} />);
+    render(<MapPinLayer />);
 
     // then
     expect(screen.getByTestId('marker-52.23-21.01')).toBeDefined();
     expect(screen.getByTestId('marker-52.24-21.02')).toBeDefined();
   });
 
-  it('calls useMapPins with userLocation', () => {
+  it('renders loading overlay when isLoading is true', () => {
     // given
-    mockUseMapPins.mockReturnValue({
-      pins: [],
-      loading: false,
-      error: null
-    });
-    const userLocation = { lat: 52.2297, lng: 21.0122 };
-
-    // when
-    render(<MapPinLayer userLocation={userLocation} />);
-
-    // then
-    expect(mockUseMapPins).toHaveBeenCalledWith(userLocation);
-  });
-
-  it('renders loading overlay when loading is true', () => {
-    // given
-    mockUseMapPins.mockReturnValue({
-      pins: [],
-      loading: true,
-      error: null
+    mockUseAnnouncementList.mockReturnValue({
+      announcements: [],
+      isLoading: true,
+      error: null,
+      isEmpty: false,
+      loadAnnouncements: vi.fn(),
+      geolocationError: null
     });
 
     // when
-    render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+    render(<MapPinLayer />);
 
     // then
     expect(screen.getByTestId('landingPage.map.pinsLoading')).toBeDefined();
@@ -121,61 +107,77 @@ describe('MapPinLayer', () => {
 
   it('renders error overlay when error is present', () => {
     // given
-    mockUseMapPins.mockReturnValue({
-      pins: [],
-      loading: false,
-      error: new Error('Failed to load pins')
+    mockUseAnnouncementList.mockReturnValue({
+      announcements: [],
+      isLoading: false,
+      error: 'Failed to load',
+      isEmpty: false,
+      loadAnnouncements: vi.fn(),
+      geolocationError: null
     });
 
     // when
-    render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+    render(<MapPinLayer />);
 
     // then
     expect(screen.getByTestId('landingPage.map.pinsError')).toBeDefined();
   });
 
-  it('renders nothing when userLocation is null', () => {
-    // given
-    mockUseMapPins.mockReturnValue({
-      pins: [],
-      loading: false,
-      error: null
-    });
-
-    // when
-    const { container } = render(<MapPinLayer userLocation={null} />);
-
-    // then
-    expect(container.firstChild).toBeNull();
-  });
-
   it('renders popup with correct data-testid for each pin', () => {
     // given
-    mockUseMapPins.mockReturnValue({
-      pins: mockPins,
-      loading: false,
-      error: null
+    mockUseAnnouncementList.mockReturnValue({
+      announcements: mockAnnouncements,
+      isLoading: false,
+      error: null,
+      isEmpty: false,
+      loadAnnouncements: vi.fn(),
+      geolocationError: null
     });
 
     // when
-    render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+    render(<MapPinLayer />);
 
     // then
     expect(screen.getByTestId('landingPage.map.popup.pin-1')).toBeDefined();
     expect(screen.getByTestId('landingPage.map.popup.pin-2')).toBeDefined();
   });
 
+  it('filters out CLOSED announcements', () => {
+    // given
+    mockUseAnnouncementList.mockReturnValue({
+      announcements: [
+        createAnnouncement({ id: '1', status: 'MISSING' }),
+        createAnnouncement({ id: '2', status: 'CLOSED', locationLatitude: 52.25, locationLongitude: 21.03 })
+      ],
+      isLoading: false,
+      error: null,
+      isEmpty: false,
+      loadAnnouncements: vi.fn(),
+      geolocationError: null
+    });
+
+    // when
+    render(<MapPinLayer />);
+
+    // then
+    expect(screen.getByTestId('landingPage.map.popup.1')).toBeDefined();
+    expect(screen.queryByTestId('landingPage.map.popup.2')).toBeNull();
+  });
+
   describe('popup content', () => {
     it('renders popup with all pet details', () => {
       // given
-      mockUseMapPins.mockReturnValue({
-        pins: [mockPins[0]],
-        loading: false,
-        error: null
+      mockUseAnnouncementList.mockReturnValue({
+        announcements: [mockAnnouncements[0]],
+        isLoading: false,
+        error: null,
+        isEmpty: false,
+        loadAnnouncements: vi.fn(),
+        geolocationError: null
       });
 
       // when
-      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+      render(<MapPinLayer />);
 
       // then
       expect(screen.getByTestId('landingPage.map.popup.pin-1')).toBeDefined();
@@ -189,15 +191,17 @@ describe('MapPinLayer', () => {
 
     it('shows Unknown when pet name is null', () => {
       // given
-      const pinWithoutName: Announcement = { ...mockPins[0], petName: null };
-      mockUseMapPins.mockReturnValue({
-        pins: [pinWithoutName],
-        loading: false,
-        error: null
+      mockUseAnnouncementList.mockReturnValue({
+        announcements: [createAnnouncement({ petName: null })],
+        isLoading: false,
+        error: null,
+        isEmpty: false,
+        loadAnnouncements: vi.fn(),
+        geolocationError: null
       });
 
       // when
-      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+      render(<MapPinLayer />);
 
       // then
       expect(screen.getByText('Unknown')).toBeDefined();
@@ -205,15 +209,17 @@ describe('MapPinLayer', () => {
 
     it('hides description when null', () => {
       // given
-      const pinWithoutDescription: Announcement = { ...mockPins[0], description: null };
-      mockUseMapPins.mockReturnValue({
-        pins: [pinWithoutDescription],
-        loading: false,
-        error: null
+      mockUseAnnouncementList.mockReturnValue({
+        announcements: [createAnnouncement({ description: null })],
+        isLoading: false,
+        error: null,
+        isEmpty: false,
+        loadAnnouncements: vi.fn(),
+        geolocationError: null
       });
 
       // when
-      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+      render(<MapPinLayer />);
 
       // then
       expect(screen.queryByTestId('landingPage.map.popup.description')).toBeNull();

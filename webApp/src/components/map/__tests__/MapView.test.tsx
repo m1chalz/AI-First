@@ -6,6 +6,17 @@ vi.mock('../../../hooks/use-map-state', () => ({
   useMapState: vi.fn()
 }));
 
+vi.mock('../../../hooks/use-announcement-list', () => ({
+  useAnnouncementList: vi.fn(() => ({
+    announcements: [],
+    isLoading: false,
+    error: null,
+    isEmpty: true,
+    loadAnnouncements: vi.fn(),
+    geolocationError: null
+  }))
+}));
+
 import { useMapState } from '../../../hooks/use-map-state';
 
 const mockUseMapState = vi.mocked(useMapState);

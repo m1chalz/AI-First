@@ -1,16 +1,11 @@
 import L from 'leaflet';
 import { Marker, Popup } from 'react-leaflet';
-import { useMapPins } from '../../hooks/use-map-pins';
+import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/announcement';
-import type { Coordinates } from '../../types/location';
 import config from '../../config/config';
 import toPascalCase from '../../utils/pascal-case-formatter';
 import { formatDate } from '../../utils/date-formatter';
 import styles from './MapPinLayer.module.css';
-
-interface MapPinLayerProps {
-  userLocation: Coordinates | null;
-}
 
 function createIcon(color: string, symbol: string): L.DivIcon {
   const svg = `
@@ -32,16 +27,13 @@ function createIcon(color: string, symbol: string): L.DivIcon {
 const MISSING_PIN_ICON = createIcon(ANNOUNCEMENT_STATUS_BADGE_COLORS.MISSING, '!');
 const FOUND_PIN_ICON = createIcon(ANNOUNCEMENT_STATUS_BADGE_COLORS.FOUND, '✓');
 
-export function MapPinLayer({ userLocation }: MapPinLayerProps) {
-  const { pins, loading, error } = useMapPins(userLocation);
-
-  if (!userLocation) {
-    return null;
-  }
+export function MapPinLayer() {
+  const { announcements, isLoading, error } = useAnnouncementList();
+  const pins = announcements.filter(a => a.status !== 'CLOSED');
 
   return (
     <>
-      {loading && (
+      {isLoading && (
         <div className={styles.overlay} data-testid="landingPage.map.pinsLoading">
           Loading pins...
         </div>
@@ -49,7 +41,7 @@ export function MapPinLayer({ userLocation }: MapPinLayerProps) {
 
       {error && (
         <div className={styles.overlay} data-testid="landingPage.map.pinsError">
-          Failed to load pins
+          {error}
         </div>
       )}
 
