@@ -42,7 +42,6 @@ A user interacts with elements on the landing page (buttons, list items, and oth
 - **Large text / Dynamic Type**: With larger text sizes, the content still scrolls as a whole and does not trap the user inside a subsection
 - **Long list**: With many list items, the overall page remains scrollable without nested scrolling behavior
 - **Short content**: If the content is shorter than the viewport, scrolling is not required and no blank space or jitter is introduced
-- **Accessibility**: VoiceOver focus order remains logical top-to-bottom across all sections, and scroll gestures do not cause focus traps
 
 ## Requirements *(mandatory)*
 
@@ -53,6 +52,8 @@ A user interacts with elements on the landing page (buttons, list items, and oth
 - **FR-003**: Existing landing page interactions (taps, navigation, and actions) MUST remain functionally unchanged by this scroll behavior change
 - **FR-004**: The scroll behavior MUST remain consistent across common device sizes and text size settings supported by the application
 - **FR-005**: This specification MUST be implemented for iOS only (Android and Web are explicitly out of scope)
+- **FR-006**: Loading, error, empty, and success states for the announcements area MUST be rendered inline as part of the same landing page vertical scroll (no full-screen overlays that detach the hero/header from the scrollable content)
+- **FR-007**: The landing page MUST NOT use pinned/sticky sections for the hero panel or the list header; they MUST scroll together with the rest of the content
 
 ## Success Criteria *(mandatory)*
 
@@ -60,7 +61,6 @@ A user interacts with elements on the landing page (buttons, list items, and oth
 
 - **SC-001**: On supported iPhone screen sizes, users can reach every landing page section by a single continuous vertical scroll gesture (verified in QA)
 - **SC-002**: In regression testing, key landing page interactions continue to succeed with no increase in interaction failures attributable to scrolling (verified in QA)
-- **SC-003**: In accessibility verification, VoiceOver users can traverse all landing page content top-to-bottom without focus traps or dead-ends (verified in QA)
 
 ## Assumptions
 
@@ -73,5 +73,8 @@ A user interacts with elements on the landing page (buttons, list items, and oth
 ### Session 2025-12-19
 
 - Scope: This spec only changes landing page scroll behavior on iOS so that the whole landing page content scrolls (not only the list). All other KAN-30 sub-features remain out of scope here.
+- Q: How should loading/error/empty/success states be rendered relative to the page scroll? → A: Inline in one ScrollView (hero + header + states + list as one continuous vertical scroll)
+- Q: Should any sections be pinned/sticky while scrolling? → A: No pinned sections (hero and header scroll with the page)
+- Q: Is VoiceOver support in-scope for this change? → A: No (VoiceOver out of scope)
 
 
