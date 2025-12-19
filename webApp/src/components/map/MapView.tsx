@@ -23,7 +23,9 @@ export function MapView() {
       <section className={styles.section}>
         <div className={styles.container}>
           <MapHeader />
-          <div className={styles.loading} data-testid="landingPage.map.loading">Loading map...</div>
+          <div className={styles.loading} data-testid="landingPage.map.loading">
+            Loading map...
+          </div>
         </div>
       </section>
     );
