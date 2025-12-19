@@ -277,3 +277,8 @@
 "mapPreview.permission.message" = "Włącz lokalizację, aby zobaczyć okolicę.";
 "mapPreview.permission.settingsButton" = "Przejdź do Ustawień";
 "mapPreview.tapHint" = "Dotknij, aby zobaczyć mapę";
+
+// Map Section Header
+"mapSection.title" = "Mapa";
+"mapSection.legend.missing" = "Zaginione";
+"mapSection.legend.found" = "Znalezione";

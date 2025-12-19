@@ -45,11 +45,15 @@ struct LandingPageView: View {
                     )
                 )
                 
+                // Map section header with legend
+                MapSectionHeaderView(model: .landingPage())
+                    .padding(.top, 8)
+                
                 // Map preview - static map centered on user location
                 MapPreviewView(model: viewModel.mapPreviewModel)
                     .aspectRatio(16/9, contentMode: .fit)
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
+                    .padding(.bottom, 16)
                 
                 // List header row - "Recent Reports" / "View All"
                 ListHeaderRowView(
