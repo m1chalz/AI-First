@@ -37,7 +37,7 @@ A user wants to click a pin and see a pop-up with details of the missing animal 
 
 1. **Given** pins are visible on the map, **When** the user clicks a pin, **Then** a pop-up appears with details of the selected missing animal
 2. **Given** a pop-up is shown, **When** the user views it, **Then** it includes at minimum: pet photo, pet name, species/type, last-seen date, description, and a way to contact the owner
-3. **Given** a pop-up is shown, **When** the user closes it (close button or click outside), **Then** the pop-up is dismissed and the map remains visible
+3. **Given** a pop-up is shown, **When** the user closes it (via close button or by clicking anywhere outside the pop-up), **Then** the pop-up is dismissed and the map remains visible
 4. **Given** a pop-up is open for one pin, **When** the user clicks a different pin, **Then** the pop-up updates to show details for the newly selected animal
 
 ---
@@ -76,10 +76,23 @@ A user wants the map to remain understandable when pins are loading or when load
 - **FR-006**: The pop-up MUST include at minimum: pet photo, pet name, species/type, last-seen date, description, and a way to contact the owner
 - **FR-011**: The pop-up contact information MUST include phone number and email address when available
 - **FR-012**: If the pet photo is missing or fails to load, the pop-up MUST display a placeholder image
-- **FR-007**: The pop-up MUST be dismissible and must not navigate away from the landing page by default
-- **FR-008**: When pin loading is in progress, the system MUST show a loading indicator in the map area
+- **FR-007**: The pop-up MUST be dismissible via both the close button and clicking anywhere outside the pop-up, and must not navigate away from the landing page by default
+- **FR-008**: When pin loading is in progress, the system MUST show a loading indicator within the map viewport (independent from the map's own loading state)
 - **FR-009**: When pin loading fails, the system MUST show a user-friendly error state with a retry action
 - **FR-010**: When the user activates retry, the system MUST re-attempt loading pins for the current map viewport without requiring a full landing page reload
+- **FR-013**: All interactive elements MUST include test identifiers following the pattern:
+  - Pins: `landingPage.map.pin.{petId}`
+  - Pop-up: `landingPage.map.popup`
+  - Pop-up close button: `landingPage.map.popup.close`
+  - Pin loading indicator: `landingPage.map.pinsLoading`
+  - Pin error state: `landingPage.map.pinsError`
+  - Pin retry button: `landingPage.map.pinsRetry`
+- **FR-014**: Pin markers MUST use the standard teardrop map marker design with color coding:
+  - Missing pets (status "missing"): Red (#EF4444) marker with white "!" symbol
+  - Found pets (status "found"): Blue (#155DFC) marker with white "✓" symbol
+  - All pins MUST include a white border and drop shadow for visual depth
+- **FR-015**: The system MUST fetch pet announcement data for pins from the existing `/api/v1/Announcements` endpoint
+- **FR-016**: The system MUST display all pins for announcements within the current viewport without imposing an artificial maximum limit
 
 ### Key Entities *(include if feature involves data)*
 
@@ -95,10 +108,18 @@ A user wants the map to remain understandable when pins are loading or when load
 - **SC-003**: Pins shown on the map match missing animal locations with 100% correctness in QA test data
 - **SC-004**: When pin loading fails, an error state is displayed within 10 seconds and retry succeeds after connectivity is restored
 
+## Design Reference
+
+**Figma Wireframes**: [PetSpot Landing Page with Map Pins](https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1071-3871&m=dev)
+
+The visual design for pin markers and pop-up layout is defined in the Figma wireframes linked above.
+
 ## Assumptions
 
 - Missing animal announcements include last-seen coordinates suitable for pin placement.
 - The landing page map component exists and is stable (provided by 063-web-map-view).
+- Pins and pop-ups will be rendered within the existing map component, not as separate components.
+- Pin loading/error states are independent from map loading/error states (the map can be loaded successfully while pins fail to load).
 
 ## Clarifications
 
@@ -109,3 +130,10 @@ A user wants the map to remain understandable when pins are loading or when load
 - Q: How should missing pet photos be handled in the pop-up? → A: Show a placeholder image.
 - Q: What should be shown when there are no pins in the visible map area? → A: Show the map without pins and without an empty-state message.
 - Q: What should the Retry action do after pin loading fails? → A: Retry re-attempts loading pins for the current viewport without a full landing page reload.
+
+### Session 2025-12-19
+
+- Q: How should the pop-up be dismissed? → A: Both close button and click-outside (clicking anywhere outside the pop-up) dismiss the pop-up.
+- Q: What should the pin markers look like? → A: Standard teardrop map marker pins with color coding - Missing pets: Red (#EF4444) with white "!" symbol, Found pets: Blue (#155DFC) with white "✓" symbol, white border, and drop shadow (per Figma design).
+- Q: Which backend API endpoint should be used to fetch pet announcements for pins? → A: Reuse existing `/api/v1/Announcements` endpoint.
+- Q: Should there be a maximum limit on the number of pins displayed? → A: Display all pins in viewport, rely on viewport filtering only (no artificial maximum).
