@@ -256,46 +256,50 @@ class GetNearbyAnimalsForMapUseCase(
 
 ---
 
-## Koin Module
+## Koin Module (Extend Existing - NO new module file)
 
-### MapPreviewModule
-
-Dependency injection configuration. **Reuses existing modules - minimal additions.**
+### Add to DomainModule.kt
 
 ```kotlin
-// Location: di/MapPreviewModule.kt
-val mapPreviewModule = module {
-    // Use Case (NEW) - wraps existing AnimalRepository
-    factory { 
-        GetNearbyAnimalsForMapUseCase(get())  // get() injects AnimalRepository (from animalModule)
-    }
+// ADD TO: di/DomainModule.kt
+val domainModule = module {
+    // ... existing use cases ...
+    factory { GetAnimalsUseCase(get()) }
+    factory { GetAnimalByIdUseCase(get()) }
+    factory { GetRecentAnimalsUseCase(get()) }
+    // ... 
     
-    // ViewModel (NEW)
+    // NEW: Map preview use case (wraps existing AnimalRepository)
+    factory { GetNearbyAnimalsForMapUseCase(get()) }
+}
+```
+
+### Add to ViewModelModule.kt
+
+```kotlin
+// ADD TO: di/ViewModelModule.kt
+val viewModelModule = module {
+    // ... existing ViewModels ...
+    viewModel { AnimalListViewModel(get(), getOrNull(), getOrNull()) }
+    viewModel { PetDetailsViewModel(get()) }
+    viewModel { LostPetsTeaserViewModel(get()) }
+    // ...
+    
+    // NEW: Map preview ViewModel
     viewModel { 
         MapPreviewViewModel(
             getCurrentLocationUseCase = get(),        // FROM locationModule
             checkLocationPermissionUseCase = get(),   // FROM locationModule
-            getNearbyAnimalsForMapUseCase = get()     // FROM mapPreviewModule
+            getNearbyAnimalsForMapUseCase = get()     // FROM domainModule
         )
     }
 }
 ```
 
-### Existing Modules (REUSE - no changes needed)
+### Existing Modules (no changes needed)
 
-```kotlin
-// EXISTING: di/LocationModule.kt
-val locationModule = module {
-    single { androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager }
-    single<PermissionChecker> { AndroidPermissionChecker(androidContext()) }
-    single<LocationRepository> { LocationRepositoryImpl(get()) }
-    factory { GetCurrentLocationUseCase(get()) }
-    factory { CheckLocationPermissionUseCase(get()) }
-}
-
-// EXISTING: di/AnimalModule.kt (or wherever AnimalRepository is defined)
-// single<AnimalRepository> { AnimalRepositoryImpl(get(), get()) }
-```
+- `locationModule` - already has `GetCurrentLocationUseCase`, `CheckLocationPermissionUseCase`
+- `dataModule` - already has `AnimalRepository`
 
 ---
 

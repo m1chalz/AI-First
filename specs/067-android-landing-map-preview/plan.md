@@ -52,7 +52,9 @@ Implement a static map preview component for the Android landing page (HomeScree
 
 - [x] **Dependency Injection**: Plan includes DI setup
   - Android: MUST use Koin - DI modules in `/composeApp/src/androidMain/.../di/`
-  - New `mapPreviewModule` defining ViewModel, UseCase, Repository
+  - Add `GetNearbyAnimalsForMapUseCase` to existing `domainModule`
+  - Add `MapPreviewViewModel` to existing `viewModelModule`
+  - Follows project's centralized module pattern (no new module file)
   - Violation justification: N/A - fully compliant
 
 - [x] **80% Test Coverage - Platform-Specific**: Plan includes unit tests
@@ -154,9 +156,10 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │       └── ui/
 │           └── HomeScreen.kt          # MODIFIED: Add MapPreviewSection
 ├── di/
-│   ├── LocationModule.kt              # EXISTING: Already has location dependencies
-│   └── MapPreviewModule.kt            # NEW: Koin module for map preview
-└── PetSpotApp.kt                      # MODIFIED: Register mapPreviewModule
+│   ├── LocationModule.kt              # EXISTING: Has location dependencies
+│   ├── DomainModule.kt                # MODIFIED: Add GetNearbyAnimalsForMapUseCase
+│   └── ViewModelModule.kt             # MODIFIED: Add MapPreviewViewModel
+└── PetSpotApp.kt                      # NO CHANGES (modules already registered)
 
 composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/
 ├── presentation/
