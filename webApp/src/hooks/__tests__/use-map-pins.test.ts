@@ -12,6 +12,28 @@ vi.mock('../../services/announcement-service', () => ({
 
 const mockGetAnnouncements = vi.mocked(announcementService.getAnnouncements);
 
+const createAnnouncement = (overrides = {}) => ({
+  id: '123',
+  petName: 'Buddy',
+  species: 'DOG' as const,
+  status: 'MISSING' as const,
+  sex: 'MALE' as const,
+  locationLatitude: 52.23,
+  locationLongitude: 21.01,
+  photoUrl: 'http://example.com/photo.jpg',
+  phone: '+48123456789',
+  email: 'test@example.com',
+  lastSeenDate: '2025-01-01',
+  breed: null,
+  description: null,
+  microchipNumber: null,
+  age: null,
+  reward: null,
+  createdAt: null,
+  updatedAt: null,
+  ...overrides
+});
+
 describe('useMapPins', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -34,28 +56,8 @@ describe('useMapPins', () => {
   it('fetches pins when userLocation is provided', async () => {
     // given
     const userLocation: Coordinates = { lat: 52.2297, lng: 21.0122 };
-    mockGetAnnouncements.mockResolvedValueOnce([
-      {
-        id: '123',
-        petName: 'Buddy',
-        species: 'DOG',
-        status: 'MISSING',
-        locationLatitude: 52.23,
-        locationLongitude: 21.01,
-        photoUrl: 'http://example.com/photo.jpg',
-        phone: '+48123456789',
-        email: 'test@example.com',
-        createdAt: '2025-01-01T10:00:00Z',
-        lastSeenDate: '2025-01-01',
-        sex: 'MALE',
-        breed: null,
-        description: null,
-        microchipNumber: null,
-        age: null,
-        reward: null,
-        updatedAt: null
-      }
-    ]);
+    const announcement = createAnnouncement();
+    mockGetAnnouncements.mockResolvedValueOnce([announcement]);
 
     // when
     const { result } = renderHook(() => useMapPins(userLocation));
@@ -68,18 +70,7 @@ describe('useMapPins', () => {
     });
 
     expect(result.current.pins).toHaveLength(1);
-    expect(result.current.pins[0]).toEqual({
-      id: '123',
-      name: 'Buddy',
-      species: 'DOG',
-      status: 'MISSING',
-      latitude: 52.23,
-      longitude: 21.01,
-      photoUrl: 'http://example.com/photo.jpg',
-      phoneNumber: '+48123456789',
-      email: 'test@example.com',
-      createdAt: '2025-01-01T10:00:00Z'
-    });
+    expect(result.current.pins[0]).toEqual(announcement);
     expect(result.current.error).toBeNull();
   });
 
@@ -118,46 +109,8 @@ describe('useMapPins', () => {
     // given
     const userLocation: Coordinates = { lat: 52.2297, lng: 21.0122 };
     mockGetAnnouncements.mockResolvedValueOnce([
-      {
-        id: '1',
-        petName: 'Buddy',
-        species: 'DOG',
-        status: 'MISSING',
-        locationLatitude: 52.23,
-        locationLongitude: 21.01,
-        photoUrl: 'http://example.com/1.jpg',
-        phone: '+48123',
-        email: 'a@b.com',
-        createdAt: '2025-01-01T10:00:00Z',
-        lastSeenDate: '2025-01-01',
-        sex: 'MALE',
-        breed: null,
-        description: null,
-        microchipNumber: null,
-        age: null,
-        reward: null,
-        updatedAt: null
-      },
-      {
-        id: '2',
-        petName: 'Closed Pet',
-        species: 'CAT',
-        status: 'CLOSED',
-        locationLatitude: 52.24,
-        locationLongitude: 21.02,
-        photoUrl: 'http://example.com/2.jpg',
-        phone: '+48456',
-        email: 'c@d.com',
-        createdAt: '2025-01-02T10:00:00Z',
-        lastSeenDate: '2025-01-02',
-        sex: 'FEMALE',
-        breed: null,
-        description: null,
-        microchipNumber: null,
-        age: null,
-        reward: null,
-        updatedAt: null
-      }
+      createAnnouncement({ id: '1', status: 'MISSING' }),
+      createAnnouncement({ id: '2', status: 'CLOSED' })
     ]);
 
     // when
@@ -170,47 +123,5 @@ describe('useMapPins', () => {
 
     expect(result.current.pins).toHaveLength(1);
     expect(result.current.pins[0].id).toBe('1');
-  });
-
-  it.each([
-    { field: 'petName', value: null, expected: '' },
-    { field: 'createdAt', value: null, expected: '' }
-  ])('transforms null $field to empty string', async ({ field, value, expected }) => {
-    // given
-    const userLocation: Coordinates = { lat: 52.2297, lng: 21.0122 };
-    const announcement = {
-      id: '1',
-      petName: 'Buddy',
-      species: 'DOG',
-      status: 'MISSING',
-      locationLatitude: 52.23,
-      locationLongitude: 21.01,
-      photoUrl: 'http://example.com/1.jpg',
-      phone: '+48123',
-      email: 'a@b.com',
-      createdAt: '2025-01-01T10:00:00Z',
-      lastSeenDate: '2025-01-01',
-      sex: 'MALE',
-      breed: null,
-      description: null,
-      microchipNumber: null,
-      age: null,
-      reward: null,
-      updatedAt: null,
-      [field]: value
-    };
-    mockGetAnnouncements.mockResolvedValueOnce([announcement]);
-
-    // when
-    const { result } = renderHook(() => useMapPins(userLocation));
-
-    // then
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    const pin = result.current.pins[0];
-    const pinField = field === 'petName' ? 'name' : field;
-    expect(pin[pinField as keyof typeof pin]).toBe(expected);
   });
 });

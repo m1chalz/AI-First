@@ -1,3 +1,7 @@
+:global(.leaflet-popup-content) {
+  margin: 0;
+}
+
 .overlay {
   position: absolute;
   top: 10px;
@@ -7,42 +11,87 @@
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   z-index: 1000;
-  font-family: var(--font-family);
   font-size: 14px;
   color: var(--color-text-secondary);
 }
 
 .popup {
-  min-width: 150px;
+  min-width: 180px;
   text-align: center;
-  font-family: var(--font-family);
+}
+
+.photoContainer {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.popupImage,
+.popupImagePlaceholder {
+  width: 100%;
+  height: 150px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .popupImage {
-  width: 100px;
-  height: 100px;
   object-fit: cover;
+  display: block;
+}
+
+.popupImagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-gray-200);
+  font-size: 50px;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 8px;
   border-radius: var(--radius-sm);
-  margin-bottom: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.hidden {
+  display: none;
+}
+
+.popupContent {
+  padding: 0 10px 6px;
 }
 
 .popupName {
-  margin: 0 0 4px 0;
+  margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text-dark);
 }
 
-.popupSpecies {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  color: var(--color-text-muted);
-  text-transform: capitalize;
+.popupInfo,
+.popupDescription {
+  margin: 0;
+  font-size: 13px;
 }
 
-.popupStatus {
-  margin: 0;
+.popupInfo {
+  color: var(--color-text-muted);
+}
+
+.popupDescription {
+  margin-top: 2px;
+  color: var(--color-text-dark);
+  line-height: 1.3;
+}
+
+.popupContact {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-bg-gray-200);
   font-size: 12px;
-  font-weight: 500;
   color: var(--color-text-secondary);
 }

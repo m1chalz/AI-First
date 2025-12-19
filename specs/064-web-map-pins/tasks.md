@@ -115,7 +115,7 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T032 [P] [US2] RED: Write failing component test for `MapPinLayer` with pop-up in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: Leaflet Popup renders pet details when marker clicked, pop-up content includes all required fields)
+- [X] T032 [P] [US2] RED: Write failing component test for `MapPinLayer` with pop-up in `/webApp/src/components/map/__tests__/MapPinLayer.test.tsx` (test: Leaflet Popup renders pet details when marker clicked, pop-up content includes all required fields)
 
 **End-to-End Tests**:
 - [ ] T033 [P] [US2] Add Gherkin scenario to `/e2e-tests/java/src/test/resources/features/web/064-web-map-pins.feature` (Scenario: Open pet details pop-up)
@@ -125,14 +125,14 @@
 ### Implementation for User Story 2
 
 **Web** (Full Stack Implementation - TDD: Red-Green-Refactor):
-- [ ] T036 [US2] GREEN: Update `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T032 - add React-Leaflet <Popup> inside each <Marker>, render pet details: photo, name, species, last-seen date, description, phone, email)
-- [ ] T037 [US2] REFACTOR: Extract pop-up content to separate component if complex (optional - only if pop-up has >20 lines of JSX)
-- [ ] T038 [US2] Add `data-testid` attributes to pop-up elements (`landingPage.map.popup`, `landingPage.map.popup.close`)
-- [ ] T039 [US2] Add CSS styling for pop-up in `/webApp/src/components/map/MapPinLayer.css` (or inline styles - match Figma design)
-- [ ] T040 [P] [US2] Handle placeholder image for missing pet photos (add `onError` handler to <img> tag, fallback to `/images/placeholder-pet.png`)
-- [ ] T041 [US2] Verify Leaflet pop-up close behavior (close button + click-outside) works by default
-- [ ] T042 [US2] Run `npm test` and verify component tests pass for pop-up rendering
-- [ ] T043 [P] [US2] Run `npm run lint` and fix ESLint violations
+- [X] T036 [US2] GREEN: Update `MapPinLayer` component in `/webApp/src/components/map/MapPinLayer.tsx` (minimal code to pass test T032 - add React-Leaflet <Popup> inside each <Marker>, render pet details: photo, name, species, last-seen date, description, phone, email)
+- [X] T037 [US2] REFACTOR: Extract pop-up content to separate component if complex (optional - only if pop-up has >20 lines of JSX)
+- [X] T038 [US2] Add `data-testid` attributes to pop-up elements (`landingPage.map.popup`, `landingPage.map.popup.close`)
+- [X] T039 [US2] Add CSS styling for pop-up in `/webApp/src/components/map/MapPinLayer.css` (or inline styles - match Figma design)
+- [X] T040 [P] [US2] Handle placeholder image for missing pet photos (add `onError` handler to <img> tag, fallback to `/images/placeholder-pet.png`)
+- [X] T041 [US2] Verify Leaflet pop-up close behavior (close button + click-outside) works by default
+- [X] T042 [US2] Run `npm test` and verify component tests pass for pop-up rendering
+- [X] T043 [P] [US2] Run `npm run lint` and fix ESLint violations
 - [ ] T044 [US2] Run E2E tests for US2: `mvn test -Dtest=WebTestRunner` (from e2e-tests/java/)
 - [ ] T045 [US2] Manual testing: Click pin, verify pop-up shows all pet details, test close button and click-outside dismissal
 

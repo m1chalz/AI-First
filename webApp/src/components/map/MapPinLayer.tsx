@@ -3,6 +3,9 @@ import { Marker, Popup } from 'react-leaflet';
 import { useMapPins } from '../../hooks/use-map-pins';
 import { ANNOUNCEMENT_STATUS_BADGE_COLORS } from '../../types/announcement';
 import type { Coordinates } from '../../types/location';
+import config from '../../config/config';
+import toPascalCase from '../../utils/pascal-case-formatter';
+import { formatDate } from '../../utils/date-formatter';
 import styles from './MapPinLayer.module.css';
 
 interface MapPinLayerProps {
@@ -53,16 +56,44 @@ export function MapPinLayer({ userLocation }: MapPinLayerProps) {
       {pins.map(pin => (
         <Marker
           key={pin.id}
-          position={[pin.latitude, pin.longitude]}
+          position={[pin.locationLatitude, pin.locationLongitude]}
           icon={pin.status === 'MISSING' ? MISSING_PIN_ICON : FOUND_PIN_ICON}
           data-testid={`landingPage.map.pin.${pin.id}`}
         >
-          <Popup>
-            <div className={styles.popup} data-testid={`landingPage.map.pin.${pin.id}`}>
-              <img src={pin.photoUrl} alt={pin.name} className={styles.popupImage} />
-              <h3 className={styles.popupName}>{pin.name || 'Unknown'}</h3>
-              <p className={styles.popupSpecies}>{pin.species}</p>
-              <p className={styles.popupStatus}>{pin.status === 'MISSING' ? 'Missing' : 'Found'}</p>
+          <Popup className={styles.petPopup}>
+            <div className={styles.popup} data-testid={`landingPage.map.popup.${pin.id}`}>
+              <div className={styles.photoContainer}>
+                <img
+                  src={`${config.apiBaseUrl}${pin.photoUrl}`}
+                  alt={pin.petName || 'Unknown'}
+                  className={styles.popupImage}
+                  onError={e => {
+                    e.currentTarget.style.display = 'none';
+                    (e.currentTarget.parentElement?.querySelector(`.${styles.popupImagePlaceholder}`) as HTMLElement)?.classList.remove(styles.hidden);
+                  }}
+                />
+                <div className={`${styles.popupImagePlaceholder} ${styles.hidden}`}>
+                  🐾
+                </div>
+                <span
+                  className={styles.statusBadge}
+                  style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}
+                >
+                  {pin.status}
+                </span>
+              </div>
+              <div className={styles.popupContent}>
+                <h3 className={styles.popupName}>{pin.petName || 'Unknown'}</h3>
+                <p className={styles.popupInfo}>{toPascalCase(pin.species)} | {formatDate(pin.lastSeenDate)}</p>
+                {pin.description && (
+                  <p className={styles.popupDescription} data-testid="landingPage.map.popup.description">
+                    {pin.description}
+                  </p>
+                )}
+                <p className={styles.popupContact}>
+                  {pin.phone} | {pin.email}
+                </p>
+              </div>
             </div>
           </Popup>
         </Marker>

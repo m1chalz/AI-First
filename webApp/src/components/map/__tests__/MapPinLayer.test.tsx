@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MapPinLayer } from '../MapPinLayer';
-import type { MapPin } from '../../../hooks/use-map-pins';
+import type { Announcement } from '../../../types/announcement';
 
 vi.mock('../../../hooks/use-map-pins', () => ({
   useMapPins: vi.fn()
@@ -23,30 +23,46 @@ vi.mock('react-leaflet', () => ({
   Popup: vi.fn(({ children }) => <div data-testid="popup">{children}</div>)
 }));
 
-const mockPins: MapPin[] = [
+const mockPins: Announcement[] = [
   {
     id: 'pin-1',
-    name: 'Buddy',
+    petName: 'Buddy',
     species: 'DOG',
     status: 'MISSING',
-    latitude: 52.23,
-    longitude: 21.01,
+    sex: 'MALE',
+    locationLatitude: 52.23,
+    locationLongitude: 21.01,
     photoUrl: 'http://example.com/buddy.jpg',
-    phoneNumber: '+48123456789',
+    phone: '+48123456789',
     email: 'buddy@example.com',
-    createdAt: '2025-01-01T10:00:00Z'
+    lastSeenDate: '2025-01-01',
+    description: 'A friendly golden retriever',
+    breed: null,
+    microchipNumber: null,
+    age: null,
+    reward: null,
+    createdAt: null,
+    updatedAt: null
   },
   {
     id: 'pin-2',
-    name: 'Whiskers',
+    petName: 'Whiskers',
     species: 'CAT',
     status: 'FOUND',
-    latitude: 52.24,
-    longitude: 21.02,
+    sex: 'FEMALE',
+    locationLatitude: 52.24,
+    locationLongitude: 21.02,
     photoUrl: 'http://example.com/whiskers.jpg',
-    phoneNumber: '+48987654321',
+    phone: '+48987654321',
     email: 'whiskers@example.com',
-    createdAt: '2025-01-02T10:00:00Z'
+    lastSeenDate: '2025-01-02',
+    description: 'Black cat with white paws',
+    breed: null,
+    microchipNumber: null,
+    age: null,
+    reward: null,
+    createdAt: null,
+    updatedAt: null
   }
 ];
 
@@ -133,7 +149,7 @@ describe('MapPinLayer', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders markers with correct data-testid for each pin', () => {
+  it('renders popup with correct data-testid for each pin', () => {
     // given
     mockUseMapPins.mockReturnValue({
       pins: mockPins,
@@ -145,7 +161,62 @@ describe('MapPinLayer', () => {
     render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
 
     // then
-    expect(screen.getByTestId('landingPage.map.pin.pin-1')).toBeDefined();
-    expect(screen.getByTestId('landingPage.map.pin.pin-2')).toBeDefined();
+    expect(screen.getByTestId('landingPage.map.popup.pin-1')).toBeDefined();
+    expect(screen.getByTestId('landingPage.map.popup.pin-2')).toBeDefined();
+  });
+
+  describe('popup content', () => {
+    it('renders popup with all pet details', () => {
+      // given
+      mockUseMapPins.mockReturnValue({
+        pins: [mockPins[0]],
+        loading: false,
+        error: null
+      });
+
+      // when
+      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+
+      // then
+      expect(screen.getByTestId('landingPage.map.popup.pin-1')).toBeDefined();
+      expect(screen.getByRole('img', { name: 'Buddy' })).toBeDefined();
+      expect(screen.getByText('Buddy')).toBeDefined();
+      expect(screen.getByText('Dog | Jan 1, 2025')).toBeDefined();
+      expect(screen.getByText('MISSING')).toBeDefined();
+      expect(screen.getByText('A friendly golden retriever')).toBeDefined();
+      expect(screen.getByText('+48123456789 | buddy@example.com')).toBeDefined();
+    });
+
+    it('shows Unknown when pet name is null', () => {
+      // given
+      const pinWithoutName: Announcement = { ...mockPins[0], petName: null };
+      mockUseMapPins.mockReturnValue({
+        pins: [pinWithoutName],
+        loading: false,
+        error: null
+      });
+
+      // when
+      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+
+      // then
+      expect(screen.getByText('Unknown')).toBeDefined();
+    });
+
+    it('hides description when null', () => {
+      // given
+      const pinWithoutDescription: Announcement = { ...mockPins[0], description: null };
+      mockUseMapPins.mockReturnValue({
+        pins: [pinWithoutDescription],
+        loading: false,
+        error: null
+      });
+
+      // when
+      render(<MapPinLayer userLocation={{ lat: 52.2297, lng: 21.0122 }} />);
+
+      // then
+      expect(screen.queryByTestId('landingPage.map.popup.description')).toBeNull();
+    });
   });
 });
