@@ -39,12 +39,12 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Verify dependencies in `/webApp/package.json` (leaflet@1.9.x, react-leaflet@4.x, @types/leaflet installed)
-- [ ] T002 [P] Create `/webApp/src/hooks/` directory if not exists
-- [ ] T003 [P] Create `/webApp/src/lib/` directory if not exists
-- [ ] T004 [P] Create `/webApp/src/components/map/` directory if not exists
-- [ ] T005 [P] Verify ESLint config in `/webApp/eslint.config.mjs` includes TypeScript plugin
-- [ ] T006 [P] Verify Vitest config in `/webApp/vite.config.ts` includes 80% coverage threshold
+- [X] T001 Verify dependencies in `/webApp/package.json` (leaflet@1.9.x, react-leaflet@4.x, @types/leaflet installed)
+- [X] T002 [P] Create `/webApp/src/hooks/` directory if not exists
+- [X] T003 [P] Create `/webApp/src/lib/` directory if not exists
+- [X] T004 [P] Create `/webApp/src/components/map/` directory if not exists
+- [X] T005 [P] Verify ESLint config in `/webApp/eslint.config.mjs` includes TypeScript plugin
+- [X] T006 [P] Verify Vitest config in `/webApp/vite.config.ts` includes 80% coverage threshold
 
 ---
 
@@ -54,10 +54,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Setup Leaflet mock for tests in `/webApp/src/__tests__/setup.ts` (mock `L.divIcon`, `L.Marker`, etc.)
-- [ ] T008 [P] Verify existing `AnnouncementService` in `/webApp/src/services/` can be reused
-- [ ] T009 [P] Setup E2E test infrastructure for web in `/e2e-tests/java/` (Java 21 + Maven + Selenium + Cucumber)
-- [ ] T010 [P] Create base Page Object for landing page in `/e2e-tests/java/src/test/java/.../pages/LandingPage.java` (if not exists)
+- [X] T007 Setup Leaflet mock for tests in `/webApp/src/__tests__/setup.ts` (mock `L.divIcon`, `L.Marker`, etc.)
+- [X] T008 [P] Verify existing `AnnouncementService` in `/webApp/src/services/` can be reused
+- [X] T009 [P] Setup E2E test infrastructure for web in `/e2e-tests/java/` (Java 21 + Maven + Selenium + Cucumber)
+- [X] T010 [P] Create base Page Object for landing page in `/e2e-tests/java/src/test/java/.../pages/LandingPage.java` (if not exists)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
