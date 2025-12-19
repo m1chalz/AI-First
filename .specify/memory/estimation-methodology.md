@@ -152,3 +152,153 @@ Example: 30 tasks × 1.5 = 45 hours = ~6 days
 - [ ] Calculate variance from initial
 - [ ] Document variance reason for team learning
 
+---
+
+## Jira Integration
+
+Every feature specification MUST have a corresponding Jira ticket of type **Feature** in the "AI First" (KAN) project.
+
+### Automatic Ticket Creation
+
+When a `spec.md` file is created or updated with an estimation, a Jira Feature ticket is automatically created/updated with:
+
+| spec.md Field | Jira Field | Notes |
+|---------------|------------|-------|
+| Feature title | Summary | From first heading |
+| User stories + Requirements | Description | Markdown content |
+| Story Points (Initial) | Story point estimate | From Initial Estimate section |
+| Feature branch name | Labels | e.g., `062-printable-flyer` |
+
+### Workflow
+
+```
+1. Create spec.md with estimation
+2. Run: specify sync-jira (or automatic on spec.md save)
+3. Jira ticket created with Story Points
+4. FigJam user flow diagram auto-generated
+5. After PLAN/TASKS phases → update spec.md → Story Points updated in Jira
+```
+
+---
+
+## Design Deliverables (Mandatory for UI Features)
+
+Every feature specification with UI components gets a complete design package.
+
+### Design Workflow
+
+```
+1. Create spec.md with user stories
+2. Generate User Flow diagram (FigJam)
+3. Generate Wireframe layout (FigJam)
+4. Create Design Brief (markdown)
+5. Create Figma Make Prompt
+6. Link all assets to Jira ticket
+7. Generate Visual Mockups (Figma Make or designer)
+```
+
+### Design Assets Table
+
+| Asset | Format | Purpose | Auto-Generated? |
+|-------|--------|---------|-----------------|
+| **User Flow** | FigJam flowchart | Navigation and logic | ✅ Yes |
+| **Wireframe** | FigJam layout | Screen structure | ✅ Yes |
+| **Design Brief** | Markdown | Component specs, interactions | ✅ Yes |
+| **Figma Make Prompt** | Markdown | AI prompt for visual design | ✅ Yes |
+| **Visual Mockups** | Figma design | High-fidelity screens | ❌ Manual (Figma Make) |
+
+### File Structure
+
+```
+specs/[feature]/
+├── spec.md
+├── plan.md
+├── tasks.md
+└── design/
+    ├── design-brief.md      # Component specs, interactions
+    └── figma-make-prompt.md # Ready-to-paste AI prompt
+```
+
+### spec.md Design Field Format
+
+```markdown
+**Design**: [User Flow](url) | [Wireframe](url) | [Design Brief](design/design-brief.md) | [Figma Make Prompt](design/figma-make-prompt.md)
+```
+
+### Jira Integration
+
+All design assets are added to the Jira ticket as comments:
+
+1. **Comment 1**: User Flow diagram link
+2. **Comment 2**: Wireframe + ASCII layout
+3. **Comment 3**: Figma Make prompt (copy-paste ready)
+4. **Comment 4**: Visual mockup links (when available)
+
+### Figma Make Prompt Template
+
+Every UI feature gets a Figma Make prompt that references the existing prototype.
+
+**Existing Prototype (REQUIRED REFERENCE)**:
+🔗 [PetSpot Lost Pet Reporting System](https://www.figma.com/make/ZbqpULNnXH99lsfgscxBcK/Lost-Pet-Reporting-System)
+
+Every Figma Make prompt MUST include:
+
+```
+Create a [screen type] for [app name].
+
+SCREEN LAYOUT:
+1. [Header/navigation elements]
+2. [Main content area]
+3. [Action buttons/CTAs]
+4. [Secondary elements]
+
+COMPONENTS:
+- [Component 1 with specs]
+- [Component 2 with specs]
+
+STYLE:
+- [Design system/brand guidelines]
+- [Platform patterns (iOS/Android/Web)]
+
+Create [N] screens: [list of variations]
+
+DESIGN SYSTEM REFERENCE:
+Use the existing PetSpot prototype as the design foundation:
+https://www.figma.com/make/ZbqpULNnXH99lsfgscxBcK/Lost-Pet-Reporting-System
+
+Match the existing design system:
+- Colors: Use the same color palette from the prototype
+- Typography: Match fonts and type scale
+- Components: Reuse existing card, button, and navigation patterns
+- Spacing: Follow the same spacing tokens
+- Style: Maintain visual consistency with existing screens
+```
+
+### When to Skip Design Deliverables
+
+Skip design for:
+- Backend-only features (API endpoints, database migrations)
+- Infrastructure features (CI/CD, deployment)
+- Refactoring tasks (no UI changes)
+
+Mark in spec.md: `**Design**: N/A - Backend only`
+
+### spec.md Required Fields for Jira
+
+Add this to the frontmatter or metadata section of spec.md:
+
+```markdown
+**Jira Ticket**: [KAN-XXX](https://ai-first-intive.atlassian.net/browse/KAN-XXX)
+```
+
+This field is automatically populated after the first Jira sync.
+
+### Jira Configuration
+
+| Setting | Value |
+|---------|-------|
+| Jira Cloud ID | `2b980644-05e9-43e0-aab6-1bcf1e6cb9de` |
+| Jira Project Key | `KAN` |
+| Issue Type | `Feature` (ID: 10003) |
+| Story Points Field | `customfield_10016` |
+
