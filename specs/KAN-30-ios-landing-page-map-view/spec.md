@@ -1,6 +1,6 @@
 # Feature Specification: iOS Landing Page Static Map Preview
 
-**Feature Branch**: `067-mobile-map-view`  
+**Feature Branch**: `KAN-30-ios-landing-page-map-view`  
 **Created**: 2025-12-18  
 **Status**: Draft  
 **Input**: User description: "Split part 1/2: Add a static map preview component to the landing page between Description and Recently Lost Pets. Preview is non-interactive and gated by location permission. (Fullscreen interactive map + pins + pop-ups are defined in a separate spec.)"
