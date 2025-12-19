@@ -25,6 +25,26 @@ describe('MapView', () => {
   });
 
   describe('when rendering with valid state', () => {
+    it('should render section header with title and subtitle', () => {
+      // given
+      mockUseMapState.mockReturnValue({
+        center: { lat: 52.2297, lng: 21.0122 },
+        zoom: 13,
+        isLoading: false,
+        error: null,
+        showPermissionPrompt: false,
+        handleRequestPermission: vi.fn(),
+        handleMapLoadError: vi.fn()
+      });
+
+      // when
+      render(<MapView />);
+
+      // then
+      expect(screen.getByText('Pet Locations Map')).toBeDefined();
+      expect(screen.getByText('Red markers indicate missing pets, blue markers indicate found pets')).toBeDefined();
+    });
+
     it('should render MapContainer with correct center and zoom', () => {
       // given
       const center = { lat: 52.2297, lng: 21.0122 };
