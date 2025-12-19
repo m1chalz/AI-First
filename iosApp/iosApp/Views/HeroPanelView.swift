@@ -15,7 +15,7 @@ struct HeroPanelView: View {
                 .foregroundColor(Color(hex: "#101828"))
                 .accessibilityIdentifier(model.titleAccessibilityId)
             
-            // Buttons row
+            // Buttons row - width controlled by FloatingActionButtonModel.expandsHorizontally
             HStack(spacing: 12) {
                 // Left button
                 FloatingActionButton(
@@ -33,7 +33,7 @@ struct HeroPanelView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 16)
         .padding(.vertical, 24)
         .background(
             LinearGradient(
