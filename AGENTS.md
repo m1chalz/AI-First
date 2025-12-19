@@ -2,6 +2,8 @@
 
 **Architecture**: See `.specify/memory/constitution.md` for architectural principles (platform independence, 80% test coverage, native patterns)
 
+**Estimation**: See `.specify/memory/estimation-methodology.md` for Story Points, budget formulas, and spec-kit re-estimation process
+
 ## Build & Test Commands
 
 ### Android (Kotlin + Jetpack Compose)
@@ -264,3 +266,28 @@ Each platform MUST maintain minimum 80% line + branch coverage:
 - **Web**: Unit tests for models, services, and hooks in `/webApp/src/__tests__/`
 - **Backend**: Unit tests for services and lib in `/server/src/services/__test__/` and `/server/src/lib/__test__/`
 - **Backend API**: Integration tests for REST endpoints in `/server/src/__test__/`
+
+## Estimation Methodology
+
+See `.specify/memory/estimation-methodology.md` for full details.
+
+### Quick Reference
+
+- **1 SP** = Effort across ALL platforms (Backend + Web + iOS + Android) with 80% test coverage
+- **Anchor**: Pet Details Screen = 3 SP (medium complexity)
+- **Budget**: `SP × 4 days × 1.3` (risk buffer)
+- **Scale**: 1, 2, 3, 5, 8, 13 (Fibonacci ONLY - no other values!)
+
+### Estimation Workflow
+
+```
+Initial SP → SPEC → PLAN → TASKS → Per-Platform Days
+  ±50%       ±30%   ±20%   ±10-15%
+```
+
+### Every spec.md MUST Include
+
+- Initial Story Points and budget
+- Re-estimation table (updated after SPEC, PLAN, TASKS)
+- Per-platform breakdown (after TASKS)
+- Variance tracking (for team learning)
