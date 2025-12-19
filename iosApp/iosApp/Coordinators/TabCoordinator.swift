@@ -95,39 +95,39 @@ final class TabCoordinator {
             fatalError("Coordinator must have navigationController")
         }
         
-        // Configure tab bar items with SF Symbols and localized titles
+        // Configure tab bar items with custom icons and localized titles
         configureTabBarItem(
             for: homeNav,
             title: L10n.Tabs.home,
-            imageName: "house",
+            assetName: "home",
             accessibilityIdentifier: "tabs.home"
         )
         
         configureTabBarItem(
             for: lostPetNav,
             title: L10n.Tabs.lostPet,
-            imageName: "magnifyingglass",
+            assetName: "lostPet",
             accessibilityIdentifier: "tabs.lostPet"
         )
         
         configureTabBarItem(
             for: foundPetNav,
             title: L10n.Tabs.foundPet,
-            imageName: "pawprint",
+            assetName: "foundPet",
             accessibilityIdentifier: "tabs.foundPet"
         )
         
         configureTabBarItem(
             for: contactUsNav,
             title: L10n.Tabs.contactUs,
-            imageName: "envelope",
+            assetName: "contactUs",
             accessibilityIdentifier: "tabs.contactUs"
         )
         
         configureTabBarItem(
             for: accountNav,
             title: L10n.Tabs.account,
-            imageName: "person.circle",
+            assetName: "account",
             accessibilityIdentifier: "tabs.account"
         )
         
@@ -164,18 +164,19 @@ final class TabCoordinator {
     /// - Parameters:
     ///   - navigationController: Navigation controller to configure
     ///   - title: Localized title for the tab
-    ///   - imageName: SF Symbol name for the tab icon
+    ///   - assetName: Custom asset name for the tab icon (from Assets.xcassets/TabBar/)
     ///   - accessibilityIdentifier: Accessibility identifier for testing
     private func configureTabBarItem(
         for navigationController: UINavigationController,
         title: String,
-        imageName: String,
+        assetName: String,
         accessibilityIdentifier: String
     ) {
+        // Use template image - tint colors applied via UITabBarAppearance
         let tabBarItem = UITabBarItem(
             title: title,
-            image: UIImage(systemName: imageName),
-            selectedImage: UIImage(systemName: "\(imageName).fill") ?? UIImage(systemName: imageName)
+            image: UIImage(named: assetName),
+            selectedImage: nil
         )
         tabBarItem.accessibilityIdentifier = accessibilityIdentifier
         navigationController.tabBarItem = tabBarItem
@@ -250,27 +251,35 @@ final class TabCoordinator {
     }
     
     /// Configures tab bar appearance with design system colors.
-    /// Background: #FAFAFA, Inactive: #808080, Active: #FF6B35
+    /// Background: #FFFFFF, Inactive: #6a7282, Active: #155dfc
     private func configureTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(hex: "#FAFAFA")
+        
+        // Background color: white (#FFFFFF)
+        appearance.backgroundColor = UIColor(hex: "#FFFFFF")
+        
+        // Top border: thin black line
+        appearance.shadowColor = UIColor.black
+        appearance.shadowImage = UIImage()
         
         // Normal (inactive) item appearance
         let normalAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor(hex: "#808080")
+            .foregroundColor: UIColor(hex: "#6a7282"),
+            .font: UIFont.systemFont(ofSize: 12)
         ]
-        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(hex: "#808080")
+        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(hex: "#6a7282")
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = normalAttributes
         
         // Selected (active) item appearance
         let selectedAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor(hex: "#FF6B35")
+            .foregroundColor: UIColor(hex: "#155dfc"),
+            .font: UIFont.systemFont(ofSize: 12)
         ]
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(hex: "#FF6B35")
+        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(hex: "#155dfc")
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = selectedAttributes
         
-        // Apply appearance
+        // Apply appearance to both standard and scrollEdge
         _tabBarController.tabBar.standardAppearance = appearance
         _tabBarController.tabBar.scrollEdgeAppearance = appearance
     }

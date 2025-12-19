@@ -91,16 +91,16 @@ final class TabCoordinatorTests: XCTestCase {
         }
     }
     
-    // MARK: - Test: Tab bar items have correct SF Symbols icons (T016)
+    // MARK: - Test: Tab bar items have correct custom icons (T016)
     
-    func testTabBarItems_shouldHaveCorrectSFSymbolsIcons() {
+    func testTabBarItems_shouldHaveCorrectCustomIcons() {
         // Given
         let expectedIconNames = [
-            "house",           // Home
-            "magnifyingglass", // Lost Pet
-            "pawprint",        // Found Pet
-            "envelope",        // Contact Us
-            "person.circle"    // Account
+            "home",       // Home
+            "lostPet",    // Lost Pet
+            "foundPet",   // Found Pet
+            "contactUs",  // Contact Us
+            "account"     // Account
         ]
         
         // When
