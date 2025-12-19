@@ -148,9 +148,12 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 │       └── ui/
 │           ├── MapPreviewSection.kt          # NEW: Stateful composable (state host)
 │           ├── MapPreviewContent.kt          # NEW: Stateless composable (pure UI)
-│           ├── MapPreviewLegend.kt           # NEW: Legend component
-│           ├── MapPreviewOverlay.kt          # NEW: "Tap to view" overlay
-│           └── PermissionRequestContent.kt   # NEW: Permission request UI
+│           ├── components/
+│           │   ├── MapPreviewLegend.kt       # NEW: Legend component
+│           │   ├── MapPreviewOverlay.kt      # NEW: "Tap to view" overlay
+│           │   └── PermissionRequestContent.kt # NEW: Permission request UI
+│           └── preview/
+│               └── MapPreviewUiStateProvider.kt # NEW: PreviewParameterProvider
 ├── features/
 │   └── home/
 │       └── ui/

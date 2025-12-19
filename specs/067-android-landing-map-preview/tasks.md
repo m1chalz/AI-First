@@ -46,10 +46,11 @@
 - [ ] T007 [P] Create `MapPreviewIntent` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/mvi/MapPreviewIntent.kt` (`LoadMap`, `RequestPermission`, `PermissionGranted`, `PermissionDenied`, `Retry`)
 - [ ] T008 [P] Create `MapPreviewEffect` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/mvi/MapPreviewEffect.kt` (empty for now, reserved for future navigation)
 - [ ] T009 [P] Create `MapPreviewError` sealed interface in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/mvi/MapPreviewError.kt` (`LocationNotAvailable`, `NetworkError`, `MapLoadFailed`)
-- [ ] T010 Create `GetNearbyAnimalsForMapUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/usecases/GetNearbyAnimalsForMapUseCase.kt` (wraps existing `AnimalRepository` with 10km radius)
-- [ ] T011 Add `GetNearbyAnimalsForMapUseCase` factory to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DomainModule.kt`
-- [ ] T012 [P] Create `LocationCoordinates.toLatLng()` extension function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/extensions/LocationExtensions.kt`
-- [ ] T013 [P] Create `AnimalStatus.toMarkerIcon()` extension function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/extensions/MarkerExtensions.kt`
+- [ ] T010 [P] Create `MapPreviewReducer` object in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/mvi/MapPreviewReducer.kt` (pure function: `reduce(state, result) -> state`)
+- [ ] T011 Create `GetNearbyAnimalsForMapUseCase` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/usecases/GetNearbyAnimalsForMapUseCase.kt` (wraps existing `AnimalRepository` with 10km radius)
+- [ ] T012 Add `GetNearbyAnimalsForMapUseCase` factory to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/DomainModule.kt`
+- [ ] T013 [P] Create `LocationCoordinates.toLatLng()` extension function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/extensions/LocationExtensions.kt`
+- [ ] T014 [P] Create `AnimalStatus.toMarkerIcon()` extension function in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/extensions/MarkerExtensions.kt`
 
 **Checkpoint**: Foundation ready - ViewModel and UI implementation can now begin
 
@@ -70,28 +71,29 @@
 - `FakeLocationRepository` at `/composeApp/src/androidUnitTest/.../fakes/FakeLocationRepository.kt`
 
 **Android Unit Tests**:
-- [ ] T014 [P] [US1] Unit test for `GetNearbyAnimalsForMapUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/usecases/GetNearbyAnimalsForMapUseCaseTest.kt` (use existing `FakeAnimalRepository`, test success, empty list, failure cases)
-- [ ] T015 [P] [US1] Unit test for `MapPreviewViewModel` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/viewmodels/MapPreviewViewModelTest.kt` (use existing fakes, test `LoadMap` intent → loading → success state with Turbine)
+- [ ] T015 [P] [US1] Unit test for `GetNearbyAnimalsForMapUseCase` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/domain/usecases/GetNearbyAnimalsForMapUseCaseTest.kt` (use existing `FakeAnimalRepository`, test success, empty list, failure cases)
+- [ ] T016 [P] [US1] Unit test for `MapPreviewReducer` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/mvi/MapPreviewReducerTest.kt` (test pure reduce function with various inputs)
+- [ ] T017 [P] [US1] Unit test for `MapPreviewViewModel` in `/composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/viewmodels/MapPreviewViewModelTest.kt` (use existing fakes, test `LoadMap` intent → loading → success state with Turbine)
 
 ### Implementation for User Story 1
 
 **ViewModel**:
-- [ ] T016 [US1] Create `MapPreviewViewModel` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/viewmodels/MapPreviewViewModel.kt` (inject `GetCurrentLocationUseCase`, `CheckLocationPermissionUseCase`, `GetNearbyAnimalsForMapUseCase`)
-- [ ] T017 [US1] Implement `LoadMap` intent handler in `MapPreviewViewModel` (fetch location → fetch animals → update state)
-- [ ] T018 [US1] Implement `Retry` intent handler in `MapPreviewViewModel` (re-attempt `LoadMap` flow)
-- [ ] T019 [US1] Add `MapPreviewViewModel` to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
+- [ ] T018 [US1] Create `MapPreviewViewModel` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/presentation/viewmodels/MapPreviewViewModel.kt` (inject `GetCurrentLocationUseCase`, `CheckLocationPermissionUseCase`, `GetNearbyAnimalsForMapUseCase`, uses `MapPreviewReducer`)
+- [ ] T019 [US1] Implement `LoadMap` intent handler in `MapPreviewViewModel` (fetch location → fetch animals → call reducer → update state)
+- [ ] T020 [US1] Implement `Retry` intent handler in `MapPreviewViewModel` (re-attempt `LoadMap` flow)
+- [ ] T021 [US1] Add `MapPreviewViewModel` to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/di/ViewModelModule.kt`
 
 **UI Composables**:
-- [ ] T020 [P] [US1] Create `MapPreviewUiStateProvider` (PreviewParameterProvider) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/preview/MapPreviewUiStateProvider.kt` (loading, success with pins, error, permission states)
-- [ ] T021 [US1] Create `MapPreviewLegend` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/MapPreviewLegend.kt` (red dot "Missing", blue dot "Found")
-- [ ] T022 [US1] Create `MapPreviewOverlay` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/MapPreviewOverlay.kt` (white pill "Tap to view interactive map")
-- [ ] T023 [US1] Create `MapPreviewContent` stateless composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewContent.kt` (GoogleMap with pins, legend, overlay, loading, error states)
-- [ ] T024 [US1] Add `@Preview` function for `MapPreviewContent` using `@PreviewParameter(MapPreviewUiStateProvider::class)` in same file
-- [ ] T025 [US1] Add `testTag` modifiers to all interactive elements in `MapPreviewContent` (`mapPreview.container`, `mapPreview.header`, `mapPreview.legend`, `mapPreview.map`, `mapPreview.overlay`, `mapPreview.loading`, `mapPreview.error`, `mapPreview.retryButton`)
-- [ ] T026 [US1] Create `MapPreviewSection` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewSection.kt` (collects state from ViewModel, dispatches intents, delegates to `MapPreviewContent`)
+- [ ] T022 [P] [US1] Create `MapPreviewUiStateProvider` (PreviewParameterProvider) in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/preview/MapPreviewUiStateProvider.kt` (loading, success with pins, error, permission states)
+- [ ] T023 [US1] Create `MapPreviewLegend` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/MapPreviewLegend.kt` (red dot "Missing", blue dot "Found")
+- [ ] T024 [US1] Create `MapPreviewOverlay` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/MapPreviewOverlay.kt` (white pill "Tap to view interactive map")
+- [ ] T025 [US1] Create `MapPreviewContent` stateless composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewContent.kt` (GoogleMap with pins, legend, overlay, loading, error states, 0.667px border per FR-016)
+- [ ] T026 [US1] Add `@Preview` function for `MapPreviewContent` using `@PreviewParameter(MapPreviewUiStateProvider::class)` in same file
+- [ ] T027 [US1] Add `testTag` modifiers to all interactive elements in `MapPreviewContent` (`mapPreview.container`, `mapPreview.header`, `mapPreview.legend`, `mapPreview.map`, `mapPreview.overlay`, `mapPreview.loading`, `mapPreview.error`, `mapPreview.retryButton`)
+- [ ] T028 [US1] Create `MapPreviewSection` state host composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewSection.kt` (collects state from ViewModel, dispatches intents, delegates to `MapPreviewContent`)
 
 **Integration**:
-- [ ] T027 [US1] Add `MapPreviewSection` to `HomeScreen` LazyColumn in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/home/ui/HomeScreen.kt` (between hero section and Recent Reports)
+- [ ] T029 [US1] Add `MapPreviewSection` to `HomeScreen` LazyColumn in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/home/ui/HomeScreen.kt` (between hero section and Recent Reports)
 
 **Checkpoint**: User Story 1 is complete - map preview with pins should display when permission is granted
 
@@ -106,21 +108,21 @@
 ### Tests for User Story 2 (MANDATORY) ✅
 
 **Android Unit Tests**:
-- [ ] T028 [P] [US2] Add test cases to `MapPreviewViewModelTest` for permission flow: `PermissionGranted` → triggers `LoadMap`, `PermissionDenied` → updates state to denied
-- [ ] T029 [P] [US2] Add test case for `RequestPermission` intent in `MapPreviewViewModelTest`
+- [ ] T030 [P] [US2] Add test cases to `MapPreviewViewModelTest` for permission flow: `PermissionGranted` → triggers `LoadMap`, `PermissionDenied` → updates state to denied
+- [ ] T031 [P] [US2] Add test case for `RequestPermission` intent in `MapPreviewViewModelTest`
 
 ### Implementation for User Story 2
 
 **ViewModel**:
-- [ ] T030 [US2] Implement `PermissionGranted` intent handler in `MapPreviewViewModel` (update permission status, trigger `LoadMap`)
-- [ ] T031 [US2] Implement `PermissionDenied` intent handler in `MapPreviewViewModel` (update permission status to denied)
-- [ ] T032 [US2] Implement `RequestPermission` intent handler in `MapPreviewViewModel` (set permission status to requesting)
+- [ ] T032 [US2] Implement `PermissionGranted` intent handler in `MapPreviewViewModel` (update permission status, trigger `LoadMap`)
+- [ ] T033 [US2] Implement `PermissionDenied` intent handler in `MapPreviewViewModel` (update permission status to denied)
+- [ ] T034 [US2] Implement `RequestPermission` intent handler in `MapPreviewViewModel` (set permission status to requesting)
 
 **UI Composables**:
-- [ ] T033 [US2] Create `PermissionRequestContent` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/PermissionRequestContent.kt` (informational text, "Enable Location" button)
-- [ ] T034 [US2] Add `testTag` modifiers to `PermissionRequestContent` (`mapPreview.permissionMessage`, `mapPreview.permissionButton`)
-- [ ] T035 [US2] Integrate `PermissionRequestContent` into `MapPreviewContent` (show when permission not granted)
-- [ ] T036 [US2] Wire Accompanist `rememberPermissionState` in `MapPreviewSection` (connect to ViewModel intents)
+- [ ] T035 [US2] Create `PermissionRequestContent` composable in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/components/PermissionRequestContent.kt` (informational text, "Enable Location" button)
+- [ ] T036 [US2] Add `testTag` modifiers to `PermissionRequestContent` (`mapPreview.permissionMessage`, `mapPreview.permissionButton`)
+- [ ] T037 [US2] Integrate `PermissionRequestContent` into `MapPreviewContent` (show when permission not granted)
+- [ ] T038 [US2] Wire Accompanist `rememberPermissionState` in `MapPreviewSection` (connect to ViewModel intents)
 
 **Checkpoint**: User Story 2 is complete - permission request UI should appear when permission not granted
 
@@ -130,11 +132,11 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T037 Add loading shimmer effect to `MapPreviewContent` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewContent.kt`
-- [ ] T038 [P] Add KDoc documentation to `MapPreviewViewModel` and `GetNearbyAnimalsForMapUseCase` (WHAT/WHY, not HOW)
-- [ ] T039 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80%+ coverage for new code
-- [ ] T040 [P] Run lint check and fix any issues in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/`
-- [ ] T041 Manual testing on device/emulator (permission flow, map rendering, pin display)
+- [ ] T039 Add loading shimmer effect to `MapPreviewContent` in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/ui/MapPreviewContent.kt`
+- [ ] T040 [P] Add KDoc documentation to `MapPreviewViewModel`, `MapPreviewReducer`, and `GetNearbyAnimalsForMapUseCase` (WHAT/WHY, not HOW)
+- [ ] T041 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80%+ coverage for new code
+- [ ] T042 [P] Run lint check and fix any issues in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/mapPreview/`
+- [ ] T043 Manual testing on device/emulator (permission flow, map rendering, pin display, verify 2s load time per SC-001)
 
 ---
 
@@ -170,9 +172,8 @@
 
 ```bash
 # Launch all tests together (after Foundational phase):
-T014: FakeAnimalRepository
-T015: FakeLocationRepository
-T016: GetNearbyAnimalsForMapUseCase test
+T015: GetNearbyAnimalsForMapUseCase test
+T016: MapPreviewReducer test
 T017: MapPreviewViewModel test
 
 # Then launch UI components together (after ViewModel complete):
@@ -207,13 +208,13 @@ T024: MapPreviewOverlay
 | Phase | Task Count | Purpose |
 |-------|------------|---------|
 | Setup | 5 | Dependencies, manifest, directories |
-| Foundational | 8 | MVI artifacts, use case, extensions |
-| User Story 1 (P1) | 14 | Map preview with pins (MVP) |
+| Foundational | 9 | MVI artifacts (incl. Reducer), use case, extensions |
+| User Story 1 (P1) | 15 | Map preview with pins (MVP) |
 | User Story 2 (P2) | 9 | Permission request flow |
 | Polish | 5 | Shimmer, docs, coverage, lint, testing |
-| **Total** | **41** | |
+| **Total** | **43** | |
 
-**MVP Scope**: Phases 1-3 (27 tasks) = Map preview working with location permission granted
+**MVP Scope**: Phases 1-3 (29 tasks) = Map preview working with location permission granted
 
 **Reused Components**: `Animal`, `AnimalStatus`, `Location`, `LocationCoordinates`, `PermissionStatus`, `AnimalRepository`, `GetCurrentLocationUseCase`, `CheckLocationPermissionUseCase`, `locationModule`, `dataModule`, Accompanist Permissions
 
