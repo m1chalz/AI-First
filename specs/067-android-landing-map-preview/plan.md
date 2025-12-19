@@ -186,7 +186,7 @@ composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPre
 |-----------|------|-------|
 | `AnnouncementApiClient` | `data/api/AnnouncementApiClient.kt` | Already has `getAnnouncements(lat, lng, range)` with location filter |
 | `AnnouncementDto` | `data/api/dto/AnnouncementDto.kt` | Has `locationLatitude`, `locationLongitude`, `status` fields |
-| `AnimalStatus` | `domain/models/AnimalStatus.kt` | LOST/FOUND enum for pin colors |
+| `AnimalStatus` | `composeapp/domain/models/AnimalStatus.kt` | MISSING/FOUND/CLOSED enum with `badgeColor` - reuse for pin colors |
 | `HomeScreen` | `features/home/ui/HomeScreen.kt` | Add `MapPreviewSection` between hero and teaser |
 | `GetCurrentLocationUseCase` | `domain/usecases/GetCurrentLocationUseCase.kt` | Two-stage location fetch (cached + fresh) |
 | `CheckLocationPermissionUseCase` | `domain/usecases/CheckLocationPermissionUseCase.kt` | Permission status checking |

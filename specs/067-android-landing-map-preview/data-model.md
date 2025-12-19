@@ -7,15 +7,17 @@
 
 ### MapPin
 
-Represents a single pet announcement pin on the map.
+Represents a single pet announcement pin on the map. Uses existing `AnimalStatus` enum.
 
 ```kotlin
 // Location: features/mapPreview/domain/models/MapPin.kt
+import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
+
 data class MapPin(
     val id: String,
     val latitude: Double,
     val longitude: Double,
-    val isMissing: Boolean  // true = LOST (red), false = FOUND (blue)
+    val status: AnimalStatus  // MISSING (red), FOUND (blue), CLOSED (gray)
 )
 ```
 
@@ -24,7 +26,19 @@ data class MapPin(
 | `id` | String | Unique announcement identifier | Required, from backend |
 | `latitude` | Double | GPS latitude | Required, -90 to 90 |
 | `longitude` | Double | GPS longitude | Required, -180 to 180 |
-| `isMissing` | Boolean | Pet status (LOST vs FOUND) | Required |
+| `status` | AnimalStatus | Pet status (MISSING/FOUND/CLOSED) | Required, reuses existing enum |
+
+### AnimalStatus (EXISTING - REUSE)
+
+```kotlin
+// EXISTING: composeapp/domain/models/AnimalStatus.kt
+@Serializable
+enum class AnimalStatus(val displayName: String, val badgeColor: String) {
+    MISSING("MISSING", "#FF0000"),  // Red - actively missing
+    FOUND("FOUND", "#0074FF"),      // Blue - animal found
+    CLOSED("CLOSED", "#93A2B4"),    // Gray - case closed
+}
+```
 
 ### LocationCoordinates (EXISTING - REUSE)
 
@@ -206,7 +220,7 @@ private fun AnnouncementDto.toMapPin(): MapPin? {
         id = id,
         latitude = lat,
         longitude = lng,
-        isMissing = status == AnimalStatus.LOST
+        status = status  // Direct mapping - AnnouncementDto already uses AnimalStatus
     )
 }
 ```
@@ -330,9 +344,9 @@ val locationModule = module {
 ```kotlin
 // For unit tests and previews
 val samplePins = listOf(
-    MapPin(id = "1", latitude = 52.2297, longitude = 21.0122, isMissing = true),  // Warsaw, lost
-    MapPin(id = "2", latitude = 52.2350, longitude = 21.0100, isMissing = false), // Warsaw, found
-    MapPin(id = "3", latitude = 52.2280, longitude = 21.0200, isMissing = true),  // Warsaw, lost
+    MapPin(id = "1", latitude = 52.2297, longitude = 21.0122, status = AnimalStatus.MISSING),  // Warsaw, missing
+    MapPin(id = "2", latitude = 52.2350, longitude = 21.0100, status = AnimalStatus.FOUND),    // Warsaw, found
+    MapPin(id = "3", latitude = 52.2280, longitude = 21.0200, status = AnimalStatus.MISSING),  // Warsaw, missing
 )
 
 val sampleUserLocation = LatLng(52.2297, 21.0122) // Warsaw center

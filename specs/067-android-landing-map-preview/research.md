@@ -258,7 +258,7 @@ val announcements = apiClient.getAnnouncements(
 // AnnouncementDto already has:
 // - locationLatitude: Double?
 // - locationLongitude: Double?
-// - status: AnimalStatus (LOST/FOUND)
+// - status: AnimalStatus (MISSING/FOUND/CLOSED)
 
 fun AnnouncementDto.toMapPin(): MapPin? {
     val lat = locationLatitude ?: return null
@@ -268,7 +268,7 @@ fun AnnouncementDto.toMapPin(): MapPin? {
         id = id,
         latitude = lat,
         longitude = lng,
-        isMissing = status == AnimalStatus.LOST
+        status = status  // Direct mapping - reuses existing AnimalStatus enum
     )
 }
 ```
@@ -278,13 +278,17 @@ fun AnnouncementDto.toMapPin(): MapPin? {
 ## 5. Custom Marker Icons
 
 ### Decision
-Use `BitmapDescriptorFactory.defaultMarker()` with custom hue for simplicity, or create vector drawables for custom pins.
+Use `BitmapDescriptorFactory.defaultMarker()` with custom hue based on `AnimalStatus`.
 
 ### Option A: Default Markers with Hue (Simple)
 
 ```kotlin
-val redMarkerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-val blueMarkerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+// Use AnimalStatus to determine marker color
+fun AnimalStatus.toMarkerIcon(): BitmapDescriptor = when (this) {
+    AnimalStatus.MISSING -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+    AnimalStatus.FOUND -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+    AnimalStatus.CLOSED -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+}
 ```
 
 ### Option B: Custom Vector Drawables (Advanced)
