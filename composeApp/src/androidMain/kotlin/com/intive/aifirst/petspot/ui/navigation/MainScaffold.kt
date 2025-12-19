@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.intive.aifirst.petspot.domain.models.TabDestination
 import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
+import com.intive.aifirst.petspot.features.home.ui.HomeScreen
 import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.reportMissingNavGraph
 import com.intive.aifirst.petspot.navigation.AccountRoute
@@ -125,8 +126,7 @@ fun MainScaffold(modifier: Modifier = Modifier) {
                 startDestination = HomeRoute.Root,
             ) {
                 composable<HomeRoute.Root> {
-                    // Placeholder for now - will show landing page when implemented
-                    PlaceholderScreen()
+                    HomeScreen(navController = navController)
                 }
             }
 
