@@ -133,15 +133,8 @@ composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/
 ├── features/
 │   └── mapPreview/                    # NEW: Map preview feature module
 │       ├── domain/
-│       │   ├── models/
-│       │   │   └── MapPin.kt          # NEW: Domain model for map pins
-│       │   ├── repositories/
-│       │   │   └── MapPreviewRepository.kt    # NEW: Repository interface
 │       │   └── usecases/
-│       │       └── GetNearbyAnnouncementsUseCase.kt  # NEW: Use case
-│       ├── data/
-│       │   └── repositories/
-│       │       └── MapPreviewRepositoryImpl.kt  # NEW: Repository implementation
+│       │       └── GetNearbyAnimalsForMapUseCase.kt  # NEW: Wraps AnimalRepository
 │       ├── presentation/
 │       │   ├── mvi/
 │       │   │   ├── MapPreviewUiState.kt     # NEW: Immutable UI state
@@ -184,8 +177,9 @@ composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/mapPre
 
 | Component | Path | Usage |
 |-----------|------|-------|
-| `AnnouncementApiClient` | `data/api/AnnouncementApiClient.kt` | Already has `getAnnouncements(lat, lng, range)` with location filter |
-| `AnnouncementDto` | `data/api/dto/AnnouncementDto.kt` | Has `locationLatitude`, `locationLongitude`, `status` fields |
+| `AnimalRepository` | `composeapp/domain/repositories/AnimalRepository.kt` | Already has `getAnimals(lat, lng, range)` - use directly! |
+| `Animal` | `composeapp/domain/models/Animal.kt` | Has `location: Location` and `status: AnimalStatus` |
+| `Location` | `composeapp/domain/models/Location.kt` | Has `latitude`/`longitude` for map pins |
 | `AnimalStatus` | `composeapp/domain/models/AnimalStatus.kt` | MISSING/FOUND/CLOSED enum with `badgeColor` - reuse for pin colors |
 | `HomeScreen` | `features/home/ui/HomeScreen.kt` | Add `MapPreviewSection` between hero and teaser |
 | `GetCurrentLocationUseCase` | `domain/usecases/GetCurrentLocationUseCase.kt` | Two-stage location fetch (cached + fresh) |

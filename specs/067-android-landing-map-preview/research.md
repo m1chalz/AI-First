@@ -252,25 +252,17 @@ val announcements = apiClient.getAnnouncements(
 )
 ```
 
-### DTO Mapping to Domain Model
+### No Mapping Needed - Use Animal Directly
+
+The existing `AnimalRepository.getAnimals()` already returns `List<Animal>` with:
+- `location: Location` (has `latitude`/`longitude`)
+- `status: AnimalStatus` (MISSING/FOUND/CLOSED)
+
+**No new DTO mapping required** - just filter animals with valid locations:
 
 ```kotlin
-// AnnouncementDto already has:
-// - locationLatitude: Double?
-// - locationLongitude: Double?
-// - status: AnimalStatus (MISSING/FOUND/CLOSED)
-
-fun AnnouncementDto.toMapPin(): MapPin? {
-    val lat = locationLatitude ?: return null
-    val lng = locationLongitude ?: return null
-    
-    return MapPin(
-        id = id,
-        latitude = lat,
-        longitude = lng,
-        status = status  // Direct mapping - reuses existing AnimalStatus enum
-    )
-}
+val animalsWithLocation = animalRepository.getAnimals(lat, lng, range = 10)
+    .filter { it.location.latitude != null && it.location.longitude != null }
 ```
 
 ---

@@ -3,32 +3,39 @@
 **Date**: 2025-12-19  
 **Feature**: 067-android-landing-map-preview
 
-## Domain Entities
+## Domain Entities (ALL EXISTING - REUSE)
 
-### MapPin
+### Animal (EXISTING)
 
-Represents a single pet announcement pin on the map. Uses existing `AnimalStatus` enum.
+The existing `Animal` model has everything needed for map pins. **No new domain model needed.**
 
 ```kotlin
-// Location: features/mapPreview/domain/models/MapPin.kt
-import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
-
-data class MapPin(
+// EXISTING: composeapp/domain/models/Animal.kt
+data class Animal(
     val id: String,
-    val latitude: Double,
-    val longitude: Double,
-    val status: AnimalStatus  // MISSING (red), FOUND (blue), CLOSED (gray)
+    val name: String,
+    val photoUrl: String,
+    val location: Location,      // Has latitude/longitude for map pins
+    val species: String,
+    val breed: String,
+    val gender: AnimalGender,
+    val status: AnimalStatus,    // MISSING/FOUND/CLOSED for pin colors
+    val lastSeenDate: String,
+    // ... other fields
 )
 ```
 
-| Field | Type | Description | Constraints |
-|-------|------|-------------|-------------|
-| `id` | String | Unique announcement identifier | Required, from backend |
-| `latitude` | Double | GPS latitude | Required, -90 to 90 |
-| `longitude` | Double | GPS longitude | Required, -180 to 180 |
-| `status` | AnimalStatus | Pet status (MISSING/FOUND/CLOSED) | Required, reuses existing enum |
+### Location (EXISTING)
 
-### AnimalStatus (EXISTING - REUSE)
+```kotlin
+// EXISTING: composeapp/domain/models/Location.kt
+data class Location(
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+)
+```
+
+### AnimalStatus (EXISTING)
 
 ```kotlin
 // EXISTING: composeapp/domain/models/AnimalStatus.kt
@@ -37,6 +44,17 @@ enum class AnimalStatus(val displayName: String, val badgeColor: String) {
     MISSING("MISSING", "#FF0000"),  // Red - actively missing
     FOUND("FOUND", "#0074FF"),      // Blue - animal found
     CLOSED("CLOSED", "#93A2B4"),    // Gray - case closed
+}
+```
+
+### Extension for Google Maps
+
+```kotlin
+// NEW: Extension to convert Animal location to Google Maps LatLng
+fun Animal.toLatLng(): LatLng? {
+    val lat = location.latitude ?: return null
+    val lng = location.longitude ?: return null
+    return LatLng(lat, lng)
 }
 ```
 
@@ -66,27 +84,26 @@ fun LocationCoordinates.toLatLng(): LatLng = LatLng(latitude, longitude)
 
 ### MapPreviewUiState
 
-Immutable state representing the entire map preview component.
+Immutable state representing the entire map preview component. Uses existing `Animal` model directly.
 
 ```kotlin
 // Location: features/mapPreview/presentation/mvi/MapPreviewUiState.kt
 data class MapPreviewUiState(
-    val permissionStatus: PermissionStatus = PermissionStatus.NOT_REQUESTED,
+    val permissionStatus: PermissionStatus = PermissionStatus.NotRequested,  // EXISTING sealed class
     val isLoading: Boolean = false,
-    val userLocation: LatLng? = null,
-    val pins: List<MapPin> = emptyList(),
+    val userLocation: LocationCoordinates? = null,  // EXISTING domain model
+    val animals: List<Animal> = emptyList(),        // EXISTING domain model
     val error: MapPreviewError? = null
 ) {
     companion object {
         val Initial = MapPreviewUiState()
     }
-}
-
-enum class PermissionStatus {
-    NOT_REQUESTED,
-    GRANTED,
-    DENIED,
-    DENIED_PERMANENTLY
+    
+    // Derived: animals with valid coordinates for map display
+    val animalsWithLocation: List<Animal>
+        get() = animals.filter { 
+            it.location.latitude != null && it.location.longitude != null 
+        }
 }
 
 sealed interface MapPreviewError {
@@ -96,12 +113,14 @@ sealed interface MapPreviewError {
 }
 ```
 
+**Note**: Uses existing `PermissionStatus` sealed class from `domain/models/PermissionStatus.kt`.
+
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `permissionStatus` | PermissionStatus | NOT_REQUESTED | Location permission state |
+| `permissionStatus` | PermissionStatus | NotRequested | Location permission state (EXISTING) |
 | `isLoading` | Boolean | false | Loading indicator |
-| `userLocation` | LatLng? | null | User's current location |
-| `pins` | List<MapPin> | emptyList() | Announcement pins to display |
+| `userLocation` | LocationCoordinates? | null | User's current location (EXISTING) |
+| `animals` | List<Animal> | emptyList() | Animals from repository (EXISTING) |
 | `error` | MapPreviewError? | null | Current error state |
 
 ### State Transitions
@@ -165,89 +184,72 @@ sealed interface MapPreviewEffect {
 
 ---
 
-## Repository Interface
+## Repository (EXISTING - REUSE)
 
-### MapPreviewRepository
+### AnimalRepository (EXISTING)
 
-Repository interface for fetching map data.
+**No new repository needed!** The existing `AnimalRepository` already has location-based filtering.
 
 ```kotlin
-// Location: features/mapPreview/domain/repositories/MapPreviewRepository.kt
-interface MapPreviewRepository {
+// EXISTING: composeapp/domain/repositories/AnimalRepository.kt
+interface AnimalRepository {
     /**
-     * Fetches pet announcements within the specified radius.
-     * @param latitude User's latitude
-     * @param longitude User's longitude
-     * @param radiusKm Search radius in kilometers
-     * @return List of map pins, or empty list on error
+     * Retrieves all animals from the data source.
+     * Optionally filters by location when lat/lng are provided.
+     *
+     * @param lat Optional latitude for location-based filtering
+     * @param lng Optional longitude for location-based filtering
+     * @param range Optional search radius in kilometers
+     * @return List of animals
      */
-    suspend fun getNearbyAnnouncements(
-        latitude: Double,
-        longitude: Double,
-        radiusKm: Int
-    ): Result<List<MapPin>>
+    suspend fun getAnimals(
+        lat: Double? = null,
+        lng: Double? = null,
+        range: Int? = null,
+    ): List<Animal>
 }
 ```
 
-### MapPreviewRepositoryImpl
-
-Repository implementation using existing API client.
+### Usage for Map Preview
 
 ```kotlin
-// Location: features/mapPreview/data/repositories/MapPreviewRepositoryImpl.kt
-class MapPreviewRepositoryImpl(
-    private val apiClient: AnnouncementApiClient
-) : MapPreviewRepository {
-    
-    override suspend fun getNearbyAnnouncements(
-        latitude: Double,
-        longitude: Double,
-        radiusKm: Int
-    ): Result<List<MapPin>> = runCatching {
-        val response = apiClient.getAnnouncements(
-            lat = latitude,
-            lng = longitude,
-            range = radiusKm
-        )
-        response.announcements.mapNotNull { it.toMapPin() }
-    }
-}
+// Use existing repository with 10km range
+val animals = animalRepository.getAnimals(
+    lat = userLocation.latitude,
+    lng = userLocation.longitude,
+    range = 10
+)
 
-private fun AnnouncementDto.toMapPin(): MapPin? {
-    val lat = locationLatitude ?: return null
-    val lng = locationLongitude ?: return null
-    return MapPin(
-        id = id,
-        latitude = lat,
-        longitude = lng,
-        status = status  // Direct mapping - AnnouncementDto already uses AnimalStatus
-    )
-}
+// Filter animals with valid locations for map display
+val pinsForMap = animals.filter { it.location.latitude != null && it.location.longitude != null }
 ```
 
 ---
 
 ## Use Case
 
-### GetNearbyAnnouncementsUseCase
+### GetNearbyAnimalsForMapUseCase
 
-Business logic for fetching nearby announcements.
+Business logic for fetching nearby animals. **Wraps existing `AnimalRepository`.**
 
 ```kotlin
-// Location: features/mapPreview/domain/usecases/GetNearbyAnnouncementsUseCase.kt
-class GetNearbyAnnouncementsUseCase(
-    private val repository: MapPreviewRepository
+// Location: features/mapPreview/domain/usecases/GetNearbyAnimalsForMapUseCase.kt
+class GetNearbyAnimalsForMapUseCase(
+    private val animalRepository: AnimalRepository  // EXISTING repository
 ) {
     companion object {
         const val DEFAULT_RADIUS_KM = 10
     }
     
     suspend operator fun invoke(
-        latitude: Double,
-        longitude: Double,
+        location: LocationCoordinates,
         radiusKm: Int = DEFAULT_RADIUS_KM
-    ): Result<List<MapPin>> {
-        return repository.getNearbyAnnouncements(latitude, longitude, radiusKm)
+    ): Result<List<Animal>> = runCatching {
+        animalRepository.getAnimals(
+            lat = location.latitude,
+            lng = location.longitude,
+            range = radiusKm
+        )
     }
 }
 ```
@@ -258,37 +260,31 @@ class GetNearbyAnnouncementsUseCase(
 
 ### MapPreviewModule
 
-Dependency injection configuration. **Reuses existing `locationModule` dependencies.**
+Dependency injection configuration. **Reuses existing modules - minimal additions.**
 
 ```kotlin
 // Location: di/MapPreviewModule.kt
 val mapPreviewModule = module {
-    // Repository (NEW)
-    single<MapPreviewRepository> { 
-        MapPreviewRepositoryImpl(get()) // get() injects AnnouncementApiClient
-    }
-    
-    // Use Case (NEW)
+    // Use Case (NEW) - wraps existing AnimalRepository
     factory { 
-        GetNearbyAnnouncementsUseCase(get()) 
+        GetNearbyAnimalsForMapUseCase(get())  // get() injects AnimalRepository (from animalModule)
     }
     
     // ViewModel (NEW)
-    // Injects existing GetCurrentLocationUseCase + CheckLocationPermissionUseCase from locationModule
     viewModel { 
         MapPreviewViewModel(
-            getCurrentLocationUseCase = get(),      // FROM locationModule
-            checkLocationPermissionUseCase = get(), // FROM locationModule
-            getNearbyAnnouncementsUseCase = get()   // FROM mapPreviewModule
+            getCurrentLocationUseCase = get(),        // FROM locationModule
+            checkLocationPermissionUseCase = get(),   // FROM locationModule
+            getNearbyAnimalsForMapUseCase = get()     // FROM mapPreviewModule
         )
     }
 }
 ```
 
-### Existing locationModule (REUSE)
+### Existing Modules (REUSE - no changes needed)
 
 ```kotlin
-// EXISTING: di/LocationModule.kt - no changes needed
+// EXISTING: di/LocationModule.kt
 val locationModule = module {
     single { androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     single<PermissionChecker> { AndroidPermissionChecker(androidContext()) }
@@ -296,6 +292,9 @@ val locationModule = module {
     factory { GetCurrentLocationUseCase(get()) }
     factory { CheckLocationPermissionUseCase(get()) }
 }
+
+// EXISTING: di/AnimalModule.kt (or wherever AnimalRepository is defined)
+// single<AnimalRepository> { AnimalRepositoryImpl(get(), get()) }
 ```
 
 ---
@@ -311,44 +310,63 @@ val locationModule = module {
 │                    MapPreviewViewModel                          │
 │              ┌──────────────┼──────────────┐                   │
 │              ▼              ▼              ▼                   │
-│   GetNearbyAnnouncementsUseCase   LocationProvider              │
+│   GetNearbyAnimalsForMapUseCase   GetCurrentLocationUseCase     │
+│              │              (EXISTING)     CheckLocationPermissionUseCase
+│              ▼                             (EXISTING)           │
+│     AnimalRepository (EXISTING)                                 │
 │              │                                                  │
 │              ▼                                                  │
-│     MapPreviewRepository                                        │
-│              │                                                  │
-│              ▼                                                  │
-│    AnnouncementApiClient (existing)                             │
+│    AnnouncementApiClient (EXISTING)                             │
 │              │                                                  │
 │              ▼                                                  │
 │      Backend API: GET /api/v1/announcements?lat=&lng=&range=    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+**Summary**: Only 2 new components needed:
+1. `GetNearbyAnimalsForMapUseCase` - thin wrapper around existing `AnimalRepository`
+2. `MapPreviewViewModel` - MVI ViewModel for the feature
+
 ---
 
 ## Validation Rules
 
-| Entity | Field | Rule |
-|--------|-------|------|
-| MapPin | latitude | Must be between -90 and 90 |
-| MapPin | longitude | Must be between -180 and 180 |
-| MapPin | id | Must not be empty |
-| UserLocation | latitude/longitude | Same as MapPin |
+All validation already exists in domain models:
+
+| Entity | Field | Rule | Source |
+|--------|-------|------|--------|
+| Animal.location | latitude | Optional, -90 to 90 | Existing model |
+| Animal.location | longitude | Optional, -180 to 180 | Existing model |
+| Animal | id | Required, not empty | Existing model |
+| LocationCoordinates | latitude | Required, -90 to 90 | Existing model with `require()` |
+| LocationCoordinates | longitude | Required, -180 to 180 | Existing model with `require()` |
 
 ---
 
 ## Test Data
 
-### Sample MapPin Instances
+### Sample Animals for Map Preview
 
 ```kotlin
-// For unit tests and previews
-val samplePins = listOf(
-    MapPin(id = "1", latitude = 52.2297, longitude = 21.0122, status = AnimalStatus.MISSING),  // Warsaw, missing
-    MapPin(id = "2", latitude = 52.2350, longitude = 21.0100, status = AnimalStatus.FOUND),    // Warsaw, found
-    MapPin(id = "3", latitude = 52.2280, longitude = 21.0200, status = AnimalStatus.MISSING),  // Warsaw, missing
+// For unit tests and previews - use existing Animal model
+val sampleAnimals = listOf(
+    Animal(
+        id = "1", 
+        name = "Buddy",
+        photoUrl = "https://example.com/buddy.jpg",
+        location = Location(latitude = 52.2297, longitude = 21.0122),  // Warsaw
+        species = "Dog",
+        breed = "Golden Retriever",
+        gender = AnimalGender.MALE,
+        status = AnimalStatus.MISSING,
+        lastSeenDate = "19/12/2025",
+        description = "Friendly dog, last seen near park",
+        email = "owner@example.com",
+        phone = "123456789"
+    ),
+    // ... more sample animals
 )
 
-val sampleUserLocation = LatLng(52.2297, 21.0122) // Warsaw center
+val sampleUserLocation = LocationCoordinates(52.2297, 21.0122) // Warsaw center
 ```
 
