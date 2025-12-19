@@ -271,3 +271,14 @@
 // Coming soon
 "placeholder.title" = "Coming soon";
 "placeholder.message" = "This feature is under development";
+
+/* MARK: - Map Preview */
+
+"mapPreview.permission.message" = "Enable location to see nearby area.";
+"mapPreview.permission.settingsButton" = "Go to Settings";
+"mapPreview.tapHint" = "Tap to view interactive map";
+
+// Map Section Header
+"mapSection.title" = "Map View";
+"mapSection.legend.missing" = "Missing";
+"mapSection.legend.found" = "Found";

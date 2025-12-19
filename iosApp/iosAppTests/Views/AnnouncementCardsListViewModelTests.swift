@@ -70,11 +70,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called with limit 5
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called with limit 5
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // Then - Should have exactly 5 card ViewModels
         XCTAssertEqual(sut.cardViewModels.count, 5, "Should display exactly 5 announcements")
@@ -94,11 +91,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // Then - Should display all 3 announcements
         XCTAssertEqual(sut.cardViewModels.count, 3, "Should display all 3 available announcements")
@@ -110,11 +104,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // Then - cardViewModels should be empty
         XCTAssertTrue(sut.cardViewModels.isEmpty, "Card ViewModels should be empty")
@@ -128,11 +119,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // Then - Should have error message
         XCTAssertNotNil(sut.errorMessage, "Should have error message when repository fails")
@@ -147,14 +135,17 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called, then immediately reload
-        sut.query = .landingPageQuery(location: nil)
+        // When - loadWithQuery is called in background, then immediately retry
+        let loadTask = Task {
+            await sut.loadWithQuery(.landingPageQuery(location: nil))
+        }
         
         // Wait a bit then call reload (should cancel first task)
         try? await Task.sleep(nanoseconds: 50_000_000)
         sut.onRetryTapped()
         
-        // Wait for second load to complete
+        // Wait for tasks to complete
+        _ = await loadTask.result
         try? await Task.sleep(nanoseconds: 600_000_000)
         
         // Then - Should have completed (only second task should finish)
@@ -174,11 +165,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called with default (no limit)
-        sut.query = .defaultQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called with default (no limit)
+        await sut.loadWithQuery(.defaultQuery(location: nil))
         
         // Then - Should be sorted newest first
         XCTAssertEqual(sut.cardViewModels.count, 3)
@@ -192,10 +180,7 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         fakeRepository.stubbedAnnouncements = [makeAnnouncement(id: "tapped-id")]
         
         sut = makeSUT()
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // When - Card ViewModel handleTap is called
         guard let cardVM = sut.cardViewModels.first else {
@@ -210,22 +195,24 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
     
     // MARK: - Loading State Tests
     
-    func test_setQuery_shouldSetIsLoadingTrue_whileLoading() async {
+    func test_loadWithQuery_shouldSetIsLoadingTrue_whileLoading() async {
         // Given - Repository with delay
-        fakeRepository.delayDuration = 0.5
+        fakeRepository.delayDuration = 0.3
         fakeRepository.stubbedAnnouncements = []
         
         sut = makeSUT()
         
-        // When - setQuery is called
-        sut.query = .landingPageQuery(location: nil)
+        // When - loadWithQuery is called in background task
+        let loadTask = Task {
+            await sut.loadWithQuery(.landingPageQuery(location: nil))
+        }
         
-        // Then - Should be loading immediately
-        try? await Task.sleep(nanoseconds: 10_000_000) // Small delay to let task start
+        // Then - Should be loading after small delay (let task start)
+        try? await Task.sleep(nanoseconds: 50_000_000) // 50ms
         XCTAssertTrue(sut.isLoading, "Should be loading while fetching")
         
         // Wait for load to complete
-        try? await Task.sleep(nanoseconds: 600_000_000)
+        await loadTask.value
         
         // Then - Should not be loading after complete
         XCTAssertFalse(sut.isLoading, "Should not be loading after completion")
@@ -240,11 +227,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called with location
-        sut.query = .landingPageQuery(location: location)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called with location
+        await sut.loadWithQuery(.landingPageQuery(location: location))
         
         // Then - Repository should receive location
         XCTAssertEqual(fakeRepository.lastLocationParameter?.latitude, 52.2297)
@@ -257,11 +241,8 @@ final class AnnouncementCardsListViewModelTests: XCTestCase {
         
         sut = makeSUT()
         
-        // When - setQuery is called without location
-        sut.query = .landingPageQuery(location: nil)
-        
-        // Wait for async load
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // When - loadWithQuery is called without location
+        await sut.loadWithQuery(.landingPageQuery(location: nil))
         
         // Then - Repository should receive nil location
         XCTAssertNil(fakeRepository.lastLocationParameter)
