@@ -11,13 +11,15 @@ struct MapSectionHeaderView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            // Section title - same font as "Recent Reports"
-            Text(model.title)
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(Color(hex: "#101828"))
-                .accessibilityIdentifier(model.titleAccessibilityId)
+            // Section title - only show if provided
+            if let title = model.title {
+                Text(title)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(Color(hex: "#101828"))
+                    .accessibilityIdentifier(model.titleAccessibilityId ?? "")
+            }
             
-            // Legend items below title
+            // Legend items below title (or standalone if no title)
             HStack(spacing: 16) {
                 ForEach(model.legendItems) { item in
                     legendItemView(item)

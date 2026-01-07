@@ -84,8 +84,8 @@ class HomeCoordinator: CoordinatorInterface {
         viewModel.onSwitchToFoundPetTab = onSwitchToFoundPetTab
         
         // Set fullscreen map navigation callback (MVVM-C pattern)
-        viewModel.onShowFullscreenMap = { [weak self] in
-            self?.showFullscreenMap()
+        viewModel.onShowFullscreenMap = { [weak self] location in
+            self?.showFullscreenMap(userLocation: location)
         }
         
         // Create SwiftUI view with ViewModel
@@ -107,10 +107,12 @@ class HomeCoordinator: CoordinatorInterface {
     
     /// Navigates to fullscreen map view with push animation.
     /// Uses UIHostingController to wrap SwiftUI view in UIKit navigation.
-    private func showFullscreenMap() {
+    ///
+    /// - Parameter userLocation: User's current location to center the map
+    private func showFullscreenMap(userLocation: Coordinate) {
         guard let navigationController else { return }
         
-        let viewModel = FullscreenMapViewModel()
+        let viewModel = FullscreenMapViewModel(userLocation: userLocation)
         let view = NavigationBackHiding {
             FullscreenMapView(viewModel: viewModel)
         }
