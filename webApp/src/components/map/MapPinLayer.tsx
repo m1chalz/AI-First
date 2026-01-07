@@ -76,10 +76,7 @@ export function MapPinLayer() {
                 <p className={styles.popupDate}>
                   <span className={styles.popupIcon}>📅</span> {formatDate(pin.lastSeenDate)}
                 </p>
-                <span
-                  className={styles.statusBadge}
-                  style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}
-                >
+                <span className={`status-badge status-badge--${pin.status.toLowerCase()}`}>
                   {pin.status}
                 </span>
               </div>
