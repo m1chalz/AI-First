@@ -27,6 +27,7 @@
 
   /* Colors - Status */
   --color-error: #ef4444;
+  --color-success: #22c55e;
   --color-warning-bg: #fff3cd;
   --color-warning-border: #ffc107;
   --color-warning-text: #856404;
@@ -46,6 +47,10 @@
   --radius-xl: 16px;
   --radius-full: 9999px;
 
+  /* Breakpoints (for reference - use in media queries) */
+  --breakpoint-tablet: 1023px;
+  --breakpoint-mobile: 767px;
+
   /* Component Heights */
   --map-height: 500px;
   --map-height-tablet: 400px;
@@ -56,4 +61,45 @@ body {
   font-family: var(--font-family);
   margin: 0;
   background-color: var(--color-bg-gray-50);
+}
+
+/* ===========================================
+   Leaflet Map Overrides
+   =========================================== */
+
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ===========================================
+   Utility Classes
+   =========================================== */
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge--missing {
+  background-color: #ff0000;
+}
+
+.status-badge--found {
+  background-color: #0074ff;
+}
+
+.status-badge--closed {
+  background-color: #93a2b4;
 }

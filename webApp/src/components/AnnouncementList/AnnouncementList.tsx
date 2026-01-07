@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAnnouncementList } from '../../hooks/use-announcement-list';
 import { useModal } from '../../hooks/use-modal';
-import { AppRoutes } from '../../pages/routes';
 import { MissingLocationPermissionBanner } from '../MissingLocationPermissionBanner/MissingLocationPermissionBanner';
 import { AnnouncementDetailsModal } from '../AnnouncementDetailsModal/AnnouncementDetailsModal';
 import { AnnouncementCard } from './AnnouncementCard';
@@ -10,7 +8,6 @@ import { EmptyState } from './EmptyState';
 import styles from './AnnouncementList.module.css';
 
 export const AnnouncementList: React.FC = () => {
-  const navigate = useNavigate();
   const { announcements, isLoading, error, isEmpty, geolocationError } = useAnnouncementList();
 
   const { isOpen, selectedAnnouncementId, openModal, closeModal } = useModal();
@@ -21,20 +18,6 @@ export const AnnouncementList: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.mainContent}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>PetSpot</h1>
-
-          <div className={styles.headerButtons}>
-            <button
-              className={styles.primaryButton}
-              onClick={() => navigate(AppRoutes.reportMissing.microchip)}
-              data-testid="announcementList.reportMissingButton"
-            >
-              Report a Missing Animal
-            </button>
-          </div>
-        </header>
-
         <div className={styles.content}>
           {showLocationBanner && <MissingLocationPermissionBanner onClose={() => setIsBannerDismissed(true)} />}
           {isLoading ? (
