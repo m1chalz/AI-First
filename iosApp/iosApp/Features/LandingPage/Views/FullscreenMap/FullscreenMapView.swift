@@ -6,7 +6,7 @@ import MapKit
 /// **Layout**: Legend header at top, interactive map below with pins.
 /// - Legend shows Missing (red) and Found (blue) markers
 /// - Map supports all gestures: pinch zoom, pan, double-tap zoom
-/// - Pins display as classic map pin markers (red `mappin.circle.fill`)
+/// - Pins display as teardrop-shaped markers (red for missing, blue for found)
 ///
 /// **Accessibility identifiers**:
 /// - `fullscreenMap.container` - Root container
@@ -26,10 +26,8 @@ struct FullscreenMapView: View {
             Map(initialPosition: .region(viewModel.mapRegion)) {
                 ForEach(viewModel.pins) { pin in
                     Annotation("", coordinate: pin.coordinate, anchor: .bottom) {
-                        // Classic map pin marker
-                        Image(systemName: "mappin.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(.red)
+                        // Teardrop pin marker - red for missing, blue for found
+                        TeardropPin(color: pin.pinColor)
                             .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
                     }
                 }

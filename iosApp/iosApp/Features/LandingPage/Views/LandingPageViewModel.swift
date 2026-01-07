@@ -214,7 +214,8 @@ class LandingPageViewModel: ObservableObject {
         let pins = listViewModel.cardViewModels.map { cardVM in
             MapPreviewView.PinModel(
                 id: cardVM.id,
-                coordinate: cardVM.announcement.coordinate
+                coordinate: cardVM.announcement.coordinate,
+                status: cardVM.announcement.status
             )
         }
         

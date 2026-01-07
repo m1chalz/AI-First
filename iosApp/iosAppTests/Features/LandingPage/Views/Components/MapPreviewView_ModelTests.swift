@@ -95,8 +95,8 @@ final class MapPreviewView_ModelTests: XCTestCase {
             longitudinalMeters: 20_000
         )
         let pins = [
-            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01)),
-            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02))
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01), status: .active),
+            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02), status: .found)
         ]
         
         let model1 = MapPreviewView.Model.map(region: region, pins: pins, onTap: { })
@@ -114,10 +114,10 @@ final class MapPreviewView_ModelTests: XCTestCase {
             longitudinalMeters: 20_000
         )
         let pins1 = [
-            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01))
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01), status: .active)
         ]
         let pins2 = [
-            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02))
+            MapPreviewView.PinModel(id: "2", coordinate: Coordinate(latitude: 52.24, longitude: 21.02), status: .active)
         ]
         
         let model1 = MapPreviewView.Model.map(region: region, pins: pins1, onTap: { })
@@ -135,7 +135,7 @@ final class MapPreviewView_ModelTests: XCTestCase {
             longitudinalMeters: 20_000
         )
         let pins = [
-            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01))
+            MapPreviewView.PinModel(id: "1", coordinate: Coordinate(latitude: 52.23, longitude: 21.01), status: .active)
         ]
         
         let model1 = MapPreviewView.Model.map(region: region, pins: [], onTap: { })
