@@ -259,6 +259,26 @@ public enum L10n {
       }
     }
   }
+  public enum MapPreview {
+    /// Tap to view interactive map
+    public static let tapHint = L10n.tr("Localizable", "mapPreview.tapHint", fallback: "Tap to view interactive map")
+    public enum Permission {
+      /// MARK: - Map Preview
+      public static let message = L10n.tr("Localizable", "mapPreview.permission.message", fallback: "Enable location to see nearby area.")
+      /// Go to Settings
+      public static let settingsButton = L10n.tr("Localizable", "mapPreview.permission.settingsButton", fallback: "Go to Settings")
+    }
+  }
+  public enum MapSection {
+    /// Map View
+    public static let title = L10n.tr("Localizable", "mapSection.title", fallback: "Map View")
+    public enum Legend {
+      /// Found
+      public static let found = L10n.tr("Localizable", "mapSection.legend.found", fallback: "Found")
+      /// Missing
+      public static let missing = L10n.tr("Localizable", "mapSection.legend.missing", fallback: "Missing")
+    }
+  }
   public enum MicrochipNumber {
     /// Continue
     public static let continueButton = L10n.tr("Localizable", "microchipNumber.continueButton", fallback: "Continue")

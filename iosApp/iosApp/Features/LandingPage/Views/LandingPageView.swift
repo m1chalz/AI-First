@@ -1,12 +1,18 @@
 import SwiftUI
 
-/// Landing page view for Home tab displaying hero panel, list header, and recent pet announcements.
-/// Composes new top panel UI with `AnnouncementCardsListView` (autonomous component).
+/// Landing page view for Home tab displaying hero panel, map preview, list header, and recent pet announcements.
+/// Uses single ScrollView for continuous scrolling of all sections.
 ///
 /// **Layout (top to bottom)**:
 /// 1. HeroPanelView - "Find Your Pet" title + "Lost Pet" / "Found Pet" buttons
-/// 2. ListHeaderRowView - "Recent Reports" title + "View All" action
-/// 3. AnnouncementCardsListView - scrollable list of pet announcements
+/// 2. MapPreviewView - Static map centered on user location (16:9 aspect ratio)
+/// 3. ListHeaderRowView - "Recent Reports" title + "View All" action
+/// 4. AnnouncementCardsListView - announcement cards (inline content, no nested scroll)
+///
+/// **Scroll Architecture**:
+/// - Single outer ScrollView with LazyVStack containing all sections
+/// - No nested scroll regions (hero, header, and list scroll together)
+/// - Loading, error, and empty states render inline in scroll content
 ///
 /// **Navigation**:
 /// - NO NavigationView - coordinator manages UINavigationController
@@ -18,43 +24,55 @@ import SwiftUI
 /// 2. Parent ViewModel fetches location and sets `listViewModel.query`
 /// 3. Shows permission popup if needed (once per session)
 /// 4. Child ViewModel loads announcements and updates state
-/// 5. `AnnouncementCardsListView` observes child ViewModel and renders UI
+/// 5. `AnnouncementCardsListView` observes child ViewModel and renders UI inline
 struct LandingPageView: View {
     @ObservedObject var viewModel: LandingPageViewModel
     
     var body: some View {
         // NO NavigationView - coordinator manages UINavigationController
-        VStack(spacing: 0) {
-            // Hero panel - "Find Your Pet" + action buttons
-            HeroPanelView(
-                model: .landingPage(
-                    onLostPetTap: {
-                        viewModel.onSwitchToLostPetTab?(nil)
-                    },
-                    onFoundPetTap: {
-                        viewModel.onSwitchToFoundPetTab?()
-                    }
+        // Single ScrollView for continuous scrolling of all sections
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                // Hero panel - "Find Your Pet" + action buttons
+                HeroPanelView(
+                    model: .landingPage(
+                        onLostPetTap: {
+                            viewModel.onSwitchToLostPetTab?(nil)
+                        },
+                        onFoundPetTap: {
+                            viewModel.onSwitchToFoundPetTab?()
+                        }
+                    )
                 )
-            )
-            
-            // List header row - "Recent Reports" / "View All"
-            ListHeaderRowView(
-                model: .recentReports(
-                    onViewAllTap: {
-                        viewModel.onSwitchToLostPetTab?(nil)
-                    }
+                
+                // Map section header with legend
+                MapSectionHeaderView(model: .landingPage())
+                    .padding(.top, 8)
+                
+                // Map preview - static map centered on user location
+                MapPreviewView(model: viewModel.mapPreviewModel)
+                    .aspectRatio(16/9, contentMode: .fit)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
+                
+                // List header row - "Recent Reports" / "View All"
+                ListHeaderRowView(
+                    model: .recentReports(
+                        onViewAllTap: {
+                            viewModel.onSwitchToLostPetTab?(nil)
+                        }
+                    )
                 )
-            )
-            
-            // Announcement cards list - takes remaining space
-            // IMPORTANT: .frame(maxHeight: .infinity) needed because AnnouncementCardsListView
-            // has its own ScrollView inside - it needs explicit height to work properly
-            AnnouncementCardsListView(
-                viewModel: viewModel.listViewModel,
-                emptyStateModel: viewModel.emptyStateModel,
-                listAccessibilityId: viewModel.listAccessibilityId
-            )
-            .frame(maxHeight: .infinity)
+                
+                // Pass hasOwnScrollView: false to disable nested ScrollView
+                // Parent ScrollView (this view) handles scrolling
+                AnnouncementCardsListView(
+                    viewModel: viewModel.listViewModel,
+                    emptyStateModel: viewModel.emptyStateModel,
+                    listAccessibilityId: viewModel.listAccessibilityId,
+                    hasOwnScrollView: false
+                )
+            }
         }
         .task {
             await viewModel.loadData()

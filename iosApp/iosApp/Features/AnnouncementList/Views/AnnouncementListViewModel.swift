@@ -137,9 +137,9 @@ class AnnouncementListViewModel: ObservableObject {
         locationPermissionStatus = result.status
         currentLocation = result.location
         
-        // Set query on child ViewModel (triggers automatic reload)
+        // Load announcements with query
         let queryWithLocation = AnnouncementListQuery.defaultQuery(location: result.location)
-        listViewModel.query = queryWithLocation
+        await listViewModel.loadWithQuery(queryWithLocation)
     }
     
     /**

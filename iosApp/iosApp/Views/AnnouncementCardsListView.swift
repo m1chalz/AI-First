@@ -6,8 +6,12 @@ import SwiftUI
 /// **Autonomous Component Pattern**:
 /// - Observes own ViewModel for state (loading, error, empty, success)
 /// - Handles states internally (loading spinner, error view, empty state, list)
-/// - Reusable in multiple contexts (full list, landing page, search, etc.)
+/// - Reusable in multiple contexts (full list with scroll, embedded without scroll)
 /// - Parent View triggers load via parent ViewModel setting `listViewModel.query`
+///
+/// **Scroll Architecture**:
+/// - `hasOwnScrollView: true` (default) - wraps content in ScrollView (for standalone usage)
+/// - `hasOwnScrollView: false` - no ScrollView wrapper (for embedding in parent ScrollView)
 ///
 /// **Does NOT trigger loading** - parent View's `.task` calls parent ViewModel's `loadData()`,
 /// which then sets `listViewModel.query` to trigger the actual load.
@@ -19,6 +23,23 @@ struct AnnouncementCardsListView: View {
     
     /// Base accessibility identifier for list elements
     let listAccessibilityId: String
+    
+    /// Whether this view manages its own scroll container.
+    /// Set to `false` when embedding in a parent ScrollView (e.g., LandingPageView).
+    /// Default: `true` (backwards compatible with existing usages).
+    let hasOwnScrollView: Bool
+    
+    init(
+        viewModel: AnnouncementCardsListViewModel,
+        emptyStateModel: EmptyStateView.Model,
+        listAccessibilityId: String,
+        hasOwnScrollView: Bool = true
+    ) {
+        self.viewModel = viewModel
+        self.emptyStateModel = emptyStateModel
+        self.listAccessibilityId = listAccessibilityId
+        self.hasOwnScrollView = hasOwnScrollView
+    }
     
     // MARK: - Computed Properties
     
@@ -50,18 +71,32 @@ struct AnnouncementCardsListView: View {
             } else if isEmpty {
                 EmptyStateView(model: emptyStateModel)
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(viewModel.cardViewModels, id: \.id) { cardViewModel in
-                            AnnouncementCardView(viewModel: cardViewModel)
-                        }
+                // Conditionally wrap in ScrollView based on hasOwnScrollView parameter
+                if hasOwnScrollView {
+                    ScrollView {
+                        listContent
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                    .accessibilityIdentifier("\(listAccessibilityId).list")
+                } else {
+                    // Parent provides scroll container (e.g., LandingPageView)
+                    listContent
+                        .accessibilityIdentifier("\(listAccessibilityId).list")
                 }
-                .accessibilityIdentifier("\(listAccessibilityId).list")
             }
         }
+    }
+    
+    // MARK: - Private Views
+    
+    /// Extracted list content for conditional scroll wrapping
+    private var listContent: some View {
+        LazyVStack(spacing: 8) {
+            ForEach(viewModel.cardViewModels, id: \.id) { cardViewModel in
+                AnnouncementCardView(viewModel: cardViewModel)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
     }
 }
 
