@@ -18,7 +18,6 @@
 }
 
 .photoContainer {
-  position: relative;
   padding: 20px;
   padding-bottom: 0;
 }
@@ -55,7 +54,7 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  line-height: 0.5;
+  line-height: 1.0;
   color: var(--color-text-dark);
 }
 
