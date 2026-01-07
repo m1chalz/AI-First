@@ -29,7 +29,6 @@ A user wants to open a fullscreen map view from the landing page preview and be 
 ### Edge Cases
 
 - **Rapid navigation**: User taps the map preview multiple times quickly - system should prevent opening multiple map views
-- **Memory pressure**: Returning from fullscreen map should not crash; landing page behavior follows existing lifecycle/state restoration behavior
 - **Orientation change**: If device orientation changes while on fullscreen map view, the view should adapt gracefully and back navigation should still work correctly
 
 ## Requirements *(mandatory)*
@@ -54,18 +53,22 @@ A user wants to open a fullscreen map view from the landing page preview and be 
 
 ### Session 2026-01-07
 
-- Q: What should the “empty map view” render? → A: Placeholder only (no map rendering yet)
+- Q: What should the "empty map view" render? → A: Placeholder only (no map rendering yet)
 - Q: What is the navigation bar title for the fullscreen map view? → A: Pet Locations
 - Q: What should the placeholder content be? → A: Empty view, no text
 - Q: Should we guarantee landing page state (scroll position) after navigating back? → A: Default pop; no guarantees
+- Q: How should the app support accessibility (VoiceOver, Dynamic Type, etc.)? → A: Not required for this feature
+- Q: Should memory pressure scenarios be handled specially? → A: No special handling needed (not memory-heavy)
+- Q: Should navigation timing be measured and verified (1s open, 500ms close)? → A: No (per constitution XIV: Performance Not a Concern)
+- Q: Should navigation events be logged (development/production)? → A: No logging required
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can open fullscreen map view within 1 second after tapping the landing page preview under normal conditions
-- **SC-002**: Users can return to landing page within 500ms after tapping the back button
-- **SC-004**: Navigation remains responsive even when user performs rapid taps (prevents duplicate navigation attempts)
+- **SC-001**: Tapping the map preview successfully opens the fullscreen map view
+- **SC-002**: Back button successfully returns user to the landing page
+- **SC-003**: Navigation remains responsive even when user performs rapid taps (prevents duplicate navigation attempts)
 
 ## Assumptions
 

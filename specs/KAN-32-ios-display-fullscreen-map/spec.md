@@ -44,15 +44,6 @@ A user wants to see a legend explaining what map symbols and colors will represe
 
 ---
 
-### Edge Cases
-
-- **Memory pressure**: Map should handle memory warnings gracefully without crashing; consider reducing cached map tiles
-- **Background/foreground**: Map state (zoom, center) should be preserved when app moves to background and returns
-- **Orientation change**: Map should adapt to orientation changes without losing current viewport
-- **Location permissions denied**: Map should still work with default region; user can manually pan to desired area
-- **Slow map tile loading**: Map should show loading indicators for tiles that are still fetching
-- **Legend positioning**: Legend should remain accessible and not obstruct map controls (zoom buttons, user location button)
-
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
@@ -61,13 +52,11 @@ A user wants to see a legend explaining what map symbols and colors will represe
 - **FR-002**: The map MUST support pinch-to-zoom gestures for zooming in and out
 - **FR-003**: The map MUST support pan gestures to navigate to different areas
 - **FR-004**: The map MUST support double-tap gesture to zoom in on a location
-- **FR-005**: The map MUST be centered on the user's current location on initial load if location permissions are granted
-- **FR-006**: If location permissions are not granted, the map MUST display a reasonable default region
-- **FR-007**: The map view MUST display a legend showing the meaning of map symbols/colors (for future pin features)
+- **FR-005**: The map MUST be centered on the user's current location on initial load with a city-level zoom (~10km radius visible)
+- **FR-006**: The map view MUST display a legend as a static view overlay positioned above the map (always visible)
+- **FR-007**: The legend MUST show the meaning of map symbols/colors (for future pin features)
 - **FR-008**: The legend MUST be positioned to not obstruct critical map areas or map controls
 - **FR-009**: The legend MUST show at minimum: missing animal pin marker symbol/color and its meaning (as placeholder for future implementation)
-- **FR-010**: The map MUST preserve its state (zoom level, center) when the app moves to background and returns
-- **FR-011**: The map MUST adapt to device orientation changes without losing current viewport
 
 ### Key Entities *(include if feature involves data)*
 
@@ -78,10 +67,9 @@ A user wants to see a legend explaining what map symbols and colors will represe
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can see an interactive map rendered within 2 seconds after opening fullscreen map view under normal conditions
-- **SC-002**: Users can zoom and pan the map without perceivable lag or UI freezing during interaction
-- **SC-003**: The map remains responsive when user performs multiple rapid zoom/pan gestures
-- **SC-004**: Users can identify future pin meanings by viewing the legend without requiring external documentation
+- **SC-001**: Interactive map is rendered successfully after opening fullscreen map view
+- **SC-002**: Map remains responsive when user performs multiple rapid zoom/pan gestures
+- **SC-003**: Users can identify future pin meanings by viewing the legend without requiring external documentation
 
 ## Assumptions
 
@@ -105,6 +93,9 @@ Pin display and interaction will be implemented in a subsequent specification bu
 ### Session 2026-01-07
 
 - Q: Should pins be included in this spec? → A: No, only map display and legend. Pins will be in a separate spec.
-- Q: What should the map center on if location permissions are denied? → A: Default region (e.g., city center or last known region)
 - Q: What should the legend show if pins aren't implemented yet? → A: Placeholder symbols/colors for missing animal markers (based on design in KAN-32 mockup)
-- Q: Should the legend be interactive (collapsible/expandable)? → A: Not specified; can be a static overlay that doesn't obstruct map interaction
+- Q: Should performance timing be measured (2s render, lag-free interaction)? → A: No (per constitution XIV: Performance Not a Concern)
+- Q: What if location permissions are denied? → A: Not applicable (app requires permissions to access map)
+- Q: Should edge cases (memory pressure, background/foreground, orientation, tile loading) be handled specially? → A: No, default system behavior is sufficient
+- Q: What initial zoom level should the map display? → A: City-level zoom (~10km radius)
+- Q: Should the legend be toggleable (show/hide) or always visible? → A: Always visible (static view overlay above map)
