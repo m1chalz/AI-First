@@ -3,6 +3,8 @@
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
 **Status**: Draft  
+**Jira Ticket**: _Pending sync_ <!-- Auto-populated after spec creation -->  
+**Design**: _Pending_ <!-- See Design Deliverables section below -->  
 **Input**: User description: "$ARGUMENTS"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -113,6 +115,40 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Design Deliverables *(mandatory for UI features)*
+
+<!--
+  DESIGN WORKFLOW: Auto-generated after spec.md creation.
+  See `.specify/memory/estimation-methodology.md` for full workflow.
+  
+  All design assets are:
+  1. Generated automatically where possible
+  2. Linked to Jira ticket
+  3. Stored in specs/[feature]/design/ folder
+-->
+
+### Design Assets
+
+| Asset | Status | Link |
+|-------|--------|------|
+| **User Flow** | _Pending_ | FigJam diagram showing navigation and logic |
+| **Wireframe** | _Pending_ | FigJam layout showing screen structure |
+| **Design Brief** | _Pending_ | Component specs, interactions, platform notes |
+| **Figma Make Prompt** | _Pending_ | AI prompt for generating visual designs |
+| **Visual Mockups** | _Pending_ | High-fidelity screens (created in Figma Make or by designer) |
+
+### Design Requirements
+
+- [ ] User flow diagram created
+- [ ] Wireframe layout created
+- [ ] Design brief with component specs
+- [ ] Figma Make prompt ready
+- [ ] All assets linked in Jira ticket
+- [ ] Visual mockups approved (if applicable)
+
+---
+
 
 ## Estimation *(mandatory)*
 
