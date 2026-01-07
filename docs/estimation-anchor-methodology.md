@@ -84,7 +84,3 @@ The anchor came from the project's workspace rules (`.specify/memory/constitutio
 
 This was pre-established by the team to ensure consistent estimation across features. The anchor should be **calibrated periodically** based on actual completion times to improve estimation accuracy.
 
-
-
-
-

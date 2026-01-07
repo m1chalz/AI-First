@@ -11,13 +11,6 @@ import kotlinx.serialization.Serializable
  */
 sealed interface NavRoute {
     /**
-     * Animal List screen - primary entry point per FR-010.
-     * Route: "animal_list"
-     */
-    @Serializable
-    data object AnimalList : NavRoute
-
-    /**
      * Animal Detail screen - shows details for specific animal.
      * Route: "animal_detail/{animalId}"
      *

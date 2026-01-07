@@ -11,7 +11,7 @@ import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.Summar
 import com.intive.aifirst.petspot.features.reportmissing.presentation.mvi.SummaryUserIntent
 import com.intive.aifirst.petspot.features.reportmissing.presentation.state.ReportMissingFlowState
 import com.intive.aifirst.petspot.features.reportmissing.presentation.viewmodels.SummaryViewModel
-import com.intive.aifirst.petspot.navigation.NavRoute
+import com.intive.aifirst.petspot.navigation.LostPetRoute
 
 /**
  * State host composable for Summary/Report Created Confirmation screen.
@@ -41,7 +41,7 @@ fun SummaryScreen(
                 is SummaryUiEffect.DismissFlow -> {
                     // Clear flow state and exit entire flow
                     flowState.clear()
-                    navController.popBackStack(NavRoute.AnimalList, inclusive = false)
+                    navController.popBackStack(LostPetRoute.List, inclusive = false)
                 }
             }
         }

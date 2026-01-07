@@ -301,4 +301,3 @@ This field is automatically populated after the first Jira sync.
 | Jira Project Key | `KAN` |
 | Issue Type | `Feature` (ID: 10003) |
 | Story Points Field | `customfield_10016` |
-
