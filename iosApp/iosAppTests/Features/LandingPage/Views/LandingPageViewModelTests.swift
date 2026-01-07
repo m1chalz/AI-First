@@ -413,6 +413,31 @@ final class LandingPageViewModelTests: XCTestCase {
         }
     }
     
+    // T006: handleMapTap should invoke onShowFullscreenMap callback
+    func test_handleMapTap_whenCallbackSet_shouldInvokeOnShowFullscreenMapCallback() async {
+        // Given
+        let expectedLocation = Coordinate(latitude: 52.23, longitude: 21.01)
+        await fakeLocationService.setStubbedAuthorizationStatus(.authorizedWhenInUse)
+        await fakeLocationService.setStubbedLocation(expectedLocation)
+        fakeRepository.stubbedAnnouncements = []
+        
+        var callbackInvoked = false
+        sut = makeSUT()
+        sut.onShowFullscreenMap = {
+            callbackInvoked = true
+        }
+        
+        await sut.loadData()
+        
+        // When - extract and call onTap from map model
+        if case .map(_, _, let onTap) = sut.mapPreviewModel {
+            onTap()
+        }
+        
+        // Then
+        XCTAssertTrue(callbackInvoked, "onShowFullscreenMap callback should be invoked when map is tapped")
+    }
+    
     // T015a: Map component should never call requestWhenInUseAuthorization
     func test_loadData_whenMapPreviewSetup_shouldNotRequestPermissionAgain() async {
         // Given - already authorized

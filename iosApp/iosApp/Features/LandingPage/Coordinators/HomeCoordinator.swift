@@ -83,6 +83,11 @@ class HomeCoordinator: CoordinatorInterface {
         viewModel.onSwitchToLostPetTab = onSwitchToLostPetTab
         viewModel.onSwitchToFoundPetTab = onSwitchToFoundPetTab
         
+        // Set fullscreen map navigation callback (MVVM-C pattern)
+        viewModel.onShowFullscreenMap = { [weak self] in
+            self?.showFullscreenMap()
+        }
+        
         // Create SwiftUI view with ViewModel
         let landingPageView = LandingPageView(viewModel: viewModel)
         
@@ -96,6 +101,36 @@ class HomeCoordinator: CoordinatorInterface {
         // Show navigation bar and set as root
         navigationController.isNavigationBarHidden = false
         navigationController.setViewControllers([hostingController], animated: animated)
+    }
+    
+    // MARK: - Fullscreen Map Navigation
+    
+    /// Navigates to fullscreen map view with push animation.
+    /// Uses UIHostingController to wrap SwiftUI view in UIKit navigation.
+    private func showFullscreenMap() {
+        guard let navigationController else { return }
+        
+        let viewModel = FullscreenMapViewModel()
+        let view = NavigationBackHiding {
+            FullscreenMapView(viewModel: viewModel)
+        }
+        let hostingController = UIHostingController(rootView: view)
+        
+        hostingController.title = L10n.FullscreenMap.navigationTitle
+        hostingController.navigationItem.largeTitleDisplayMode = .never
+        
+        // Create custom back button (chevron only, no text, black color)
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = UIColor(hex: "#2D2D2D")
+        backButton.addAction(UIAction { [weak navigationController] _ in
+            navigationController?.popViewController(animated: true)
+        }, for: .touchUpInside)
+        
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        hostingController.navigationItem.leftBarButtonItem = backBarButtonItem
+        
+        navigationController.pushViewController(hostingController, animated: true)
     }
     
     // MARK: - Settings Navigation

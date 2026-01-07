@@ -30,9 +30,9 @@
 
 **Purpose**: Add localization strings required for fullscreen map navigation title
 
-- [ ] T001 Add fullscreen map localization key to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings`
-- [ ] T002 [P] Add fullscreen map localization key to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings`
-- [ ] T003 Regenerate Strings.swift by running `swiftgen` in `/iosApp/`
+- [X] T001 Add fullscreen map localization key to `/iosApp/iosApp/Resources/en.lproj/Localizable.strings`
+- [X] T002 [P] Add fullscreen map localization key to `/iosApp/iosApp/Resources/pl.lproj/Localizable.strings`
+- [X] T003 Regenerate Strings.swift by running `swiftgen` in `/iosApp/`
 
 ---
 
@@ -55,28 +55,28 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 **iOS Unit Tests**:
-- [ ] T004 [P] [US1] Create test file `/iosApp/iosAppTests/Features/FullscreenMap/FullscreenMapViewModelTests.swift` with initial test structure
-- [ ] T005 [P] [US1] Write test `testInit_shouldCreateViewModel()` verifying ViewModel instantiation in `/iosApp/iosAppTests/Features/FullscreenMap/FullscreenMapViewModelTests.swift`
-- [ ] T006 [P] [US1] Write test `testHandleMapTap_whenCallbackSet_shouldInvokeCallback()` in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift`
+- [X] T004 [P] [US1] Create test file `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift` with initial test structure
+- [X] T005 [P] [US1] Write test `testInit_shouldCreateViewModel()` verifying ViewModel instantiation in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T006 [P] [US1] Write test `testHandleMapTap_whenCallbackSet_shouldInvokeCallback()` in `/iosApp/iosAppTests/Features/LandingPage/LandingPageViewModelTests.swift`
 
 ### Implementation for User Story 1
 
 **ViewModel & View** (Core components):
-- [ ] T007 [P] [US1] Create directory structure `/iosApp/iosApp/Features/FullscreenMap/Views/`
-- [ ] T008 [US1] Create FullscreenMapViewModel in `/iosApp/iosApp/Features/FullscreenMap/Views/FullscreenMapViewModel.swift` (minimal @MainActor class, ObservableObject, empty placeholder)
-- [ ] T009 [US1] Create FullscreenMapView in `/iosApp/iosApp/Features/FullscreenMap/Views/FullscreenMapView.swift` (SwiftUI view with Color(.systemBackground) and accessibilityIdentifier)
+- [X] T007 [P] [US1] Create directory structure `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/`
+- [X] T008 [US1] Create FullscreenMapViewModel in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift` (minimal @MainActor class, ObservableObject, empty placeholder)
+- [X] T009 [US1] Create FullscreenMapView in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift` (SwiftUI view with Color(.systemBackground) and accessibilityIdentifier)
 
 **LandingPageViewModel Modification**:
-- [ ] T010 [US1] Add `onShowFullscreenMap: (() -> Void)?` closure property to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
-- [ ] T011 [US1] Update map tap handler to invoke `onShowFullscreenMap?()` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
+- [X] T010 [US1] Add `onShowFullscreenMap: (() -> Void)?` closure property to LandingPageViewModel in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
+- [X] T011 [US1] Update map tap handler to invoke `onShowFullscreenMap?()` in `/iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift`
 
 **HomeCoordinator Modification** (Navigation integration):
-- [ ] T012 [US1] Add `showFullscreenMap()` private method to HomeCoordinator in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
-- [ ] T013 [US1] Wire `viewModel.onShowFullscreenMap` callback to `showFullscreenMap()` in HomeCoordinator's `start()` method in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
-- [ ] T014 [US1] Implement navigation push with UIHostingController, title, and largeTitleDisplayMode in `showFullscreenMap()` in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
+- [X] T012 [US1] Add `showFullscreenMap()` private method to HomeCoordinator in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
+- [X] T013 [US1] Wire `viewModel.onShowFullscreenMap` callback to `showFullscreenMap()` in HomeCoordinator's `start()` method in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
+- [X] T014 [US1] Implement navigation push with UIHostingController, title, and largeTitleDisplayMode in `showFullscreenMap()` in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
 
 **Test Identifiers** (E2E preparation):
-- [ ] T015 [US1] Verify `accessibilityIdentifier("fullscreenMap.container")` is set on FullscreenMapView root element in `/iosApp/iosApp/Features/FullscreenMap/Views/FullscreenMapView.swift`
+- [X] T015 [US1] Verify `accessibilityIdentifier("fullscreenMap.container")` is set on FullscreenMapView root element in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
 
 **Checkpoint**: User Story 1 should be fully functional - tapping map preview opens fullscreen map, back button/swipe returns to landing page
 
@@ -86,11 +86,11 @@
 
 **Purpose**: Final validation and cleanup
 
-- [ ] T016 Build iOS project in Xcode and verify no compilation errors
-- [ ] T017 Run unit tests with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
-- [ ] T018 Verify test coverage meets 80% threshold for FullscreenMapViewModel
+- [X] T016 Build iOS project in Xcode and verify no compilation errors
+- [X] T017 Run unit tests with `xcodebuild test -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 16' -enableCodeCoverage YES`
+- [X] T018 Verify test coverage meets 80% threshold for FullscreenMapViewModel
 - [ ] T019 Run manual verification per quickstart.md checklist (all 10 verification steps)
-- [ ] T020 [P] Add SwiftDoc comments to `showFullscreenMap()` method if purpose is not self-explanatory
+- [X] T020 [P] Add SwiftDoc comments to `showFullscreenMap()` method if purpose is not self-explanatory
 
 ---
 
@@ -175,9 +175,9 @@ This feature has only one user story (P1), which IS the MVP:
 | `iosApp/iosApp/Resources/en.lproj/Localizable.strings` | Modify | 1 |
 | `iosApp/iosApp/Resources/pl.lproj/Localizable.strings` | Modify | 1 |
 | `iosApp/iosApp/Generated/Strings.swift` | Regenerate | 1 |
-| `iosApp/iosAppTests/Features/FullscreenMap/FullscreenMapViewModelTests.swift` | Create | 3 |
-| `iosApp/iosApp/Features/FullscreenMap/Views/FullscreenMapViewModel.swift` | Create | 3 |
-| `iosApp/iosApp/Features/FullscreenMap/Views/FullscreenMapView.swift` | Create | 3 |
+| `iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift` | Create | 3 |
+| `iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift` | Create | 3 |
+| `iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift` | Create | 3 |
 | `iosApp/iosApp/Features/LandingPage/Views/LandingPageViewModel.swift` | Modify | 3 |
 | `iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift` | Modify | 3 |
 

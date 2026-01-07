@@ -218,6 +218,10 @@ public enum L10n {
     /// Retry
     public static let retry = L10n.tr("Localizable", "common.retry", fallback: "Retry")
   }
+  public enum FullscreenMap {
+    /// MARK: - Fullscreen Map
+    public static let navigationTitle = L10n.tr("Localizable", "fullscreenMap.navigationTitle", fallback: "Pet Locations")
+  }
   public enum LandingPage {
     /// MARK: - Landing Page (Home Tab)
     public static let navigationTitle = L10n.tr("Localizable", "landingPage.navigationTitle", fallback: "Home")

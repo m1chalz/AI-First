@@ -95,6 +95,9 @@ class LandingPageViewModel: ObservableObject {
     /// Called when user taps "Found Pet" button (switches to Found Pet tab)
     var onSwitchToFoundPetTab: (() -> Void)?
     
+    /// Called when user taps map preview to open fullscreen map view (MVVM-C pattern)
+    var onShowFullscreenMap: (() -> Void)?
+    
     // MARK: - Dependencies
     
     private let locationHandler: LocationPermissionHandler
@@ -221,11 +224,9 @@ class LandingPageViewModel: ObservableObject {
         )
     }
     
-    /// Handles tap on map preview. Currently logs to console.
-    /// Future: Will navigate to fullscreen map view.
+    /// Handles tap on map preview. Navigates to fullscreen map view via coordinator callback.
     private func handleMapTap() {
-        print("[LandingPage] Map preview tapped")
-        // Future: coordinator?.showFullscreenMap()
+        onShowFullscreenMap?()
     }
     
     /// Refreshes data with updated location.
