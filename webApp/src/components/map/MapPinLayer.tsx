@@ -73,8 +73,17 @@ export function MapPinLayer() {
                 <p className={styles.popupSpecies}>
                   {toPascalCase(pin.species)} {pin.breed && `• ${pin.breed}`}
                 </p>
-                <p className={styles.popupDate}>
+                <p className={styles.popupInfoLine}>
                   <span className={styles.popupIcon}>📅</span> {formatDate(pin.lastSeenDate)}
+                </p>
+                <p className={styles.popupInfoLine}>
+                  <span className={styles.popupIcon}>✉️</span> {pin.email}
+                </p>
+                <p className={styles.popupInfoLine}>
+                  <span className={styles.popupIcon}>📞</span> {pin.phone}
+                </p>
+                <p className={styles.popupDescription}>
+                  {pin.description || 'No additional description provided.'}
                 </p>
                 <span className={`status-badge status-badge--${pin.status.toLowerCase()}`}>
                   {pin.status}

@@ -65,7 +65,7 @@
   color: var(--color-text-muted);
 }
 
-.popupDate {
+.popupInfoLine {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -76,5 +76,14 @@
 }
 
 .popupIcon {
-  font-size: 16px;
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.popupDescription {
+  margin: 12px 0;
+  font-size: 14px;
+  color: var(--color-text-dark);
+  line-height: 1.4;
 }
