@@ -30,10 +30,10 @@
 
 **Purpose**: Verify prerequisites and prepare development environment
 
-- [ ] T001 Verify branch `KAN-32-ios-fullscreen-map-fetch-pins` is checked out
-- [ ] T002 Verify iOS 18 SDK available (Xcode 16+) and iPhone 16 Simulator configured
-- [ ] T003 Verify backend server running at configured API URL (existing endpoint required)
-- [ ] T004 Verify `KAN-32-ios-display-fullscreen-map` feature is implemented (interactive map with legend)
+- [X] T001 Verify branch `KAN-32-ios-fullscreen-map-fetch-pins` is checked out
+- [X] T002 Verify iOS 18 SDK available (Xcode 16+) and iPhone 16 Simulator configured
+- [X] T003 Verify backend server running at configured API URL (existing endpoint required)
+- [X] T004 Verify `KAN-32-ios-display-fullscreen-map` feature is implemented (interactive map with legend)
 
 ---
 
@@ -43,9 +43,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [P] Create `MKCoordinateRegion+Radius.swift` extension in `/iosApp/iosApp/Domain/Models/MKCoordinateRegion+Radius.swift` with `radiusInKilometers` computed property
-- [ ] T006 [P] Create `MapPin.swift` model in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` conforming to `Identifiable` and `Equatable`
-- [ ] T007 [P] Reuse existing `FakeAnnouncementRepository` in `/iosApp/iosAppTests/Fakes/FakeAnnouncementRepository.swift` for unit testing (no new mock file)
+- [X] T005 [P] Create `MKCoordinateRegion+Radius.swift` extension in `/iosApp/iosApp/Domain/Models/MKCoordinateRegion+Radius.swift` with `radiusInKilometers` computed property
+- [X] T006 [P] Create `MapPin.swift` model in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` conforming to `Identifiable` and `Equatable`
+- [X] T007 [P] Reuse existing `FakeAnnouncementRepository` in `/iosApp/iosAppTests/Fakes/FakeAnnouncementRepository.swift` for unit testing (no new mock file)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -63,28 +63,28 @@
 
 **iOS Unit Tests** (Given-When-Then structure):
 
-- [ ] T008 [P] [US1] Unit test `testLoadPins_whenViewAppears_shouldSetIsLoadingTrue` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T009 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsAnnouncements_shouldMapAllToMapPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T010 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsAnnouncements_shouldMapToMapPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T011 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsEmptyArray_shouldSetEmptyPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T012 [P] [US1] Unit test `testLoadPins_whenRepositoryThrowsError_shouldKeepExistingPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T013 [P] [US1] Unit test `testLoadPins_whenComplete_shouldSetIsLoadingFalse` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T008 [P] [US1] Unit test `testLoadPins_whenViewAppears_shouldSetIsLoadingTrue` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T009 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsAnnouncements_shouldMapAllToMapPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T010 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsAnnouncements_shouldMapToMapPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T011 [P] [US1] Unit test `testLoadPins_whenRepositoryReturnsEmptyArray_shouldSetEmptyPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T012 [P] [US1] Unit test `testLoadPins_whenRepositoryThrowsError_shouldKeepExistingPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T013 [P] [US1] Unit test `testLoadPins_whenComplete_shouldSetIsLoadingFalse` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
 
 ### Implementation for User Story 1
 
 **iOS Implementation**:
 
-- [ ] T014 [US1] Add `repository: AnnouncementRepositoryProtocol` dependency to `FullscreenMapViewModel` initializer in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T015 [US1] Add `@Published private(set) var pins: [MapPin] = []` property to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T016 [US1] Add `@Published private(set) var isLoading = false` property to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T017 [US1] Add `private var fetchTask: Task<Void, Never>?` property for task cancellation in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T018 [US1] Implement `loadPins() async` method that fetches announcements and maps all to `MapPin` array (no status filtering) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T019 [US1] Implement silent error handling in `loadPins()` - catch errors, log to console, keep existing pins in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T020 [US1] Update `HomeCoordinator.showFullscreenMap()` to inject `repository` dependency into ViewModel in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
-- [ ] T021 [US1] Add `.task { await viewModel.loadPins() }` modifier to Map in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
-- [ ] T022 [US1] Add `ForEach(viewModel.pins)` with `Annotation` displaying classic map pin markers (`mappin.circle.fill` SF Symbol, red) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
-- [ ] T023 [US1] Update pins without animation (instant update; no `withAnimation` fade-in)
-- [ ] T024 [US1] Add `.accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")` to each pin Annotation in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
+- [X] T014 [US1] Add `repository: AnnouncementRepositoryProtocol` dependency to `FullscreenMapViewModel` initializer in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T015 [US1] Add `@Published private(set) var pins: [MapPin] = []` property to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T016 [US1] Add `@Published private(set) var isLoading = false` property to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T017 [US1] Add `private var fetchTask: Task<Void, Never>?` property for task cancellation in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T018 [US1] Implement `loadPins() async` method that fetches announcements and maps all to `MapPin` array (no status filtering) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T019 [US1] Implement silent error handling in `loadPins()` - catch errors, log to console, keep existing pins in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T020 [US1] Update `HomeCoordinator.showFullscreenMap()` to inject `repository` dependency into ViewModel in `/iosApp/iosApp/Features/LandingPage/Coordinators/HomeCoordinator.swift`
+- [X] T021 [US1] Add `.task { await viewModel.loadPins() }` modifier to Map in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
+- [X] T022 [US1] Add `ForEach(viewModel.pins)` with `Annotation` displaying classic map pin markers (`mappin.circle.fill` SF Symbol, red) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
+- [X] T023 [US1] Update pins without animation (instant update; no `withAnimation` fade-in)
+- [X] T024 [US1] Add `.accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")` to each pin Annotation in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - pins appear on map load
 
@@ -102,19 +102,19 @@
 
 **iOS Unit Tests** (Given-When-Then structure):
 
-- [ ] T025 [P] [US2] Unit test `testHandleRegionChange_whenCalled_shouldFetchPinsForNewRegion` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T026 [P] [US2] Unit test `testHandleRegionChange_whenCalledRapidly_shouldCancelPreviousTask` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T027 [P] [US2] Unit test `testHandleRegionChange_whenRepositoryFails_shouldKeepExistingPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
-- [ ] T028 [P] [US2] Unit test `testRadiusInKilometers_whenRegionProvided_shouldCalculateCorrectRadius` in `/iosApp/iosAppTests/Domain/Models/MKCoordinateRegionRadiusTests.swift`
+- [X] T025 [P] [US2] Unit test `testHandleRegionChange_whenCalled_shouldFetchPinsForNewRegion` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T026 [P] [US2] Unit test `testHandleRegionChange_whenCalledRapidly_shouldCancelPreviousTask` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T027 [P] [US2] Unit test `testHandleRegionChange_whenRepositoryFails_shouldKeepExistingPins` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift`
+- [X] T028 [P] [US2] Unit test `testRadiusInKilometers_whenRegionProvided_shouldCalculateCorrectRadius` in `/iosApp/iosAppTests/Domain/Models/MKCoordinateRegionRadiusTests.swift`
 
 ### Implementation for User Story 2
 
 **iOS Implementation**:
 
-- [ ] T029 [US2] Implement `handleRegionChange(_ region: MKCoordinateRegion) async` method in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T030 [US2] Implement task cancellation in `handleRegionChange()` - cancel `fetchTask` before starting new fetch in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T031 [US2] Extract shared `fetchPins(for region: MKCoordinateRegion) async` private method used by both `loadPins()` and `handleRegionChange()` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T032 [US2] Add `.onMapCameraChange(frequency: .onEnd) { context in Task { await viewModel.handleRegionChange(context.region) } }` modifier to Map in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
+- [X] T029 [US2] Implement `handleRegionChange(_ region: MKCoordinateRegion) async` method in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T030 [US2] Implement task cancellation in `handleRegionChange()` - cancel `fetchTask` before starting new fetch in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T031 [US2] Extract shared `fetchPins(for region: MKCoordinateRegion) async` private method used by both `loadPins()` and `handleRegionChange()` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T032 [US2] Add `.onMapCameraChange(frequency: .onEnd) { context in Task { await viewModel.handleRegionChange(context.region) } }` modifier to Map in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - pins load on appear AND refresh on gesture
 
@@ -124,11 +124,11 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T033 Add SwiftDoc documentation to `MapPin` model in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift`
-- [ ] T034 Add SwiftDoc documentation to `MKCoordinateRegion.radiusInKilometers` extension in `/iosApp/iosApp/Domain/Models/MKCoordinateRegion+Radius.swift`
+- [X] T033 Add SwiftDoc documentation to `MapPin` model in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift`
+- [X] T034 Add SwiftDoc documentation to `MKCoordinateRegion.radiusInKilometers` extension in `/iosApp/iosApp/Domain/Models/MKCoordinateRegion+Radius.swift`
 - [ ] T035 Run `xcodebuild test` with coverage and verify `FullscreenMapViewModel` has ≥ 80% coverage
 - [ ] T036 Run quickstart.md verification checklist to validate all scenarios work correctly
-- [ ] T037 Clean up any TODO comments or debug print statements in modified files
+- [X] T037 Clean up any TODO comments or debug print statements in modified files
 
 ---
 

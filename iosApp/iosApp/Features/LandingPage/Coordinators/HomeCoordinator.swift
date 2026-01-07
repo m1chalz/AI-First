@@ -112,7 +112,10 @@ class HomeCoordinator: CoordinatorInterface {
     private func showFullscreenMap(userLocation: Coordinate) {
         guard let navigationController else { return }
         
-        let viewModel = FullscreenMapViewModel(userLocation: userLocation)
+        let viewModel = FullscreenMapViewModel(
+            userLocation: userLocation,
+            repository: repository
+        )
         let view = NavigationBackHiding {
             FullscreenMapView(viewModel: viewModel)
         }

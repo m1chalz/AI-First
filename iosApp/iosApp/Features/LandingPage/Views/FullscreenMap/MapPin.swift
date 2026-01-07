@@ -1,0 +1,43 @@
+import Foundation
+import CoreLocation
+
+/// Lightweight pin representation for map display.
+/// Derived from `Announcement` with only fields needed for rendering.
+///
+/// **Conformances**:
+/// - `Identifiable`: Enables SwiftUI `ForEach` and optimized diffing
+/// - `Equatable`: Enables selection comparison for future callout toggle
+///
+/// **Future extension**: When tap interaction is implemented, this model
+/// will be extended with additional fields for callout content (see Figma node `1192:5893`).
+struct MapPin: Identifiable, Equatable {
+    /// Unique identifier from announcement
+    let id: String
+    
+    /// Pin position on map (latitude/longitude)
+    let coordinate: CLLocationCoordinate2D
+    
+    /// Animal species for future pin icon variation
+    let species: AnimalSpecies
+    
+    /// Creates MapPin from Announcement domain model.
+    /// - Parameter announcement: Source announcement with location data
+    init(from announcement: Announcement) {
+        self.id = announcement.id
+        self.coordinate = CLLocationCoordinate2D(
+            latitude: announcement.coordinate.latitude,
+            longitude: announcement.coordinate.longitude
+        )
+        self.species = announcement.species
+    }
+    
+    // MARK: - Equatable
+    
+    static func == (lhs: MapPin, rhs: MapPin) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.coordinate.latitude == rhs.coordinate.latitude &&
+        lhs.coordinate.longitude == rhs.coordinate.longitude &&
+        lhs.species == rhs.species
+    }
+}
+
