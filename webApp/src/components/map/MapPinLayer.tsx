@@ -76,12 +76,16 @@ export function MapPinLayer() {
                 <p className={styles.popupInfoLine}>
                   <span className={styles.popupIcon}>📅</span> {formatDate(pin.lastSeenDate)}
                 </p>
-                <p className={styles.popupInfoLine}>
-                  <span className={styles.popupIcon}>✉️</span> {pin.email}
-                </p>
-                <p className={styles.popupInfoLine}>
-                  <span className={styles.popupIcon}>📞</span> {pin.phone}
-                </p>
+                {pin.email && (
+                  <p className={styles.popupInfoLine}>
+                    <span className={styles.popupIcon}>✉️</span> {pin.email}
+                  </p>
+                )}
+                {pin.phone && (
+                  <p className={styles.popupInfoLine}>
+                    <span className={styles.popupIcon}>📞</span> {pin.phone}
+                  </p>
+                )}
                 <p className={styles.popupDescription}>
                   {pin.description || 'No additional description provided.'}
                 </p>
