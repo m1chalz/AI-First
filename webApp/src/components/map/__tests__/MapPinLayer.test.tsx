@@ -168,7 +168,7 @@ describe('MapPinLayer', () => {
   });
 
   describe('popup content', () => {
-    it('renders popup with all pet details', () => {
+    it('renders popup with pet name, species, date, and status', () => {
       // given
       mockUseAnnouncementList.mockReturnValue({
         announcements: [mockAnnouncements[0]],
@@ -186,10 +186,27 @@ describe('MapPinLayer', () => {
       expect(screen.getByTestId('landingPage.map.popup.pin-1')).toBeDefined();
       expect(screen.getByRole('img', { name: 'Buddy' })).toBeDefined();
       expect(screen.getByText('Buddy')).toBeDefined();
-      expect(screen.getByText('Dog | Jan 1, 2025')).toBeDefined();
+      expect(screen.getByText('Dog')).toBeDefined();
+      expect(screen.getByText('Jan 1, 2025')).toBeDefined();
       expect(screen.getByText('MISSING')).toBeDefined();
-      expect(screen.getByText('A friendly golden retriever')).toBeDefined();
-      expect(screen.getByText('+48123456789 | buddy@example.com')).toBeDefined();
+    });
+
+    it('shows species with breed when breed is provided', () => {
+      // given
+      mockUseAnnouncementList.mockReturnValue({
+        announcements: [createAnnouncement({ breed: 'Golden Retriever' })],
+        isLoading: false,
+        error: null,
+        isEmpty: false,
+        loadAnnouncements: vi.fn(),
+        geolocationError: null
+      });
+
+      // when
+      render(<MapPinLayer />);
+
+      // then
+      expect(screen.getByText('Dog • Golden Retriever')).toBeDefined();
     });
 
     it('shows Unknown when pet name is null', () => {
@@ -208,24 +225,6 @@ describe('MapPinLayer', () => {
 
       // then
       expect(screen.getByText('Unknown')).toBeDefined();
-    });
-
-    it('hides description when null', () => {
-      // given
-      mockUseAnnouncementList.mockReturnValue({
-        announcements: [createAnnouncement({ description: null })],
-        isLoading: false,
-        error: null,
-        isEmpty: false,
-        loadAnnouncements: vi.fn(),
-        geolocationError: null
-      });
-
-      // when
-      render(<MapPinLayer />);
-
-      // then
-      expect(screen.queryByTestId('landingPage.map.popup.description')).toBeNull();
     });
   });
 });

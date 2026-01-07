@@ -67,23 +67,21 @@ export function MapPinLayer() {
                   }}
                 />
                 <div className={`${styles.popupImagePlaceholder} ${styles.hidden}`}>🐾</div>
-                <span className={styles.statusBadge} style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}>
-                  {pin.status}
-                </span>
               </div>
               <div className={styles.popupContent}>
                 <h3 className={styles.popupName}>{pin.petName || 'Unknown'}</h3>
-                <p className={styles.popupInfo}>
-                  {toPascalCase(pin.species)} | {formatDate(pin.lastSeenDate)}
+                <p className={styles.popupSpecies}>
+                  {toPascalCase(pin.species)} {pin.breed && `• ${pin.breed}`}
                 </p>
-                {pin.description && (
-                  <p className={styles.popupDescription} data-testid="landingPage.map.popup.description">
-                    {pin.description}
-                  </p>
-                )}
-                <p className={styles.popupContact}>
-                  {pin.phone} | {pin.email}
+                <p className={styles.popupDate}>
+                  <span className={styles.popupIcon}>📅</span> {formatDate(pin.lastSeenDate)}
                 </p>
+                <span
+                  className={styles.statusBadge}
+                  style={{ backgroundColor: ANNOUNCEMENT_STATUS_BADGE_COLORS[pin.status] }}
+                >
+                  {pin.status}
+                </span>
               </div>
             </div>
           </Popup>
