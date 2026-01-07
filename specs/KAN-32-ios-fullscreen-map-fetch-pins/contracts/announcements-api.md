@@ -108,17 +108,14 @@ Accept: application/json
 func getAnnouncements(near location: Coordinate?, range: Int) async throws -> [Announcement]
 ```
 
-### Pin Filtering (Client-Side)
+### Pin Mapping (No Client-Side Filtering)
 
 ```swift
-// Filter for "missing" announcements only
-let pins = announcements.filter { $0.status == .active }
+// Map all announcements to pins (no status filtering)
+let pins = announcements.map { MapPin(from: $0) }
 ```
 
-**Status Mapping**:
-- Backend `MISSING` → iOS `AnnouncementStatus.active`
-- Backend `FOUND` → iOS `AnnouncementStatus.found` (not shown as pins)
-- Backend `CLOSED` → iOS `AnnouncementStatus.closed` (not shown as pins)
+**Note**: All announcements returned by the server are displayed as pins. Server handles location-based filtering via lat/lng/range parameters.
 
 ### Radius Calculation
 

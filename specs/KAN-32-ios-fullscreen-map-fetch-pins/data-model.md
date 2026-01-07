@@ -18,13 +18,13 @@
 | species | AnimalSpecies | Dog, Cat, Bird, etc. | Required |
 | breed | String? | Specific breed name | Optional |
 | gender | AnimalGender | Male, Female, Unknown | Required |
-| status | AnnouncementStatus | Active, Found, Closed | Required, filter by `.active` |
+| status | AnnouncementStatus | Active, Found, Closed | Required |
 | lastSeenDate | String | Date formatted DD/MM/YYYY | Required |
 | description | String? | Detailed text | Optional |
 | email | String? | Contact email | Optional |
 | phone | String? | Contact phone | Optional |
 
-**Pin Filtering**: Only announcements with `status == .active` are displayed as pins (maps to "MISSING" on backend).
+**Pin Display**: All announcements returned by the server are displayed as pins (no client-side status filtering).
 
 ---
 
@@ -122,7 +122,7 @@ Extended ViewModel state for pin fetching:
 │  @Published pins: [MapPin]                                      │
 │  @Published isLoading: Bool                                     │
 │  - Calls repository.getAnnouncements()                          │
-│  - Filters status == .active                                    │
+│  - Maps all announcements to MapPin                             │
 │  - Maps Announcement → MapPin                                   │
 └─────────────────────────────────┬───────────────────────────────┘
                                   │ dependency injection
@@ -148,7 +148,7 @@ Extended ViewModel state for pin fetching:
 ┌─────────────┐     onAppear/      ┌─────────────┐     Success      ┌─────────────┐
 │    Idle     │ ──────────────────>│   Loading   │ ───────────────> │   Loaded    │
 │  pins: []   │  onRegionChange    │ isLoading:  │  pins updated    │  pins: [...]│
-│             │                    │   true      │  with fade-in    │             │
+│             │                    │   true      │  instantly       │             │
 └─────────────┘                    └──────┬──────┘                  └─────────────┘
                                           │
                                           │ Error (silent)
@@ -189,7 +189,7 @@ User Gesture (pan/zoom)
 │ Remove old pins     │
 │ (instant)           │
 │ Add new pins        │
-│ (fade-in animation) │
+│ (instant)           │
 └─────────────────────┘
 ```
 
@@ -198,7 +198,7 @@ User Gesture (pan/zoom)
 | Rule | Entity | Constraint |
 |------|--------|------------|
 | Pin coordinate validity | MapPin | Latitude -90..90, Longitude -180..180 |
-| Status filter | Announcement | Only `status == .active` shown as pins |
+| No status filter | Announcement | All announcements shown as pins |
 | Non-empty ID | Announcement | Required for pin identification |
 | Coordinate required | Announcement | Must have valid lat/lng for pin placement |
 

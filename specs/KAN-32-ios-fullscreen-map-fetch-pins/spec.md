@@ -39,7 +39,7 @@ A user wants pins to update automatically after moving or zooming the map so the
 
 1. **Given** the fullscreen map is displayed with pins, **When** the user pans to a different area, **Then** the system fetches missing animal announcements for the newly visible area immediately after the pan gesture completes without debounce delay
 2. **Given** the fullscreen map is displayed with pins, **When** the user zooms in or out, **Then** the system fetches missing animal announcements for the newly visible area immediately after the pinch gesture completes without debounce delay
-3. **Given** the map region has changed, **When** new pins are loaded, **Then** pins from the previous region that are no longer in view are removed instantly and new pins appear with a fade-in animation
+3. **Given** the map region has changed, **When** new pins are loaded, **Then** pins from the previous region that are no longer in view are removed instantly and new pins appear instantly (no animation)
 4. **Given** the user is actively panning or zooming, **When** the gesture is in progress, **Then** pin fetch requests are NOT sent (wait until gesture ends)
 
 ---
@@ -56,8 +56,8 @@ A user wants pins to update automatically after moving or zooming the map so the
 
 - **FR-001**: The system MUST fetch missing animal announcements from the server when the fullscreen map view loads
 - **FR-002**: The system MUST use the map's center coordinates (latitude, longitude) and visible radius to query the server
-- **FR-003**: The server request MUST use the endpoint `GET /announcements?lat={latitude}&lng={longitude}&range={radius_in_meters}`
-- **FR-004**: The system MUST display pins for each missing animal announcement in the response with status "missing"
+- **FR-003**: The server request MUST use the endpoint `GET /api/v1/announcements?lat={latitude}&lng={longitude}&range={radius_in_kilometers}`
+- **FR-004**: The system MUST display pins for each announcement in the response (no client-side status filtering)
 - **FR-005**: Pins MUST be positioned using each announcement's last-seen coordinates (latitude, longitude)
 - **FR-006**: The system MUST maintain an internal loading state (e.g., isLoading flag) during pin fetch operations without displaying any visible loading indicator to the user
 - **FR-007**: The system MUST fetch updated pins immediately after the user completes a pan gesture (region change) without debounce delay
@@ -66,9 +66,9 @@ A user wants pins to update automatically after moving or zooming the map so the
 - **FR-010**: The system MUST remove pins that are no longer in the visible region after a region change
 - **FR-011**: When pin fetch fails, the system MUST silently fail and keep existing pins displayed without showing error messages
 - **FR-012**: Pins MUST use the visual style (symbol, color) defined in the legend from KAN-32-ios-display-fullscreen-map
-- **FR-013**: Only announcements with status "missing" MUST be displayed as pins
+- **FR-013**: All announcements returned by the server MUST be displayed as pins (no status filtering)
 - **FR-014**: The system MUST display all pins returned by the server without applying any client-side limit
-- **FR-015**: When map region changes and pins are updated, old pins MUST be removed instantly (no animation) and new pins MUST appear with a fade-in animation
+- **FR-015**: When map region changes and pins are updated, old pins MUST be removed instantly (no animation) and new pins MUST appear instantly (no animation)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -86,7 +86,7 @@ A user wants pins to update automatically after moving or zooming the map so the
 ## Assumptions
 
 - The previous spec (KAN-32-ios-display-fullscreen-map) has been implemented, providing the interactive map and legend
-- The backend API endpoint `GET /announcements?lat=X&lng=Y&range=Z` is already implemented and returns announcements in expected format
+- The backend API endpoint `GET /api/v1/announcements?lat=X&lng=Y&range=Z` is already implemented (range in kilometers) and returns announcements in expected format
 - Missing animal announcements include `lastSeenLatitude` and `lastSeenLongitude` fields suitable for pin placement
 - Missing animal announcements include a `status` field with value "missing" for lost pets
 - The iOS app uses URLSession or similar networking stack for API requests
@@ -102,8 +102,8 @@ A user wants pins to update automatically after moving or zooming the map so the
 - Q: What is the limit for number of pins displayed when server returns many announcements? → A: No limit - display all pins returned by server
 - Q: Should users see a visible loading indicator while pins are being fetched? → A: No visible loading indicator - only internal state tracking
 - Q: Should there be a debounce delay after gesture ends before fetching pins? → A: Fetch immediately after gesture ends - no debounce
-- Q: How to handle multiple in-flight requests from rapid gestures (cancel old, queue, allow parallel)? → A: Repository layer concern
-- Q: Should pins animate when appearing/disappearing during map updates? → A: Instant remove old pins + fade-in animation for new pins
+- Q: How to handle multiple in-flight requests from rapid gestures (cancel old, queue, allow parallel)? → A: ViewModel cancels previous fetch task when starting a new fetch
+- Q: Should pins animate when appearing/disappearing during map updates? → A: No - pins update instantly with no animation
 
 ## Notes
 
@@ -117,7 +117,7 @@ Pin visual style (symbol, color) must match the legend defined in KAN-32-ios-dis
 
 **Error Handling Philosophy**: Pin loading failures are handled silently (no error messages, no retry buttons). If a fetch fails, the existing pins remain displayed, and the user can continue interacting with the map. The next pan/zoom will trigger a new fetch attempt. This approach keeps the UI clean and avoids interrupting the user experience with transient network issues.
 
-**Implementation Note**: The specification intentionally does not include requirements for canceling in-flight requests during rapid map movements or filtering invalid coordinates. These concerns are delegated to the repository layer implementation. The ViewModel/View layer focuses on user interaction patterns (fetch after gesture ends, update pins on success).
+**Implementation Note**: The ViewModel cancels any in-flight pin fetch task when starting a new fetch (e.g., after rapid map movements). The ViewModel/View layer focuses on user interaction patterns (fetch after gesture ends, update pins on success).
 
 ## Estimation *(mandatory)*
 

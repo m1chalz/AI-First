@@ -7,7 +7,7 @@
 
 ## Summary
 
-Extend iOS fullscreen map to fetch and display pins for missing animal announcements. On view load and after pan/zoom gestures, the app fetches announcements from existing backend API (`GET /api/v1/announcements?lat=X&lng=Y&range=Z`), filters for "missing" status, and displays pins with fade-in animation. Silent error handling - failures keep existing pins without user notification.
+Extend iOS fullscreen map to fetch and display pins for animal announcements. On view load and after pan/zoom gestures, the app fetches announcements from existing backend API (`GET /api/v1/announcements?lat=X&lng=Y&range=Z`) and displays all returned announcements as pins (no animation, no client-side filtering). Silent error handling - failures keep existing pins without user notification.
 
 ## Technical Context
 
@@ -58,7 +58,7 @@ Extend iOS fullscreen map to fetch and display pins for missing animal announcem
 - [x] **80% Test Coverage - Platform-Specific**: Plan includes unit tests for each platform
   - iOS: Tests in `/iosApp/iosAppTests/Features/LandingPage/Views/` ✅
   - Extend existing `FullscreenMapViewModelTests.swift`
-  - Test cases: initial load, status filtering, error handling, gesture handling, task cancellation
+  - Test cases: initial load, mapping to pins, error handling, gesture handling, task cancellation
   - Violation justification: _Fully compliant_
 
 - [x] **End-to-End Tests**: Plan includes E2E tests for all user stories

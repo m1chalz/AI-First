@@ -82,7 +82,6 @@ class FullscreenMapViewModel: ObservableObject {
     }
     
     private func fetchPins(for region: MKCoordinateRegion) async {
-        // Cancel previous task
         fetchTask?.cancel()
         
         fetchTask = Task {
@@ -97,18 +96,14 @@ class FullscreenMapViewModel: ObservableObject {
             do {
                 let announcements = try await repository.getAnnouncements(
                     near: center,
-                    range: region.radiusInKilometers  // Extension method
+                    range: region.radiusInKilometers  // API expects kilometers
                 )
                 
-                // Filter missing only, map to pins
-                let newPins = announcements
-                    .filter { $0.status == .active }
-                    .map { MapPin(from: $0) }
+                // Map all announcements to pins (no status filtering)
+                let newPins = announcements.map { MapPin(from: $0) }
                 
-                // Animate pin update
-                withAnimation(.easeIn(duration: 0.3)) {
-                    self.pins = newPins
-                }
+                // Instant update (no animation)
+                self.pins = newPins
             } catch {
                 // Silent failure - keep existing pins
                 print("Pin fetch error: \(error)")
@@ -141,10 +136,10 @@ struct FullscreenMapView: View {
                             //         .transition(.scale.combined(with: .opacity))
                             // }
                             
-                            // Pin marker - red circle matching legend
-                            Circle()
-                                .fill(Color.red)
-                                .frame(width: 12, height: 12)
+                            // Pin marker - classic map pin
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.title)
+                                .foregroundStyle(.red)
                         }
                         // Future: .onTapGesture { withAnimation { selectedPin = pin } }
                     }
@@ -166,7 +161,7 @@ struct FullscreenMapView: View {
 }
 ```
 
-**Note**: Uses `Annotation` to enable future callout bubble feature (rich popup with photo, pet details - see Figma node `1192:5893`). Pin marker is red circle matching legend style.
+**Note**: Uses `Annotation` to enable future callout bubble feature (rich popup with photo, pet details - see Figma node `1192:5893`). Pin marker uses SF Symbol `mappin.circle.fill` for classic pin appearance.
 
 ### Coordinator Injection
 
@@ -200,7 +195,7 @@ xcodebuild test \
 | Test | Description |
 |------|-------------|
 | `testLoadPins_whenViewAppears_shouldFetchPinsFromRepository` | Verify initial load |
-| `testLoadPins_whenRepositoryReturnsData_shouldFilterMissingOnly` | Status filtering |
+| `testLoadPins_whenRepositoryReturnsData_shouldMapAllToMapPins` | All announcements mapped to pins |
 | `testLoadPins_whenRepositoryFails_shouldKeepExistingPins` | Silent error handling |
 | `testHandleRegionChange_whenCalled_shouldFetchNewPins` | Gesture handling |
 | `testHandleRegionChange_whenCalledRapidly_shouldCancelPreviousTask` | Concurrent request handling |
@@ -208,9 +203,9 @@ xcodebuild test \
 ## Verification Checklist
 
 - [ ] Open fullscreen map → pins appear within 3 seconds
-- [ ] Pan map to new area → old pins removed, new pins fade in
+- [ ] Pan map to new area → old pins removed, new pins appear (no animation)
 - [ ] Zoom in/out → pins update after gesture ends
 - [ ] Disable network → existing pins remain, no error shown
-- [ ] Rapid pan gestures → only final position triggers fetch
-- [ ] Pins match legend style (red circle for missing)
+- [ ] Rapid pan gestures → only final position triggers fetch (previous request cancelled)
+- [ ] Pins display as classic map pin markers (red `mappin.circle.fill`)
 

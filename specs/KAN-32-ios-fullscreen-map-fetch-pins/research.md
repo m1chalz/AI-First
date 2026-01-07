@@ -18,7 +18,7 @@
 
 **Alternatives Considered**:
 - Creating new dedicated `/pins` endpoint → Rejected: unnecessary duplication
-- Adding status filter parameter → Rejected: client-side filtering is simpler for single-platform feature
+- Adding status filter parameter → Rejected: not needed, display all announcements
 
 ### 2. iOS Repository Layer for Announcements
 
@@ -39,19 +39,19 @@
 
 ### 3. Status Filtering for "Missing" Announcements
 
-**Question**: How to filter announcements to show only "missing" status?
+**Question**: Should the client filter announcements by status?
 
-**Decision**: Client-side filter using `announcement.status == .active`
+**Decision**: No client-side filtering - display all announcements returned by server
 
 **Rationale**:
-- Backend `MISSING` status maps to iOS domain `AnnouncementStatus.active`
-- Mapping defined in `AnnouncementStatusDTO` (missing → active)
-- Simple filter: `announcements.filter { $0.status == .active }`
-- Keeps API contract unchanged, flexibility for future multi-status support
+- Server already filters by location (lat/lng/range)
+- All returned announcements are relevant for the visible map region
+- Simplifies client logic - no status filtering needed
+- Future filtering can be done server-side via query parameters if needed
 
 **Alternatives Considered**:
-- Backend filter parameter `?status=MISSING` → Rejected: API change for single-platform feature
-- Create new domain enum value `.missing` → Rejected: unnecessary complexity, existing mapping works
+- Client-side filter `announcements.filter { $0.status == .active }` → Rejected: display all announcements, let server handle filtering if needed
+- Backend filter parameter `?status=MISSING` → Rejected: not needed for current requirements
 
 ### 4. iOS 18 MapKit Camera API for Gesture Detection
 
@@ -71,9 +71,9 @@
 - UIKit `MKMapViewDelegate.regionDidChangeAnimated` → Rejected: unnecessary UIKit complexity
 - Timer-based debouncing → Rejected: spec requires immediate fetch, no debounce
 
-### 5. Pin Display with Fade-In Animation
+### 5. Pin Display with Annotations (No Pin Update Animations)
 
-**Question**: How to display pins on SwiftUI Map with fade-in animation?
+**Question**: How to display pins on SwiftUI Map (and keep a path for future rich callouts)?
 
 **Decision**: Use `Annotation` with custom SwiftUI view for rich callout support
 
@@ -82,7 +82,7 @@
 - **Callout with tail/arrow**: Design shows speech-bubble style callout with triangle pointing at pin
 - `Annotation` allows fully custom SwiftUI content including callout bubble
 - Tap on pin toggles callout visibility with animation
-- `withAnimation { }` enables fade-in for new pins
+- Pin updates remain instant (no animation) per spec; only callout selection may animate
 
 **Figma Design Reference**: 
 - Node: `1192:5893` in PetSpot-wireframes
@@ -99,10 +99,10 @@ Annotation("", coordinate: pin.coordinate, anchor: .bottom) {
                 .transition(.scale.combined(with: .opacity))
         }
         
-        // Pin marker (always visible) - red circle matching legend
-        Circle()
-            .fill(Color.red)
-            .frame(width: 12, height: 12)
+        // Pin marker (always visible) - classic map pin
+        Image(systemName: "mappin.circle.fill")
+            .font(.title)
+            .foregroundStyle(.red)
     }
     .onTapGesture {
         withAnimation(.easeInOut(duration: 0.2)) {
@@ -200,13 +200,12 @@ let announcements = try await repository.getAnnouncements(near: center, range: r
 
 **Question**: How to handle rapid gestures that could trigger multiple concurrent requests?
 
-**Decision**: Delegate to repository layer (existing Task cancellation support)
+**Decision**: ViewModel cancels previous fetch task when starting a new fetch
 
 **Rationale**:
 - Spec notes: "Repository layer concern"
-- `AnnouncementRepository` already has `try Task.checkCancellation()` checks
-- ViewModel can cancel previous task before starting new fetch
-- Pattern: store `Task` reference, cancel on new request
+- Matches existing codebase conventions (ViewModels cancel in-flight tasks on refresh)
+- Prevents outdated responses from racing and overwriting pins for the latest region
 
 **Alternatives Considered**:
 - Serial queue → Rejected: adds complexity, cancellation is simpler
@@ -219,7 +218,7 @@ All technical decisions align with existing iOS architecture (MVVM-C) and levera
 - **Backend**: Existing API endpoint ready to use
 - **Repository**: Existing protocol and implementation sufficient
 - **MapKit**: iOS 18 camera APIs provide clean gesture detection
-- **SwiftUI**: Native animation support for pin transitions
+- **SwiftUI**: Map `Annotation` supports custom pin content and future rich callouts
 - **Error handling**: Simple silent failure pattern
 
 No new dependencies required. Implementation focuses on extending existing `FullscreenMapViewModel` and `FullscreenMapView`.
