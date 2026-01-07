@@ -20,7 +20,7 @@ A user wants to see pins for missing animals when opening the fullscreen map so 
 
 **Acceptance Scenarios**:
 
-1. **Given** the fullscreen map view is opening, **When** the map loads, **Then** the system fetches missing animal announcements for the visible area from the server
+1. **Given** the fullscreen map view is opening, **When** the map loads, **Then** the system fetches missing animal announcements for the visible area from the server without displaying any loading indicator
 2. **Given** missing animal announcements exist in the visible area, **When** the data is received, **Then** pins are displayed at each missing animal's last-seen location
 3. **Given** no missing animal announcements exist in the visible area, **When** the data is received, **Then** the map is shown without pins
 4. **Given** pins are displayed, **When** the user views them, **Then** each pin visually matches the legend symbols defined in KAN-32-ios-display-fullscreen-map
@@ -37,16 +37,16 @@ A user wants pins to update automatically after moving or zooming the map so the
 
 **Acceptance Scenarios**:
 
-1. **Given** the fullscreen map is displayed with pins, **When** the user pans to a different area, **Then** the system fetches missing animal announcements for the newly visible area after the pan gesture completes
-2. **Given** the fullscreen map is displayed with pins, **When** the user zooms in or out, **Then** the system fetches missing animal announcements for the newly visible area after the pinch gesture completes
-3. **Given** the map region has changed, **When** new pins are loaded, **Then** pins from the previous region that are no longer in view are removed
+1. **Given** the fullscreen map is displayed with pins, **When** the user pans to a different area, **Then** the system fetches missing animal announcements for the newly visible area immediately after the pan gesture completes without debounce delay
+2. **Given** the fullscreen map is displayed with pins, **When** the user zooms in or out, **Then** the system fetches missing animal announcements for the newly visible area immediately after the pinch gesture completes without debounce delay
+3. **Given** the map region has changed, **When** new pins are loaded, **Then** pins from the previous region that are no longer in view are removed instantly and new pins appear with a fade-in animation
 4. **Given** the user is actively panning or zooming, **When** the gesture is in progress, **Then** pin fetch requests are NOT sent (wait until gesture ends)
 
 ---
 
 ### Edge Cases
 
-- **High pin density**: Pins remain individually visible and tappable even when many pins are close together
+- **High pin density**: When server returns large number of announcements (e.g., 500+ pins), all pins are displayed without limit; pins remain individually visible and tappable even when many pins overlap
 - **Empty response**: Server returns empty array for visible region - map displays without pins
 - **Failed pin fetch**: When pin loading fails (network error, server error, timeout), system silently fails and keeps existing pins displayed without showing error messages
 
@@ -59,14 +59,16 @@ A user wants pins to update automatically after moving or zooming the map so the
 - **FR-003**: The server request MUST use the endpoint `GET /announcements?lat={latitude}&lng={longitude}&range={radius_in_meters}`
 - **FR-004**: The system MUST display pins for each missing animal announcement in the response with status "missing"
 - **FR-005**: Pins MUST be positioned using each announcement's last-seen coordinates (latitude, longitude)
-- **FR-006**: The system MUST maintain an internal loading state (e.g., isLoading flag) during pin fetch operations for future extensibility
-- **FR-007**: The system MUST fetch updated pins after the user completes a pan gesture (region change)
-- **FR-008**: The system MUST fetch updated pins after the user completes a pinch/zoom gesture (region change)
+- **FR-006**: The system MUST maintain an internal loading state (e.g., isLoading flag) during pin fetch operations without displaying any visible loading indicator to the user
+- **FR-007**: The system MUST fetch updated pins immediately after the user completes a pan gesture (region change) without debounce delay
+- **FR-008**: The system MUST fetch updated pins immediately after the user completes a pinch/zoom gesture (region change) without debounce delay
 - **FR-009**: The system MUST NOT send fetch requests while pan or zoom gestures are in progress
 - **FR-010**: The system MUST remove pins that are no longer in the visible region after a region change
 - **FR-011**: When pin fetch fails, the system MUST silently fail and keep existing pins displayed without showing error messages
 - **FR-012**: Pins MUST use the visual style (symbol, color) defined in the legend from KAN-32-ios-display-fullscreen-map
 - **FR-013**: Only announcements with status "missing" MUST be displayed as pins
+- **FR-014**: The system MUST display all pins returned by the server without applying any client-side limit
+- **FR-015**: When map region changes and pins are updated, old pins MUST be removed instantly (no animation) and new pins MUST appear with a fade-in animation
 
 ### Key Entities *(include if feature involves data)*
 
@@ -97,7 +99,11 @@ A user wants pins to update automatically after moving or zooming the map so the
 
 ### Session 2026-01-07
 
-No clarifications needed - requirements are clear based on existing backend API and previous KAN-32 specs.
+- Q: What is the limit for number of pins displayed when server returns many announcements? → A: No limit - display all pins returned by server
+- Q: Should users see a visible loading indicator while pins are being fetched? → A: No visible loading indicator - only internal state tracking
+- Q: Should there be a debounce delay after gesture ends before fetching pins? → A: Fetch immediately after gesture ends - no debounce
+- Q: How to handle multiple in-flight requests from rapid gestures (cancel old, queue, allow parallel)? → A: Repository layer concern
+- Q: Should pins animate when appearing/disappearing during map updates? → A: Instant remove old pins + fade-in animation for new pins
 
 ## Notes
 
