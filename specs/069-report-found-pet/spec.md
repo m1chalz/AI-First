@@ -76,9 +76,12 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
   Fill them out with the right edge cases.
 -->
 
-- What happens when the user selects a very large photo or an unsupported photo format?
+- What happens when the user selects a photo larger than 20MB?
+- What happens when the user selects an unsupported photo format (not JPEG, PNG, or GIF)?
 - What happens when the user temporarily loses connectivity during submission?
 - What happens when the user provides neither phone nor email contact details?
+- What happens when the user denies location permissions or GPS is unavailable?
+- What happens when the user taps "Use Current Location" but GPS cannot determine position?
 - What happens when the user provides a location that cannot be determined precisely (e.g., approximate area)?
 - What happens when the user tries to submit the same report multiple times (double-tap / retry)?
 
@@ -91,8 +94,11 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 
 ### Functional Requirements
 
-- **FR-001**: System MUST provide a “Report Found Pet” wizard consisting of exactly 3 steps (Screen 1, Screen 2, Screen 3).
+- **FR-001**: System MUST provide a "Report Found Pet" wizard consisting of exactly 3 steps (Screen 1, Screen 2, Screen 3).
 - **FR-002**: Screen 1 MUST allow the user to upload a photo of the found pet, and a photo MUST be mandatory to continue.
+  - Photo MUST be in JPEG, PNG, or GIF format.
+  - Photo size MUST NOT exceed 20MB.
+  - System MUST display clear validation errors for unsupported formats or oversized files before upload.
 - **FR-003**: Screen 2 MUST collect the following information:
   - **date of finding** (mandatory)
   - **collar data** (optional, if the animal has a collar)
@@ -100,11 +106,17 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
   - **breed** (optional, if the user can specify)
   - **gender** (mandatory)
   - **found location** (mandatory)
+    - MUST provide a "Use Current Location" button that captures device GPS coordinates when tapped
+    - MUST provide text input field(s) for manual address/location entry
+    - User MAY use current location button, manual text entry, or both
+    - System MUST require at least location data (GPS coordinates OR text description) before proceeding
   - **additional description** (optional)
 - **FR-004**: Screen 3 MUST allow the user to provide contact details for the person who found the animal:
   - **contact phone number** (optional)
   - **contact email** (optional)
   - The system MUST require at least one contact method (phone or email) before submission.
+  - Phone number validation: MUST contain at least 7 digits; any format accepted (spaces, dashes, parentheses allowed).
+  - Email validation: MUST contain @ character and at least one dot (.) after @; minimal format validation.
 - **FR-005**: Screen 3 MUST allow the user to optionally provide:
   - **contact phone number of the person currently caring for the found animal**
   - **physical address where the animal is currently located**
@@ -113,11 +125,24 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 - **FR-008**: The system MUST allow the user to submit the report after completing required inputs and MUST show a clear confirmation on success.
 - **FR-009**: The system MUST ensure retrying submission does not create duplicate reports.
 - **FR-010**: The design and interaction patterns of the found-pet wizard MUST be consistent with the wizard for reporting a missing animal (step-based flow, navigation patterns, and validation behavior).
+- **FR-011**: All submitted found pet reports MUST be publicly viewable by all app users (no privacy restrictions or authentication requirements for viewing).
+
+## Clarifications
+
+### Session 2026-01-07
+
+- Q: Should the system attempt to automatically match found pet reports with existing missing pet reports? → A: No, found and missing reports exist independently with no matching logic
+- Q: What are the photo upload requirements and constraints? → A: JPEG, PNG, GIF • Max 20MB
+- Q: What validation rules should apply to phone numbers and email addresses? → A: Phone: min 7 digits, any format accepted; Email: must contain @ and dot, minimal validation
+- Q: How should users specify the "found location" where the animal was discovered? → A: Current location button + text inputs
+- Q: Who should be able to view submitted found pet reports? → A: Public - all app users can view all found pet reports
 
 ### Assumptions
 
-- **A-001**: Submitting the wizard creates a “found pet” report that is viewable within the product as a found-pet item.
+- **A-001**: Submitting the wizard creates a "found pet" report that is viewable within the product as a found-pet item.
 - **A-002**: Contact details (phone/email) provided in Screen 3 are displayed on the found-pet report detail view to enable owners to reach the contact person.
+- **A-003**: Found pet reports exist independently; the system does NOT attempt to match or link them to missing pet reports (no automated or suggested matching logic).
+- **A-004**: All found pet reports are public and visible to all app users without authentication or privacy restrictions.
 
 ### Key Entities *(include if feature involves data)*
 
