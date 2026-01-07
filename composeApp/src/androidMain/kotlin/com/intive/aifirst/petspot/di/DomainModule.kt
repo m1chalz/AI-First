@@ -3,6 +3,7 @@ package com.intive.aifirst.petspot.di
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalByIdUseCase
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetAnimalsUseCase
 import com.intive.aifirst.petspot.composeapp.domain.usecases.GetRecentAnimalsUseCase
+import com.intive.aifirst.petspot.features.mapPreview.domain.usecases.GetNearbyAnimalsForMapUseCase
 import com.intive.aifirst.petspot.features.reportmissing.domain.usecases.ExtractPhotoMetadataUseCase
 import com.intive.aifirst.petspot.features.reportmissing.domain.usecases.SubmitAnnouncementUseCase
 import org.koin.dsl.module
@@ -25,4 +26,7 @@ val domainModule =
         factory { GetRecentAnimalsUseCase(get()) }
         factory { ExtractPhotoMetadataUseCase(get()) }
         factory { SubmitAnnouncementUseCase(get()) }
+
+        // Map Preview
+        factory { GetNearbyAnimalsForMapUseCase(get()) }
     }

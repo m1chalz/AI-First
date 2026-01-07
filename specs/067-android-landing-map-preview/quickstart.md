@@ -33,19 +33,21 @@ dependencies {
 
 ### 2. Configure API Key
 
-Add to `AndroidManifest.xml`:
+The Google Maps API key is already configured in `AndroidManifest.xml`:
 
 ```xml
 <meta-data
     android:name="com.google.android.geo.API_KEY"
-    android:value="${GOOGLE_MAPS_API_KEY}" />
+    android:value="${MAPS_API_KEY}" />
 ```
 
-Add to `local.properties`:
+Add your API key to `local.properties` (gitignored - never commit secrets!):
 
 ```properties
-GOOGLE_MAPS_API_KEY=your_api_key_here
+MAPS_API_KEY=your_api_key_here
 ```
+
+Get your API key from [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
 
 ### 3. Add Permission
 

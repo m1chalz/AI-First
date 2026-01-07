@@ -76,7 +76,7 @@ ij_kotlin_wrap_elvis_expressions = 1
 # Disable specific rules by uncommenting the lines below
 
 # Allow wildcard imports (e.g., import kotlinx.coroutines.*)
-ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_no-wildcard-imports = enabled
 
 # Allow flexible file naming (not required to match class name)
 ktlint_standard_filename = disabled

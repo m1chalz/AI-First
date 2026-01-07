@@ -361,19 +361,21 @@ dependencies {
 
 ## API Key Configuration
 
-Google Maps SDK requires an API key. This should be configured in:
+Google Maps SDK requires an API key. Already configured in:
 
 ```xml
 <!-- AndroidManifest.xml -->
 <meta-data
     android:name="com.google.android.geo.API_KEY"
-    android:value="${GOOGLE_MAPS_API_KEY}" />
+    android:value="${MAPS_API_KEY}" />
 ```
 
 ```properties
-# local.properties (not committed to git)
-GOOGLE_MAPS_API_KEY=your_api_key_here
+# local.properties (gitignored - never commit secrets!)
+MAPS_API_KEY=your_api_key_here
 ```
 
-**Note**: Check if API key is already configured in the project. If not, this will need to be obtained from Google Cloud Console.
+**Setup:**
+1. Get API key from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Add to `local.properties` (this file is gitignored - never commit secrets!)
 
