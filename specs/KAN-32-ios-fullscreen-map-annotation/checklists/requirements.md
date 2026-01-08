@@ -67,5 +67,9 @@
   - Changed from MM/DD/YYYY to MMM dd, yyyy format (e.g., "Jan 15, 2025")
   - Added FR-018 to specify date formatting consistency with Pet Details
   - Ensures consistent date presentation across the app
+- Specified placeholder details to match Announcement List:
+  - FR-005 updated with exact placeholder implementation (circular pawprint.fill icon on #EEEEEE background)
+  - Reuses existing pattern from AnnouncementCardView for visual consistency
+  - Ensures uniform placeholder appearance across map annotations and announcement list
 - This reduces scope and simplifies UI while maintaining core value proposition (viewing pet details)
 
