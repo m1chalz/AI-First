@@ -45,6 +45,8 @@ struct AnnotationCalloutView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Pet photo (216×120px, 8px radius) - FR-004
             photoView
+                .padding(.horizontal, 21)
+                .padding(.top, 14)
             
             // Content section with padding
             VStack(alignment: .leading, spacing: 4) {
