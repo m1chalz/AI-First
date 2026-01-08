@@ -46,35 +46,39 @@ As a developer working on pet reporting features, I need all full-screen views a
 - How does system handle import statements after moving files? → All import statements must be updated to reflect new file locations
 - What if tests reference old class names? → All test files must be updated to reference new prefixed class names
 - What if coordinator navigation references use old names? → All navigation code must be updated to use new coordinator and view names
+- What if test file organization diverges from production structure? → Test directory structure must mirror production (iosAppTests/Features/ReportMissingAndFoundPet/{ReportMissingPet,Common}/) to maintain consistency
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUST create new directory structure `iosApp/Features/ReportMissingAndFoundPet/` containing subdirectories `ReportMissingPet/` and `Common/`
-- **FR-002**: System MUST move existing `iosApp/Features/ReportMissingPet/` directory to become `iosApp/Features/ReportMissingAndFoundPet/ReportMissingPet/`
-- **FR-003**: System MUST create `iosApp/Features/ReportMissingAndFoundPet/Common/` directory for shared components
-- **FR-004**: System MUST keep in `ReportMissingPet/` subdirectory only: coordinator, full-screen views and their view models (preserving subdirectory structure)
-- **FR-005**: System MUST move to `Common/` subdirectory: all helpers, services, models, reusable components, and form components
-- **FR-006**: ReportMissingPetCoordinator MUST be renamed to MissingPetReportCoordinator
-- **FR-007**: All full-screen views MUST have "MissingPet" prefix added to class names:
+- **FR-001**: System MUST create explicit file inventory mapping all files to their destination folders (ReportMissingPet/ or Common/) before starting refactoring
+- **FR-002**: System MUST create new directory structure `iosApp/Features/ReportMissingAndFoundPet/` containing subdirectories `ReportMissingPet/` and `Common/`
+- **FR-003**: System MUST move existing `iosApp/Features/ReportMissingPet/` directory to become `iosApp/Features/ReportMissingAndFoundPet/ReportMissingPet/`
+- **FR-004**: System MUST create `iosApp/Features/ReportMissingAndFoundPet/Common/` directory for shared components
+- **FR-005**: System MUST keep in `ReportMissingPet/` subdirectory only: coordinator, full-screen views and their view models (preserving subdirectory structure)
+- **FR-006**: System MUST move to `Common/` subdirectory: all helpers, services, models, reusable components, and form components (per file inventory from FR-001)
+- **FR-007**: ReportMissingPetCoordinator MUST be renamed to MissingPetReportCoordinator
+- **FR-008**: All full-screen views MUST have "MissingPet" prefix added to class names:
   - AnimalDescriptionView → MissingPetAnimalDescriptionView
   - ChipNumberView → MissingPetChipNumberView
   - ContactDetailsView → MissingPetContactDetailsView
   - PhotoView → MissingPetPhotoView
   - SummaryView → MissingPetSummaryView
-- **FR-008**: All full-screen view models MUST have "MissingPet" prefix added to class names:
+- **FR-009**: All full-screen view models MUST have "MissingPet" prefix added to class names:
   - AnimalDescriptionViewModel → MissingPetAnimalDescriptionViewModel
   - ChipNumberViewModel → MissingPetChipNumberViewModel
   - ContactDetailsViewModel → MissingPetContactDetailsViewModel
   - PhotoViewModel → MissingPetPhotoViewModel
   - SummaryViewModel → MissingPetSummaryViewModel
-- **FR-009**: All import statements in affected files MUST be updated to reflect new file locations
-- **FR-010**: All class references in coordinator, tests, and other files MUST be updated to use new prefixed names
-- **FR-011**: Xcode project file MUST be updated to reflect new directory structure and file locations
-- **FR-012**: Application MUST compile successfully after all changes
-- **FR-013**: All existing unit tests MUST pass after all changes
-- **FR-014**: Manual testing MUST confirm Report Missing Pet flow works identically to before refactoring
+- **FR-010**: All import statements in affected files MUST be updated to reflect new file locations
+- **FR-011**: All class references in coordinator, tests, and other files MUST be updated to use new prefixed names
+- **FR-012**: Test directory structure MUST mirror production structure: `iosAppTests/Features/ReportMissingAndFoundPet/ReportMissingPet/` for feature-specific tests, `iosAppTests/Features/ReportMissingAndFoundPet/Common/` for shared component tests
+- **FR-013**: All test files MUST be moved to match their corresponding production file locations in the new structure
+- **FR-014**: Xcode project file MUST be updated to reflect new directory structure and file locations for both production and test files
+- **FR-015**: Application MUST compile successfully after all changes
+- **FR-016**: All existing unit tests MUST pass after all changes
+- **FR-017**: Manual testing MUST confirm Report Missing Pet flow works identically to before refactoring
 
 ### Key Entities
 
@@ -86,21 +90,47 @@ As a developer working on pet reporting features, I need all full-screen views a
 - **Services**: Business logic services for photo caching and toast scheduling
 - **Models**: Data structures for flow state, photo attachments, and selections
 
+### Implementation Constraints
+
+- **IC-001**: Refactoring MUST be executed in multiple atomic commits for safety and reviewability:
+  - Commit 1: Move files to new directory structure
+  - Commit 2: Rename classes with MissingPet prefix
+  - Commit 3: Update all import statements and references
+- **IC-002**: Each atomic commit MUST be followed by full verification testing (build + unit tests + manual smoke test) before proceeding to next commit
+- **IC-003**: Each commit MUST compile successfully and pass all tests before being committed to git
+- **IC-004**: All file operations MUST be performed within Xcode to maintain project file consistency
+- **IC-005**: If a commit introduces errors preventing continuation, use `git reset --hard HEAD~1` to rollback (feature branch - history rewrite acceptable)
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: iOS application compiles successfully with zero build errors after restructuring
-- **SC-002**: All existing iOS unit tests pass with same results as before refactoring (100% pass rate maintained)
-- **SC-003**: Manual testing confirms Report Missing Pet flow completes successfully with identical behavior to before refactoring
-- **SC-004**: Code review confirms all full-screen views and coordinators have MissingPet prefix in class names
-- **SC-005**: Code review confirms directory structure matches specification (ReportMissingAndFoundPet/ReportMissingPet/ and ReportMissingAndFoundPet/Common/)
-- **SC-006**: All file moves are reflected in Xcode project file (not just filesystem)
-- **SC-007**: No broken import statements remain after refactoring
+- **SC-001**: File inventory document exists listing all files with their source and destination paths before refactoring starts
+- **SC-002**: File inventory covers 100% of files currently in iosApp/Features/ReportMissingPet/ directory
+- **SC-003**: iOS application compiles successfully with zero build errors after restructuring
+- **SC-004**: All existing iOS unit tests pass with same results as before refactoring (100% pass rate maintained)
+- **SC-005**: Manual testing confirms Report Missing Pet flow completes successfully with identical behavior to before refactoring
+- **SC-006**: Code review confirms all full-screen views and coordinators have MissingPet prefix in class names
+- **SC-007**: Code review confirms production directory structure matches specification (ReportMissingAndFoundPet/ReportMissingPet/ and ReportMissingAndFoundPet/Common/)
+- **SC-008**: Code review confirms test directory structure mirrors production structure (iosAppTests/Features/ReportMissingAndFoundPet/ReportMissingPet/ and Common/)
+- **SC-009**: All file moves (production and test files) are reflected in Xcode project file (not just filesystem)
+- **SC-010**: No broken import statements remain after refactoring
 
 ## Design Deliverables
 
 N/A - This is a code refactoring task with no UI changes or design requirements.
+
+---
+
+## Clarifications
+
+### Session 2026-01-08
+
+- Q: What should be the git commit strategy for this refactoring? → A: Multiple atomic commits: 1) move files, 2) rename classes, 3) update imports
+- Q: When should verification testing (build + unit tests + manual smoke test) be executed during refactoring? → A: After each atomic commit (move → test, rename → test, imports → test)
+- Q: What should be the rollback strategy if a commit introduces errors preventing continuation? → A: Hard reset to commit before problematic change (rewrite history)
+- Q: Should explicit file inventory with destination folders be created before implementation? → A: Create explicit file inventory mapping before execution starts
+- Q: Should test directory structure mirror the new production structure or keep current layout? → A: Mirror production structure: iosAppTests/Features/ReportMissingAndFoundPet/{ReportMissingPet,Common}/
 
 ---
 
