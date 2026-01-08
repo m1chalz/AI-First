@@ -37,9 +37,8 @@ A user wants to see the current status of the missing animal (e.g., "MISSING", "
 
 **Acceptance Scenarios**:
 
-1. **Given** an annotation is displayed, **When** the pet status is "missing", **Then** the annotation shows a status badge displaying "MISSING" with appropriate styling
-2. **Given** an annotation is displayed, **When** the pet status is "found", **Then** the annotation shows a status badge displaying "FOUND" with appropriate styling (blue background, white text)
-3. **Given** an annotation is displayed, **When** the pet status is "reunited", **Then** the annotation shows a status badge displaying "REUNITED" with appropriate styling
+1. **Given** an annotation is displayed, **When** the pet status is "MISSING", **Then** the annotation shows a status badge displaying "MISSING" with orange background (#FF9500) and white text
+2. **Given** an annotation is displayed, **When** the pet status is "FOUND", **Then** the annotation shows a status badge displaying "FOUND" with blue background (#155DFC) and white text
 
 ---
 
@@ -91,10 +90,9 @@ A user wants to see annotation details even when some information is missing or 
 - **FR-006**: When the description is empty or null, the annotation MUST omit the description field entirely
 - **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
 - **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
-- **FR-009**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
+- **FR-009**: The status badge MUST display the pet's current status (MISSING or FOUND) with appropriate colors:
   - MISSING: Orange background (#FF9500), white text
   - FOUND: Blue background (#155DFC), white text
-  - REUNITED: Green background (#34C759), white text
 - **FR-010**: When the user taps elsewhere on the map, the annotation MUST dismiss
 - **FR-011**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
 - **FR-012**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
@@ -106,8 +104,8 @@ A user wants to see annotation details even when some information is missing or 
 
 ### Key Entities *(include if feature involves data)*
 
-- **Annotation Callout**: Visual overlay displaying detailed information about a missing animal when its pin is tapped; dismissible by tapping elsewhere
-- **Status Badge**: Visual indicator showing the current status of a missing animal (MISSING, FOUND, REUNITED) with status-specific colors
+- **Annotation Callout**: Visual overlay displaying detailed information about a pet announcement when its pin is tapped; dismissible by tapping elsewhere
+- **Status Badge**: Visual indicator showing the current status of the announcement (MISSING or FOUND) with status-specific colors
 
 ## Success Criteria *(mandatory)*
 
@@ -124,7 +122,8 @@ A user wants to see annotation details even when some information is missing or 
 - The iOS app targets iOS 18+, allowing use of latest MapKit annotation APIs
 - Reverse geocoding (coordinates → location name) is handled by the backend or MapKit; if unavailable, coordinates are shown as fallback
 - Pet photo URLs are valid and hosted on a reliable server; placeholder image is bundled in the app
-- Status values from backend are standardized ("missing", "found", "reunited") and map to badge labels and colors
+- Status values from backend are "MISSING" or "FOUND" (as defined in backend validation schema)
+- The map displays pins for both MISSING and FOUND announcements (departure from spec 066 which specified only MISSING)
 - The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
 - Future specs may add additional interactions (tappable contact fields, share announcement, report sighting, navigate to location)
 
@@ -138,7 +137,7 @@ The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgse
 
 Contact fields (phone, email) are displayed as text. Tappable interaction for initiating calls/emails may be added in a future enhancement.
 
-Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational, green for reunited/success).
+Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational). Only two status values exist in the system: MISSING and FOUND.
 
 ## Clarifications
 
@@ -151,6 +150,7 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 - Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
 - Q: Should phone/email be tappable to initiate calls/emails? → A: Not in this spec. Display as text only. Tappable interaction can be added later as enhancement.
+- Q: What status values exist in the system? → A: Only MISSING and FOUND (per backend validation schema). No REUNITED status exists.
 
 ## Design Deliverables *(mandatory for UI features)*
 

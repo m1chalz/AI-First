@@ -53,5 +53,9 @@
   - Removed "No additional description provided." message (original FR-006)
   - Removed "Contact information not available" message (original FR-009)
   - Empty fields (description, phone, email) are simply not rendered
+- Corrected status badge values: removed non-existent "REUNITED" status
+  - Backend only supports MISSING and FOUND (per server/src/lib/announcement-validation.ts)
+  - Status badge FR-009 updated to show only 2 status types (was incorrectly showing 3)
+- Map displays both MISSING and FOUND announcements (departure from spec 066 which specified only MISSING)
 - This reduces scope and simplifies UI while maintaining core value proposition (viewing pet details)
 
