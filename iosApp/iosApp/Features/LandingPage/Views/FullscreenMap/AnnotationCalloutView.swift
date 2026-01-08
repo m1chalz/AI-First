@@ -54,7 +54,6 @@ struct AnnotationCalloutView: View {
                 Text(model.petName)
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color(hex: "#333333"))
-                    .lineLimit(2)
                 
                 // Species • Breed (13px, #666)
                 Text(model.speciesAndBreed)
@@ -76,7 +75,6 @@ struct AnnotationCalloutView: View {
                     Text(email)
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "#666666"))
-                        .lineLimit(1)
                 }
                 
                 // Phone (optional - FR-007)
@@ -91,7 +89,6 @@ struct AnnotationCalloutView: View {
                     Text(description)
                         .font(.system(size: 14))
                         .foregroundColor(Color(hex: "#444444"))
-                        .lineLimit(3)
                         .padding(.top, 4)
                 }
                 
