@@ -6,7 +6,7 @@
 
 **Platform Scope**: iOS only (no backend, Android, or Web changes)
 
-**Tests**: This spec does NOT explicitly request test tasks. Tests are optional per constitution. Unit tests for ViewModels and model mapping can be added in Phase 6 (Polish) if desired.
+**Tests**: Required per iOS constitution. Add/adjust unit tests for ViewModels and presentation-model mapping, and ensure >=80% line+branch coverage for changed/new iOS logic.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story. Each user story can be deployed as an independent increment after Phase 2 completion.
 
@@ -34,16 +34,16 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Extend `MapPin` struct with callout data fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (add: `name: String?`, `photoUrl: String`, `breed: String?`, `lastSeenDate: String`, `email: String?`, `phone: String?`, `description: String?`)
-- [ ] T004 Update `MapPin.init(from: Announcement)` to map new fields from announcement in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift`
+- [ ] T003 Extend `MapPin` struct with callout data fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (add: `petName: String?`, `photoUrl: String?`, `breed: String?`, `lastSeenDate: String`, `ownerEmail: String?`, `ownerPhone: String?`, `petDescription: String?`)
+- [ ] T004 Update `MapPin.init(from: Announcement)` to map new callout fields from announcement in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (treat empty photoUrl as nil)
 - [ ] T005 Add `@Published private(set) var selectedPinId: String?` to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
 - [ ] T006 [P] Implement `selectPin(_ pinId: String)` method in `FullscreenMapViewModel` (toggle if same pin, replace if different - FR-011, FR-012)
 - [ ] T007 [P] Implement `deselectPin()` method in `FullscreenMapViewModel` (clear selection - FR-010)
 - [ ] T008 Create `AnnotationCalloutView_Model.swift` with `struct Model` containing presentation fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
 - [ ] T009 Implement `AnnotationCalloutView.Model.init(from pin: MapPin)` factory method with field mapping and formatting logic in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
-- [ ] T010 [P] Add static `formatDate(_ dateString: String) -> String` helper in `AnnotationCalloutView.Model` extension (yyyy-MM-dd → MMM dd, yyyy, TODO comment for future extraction)
-- [ ] T011 [P] Add static `formatCoordinates(_ coordinate: CLLocationCoordinate2D) -> String` helper in `AnnotationCalloutView.Model` extension (52.2297° N format, TODO comment for future extraction)
-- [ ] T012 [P] Add `annotationBadgeColorHex` computed property to `AnnouncementStatus` extension returning spec colors (#FF9500 for .active, #155DFC for .found) - create new file or extend existing `AnnouncementStatus+Presentation.swift`
+- [ ] T010 [P] Add static `formatDate(_ dateString: String) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; yyyy-MM-dd → MMM dd, yyyy; include TODO for Phase 6 extraction)
+- [ ] T011 [P] Add static `formatCoordinates(_ coordinate: CLLocationCoordinate2D) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; "52.2297° N, 21.0122° E"; include TODO for Phase 6 extraction)
+- [ ] T012 [P] Add `annotationBadgeColorHex` computed property to `AnnouncementStatus` extension returning spec colors (#FF9500 for .active, #155DFC for .found, #8E8E93 for .closed) - create new file or extend existing `AnnouncementStatus+Presentation.swift` (Note: `.closed` exists in iOS `AnnouncementStatus` and is localized as CLOSED; handle as gray badge as an edge case outside current spec assumptions.)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -158,10 +158,10 @@
 - [ ] T048 Update `PetDetailsViewModel` to use shared `formatDate` and `formatCoordinates` utilities in `/iosApp/iosApp/Features/PetDetails/PetDetailsViewModel.swift` (remove duplicated formatters)
 - [ ] T049 Update `AnnotationCalloutView.Model` to use shared `DateFormatting.formatDate` and `CoordinateFormatting.formatCoordinates` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
 - [ ] T050 [P] Run quickstart.md manual testing checklist (tap pin, toggle, switch, dismiss, missing fields, status badges)
-- [ ] T051 [P] OPTIONAL: Add unit test for `FullscreenMapViewModel.selectPin` toggle behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin A, Then selectedPinId = nil)
-- [ ] T052 [P] OPTIONAL: Add unit test for `FullscreenMapViewModel.selectPin` replace behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin B, Then selectedPinId = B)
-- [ ] T053 [P] OPTIONAL: Add unit test for `AnnotationCalloutView.Model.init` field mapping in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given announcement data, When init model, Then fields formatted correctly)
-- [ ] T054 [P] OPTIONAL: Add unit test for graceful nil handling in `AnnotationCalloutView.Model.init` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given nil email/phone/description, When init model, Then optional fields = nil)
+- [ ] T051 [P] Add unit test for `FullscreenMapViewModel.selectPin` toggle behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin A, Then selectedPinId = nil)
+- [ ] T052 [P] Add unit test for `FullscreenMapViewModel.selectPin` replace behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin B, Then selectedPinId = B)
+- [ ] T053 [P] Add unit test for `AnnotationCalloutView.Model.init` field mapping in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given announcement data, When init model, Then fields formatted correctly)
+- [ ] T054 [P] Add unit test for graceful nil handling in `AnnotationCalloutView.Model.init` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given nil email/phone/description, When init model, Then optional fields = nil)
 - [ ] T055 [P] Update `MIGRATION-COMPLETE.md` or add feature completion note (if tracking enabled)
 
 ---
