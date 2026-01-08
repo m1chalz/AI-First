@@ -79,7 +79,8 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 - What happens when the user selects a photo larger than 20MB?
 - What happens when the user selects an unsupported photo format (not JPEG, PNG, or GIF)?
 - What happens when the user temporarily loses connectivity during submission?
-- What happens when the user provides neither phone nor email contact details?
+- What happens when the user provides invalid phone number format?
+- What happens when the user provides invalid email format?
 - What happens when the user denies location permissions or GPS is unavailable?
 - What happens when the user taps "Use Current Location" but GPS cannot determine position?
 - What happens when the user provides a location that cannot be determined precisely (e.g., approximate area)?
@@ -112,20 +113,18 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
     - System MUST require at least location data (GPS coordinates OR text description) before proceeding
   - **additional description** (optional)
 - **FR-004**: Screen 3 MUST allow the user to provide contact details for the person who found the animal:
-  - **contact phone number** (optional)
-  - **contact email** (optional)
-  - The system MUST require at least one contact method (phone or email) before submission.
+  - **contact phone number** (mandatory)
+  - **contact email** (mandatory)
   - Phone number validation (aligned with Report Lost Pet backend):
-    - If non-empty: MUST match regex `/\d/` (must contain at least one digit)
+    - MUST be non-empty
+    - MUST match regex `/\d/` (must contain at least one digit)
     - Any format accepted (spaces, dashes, parentheses, plus signs allowed)
-    - Error message: "Enter a valid phone number"
+    - Error message: "Phone number is required" (if empty), "Enter a valid phone number" (if invalid format)
   - Email validation (aligned with Report Lost Pet backend):
-    - If non-empty: MUST match regex `/^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/` (RFC 5322 basic format)
+    - MUST be non-empty
+    - MUST match regex `/^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/` (RFC 5322 basic format)
     - Max length: 254 characters
-    - Error message: "Enter a valid email address"
-  - At least one contact validation:
-    - If both fields are empty: show error "Please provide at least one contact method (phone or email)"
-    - If one or both fields are non-empty: both MUST pass their respective format validation
+    - Error message: "Email is required" (if empty), "Enter a valid email address" (if invalid format)
 - **FR-005**: Screen 3 MUST allow the user to optionally provide:
   - **contact phone number of the person currently caring for the found animal**
   - **physical address where the animal is currently located**
@@ -142,7 +141,7 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 
 - Q: Should the system attempt to automatically match found pet reports with existing missing pet reports? → A: No, found and missing reports exist independently with no matching logic
 - Q: What are the photo upload requirements and constraints? → A: JPEG, PNG, GIF • Max 20MB
-- Q: What validation rules should apply to phone numbers and email addresses? → A: Same as Report Lost Pet - Phone: regex /\d/ (at least one digit); Email: regex /^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/ (RFC 5322 basic)
+- Q: What validation rules should apply to phone numbers and email addresses? → A: Both phone and email are mandatory. Phone: regex /\d/ (at least one digit); Email: regex /^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/ (RFC 5322 basic)
 - Q: How should users specify the "found location" where the animal was discovered? → A: Current location button + text inputs
 - Q: Who should be able to view submitted found pet reports? → A: Public - all app users can view all found pet reports
 
