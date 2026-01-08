@@ -1,0 +1,223 @@
+# Feature Specification: iOS Fullscreen Map - Display Pin Annotation Details
+
+**Feature Branch**: `KAN-32-ios-fullscreen-map-annotation`  
+**Created**: 2025-01-08  
+**Status**: Draft  
+**Ticket**: KAN-32  
+**Platform**: iOS only  
+**Dependencies**: KAN-32-ios-fullscreen-map-fetch-pins (pins must be displayed on map first)  
+**Input**: User description: "W tej części specyfikacji zrobimy wyświetlanie annotacji kiedy user kliknie na pinezkę. Link do szczegółów designu: https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev. W Jira w tickecie KAN-32 zobacz także attachment obrazka, który pokazuje jak to ma wyglądać w kontekscie (annotacja ma strzałkę na dole). Obsługujemy iOS 18+ więc możemy używać najnowszego API."
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - View Missing Animal Details from Pin (Priority: P1)
+
+A user wants to tap a pin on the map and see detailed information about the missing animal so they can recognize it and contact the owner.
+
+**Why this priority**: This is the core interaction that makes the map actionable. Without annotation details, users can only see pin locations but cannot act on them (identify the animal, contact the owner). This directly enables the primary use case: helping reunite lost pets with owners.
+
+**Independent Test**: Can be tested by opening fullscreen map with pins displayed, tapping any pin, and verifying annotation callout appears with all required information fields populated correctly.
+
+**Acceptance Scenarios**:
+
+1. **Given** pins are visible on the fullscreen map, **When** the user taps a pin, **Then** an annotation callout appears displaying the missing animal's details
+2. **Given** an annotation is displayed, **When** the user views it, **Then** it shows at minimum: pet photo, pet name, species/breed, last-seen location name, last-seen date, owner email, owner phone, and description
+3. **Given** an annotation is displayed, **When** the user taps on the phone number, **Then** the system opens the phone dialer with the number pre-populated
+4. **Given** an annotation is displayed, **When** the user taps on the email address, **Then** the system opens the mail app with the email pre-populated
+5. **Given** an annotation is displayed, **When** the user taps elsewhere on the map or taps the same pin again, **Then** the annotation dismisses
+6. **Given** an annotation is displayed, **When** the user taps a different pin, **Then** the previous annotation dismisses and the new annotation appears for the selected pin
+
+---
+
+### User Story 2 - View Animal Status Badge (Priority: P2)
+
+A user wants to see the current status of the missing animal (e.g., "MISSING", "FOUND") in the annotation so they know if assistance is still needed.
+
+**Why this priority**: Status information prevents users from wasting time on outdated announcements. If an animal has been found, users don't need to keep looking. This improves user experience and reduces unnecessary contact attempts.
+
+**Independent Test**: Can be tested by tapping pins for animals with different statuses and verifying the status badge displays correctly with appropriate styling for each status type.
+
+**Acceptance Scenarios**:
+
+1. **Given** an annotation is displayed, **When** the pet status is "missing", **Then** the annotation shows a status badge displaying "MISSING" with appropriate styling
+2. **Given** an annotation is displayed, **When** the pet status is "found", **Then** the annotation shows a status badge displaying "FOUND" with appropriate styling (blue background, white text)
+3. **Given** an annotation is displayed, **When** the pet status is "reunited", **Then** the annotation shows a status badge displaying "REUNITED" with appropriate styling
+
+---
+
+### User Story 3 - Handle Missing or Invalid Data Gracefully (Priority: P3)
+
+A user wants to see annotation details even when some information is missing or unavailable, without the UI breaking or becoming unusable.
+
+**Why this priority**: Data integrity cannot always be guaranteed (user-generated content, optional fields, failed image uploads). Graceful degradation ensures the feature remains useful even with incomplete data.
+
+**Independent Test**: Can be tested by creating test announcements with missing fields (no photo, no description, no phone, etc.) and verifying annotation displays correctly with placeholders or omits missing fields without crashing.
+
+**Acceptance Scenarios**:
+
+1. **Given** an announcement has no pet photo, **When** the annotation is displayed, **Then** a placeholder image is shown instead of an empty space
+2. **Given** an announcement has no description, **When** the annotation is displayed, **Then** the description field shows "No additional description provided."
+3. **Given** an announcement has no phone number, **When** the annotation is displayed, **Then** the phone field is omitted from the display
+4. **Given** an announcement has no email address, **When** the annotation is displayed, **Then** the email field is omitted from the display
+5. **Given** an announcement has neither phone nor email, **When** the annotation is displayed, **Then** a message "Contact information not available" is shown
+
+---
+
+### Edge Cases
+
+- **Pet photo fails to load**: Display placeholder image instead of broken image icon
+- **Very long pet names**: Name should truncate with ellipsis (...) after exceeding maximum width
+- **Very long descriptions**: Description should display in scrollable area or truncate with "Read more" option
+- **Invalid coordinates for location name**: If reverse geocoding fails, show coordinates as fallback (e.g., "40.7128° N, 74.0060° W")
+- **Rapid pin tapping**: Annotation transitions should be smooth without flickering; dismiss previous annotation before showing new one
+- **Annotation positioning**: Annotation callout should position above the pin with a pointer/arrow pointing down to the pin location; if insufficient space above, position below with upward arrow
+- **Map interaction while annotation visible**: Pan/zoom gestures should dismiss the annotation to avoid disorienting the user
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: When the user taps a pin, the system MUST display an annotation callout for that pin
+- **FR-002**: The annotation callout MUST be styled as a white card with rounded corners (12px border radius) and drop shadow matching Figma design
+- **FR-003**: The annotation callout MUST include a pointer/arrow pointing to the pin location
+- **FR-004**: The annotation MUST display the following information fields:
+  - Pet photo (120px height, 8px border radius)
+  - Pet name (16px, bold, #333 color)
+  - Species and breed formatted as "Species • Breed" (13px, #666 color)
+  - Last-seen location name with 📍 emoji prefix (13px, #666 color)
+  - Last-seen date formatted as MM/DD/YYYY with 📅 emoji prefix (13px, #666 color)
+  - Owner email with 📧 emoji prefix (13px, #666 color, tappable)
+  - Owner phone with 📞 emoji prefix (13px, #666 color, tappable)
+  - Description text (14px, #444 color)
+  - Status badge (rounded 12px, content-specific colors)
+- **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display a placeholder image
+- **FR-006**: When the description is empty or null, the annotation MUST display "No additional description provided."
+- **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
+- **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
+- **FR-009**: When both phone and email are missing, the annotation MUST display "Contact information not available"
+- **FR-010**: The phone number field MUST be tappable and open the phone dialer app when tapped
+- **FR-011**: The email address field MUST be tappable and open the mail app with a pre-populated email when tapped
+- **FR-012**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
+  - MISSING: Orange background (#FF9500), white text
+  - FOUND: Blue background (#155DFC), white text
+  - REUNITED: Green background (#34C759), white text
+- **FR-013**: When the user taps elsewhere on the map, the annotation MUST dismiss
+- **FR-014**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
+- **FR-015**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
+- **FR-016**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
+- **FR-017**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
+- **FR-018**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
+- **FR-019**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
+- **FR-020**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
+
+### Key Entities *(include if feature involves data)*
+
+- **Annotation Callout**: Visual overlay displaying detailed information about a missing animal when its pin is tapped; dismissible by tapping elsewhere
+- **Status Badge**: Visual indicator showing the current status of a missing animal (MISSING, FOUND, REUNITED) with status-specific colors
+- **Contact Fields**: Tappable UI elements (phone, email) that trigger system actions (open dialer, open mail app)
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: Users can view annotation details within 1 second of tapping a pin under normal conditions
+- **SC-002**: Users can successfully initiate phone calls or emails from the annotation without copying/pasting contact information manually
+- **SC-003**: Users can identify the animal's current status at a glance by viewing the status badge color and text
+- **SC-004**: The annotation remains visually consistent with the Figma design (white card, rounded corners, drop shadow, pointer arrow)
+
+## Assumptions
+
+- The previous spec (KAN-32-ios-fullscreen-map-fetch-pins) has been implemented, providing pins on the map
+- The backend API returns all necessary fields in the announcement response: pet name, species, breed, last-seen location name, last-seen date, owner email, owner phone, description, status, pet photo URL, coordinates
+- The iOS app has permission to access phone dialer and mail app
+- The iOS app targets iOS 18+, allowing use of latest MapKit annotation APIs
+- Reverse geocoding (coordinates → location name) is handled by the backend or MapKit; if unavailable, coordinates are shown as fallback
+- Pet photo URLs are valid and hosted on a reliable server; placeholder image is bundled in the app
+- Status values from backend are standardized ("missing", "found", "reunited") and map to badge labels and colors
+- The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
+- Future specs may add additional interactions (share announcement, report sighting, navigate to location)
+
+## Notes
+
+This specification builds upon KAN-32-ios-fullscreen-map-fetch-pins by adding interactive annotation details to pins. The map and pin display from previous specs remain unchanged.
+
+The annotation callout uses MapKit's native APIs for positioning and presentation. Custom styling (white card, shadow, pointer arrow, rounded corners) is achieved using custom annotation views or callout accessories.
+
+The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev) exactly: white background, rounded corners (12px), drop shadow, emoji prefixes for location/date/contact, blue "FOUND" badge, placeholder for missing description.
+
+Contact fields (phone, email) are tappable using iOS URL schemes: `tel://` for phone dialer, `mailto:` for mail app. This leverages native system integration without requiring custom contact management.
+
+Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational, green for reunited/success).
+
+## Clarifications
+
+### Session 2026-01-08
+
+- Q: Should the annotation be dismissible by tapping a close button, or by tapping elsewhere on the map? → A: Dismiss by tapping elsewhere on map or tapping the same pin again (toggle behavior). No explicit close button needed.
+- Q: Should very long descriptions be truncated or scrollable? → A: Descriptions can be displayed in full with reasonable height limit; if needed, display in scrollable container with max height constraint.
+- Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely if missing. If both are missing, show "Contact information not available".
+- Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
+- Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
+
+## Design Deliverables *(mandatory for UI features)*
+
+### Design Assets
+
+| Asset | Status | Link |
+|-------|--------|------|
+| **Figma Design** | _Complete_ | https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev |
+| **User Flow** | _Pending_ | FigJam diagram showing pin tap → annotation display → dismiss flow |
+| **Wireframe** | _Pending_ | FigJam showing annotation positioning (above/below pin) |
+| **Design Brief** | _Pending_ | Component specs: spacing, typography, colors, status badge styles |
+| **Figma Make Prompt** | _N/A_ | Design already exists in Figma |
+| **Visual Mockups** | _Complete_ | See Figma link above |
+
+### Design Requirements
+
+- [x] Visual mockups available in Figma
+- [ ] User flow diagram created
+- [ ] Wireframe layout created (annotation positioning logic)
+- [ ] Design brief with component specs (spacing, typography, colors)
+- [ ] All assets linked in Jira ticket KAN-32
+
+---
+
+## Estimation *(mandatory)*
+
+### Initial Estimate
+
+- **Story Points**: 2
+- **Initial Budget**: 2 × 4 × 1.3 = 10.4 days
+- **Confidence**: ±50%
+- **Anchor Comparison**: Simpler than Pet Details Screen (3 SP). This feature involves custom MapKit annotation view with styling, data binding, contact action handling, and status badge logic. No network requests (data already available from pin fetch). Comparable to a single detailed view with interactive elements and custom styling, but less complex than full CRUD screen.
+
+### Re-Estimation (Updated After Each Phase)
+
+| Phase | SP | Days | Confidence | Key Discovery |
+|-------|-----|------|------------|---------------|
+| Initial | 2 | 10.4 | ±50% | Gut feel from feature title and Figma design |
+| After SPEC | — | — | ±30% | [Update when spec.md complete] |
+| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After TASKS | — | — | ±10-15% | [Update when tasks.md complete] |
+
+### Per-Platform Breakdown (After TASKS)
+
+| Platform | Tasks | Days | Notes |
+|----------|-------|------|-------|
+| Backend | — | — | [Fill after tasks.md - likely 0, no backend changes needed] |
+| iOS | — | — | [Fill after tasks.md - full implementation here] |
+| Android | — | — | [Fill after tasks.md - N/A, iOS only] |
+| Web | — | — | [Fill after tasks.md - N/A, iOS only] |
+| **Total** | | **—** | |
+
+### Variance Tracking
+
+| Metric | Initial | Final | Variance |
+|--------|---------|-------|----------|
+| **Story Points** | 2 SP | — | [Calculate: (Y - X) / X × 100%] |
+| **Budget (days)** | 10.4 days | — | [Calculate: (Y - X) / X × 100%] |
+
+**Variance Reasons**: [Why was estimate different? MapKit native annotation APIs? Custom view complexity? Contact action handling?]
+
+**Learning for Future Estimates**: [What pattern should the team apply to similar custom MapKit annotation features?]
+
