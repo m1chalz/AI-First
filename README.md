@@ -76,6 +76,17 @@ See [server/README.md](./server/README.md) for backend-specific documentation.
 
 ### Android Application
 
+#### Prerequisites
+
+**Google Maps API Key** (required for map features):
+1. Get API key from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Add to `local.properties` (this file is gitignored - never commit secrets!):
+   ```properties
+   MAPS_API_KEY=your_api_key_here
+   ```
+
+#### Build
+
 Build and run the Android app from the terminal:
 
 **macOS/Linux:**

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavController
 import com.intive.aifirst.petspot.features.lostPetsTeaser.ui.LostPetsTeaser
+import com.intive.aifirst.petspot.features.mapPreview.ui.MapPreviewSection
 import com.intive.aifirst.petspot.navigation.NavRoute.AnimalDetail
 import com.intive.aifirst.petspot.navigation.navigateToFoundPetTab
 import com.intive.aifirst.petspot.navigation.navigateToLostPetTab
@@ -51,6 +52,15 @@ fun HomeScreen(
                     dropUnlessResumed {
                         navController.navigateToFoundPetTab()
                     },
+            )
+        }
+
+        // Map Preview Section (between hero and recent reports)
+        item {
+            MapPreviewSection(
+                onNavigateToFullMap = {
+                    // Future: Navigate to full interactive map screen
+                },
             )
         }
 

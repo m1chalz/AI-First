@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.secrets)
 }
 
 kotlin {
@@ -38,6 +39,9 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.okhttp.logging.interceptor)
+            // Google Maps Compose
+            implementation(libs.maps.compose)
+            implementation(libs.play.services.maps)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -138,6 +142,14 @@ detekt {
 ktlint {
     android.set(true)
     version.set(libs.versions.ktlint.engine.get())
+}
+
+// Secrets Gradle Plugin Configuration (Google Maps API key)
+// API keys are stored in local.properties (gitignored) - see README.md for setup
+secrets {
+    propertiesFileName = "local.properties"
+    ignoreList.add("keyToIgnore")
+    ignoreList.add("sdk.*")
 }
 
 // Android Lint Configuration
