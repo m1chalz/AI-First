@@ -108,7 +108,7 @@ A user wants to see annotation details even when some information is missing or 
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can view annotation details within 1 second of tapping a pin under normal conditions
+- **SC-001**: Users can view annotation details by tapping a pin
 - **SC-002**: Users can identify the animal's current status at a glance by viewing the status badge color and text
 - **SC-003**: The annotation remains visually consistent with the Figma design (white card, rounded corners, drop shadow, pointer arrow)
 
