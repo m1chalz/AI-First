@@ -242,6 +242,78 @@
   - Run commands: `npm test`, `npm test --coverage`
   - Violation justification: _[Required if coverage < 80% or N/A if /server not affected]_
 
+## Test Strategy Decisions *(gate: must complete before Phase 0)*
+
+<!--
+  TEST STRATEGY: Document testing approach based on feature complexity.
+  Reference: docs/testing-workflow.md and docs/testing-spec-kit-integration.md
+-->
+
+### Test Type Selection
+
+| Test Type | Include? | Rationale | Estimated Tasks |
+|-----------|----------|-----------|-----------------|
+| **Unit Tests** | ✅ Yes | [e.g., ViewModels, services, use cases] | [e.g., ~15 tasks] |
+| **Integration Tests** | ✅ Yes | [e.g., 3 API endpoints] | [e.g., ~3 tasks] |
+| **E2E Tests** | ✅ Yes | [e.g., 2 user flows] | [e.g., ~4 tasks] |
+| **Manual Tests** | ⚠️ If needed | [e.g., Social platform preview validation] | [N/A - documented in spec] |
+
+### Test Workflow Selection
+
+| Platform | Test Approach | Rationale |
+|----------|---------------|-----------|
+| **Backend** | TDD (Red-Green-Refactor) | Mandatory per constitution |
+| **Web** | TDD Recommended (hooks/lib), Test-After permitted | 80% coverage mandatory; TDD beneficial for business logic |
+| **Android** | Test-After (Implement → Test) | Permitted per constitution |
+| **iOS** | Test-After (Implement → Test) | Permitted per constitution |
+| **E2E** | Test-After (All platforms complete → E2E) | After feature completion |
+
+### Coverage Targets Per Platform
+
+| Platform | Target | Test Locations | Notes |
+|----------|--------|----------------|-------|
+| Backend | 80% | `/server/src/services/__test__/`, `/server/src/lib/__test__/`, `/server/src/__test__/` | Unit + Integration |
+| Web | 80% | `/webApp/src/hooks/__test__/`, `/webApp/src/lib/__test__/` | Unit tests |
+| Android | 80% | `/composeApp/src/androidUnitTest/` | ViewModels, use cases, domain |
+| iOS | 80% | `/iosApp/iosAppTests/` | ViewModels, domain |
+| E2E | 100% user stories | `/e2e-tests/java/src/test/resources/features/[feature].feature` | Gherkin scenarios |
+
+### Test Environment Requirements
+
+- [ ] Backend API endpoints available (for integration tests)
+- [ ] Test data fixtures created (for E2E tests)
+- [ ] Selenium Grid / Appium setup verified (for E2E mobile tests)
+- [ ] Test identifiers implemented on all UI elements
+- [ ] Fake/mock repositories created (for unit tests)
+
+## Test Effort Estimation *(gate: update after tasks.md)*
+
+<!--
+  TEST EFFORT: Estimate testing tasks separately to ensure adequate coverage.
+  Testing typically adds 30-40% to implementation effort.
+  Reference: docs/testing-spec-kit-integration.md
+-->
+
+### Test Task Breakdown
+
+| Platform | Unit Tests | Integration Tests | E2E Tests | Total Test Tasks |
+|----------|------------|-------------------|-----------|------------------|
+| Backend | [X tasks] | [Y tasks] | N/A | [X+Y tasks] |
+| Web | [X tasks] | N/A | [Y tasks] | [X+Y tasks] |
+| Android | [X tasks] | N/A | [Y tasks] | [X+Y tasks] |
+| iOS | [X tasks] | N/A | [Y tasks] | [X+Y tasks] |
+| **Total** | **[sum]** | **[sum]** | **[sum]** | **[total]** |
+
+### Test Task Ratio
+
+- **Implementation Tasks**: [X tasks] (~60-70%)
+- **Test Tasks**: [Y tasks] (~30-40%)
+- **Total Tasks**: [X+Y tasks]
+
+**Test Task Percentage**: [Y / (X+Y) × 100]%
+
+**Sanity Check**: Test tasks should be 30-40% of total. If < 20%, tests may be underestimated. If > 50%, implementation may be underestimated.
+
 ## Project Structure
 
 ### Documentation (this feature)
