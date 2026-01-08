@@ -168,10 +168,7 @@ As a user familiar with reporting a missing pet, I want the â€œReport Found Petâ
 
 ### Measurable Outcomes
 
-- **SC-001**: At least 90% of users who start the wizard successfully submit a found-pet report.
-- **SC-002**: Median time to complete and submit a report is under 3 minutes for users providing the minimum required information.
-- **SC-003**: At least 95% of submissions succeed on the first attempt (excluding user validation errors).
-- **SC-004**: Less than 5% of submitted reports result in user-reported issues related to missing/incorrect mandatory validations within the first release cycle.
+- **SC-001**: At least 95% of submissions succeed on the first attempt (excluding user validation errors).
 
 ## Design Deliverables *(mandatory for UI features)*
 
