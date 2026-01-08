@@ -117,7 +117,15 @@ Each platform MUST maintain minimum 80% line + branch coverage for business logi
 - MUST test behavior, not implementation details
 - MUST use test doubles (fakes, mocks) for dependencies
 
-See platform-specific constitution files for detailed testing standards.
+**Testing Workflow**:
+- Backend MUST use TDD (Red-Green-Refactor)
+- Web TDD RECOMMENDED for business logic (hooks/lib), test-after permitted for components
+- Mobile (Android/iOS) MAY use test-after workflow
+
+**Detailed Testing Guides**:
+- Testing workflow and quality gates: `docs/testing-workflow.md`
+- Spec-kit integration (SPEC → PLAN → TASKS): `docs/testing-spec-kit-integration.md`
+- Platform-specific standards: See platform-specific constitution files
 
 ### III. Interface-Based Design (NON-NEGOTIABLE)
 
@@ -164,7 +172,11 @@ All interactive UI elements MUST have stable test identifiers for E2E testing:
 | iOS | `.accessibilityIdentifier()` | `petList.addButton` |
 | Web | `data-testid` | `petList.addButton.click` |
 
-**Naming Convention**: `{screen}.{element}.{action?}`
+**Naming Convention**:
+- **Buttons/Inputs/Links**: `{screen}.{element}.{action}` (e.g., `petList.addButton.click`, `login.emailInput.field`)
+- **List Items**: `{screen}.item.{id}` (e.g., `petList.item.${petId}`)
+- **Dynamic Elements**: Use stable IDs (database IDs, unique keys), NEVER array indices
+- **Action Suffixes**: `click`, `field`, `toggle`, `submit` (descriptive of interaction type)
 
 ### VII. Public API Documentation (NON-NEGOTIABLE)
 

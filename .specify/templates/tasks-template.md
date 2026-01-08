@@ -38,11 +38,13 @@ description: "Task list template for feature implementation"
 - Convention: MUST follow Given-When-Then structure
 
 **MANDATORY - End-to-End Tests**:
-- Web: `/e2e-tests/web/specs/[feature-name].spec.ts` (Playwright + TypeScript)
-- Mobile: `/e2e-tests/mobile/specs/[feature-name].spec.ts` (Appium + TypeScript)
-- All user stories MUST have E2E test coverage
-- Use Page Object Model / Screen Object Model pattern
-- Convention: MUST structure scenarios with Given-When-Then phases
+- Features: `/e2e-tests/java/src/test/resources/features/[feature-name].feature` (Gherkin scenarios)
+- Page Objects: `/e2e-tests/java/src/test/java/.../pages/` (Selenium for @web)
+- Screen Objects: `/e2e-tests/java/src/test/java/.../screens/` (Appium for @android/@ios)
+- Step Definitions: `/e2e-tests/java/src/test/java/.../steps/{web,mobile}/`
+- Stack: Java 21 + Maven + Cucumber + Selenium/Appium
+- All user stories MUST have E2E scenario coverage
+- Convention: Gherkin Given-When-Then structure
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -98,9 +100,9 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T006 Setup E2E test infrastructure (Playwright config, Appium setup, TypeScript configs)
-- [ ] T007 [P] Create base Page Objects for web in `/e2e-tests/web/pages/base/`
-- [ ] T008 [P] Create base Screen Objects for mobile in `/e2e-tests/mobile/screens/base/`
+- [ ] T006 Setup E2E test infrastructure (Maven POM, Cucumber config, Java 21 setup, Selenium/Appium drivers)
+- [ ] T007 [P] Create base Page Objects for web in `/e2e-tests/java/src/test/java/.../pages/base/`
+- [ ] T008 [P] Create base Screen Objects for mobile in `/e2e-tests/java/src/test/java/.../screens/base/`
 - [ ] T009 [P] Setup Android Koin DI modules in `/composeApp/src/androidMain/.../di/` (Koin mandatory)
 - [ ] T010 [P] Setup Android Navigation Component in `/composeApp/src/androidMain/.../navigation/` (NavHost with declarative graph)
 - [ ] T011 [P] Setup iOS manual DI (ServiceContainer with constructor injection) in `/iosApp/iosApp/DI/`
@@ -137,9 +139,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T024 [P] [US1] Create fake [Repository] in `/iosApp/iosAppTests/Fakes/Fake[Repository].swift`
 - [ ] T025 [P] [US1] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift` (test repository calls directly)
 
-**Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T026 [P] [US1] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts` (Vitest, Given-When-Then)
-- [ ] T027 [P] [US1] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts` (Vitest, Given-When-Then)
+**Web Unit Tests** (TDD Recommended):
+- [ ] T026 [P] [US1] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts` (Vitest, Given-When-Then) - TDD recommended for hooks
+- [ ] T027 [P] [US1] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts` (Vitest, Given-When-Then) - TDD recommended for lib
 
 **Backend Unit Tests** (TDD: Red-Green-Refactor):
 - [ ] T029 [P] [US1] Unit test for service in `/server/src/services/__test__/[Service].test.ts` (Vitest, Given-When-Then)
@@ -149,10 +151,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T031 [P] [US1] Integration test for API endpoint in `/server/src/__test__/[endpoint].test.ts` (Vitest + SuperTest, Given-When-Then)
 
 **End-to-End Tests**:
-- [ ] T032 [P] [US1] Web E2E test in `/e2e-tests/web/specs/[feature-name].spec.ts`
-- [ ] T033 [P] [US1] Mobile E2E test in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
-- [ ] T034 [P] [US1] Page Objects for US1 in `/e2e-tests/web/pages/[Feature]Page.ts`
-- [ ] T035 [P] [US1] Screen Objects for US1 in `/e2e-tests/mobile/screens/[Feature]Screen.ts`
+- [ ] T032 [P] [US1] Gherkin feature file for US1 in `/e2e-tests/java/src/test/resources/features/[feature-name].feature` (scenarios tagged @web, @android, @ios)
+- [ ] T033 [P] [US1] Page Objects + Web step definitions in `/e2e-tests/java/src/test/java/.../pages/[Feature]Page.java` and `.../steps/web/[Feature]Steps.java`
+- [ ] T034 [P] [US1] Screen Objects + Mobile step definitions in `/e2e-tests/java/src/test/java/.../screens/[Feature]Screen.java` and `.../steps/mobile/[Feature]Steps.java`
 
 ### Implementation for User Story 1
 
@@ -185,7 +186,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T057 [US1] Add accessibilityIdentifier to all interactive views in [Feature]View (e.g., `.accessibilityIdentifier("[screen].[element].[action]")`)
 - [ ] T058 [P] [US1] Add SwiftDoc documentation to complex iOS APIs (skip self-explanatory methods/properties)
 
-**Web** (Full Stack Implementation - TDD: Red-Green-Refactor):
+**Web** (Full Stack Implementation - TDD Recommended for hooks/lib, test-after permitted for components):
 - [ ] T059 [P] [US1] Create TypeScript domain models in `/webApp/src/models/[Model].ts`
 - [ ] T060 [P] [US1] Create service interface in `/webApp/src/services/[Service].ts`
 - [ ] T061 [US1] Implement HTTP service consuming backend API in `/webApp/src/services/[Service]Impl.ts`
@@ -234,53 +235,53 @@ Examples of foundational tasks (adjust based on your project):
 **iOS Unit Tests**:
 - [ ] T079 [P] [US2] iOS ViewModel test in `/iosApp/iosAppTests/ViewModels/[ViewModel]Tests.swift` (test repository calls directly)
 
-**Web Unit Tests** (TDD: Red-Green-Refactor):
-- [ ] T080 [P] [US2] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts`
-- [ ] T081 [P] [US2] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts`
+**Web Unit Tests** (TDD Recommended):
+- [ ] T080 [P] [US2] RED: Write failing unit test for hook in `/webApp/src/hooks/__test__/use[Feature].test.ts` - TDD recommended
+- [ ] T081 [P] [US2] RED: Write failing unit test for lib function in `/webApp/src/lib/__test__/[util].test.ts` - TDD recommended
 
 **End-to-End Tests**:
-- [ ] T081 [P] [US2] Web E2E test in `/e2e-tests/web/specs/[feature-name].spec.ts`
-- [ ] T082 [P] [US2] Mobile E2E test in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
+- [ ] T082 [P] [US2] Gherkin feature file for US2 in `/e2e-tests/java/src/test/resources/features/[feature-name].feature` (additional scenarios)
+- [ ] T083 [P] [US2] Update Page/Screen Objects + step definitions as needed for US2
 
 ### Implementation for User Story 2
 
 > **Note**: For backend-only features, SKIP Android, iOS, and Web sections. Only implement Backend tasks.
 
 **Android** (Full Stack):
-- [ ] T083 [P] [US2] Create [Entity] model in `/composeApp/src/androidMain/.../domain/models/[Entity].kt`
-- [ ] T084 [P] [US2] Create [Repository] interface in `/composeApp/src/androidMain/.../domain/repositories/[Repository].kt`
-- [ ] T085 [US2] Implement [UseCase] in `/composeApp/src/androidMain/.../domain/usecases/[UseCase].kt`
-- [ ] T086 [US2] Implement repository + DI + ViewModel
-- [ ] T087 [US2] Create state host composable `[Feature]Screen` (stateful)
-- [ ] T088 [US2] Create stateless composable `[Feature]Content` (pure presentation)
-- [ ] T089 [US2] Create `PreviewParameterProvider` and `@Preview` for stateless composable
-- [ ] T090 [US2] Add Navigation Component route for US2 in NavGraph
-- [ ] T091 [US2] Add testTag modifiers to all Android UI elements for US2
-- [ ] T092 [P] [US2] Add KDoc documentation to complex US2 Android APIs (skip self-explanatory)
+- [ ] T084 [P] [US2] Create [Entity] model in `/composeApp/src/androidMain/.../domain/models/[Entity].kt`
+- [ ] T085 [P] [US2] Create [Repository] interface in `/composeApp/src/androidMain/.../domain/repositories/[Repository].kt`
+- [ ] T086 [US2] Implement [UseCase] in `/composeApp/src/androidMain/.../domain/usecases/[UseCase].kt`
+- [ ] T087 [US2] Implement repository + DI + ViewModel
+- [ ] T088 [US2] Create state host composable `[Feature]Screen` (stateful)
+- [ ] T089 [US2] Create stateless composable `[Feature]Content` (pure presentation)
+- [ ] T090 [US2] Create `PreviewParameterProvider` and `@Preview` for stateless composable
+- [ ] T091 [US2] Add Navigation Component route for US2 in NavGraph
+- [ ] T092 [US2] Add testTag modifiers to all Android UI elements for US2
+- [ ] T093 [P] [US2] Add KDoc documentation to complex US2 Android APIs (skip self-explanatory)
 
 **iOS** (Full Stack - NO use cases):
-- [ ] T093 [P] [US2] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
-- [ ] T094 [P] [US2] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
-- [ ] T095 [US2] Implement repository + manual DI + ViewModel (calls repository directly) + Coordinator + SwiftUI view
-- [ ] T096 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
-- [ ] T097 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
+- [ ] T094 [P] [US2] Create [Entity] model in `/iosApp/iosApp/Domain/Models/[Entity].swift`
+- [ ] T095 [P] [US2] Create [Repository] protocol in `/iosApp/iosApp/Domain/Repositories/[Repository].swift`
+- [ ] T096 [US2] Implement repository + manual DI + ViewModel (calls repository directly) + Coordinator + SwiftUI view
+- [ ] T097 [US2] Add accessibilityIdentifier to all iOS UI elements for US2
+- [ ] T098 [P] [US2] Add SwiftDoc documentation to complex US2 iOS APIs (skip self-explanatory)
 
-**Web** (Full Stack - TDD: Red-Green-Refactor):
-- [ ] T098 [P] [US2] Create TypeScript models for US2 in `/webApp/src/models/`
-- [ ] T099 [US2] GREEN: Implement hook in `/webApp/src/hooks/use[Feature].ts` (minimal code to pass test)
-- [ ] T100 [US2] REFACTOR: Improve hook code quality
-- [ ] T101 [P] [US2] GREEN: Implement lib function in `/webApp/src/lib/[util].ts` (minimal code to pass test)
-- [ ] T102 [US2] REFACTOR: Improve lib function code quality
-- [ ] T103 [US2] Implement HTTP service + DI + React component (thin, delegates to hooks/lib)
-- [ ] T104 [US2] Add data-testid attributes to all Web UI elements for US2
-- [ ] T105 [P] [US2] Add JSDoc documentation ONLY to complex US2 Web APIs (skip self-explanatory)
-- [ ] T106 [US2] Run `npm test --coverage` and verify 80% coverage
-- [ ] T107 [P] [US2] Run `npm run lint` and fix ESLint violations
+**Web** (Full Stack - TDD Recommended for hooks/lib, test-after permitted for components):
+- [ ] T099 [P] [US2] Create TypeScript models for US2 in `/webApp/src/models/`
+- [ ] T100 [US2] GREEN: Implement hook in `/webApp/src/hooks/use[Feature].ts` (minimal code to pass test)
+- [ ] T101 [US2] REFACTOR: Improve hook code quality
+- [ ] T102 [P] [US2] GREEN: Implement lib function in `/webApp/src/lib/[util].ts` (minimal code to pass test)
+- [ ] T103 [US2] REFACTOR: Improve lib function code quality
+- [ ] T104 [US2] Implement HTTP service + DI + React component (thin, delegates to hooks/lib)
+- [ ] T105 [US2] Add data-testid attributes to all Web UI elements for US2
+- [ ] T106 [P] [US2] Add JSDoc documentation ONLY to complex US2 Web APIs (skip self-explanatory)
+- [ ] T107 [US2] Run `npm test --coverage` and verify 80% coverage
+- [ ] T108 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Backend** (TDD):
-- [ ] T102 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
-- [ ] T103 [US2] Run `npm test --coverage` and verify 80% coverage
-- [ ] T104 [P] [US2] Run `npm run lint` and fix ESLint violations
+- [ ] T109 [P] [US2] RED-GREEN-REFACTOR: Implement backend service, routes, tests for US2
+- [ ] T110 [US2] Run `npm test --coverage` and verify 80% coverage
+- [ ] T111 [P] [US2] Run `npm run lint` and fix ESLint violations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -295,7 +296,7 @@ Examples of foundational tasks (adjust based on your project):
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
 - [ ] T105 [P] [US3] Platform-specific unit tests (follow same pattern as US1/US2)
-- [ ] T106 [P] [US3] E2E tests for US3
+- [ ] T106 [P] [US3] E2E tests for US3 in `/e2e-tests/java/src/test/resources/features/[feature-name].feature` (additional scenarios)
 
 ### Implementation for User Story 3
 
