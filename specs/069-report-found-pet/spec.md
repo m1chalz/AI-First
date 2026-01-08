@@ -4,7 +4,7 @@
 **Created**: 2026-01-07  
 **Status**: Draft  
 **Jira Ticket**: `KAN-5`  
-**Design**: [Figma - Found Pet Reporting Wizard](https://www.figma.com/make/CLdBKnXW8HTucDAHFpnPBa/Found-Pet-Reporting-Wizard?t=A1LbdLNZE9jj2JHF-1)  
+**Design**: [Figma - Found Pet Reporting Wizard - Mobile](https://www.figma.com/make/CLdBKnXW8HTucDAHFpnPBa/Found-Pet-Reporting-Wizard?t=A1LbdLNZE9jj2JHF-1); [Figma - Found Pet Reporting Wizard - Web](https://www.figma.com/make/d9XfceXLl9Lo4gH4mf3Cb8/Found-Pet-Reporting-Wizard--Copy-?t=kKS7Penl3hlxlFM7-1)  
 **Input**: User description: "take requirements from jira KAN-5"
 
 ## User Scenarios & Testing *(mandatory)*
