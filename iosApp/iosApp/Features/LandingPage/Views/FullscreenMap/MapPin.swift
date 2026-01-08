@@ -50,14 +50,7 @@ struct MapPin: Identifiable, Equatable {
     
     /// Converts announcement status to TeardropPin display mode.
     var displayMode: TeardropPin.Mode {
-        switch status {
-        case .active:
-            return .active
-        case .found:
-            return .found
-        case .closed:
-            return .closed
-        }
+        .from(status: status)
     }
     
     /// Memberwise initializer for testing and preview purposes.

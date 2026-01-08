@@ -58,6 +58,19 @@ struct TeardropPin: View {
                 return iconName
             }
         }
+        
+        /// Creates Mode from announcement status.
+        /// Maps domain status to presentation appearance.
+        static func from(status: AnnouncementStatus) -> Mode {
+            switch status {
+            case .active:
+                return .active
+            case .found:
+                return .found
+            case .closed:
+                return .closed
+            }
+        }
     }
     
     // MARK: - Properties
