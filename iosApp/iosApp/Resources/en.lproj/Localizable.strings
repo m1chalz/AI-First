@@ -286,3 +286,7 @@
 /* MARK: - Fullscreen Map */
 
 "fullscreenMap.navigationTitle" = "Pet Locations";
+
+/* MARK: - Annotation Callout */
+
+"annotationCallout.unknownPet" = "Unknown Pet";

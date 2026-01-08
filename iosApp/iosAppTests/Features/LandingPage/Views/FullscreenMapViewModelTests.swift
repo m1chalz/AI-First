@@ -408,6 +408,65 @@ final class FullscreenMapViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pins[0].id, "fast-response")
     }
     
+    // MARK: - T051: Pin Selection - Toggle Behavior (KAN-32)
+    
+    func testSelectPin_whenSamePinAlreadySelected_shouldDeselectIt() {
+        // Given
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        sut = FullscreenMapViewModel(userLocation: userLocation, repository: fakeRepository)
+        sut.selectPin("pin-A")
+        XCTAssertEqual(sut.selectedPinId, "pin-A")
+        
+        // When - tap same pin again (FR-011)
+        sut.selectPin("pin-A")
+        
+        // Then - should toggle off
+        XCTAssertNil(sut.selectedPinId)
+    }
+    
+    // MARK: - T052: Pin Selection - Replace Behavior (KAN-32)
+    
+    func testSelectPin_whenDifferentPinSelected_shouldReplaceSelection() {
+        // Given
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        sut = FullscreenMapViewModel(userLocation: userLocation, repository: fakeRepository)
+        sut.selectPin("pin-A")
+        XCTAssertEqual(sut.selectedPinId, "pin-A")
+        
+        // When - tap different pin (FR-012)
+        sut.selectPin("pin-B")
+        
+        // Then - should replace with new pin
+        XCTAssertEqual(sut.selectedPinId, "pin-B")
+    }
+    
+    func testDeselectPin_whenPinSelected_shouldClearSelection() {
+        // Given
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        sut = FullscreenMapViewModel(userLocation: userLocation, repository: fakeRepository)
+        sut.selectPin("pin-A")
+        XCTAssertEqual(sut.selectedPinId, "pin-A")
+        
+        // When - tap on map background (FR-010)
+        sut.deselectPin()
+        
+        // Then - should clear selection
+        XCTAssertNil(sut.selectedPinId)
+    }
+    
+    func testSelectPin_whenNoSelectionExists_shouldSelectNewPin() {
+        // Given
+        let userLocation = Coordinate(latitude: 52.2297, longitude: 21.0122)
+        sut = FullscreenMapViewModel(userLocation: userLocation, repository: fakeRepository)
+        XCTAssertNil(sut.selectedPinId)
+        
+        // When - tap pin (FR-001)
+        sut.selectPin("pin-A")
+        
+        // Then - should select the pin
+        XCTAssertEqual(sut.selectedPinId, "pin-A")
+    }
+    
     // MARK: - T027: Region Change - Error Handling (US2)
     
     func testHandleRegionChange_whenRepositoryFails_shouldKeepExistingPins() async {

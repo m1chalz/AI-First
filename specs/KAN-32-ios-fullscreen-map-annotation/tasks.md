@@ -23,8 +23,8 @@
 
 **Purpose**: Minimal project setup for annotation feature
 
-- [ ] T001 [P] Add localization string for missing pet name fallback in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` ("annotationCallout.unknownPet" = "Unknown Pet")
-- [ ] T002 [P] Run SwiftGen to generate `L10n.AnnotationCallout.unknownPet` in `/iosApp/iosApp/Generated/Strings.swift`
+- [X] T001 [P] Add localization string for missing pet name fallback in `/iosApp/iosApp/Resources/en.lproj/Localizable.strings` ("annotationCallout.unknownPet" = "Unknown Pet")
+- [X] T002 [P] Run SwiftGen to generate `L10n.AnnotationCallout.unknownPet` in `/iosApp/iosApp/Generated/Strings.swift`
 
 ---
 
@@ -34,16 +34,16 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Extend `MapPin` struct with callout data fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (add: `petName: String?`, `photoUrl: String?`, `breed: String?`, `lastSeenDate: String`, `ownerEmail: String?`, `ownerPhone: String?`, `petDescription: String?`)
-- [ ] T004 Update `MapPin.init(from: Announcement)` to map new callout fields from announcement in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (treat empty photoUrl as nil)
-- [ ] T005 Add `@Published private(set) var selectedPinId: String?` to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
-- [ ] T006 [P] Implement `selectPin(_ pinId: String)` method in `FullscreenMapViewModel` (toggle if same pin, replace if different - FR-011, FR-012)
-- [ ] T007 [P] Implement `deselectPin()` method in `FullscreenMapViewModel` (clear selection - FR-010)
-- [ ] T008 Create `AnnotationCalloutView_Model.swift` with `struct Model` containing presentation fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
-- [ ] T009 Implement `AnnotationCalloutView.Model.init(from pin: MapPin)` factory method with field mapping and formatting logic in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
-- [ ] T010 [P] Add static `formatDate(_ dateString: String) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; yyyy-MM-dd → MMM dd, yyyy; include TODO for Phase 6 extraction)
-- [ ] T011 [P] Add static `formatCoordinates(_ coordinate: CLLocationCoordinate2D) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; "52.2297° N, 21.0122° E"; include TODO for Phase 6 extraction)
-- [ ] T012 [P] Add `annotationBadgeColorHex` computed property to `AnnouncementStatus` extension returning spec colors (#FF9500 for .active, #155DFC for .found, #8E8E93 for .closed) - create new file or extend existing `AnnouncementStatus+Presentation.swift` (Note: `.closed` exists in iOS `AnnouncementStatus` and is localized as CLOSED; handle as gray badge as an edge case outside current spec assumptions.)
+- [X] T003 Extend `MapPin` struct with callout data fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (add: `petName: String?`, `photoUrl: String?`, `breed: String?`, `lastSeenDate: String`, `ownerEmail: String?`, `ownerPhone: String?`, `petDescription: String?`)
+- [X] T004 Update `MapPin.init(from: Announcement)` to map new callout fields from announcement in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/MapPin.swift` (treat empty photoUrl as nil)
+- [X] T005 Add `@Published private(set) var selectedPinId: String?` to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift`
+- [X] T006 [P] Implement `selectPin(_ pinId: String)` method in `FullscreenMapViewModel` (toggle if same pin, replace if different - FR-011, FR-012)
+- [X] T007 [P] Implement `deselectPin()` method in `FullscreenMapViewModel` (clear selection - FR-010)
+- [X] T008 Create `AnnotationCalloutView_Model.swift` with `struct Model` containing presentation fields in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
+- [X] T009 Implement `AnnotationCalloutView.Model.init(from pin: MapPin)` factory method with field mapping and formatting logic in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
+- [X] T010 [P] Add static `formatDate(_ dateString: String) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; yyyy-MM-dd → MMM dd, yyyy; include TODO for Phase 6 extraction)
+- [X] T011 [P] Add static `formatCoordinates(_ coordinate: CLLocationCoordinate2D) -> String` helper in `AnnotationCalloutView.Model` extension (temporary duplication of `PetDetailsViewModel` formatting; "52.2297° N, 21.0122° E"; include TODO for Phase 6 extraction)
+- [X] T012 [P] Add `annotationBadgeColorHex` computed property to `AnnouncementStatus` extension returning spec colors (#FF9500 for .active, #155DFC for .found, #8E8E93 for .closed) - create new file or extend existing `AnnouncementStatus+Presentation.swift` (Note: `.closed` exists in iOS `AnnouncementStatus` and is localized as CLOSED; handle as gray badge as an edge case outside current spec assumptions.)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -68,21 +68,21 @@
 
 **iOS** (Full Stack Implementation):
 
-- [ ] T013 [US1] Create `CalloutPointer` shape struct in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView.swift` (triangle pointing down: 20pt wide, 10pt tall)
-- [ ] T014 [US1] Create `AnnotationCalloutView` SwiftUI view in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView.swift` with `model: Model` parameter
-- [ ] T015 [US1] Implement `cardContent` computed property with VStack layout containing all fields from Figma design (pet photo 216×120px/8px radius, name 16px bold #333, species/breed 13px #666, location/date/email/phone 13px #666 with emoji prefixes, description 14px #444, status badge)
-- [ ] T016 [US1] Implement `photoView` computed property with `AsyncImage` showing pet photo or placeholder (120px height, 8px border radius - FR-004)
-- [ ] T017 [US1] Implement placeholder for missing photo: rounded rectangle with `pawprint.fill` icon (24pt scaled, #93A2B4) on #EEEEEE background matching Announcement List style (FR-005)
-- [ ] T018 [US1] Implement `statusBadge` computed property displaying status text with colored background (12px radius, status-specific colors from `model.statusColorHex` - FR-009)
-- [ ] T019 [US1] Assemble `body` view with VStack: `cardContent` with white background, 12px corner radius, shadow (0/3/14/0.4), followed by `CalloutPointer` below (FR-002, FR-003)
-- [ ] T020 [US1] Add `.accessibilityIdentifier(model.accessibilityId)` to callout root view
-- [ ] T021 [US1] Add `calloutModel(for pin: MapPin) -> AnnotationCalloutView.Model` method to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift` (creates model on demand for selected pin)
-- [ ] T022 [US1] Update `FullscreenMapView` Map ForEach to embed callout inside `Annotation` content in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift` (use `ZStack(alignment: .bottom)` with callout above pin, conditional on `selectedPinId == pin.id`)
-- [ ] T023 [US1] Add `.onTapGesture { viewModel.selectPin(pin.id) }` to `TeardropPin` in `FullscreenMapView` (FR-001, FR-011, FR-012)
-- [ ] T024 [US1] Add `.onTapGesture { viewModel.deselectPin() }` to Map in `FullscreenMapView` (FR-010)
-- [ ] T025 [US1] Set `Annotation` anchor to `.bottom` so coordinate points to pin tip in `FullscreenMapView` (FR-013)
-- [ ] T026 [US1] Add `.offset(y: -10)` to callout in ZStack for gap between callout arrow and pin top in `FullscreenMapView`
-- [ ] T027 [P] [US1] Add SwiftDoc comments to `AnnotationCalloutView`, `AnnotationCalloutView.Model.init`, and ViewModel selection methods (only if purpose not clear from name)
+- [X] T013 [US1] Create `CalloutPointer` shape struct in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView.swift` (triangle pointing down: 20pt wide, 10pt tall)
+- [X] T014 [US1] Create `AnnotationCalloutView` SwiftUI view in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView.swift` with `model: Model` parameter
+- [X] T015 [US1] Implement `cardContent` computed property with VStack layout containing all fields from Figma design (pet photo 216×120px/8px radius, name 16px bold #333, species/breed 13px #666, location/date/email/phone 13px #666 with emoji prefixes, description 14px #444, status badge)
+- [X] T016 [US1] Implement `photoView` computed property with `AsyncImage` showing pet photo or placeholder (120px height, 8px border radius - FR-004)
+- [X] T017 [US1] Implement placeholder for missing photo: rounded rectangle with `pawprint.fill` icon (24pt scaled, #93A2B4) on #EEEEEE background matching Announcement List style (FR-005)
+- [X] T018 [US1] Implement `statusBadge` computed property displaying status text with colored background (12px radius, status-specific colors from `model.statusColorHex` - FR-009)
+- [X] T019 [US1] Assemble `body` view with VStack: `cardContent` with white background, 12px corner radius, shadow (0/3/14/0.4), followed by `CalloutPointer` below (FR-002, FR-003)
+- [X] T020 [US1] Add `.accessibilityIdentifier(model.accessibilityId)` to callout root view
+- [X] T021 [US1] Add `calloutModel(for pin: MapPin) -> AnnotationCalloutView.Model` method to `FullscreenMapViewModel` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModel.swift` (creates model on demand for selected pin)
+- [X] T022 [US1] Update `FullscreenMapView` Map ForEach to embed callout inside `Annotation` content in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/FullscreenMapView.swift` (use `ZStack(alignment: .bottom)` with callout above pin, conditional on `selectedPinId == pin.id`)
+- [X] T023 [US1] Add `.onTapGesture { viewModel.selectPin(pin.id) }` to `TeardropPin` in `FullscreenMapView` (FR-001, FR-011, FR-012)
+- [X] T024 [US1] Add `.onTapGesture { viewModel.deselectPin() }` to Map in `FullscreenMapView` (FR-010)
+- [X] T025 [US1] Set `Annotation` anchor to `.bottom` so coordinate points to pin tip in `FullscreenMapView` (FR-013)
+- [X] T026 [US1] Add `.offset(y: -10)` to callout in ZStack for gap between callout arrow and pin top in `FullscreenMapView`
+- [X] T027 [P] [US1] Add SwiftDoc comments to `AnnotationCalloutView`, `AnnotationCalloutView.Model.init`, and ViewModel selection methods (only if purpose not clear from name)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can tap pins, see callout with all details, and dismiss via tap
 
@@ -103,9 +103,9 @@
 
 **iOS**:
 
-- [ ] T028 [US2] Verify `statusText` in `AnnotationCalloutView.Model` uses existing `pin.status.displayName` (reuses `L10n.AnnouncementStatus.active`/`.found` via `AnnouncementStatus+Presentation.swift`)
-- [ ] T029 [US2] Verify `statusColorHex` in `AnnotationCalloutView.Model` uses `pin.status.annotationBadgeColorHex` returning spec colors (#FF9500 for MISSING, #155DFC for FOUND per FR-009)
-- [ ] T030 [US2] Verify `statusBadge` view in `AnnotationCalloutView` applies background color from `model.statusColorHex` with white text and 12px border radius
+- [X] T028 [US2] Verify `statusText` in `AnnotationCalloutView.Model` uses existing `pin.status.displayName` (reuses `L10n.AnnouncementStatus.active`/`.found` via `AnnouncementStatus+Presentation.swift`)
+- [X] T029 [US2] Verify `statusColorHex` in `AnnotationCalloutView.Model` uses `pin.status.annotationBadgeColorHex` returning spec colors (#FF9500 for MISSING, #155DFC for FOUND per FR-009)
+- [X] T030 [US2] Verify `statusBadge` view in `AnnotationCalloutView` applies background color from `model.statusColorHex` with white text and 12px border radius
 - [ ] T031 [US2] Manual test: Create/fetch announcements with MISSING status, tap pin, verify orange badge with "MISSING" text
 - [ ] T032 [US2] Manual test: Create/fetch announcements with FOUND status, tap pin, verify blue badge with "FOUND" text
 
@@ -131,14 +131,14 @@
 
 **iOS**:
 
-- [ ] T033 [US3] Update `AnnotationCalloutView.Model.init` to set `photoUrl = nil` when `pin.photoUrl.isEmpty` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift` (FR-005)
-- [ ] T034 [US3] Update `AnnotationCalloutView.Model.init` to use `pin.name ?? L10n.AnnotationCallout.unknownPet` for `petName` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
-- [ ] T035 [US3] Update `AnnotationCalloutView.Model.init` to handle nil breed: if `pin.breed == nil`, set `speciesAndBreed = speciesName` (omit breed part) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
-- [ ] T036 [US3] Update `AnnotationCalloutView.Model.init` to map optional fields: `emailText = pin.email.map { "📧 \($0)" }`, `phoneText = pin.phone.map { "📞 \($0)" }`, `descriptionText = pin.description` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift` (FR-007, FR-008)
-- [ ] T037 [US3] Verify `photoView` in `AnnotationCalloutView` shows placeholder when `model.photoUrl == nil` (AsyncImage failure case, FR-005)
-- [ ] T038 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders email field only if `model.emailText != nil` (FR-008)
-- [ ] T039 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders phone field only if `model.phoneText != nil` (FR-007)
-- [ ] T040 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders description field only if `model.descriptionText != nil` (FR-006)
+- [X] T033 [US3] Update `AnnotationCalloutView.Model.init` to set `photoUrl = nil` when `pin.photoUrl.isEmpty` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift` (FR-005)
+- [X] T034 [US3] Update `AnnotationCalloutView.Model.init` to use `pin.name ?? L10n.AnnotationCallout.unknownPet` for `petName` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
+- [X] T035 [US3] Update `AnnotationCalloutView.Model.init` to handle nil breed: if `pin.breed == nil`, set `speciesAndBreed = speciesName` (omit breed part) in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
+- [X] T036 [US3] Update `AnnotationCalloutView.Model.init` to map optional fields: `emailText = pin.email.map { "📧 \($0)" }`, `phoneText = pin.phone.map { "📞 \($0)" }`, `descriptionText = pin.description` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift` (FR-007, FR-008)
+- [X] T037 [US3] Verify `photoView` in `AnnotationCalloutView` shows placeholder when `model.photoUrl == nil` (AsyncImage failure case, FR-005)
+- [X] T038 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders email field only if `model.emailText != nil` (FR-008)
+- [X] T039 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders phone field only if `model.phoneText != nil` (FR-007)
+- [X] T040 [US3] Verify `cardContent` in `AnnotationCalloutView` conditionally renders description field only if `model.descriptionText != nil` (FR-006)
 - [ ] T041 [US3] Manual test: Mock announcement with `photoUrl = ""`, verify placeholder (circular pawprint on #EEEEEE) displays immediately (no retry, no spinner)
 - [ ] T042 [US3] Manual test: Mock announcement with `description = nil`, verify description field is omitted from callout
 - [ ] T043 [US3] Manual test: Mock announcement with `phone = nil`, verify phone field is omitted from callout
@@ -153,15 +153,15 @@
 
 **Purpose**: Improvements that affect multiple user stories or enhance code quality
 
-- [ ] T046 [P] Extract `formatDate` from `AnnotationCalloutView.Model` to shared utility in `/iosApp/iosApp/FoundationAdditions/DateFormatting.swift`
-- [ ] T047 [P] Extract `formatCoordinates` from `AnnotationCalloutView.Model` to shared utility in `/iosApp/iosApp/FoundationAdditions/CoordinateFormatting.swift`
-- [ ] T048 Update `PetDetailsViewModel` to use shared `formatDate` and `formatCoordinates` utilities in `/iosApp/iosApp/Features/PetDetails/PetDetailsViewModel.swift` (remove duplicated formatters)
-- [ ] T049 Update `AnnotationCalloutView.Model` to use shared `DateFormatting.formatDate` and `CoordinateFormatting.formatCoordinates` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
+- [X] T046 [P] Extract `formatDate` from `AnnotationCalloutView.Model` to shared utility in `/iosApp/iosApp/FoundationAdditions/DateFormatting.swift`
+- [X] T047 [P] Extract `formatCoordinates` from `AnnotationCalloutView.Model` to shared utility in `/iosApp/iosApp/FoundationAdditions/CoordinateFormatting.swift`
+- [X] T048 Update `PetDetailsViewModel` to use shared `formatDate` and `formatCoordinates` utilities in `/iosApp/iosApp/Features/PetDetails/Views/PetDetailsViewModel.swift` (remove duplicated formatters)
+- [X] T049 Update `AnnotationCalloutView.Model` to use shared `DateFormatting.formatDate` and `CoordinateFormatting.formatCoordinates` in `/iosApp/iosApp/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutView_Model.swift`
 - [ ] T050 [P] Run quickstart.md manual testing checklist (tap pin, toggle, switch, dismiss, missing fields, status badges)
-- [ ] T051 [P] Add unit test for `FullscreenMapViewModel.selectPin` toggle behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin A, Then selectedPinId = nil)
-- [ ] T052 [P] Add unit test for `FullscreenMapViewModel.selectPin` replace behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin B, Then selectedPinId = B)
-- [ ] T053 [P] Add unit test for `AnnotationCalloutView.Model.init` field mapping in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given announcement data, When init model, Then fields formatted correctly)
-- [ ] T054 [P] Add unit test for graceful nil handling in `AnnotationCalloutView.Model.init` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given nil email/phone/description, When init model, Then optional fields = nil)
+- [X] T051 [P] Add unit test for `FullscreenMapViewModel.selectPin` toggle behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin A, Then selectedPinId = nil)
+- [X] T052 [P] Add unit test for `FullscreenMapViewModel.selectPin` replace behavior in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMapViewModelTests.swift` (Given selected pin A, When tap pin B, Then selectedPinId = B)
+- [X] T053 [P] Add unit test for `AnnotationCalloutView.Model.init` field mapping in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given announcement data, When init model, Then fields formatted correctly)
+- [X] T054 [P] Add unit test for graceful nil handling in `AnnotationCalloutView.Model.init` in `/iosApp/iosAppTests/Features/LandingPage/Views/FullscreenMap/AnnotationCalloutViewModelTests.swift` (Given nil email/phone/description, When init model, Then optional fields = nil)
 - [ ] T055 [P] Update `MIGRATION-COMPLETE.md` or add feature completion note (if tracking enabled)
 
 ---

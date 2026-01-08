@@ -1,12 +1,19 @@
 import SwiftUI
 import MapKit
 
-/// Fullscreen interactive map view with legend and pins.
+/// Fullscreen interactive map view with legend, pins, and annotation callouts.
 ///
 /// **Layout**: Legend header at top, interactive map below with pins.
 /// - Legend shows Missing (red) and Found (blue) markers
 /// - Map supports all gestures: pinch zoom, pan, double-tap zoom
 /// - Pins display as teardrop-shaped markers (red for missing, blue for found)
+/// - Tapping a pin shows annotation callout with pet details (FR-001)
+///
+/// **Callout Behavior** (FR-010, FR-011, FR-012):
+/// - Tap pin → callout appears
+/// - Tap same pin → callout toggles off
+/// - Tap different pin → callout switches
+/// - Tap map background → callout dismisses
 ///
 /// **Accessibility identifiers**:
 /// - `fullscreenMap.container` - Root container
@@ -14,6 +21,7 @@ import MapKit
 /// - `fullscreenMap.legend.missing` - Missing legend item
 /// - `fullscreenMap.legend.found` - Found legend item
 /// - `fullscreenMap.pin.{id}` - Individual pin markers
+/// - `fullscreenMap.annotation.{id}` - Annotation callouts
 struct FullscreenMapView: View {
     @ObservedObject var viewModel: FullscreenMapViewModel
     
@@ -22,17 +30,36 @@ struct FullscreenMapView: View {
             // Legend header above map (reuse existing component)
             MapSectionHeaderView(model: viewModel.legendModel)
             
-            // Interactive map with pins - all gestures enabled by default
+            // Interactive map with pins and callouts
             Map(initialPosition: .region(viewModel.mapRegion)) {
                 ForEach(viewModel.pins) { pin in
+                    // T025: anchor: .bottom - coordinate points to pin tip
                     Annotation("", coordinate: pin.coordinate, anchor: .bottom) {
-                        // Teardrop pin marker - red for missing, blue for found
-                        TeardropPin(color: pin.pinColor)
-                            .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
+                        // T022: ZStack with callout above pin
+                        ZStack(alignment: .bottom) {
+                            // Callout appears ABOVE pin when selected (FR-001)
+                            if viewModel.selectedPinId == pin.id {
+                                AnnotationCalloutView(model: viewModel.calloutModel(for: pin))
+                                    // T026: Gap between callout arrow and pin top
+                                    .offset(y: -10)
+                            }
+                            
+                            // Teardrop pin marker - always visible
+                            TeardropPin(color: pin.pinColor)
+                                // T023: Tap pin to show/toggle callout (FR-001, FR-011, FR-012)
+                                .onTapGesture {
+                                    viewModel.selectPin(pin.id)
+                                }
+                                .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
+                        }
                     }
                 }
             }
             .accessibilityIdentifier("fullscreenMap.map")
+            // T024: Tap map to dismiss callout (FR-010)
+            .onTapGesture {
+                viewModel.deselectPin()
+            }
             .task {
                 await viewModel.loadPins()
             }

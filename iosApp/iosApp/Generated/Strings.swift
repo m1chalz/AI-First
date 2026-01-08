@@ -154,6 +154,10 @@ public enum L10n {
     /// Rabbit
     public static let rabbit = L10n.tr("Localizable", "animalSpecies.rabbit", fallback: "Rabbit")
   }
+  public enum AnnotationCallout {
+    /// MARK: - Annotation Callout
+    public static let unknownPet = L10n.tr("Localizable", "annotationCallout.unknownPet", fallback: "Unknown Pet")
+  }
   public enum AnnouncementCard {
     public enum Location {
       /// MARK: - Announcement Card

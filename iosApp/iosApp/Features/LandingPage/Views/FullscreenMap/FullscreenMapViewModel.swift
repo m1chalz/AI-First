@@ -1,11 +1,12 @@
 import Foundation
 import MapKit
 
-/// ViewModel for fullscreen map screen with pin loading.
+/// ViewModel for fullscreen map screen with pin loading and annotation callout.
 /// Receives user location and repository via constructor injection from coordinator.
 ///
 /// **Features**:
 /// - Fetches announcements from repository and displays as pins on map
+/// - Handles pin selection for annotation callout display (FR-001, FR-010, FR-011, FR-012)
 /// - Silent error handling - failures keep existing pins without user notification
 /// - Task cancellation for rapid gesture scenarios
 ///
@@ -13,6 +14,7 @@ import MapKit
 /// - `mapRegion`: Pre-calculated from user location for city-level zoom (~10km radius)
 /// - `legendModel`: Legend-only configuration (no title - navigation bar provides context)
 /// - `pins`: Array of map pins derived from announcements
+/// - `selectedPinId`: Currently selected pin ID for callout display (nil = no selection)
 /// - `isLoading`: Internal loading state (no UI indicator per spec)
 @MainActor
 class FullscreenMapViewModel: ObservableObject {
@@ -25,6 +27,11 @@ class FullscreenMapViewModel: ObservableObject {
     
     /// Displayed pins on map. Updated after fetching announcements.
     @Published private(set) var pins: [MapPin] = []
+    
+    /// Currently selected pin ID for annotation callout display.
+    /// - `nil`: No pin selected (callout hidden)
+    /// - `String`: ID of selected pin (callout shown for that pin)
+    @Published private(set) var selectedPinId: String?
     
     /// Internal loading state. No visible indicator per spec FR-006.
     @Published private(set) var isLoading = false
@@ -44,6 +51,36 @@ class FullscreenMapViewModel: ObservableObject {
         self.mapRegion = userLocation.mapRegion()
         self.legendModel = .fullscreenMap()
         self.repository = repository
+    }
+    
+    // MARK: - Pin Selection
+    
+    /// Selects a pin to show its annotation callout.
+    /// - If same pin is already selected: toggles off (FR-011)
+    /// - If different pin is selected: replaces selection (FR-012)
+    /// - Parameter pinId: The ID of the pin to select
+    func selectPin(_ pinId: String) {
+        if selectedPinId == pinId {
+            // FR-011: Toggle - same pin tapped again
+            selectedPinId = nil
+        } else {
+            // FR-012: Replace - different pin tapped
+            selectedPinId = pinId
+        }
+    }
+    
+    /// Deselects the current pin, hiding its annotation callout.
+    /// Called when user taps on the map background (FR-010).
+    func deselectPin() {
+        selectedPinId = nil
+    }
+    
+    /// Creates a presentation model for the annotation callout.
+    /// Called from View's ForEach to get callout data for the selected pin.
+    /// - Parameter pin: The MapPin to create callout model for
+    /// - Returns: Formatted model ready for UI display
+    func calloutModel(for pin: MapPin) -> AnnotationCalloutView.Model {
+        AnnotationCalloutView.Model(from: pin)
     }
     
     // MARK: - Pin Loading
