@@ -76,8 +76,8 @@ A user wants to see annotation details even when some information is missing or 
   - Pet photo (120px height, 8px border radius)
   - Pet name (16px, bold, #333 color)
   - Species and breed formatted as "Species • Breed" (13px, #666 color)
-  - Last-seen location name with 📍 emoji prefix (13px, #666 color)
-  - Last-seen date formatted as MM/DD/YYYY with 📅 emoji prefix (13px, #666 color)
+  - Last-seen location coordinates with 📍 emoji prefix (13px, #666 color)
+  - Last-seen date formatted in the same format as Pet Details (MMM dd, yyyy) with 📅 emoji prefix (13px, #666 color)
   - Owner email with 📧 emoji prefix (13px, #666 color)
   - Owner phone with 📞 emoji prefix (13px, #666 color)
   - Description text (14px, #444 color)
@@ -97,6 +97,7 @@ A user wants to see annotation details even when some information is missing or 
 - **FR-015**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
 - **FR-016**: Pet names and descriptions MUST be displayed in full without truncation
 - **FR-017**: The location field MUST display coordinates in the same format used in announcement list and pet details
+- **FR-018**: The last-seen date MUST be formatted using the same format as Pet Details screen (MMM dd, yyyy format, e.g., "Jan 15, 2025")
 
 ### Key Entities *(include if feature involves data)*
 
@@ -137,6 +138,8 @@ Pet names and descriptions are displayed in full without truncation. If this cre
 
 Location is displayed as coordinates using the same format as announcement list and pet details (no reverse geocoding to location names).
 
+Last-seen date is formatted identically to Pet Details screen (MMM dd, yyyy format, e.g., "Jan 15, 2025") to maintain consistency across the app.
+
 Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational). Only two status values exist in the system: MISSING and FOUND.
 
 ## Clarifications
@@ -148,6 +151,7 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 - Q: What should happen when description is missing? → A: Omit the field entirely. No placeholder messages shown.
 - Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely. No placeholder messages shown.
 - Q: How should location be displayed? → A: Display coordinates in the same format used in announcement list and pet details. No reverse geocoding.
+- Q: What date format should be used for last-seen date? → A: Same format as Pet Details screen (MMM dd, yyyy, e.g., "Jan 15, 2025").
 - Q: What happens when user pans/zooms while annotation is visible? → A: Default MapKit behavior (annotation typically remains visible and moves with pin).
 - Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.

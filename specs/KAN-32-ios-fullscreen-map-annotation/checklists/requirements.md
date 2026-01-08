@@ -63,5 +63,9 @@
   - Removed annotation dismiss on pan/zoom requirement (FR-013) - use default MapKit behavior
   - Removed rapid pin tapping edge case - system handles annotation transitions
   - Text truncation may be added in future enhancement if layout issues occur
+- Corrected date format to match Pet Details screen:
+  - Changed from MM/DD/YYYY to MMM dd, yyyy format (e.g., "Jan 15, 2025")
+  - Added FR-018 to specify date formatting consistency with Pet Details
+  - Ensures consistent date presentation across the app
 - This reduces scope and simplifies UI while maintaining core value proposition (viewing pet details)
 
