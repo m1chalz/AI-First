@@ -67,12 +67,14 @@ class FullscreenMapViewModel: ObservableObject {
             // FR-012: Replace - different pin tapped
             selectedPinId = pinId
         }
+        print("Selected pin: \(pinId)")
     }
     
     /// Deselects the current pin, hiding its annotation callout.
     /// Called when user taps on the map background (FR-010).
     func deselectPin() {
         selectedPinId = nil
+        print("Selected pin: nil")
     }
     
     /// Creates a presentation model for the annotation callout.

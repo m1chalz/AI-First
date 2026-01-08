@@ -46,12 +46,17 @@ struct FullscreenMapView: View {
                             
                             // Teardrop pin marker - always visible
                             TeardropPin(color: pin.pinColor)
-                                // T023: Tap pin to show/toggle callout (FR-001, FR-011, FR-012)
-                                .onTapGesture {
-                                    viewModel.selectPin(pin.id)
-                                }
                                 .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
                         }
+                        // T023: Tap anywhere in annotation (pin or callout) to select/toggle
+                        // Using contentShape + highPriorityGesture ensures pin tap wins over map tap
+                        .contentShape(Rectangle())
+                        .highPriorityGesture(
+                            TapGesture()
+                                .onEnded {
+                                    viewModel.selectPin(pin.id)
+                                }
+                        )
                     }
                 }
             }
