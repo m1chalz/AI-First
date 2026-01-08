@@ -61,7 +61,7 @@ A user wants to see annotation details even when some information is missing or 
 
 ### Edge Cases
 
-- **Pet photo fails to load**: Display placeholder (circular pawprint icon on `#EEEEEE` background, matching Announcement List) instead of broken image icon
+- **Pet photo fails to load**: Immediately display placeholder (circular pawprint icon on `#EEEEEE` background, matching Announcement List) without retry attempts; no loading spinner or broken image icon shown
 - **Location display**: Display coordinates in the same format used in announcement list and pet details (no reverse geocoding)
 - **Annotation positioning**: Annotation callout should position above the pin with a pointer/arrow pointing down to the pin location; if insufficient space above, position below with upward arrow
 
@@ -70,7 +70,7 @@ A user wants to see annotation details even when some information is missing or 
 ### Functional Requirements
 
 - **FR-001**: When the user taps a pin, the system MUST display an annotation callout for that pin
-- **FR-002**: The annotation callout MUST be styled as a white card with rounded corners (12px border radius) and drop shadow matching Figma design
+- **FR-002**: The annotation callout MUST be styled as a white card with rounded corners (12px border radius) and drop shadow matching Figma design, with fixed intrinsic width (value extracted from Figma) and internal text wrapping
 - **FR-003**: The annotation callout MUST include a pointer/arrow pointing to the pin location
 - **FR-004**: The annotation MUST display the following information fields:
   - Pet photo (120px height, 8px border radius)
@@ -82,7 +82,7 @@ A user wants to see annotation details even when some information is missing or 
   - Owner phone with 📞 emoji prefix (13px, #666 color)
   - Description text (14px, #444 color)
   - Status badge (rounded 12px, content-specific colors)
-- **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display placeholder matching Announcement List: circular `pawprint.fill` icon (24pt, `#93A2B4` color) on `#EEEEEE` circle background (63pt diameter)
+- **FR-005**: When the pet photo is missing or fails to load, the annotation MUST immediately display placeholder (no retry attempts) matching Announcement List: circular `pawprint.fill` icon (24pt, `#93A2B4` color) on `#EEEEEE` circle background (63pt diameter)
 - **FR-006**: When the description is empty or null, the annotation MUST omit the description field entirely
 - **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
 - **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
@@ -96,7 +96,7 @@ A user wants to see annotation details even when some information is missing or 
 - **FR-014**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
 - **FR-015**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
 - **FR-016**: Pet names and descriptions MUST be displayed in full without truncation
-- **FR-017**: The location field MUST display coordinates in the same format used in announcement list and pet details
+- **FR-017**: The location field MUST display coordinates in the exact same format (including decimal precision) used in announcement list and pet details for consistency
 - **FR-018**: The last-seen date MUST be formatted using the same format as Pet Details screen (MMM dd, yyyy format, e.g., "Jan 15, 2025")
 
 ### Key Entities *(include if feature involves data)*
@@ -123,6 +123,10 @@ A user wants to see annotation details even when some information is missing or 
 - The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
 - Location is displayed as coordinates (same format as announcement list and pet details) - no reverse geocoding
 - Future specs may add additional interactions (tappable contact fields, share announcement, report sighting, navigate to location, text truncation)
+- Accessibility features (VoiceOver support, Dynamic Type, accessibility labels) are deferred to a future enhancement
+- Annotation appearance/dismissal uses MapKit default behavior (instant show/hide, no custom animation)
+- Annotation callout has fixed intrinsic width (extracted from Figma design); long text fields wrap to multiple lines rather than truncating
+- Pet photo loading failures result in immediate placeholder display (no retry attempts); assumes standard iOS image loading behavior with reasonable timeout
 
 ## Notes
 
@@ -157,6 +161,11 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
 - Q: Should phone/email be tappable to initiate calls/emails? → A: Not in this spec. Display as text only. Tappable interaction can be added later as enhancement.
 - Q: What status values exist in the system? → A: Only MISSING and FOUND (per backend validation schema). No REUNITED status exists.
+- Q: Should the annotation support VoiceOver and accessibility features? → A: No special accessibility handling in this spec (defer to future enhancement)
+- Q: Should the annotation animate when appearing/dismissing? → A: Use MapKit default behavior (instant show/hide, no custom animation)
+- Q: How should annotation callout width be determined? → A: Fixed intrinsic width (exact value to be extracted from Figma design) with text wrapping inside
+- Q: What exact coordinate format should be used for location display? → A: Match existing format from announcement list and pet details (implementation determines exact decimal precision)
+- Q: How should network image loading failures be handled? → A: Immediate fallback to placeholder (no retry) when load fails
 
 ## Design Deliverables *(mandatory for UI features)*
 
@@ -195,8 +204,8 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 | Phase | SP | Days | Confidence | Key Discovery |
 |-------|-----|------|------------|---------------|
 | Initial | 2 | 10.4 | ±50% | Gut feel from feature title and Figma design |
-| After SPEC | — | — | ±30% | [Update when spec.md complete] |
-| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After SPEC | 2 | 10.4 | ±30% | Spec complete - iOS-only, no backend changes, extends existing FullscreenMap |
+| After PLAN | 2 | 10.4 | ±20% | Plan complete - reuses existing patterns (placeholder, formatters), simple selection state |
 | After TASKS | — | — | ±10-15% | [Update when tasks.md complete] |
 
 ### Per-Platform Breakdown (After TASKS)
