@@ -32,6 +32,18 @@ extension MapPreviewView {
                 return .gray
             }
         }
+        
+        /// Pin icon SF Symbol name based on status
+        var pinIcon: String {
+            switch status {
+            case .active:
+                return "exclamationmark"
+            case .found:
+                return "checkmark"
+            case .closed:
+                return "xmark"
+            }
+        }
     }
 }
 

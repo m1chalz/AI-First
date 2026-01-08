@@ -8,23 +8,40 @@ import SwiftUI
 ///
 /// **Usage**:
 /// ```swift
-/// TeardropPin(color: .red)  // Missing pet
-/// TeardropPin(color: .blue) // Found pet
+/// TeardropPin(color: .red, icon: "exclamationmark")  // Missing pet
+/// TeardropPin(color: .blue, icon: "checkmark")       // Found pet
+/// TeardropPin(color: .gray)                          // No icon
 /// ```
 ///
 /// **Sizing**: Default size is 28x36 points. Use `.frame()` to adjust.
 struct TeardropPin: View {
     let color: Color
+    let icon: String?
+    
+    init(color: Color, icon: String? = nil) {
+        self.color = color
+        self.icon = icon
+    }
     
     var body: some View {
-        TeardropShape()
-            .fill(color)
-            .overlay(
-                TeardropShape()
-                    .stroke(Color.white, lineWidth: 3)
-            )
-            .frame(width: 28, height: 36)
-            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 2)
+        ZStack {
+            TeardropShape()
+                .fill(color)
+                .overlay(
+                    TeardropShape()
+                        .stroke(Color.white, lineWidth: 3)
+                )
+            
+            // Icon centered in the circular part (top 60% of pin)
+            if let icon {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.white)
+                    .offset(y: -4) // Move up into circular part
+            }
+        }
+        .frame(width: 28, height: 36)
+        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 2)
     }
 }
 
@@ -81,19 +98,19 @@ struct TeardropShape: Shape {
 // MARK: - Previews
 
 #Preview("Red Pin (Missing)") {
-    TeardropPin(color: .red)
+    TeardropPin(color: .red, icon: "exclamationmark")
         .padding()
 }
 
 #Preview("Blue Pin (Found)") {
-    TeardropPin(color: .blue)
+    TeardropPin(color: .blue, icon: "checkmark")
         .padding()
 }
 
 #Preview("Size Comparison") {
     HStack(spacing: 20) {
-        TeardropPin(color: .red)
-        TeardropPin(color: .blue)
+        TeardropPin(color: .red, icon: "exclamationmark")
+        TeardropPin(color: .blue, icon: "checkmark")
         TeardropPin(color: .green)
         TeardropPin(color: .orange)
     }
@@ -106,8 +123,8 @@ struct TeardropShape: Shape {
         
         VStack(spacing: 40) {
             HStack(spacing: 30) {
-                TeardropPin(color: .red)
-                TeardropPin(color: .blue)
+                TeardropPin(color: .red, icon: "exclamationmark")
+                TeardropPin(color: .blue, icon: "checkmark")
             }
             
             Text("Missing          Found")

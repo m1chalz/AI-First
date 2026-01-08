@@ -38,7 +38,7 @@ struct FullscreenMapView: View {
                         // T022: ZStack with callout above pin
                         ZStack(alignment: .bottom) {
                             // Teardrop pin marker - always visible (rendered first = below)
-                            TeardropPin(color: pin.pinColor)
+                            TeardropPin(color: pin.pinColor, icon: pin.pinIcon)
                                 .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
                             
                             // Callout appears ABOVE pin when selected (FR-001)

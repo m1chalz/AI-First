@@ -60,6 +60,18 @@ struct MapPin: Identifiable, Equatable {
         }
     }
     
+    /// Pin icon SF Symbol name based on status
+    var pinIcon: String {
+        switch status {
+        case .active:
+            return "exclamationmark"
+        case .found:
+            return "checkmark"
+        case .closed:
+            return "xmark"
+        }
+    }
+    
     /// Memberwise initializer for testing and preview purposes.
     init(
         id: String,
