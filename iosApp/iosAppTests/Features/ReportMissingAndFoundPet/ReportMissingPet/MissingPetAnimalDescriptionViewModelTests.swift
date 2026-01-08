@@ -6,7 +6,7 @@ final class MissingPetAnimalDescriptionViewModelTests: XCTestCase {
     
     // MARK: - Test Doubles
     
-    private var flowState: ReportMissingPetFlowState!
+    private var flowState: MissingPetReportFlowState!
     private var fakeLocationService: FakeLocationService!
     private var locationHandler: LocationPermissionHandler!
     private var toastSchedulerFake: ToastSchedulerFake!
@@ -18,7 +18,7 @@ final class MissingPetAnimalDescriptionViewModelTests: XCTestCase {
         try await super.setUp()
         
         let fakeCache = PhotoAttachmentCacheFake()
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: fakeCache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: fakeCache)
         
         fakeLocationService = FakeLocationService()
         locationHandler = LocationPermissionHandler(

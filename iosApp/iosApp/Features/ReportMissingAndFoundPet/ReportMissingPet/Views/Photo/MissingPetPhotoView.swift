@@ -140,7 +140,7 @@ struct MissingPetPhotoView_Previews: PreviewProvider {
     
     static var previews: some View {
         let cache = PreviewCache()
-        let flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        let flowState = MissingPetReportFlowState(photoAttachmentCache: cache)
         let viewModel = MissingPetPhotoViewModel(
             flowState: flowState,
             photoAttachmentCache: cache,

@@ -4,7 +4,7 @@ import Foundation
 /// Owned by ReportMissingPetCoordinator and injected into all ViewModels.
 /// Persists data during forward/backward navigation within active session.
 @MainActor
-final class ReportMissingPetFlowState: ObservableObject {
+final class MissingPetReportFlowState: ObservableObject {
     private let photoAttachmentCache: PhotoAttachmentCacheProtocol
     
     // MARK: - Step 1: Chip Number

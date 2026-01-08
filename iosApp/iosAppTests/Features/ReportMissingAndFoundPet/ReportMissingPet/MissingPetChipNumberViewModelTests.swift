@@ -4,14 +4,14 @@ import XCTest
 @MainActor
 final class MissingPetChipNumberViewModelTests: XCTestCase {
     
-    var flowState: ReportMissingPetFlowState!
+    var flowState: MissingPetReportFlowState!
     var cache: PhotoAttachmentCacheFake!
     var sut: MissingPetChipNumberViewModel!
     
     override func setUp() {
         super.setUp()
         cache = PhotoAttachmentCacheFake()
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: cache)
         sut = MissingPetChipNumberViewModel(flowState: flowState)
     }
     

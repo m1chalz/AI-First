@@ -3,15 +3,15 @@ import UniformTypeIdentifiers
 @testable import PetSpot
 
 @MainActor
-final class ReportMissingPetFlowStateTests: XCTestCase {
+final class MissingPetReportFlowStateTests: XCTestCase {
     
-    var sut: ReportMissingPetFlowState!
+    var sut: MissingPetReportFlowState!
     var cache: PhotoAttachmentCacheFake!
     
     override func setUp() {
         super.setUp()
         cache = PhotoAttachmentCacheFake()
-        sut = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        sut = MissingPetReportFlowState(photoAttachmentCache: cache)
     }
     
     override func tearDown() {

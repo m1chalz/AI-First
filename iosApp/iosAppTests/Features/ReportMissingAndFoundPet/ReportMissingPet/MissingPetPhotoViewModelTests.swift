@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 @MainActor
 final class MissingPetPhotoViewModelTests: XCTestCase {
     
-    private var flowState: ReportMissingPetFlowState!
+    private var flowState: MissingPetReportFlowState!
     private var cache: PhotoAttachmentCacheFake!
     private var toastScheduler: ToastSchedulerFake!
     private var photoSelectionProcessor: PhotoSelectionProcessorStub!
@@ -15,7 +15,7 @@ final class MissingPetPhotoViewModelTests: XCTestCase {
         super.setUp()
         cache = PhotoAttachmentCacheFake()
         toastScheduler = ToastSchedulerFake()
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: cache)
         photoSelectionProcessor = PhotoSelectionProcessorStub()
         sut = MissingPetPhotoViewModel(
             flowState: flowState,
@@ -154,7 +154,7 @@ final class MissingPetPhotoViewModelTests: XCTestCase {
     func testRestorePersistedAttachment_shouldUseFlowStateMetadata() async {
         // Given
         let metadata = makeMetadata(fileName: "persisted.jpg")
-        let freshFlowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        let freshFlowState = MissingPetReportFlowState(photoAttachmentCache: cache)
         freshFlowState.photoAttachment = metadata
         
         let freshCache = PhotoAttachmentCacheFake()

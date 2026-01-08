@@ -57,14 +57,14 @@ class MissingPetAnimalDescriptionViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let flowState: ReportMissingPetFlowState
+    private let flowState: MissingPetReportFlowState
     private let locationHandler: LocationPermissionHandler
     private let toastScheduler: ToastSchedulerProtocol
     
     // MARK: - Initialization
     
     init(
-        flowState: ReportMissingPetFlowState,
+        flowState: MissingPetReportFlowState,
         locationHandler: LocationPermissionHandler,
         toastScheduler: ToastSchedulerProtocol
     ) {

@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Coordinator for Missing Pet Report modal flow.
 /// Creates and manages own UINavigationController for modal presentation.
-/// Owns ReportMissingPetFlowState and injects it into all ViewModels.
+/// Owns MissingPetReportFlowState and injects it into all ViewModels.
 /// Renamed from ReportMissingPetCoordinator for consistency with MissingPet prefix pattern.
 class MissingPetReportCoordinator: CoordinatorInterface {
     // MARK: - Properties
@@ -17,7 +17,7 @@ class MissingPetReportCoordinator: CoordinatorInterface {
     var onReportSent: (() -> Void)?
     
     private let parentNavigationController: UINavigationController
-    private var flowState: ReportMissingPetFlowState?
+    private var flowState: MissingPetReportFlowState?
     
     // MARK: - Dependencies
     
@@ -60,7 +60,7 @@ class MissingPetReportCoordinator: CoordinatorInterface {
         
         // Create FlowState as coordinator property (owned by coordinator lifecycle)
         // This state object will be injected into all ViewModels
-        let flowState = ReportMissingPetFlowState(
+        let flowState = MissingPetReportFlowState(
             photoAttachmentCache: photoAttachmentCache
         )
         self.flowState = flowState

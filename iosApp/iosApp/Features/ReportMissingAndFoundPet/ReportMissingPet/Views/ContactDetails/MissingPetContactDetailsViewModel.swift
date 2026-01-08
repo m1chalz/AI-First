@@ -27,7 +27,7 @@ class MissingPetContactDetailsViewModel: ObservableObject {
     // MARK: - Dependencies (injected via initializer)
     
     private let submissionService: AnnouncementSubmissionServiceProtocol
-    private let flowState: ReportMissingPetFlowState
+    private let flowState: MissingPetReportFlowState
     
     // MARK: - Coordinator Callbacks
     
@@ -39,7 +39,7 @@ class MissingPetContactDetailsViewModel: ObservableObject {
     
     // MARK: - Initialization (Manual DI)
     
-    init(submissionService: AnnouncementSubmissionServiceProtocol, flowState: ReportMissingPetFlowState) {
+    init(submissionService: AnnouncementSubmissionServiceProtocol, flowState: MissingPetReportFlowState) {
         self.submissionService = submissionService
         self.flowState = flowState
         

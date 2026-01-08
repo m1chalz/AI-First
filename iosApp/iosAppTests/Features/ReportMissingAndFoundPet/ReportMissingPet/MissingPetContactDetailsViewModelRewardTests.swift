@@ -6,14 +6,14 @@ import XCTest
 final class MissingPetContactDetailsViewModelRewardTests: XCTestCase {
     var sut: MissingPetContactDetailsViewModel!
     var fakeService: FakeAnnouncementSubmissionService!
-    var flowState: ReportMissingPetFlowState!
+    var flowState: MissingPetReportFlowState!
     var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
         try await super.setUp()
         fakeService = FakeAnnouncementSubmissionService()
         fakePhotoCache = PhotoAttachmentCacheFake()
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: fakePhotoCache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: fakePhotoCache)
         sut = MissingPetContactDetailsViewModel(
             submissionService: fakeService,
             flowState: flowState

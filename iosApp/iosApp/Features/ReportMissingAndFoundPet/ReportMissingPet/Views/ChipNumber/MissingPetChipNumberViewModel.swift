@@ -9,7 +9,7 @@ class MissingPetChipNumberViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let flowState: ReportMissingPetFlowState
+    private let flowState: MissingPetReportFlowState
     
     // MARK: - Coordinator Communication
     
@@ -18,7 +18,7 @@ class MissingPetChipNumberViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState) {
+    init(flowState: MissingPetReportFlowState) {
         self.flowState = flowState
         
         if let savedDigits = flowState.chipNumber {

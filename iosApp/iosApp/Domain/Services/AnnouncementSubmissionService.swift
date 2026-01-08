@@ -3,11 +3,11 @@ import Foundation
 /// Protocol for announcement submission orchestration
 protocol AnnouncementSubmissionServiceProtocol {
     /// Submits complete announcement with photo.
-    /// - Parameter flowState: ReportMissingPetFlowState with all data from Steps 1-4
+    /// - Parameter flowState: MissingPetReportFlowState with all data from Steps 1-4
     /// - Returns: managementPassword for summary screen
     /// - Throws: Error on submission failure (network, backend, validation)
     @MainActor
-    func submitAnnouncement(flowState: ReportMissingPetFlowState) async throws -> String
+    func submitAnnouncement(flowState: MissingPetReportFlowState) async throws -> String
 }
 
 /// Orchestrates 2-step announcement submission (create + photo upload)
@@ -20,11 +20,11 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     
     /// Submits complete announcement with photo.
     /// Orchestrates: (1) create announcement → (2) upload photo → return managementPassword.
-    /// - Parameter flowState: ReportMissingPetFlowState with all data from Steps 1-4
+    /// - Parameter flowState: MissingPetReportFlowState with all data from Steps 1-4
     /// - Returns: managementPassword for summary screen
     /// - Throws: Error on submission failure (network, backend, validation)
     @MainActor
-    func submitAnnouncement(flowState: ReportMissingPetFlowState) async throws -> String {
+    func submitAnnouncement(flowState: MissingPetReportFlowState) async throws -> String {
         // Validate photo upfront (required)
         guard let photoAttachment = flowState.photoAttachment else {
             throw SubmissionValidationError.missingPhoto
@@ -49,7 +49,7 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     }
     
     @MainActor
-    private func buildAnnouncementData(from flowState: ReportMissingPetFlowState) async throws -> CreateAnnouncementData {
+    private func buildAnnouncementData(from flowState: MissingPetReportFlowState) async throws -> CreateAnnouncementData {
         guard let contactDetails = flowState.contactDetails else {
             throw SubmissionValidationError.missingContactDetails
         }

@@ -36,7 +36,7 @@ final class MissingPetPhotoViewModel: ObservableObject {
     
     // MARK: - Dependencies
     
-    private let flowState: ReportMissingPetFlowState
+    private let flowState: MissingPetReportFlowState
     private let photoAttachmentCache: PhotoAttachmentCacheProtocol
     private let toastScheduler: ToastSchedulerProtocol
     private let photoSelectionProcessor: PhotoSelectionProcessing
@@ -54,7 +54,7 @@ final class MissingPetPhotoViewModel: ObservableObject {
     // MARK: - Initialization
     
     init(
-        flowState: ReportMissingPetFlowState,
+        flowState: MissingPetReportFlowState,
         photoAttachmentCache: PhotoAttachmentCacheProtocol,
         toastScheduler: ToastSchedulerProtocol,
         photoSelectionProcessor: PhotoSelectionProcessing = PhotoSelectionProcessor()

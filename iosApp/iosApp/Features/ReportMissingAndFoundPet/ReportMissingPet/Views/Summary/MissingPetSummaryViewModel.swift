@@ -7,7 +7,7 @@ import UIKit
 class MissingPetSummaryViewModel: ObservableObject {
     // MARK: - Dependencies
     
-    private let flowState: ReportMissingPetFlowState
+    private let flowState: MissingPetReportFlowState
     private let toastScheduler: ToastSchedulerProtocol
     
     // MARK: - Coordinator Communication
@@ -28,7 +28,7 @@ class MissingPetSummaryViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init(flowState: ReportMissingPetFlowState, toastScheduler: ToastSchedulerProtocol) {
+    init(flowState: MissingPetReportFlowState, toastScheduler: ToastSchedulerProtocol) {
         self.flowState = flowState
         self.toastScheduler = toastScheduler
     }

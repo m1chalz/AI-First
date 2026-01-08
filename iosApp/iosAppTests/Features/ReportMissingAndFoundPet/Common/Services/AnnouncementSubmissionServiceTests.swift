@@ -6,7 +6,7 @@ import XCTest
 final class AnnouncementSubmissionServiceTests: XCTestCase {
     var sut: AnnouncementSubmissionService!
     var fakeRepository: FakeAnnouncementRepository!
-    var flowState: ReportMissingPetFlowState!
+    var flowState: MissingPetReportFlowState!
     var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
@@ -14,7 +14,7 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         fakeRepository = FakeAnnouncementRepository()
         fakePhotoCache = PhotoAttachmentCacheFake()
         sut = AnnouncementSubmissionService(repository: fakeRepository)
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: fakePhotoCache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: fakePhotoCache)
     }
     
     override func tearDown() async throws {

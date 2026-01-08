@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class MissingPetSummaryViewModelTests: XCTestCase {
     
-    var flowState: ReportMissingPetFlowState!
+    var flowState: MissingPetReportFlowState!
     var cache: PhotoAttachmentCacheFake!
     var toastScheduler: ToastSchedulerFake!
     var sut: MissingPetSummaryViewModel!
@@ -13,7 +13,7 @@ final class MissingPetSummaryViewModelTests: XCTestCase {
         super.setUp()
         cache = PhotoAttachmentCacheFake()
         toastScheduler = ToastSchedulerFake()
-        flowState = ReportMissingPetFlowState(photoAttachmentCache: cache)
+        flowState = MissingPetReportFlowState(photoAttachmentCache: cache)
         sut = MissingPetSummaryViewModel(
             flowState: flowState,
             toastScheduler: toastScheduler
