@@ -90,6 +90,7 @@ struct AnnotationCalloutView: View {
                     Text(description)
                         .font(.system(size: 14))
                         .foregroundColor(Color(hex: "#444444"))
+                        .lineLimit(5)
                         .padding(.top, 4)
                 }
                 
