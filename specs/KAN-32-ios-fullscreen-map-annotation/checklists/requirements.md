@@ -57,5 +57,11 @@
   - Backend only supports MISSING and FOUND (per server/src/lib/announcement-validation.ts)
   - Status badge FR-009 updated to show only 2 status types (was incorrectly showing 3)
 - Map displays both MISSING and FOUND announcements (departure from spec 066 which specified only MISSING)
+- Simplified edge case handling:
+  - Removed text truncation requirement (FR-016) - display names/descriptions in full
+  - Removed reverse geocoding assumption - display coordinates in same format as announcement list
+  - Removed annotation dismiss on pan/zoom requirement (FR-013) - use default MapKit behavior
+  - Removed rapid pin tapping edge case - system handles annotation transitions
+  - Text truncation may be added in future enhancement if layout issues occur
 - This reduces scope and simplifies UI while maintaining core value proposition (viewing pet details)
 

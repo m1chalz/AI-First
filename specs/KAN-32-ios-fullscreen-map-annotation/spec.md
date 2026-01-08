@@ -62,12 +62,8 @@ A user wants to see annotation details even when some information is missing or 
 ### Edge Cases
 
 - **Pet photo fails to load**: Display placeholder image instead of broken image icon
-- **Very long pet names**: Name should truncate with ellipsis (...) after exceeding maximum width
-- **Very long descriptions**: Description should display in scrollable area or truncate with "Read more" option
-- **Invalid coordinates for location name**: If reverse geocoding fails, show coordinates as fallback (e.g., "40.7128° N, 74.0060° W")
-- **Rapid pin tapping**: Annotation transitions should be smooth without flickering; dismiss previous annotation before showing new one
+- **Location display**: Display coordinates in the same format used in announcement list and pet details (no reverse geocoding)
 - **Annotation positioning**: Annotation callout should position above the pin with a pointer/arrow pointing down to the pin location; if insufficient space above, position below with upward arrow
-- **Map interaction while annotation visible**: Pan/zoom gestures should dismiss the annotation to avoid disorienting the user
 
 ## Requirements *(mandatory)*
 
@@ -96,11 +92,11 @@ A user wants to see annotation details even when some information is missing or 
 - **FR-010**: When the user taps elsewhere on the map, the annotation MUST dismiss
 - **FR-011**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
 - **FR-012**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
-- **FR-013**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
-- **FR-014**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
-- **FR-015**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
-- **FR-016**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
-- **FR-017**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
+- **FR-013**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
+- **FR-014**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
+- **FR-015**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
+- **FR-016**: Pet names and descriptions MUST be displayed in full without truncation
+- **FR-017**: The location field MUST display coordinates in the same format used in announcement list and pet details
 
 ### Key Entities *(include if feature involves data)*
 
@@ -118,14 +114,14 @@ A user wants to see annotation details even when some information is missing or 
 ## Assumptions
 
 - The previous spec (KAN-32-ios-fullscreen-map-fetch-pins) has been implemented, providing pins on the map
-- The backend API returns all necessary fields in the announcement response: pet name, species, breed, last-seen location name, last-seen date, owner email, owner phone, description, status, pet photo URL, coordinates
+- The backend API returns all necessary fields in the announcement response: pet name, species, breed, coordinates, last-seen date, owner email, owner phone, description, status, pet photo URL
 - The iOS app targets iOS 18+, allowing use of latest MapKit annotation APIs
-- Reverse geocoding (coordinates → location name) is handled by the backend or MapKit; if unavailable, coordinates are shown as fallback
 - Pet photo URLs are valid and hosted on a reliable server; placeholder image is bundled in the app
 - Status values from backend are "MISSING" or "FOUND" (as defined in backend validation schema)
 - The map displays pins for both MISSING and FOUND announcements (departure from spec 066 which specified only MISSING)
 - The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
-- Future specs may add additional interactions (tappable contact fields, share announcement, report sighting, navigate to location)
+- Location is displayed as coordinates (same format as announcement list and pet details) - no reverse geocoding
+- Future specs may add additional interactions (tappable contact fields, share announcement, report sighting, navigate to location, text truncation)
 
 ## Notes
 
@@ -137,6 +133,10 @@ The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgse
 
 Contact fields (phone, email) are displayed as text. Tappable interaction for initiating calls/emails may be added in a future enhancement.
 
+Pet names and descriptions are displayed in full without truncation. If this creates layout issues in practice, text truncation may be added in a future enhancement.
+
+Location is displayed as coordinates using the same format as announcement list and pet details (no reverse geocoding to location names).
+
 Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational). Only two status values exist in the system: MISSING and FOUND.
 
 ## Clarifications
@@ -144,9 +144,11 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 ### Session 2026-01-08
 
 - Q: Should the annotation be dismissible by tapping a close button, or by tapping elsewhere on the map? → A: Dismiss by tapping elsewhere on map or tapping the same pin again (toggle behavior). No explicit close button needed.
-- Q: Should very long descriptions be truncated or scrollable? → A: Descriptions can be displayed in full with reasonable height limit; if needed, display in scrollable container with max height constraint.
+- Q: Should very long names/descriptions be truncated? → A: No. Display in full without truncation. Truncation may be added in future enhancement if needed.
 - Q: What should happen when description is missing? → A: Omit the field entirely. No placeholder messages shown.
 - Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely. No placeholder messages shown.
+- Q: How should location be displayed? → A: Display coordinates in the same format used in announcement list and pet details. No reverse geocoding.
+- Q: What happens when user pans/zooms while annotation is visible? → A: Default MapKit behavior (annotation typically remains visible and moves with pin).
 - Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
 - Q: Should phone/email be tappable to initiate calls/emails? → A: Not in this spec. Display as text only. Tappable interaction can be added later as enhancement.
