@@ -63,16 +63,16 @@ The Lost Pet tab should no longer trigger location permission requests. It shoul
 
 ### User Story 3 - Existing Permission Behavior Preserved (Priority: P3)
 
-All existing permission behaviors (rationale dialogs, Settings navigation, permission change detection) should continue working but be triggered from the main screen instead of the Lost Pet tab.
+All existing permission behaviors (rationale dialogs, Settings navigation, permission change detection) should continue working. Rationale dialogs remain in feature screens (e.g., AnimalListScreen) where they are contextually relevant - only the initial permission request moves to MainScaffold.
 
 **Why this priority**: Ensures no regression in existing permission UX flows.
 
-**Independent Test**: Can be tested by verifying rationale dialogs, Settings navigation, and permission change detection work from the main screen context.
+**Independent Test**: Can be tested by verifying rationale dialogs, Settings navigation, and permission change detection work from the Lost Pet tab context after initial permission request on main screen.
 
 **Acceptance Scenarios**:
 
-1. **Given** user previously denied permission (shouldShowRationale = true), **When** main screen appears, **Then** educational rationale dialog is displayed (Android only)
-2. **Given** user denied with "Don't ask again" (shouldShowRationale = false), **When** main screen appears, **Then** informational rationale with "Go to Settings" option is displayed
+1. **Given** user previously denied permission (shouldShowRationale = true), **When** user navigates to Lost Pet tab, **Then** educational rationale dialog is displayed (Android only)
+2. **Given** user denied with "Don't ask again" (shouldShowRationale = false), **When** user navigates to Lost Pet tab, **Then** informational rationale with "Go to Settings" option is displayed
 3. **Given** user changes permission in Settings, **When** user returns to app, **Then** app detects the change and updates accordingly
 
 ---
@@ -81,7 +81,7 @@ All existing permission behaviors (rationale dialogs, Settings navigation, permi
 
 - What happens when permission is requested but user backgrounded the app before responding? → Permission request remains pending, normal Android/iOS behavior
 - How does app behave if location permission was already granted on previous launch? → No permission dialog shown, location is fetched silently when needed
-- What happens on Android if permission is requested on MainScaffold but user immediately navigates to Lost Pet tab? → Lost Pet tab uses current permission status, no duplicate request
+- What happens on Android if permission is requested on MainScaffold but user immediately navigates to Lost Pet tab? → Lost Pet tab uses current permission status, no duplicate request. Note: No race condition is possible because MainScaffold's `LaunchedEffect(Unit)` executes during composition before NavHost renders child screens.
 
 ## Requirements *(mandatory)*
 
@@ -92,16 +92,16 @@ All existing permission behaviors (rationale dialogs, Settings navigation, permi
 - **FR-003**: All existing permission handling logic (rationale dialogs, Settings navigation, permission callbacks) MUST continue to function but be triggered from MainScaffold
 - **FR-004**: iOS app permission timing MUST remain unchanged (already at app launch in SceneDelegate)
 - **FR-005**: Permission request on MainScaffold MUST use the same Accompanist MultiplePermissionsState pattern currently used in AnimalListScreen
-- **FR-006**: Lost Pet tab (AnimalListScreen) MUST receive permission status from a shared source rather than managing its own permission state
-- **FR-007**: Permission status MUST be available to all tabs that need location data (Lost Pet, Home, Found Pet)
+- **FR-006**: Lost Pet tab (AnimalListScreen) MUST check permission status via system APIs (Accompanist/ContextCompat) rather than triggering its own initial permission request
+- **FR-007**: Permission status MUST be available to all tabs via system APIs - each tab checks the Android permission system directly (fire-and-forget pattern)
 - **FR-008**: Web app permission timing MUST remain unchanged (no changes required)
 
 ### Key Entities
 
-- **MainScaffold**: The main Composable containing bottom navigation - new location for permission request
-- **AnimalListScreen**: Lost Pet tab screen - permission request logic to be removed
-- **AnimalListViewModel**: ViewModel managing Lost Pet list - will receive permission status instead of requesting it
-- **Location Permission Status**: Shared state accessible by all feature screens
+- **MainScaffold**: The main Composable containing bottom navigation - new location for initial permission request (fire-and-forget)
+- **AnimalListScreen**: Lost Pet tab screen - initial permission request logic to be removed; rationale dialog logic remains
+- **AnimalListViewModel**: ViewModel managing Lost Pet list - unchanged; receives permission status from screen's Accompanist state
+- **Android Permission System**: Source of truth for permission status - each screen checks via Accompanist/ContextCompat (no app-level shared state needed)
 
 ## Success Criteria *(mandatory)*
 
@@ -118,10 +118,10 @@ This feature does not require design deliverables as it only changes the timing 
 
 ## Assumptions
 
-1. The existing permission handling logic in `AnimalListScreen` is correct and well-tested - it just needs to be moved
-2. A shared permission state can be hoisted to `MainScaffold` level without breaking existing screen functionality
-3. `AnimalListViewModel` can be refactored to accept permission status as input rather than managing permission flow
-4. The permission-related rationale dialogs should appear at app launch, not be deferred to tab navigation
+1. The existing permission handling logic in `AnimalListScreen` is correct and well-tested - only the initial request needs to move
+2. Fire-and-forget pattern (matching iOS) is sufficient - no app-level shared state needed since Android system maintains permission status
+3. `AnimalListViewModel` does not need refactoring - it already receives permission status from the screen's Accompanist state via intents
+4. Rationale dialogs should remain in feature screens where they are contextually relevant (e.g., Lost Pet tab explains why location helps find pets)
 
 ## Estimation *(mandatory)*
 
@@ -139,7 +139,7 @@ This feature does not require design deliverables as it only changes the timing 
 | Initial | 2 | 10.4 | ±50% | Moving permission logic from screen to scaffold level |
 | After SPEC | 2 | 10.4 | ±30% | iOS already correct, Android-only change, well-scoped refactoring |
 | After PLAN | 1 | 5.2 | ±20% | Fire-and-forget pattern like iOS - no state sharing, no new ViewModel, ~25 lines changed |
-| After TASKS | — | — | ±15% | [Update when tasks.md complete] |
+| After TASKS | 1 | 5.2 | ±15% | 19 tasks, ~0.5 days actual implementation |
 
 ### Per-Platform Breakdown (After TASKS)
 
@@ -147,9 +147,9 @@ This feature does not require design deliverables as it only changes the timing 
 |----------|-------|------|-------|
 | Backend | 0 | 0 | No backend changes needed |
 | iOS | 0 | 0 | Already at correct timing |
-| Android | — | — | [Fill after tasks.md] |
+| Android | 19 | ~0.5 | 2 files modified, ~25 lines changed |
 | Web | 0 | 0 | No web changes needed |
-| **Total** | | **—** | |
+| **Total** | 19 | **~0.5** | Well within 5.2 day budget |
 
 ### Variance Tracking
 
