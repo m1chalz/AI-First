@@ -155,14 +155,14 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     
     /**
      * Shows Report Missing Animal form.
-     * Creates and starts ReportMissingPetCoordinator as child coordinator.
+     * Creates and starts MissingPetReportCoordinator as child coordinator.
      * User Story 3 (T066): Sets up callback chain to refresh list when report is sent.
      */
     private func showReportMissing() {
         guard let navigationController = navigationController else { return }
         
         // Create child coordinator with injected dependencies
-        let reportCoordinator = ReportMissingPetCoordinator(
+        let reportCoordinator = MissingPetReportCoordinator(
             parentNavigationController: navigationController,
             locationService: locationService,
             photoAttachmentCache: photoAttachmentCache,
