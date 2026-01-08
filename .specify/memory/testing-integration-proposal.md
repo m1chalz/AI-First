@@ -89,7 +89,7 @@ Insert after "Test Identifiers":
 ### Coverage Targets
 
 - **Backend**: 80% (services, lib, API endpoints) - TDD mandatory
-- **Web**: 80% (hooks, lib functions) - TDD mandatory
+- **Web**: 80% (hooks, lib functions) - TDD recommended, 80% coverage mandatory
 - **Android**: 80% (ViewModels, use cases, domain models)
 - **iOS**: 80% (ViewModels, domain models)
 
@@ -163,7 +163,7 @@ Insert after "Constitution Check":
 | Platform | Test Approach | Rationale |
 |----------|---------------|-----------|
 | **Backend** | TDD (Red-Green-Refactor) | Mandatory per constitution |
-| **Web** | TDD (Red-Green-Refactor) | Mandatory per constitution |
+| **Web** | TDD Recommended (hooks/lib), Test-After permitted | 80% coverage mandatory; TDD beneficial for business logic |
 | **Android** | Test-After (Implement → Test) | Permitted per constitution |
 | **iOS** | Test-After (Implement → Test) | Permitted per constitution |
 | **E2E** | Test-After (All platforms complete → E2E) | After feature completion |

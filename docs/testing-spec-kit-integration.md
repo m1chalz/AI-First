@@ -125,7 +125,7 @@ This document summarizes how the testing workflow (`docs/testing-workflow.md`) i
 **Focus**: How will we test it?
 
 - ✅ Select test types (unit, integration, E2E)
-- ✅ Choose test workflow (TDD for backend/web, test-after for mobile)
+- ✅ Choose test workflow (TDD mandatory for backend, TDD recommended for web, test-after for mobile)
 - ✅ Set coverage targets (80% per platform)
 - ✅ Estimate test effort (30-40% of total effort)
 - ✅ Verify constitution compliance (80% coverage requirement)
@@ -140,7 +140,7 @@ This document summarizes how the testing workflow (`docs/testing-workflow.md`) i
 
 ✅ **Already complete!** The tasks template is excellent:
 - Test tasks organized by user story
-- TDD workflow enforced (Red-Green-Refactor for backend/web)
+- TDD workflow enforced (Red-Green-Refactor mandatory for backend, recommended for web)
 - Platform-specific test locations documented
 - 80% coverage targets specified
 - Given-When-Then structure enforced

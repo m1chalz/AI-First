@@ -89,11 +89,13 @@
   - Violation justification: _[Required if coverage < 80%]_
 
 - [ ] **End-to-End Tests**: Plan includes E2E tests for all user stories
-  - Web: Playwright tests in `/e2e-tests/web/specs/[feature-name].spec.ts`
-  - Mobile: Appium tests in `/e2e-tests/mobile/specs/[feature-name].spec.ts`
-  - All tests written in TypeScript
-  - Page Object Model / Screen Object Model used
-  - Each user story has at least one E2E test
+  - Features: Gherkin scenarios in `/e2e-tests/java/src/test/resources/features/[feature-name].feature`
+  - Web: Selenium with Page Object Model in `/e2e-tests/java/src/test/java/.../pages/`
+  - Mobile: Appium with Screen Object Model in `/e2e-tests/java/src/test/java/.../screens/`
+  - Step definitions: `/e2e-tests/java/src/test/java/.../steps/{web,mobile}/`
+  - All tests written in Java 21 + Cucumber
+  - Platform selection via tags: @web, @android, @ios
+  - Each user story has at least one E2E scenario
   - Violation justification: _[Required if E2E tests missing]_
 
 - [ ] **Asynchronous Programming Standards**: Plan uses correct async patterns per platform
@@ -190,12 +192,12 @@
   - All hooks and lib functions covered by unit tests
   - Violation justification: _[Required if business logic in components or N/A if /webApp not affected]_
 
-- [ ] **Web TDD Workflow**: Plan follows Test-Driven Development (Red-Green-Refactor)
-  - RED: Write failing test first
-  - GREEN: Write minimal code to pass test
-  - REFACTOR: Improve code quality without changing behavior
-  - Tests written BEFORE implementation code
-  - Violation justification: _[Required if not compliant or N/A if /webApp not affected]_
+- [ ] **Web TDD Workflow**: TDD (Red-Green-Refactor) is RECOMMENDED, not mandatory
+  - TDD recommended for: Custom hooks, lib utilities (business logic)
+  - Test-after permitted for: React components (visual iteration benefits)
+  - 80% coverage requirement applies regardless of workflow
+  - RED → GREEN → REFACTOR cycle beneficial for hooks/lib functions
+  - Note: _[This is a recommendation, not a requirement. Mark as N/A if /webApp not affected]_
 
 - [ ] **Web Testing Strategy**: Plan includes comprehensive test coverage for `/webApp`
   - Unit tests (Vitest):
