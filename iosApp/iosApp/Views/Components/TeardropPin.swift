@@ -19,6 +19,10 @@ struct TeardropPin: View {
     var body: some View {
         TeardropShape()
             .fill(color)
+            .overlay(
+                TeardropShape()
+                    .stroke(Color.white, lineWidth: 3)
+            )
             .frame(width: 28, height: 36)
             .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 2)
     }
