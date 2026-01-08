@@ -52,7 +52,7 @@ A user wants to see annotation details even when some information is missing or 
 
 **Acceptance Scenarios**:
 
-1. **Given** an announcement has no pet photo, **When** the annotation is displayed, **Then** a placeholder image is shown instead of an empty space
+1. **Given** an announcement has no pet photo, **When** the annotation is displayed, **Then** a placeholder (circular pawprint icon on gray background, matching Announcement List) is shown instead of an empty space
 2. **Given** an announcement has no description, **When** the annotation is displayed, **Then** the description field is omitted from the display
 3. **Given** an announcement has no phone number, **When** the annotation is displayed, **Then** the phone field is omitted from the display
 4. **Given** an announcement has no email address, **When** the annotation is displayed, **Then** the email field is omitted from the display
@@ -61,7 +61,7 @@ A user wants to see annotation details even when some information is missing or 
 
 ### Edge Cases
 
-- **Pet photo fails to load**: Display placeholder image instead of broken image icon
+- **Pet photo fails to load**: Display placeholder (circular pawprint icon on `#EEEEEE` background, matching Announcement List) instead of broken image icon
 - **Location display**: Display coordinates in the same format used in announcement list and pet details (no reverse geocoding)
 - **Annotation positioning**: Annotation callout should position above the pin with a pointer/arrow pointing down to the pin location; if insufficient space above, position below with upward arrow
 
@@ -82,7 +82,7 @@ A user wants to see annotation details even when some information is missing or 
   - Owner phone with 📞 emoji prefix (13px, #666 color)
   - Description text (14px, #444 color)
   - Status badge (rounded 12px, content-specific colors)
-- **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display a placeholder image
+- **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display placeholder matching Announcement List: circular `pawprint.fill` icon (24pt, `#93A2B4` color) on `#EEEEEE` circle background (63pt diameter)
 - **FR-006**: When the description is empty or null, the annotation MUST omit the description field entirely
 - **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
 - **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
@@ -117,7 +117,7 @@ A user wants to see annotation details even when some information is missing or 
 - The previous spec (KAN-32-ios-fullscreen-map-fetch-pins) has been implemented, providing pins on the map
 - The backend API returns all necessary fields in the announcement response: pet name, species, breed, coordinates, last-seen date, owner email, owner phone, description, status, pet photo URL
 - The iOS app targets iOS 18+, allowing use of latest MapKit annotation APIs
-- Pet photo URLs are valid and hosted on a reliable server; placeholder image is bundled in the app
+- Pet photo URLs are valid and hosted on a reliable server; placeholder uses system icon (`pawprint.fill`) matching Announcement List styling
 - Status values from backend are "MISSING" or "FOUND" (as defined in backend validation schema)
 - The map displays pins for both MISSING and FOUND announcements (departure from spec 066 which specified only MISSING)
 - The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
