@@ -21,27 +21,15 @@ extension MapPreviewView {
             )
         }
         
-        /// Pin color based on announcement status
-        var pinColor: Color {
+        /// Converts announcement status to TeardropPin display mode.
+        var displayMode: TeardropPin.Mode {
             switch status {
             case .active:
-                return .red
+                return .active
             case .found:
-                return .blue
+                return .found
             case .closed:
-                return .gray
-            }
-        }
-        
-        /// Pin icon SF Symbol name based on status
-        var pinIcon: String {
-            switch status {
-            case .active:
-                return "exclamationmark"
-            case .found:
-                return "checkmark"
-            case .closed:
-                return "xmark"
+                return .closed
             }
         }
     }

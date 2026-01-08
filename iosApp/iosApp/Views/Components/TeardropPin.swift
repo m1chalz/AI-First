@@ -8,16 +8,72 @@ import SwiftUI
 ///
 /// **Usage**:
 /// ```swift
-/// TeardropPin(color: .red, icon: "exclamationmark")  // Missing pet
-/// TeardropPin(color: .blue, icon: "checkmark")       // Found pet
-/// TeardropPin(color: .gray)                          // No icon
+/// TeardropPin(mode: .active)                         // Red pin with exclamationmark
+/// TeardropPin(mode: .found)                          // Blue pin with checkmark
+/// TeardropPin(mode: .closed)                         // Gray pin with xmark
+/// TeardropPin(mode: .custom(color: "#FF6600", icon: "star.fill"))  // Custom
+/// TeardropPin(color: .red, icon: "exclamationmark")  // Legacy: Missing pet
 /// ```
 ///
 /// **Sizing**: Default size is 28x36 points. Use `.frame()` to adjust.
 struct TeardropPin: View {
+    
+    // MARK: - Mode
+    
+    /// Pin display mode with predefined or custom appearance.
+    public enum Mode: Equatable {
+        /// Missing pet - red pin with exclamation mark
+        case active
+        /// Found pet - blue pin with checkmark
+        case found
+        /// Closed announcement - gray pin with X mark
+        case closed
+        /// Custom appearance with hex color and SF Symbol icon name
+        case custom(color: String, icon: String)
+        
+        /// Resolved color for this mode
+        var color: Color {
+            switch self {
+            case .active:
+                return .red
+            case .found:
+                return .blue
+            case .closed:
+                return .gray
+            case .custom(let hexColor, _):
+                return Color(hex: hexColor)
+            }
+        }
+        
+        /// Resolved icon for this mode
+        var icon: String? {
+            switch self {
+            case .active:
+                return "exclamationmark"
+            case .found:
+                return "checkmark"
+            case .closed:
+                return "xmark"
+            case .custom(_, let iconName):
+                return iconName
+            }
+        }
+    }
+    
+    // MARK: - Properties
+    
     let color: Color
     let icon: String?
     
+    // MARK: - Initializers
+    
+    /// Creates a pin with a predefined or custom mode.
+    init(mode: Mode) {
+        self.color = mode.color
+        self.icon = mode.icon
+    }
+    
+    /// Creates a pin with explicit color and optional icon (legacy initializer).
     init(color: Color, icon: String? = nil) {
         self.color = color
         self.icon = icon
@@ -97,22 +153,32 @@ struct TeardropShape: Shape {
 
 // MARK: - Previews
 
-#Preview("Red Pin (Missing)") {
-    TeardropPin(color: .red, icon: "exclamationmark")
+#Preview("Active Pin (Missing)") {
+    TeardropPin(mode: .active)
         .padding()
 }
 
-#Preview("Blue Pin (Found)") {
-    TeardropPin(color: .blue, icon: "checkmark")
+#Preview("Found Pin") {
+    TeardropPin(mode: .found)
         .padding()
 }
 
-#Preview("Size Comparison") {
+#Preview("Closed Pin") {
+    TeardropPin(mode: .closed)
+        .padding()
+}
+
+#Preview("Custom Pin") {
+    TeardropPin(mode: .custom(color: "#FF6600", icon: "star.fill"))
+        .padding()
+}
+
+#Preview("All Modes") {
     HStack(spacing: 20) {
-        TeardropPin(color: .red, icon: "exclamationmark")
-        TeardropPin(color: .blue, icon: "checkmark")
-        TeardropPin(color: .green)
-        TeardropPin(color: .orange)
+        TeardropPin(mode: .active)
+        TeardropPin(mode: .found)
+        TeardropPin(mode: .closed)
+        TeardropPin(mode: .custom(color: "#FF6600", icon: "star.fill"))
     }
     .padding()
 }
@@ -123,8 +189,8 @@ struct TeardropShape: Shape {
         
         VStack(spacing: 40) {
             HStack(spacing: 30) {
-                TeardropPin(color: .red, icon: "exclamationmark")
-                TeardropPin(color: .blue, icon: "checkmark")
+                TeardropPin(mode: .active)
+                TeardropPin(mode: .found)
             }
             
             Text("Missing          Found")

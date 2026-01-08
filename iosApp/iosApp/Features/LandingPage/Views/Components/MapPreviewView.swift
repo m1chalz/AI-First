@@ -58,7 +58,7 @@ struct MapPreviewView: View {
                 ForEach(pins) { pin in
                     Annotation("", coordinate: pin.clLocationCoordinate, anchor: .bottom) {
                         // Teardrop pin marker - red for missing, blue for found
-                        TeardropPin(color: pin.pinColor, icon: pin.pinIcon)
+                        TeardropPin(mode: pin.displayMode)
                     }
                 }
             }
