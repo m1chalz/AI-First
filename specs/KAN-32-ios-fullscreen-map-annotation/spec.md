@@ -22,10 +22,8 @@ A user wants to tap a pin on the map and see detailed information about the miss
 
 1. **Given** pins are visible on the fullscreen map, **When** the user taps a pin, **Then** an annotation callout appears displaying the missing animal's details
 2. **Given** an annotation is displayed, **When** the user views it, **Then** it shows at minimum: pet photo, pet name, species/breed, last-seen location name, last-seen date, owner email, owner phone, and description
-3. **Given** an annotation is displayed, **When** the user taps on the phone number, **Then** the system opens the phone dialer with the number pre-populated
-4. **Given** an annotation is displayed, **When** the user taps on the email address, **Then** the system opens the mail app with the email pre-populated
-5. **Given** an annotation is displayed, **When** the user taps elsewhere on the map or taps the same pin again, **Then** the annotation dismisses
-6. **Given** an annotation is displayed, **When** the user taps a different pin, **Then** the previous annotation dismisses and the new annotation appears for the selected pin
+3. **Given** an annotation is displayed, **When** the user taps elsewhere on the map or taps the same pin again, **Then** the annotation dismisses
+4. **Given** an annotation is displayed, **When** the user taps a different pin, **Then** the previous annotation dismisses and the new annotation appears for the selected pin
 
 ---
 
@@ -86,8 +84,8 @@ A user wants to see annotation details even when some information is missing or 
   - Species and breed formatted as "Species • Breed" (13px, #666 color)
   - Last-seen location name with 📍 emoji prefix (13px, #666 color)
   - Last-seen date formatted as MM/DD/YYYY with 📅 emoji prefix (13px, #666 color)
-  - Owner email with 📧 emoji prefix (13px, #666 color, tappable)
-  - Owner phone with 📞 emoji prefix (13px, #666 color, tappable)
+  - Owner email with 📧 emoji prefix (13px, #666 color)
+  - Owner phone with 📞 emoji prefix (13px, #666 color)
   - Description text (14px, #444 color)
   - Status badge (rounded 12px, content-specific colors)
 - **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display a placeholder image
@@ -95,47 +93,42 @@ A user wants to see annotation details even when some information is missing or 
 - **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
 - **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
 - **FR-009**: When both phone and email are missing, the annotation MUST display "Contact information not available"
-- **FR-010**: The phone number field MUST be tappable and open the phone dialer app when tapped
-- **FR-011**: The email address field MUST be tappable and open the mail app with a pre-populated email when tapped
-- **FR-012**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
+- **FR-010**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
   - MISSING: Orange background (#FF9500), white text
   - FOUND: Blue background (#155DFC), white text
   - REUNITED: Green background (#34C759), white text
-- **FR-013**: When the user taps elsewhere on the map, the annotation MUST dismiss
-- **FR-014**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
-- **FR-015**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
-- **FR-016**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
-- **FR-017**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
-- **FR-018**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
-- **FR-019**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
-- **FR-020**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
+- **FR-011**: When the user taps elsewhere on the map, the annotation MUST dismiss
+- **FR-012**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
+- **FR-013**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
+- **FR-014**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
+- **FR-015**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
+- **FR-016**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
+- **FR-017**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
+- **FR-018**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
 
 ### Key Entities *(include if feature involves data)*
 
 - **Annotation Callout**: Visual overlay displaying detailed information about a missing animal when its pin is tapped; dismissible by tapping elsewhere
 - **Status Badge**: Visual indicator showing the current status of a missing animal (MISSING, FOUND, REUNITED) with status-specific colors
-- **Contact Fields**: Tappable UI elements (phone, email) that trigger system actions (open dialer, open mail app)
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
 - **SC-001**: Users can view annotation details within 1 second of tapping a pin under normal conditions
-- **SC-002**: Users can successfully initiate phone calls or emails from the annotation without copying/pasting contact information manually
-- **SC-003**: Users can identify the animal's current status at a glance by viewing the status badge color and text
-- **SC-004**: The annotation remains visually consistent with the Figma design (white card, rounded corners, drop shadow, pointer arrow)
+- **SC-002**: Users can identify the animal's current status at a glance by viewing the status badge color and text
+- **SC-003**: The annotation remains visually consistent with the Figma design (white card, rounded corners, drop shadow, pointer arrow)
 
 ## Assumptions
 
 - The previous spec (KAN-32-ios-fullscreen-map-fetch-pins) has been implemented, providing pins on the map
 - The backend API returns all necessary fields in the announcement response: pet name, species, breed, last-seen location name, last-seen date, owner email, owner phone, description, status, pet photo URL, coordinates
-- The iOS app has permission to access phone dialer and mail app
 - The iOS app targets iOS 18+, allowing use of latest MapKit annotation APIs
 - Reverse geocoding (coordinates → location name) is handled by the backend or MapKit; if unavailable, coordinates are shown as fallback
 - Pet photo URLs are valid and hosted on a reliable server; placeholder image is bundled in the app
 - Status values from backend are standardized ("missing", "found", "reunited") and map to badge labels and colors
 - The annotation design follows the Figma mockup (node-id=1192:5893) with exact spacing, typography, and colors
-- Future specs may add additional interactions (share announcement, report sighting, navigate to location)
+- Future specs may add additional interactions (tappable contact fields, share announcement, report sighting, navigate to location)
 
 ## Notes
 
@@ -145,7 +138,7 @@ The annotation callout uses MapKit's native APIs for positioning and presentatio
 
 The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev) exactly: white background, rounded corners (12px), drop shadow, emoji prefixes for location/date/contact, blue "FOUND" badge, placeholder for missing description.
 
-Contact fields (phone, email) are tappable using iOS URL schemes: `tel://` for phone dialer, `mailto:` for mail app. This leverages native system integration without requiring custom contact management.
+Contact fields (phone, email) are displayed as text. Tappable interaction for initiating calls/emails may be added in a future enhancement.
 
 Status badge colors are defined explicitly to ensure consistency across the app and match common semantic colors (orange for missing/warning, blue for found/informational, green for reunited/success).
 
@@ -158,6 +151,7 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 - Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely if missing. If both are missing, show "Contact information not available".
 - Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
+- Q: Should phone/email be tappable to initiate calls/emails? → A: Not in this spec. Display as text only. Tappable interaction can be added later as enhancement.
 
 ## Design Deliverables *(mandatory for UI features)*
 

@@ -39,8 +39,15 @@
 - Exact design reference from Figma with specific measurements and colors
 - Testable functional requirements with clear acceptance criteria
 - Technology-agnostic success criteria focused on user experience
+- Well-defined scope with deferred enhancements (tappable contact fields moved to future spec)
 
 **Areas Noted**:
-- FR-020 mentions "MapKit's native annotation callout API" which is slightly implementation-focused, but acceptable as it clarifies the iOS-native approach vs custom modal overlay
-- Assumptions section appropriately documents technical constraints (iOS 18+, MapKit, URL schemes) without leaking into requirements
+- FR-018 mentions "MapKit's native annotation callout API" which is slightly implementation-focused, but acceptable as it clarifies the iOS-native approach vs custom modal overlay
+- Assumptions section appropriately documents technical constraints (iOS 18+, MapKit) without leaking into requirements
+
+**Scope Changes** (2026-01-08):
+- Removed tappable phone/email interaction requirements (FR-010, FR-011)
+- Removed success criteria for initiating calls/emails (SC-002)
+- Contact fields will display as text only; tappable interaction deferred to future enhancement
+- This reduces scope while maintaining core value proposition (viewing pet details)
 
