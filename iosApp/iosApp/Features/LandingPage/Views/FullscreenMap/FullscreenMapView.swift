@@ -37,16 +37,17 @@ struct FullscreenMapView: View {
                     Annotation("", coordinate: pin.coordinate, anchor: .bottom) {
                         // T022: ZStack with callout above pin
                         ZStack(alignment: .bottom) {
+                            // Teardrop pin marker - always visible (rendered first = below)
+                            TeardropPin(color: pin.pinColor)
+                                .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
+                            
                             // Callout appears ABOVE pin when selected (FR-001)
+                            // Rendered second = on top, so arrow is visible above pin
                             if viewModel.selectedPinId == pin.id {
                                 AnnotationCalloutView(model: viewModel.calloutModel(for: pin))
                                     // T026: Gap between callout arrow and pin top
                                     .offset(y: -10)
                             }
-                            
-                            // Teardrop pin marker - always visible
-                            TeardropPin(color: pin.pinColor)
-                                .accessibilityIdentifier("fullscreenMap.pin.\(pin.id)")
                         }
                         // T023: Tap anywhere in annotation (pin or callout) to select/toggle
                         // Using contentShape + highPriorityGesture ensures pin tap wins over map tap
