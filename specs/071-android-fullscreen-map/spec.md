@@ -30,6 +30,8 @@
 - Turn-by-turn navigation to pet location
 - Multiple map styles/themes
 - Pet search/filtering within fullscreen map
+- Accessibility features (screen reader support, content descriptions) - deferred to separate ticket
+- Analytics tracking (map opens, pin taps, errors) - deferred to separate ticket
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -110,6 +112,7 @@ A user sees a pin on the map and wants to know more about the pet. They tap the 
 - **Duplicate coordinates**: If multiple pets have the same coordinates, tapping shows one pet at a time; user can dismiss and tap again to see others
 - **Location permission denied**: Open fullscreen map centered on a default location (city center or last known position)
 - **Data refresh on return**: When returning to fullscreen map from background, pin data is refreshed automatically
+- **No auto-refresh**: Pin data does not auto-refresh while viewing the same area; user must pan/zoom or return from background to trigger refresh
 
 ## Requirements *(mandatory)*
 
@@ -126,8 +129,10 @@ A user sees a pin on the map and wants to know more about the pet. They tap the 
 - **FR-009**: The fullscreen map MUST display blue pins for found pet announcements in the visible area
 - **FR-010**: Pins MUST be positioned using each pet's last-seen/found coordinates
 - **FR-011**: When the visible map area changes, pins MUST update after the gesture completes
+- **FR-011a**: There is no client-side limit on pin count; all pins returned by the API for the visible area MUST be displayed
 - **FR-012**: Tapping a pin MUST show a details pop-up for that pet
 - **FR-013**: The details pop-up MUST include: pet photo, pet name, species, last-seen/found date, description, and owner contact information (phone and email when available)
+- **FR-013a**: The details pop-up MUST be information-only; contact details are displayed as plain text (not tappable links)
 - **FR-014**: The details pop-up MUST be dismissible by tapping outside or swiping
 - **FR-015**: If the pet photo fails to load, the pop-up MUST display a placeholder image
 - **FR-016**: While pins are loading, a loading indicator MUST be displayed
@@ -209,6 +214,11 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 - Q: How to handle overlapping pins? → A: No clustering for now; pins remain individually tappable even when overlapping
 - Q: What if user taps pin while pop-up is open? → A: Pop-up updates to show the newly tapped pet
 - Q: Default location if permission denied? → A: Use last known location if available, otherwise city center (configurable)
+- Q: What actions can users take from the pet details pop-up? → A: Information-only display; no tappable phone/email links or navigation to details screen
+- Q: Are there accessibility requirements for the interactive map? → A: Deferred to a separate specification/ticket
+- Q: Should user interactions be tracked for analytics? → A: Deferred to a separate specification/ticket
+- Q: Is there a maximum number of pins to display? → A: No limit; display all pins returned by API for the visible area
+- Q: Should pin data auto-refresh if user stays on map for extended period? → A: No auto-refresh; data updates only on pan/zoom or return from background
 
 ## Design References
 
