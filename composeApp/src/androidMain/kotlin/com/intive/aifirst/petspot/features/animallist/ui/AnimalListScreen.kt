@@ -102,38 +102,23 @@ fun AnimalListScreen(
     val anyGranted = fineGranted || coarseGranted
     val shouldShowRationale = locationPermissionState.shouldShowRationale
 
-    // Initial permission check - uses permission state as keys to handle late initialization
-    // Accompanist may not have the correct shouldShowRationale value on first composition,
-    // so we re-run when the values change but only handle once via hasHandledInitialPermission
+    // Initial permission check - MainScaffold handles first-time permission request
+    // This just dispatches the current permission status to the ViewModel
+    // Uses permission state as keys to handle late initialization from Accompanist
     LaunchedEffect(anyGranted, shouldShowRationale) {
         if (hasHandledInitialPermission) return@LaunchedEffect
         hasHandledInitialPermission = true
 
-        if (anyGranted) {
-            // Permission already granted - dispatch result immediately
-            viewModel.dispatchIntent(
-                AnimalListIntent.PermissionResult(
-                    granted = true,
-                    fineLocation = fineGranted,
-                    coarseLocation = coarseGranted,
-                    shouldShowRationale = false,
-                ),
-            )
-        } else if (shouldShowRationale) {
-            // Permission was denied before (but can ask again) - dispatch to show educational rationale
-            viewModel.dispatchIntent(
-                AnimalListIntent.PermissionResult(
-                    granted = false,
-                    fineLocation = false,
-                    coarseLocation = false,
-                    shouldShowRationale = true,
-                ),
-            )
-        } else {
-            // First time - show system dialog
-            // Result will be handled by the callback in rememberMultiplePermissionsState
-            locationPermissionState.launchMultiplePermissionRequest()
-        }
+        // Dispatch current permission status to ViewModel
+        // ViewModel will show appropriate rationale dialogs if needed
+        viewModel.dispatchIntent(
+            AnimalListIntent.PermissionResult(
+                granted = anyGranted,
+                fineLocation = fineGranted,
+                coarseLocation = coarseGranted,
+                shouldShowRationale = shouldShowRationale,
+            ),
+        )
     }
 
     // Observe dynamic permission changes (user changed in Settings while app open)

@@ -29,9 +29,9 @@
 
 **Purpose**: Verify prerequisites and build environment before making changes
 
-- [ ] T001 Verify Android project builds successfully: `./gradlew :composeApp:assembleDebug`
-- [ ] T002 Verify existing unit tests pass: `./gradlew :composeApp:testDebugUnitTest`
-- [ ] T003 [P] Create feature branch `070-location-permission-timing` from main
+- [X] T001 Verify Android project builds successfully: `./gradlew :composeApp:assembleDebug`
+- [X] T002 Verify existing unit tests pass: `./gradlew :composeApp:testDebugUnitTest`
+- [X] T003 [P] Create feature branch `070-location-permission-timing` from main
 
 **Checkpoint**: Build passes, existing tests green, ready for implementation
 
@@ -47,11 +47,11 @@
 
 **Android**:
 
-- [ ] T004 [US1] Add Accompanist permissions imports to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/ui/navigation/MainScaffold.kt`
-- [ ] T005 [US1] Add `@OptIn(ExperimentalPermissionsApi::class)` annotation to MainScaffold function
-- [ ] T006 [US1] Add `rememberMultiplePermissionsState` for location permissions at start of MainScaffold
-- [ ] T007 [US1] Add fire-and-forget permission request logic using LaunchedEffect in MainScaffold
-- [ ] T008 [US1] Verify MainScaffold compiles with new permission logic: `./gradlew :composeApp:assembleDebug`
+- [X] T004 [US1] Add Accompanist permissions imports to `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/ui/navigation/MainScaffold.kt`
+- [X] T005 [US1] Add `@OptIn(ExperimentalPermissionsApi::class)` annotation to MainScaffold function
+- [X] T006 [US1] Add `rememberMultiplePermissionsState` for location permissions at start of MainScaffold
+- [X] T007 [US1] Add fire-and-forget permission request logic using LaunchedEffect in MainScaffold
+- [X] T008 [US1] Verify MainScaffold compiles with new permission logic: `./gradlew :composeApp:assembleDebug`
 
 **Checkpoint**: MainScaffold now requests permission on first composition. User Story 1 independently testable.
 
@@ -67,10 +67,10 @@
 
 **Android**:
 
-- [ ] T009 [US2] Simplify initial permission check LaunchedEffect in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListScreen.kt`
-- [ ] T010 [US2] Remove the `else` branch that calls `locationPermissionState.launchMultiplePermissionRequest()` for first-time requests
-- [ ] T011 [US2] Update LaunchedEffect to always dispatch current permission status to ViewModel
-- [ ] T012 [US2] Verify AnimalListScreen compiles with simplified logic: `./gradlew :composeApp:assembleDebug`
+- [X] T009 [US2] Simplify initial permission check LaunchedEffect in `/composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/animallist/ui/AnimalListScreen.kt`
+- [X] T010 [US2] Remove the `else` branch that calls `locationPermissionState.launchMultiplePermissionRequest()` for first-time requests
+- [X] T011 [US2] Update LaunchedEffect to always dispatch current permission status to ViewModel
+- [X] T012 [US2] Verify AnimalListScreen compiles with simplified logic: `./gradlew :composeApp:assembleDebug`
 
 **Checkpoint**: AnimalListScreen no longer requests permission on its own. User Story 2 independently testable.
 
@@ -98,9 +98,9 @@
 
 **Purpose**: Final verification and cleanup
 
-- [ ] T016 [P] Run full test suite: `./gradlew :composeApp:testDebugUnitTest`
-- [ ] T017 [P] Run linter: `./gradlew :composeApp:lint`
-- [ ] T018 [P] Verify test coverage maintained: `./gradlew :composeApp:testDebugUnitTest koverHtmlReport`
+- [X] T016 [P] Run full test suite: `./gradlew :composeApp:testDebugUnitTest`
+- [X] T017 [P] Run linter: `./gradlew :composeApp:lint`
+- [X] T018 [P] Verify test coverage maintained (kover not configured - skipped)
 - [ ] T019 Complete manual testing checklist from quickstart.md:
   - [ ] Fresh install: Permission dialog appears when main screen loads
   - [ ] Fresh install: Navigating to Lost Pet tab does NOT show another permission dialog
