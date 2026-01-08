@@ -45,8 +45,8 @@ struct FullscreenMapView: View {
                             // Rendered second = on top, so arrow is visible above pin
                             if viewModel.selectedPinId == pin.id {
                                 AnnotationCalloutView(model: viewModel.calloutModel(for: pin))
-                                    // T026: Gap between callout arrow and pin top
-                                    .offset(y: -10)
+                                    // Position arrow to point at ~1/3 from top of teardrop pin
+                                    .offset(y: -22)
                             }
                         }
                         // T023: Tap anywhere in annotation (pin or callout) to select/toggle

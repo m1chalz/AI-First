@@ -24,14 +24,13 @@ struct AnnotationCalloutView: View {
                 .cornerRadius(12)
             
             // Pointer arrow at bottom (FR-003, FR-013)
-            // Overlap slightly with card to hide gap, positioned above card shadow
             CalloutPointer()
                 .fill(Color.white)
-                .frame(width: 20, height: 10)
-                .offset(y: -1)
+                .frame(width: 20, height: 12)
+                .offset(y: -2)
         }
-        // Apply shadow to entire callout (card + pointer) for unified look
-        .shadow(color: .black.opacity(0.4), radius: 7, x: 0, y: 3)
+        // Shadow on card only, reduced opacity so arrow stays clean white
+        .shadow(color: .black.opacity(0.25), radius: 5, x: 0, y: 2)
         .accessibilityIdentifier(model.accessibilityId)
     }
     
