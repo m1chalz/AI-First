@@ -3,7 +3,7 @@
 **Feature Branch**: `070-location-permission-timing`  
 **Created**: 2026-01-08  
 **Status**: Draft  
-**Jira Ticket**: _Pending sync_  
+**Jira Ticket**: [KAN-33](https://ai-first-intive.atlassian.net/browse/KAN-33)  
 **Design**: N/A (no UI changes required)  
 **Input**: User description: "Change the way and time when app asks for location permissions. Move from lost pets tab to main screen with bottom navigation."
 
@@ -127,10 +127,10 @@ This feature does not require design deliverables as it only changes the timing 
 
 ### Initial Estimate
 
-- **Story Points**: 2
-- **Initial Budget**: 2 × 4 × 1.3 = 10.4 days
-- **Confidence**: ±50%
-- **Anchor Comparison**: Simpler than Pet Details (3 SP) - this is primarily moving existing code and adjusting the flow, no new features or complex logic
+- **Story Points**: 1
+- **Initial Budget**: 1 × 4 × 1.3 = 5.2 days
+- **Confidence**: ±30%
+- **Anchor Comparison**: Much simpler than Pet Details (3 SP) - this is ~25 lines of code change with no new files
 
 ### Re-Estimation (Updated After Each Phase)
 
@@ -138,7 +138,7 @@ This feature does not require design deliverables as it only changes the timing 
 |-------|-----|------|------------|---------------|
 | Initial | 2 | 10.4 | ±50% | Moving permission logic from screen to scaffold level |
 | After SPEC | 2 | 10.4 | ±30% | iOS already correct, Android-only change, well-scoped refactoring |
-| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After PLAN | 1 | 5.2 | ±20% | Fire-and-forget pattern like iOS - no state sharing, no new ViewModel, ~25 lines changed |
 | After TASKS | — | — | ±15% | [Update when tasks.md complete] |
 
 ### Per-Platform Breakdown (After TASKS)
@@ -153,10 +153,10 @@ This feature does not require design deliverables as it only changes the timing 
 
 ### Variance Tracking
 
-| Metric | Initial | Final | Variance |
-|--------|---------|-------|----------|
-| **Story Points** | 2 SP | — | — |
-| **Budget (days)** | 10.4 days | — | — |
+| Metric | Initial | After PLAN | Variance |
+|--------|---------|------------|----------|
+| **Story Points** | 2 SP | 1 SP | -50% (simplified approach) |
+| **Budget (days)** | 10.4 days | 5.2 days | -50% |
 
 **Variance Reasons**: _To be filled after completion_
 
