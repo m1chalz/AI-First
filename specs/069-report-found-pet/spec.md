@@ -4,7 +4,7 @@
 **Created**: 2026-01-07  
 **Status**: Draft  
 **Jira Ticket**: `KAN-5`  
-**Design**: _Pending_ <!-- See Design Deliverables section below -->  
+**Design**: [Figma - Found Pet Reporting Wizard](https://www.figma.com/make/CLdBKnXW8HTucDAHFpnPBa/Found-Pet-Reporting-Wizard?t=A1LbdLNZE9jj2JHF-1)  
 **Input**: User description: "take requirements from jira KAN-5"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -32,9 +32,9 @@ As a user who found an animal, I want to report a found pet using a guided wizar
 
 **Acceptance Scenarios**:
 
-1. **Given** I am on the “Report Found Pet” wizard, **When** I provide all mandatory inputs and submit, **Then** the system confirms the report was created and the report is available to view.
+1. **Given** I am on the "Report Found Pet" wizard, **When** I provide all mandatory inputs and submit, **Then** the system confirms the report was created and the report is available to view.
 2. **Given** I am on any wizard step, **When** I try to proceed without a mandatory field, **Then** the system prevents progress and shows a clear validation message for the missing input.
-3. **Given** I submit a report and a transient error occurs, **When** I retry submission, **Then** the report is created once and I receive confirmation without duplicate reports being created.
+3. **Given** I submit a report successfully, **When** I submit again with the same or different data, **Then** each submission creates a new independent report (duplicates are allowed).
 
 ---
 
@@ -83,7 +83,7 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 - What happens when the user denies location permissions or GPS is unavailable?
 - What happens when the user taps "Use Current Location" but GPS cannot determine position?
 - What happens when the user provides a location that cannot be determined precisely (e.g., approximate area)?
-- What happens when the user tries to submit the same report multiple times (double-tap / retry)?
+- What happens when the user rapidly taps the submit button multiple times (double-tap)?
 
 ## Requirements *(mandatory)*
 
@@ -115,15 +115,24 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
   - **contact phone number** (optional)
   - **contact email** (optional)
   - The system MUST require at least one contact method (phone or email) before submission.
-  - Phone number validation: MUST contain at least 7 digits; any format accepted (spaces, dashes, parentheses allowed).
-  - Email validation: MUST contain @ character and at least one dot (.) after @; minimal format validation.
+  - Phone number validation (aligned with Report Lost Pet backend):
+    - If non-empty: MUST match regex `/\d/` (must contain at least one digit)
+    - Any format accepted (spaces, dashes, parentheses, plus signs allowed)
+    - Error message: "Enter a valid phone number"
+  - Email validation (aligned with Report Lost Pet backend):
+    - If non-empty: MUST match regex `/^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/` (RFC 5322 basic format)
+    - Max length: 254 characters
+    - Error message: "Enter a valid email address"
+  - At least one contact validation:
+    - If both fields are empty: show error "Please provide at least one contact method (phone or email)"
+    - If one or both fields are non-empty: both MUST pass their respective format validation
 - **FR-005**: Screen 3 MUST allow the user to optionally provide:
   - **contact phone number of the person currently caring for the found animal**
   - **physical address where the animal is currently located**
 - **FR-006**: The system MUST allow users to navigate forward and backward between wizard steps without losing entered data.
 - **FR-007**: The system MUST prevent progress and submission when mandatory fields are missing and MUST provide clear, user-friendly validation feedback.
 - **FR-008**: The system MUST allow the user to submit the report after completing required inputs and MUST show a clear confirmation on success.
-- **FR-009**: The system MUST ensure retrying submission does not create duplicate reports.
+- **FR-009**: The system MUST allow multiple submissions of found pet reports; duplicate reports are permitted (no deduplication logic required).
 - **FR-010**: The design and interaction patterns of the found-pet wizard MUST be consistent with the wizard for reporting a missing animal (step-based flow, navigation patterns, and validation behavior).
 - **FR-011**: All submitted found pet reports MUST be publicly viewable by all app users (no privacy restrictions or authentication requirements for viewing).
 
@@ -133,7 +142,7 @@ As a user familiar with reporting a missing pet, I want the “Report Found Pet�
 
 - Q: Should the system attempt to automatically match found pet reports with existing missing pet reports? → A: No, found and missing reports exist independently with no matching logic
 - Q: What are the photo upload requirements and constraints? → A: JPEG, PNG, GIF • Max 20MB
-- Q: What validation rules should apply to phone numbers and email addresses? → A: Phone: min 7 digits, any format accepted; Email: must contain @ and dot, minimal validation
+- Q: What validation rules should apply to phone numbers and email addresses? → A: Same as Report Lost Pet - Phone: regex /\d/ (at least one digit); Email: regex /^(?=.{1,254}$)[^\s@]+@[^\s@]+\.[^\s@]+$/ (RFC 5322 basic)
 - Q: How should users specify the "found location" where the animal was discovered? → A: Current location button + text inputs
 - Q: Who should be able to view submitted found pet reports? → A: Public - all app users can view all found pet reports
 
