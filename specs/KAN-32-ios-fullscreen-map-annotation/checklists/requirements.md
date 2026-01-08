@@ -46,8 +46,12 @@
 - Assumptions section appropriately documents technical constraints (iOS 18+, MapKit) without leaking into requirements
 
 **Scope Changes** (2026-01-08):
-- Removed tappable phone/email interaction requirements (FR-010, FR-011)
-- Removed success criteria for initiating calls/emails (SC-002)
+- Removed tappable phone/email interaction requirements (original FR-010, FR-011)
+- Removed success criteria for initiating calls/emails (original SC-002)
 - Contact fields will display as text only; tappable interaction deferred to future enhancement
-- This reduces scope while maintaining core value proposition (viewing pet details)
+- Simplified missing data handling: fields with no data are omitted entirely (no placeholder messages)
+  - Removed "No additional description provided." message (original FR-006)
+  - Removed "Contact information not available" message (original FR-009)
+  - Empty fields (description, phone, email) are simply not rendered
+- This reduces scope and simplifies UI while maintaining core value proposition (viewing pet details)
 

@@ -54,10 +54,9 @@ A user wants to see annotation details even when some information is missing or 
 **Acceptance Scenarios**:
 
 1. **Given** an announcement has no pet photo, **When** the annotation is displayed, **Then** a placeholder image is shown instead of an empty space
-2. **Given** an announcement has no description, **When** the annotation is displayed, **Then** the description field shows "No additional description provided."
+2. **Given** an announcement has no description, **When** the annotation is displayed, **Then** the description field is omitted from the display
 3. **Given** an announcement has no phone number, **When** the annotation is displayed, **Then** the phone field is omitted from the display
 4. **Given** an announcement has no email address, **When** the annotation is displayed, **Then** the email field is omitted from the display
-5. **Given** an announcement has neither phone nor email, **When** the annotation is displayed, **Then** a message "Contact information not available" is shown
 
 ---
 
@@ -89,22 +88,21 @@ A user wants to see annotation details even when some information is missing or 
   - Description text (14px, #444 color)
   - Status badge (rounded 12px, content-specific colors)
 - **FR-005**: When the pet photo is missing or fails to load, the annotation MUST display a placeholder image
-- **FR-006**: When the description is empty or null, the annotation MUST display "No additional description provided."
+- **FR-006**: When the description is empty or null, the annotation MUST omit the description field entirely
 - **FR-007**: When the phone number is missing, the annotation MUST omit the phone field entirely
 - **FR-008**: When the email address is missing, the annotation MUST omit the email field entirely
-- **FR-009**: When both phone and email are missing, the annotation MUST display "Contact information not available"
-- **FR-010**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
+- **FR-009**: The status badge MUST display the pet's current status (MISSING, FOUND, REUNITED) with appropriate colors:
   - MISSING: Orange background (#FF9500), white text
   - FOUND: Blue background (#155DFC), white text
   - REUNITED: Green background (#34C759), white text
-- **FR-011**: When the user taps elsewhere on the map, the annotation MUST dismiss
-- **FR-012**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
-- **FR-013**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
-- **FR-014**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
-- **FR-015**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
-- **FR-016**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
-- **FR-017**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
-- **FR-018**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
+- **FR-010**: When the user taps elsewhere on the map, the annotation MUST dismiss
+- **FR-011**: When the user taps the same pin while its annotation is visible, the annotation MUST dismiss (toggle behavior)
+- **FR-012**: When the user taps a different pin while an annotation is visible, the previous annotation MUST dismiss and the new annotation MUST appear
+- **FR-013**: When the user pans or zooms the map while an annotation is visible, the annotation MUST dismiss
+- **FR-014**: The annotation callout MUST position above the pin with a downward-pointing arrow by default
+- **FR-015**: If insufficient space exists above the pin, the annotation MUST position below the pin with an upward-pointing arrow
+- **FR-016**: Pet names exceeding the annotation width MUST truncate with ellipsis (...)
+- **FR-017**: The annotation MUST use MapKit's native annotation callout API (MKAnnotationView callout or custom annotation view)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -136,7 +134,7 @@ This specification builds upon KAN-32-ios-fullscreen-map-fetch-pins by adding in
 
 The annotation callout uses MapKit's native APIs for positioning and presentation. Custom styling (white card, shadow, pointer arrow, rounded corners) is achieved using custom annotation views or callout accessories.
 
-The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev) exactly: white background, rounded corners (12px), drop shadow, emoji prefixes for location/date/contact, blue "FOUND" badge, placeholder for missing description.
+The design matches the Figma mockup (https://www.figma.com/design/3jKkbGNFwMUgsejhr3XFvt/PetSpot-wireframes?node-id=1192-5893&m=dev) exactly: white background, rounded corners (12px), drop shadow, emoji prefixes for location/date/contact, blue "FOUND" badge. Fields with missing data (description, phone, email) are omitted entirely rather than showing placeholder text.
 
 Contact fields (phone, email) are displayed as text. Tappable interaction for initiating calls/emails may be added in a future enhancement.
 
@@ -148,7 +146,8 @@ Status badge colors are defined explicitly to ensure consistency across the app 
 
 - Q: Should the annotation be dismissible by tapping a close button, or by tapping elsewhere on the map? → A: Dismiss by tapping elsewhere on map or tapping the same pin again (toggle behavior). No explicit close button needed.
 - Q: Should very long descriptions be truncated or scrollable? → A: Descriptions can be displayed in full with reasonable height limit; if needed, display in scrollable container with max height constraint.
-- Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely if missing. If both are missing, show "Contact information not available".
+- Q: What should happen when description is missing? → A: Omit the field entirely. No placeholder messages shown.
+- Q: What should happen when contact information (phone/email) is missing? → A: Omit the field entirely. No placeholder messages shown.
 - Q: Should the annotation show the distance from user's current location? → A: Not in this spec. Focus on core annotation details. Distance could be added in future enhancement.
 - Q: Should users be able to share the announcement from the annotation? → A: Not in this spec. Share functionality could be added in future enhancement.
 - Q: Should phone/email be tappable to initiate calls/emails? → A: Not in this spec. Display as text only. Tappable interaction can be added later as enhancement.
