@@ -18,18 +18,20 @@ struct AnnotationCalloutView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Main card content with white background and shadow
+            // Main card content with white background
             cardContent
                 .background(Color.white)
                 .cornerRadius(12)
-                .shadow(color: .black.opacity(0.4), radius: 7, x: 0, y: 3)
             
             // Pointer arrow at bottom (FR-003, FR-013)
+            // Overlap slightly with card to hide gap, positioned above card shadow
             CalloutPointer()
                 .fill(Color.white)
                 .frame(width: 20, height: 10)
-                .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
+                .offset(y: -1)
         }
+        // Apply shadow to entire callout (card + pointer) for unified look
+        .shadow(color: .black.opacity(0.4), radius: 7, x: 0, y: 3)
         .accessibilityIdentifier(model.accessibilityId)
     }
     
