@@ -7,6 +7,14 @@
 **Jira Ticket**: KAN-34  
 **Input**: User description: "utwórz specyfikację tylko dla iOS o nazwie KAN-34-send-data-to-backend. Nie numeruj specki jak masz w skrypcie, nazwa dokładnie taka jak napisałem. Branch o takiej samej nazwie. W tej specyfikacji zrobimy wysyłanie danych na backend. Obecnie przy wysyłaniu zgłoszenia mamy zahardcodowany status na .active. Musimy mieć to pole modyfikowalne i w missing flow ustawić na .active a w found na .found. W found flow wysyłamy dane jakie mamy w state i backend je akceptuje, sprawdź czy nie jest tak, że coś mamy optional a backend wymaga, jak mamy jakieś dane których nie wysyłamy do backendu to spoko, nie jest to problemem"
 
+## Clarifications
+
+### Session 2026-01-09
+
+- Q: Where should the status decision live in iOS (higher layer) so Found vs Missing sends correct status? → A: Add `status` field to `CreateAnnouncementData`.
+- Q: Should iOS require at least one contact method, or require both email and phone? → A: Require both email and phone.
+- Q: Should submission be blocked when coordinates are missing? → A: Yes; user cannot reach submit without coordinates, so keep current implementation behavior.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Submit a Missing report to backend (Priority: P1)
@@ -45,7 +53,8 @@ As a user reporting a found pet, I want my report to be submitted to the backend
 
 - The submission payload includes an unknown field: backend rejects it; iOS must not send unknown fields.
 - The submission payload omits required fields (e.g., species, sex, last-seen date, coordinates, status): backend rejects it; iOS must prevent submission until required data is present.
-- Optional contact details: backend requires at least one contact method; iOS must ensure at least one is provided.
+- Coordinates missing: user cannot reach the submit action without valid coordinates, so this case is prevented by the flow UI/validation.
+- Contact details missing: iOS requires both email and phone; submission is blocked until both are provided.
 - Optional values present but malformed (e.g., non-digit microchip): backend rejects; iOS must enforce correct formats before submission.
 
 ## Requirements *(mandatory)*
@@ -58,6 +67,7 @@ As a user reporting a found pet, I want my report to be submitted to the backend
 - **FR-002**: The status MUST be configurable by the reporting flow (not hardcoded).
 - **FR-003**: When the user submits a report from the Missing flow, the status MUST represent “missing” (iOS domain: `.active`).
 - **FR-004**: When the user submits a report from the Found flow, the status MUST represent “found” (iOS domain: `.found`).
+- **FR-004a**: The iOS Domain model `CreateAnnouncementData` MUST include a `status` field so the reporting flow can set it before mapping to DTO/payload.
 
 #### Payload compatibility with backend validation
 
@@ -75,9 +85,10 @@ As a user reporting a found pet, I want my report to be submitted to the backend
   - Description
   - Microchip number (digits-only)
   - Reward
-- **FR-008**: The iOS app MUST ensure at least one contact method is included in the submission payload:
-  - Email and/or phone (at least one MUST be provided)
-- **FR-009**: The iOS app MUST NOT send invalid “empty” values for optional fields when a field is not provided (e.g., empty strings for email/phone that would fail backend validation).
+- **FR-008**: The iOS app MUST require both contact methods before submission:
+  - Email MUST be provided
+  - Phone MUST be provided
+- **FR-009**: The iOS app MUST NOT send invalid “empty” values for fields that are not provided (e.g., empty strings) that would fail backend validation.
 
 #### Found flow: “state vs payload”
 
