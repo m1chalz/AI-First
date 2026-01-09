@@ -139,5 +139,17 @@ final class MissingPetReportFlowStateTests: XCTestCase {
         // Then: managementPassword should be nil
         XCTAssertNil(sut.managementPassword)
     }
+    
+    // MARK: - Status Tests (KAN-34)
+    
+    func testStatus_whenAccessedFromMissingFlow_shouldReturnActive() {
+        // Given: MissingPetReportFlowState instance (created in setUp)
+        
+        // When: Accessing status property
+        let status = sut.status
+        
+        // Then: Should return .active (maps to "MISSING" in backend)
+        XCTAssertEqual(status, .active, "Missing flow status should be .active")
+    }
 }
 

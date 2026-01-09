@@ -7,6 +7,7 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
     var sut: AnnouncementSubmissionService!
     var fakeRepository: FakeAnnouncementRepository!
     var flowState: MissingPetReportFlowState!
+    var foundFlowState: FoundPetReportFlowState!
     var fakePhotoCache: PhotoAttachmentCacheFake!
     
     override func setUp() async throws {
@@ -15,12 +16,14 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         fakePhotoCache = PhotoAttachmentCacheFake()
         sut = AnnouncementSubmissionService(repository: fakeRepository)
         flowState = MissingPetReportFlowState(photoAttachmentCache: fakePhotoCache)
+        foundFlowState = FoundPetReportFlowState(photoAttachmentCache: fakePhotoCache)
     }
     
     override func tearDown() async throws {
         sut = nil
         fakeRepository = nil
         flowState = nil
+        foundFlowState = nil
         fakePhotoCache = nil
         try await super.tearDown()
     }
@@ -217,6 +220,34 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
         }
     }
     
+    // MARK: - Test: Status passthrough (KAN-34)
+    
+    func testSubmitAnnouncement_whenMissingFlow_shouldPassActiveStatus() async throws {
+        // Given: Valid MissingPetReportFlowState (status = .active)
+        setupValidFlowState()
+        
+        // When: Submit announcement
+        _ = try await sut.submitAnnouncement(flowState: flowState)
+        
+        // Then: Repository should receive .active status
+        XCTAssertTrue(fakeRepository.createAnnouncementCalled)
+        XCTAssertEqual(fakeRepository.lastCreateAnnouncementData?.status, .active,
+                       "Missing flow should pass .active status (maps to MISSING in backend)")
+    }
+    
+    func testSubmitAnnouncement_whenFoundFlow_shouldPassFoundStatus() async throws {
+        // Given: Valid FoundPetReportFlowState (status = .found)
+        setupValidFoundFlowState()
+        
+        // When: Submit announcement
+        _ = try await sut.submitAnnouncement(flowState: foundFlowState)
+        
+        // Then: Repository should receive .found status
+        XCTAssertTrue(fakeRepository.createAnnouncementCalled)
+        XCTAssertEqual(fakeRepository.lastCreateAnnouncementData?.status, .found,
+                       "Found flow should pass .found status (maps to FOUND in backend)")
+    }
+    
     // MARK: - Helpers
     
     private func setupValidFlowState() {
@@ -239,6 +270,30 @@ final class AnnouncementSubmissionServiceTests: XCTestCase {
             pixelHeight: 600,
             assetIdentifier: nil,
             cachedURL: URL(fileURLWithPath: "/tmp/test.jpg"),
+            savedAt: Date()
+        )
+    }
+    
+    private func setupValidFoundFlowState() {
+        foundFlowState.animalSpecies = .cat
+        foundFlowState.animalRace = "Siamese"
+        foundFlowState.animalGender = .female
+        foundFlowState.disappearanceDate = Date()
+        foundFlowState.contactDetails = OwnerContactDetails(
+            phone: "+48987654321",
+            email: "finder@example.com",
+            rewardDescription: nil
+        )
+        // Photo is required for submission
+        foundFlowState.photoAttachment = PhotoAttachmentMetadata(
+            id: UUID(),
+            fileName: "found_pet.jpg",
+            fileSizeBytes: 2048,
+            utiIdentifier: "public.jpeg",
+            pixelWidth: 1024,
+            pixelHeight: 768,
+            assetIdentifier: nil,
+            cachedURL: URL(fileURLWithPath: "/tmp/found_pet.jpg"),
             savedAt: Date()
         )
     }

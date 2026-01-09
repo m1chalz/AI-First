@@ -62,6 +62,13 @@ final class MissingPetReportFlowState: ObservableObject, PetReportFlowStateProto
     /// Nil before submission completes.
     @Published var managementPassword: String?
     
+    // MARK: - Status
+    
+    /// Returns .active status for Missing Pet flow (maps to "MISSING" in backend)
+    var status: AnnouncementStatus {
+        .active
+    }
+    
     // MARK: - Initialization
     
     init(photoAttachmentCache: PhotoAttachmentCacheProtocol) {

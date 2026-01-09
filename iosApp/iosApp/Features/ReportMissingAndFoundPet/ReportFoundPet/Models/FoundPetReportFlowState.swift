@@ -72,6 +72,13 @@ final class FoundPetReportFlowState: ObservableObject, PetReportFlowStateProtoco
     /// Nil before submission completes.
     @Published var managementPassword: String?
     
+    // MARK: - Status
+    
+    /// Returns .found status for Found Pet flow (maps to "FOUND" in backend)
+    var status: AnnouncementStatus {
+        .found
+    }
+    
     // MARK: - Initialization
     
     init(photoAttachmentCache: PhotoAttachmentCacheProtocol) {

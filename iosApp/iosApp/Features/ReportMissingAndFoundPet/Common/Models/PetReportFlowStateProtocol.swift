@@ -33,5 +33,10 @@ protocol PetReportFlowStateProtocol: AnyObject {
     // MARK: - Step 5: Submission Result
     
     var managementPassword: String? { get set }
+    
+    // MARK: - Status (determined by flow type)
+    
+    /// Status to be sent to backend: .active for Missing flow, .found for Found flow
+    var status: AnnouncementStatus { get }
 }
 

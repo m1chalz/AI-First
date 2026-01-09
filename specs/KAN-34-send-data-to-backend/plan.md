@@ -207,8 +207,8 @@ Based on detailed design, estimation remains at **1 SP** with increased confiden
 |-------|-----|------|------------|---------------|
 | Initial | 1 | 5.2 | ±50% | Gut feel from feature title |
 | After SPEC | 1 | 5.2 | ±30% | Status must depend on flow; backend schema is strict |
-| **After PLAN** | **1** | **5.2** | **±20%** | **6 source files + 2 test files; existing mapper pattern; no backend changes** |
-| After TASKS | — | — | ±15% | [Update when tasks.md complete] |
+| After PLAN | 1 | 5.2 | ±20% | 6 source files + 2 test files; existing mapper pattern; no backend changes |
+| **After TASKS** | **1** | **5.2** | **±15%** | **14 tasks completed: 7 code + 5 test + 2 polish. Actual effort ~1.5 days** |
 
 **Rationale**: Design confirmed this is a straightforward refactoring:
 - Adding one field to domain model

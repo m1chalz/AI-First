@@ -83,7 +83,8 @@ class AnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
             microchipNumber: flowState.chipNumber,
             petName: flowState.petName,
             description: flowState.animalAdditionalDescription,
-            reward: contactDetails.rewardDescription
+            reward: contactDetails.rewardDescription,
+            status: flowState.status
         )
     }
 }

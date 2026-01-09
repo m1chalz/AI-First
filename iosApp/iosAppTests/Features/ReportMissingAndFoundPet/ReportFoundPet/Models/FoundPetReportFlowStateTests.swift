@@ -139,5 +139,17 @@ final class FoundPetReportFlowStateTests: XCTestCase {
         // Then: managementPassword should be nil
         XCTAssertNil(sut.managementPassword)
     }
+    
+    // MARK: - Status Tests (KAN-34)
+    
+    func testStatus_whenAccessedFromFoundFlow_shouldReturnFound() {
+        // Given: FoundPetReportFlowState instance (created in setUp)
+        
+        // When: Accessing status property
+        let status = sut.status
+        
+        // Then: Should return .found (maps to "FOUND" in backend)
+        XCTAssertEqual(status, .found, "Found flow status should be .found")
+    }
 }
 
