@@ -56,8 +56,10 @@ struct MapPreviewView: View {
         ZStack {
             Map(initialPosition: .region(region), interactionModes: []) {
                 ForEach(pins) { pin in
-                    Marker("", coordinate: pin.clLocationCoordinate)
-                        .tint(.red)
+                    Annotation("", coordinate: pin.clLocationCoordinate, anchor: .bottom) {
+                        // Teardrop pin marker - red for missing, blue for found
+                        TeardropPin(mode: pin.displayMode)
+                    }
                 }
             }
             .disabled(true)
@@ -126,15 +128,18 @@ struct MapPreviewView: View {
             pins: [
                 MapPreviewView.PinModel(
                     id: "1",
-                    coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122)
+                    coordinate: Coordinate(latitude: 52.2297, longitude: 21.0122),
+                    status: .active
                 ),
                 MapPreviewView.PinModel(
                     id: "2",
-                    coordinate: Coordinate(latitude: 52.2350, longitude: 21.0200)
+                    coordinate: Coordinate(latitude: 52.2350, longitude: 21.0200),
+                    status: .found
                 ),
                 MapPreviewView.PinModel(
                     id: "3",
-                    coordinate: Coordinate(latitude: 52.2200, longitude: 21.0050)
+                    coordinate: Coordinate(latitude: 52.2200, longitude: 21.0050),
+                    status: .active
                 )
             ],
             onTap: { print("Map tapped") }

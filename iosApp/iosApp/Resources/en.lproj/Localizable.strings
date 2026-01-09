@@ -282,3 +282,11 @@
 "mapSection.title" = "Map View";
 "mapSection.legend.missing" = "Missing";
 "mapSection.legend.found" = "Found";
+
+/* MARK: - Fullscreen Map */
+
+"fullscreenMap.navigationTitle" = "Pet Locations";
+
+/* MARK: - Annotation Callout */
+
+"annotationCallout.unknownPet" = "Unknown Pet";

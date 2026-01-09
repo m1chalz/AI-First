@@ -282,3 +282,7 @@
 "mapSection.title" = "Mapa";
 "mapSection.legend.missing" = "Zaginione";
 "mapSection.legend.found" = "Znalezione";
+
+/* MARK: - Fullscreen Map */
+
+"fullscreenMap.navigationTitle" = "Lokalizacje zwierząt";

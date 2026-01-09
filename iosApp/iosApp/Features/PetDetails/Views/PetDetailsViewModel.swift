@@ -166,33 +166,17 @@ private extension PetDetailsViewModel {
         return formatted
     }
     
-    /// Formats date string from YYYY-MM-DD to MMM dd, yyyy format
+    /// Formats date string from YYYY-MM-DD to MMM dd, yyyy format.
+    /// Delegates to shared DateFormatting utility.
     func formatDate(_ dateString: String) -> String {
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let date = inputFormatter.date(from: dateString) else {
-            return dateString
-        }
-        
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "MMM dd, yyyy"
-        
-        return outputFormatter.string(from: date)
+        DateFormatting.formatDate(dateString)
     }
     
-    /// Formats coordinates with cardinal directions
+    /// Formats coordinates with cardinal directions.
+    /// Delegates to shared CoordinateFormatting utility.
     /// Format: "52.2297° N, 21.0122° E"
-    /// - Parameters:
-    ///   - latitude: Latitude coordinate
-    ///   - longitude: Longitude coordinate
-    /// - Returns: Formatted string with degrees and cardinal directions
     func formatCoordinates(latitude: Double, longitude: Double) -> String {
-        let latDirection = latitude >= 0 ? "N" : "S"
-        let lonDirection = longitude >= 0 ? "E" : "W"
-        let lat = abs(latitude)
-        let lon = abs(longitude)
-        return String(format: "%.4f° %@, %.4f° %@", lat, latDirection, lon, lonDirection)
+        CoordinateFormatting.formatCoordinates(latitude: latitude, longitude: longitude)
     }
     
     /// Returns gender symbol (Unicode character) for given gender
