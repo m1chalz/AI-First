@@ -36,11 +36,11 @@
 
 **Note**: Maps SDK, API key, and base components already configured from 067-android-landing-map-preview ✅
 
-- [ ] T001 Create feature directory structure at `composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/fullscreenmap/`
-- [ ] T002 [P] Create `ui/` subdirectory for composables
-- [ ] T003 [P] Create `presentation/mvi/` subdirectory for MVI artifacts
-- [ ] T004 [P] Create `presentation/viewmodels/` subdirectory for ViewModel
-- [ ] T005 Create test directory at `composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/fullscreenmap/`
+- [X] T001 Create feature directory structure at `composeApp/src/androidMain/kotlin/com/intive/aifirst/petspot/features/fullscreenmap/`
+- [X] T002 [P] Create `ui/` subdirectory for composables
+- [X] T003 [P] Create `presentation/mvi/` subdirectory for MVI artifacts
+- [X] T004 [P] Create `presentation/viewmodels/` subdirectory for ViewModel
+- [X] T005 Create test directory at `composeApp/src/androidUnitTest/kotlin/com/intive/aifirst/petspot/features/fullscreenmap/`
 
 ---
 
@@ -50,13 +50,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create `FullscreenMapUiState.kt` with immutable state data class in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapUiState.kt`
-- [ ] T007 [P] Create `FullscreenMapIntent.kt` with sealed interface in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapIntent.kt`
-- [ ] T008 [P] Create `FullscreenMapEffect.kt` with sealed interface in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapEffect.kt`
-- [ ] T009 Create `FullscreenMapReducer.kt` with pure reducer functions in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapReducer.kt`
-- [ ] T010 Create `FullscreenMapReducerTest.kt` with unit tests for all reducer functions in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapReducerTest.kt`
-- [ ] T011 Create `FakeGetNearbyAnimalsForMapUseCase.kt` test fake in `composeApp/src/androidUnitTest/.../features/fullscreenmap/fakes/FakeGetNearbyAnimalsForMapUseCase.kt`
-- [ ] T012 [P] Create `FakeLocationProvider.kt` test fake in `composeApp/src/androidUnitTest/.../features/fullscreenmap/fakes/FakeLocationProvider.kt`
+- [X] T006 Create `FullscreenMapUiState.kt` with immutable state data class in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapUiState.kt`
+- [X] T007 [P] Create `FullscreenMapIntent.kt` with sealed interface in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapIntent.kt`
+- [X] T008 [P] Create `FullscreenMapEffect.kt` with sealed interface in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapEffect.kt`
+- [X] T009 Create `FullscreenMapReducer.kt` with pure reducer functions in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/mvi/FullscreenMapReducer.kt`
+- [X] T010 Create `FullscreenMapReducerTest.kt` with unit tests for all reducer functions in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapReducerTest.kt`
+- [X] T011 Create `FakeGetNearbyAnimalsForMapUseCase.kt` test fake in `composeApp/src/androidUnitTest/.../features/fullscreenmap/fakes/FakeGetNearbyAnimalsForMapUseCase.kt`
+- [X] T012 [P] Create `FakeLocationProvider.kt` test fake in `composeApp/src/androidUnitTest/.../features/fullscreenmap/fakes/FakeLocationProvider.kt`
 
 **Checkpoint**: MVI contracts ready - user story implementation can now begin
 
@@ -70,27 +70,27 @@
 
 ### Tests for User Story 1 (MANDATORY) ✅
 
-- [ ] T013 [P] [US1] Unit test for back navigation in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapViewModelTest.kt` - test `OnBackPressed` intent emits `NavigateBack` effect
-- [ ] T014 [P] [US1] Unit test for initialization in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapViewModelTest.kt` - test `Initialize` intent sets initial state
+- [X] T013 [P] [US1] Unit test for back navigation in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapViewModelTest.kt` - test `OnBackPressed` intent emits `NavigateBack` effect
+- [X] T014 [P] [US1] Unit test for initialization in `composeApp/src/androidUnitTest/.../features/fullscreenmap/presentation/FullscreenMapViewModelTest.kt` - test `Initialize` intent sets initial state
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Create `FullscreenMapViewModel.kt` skeleton with state/effects flows and `dispatchIntent()` in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/viewmodels/FullscreenMapViewModel.kt`
-- [ ] T016 [US1] Implement `Initialize` and `OnBackPressed` intent handling in ViewModel
-- [ ] T017 [US1] Create `FullscreenMapContent.kt` stateless composable with header bar (back arrow + title) and legend in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapContent.kt`
-- [ ] T018 [US1] Add `TopAppBar` with testTag (`fullscreenMap.header`), back button (`fullscreenMap.backButton`) and title (`fullscreenMap.title`) to FullscreenMapContent
-- [ ] T019 [US1] Import and add `MapPreviewLegend` component with testTag (`fullscreenMap.legend`) to FullscreenMapContent
-- [ ] T020 [US1] Add `GoogleMap` composable container with testTag (`fullscreenMap.container`) to FullscreenMapContent
-- [ ] T021 [US1] Create `FullscreenMapScreen.kt` state host composable in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapScreen.kt`
-- [ ] T022 [US1] Wire `collectAsStateWithLifecycle()` and effect collection in FullscreenMapScreen
-- [ ] T023 [US1] Add `BackHandler` for system back button support in FullscreenMapScreen
-- [ ] T024 [US1] Register `FullscreenMapViewModel` in `composeApp/src/androidMain/.../di/ViewModelModule.kt`
-- [ ] T025 [US1] Add navigation route `"fullscreenMap"` to NavGraph in `composeApp/src/androidMain/.../navigation/`
-- [ ] T026 [US1] Wire navigation from map preview tap to fullscreen map route (update landing page preview click handler)
-- [ ] T027 [P] [US1] Create E2E feature file `fullscreen-map.feature` in `e2e-tests/java/src/test/resources/features/mobile/fullscreen-map.feature`
-- [ ] T028 [P] [US1] Create Screen Object `FullscreenMapScreen.java` in `e2e-tests/java/src/test/java/.../screens/FullscreenMapScreen.java`
-- [ ] T029 [US1] Add E2E scenario "User opens fullscreen map from preview" in feature file
-- [ ] T030 [US1] Add E2E scenario "User returns to landing page via back button" in feature file
+- [X] T015 [US1] Create `FullscreenMapViewModel.kt` skeleton with state/effects flows and `dispatchIntent()` in `composeApp/src/androidMain/.../features/fullscreenmap/presentation/viewmodels/FullscreenMapViewModel.kt`
+- [X] T016 [US1] Implement `Initialize` and `OnBackPressed` intent handling in ViewModel
+- [X] T017 [US1] Create `FullscreenMapContent.kt` stateless composable with header bar (back arrow + title) and legend in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapContent.kt`
+- [X] T018 [US1] Add `TopAppBar` with testTag (`fullscreenMap.header`), back button (`fullscreenMap.backButton`) and title (`fullscreenMap.title`) to FullscreenMapContent
+- [X] T019 [US1] Import and add `MapPreviewLegend` component with testTag (`fullscreenMap.legend`) to FullscreenMapContent
+- [X] T020 [US1] Add `GoogleMap` composable container with testTag (`fullscreenMap.container`) to FullscreenMapContent
+- [X] T021 [US1] Create `FullscreenMapScreen.kt` state host composable in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapScreen.kt`
+- [X] T022 [US1] Wire `collectAsStateWithLifecycle()` and effect collection in FullscreenMapScreen
+- [X] T023 [US1] Add `BackHandler` for system back button support in FullscreenMapScreen
+- [X] T024 [US1] Register `FullscreenMapViewModel` in `composeApp/src/androidMain/.../di/ViewModelModule.kt`
+- [X] T025 [US1] Add navigation route `"fullscreenMap"` to NavGraph in `composeApp/src/androidMain/.../navigation/`
+- [X] T026 [US1] Wire navigation from map preview tap to fullscreen map route (update landing page preview click handler)
+- [X] T027 [P] [US1] Create E2E feature file `fullscreen-map.feature` in `e2e-tests/java/src/test/resources/features/mobile/fullscreen-map.feature`
+- [X] T028 [P] [US1] Create Screen Object `FullscreenMapScreen.java` in `e2e-tests/java/src/test/java/.../screens/FullscreenMapScreen.java`
+- [X] T029 [US1] Add E2E scenario "User opens fullscreen map from preview" in feature file
+- [X] T030 [US1] Add E2E scenario "User returns to landing page via back button" in feature file
 
 **Checkpoint**: User Story 1 complete - fullscreen map opens/closes, no pins yet
 
@@ -104,17 +104,17 @@
 
 ### Tests for User Story 2 (MANDATORY) ✅
 
-- [ ] T031 [P] [US2] Unit test for viewport changed intent in `FullscreenMapViewModelTest.kt` - test `OnViewportChanged` triggers pin loading
+- [X] T031 [P] [US2] Unit test for viewport changed intent in `FullscreenMapViewModelTest.kt` - test `OnViewportChanged` triggers pin loading
 
 ### Implementation for User Story 2
 
-- [ ] T032 [US2] Add `CameraPositionState` handling in FullscreenMapScreen with `LaunchedEffect` for camera idle detection
-- [ ] T033 [US2] Implement `OnViewportChanged` intent dispatch when camera stops moving
-- [ ] T034 [US2] Verify GoogleMap composable supports pinch-to-zoom (default behavior) - no code needed, add acceptance note
-- [ ] T035 [US2] Verify GoogleMap composable supports pan/drag (default behavior) - no code needed, add acceptance note
-- [ ] T036 [US2] Verify GoogleMap composable supports double-tap zoom (default behavior) - no code needed, add acceptance note
-- [ ] T037 [P] [US2] Add E2E scenario "User zooms in using pinch gesture" in feature file
-- [ ] T038 [P] [US2] Add E2E scenario "User pans the map" in feature file
+- [X] T032 [US2] Add `CameraPositionState` handling in FullscreenMapScreen with `LaunchedEffect` for camera idle detection
+- [X] T033 [US2] Implement `OnViewportChanged` intent dispatch when camera stops moving
+- [X] T034 [US2] Verify GoogleMap composable supports pinch-to-zoom (default behavior) - no code needed, add acceptance note
+- [X] T035 [US2] Verify GoogleMap composable supports pan/drag (default behavior) - no code needed, add acceptance note
+- [X] T036 [US2] Verify GoogleMap composable supports double-tap zoom (default behavior) - no code needed, add acceptance note
+- [X] T037 [P] [US2] Add E2E scenario "User zooms in using pinch gesture" in feature file
+- [X] T038 [P] [US2] Add E2E scenario "User pans the map" in feature file
 
 **Checkpoint**: User Story 2 complete - map is fully navigable
 
@@ -128,27 +128,27 @@
 
 ### Tests for User Story 3 (MANDATORY) ✅
 
-- [ ] T039 [P] [US3] Unit test for loading state in `FullscreenMapViewModelTest.kt` - test loading indicator shown while fetching
-- [ ] T040 [P] [US3] Unit test for success state in `FullscreenMapViewModelTest.kt` - test animals loaded and displayed
-- [ ] T041 [P] [US3] Unit test for error state in `FullscreenMapViewModelTest.kt` - test error message shown on failure
-- [ ] T042 [P] [US3] Unit test for retry in `FullscreenMapViewModelTest.kt` - test `OnRetryTapped` re-fetches pins
+- [X] T039 [P] [US3] Unit test for loading state in `FullscreenMapViewModelTest.kt` - test loading indicator shown while fetching
+- [X] T040 [P] [US3] Unit test for success state in `FullscreenMapViewModelTest.kt` - test animals loaded and displayed
+- [X] T041 [P] [US3] Unit test for error state in `FullscreenMapViewModelTest.kt` - test error message shown on failure
+- [X] T042 [P] [US3] Unit test for retry in `FullscreenMapViewModelTest.kt` - test `OnRetryTapped` re-fetches pins
 
 ### Implementation for User Story 3
 
-- [ ] T043 [US3] Implement pin loading logic in ViewModel using `GetNearbyAnimalsForMapUseCase` (reuse existing or create wrapper)
-- [ ] T044 [US3] Add loading state handling with `reduceAnimalsLoading` reducer
-- [ ] T045 [US3] Add success state handling with `reduceAnimalsSuccess` reducer
-- [ ] T046 [US3] Add error state handling with `reduceAnimalsError` reducer
-- [ ] T047 [US3] Implement `OnRetryTapped` intent handling in ViewModel
-- [ ] T048 [US3] Add `Marker` composables in GoogleMap for each `animalsWithLocation` with testTag (`fullscreenMap.pin.${animalId}`) in FullscreenMapContent
-- [ ] T049 [US3] Set marker color based on `AnimalStatus` (RED for MISSING, BLUE for FOUND) using `BitmapDescriptorFactory`
-- [ ] T050 [US3] Add loading indicator (`CircularProgressIndicator`) overlay with testTag (`fullscreenMap.loading`) in FullscreenMapContent
-- [ ] T051 [US3] Create `ErrorCard` composable (or reuse existing) with error message and retry button in FullscreenMapContent
-- [ ] T052 [US3] Add testTags to error state (`fullscreenMap.error`) and retry button (`fullscreenMap.retryButton`)
-- [ ] T053 [US3] Register use case in `DomainModule.kt` if new use case created
-- [ ] T054 [P] [US3] Add E2E scenario "User sees red pins for missing pets" in feature file
-- [ ] T055 [P] [US3] Add E2E scenario "User sees blue pins for found pets" in feature file
-- [ ] T056 [P] [US3] Add E2E scenario "Pins update when user pans map" in feature file
+- [X] T043 [US3] Implement pin loading logic in ViewModel using `GetNearbyAnimalsForMapUseCase` (reuse existing or create wrapper)
+- [X] T044 [US3] Add loading state handling with `reduceAnimalsLoading` reducer
+- [X] T045 [US3] Add success state handling with `reduceAnimalsSuccess` reducer
+- [X] T046 [US3] Add error state handling with `reduceAnimalsError` reducer
+- [X] T047 [US3] Implement `OnRetryTapped` intent handling in ViewModel
+- [X] T048 [US3] Add `Marker` composables in GoogleMap for each `animalsWithLocation` with testTag (`fullscreenMap.pin.${animalId}`) in FullscreenMapContent
+- [X] T049 [US3] Set marker color based on `AnimalStatus` (RED for MISSING, BLUE for FOUND) using `BitmapDescriptorFactory`
+- [X] T050 [US3] Add loading indicator (`CircularProgressIndicator`) overlay with testTag (`fullscreenMap.loading`) in FullscreenMapContent
+- [X] T051 [US3] Create `ErrorCard` composable (or reuse existing) with error message and retry button in FullscreenMapContent
+- [X] T052 [US3] Add testTags to error state (`fullscreenMap.error`) and retry button (`fullscreenMap.retryButton`)
+- [X] T053 [US3] Register use case in `DomainModule.kt` if new use case created
+- [X] T054 [P] [US3] Add E2E scenario "User sees red pins for missing pets" in feature file
+- [X] T055 [P] [US3] Add E2E scenario "User sees blue pins for found pets" in feature file
+- [X] T056 [P] [US3] Add E2E scenario "Pins update when user pans map" in feature file
 
 **Checkpoint**: User Story 3 complete - pins display correctly with loading/error states
 
@@ -162,26 +162,26 @@
 
 ### Tests for User Story 4 (MANDATORY) ✅
 
-- [ ] T057 [P] [US4] Unit test for pin tap in `FullscreenMapViewModelTest.kt` - test `OnAnimalTapped` sets `selectedAnimal`
-- [ ] T058 [P] [US4] Unit test for popup dismiss in `FullscreenMapViewModelTest.kt` - test `OnPopupDismissed` clears `selectedAnimal`
-- [ ] T059 [P] [US4] Unit test for tap different pin in `FullscreenMapViewModelTest.kt` - test tapping new pin updates `selectedAnimal`
+- [X] T057 [P] [US4] Unit test for pin tap in `FullscreenMapViewModelTest.kt` - test `OnAnimalTapped` sets `selectedAnimal`
+- [X] T058 [P] [US4] Unit test for popup dismiss in `FullscreenMapViewModelTest.kt` - test `OnPopupDismissed` clears `selectedAnimal`
+- [X] T059 [P] [US4] Unit test for tap different pin in `FullscreenMapViewModelTest.kt` - test tapping new pin updates `selectedAnimal`
 
 ### Implementation for User Story 4
 
-- [ ] T060 [US4] Add `reduceAnimalSelected` and `reducePopupDismissed` calls in ViewModel intent handling
-- [ ] T061 [US4] Implement `OnAnimalTapped` intent - find animal by ID and update state
-- [ ] T062 [US4] Implement `OnPopupDismissed` intent - clear selectedAnimal
-- [ ] T063 [US4] Add `onClick` handler to each `Marker` to dispatch `OnAnimalTapped` intent
-- [ ] T064 [US4] Create `AnimalDetailsBottomSheet.kt` composable (or reuse `AnimalDetailsContent`) in `composeApp/src/androidMain/.../features/fullscreenmap/ui/components/AnimalDetailsBottomSheet.kt`
-- [ ] T065 [US4] Add pet photo (with placeholder on error), name, species, last-seen date, description to bottom sheet
-- [ ] T066 [US4] Add owner contact info (phone/email as plain text, non-tappable) to bottom sheet
-- [ ] T067 [US4] Add `ModalBottomSheet` wrapper in FullscreenMapContent when `selectedAnimal != null`
-- [ ] T068 [US4] Wire `onDismissRequest` to dispatch `OnPopupDismissed` intent
-- [ ] T069 [US4] Add testTag (`fullscreenMap.petPopup`) to bottom sheet content
-- [ ] T069a [US4] Add close/dismiss icon button with testTag (`fullscreenMap.petPopup.close`) to bottom sheet header
-- [ ] T070 [P] [US4] Add E2E scenario "User views pet details by tapping pin" in feature file
-- [ ] T071 [P] [US4] Add E2E scenario "User dismisses popup by tapping outside" in feature file
-- [ ] T072 [P] [US4] Add E2E scenario "User taps different pin to update popup" in feature file
+- [X] T060 [US4] Add `reduceAnimalSelected` and `reducePopupDismissed` calls in ViewModel intent handling
+- [X] T061 [US4] Implement `OnAnimalTapped` intent - find animal by ID and update state
+- [X] T062 [US4] Implement `OnPopupDismissed` intent - clear selectedAnimal
+- [X] T063 [US4] Add `onClick` handler to each `Marker` to dispatch `OnAnimalTapped` intent
+- [X] T064 [US4] Create `AnimalDetailsBottomSheet.kt` composable (or reuse `AnimalDetailsContent`) in `composeApp/src/androidMain/.../features/fullscreenmap/ui/components/AnimalDetailsBottomSheet.kt`
+- [X] T065 [US4] Add pet photo (with placeholder on error), name, species, last-seen date, description to bottom sheet
+- [X] T066 [US4] Add owner contact info (phone/email as plain text, non-tappable) to bottom sheet
+- [X] T067 [US4] Add `ModalBottomSheet` wrapper in FullscreenMapContent when `selectedAnimal != null`
+- [X] T068 [US4] Wire `onDismissRequest` to dispatch `OnPopupDismissed` intent
+- [X] T069 [US4] Add testTag (`fullscreenMap.petPopup`) to bottom sheet content
+- [X] T069a [US4] Add close/dismiss icon button with testTag (`fullscreenMap.petPopup.close`) to bottom sheet header
+- [X] T070 [P] [US4] Add E2E scenario "User views pet details by tapping pin" in feature file
+- [X] T071 [P] [US4] Add E2E scenario "User dismisses popup by tapping outside" in feature file
+- [X] T072 [P] [US4] Add E2E scenario "User taps different pin to update popup" in feature file
 
 **Checkpoint**: User Story 4 complete - pet details popup works
 
@@ -191,13 +191,13 @@
 
 **Purpose**: Previews, documentation, final verification
 
-- [ ] T073 Create `FullscreenMapStateProvider.kt` with preview states (Initial, Loading, Success with pins, Error, Popup visible) in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapStateProvider.kt`
-- [ ] T074 Add `@Preview` function with `@PreviewParameter` to `FullscreenMapContent.kt`
-- [ ] T075 [P] Add KDoc to `FullscreenMapViewModel` public methods
-- [ ] T076 [P] Add KDoc to `FullscreenMapReducer` functions
-- [ ] T077 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for fullscreenmap package
+- [X] T073 Create `FullscreenMapStateProvider.kt` with preview states (Initial, Loading, Success with pins, Error, Popup visible) in `composeApp/src/androidMain/.../features/fullscreenmap/ui/FullscreenMapStateProvider.kt`
+- [X] T074 Add `@Preview` function with `@PreviewParameter` to `FullscreenMapContent.kt`
+- [X] T075 [P] Add KDoc to `FullscreenMapViewModel` public methods
+- [X] T076 [P] Add KDoc to `FullscreenMapReducer` functions
+- [X] T077 Run `./gradlew :composeApp:testDebugUnitTest koverHtmlReport` and verify 80% coverage for fullscreenmap package
 - [ ] T078 Run E2E tests with `mvn test -Dtest=AndroidTestRunner` from `e2e-tests/java/` and verify all scenarios pass
-- [ ] T079 Update `spec.md` estimation table with final task count and days
+- [X] T079 Update `spec.md` estimation table with final task count and days
 
 ---
 

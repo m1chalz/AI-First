@@ -38,6 +38,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.intive.aifirst.petspot.domain.models.TabDestination
 import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
+import com.intive.aifirst.petspot.features.fullscreenmap.ui.FullscreenMapScreen
 import com.intive.aifirst.petspot.features.home.ui.HomeScreen
 import com.intive.aifirst.petspot.features.petdetails.ui.PetDetailsScreen
 import com.intive.aifirst.petspot.features.reportmissing.ui.reportMissingNavGraph
@@ -157,6 +158,11 @@ fun MainScaffold(modifier: Modifier = Modifier) {
                 composable<HomeRoute.Root> {
                     HomeScreen(navController = navController)
                 }
+
+                // Fullscreen Map (navigated from map preview)
+                composable<NavRoute.FullscreenMap> {
+                    FullscreenMapScreen(navController = navController)
+                }
             }
 
             // Lost Pet Tab Navigation Graph
@@ -275,7 +281,11 @@ private fun isCurrentTabSelected(
     if (currentRoute == null) return tab == TabDestination.HOME
 
     return when (tab) {
-        TabDestination.HOME -> currentRoute.contains("HomeRoute") || currentRoute.contains("TabRoute.Home")
+        TabDestination.HOME -> {
+            currentRoute.contains("HomeRoute") ||
+                currentRoute.contains("TabRoute.Home") ||
+                currentRoute.contains("FullscreenMap")
+        }
         TabDestination.LOST_PET -> {
             currentRoute.contains("LostPetRoute") ||
                 currentRoute.contains("TabRoute.LostPet") ||
