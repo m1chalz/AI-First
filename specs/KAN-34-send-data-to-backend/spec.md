@@ -135,7 +135,7 @@ As a user reporting a found pet, I want my report to be submitted to the backend
 |-------|-----|------|------------|---------------|
 | Initial | 1 | 5.2 | ±50% | Gut feel from feature title - iOS-only request payload adjustment |
 | After SPEC | 1 | 5.2 | ±30% | Status must depend on flow; backend schema is strict and rejects unknown fields |
-| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After PLAN | 1 | 5.2 | ±20% | 6 source files + 2 test files; existing mapper pattern; no backend changes |
 | After TASKS | — | — | ±15% | [Update when tasks.md complete] |
 
 ### Per-Platform Breakdown (After TASKS)
