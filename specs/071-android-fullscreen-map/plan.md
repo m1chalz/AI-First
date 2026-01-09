@@ -34,7 +34,7 @@ Implement a fullscreen interactive map screen for Android that opens when users 
 
 - [x] **Android MVI Architecture**: Android features follow the mandated Compose MVI loop
   - ✅ Single `StateFlow<FullscreenMapUiState>` source of truth with immutable data class
-  - ✅ Sealed `FullscreenMapIntent` (LoadPins, SelectPin, DismissPopup, RetryLoad, NavigateBack)
+  - ✅ Sealed `FullscreenMapIntent` (Initialize, OnViewportChanged, OnAnimalTapped, OnPopupDismissed, OnRetryTapped, OnBackPressed)
   - ✅ Sealed `FullscreenMapEffect` (NavigateBack)
   - ✅ Reducers as pure functions, unit-tested
   - ✅ Navigation via Jetpack Navigation Component

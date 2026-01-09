@@ -269,17 +269,17 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 | Initial     | 5  | 26   | ±50%       | Interactive map with pop-ups           |
 | After SPEC  | 5  | 26   | ±30%       | Scope aligned with 066 base spec       |
 | After PLAN  | 5  | 26   | ±20%       | MVI pattern, maps-compose, no backend changes |
-| After TASKS | —  | —    | ±15%       | [Update when tasks.md complete]        |
+| After TASKS | 5  | 2-3  | ±15%       | 80 tasks, ~11 hours implementation, reuses existing components |
 
 ### Per-Platform Breakdown (After TASKS)
 
 | Platform    | Tasks | Days | Notes                    |
 | ----------- | ----- | ---- | ------------------------ |
-| Backend     | —     | —    | Existing API (no change) |
-| iOS         | —     | —    | N/A (Android only spec)  |
-| Android     | —     | —    | [Fill after tasks.md]    |
-| Web         | —     | —    | N/A (Android only spec)  |
-| **Total**   |       | **—**|                          |
+| Backend     | 0     | 0    | Existing API (no change) |
+| iOS         | 0     | 0    | N/A (Android only spec)  |
+| Android     | 80    | 2-3  | MVI + Compose + Maps SDK |
+| Web         | 0     | 0    | N/A (Android only spec)  |
+| **Total**   | 80    | **2-3** |                       |
 
 ### Variance Tracking
 
