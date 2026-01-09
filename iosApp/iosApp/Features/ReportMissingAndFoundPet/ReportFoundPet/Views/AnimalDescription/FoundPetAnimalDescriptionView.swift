@@ -142,15 +142,17 @@ struct FoundPetAnimalDescriptionView: View {
                 .foregroundColor(Color(hex: "#364153"))
             
             TextField(
-                L10n.ReportFoundPet.PetDetails.collarDataPlaceholder,
-                text: Binding(
-                    get: { viewModel.formattedCollarData },
-                    set: { viewModel.updateCollarData($0) }
-                )
+                "",
+                text: $viewModel.collarData,
+                prompt: Text(L10n.ReportFoundPet.PetDetails.collarDataPlaceholder)
+                    .foregroundColor(Color(hex: "#0A0A0A").opacity(0.5))
             )
             .font(.custom("Hind-Regular", size: 16))
             .foregroundColor(Color(hex: "#364153"))
             .keyboardType(.numberPad)
+            .textContentType(.oneTimeCode)
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(Color.white)
@@ -159,6 +161,9 @@ struct FoundPetAnimalDescriptionView: View {
                     .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
             )
             .accessibilityIdentifier("reportFoundPet.petDetails.collarData.input")
+            .onChange(of: viewModel.collarData) { _, newValue in
+                viewModel.formatCollarData(newValue)
+            }
         }
     }
 }

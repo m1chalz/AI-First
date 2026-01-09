@@ -29,8 +29,8 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
     /// Additional description text (optional, max 500 characters)
     @Published var additionalDescription: String = ""
     
-    /// Collar data / microchip number (optional, digits only, max 15)
-    /// Stored as digits-only string (no dashes)
+    /// Collar data / microchip number (optional, max 15 digits)
+    /// Stored as formatted string with dashes (00000-00000-00000)
     @Published var collarData: String = ""
     
     // MARK: - Published Properties (Validation Errors)
@@ -99,17 +99,10 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
             self.additionalDescription = existingDesc
         }
         
-        // Load collar data (microchip) from flow state
+        // Load collar data (microchip) from flow state - format for display
         if let existingChip = flowState.chipNumber {
-            self.collarData = existingChip
+            self.collarData = MicrochipNumberFormatter.format(existingChip)
         }
-    }
-    
-    // MARK: - Computed Properties
-    
-    /// Formatted collar data for display (00000-00000-00000)
-    var formattedCollarData: String {
-        MicrochipNumberFormatter.format(collarData)
     }
     
     // MARK: - Computed Properties (Component Models)
@@ -189,24 +182,13 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         return "\(additionalDescription.count)/500"
     }
     
-    /// Model for collar data text field (optional, digits only)
-    var collarDataTextFieldModel: ValidatedTextField.Model {
-        ValidatedTextField.Model(
-            label: L10n.ReportFoundPet.PetDetails.collarDataLabel,
-            placeholder: L10n.ReportFoundPet.PetDetails.collarDataPlaceholder,
-            errorMessage: nil, // Collar data is optional - no validation errors
-            isDisabled: false,
-            keyboardType: .numberPad,
-            accessibilityID: "reportFoundPet.petDetails.collarData.input"
-        )
-    }
-    
     // MARK: - User Actions
     
-    /// Updates collar data with digit filtering and 15-digit limit
-    func updateCollarData(_ newValue: String) {
-        let digits = MicrochipNumberFormatter.extractDigits(newValue)
-        collarData = String(digits.prefix(MicrochipNumberFormatter.maxDigits))
+    /// Formats collar data input and updates the published property
+    func formatCollarData(_ input: String) {
+        let formatted = MicrochipNumberFormatter.format(input)
+        guard formatted != collarData else { return }
+        collarData = formatted
     }
     
     /// Called when species selection changes
@@ -404,8 +386,9 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
         flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
         
-        // Collar data (microchip) - store digits-only
-        flowState.chipNumber = collarData.isEmpty ? nil : collarData
+        // Collar data (microchip) - extract digits before storing
+        let collarDigits = MicrochipNumberFormatter.extractDigits(collarData)
+        flowState.chipNumber = collarDigits.isEmpty ? nil : collarDigits
     }
 
     deinit {
