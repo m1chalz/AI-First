@@ -8,6 +8,16 @@
 **Design**: N/A (temporary scaffolding; reuse existing Missing Pet flow UI patterns)  
 **Input**: User description: "utwórz specyfikację tylko dla iOS o nazwie KAN-34-ios-prepare-found-flow-as-missing-copy. Nie numeruj specki jak masz w skrypcie, nazwa dokładnie taka jak napisałem. Branch o takiej samej nazwie. W tej specyfikacji przygotujemy strukturę projektu pod feature raportowania znalezionego zwierzęcia (069-report-found-pet). Wewnątrz katalogu ReportMissingAndFoundPet stwórzmy katalog ReportFoundPet. Zawartość katalogu powinna być kopią katalogu ReportMissingPet, ale wszystkie klasy wewnątrz powinny mieć zmienione nazwy na prefix FoundPet* zamiast MissingPet*. Analogicznie dla testów. Jest to rozwiązanie przejściowe, flow będziemy modyfikować później, więc cały kontent widoków zostaje bez zmian Na announcementListView stwórzmy przycisk Report Found Animal uruchamiający flow. Część implementacji pod to powinna być już przygotowana."
 
+## Clarifications
+
+### Session 2026-01-09
+
+- Q: Where should the “Report Found Animal” entry point be placed on announcements list? → A: Enable the existing secondary floating action button above the Missing button (`style: .secondary`) with `accessibilityIdentifier` `animalList.reportFoundButton`.
+- Q: How should the Report Found Animal flow be presented? → A: Present it modally as `.fullScreen` with its own `UINavigationController` (mirror Missing flow behavior).
+- Q: What should happen to announcements list after successful completion of the Found flow? → A: Refresh announcements list (same as Missing flow), using a callback from Found flow to invoke `requestToRefreshData()` on `AnnouncementListViewModel`.
+- Q: Should the Found flow actually submit an announcement in this iteration? → A: Yes - it should submit using the same submission logic as the Missing flow (scaffolding copy).
+- Q: Should `accessibilityIdentifier` values inside the Found flow be renamed to Found equivalents? → A: Yes - use `reportFoundPet.*` / `foundPet.*` identifiers instead of `reportMissingPet.*` / `missingPet.*`.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Enter “Report Found Animal” flow from announcement list (Priority: P1)
@@ -20,9 +30,10 @@ As a user who found an animal, I want to start a “Report Found Animal” flow 
 
 **Acceptance Scenarios**:
 
-1. **Given** I am on the announcements list screen, **When** I tap “Report Found Animal”, **Then** the app starts the Report Found Animal flow and shows the first screen.
+1. **Given** I am on the announcements list screen, **When** I tap “Report Found Animal”, **Then** the app presents the Report Found Animal flow modally (full-screen) and shows the first screen.
 2. **Given** I am in the Report Found Animal flow, **When** I navigate through steps, **Then** the content and behavior matches the current Missing Pet flow (temporary copy, no copy/content changes in this iteration).
 3. **Given** I am in the Report Found Animal flow, **When** I use back navigation from the first screen, **Then** I return to the announcements list screen.
+4. **Given** I successfully complete the Report Found Animal flow, **When** I return to the announcements list, **Then** the announcements list refresh is triggered (same behavior as Missing flow completion).
 
 ---
 
@@ -56,11 +67,16 @@ As a user reporting a missing pet, I want the existing “Report Missing Animal�
 - **FR-003**: All types inside `ReportFoundPet/` MUST be renamed to use the `FoundPet*` prefix instead of `MissingPet*`.
 - **FR-004**: All corresponding unit tests MUST be copied and renamed analogously (types and file names) to use the `FoundPet*` prefix.
 - **FR-005**: The UI content (texts, layout, components) of the copied found-pet views MUST remain unchanged in this iteration (copy-only; future changes are out of scope).
-- **FR-006**: Announcements list screen MUST include a new button labeled “Report Found Animal”.
-- **FR-007**: Tapping “Report Found Animal” MUST start the Report Found Animal flow.
-- **FR-008**: Existing “Report Missing Animal” entry point MUST remain intact and unchanged.
-- **FR-009**: The iOS app MUST compile successfully after all changes.
-- **FR-010**: All iOS unit tests MUST pass after all changes.
+- **FR-006**: Announcements list screen MUST include a new secondary floating action button labeled “Report Found Animal” (above the existing Missing button), matching existing `FloatingActionButton` patterns.
+- **FR-007**: The “Report Found Animal” button MUST have `accessibilityIdentifier` `animalList.reportFoundButton`.
+- **FR-008**: Tapping “Report Found Animal” MUST start the Report Found Animal flow.
+- **FR-009**: The Report Found Animal flow MUST be presented modally as `.fullScreen` using its own `UINavigationController` (same navigation pattern as Missing flow).
+- **FR-010**: Existing “Report Missing Animal” entry point MUST remain intact and unchanged.
+- **FR-011**: On successful completion of the Found flow, the announcements list MUST trigger a refresh (same callback pattern as Missing flow: coordinator receives `onReportSent` and calls `AnnouncementListViewModel.requestToRefreshData()`).
+- **FR-012**: The Found flow MUST keep the same submission behavior as the Missing flow in this iteration (same service call and payload shape; differentiating Found vs Missing is out of scope).
+- **FR-013**: All `accessibilityIdentifier` values inside the Found flow MUST be renamed to Found equivalents (e.g., `reportFoundPet.*` / `foundPet.*`) to avoid collisions and ambiguity with Missing flow identifiers.
+- **FR-014**: The iOS app MUST compile successfully after all changes.
+- **FR-015**: All iOS unit tests MUST pass after all changes.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -73,12 +89,13 @@ As a user reporting a missing pet, I want the existing “Report Missing Animal�
 
 - **SC-001**: “Report Found Animal” button is visible on announcements list and reliably starts the found-pet flow.
 - **SC-002**: Existing Missing Pet flow remains unchanged from user perspective (manual smoke test confirms same behavior/screens).
+- **SC-003**: After successful completion of the Found flow, the announcements list refresh is triggered (observable via refreshed data load).
 
 ## Assumptions
 
 - This iteration is **scaffolding only**: it prepares a Found flow entry point and code structure, but does not implement the final Found Pet reporting UX defined in `069-report-found-pet`.
 - The Found flow is intentionally a **copy** of the Missing flow for now; future work will diverge the flows.
-- Copying and renaming types will not require backend/API changes in this iteration.
+- Copying and renaming types will not require backend/API changes in this iteration (Found flow submission reuses existing Missing submission logic temporarily).
 
 ## Dependencies
 
