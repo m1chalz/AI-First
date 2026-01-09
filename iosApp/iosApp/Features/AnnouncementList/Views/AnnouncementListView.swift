@@ -50,9 +50,7 @@ struct AnnouncementListView: View {
         VStack(alignment: .trailing, spacing: 30) {
             Spacer()
             
-            // Report Found Animal button (optional - not in MVP mobile)
-            // Uncomment when ready to enable
-            /*
+            // Report Found Animal button
             FloatingActionButton(
                 model: FloatingActionButtonModel(
                     title: L10n.AnnouncementList.Button.reportFound,
@@ -61,7 +59,6 @@ struct AnnouncementListView: View {
                 action: { viewModel.reportFound() }
             )
             .accessibilityIdentifier("animalList.reportFoundButton")
-            */
             
             // Report a Missing Animal button (primary action)
             FloatingActionButton(

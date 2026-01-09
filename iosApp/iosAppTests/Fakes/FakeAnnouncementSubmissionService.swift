@@ -12,12 +12,12 @@ class FakeAnnouncementSubmissionService: AnnouncementSubmissionServiceProtocol {
     // MARK: - Call Tracking
     
     var submitAnnouncementCalled = false
-    var lastFlowState: ReportMissingPetFlowState?
+    var lastFlowState: (any PetReportFlowStateProtocol)?
     
     // MARK: - Service Methods
     
     @MainActor
-    func submitAnnouncement(flowState: ReportMissingPetFlowState) async throws -> String {
+    func submitAnnouncement(flowState: any PetReportFlowStateProtocol) async throws -> String {
         submitAnnouncementCalled = true
         lastFlowState = flowState
         

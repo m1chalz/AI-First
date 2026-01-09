@@ -14,5 +14,7 @@ struct CreateAnnouncementData {
     let petName: String?
     let description: String?
     let reward: String?
+    /// Status to be sent to backend: .active for Missing flow (→ "MISSING"), .found for Found flow (→ "FOUND")
+    let status: AnnouncementStatus
 }
 

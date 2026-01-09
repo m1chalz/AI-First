@@ -427,6 +427,72 @@ public enum L10n {
     /// MARK: - Placeholder Screen
     public static let title = L10n.tr("Localizable", "placeholder.title", fallback: "Coming soon")
   }
+  public enum ReportFoundPet {
+    public enum ContactInfo {
+      /// Share your contact details so the pet's owner can reach you.
+      public static let body = L10n.tr("Localizable", "reportFoundPet.contactInfo.body", fallback: "Share your contact details so the pet's owner can reach you.")
+      /// Caregiver phone number (optional)
+      public static let caregiverPhoneLabel = L10n.tr("Localizable", "reportFoundPet.contactInfo.caregiverPhoneLabel", fallback: "Caregiver phone number (optional)")
+      /// +1 (555) 000-0000
+      public static let caregiverPhonePlaceholder = L10n.tr("Localizable", "reportFoundPet.contactInfo.caregiverPhonePlaceholder", fallback: "+1 (555) 000-0000")
+      /// Current physical address (optional)
+      public static let currentAddressLabel = L10n.tr("Localizable", "reportFoundPet.contactInfo.currentAddressLabel", fallback: "Current physical address (optional)")
+      /// Full address where the animal is currently located
+      public static let currentAddressPlaceholder = L10n.tr("Localizable", "reportFoundPet.contactInfo.currentAddressPlaceholder", fallback: "Full address where the animal is currently located")
+      /// Contact information
+      public static let heading = L10n.tr("Localizable", "reportFoundPet.contactInfo.heading", fallback: "Contact information")
+      /// Contact info
+      public static let screenTitle = L10n.tr("Localizable", "reportFoundPet.contactInfo.screenTitle", fallback: "Contact info")
+      /// Submit report
+      public static let submitButton = L10n.tr("Localizable", "reportFoundPet.contactInfo.submitButton", fallback: "Submit report")
+      /// Your email
+      public static let yourEmailLabel = L10n.tr("Localizable", "reportFoundPet.contactInfo.yourEmailLabel", fallback: "Your email")
+      /// email@example.com
+      public static let yourEmailPlaceholder = L10n.tr("Localizable", "reportFoundPet.contactInfo.yourEmailPlaceholder", fallback: "email@example.com")
+      /// Your phone number
+      public static let yourPhoneLabel = L10n.tr("Localizable", "reportFoundPet.contactInfo.yourPhoneLabel", fallback: "Your phone number")
+      /// +1 (555) 000-0000
+      public static let yourPhonePlaceholder = L10n.tr("Localizable", "reportFoundPet.contactInfo.yourPhonePlaceholder", fallback: "+1 (555) 000-0000")
+    }
+    public enum PetDetails {
+      /// Additional description (optional)
+      public static let additionalDescriptionLabel = L10n.tr("Localizable", "reportFoundPet.petDetails.additionalDescriptionLabel", fallback: "Additional description (optional)")
+      /// Any details that could help identify the pet...
+      public static let additionalDescriptionPlaceholder = L10n.tr("Localizable", "reportFoundPet.petDetails.additionalDescriptionPlaceholder", fallback: "Any details that could help identify the pet...")
+      /// Tell us what you know about the animal you found.
+      public static let body = L10n.tr("Localizable", "reportFoundPet.petDetails.body", fallback: "Tell us what you know about the animal you found.")
+      /// Collar data (optional)
+      public static let collarDataLabel = L10n.tr("Localizable", "reportFoundPet.petDetails.collarDataLabel", fallback: "Collar data (optional)")
+      /// 00000-00000-00000
+      public static let collarDataPlaceholder = L10n.tr("Localizable", "reportFoundPet.petDetails.collarDataPlaceholder", fallback: "00000-00000-00000")
+      /// Continue
+      public static let continueButton = L10n.tr("Localizable", "reportFoundPet.petDetails.continueButton", fallback: "Continue")
+      /// Date found
+      public static let dateFoundLabel = L10n.tr("Localizable", "reportFoundPet.petDetails.dateFoundLabel", fallback: "Date found")
+      /// DD/MM/YYYY
+      public static let dateFoundPlaceholder = L10n.tr("Localizable", "reportFoundPet.petDetails.dateFoundPlaceholder", fallback: "DD/MM/YYYY")
+      /// Use current location
+      public static let gpsButton = L10n.tr("Localizable", "reportFoundPet.petDetails.gpsButton", fallback: "Use current location")
+      /// Pet details
+      public static let heading = L10n.tr("Localizable", "reportFoundPet.petDetails.heading", fallback: "Pet details")
+      /// Pet details
+      public static let screenTitle = L10n.tr("Localizable", "reportFoundPet.petDetails.screenTitle", fallback: "Pet details")
+    }
+    public enum Photo {
+      /// Upload a clear photo of the pet you found. This helps the owner recognize them quickly.
+      public static let body = L10n.tr("Localizable", "reportFoundPet.photo.body", fallback: "Upload a clear photo of the pet you found. This helps the owner recognize them quickly.")
+      /// Continue
+      public static let continueButton = L10n.tr("Localizable", "reportFoundPet.photo.continueButton", fallback: "Continue")
+      /// Upload photo
+      public static let heading = L10n.tr("Localizable", "reportFoundPet.photo.heading", fallback: "Upload photo")
+      /// MARK: - Report Found Pet Flow (3-step)
+      public static let screenTitle = L10n.tr("Localizable", "reportFoundPet.photo.screenTitle", fallback: "Upload photo")
+      /// Tap to upload a photo
+      public static let uploadEmptyPrimary = L10n.tr("Localizable", "reportFoundPet.photo.uploadEmptyPrimary", fallback: "Tap to upload a photo")
+      /// PNG or JPG up to 10 MB
+      public static let uploadEmptySecondary = L10n.tr("Localizable", "reportFoundPet.photo.uploadEmptySecondary", fallback: "PNG or JPG up to 10 MB")
+    }
+  }
   public enum ReportMissingPet {
     public enum Button {
       /// Close

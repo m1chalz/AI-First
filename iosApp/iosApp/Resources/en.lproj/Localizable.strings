@@ -290,3 +290,40 @@
 /* MARK: - Annotation Callout */
 
 "annotationCallout.unknownPet" = "Unknown Pet";
+
+/* MARK: - Report Found Pet Flow (3-step) */
+
+// Step 1: Upload photo (1/3)
+"reportFoundPet.photo.screenTitle" = "Upload photo";
+"reportFoundPet.photo.heading" = "Upload photo";
+"reportFoundPet.photo.body" = "Upload a clear photo of the pet you found. This helps the owner recognize them quickly.";
+"reportFoundPet.photo.uploadEmptyPrimary" = "Tap to upload a photo";
+"reportFoundPet.photo.uploadEmptySecondary" = "PNG or JPG up to 10 MB";
+"reportFoundPet.photo.continueButton" = "Continue";
+
+// Step 2: Pet details (2/3)
+"reportFoundPet.petDetails.screenTitle" = "Pet details";
+"reportFoundPet.petDetails.heading" = "Pet details";
+"reportFoundPet.petDetails.body" = "Tell us what you know about the animal you found.";
+"reportFoundPet.petDetails.dateFoundLabel" = "Date found";
+"reportFoundPet.petDetails.dateFoundPlaceholder" = "DD/MM/YYYY";
+"reportFoundPet.petDetails.collarDataLabel" = "Collar data (optional)";
+"reportFoundPet.petDetails.collarDataPlaceholder" = "00000-00000-00000";
+"reportFoundPet.petDetails.additionalDescriptionLabel" = "Additional description (optional)";
+"reportFoundPet.petDetails.additionalDescriptionPlaceholder" = "Any details that could help identify the pet...";
+"reportFoundPet.petDetails.gpsButton" = "Use current location";
+"reportFoundPet.petDetails.continueButton" = "Continue";
+
+// Step 3: Contact information (3/3)
+"reportFoundPet.contactInfo.screenTitle" = "Contact info";
+"reportFoundPet.contactInfo.heading" = "Contact information";
+"reportFoundPet.contactInfo.body" = "Share your contact details so the pet's owner can reach you.";
+"reportFoundPet.contactInfo.yourPhoneLabel" = "Your phone number";
+"reportFoundPet.contactInfo.yourPhonePlaceholder" = "+1 (555) 000-0000";
+"reportFoundPet.contactInfo.yourEmailLabel" = "Your email";
+"reportFoundPet.contactInfo.yourEmailPlaceholder" = "email@example.com";
+"reportFoundPet.contactInfo.caregiverPhoneLabel" = "Caregiver phone number (optional)";
+"reportFoundPet.contactInfo.caregiverPhonePlaceholder" = "+1 (555) 000-0000";
+"reportFoundPet.contactInfo.currentAddressLabel" = "Current physical address (optional)";
+"reportFoundPet.contactInfo.currentAddressPlaceholder" = "Full address where the animal is currently located";
+"reportFoundPet.contactInfo.submitButton" = "Submit report";
