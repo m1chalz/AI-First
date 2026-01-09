@@ -1,5 +1,7 @@
 package com.intive.aifirst.petspot.ui.navigation
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -12,7 +14,11 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -28,6 +34,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.intive.aifirst.petspot.domain.models.TabDestination
 import com.intive.aifirst.petspot.features.animallist.ui.AnimalListScreen
 import com.intive.aifirst.petspot.features.home.ui.HomeScreen
@@ -50,9 +58,30 @@ import com.intive.aifirst.petspot.ui.theme.BottomNavColors
  * Tab selection uses saveState/restoreState flags for back stack preservation.
  *
  * Modal flows (ReportMissing) are at root level and hide the bottom nav bar.
+ *
+ * Requests location permission on first composition using fire-and-forget pattern
+ * to match iOS timing (permission requested at app launch, not on specific screen).
  */
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScaffold(modifier: Modifier = Modifier) {
+    // Fire-and-forget permission request - matches iOS pattern in SceneDelegate
+    val permissionState =
+        rememberMultiplePermissionsState(
+            permissions = listOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION),
+        )
+
+    // Request permission once if not yet determined (first time user)
+    // notDetermined = not granted AND shouldShowRationale is false (never asked before)
+    var hasRequestedPermission by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        val notDetermined = !permissionState.allPermissionsGranted && !permissionState.shouldShowRationale
+        if (!hasRequestedPermission && notDetermined) {
+            hasRequestedPermission = true
+            permissionState.launchMultiplePermissionRequest()
+        }
+    }
+
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
