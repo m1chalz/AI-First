@@ -16,20 +16,25 @@
 
 ### In Scope
 - Fullscreen interactive map opened from landing page preview
-- Zoom and pan functionality
+- Header bar with back arrow and "Pet Locations" title
+- Legend showing pin color meanings (Missing = red, Found = blue)
+- Zoom and pan functionality (pinch-to-zoom, double-tap, drag gestures)
 - Pins for missing (red) and found (blue) pets displayed on the map
 - Pet details pop-up when tapping a pin
 - Back arrow navigation to return to landing page
 - Loading and error states for pin data
 - Location-based initial viewport (centered on user location)
+- Bottom navigation bar remains visible
 
 ### Out of Scope
 - Static map preview on landing page (covered by 067-android-landing-map-preview)
+- Custom pin markers (use default Google Maps markers initially; custom icons to be added as enhancement)
 - Map marker clustering logic
 - Offline map support
 - Turn-by-turn navigation to pet location
 - Multiple map styles/themes
 - Pet search/filtering within fullscreen map
+- Zoom control buttons (+/-) - zoom via gestures only (pinch-to-zoom, double-tap)
 - Accessibility features (screen reader support, content descriptions) - deferred to separate ticket
 - Analytics tracking (map opens, pin taps, errors) - deferred to separate ticket
 
@@ -119,9 +124,12 @@ A user sees a pin on the map and wants to know more about the pet. They tap the 
 ### Functional Requirements
 
 - **FR-001**: The application MUST open fullscreen interactive map when the user taps the landing-page map preview
-- **FR-002**: The fullscreen map MUST include a back arrow button in the top-left corner
+- **FR-002**: The fullscreen map MUST include a header bar with back arrow button and "Pet Locations" title
+- **FR-002a**: The back arrow MUST be positioned in the top-left corner of the header
+- **FR-002b**: A legend MUST be displayed below the header showing "● Missing" (red) and "● Found" (blue) indicators
 - **FR-003**: Tapping the back arrow MUST close fullscreen mode and return to the landing page
 - **FR-004**: The Android system back button MUST close fullscreen mode and return to the landing page
+- **FR-004a**: The bottom navigation bar MUST remain visible in fullscreen map mode
 - **FR-005**: The fullscreen map MUST support pinch-to-zoom gestures
 - **FR-006**: The fullscreen map MUST support pan (drag) gestures
 - **FR-007**: The fullscreen map MUST support double-tap to zoom in
@@ -144,7 +152,9 @@ A user sees a pin on the map and wants to know more about the pet. They tap the 
 ### Key Entities
 
 - **Fullscreen Interactive Map**: A full-window map experience that supports zoom, pan, and pin interaction; closed via back arrow or system back button
-- **Pet Pin**: A visual marker on the map indicating the location of a pet announcement (red for missing, blue for found)
+- **Header Bar**: Top bar containing back arrow and "Pet Locations" title
+- **Legend**: Visual indicator below header showing pin color meanings (red = Missing, blue = Found). **Reuses existing `MapPreviewLegend` component from map preview feature.**
+- **Pet Pin**: A visual marker on the map indicating the location of a pet announcement (red for missing, blue for found); uses default Google Maps markers initially (custom icons as future enhancement)
 - **Pet Details Pop-up**: A modal overlay that shows pet details and owner contact information after selecting a pin
 
 ## Success Criteria *(mandatory)*
@@ -187,8 +197,11 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 - Repository and use cases MUST be defined in Koin modules
 
 ### Test Identifiers (NON-NEGOTIABLE)
-- Map container: `fullscreenMap.container`
+- Header bar: `fullscreenMap.header`
 - Back button: `fullscreenMap.backButton`
+- Title: `fullscreenMap.title`
+- Legend: `fullscreenMap.legend`
+- Map container: `fullscreenMap.container`
 - Loading indicator: `fullscreenMap.loading`
 - Error state: `fullscreenMap.error`
 - Retry button: `fullscreenMap.retryButton`
@@ -200,7 +213,8 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 
 - Landing page map preview (spec 067) exists and provides the entry point to fullscreen mode
 - Backend API provides pet announcements with coordinates via existing announcements endpoint with location filter
-- Google Maps SDK will be used for interactive map rendering
+- Google Maps SDK will be used for interactive map rendering (already configured from 067)
+- Google Maps API key is already configured in `local.properties` and `AndroidManifest.xml` (from 067)
 - Pin icons/assets for missing (red) and found (blue) states are available or will be provided
 - Pet data includes: id, name, species, photo URL, description, last-seen/found date, owner phone, owner email
 - Location permission is already requested on landing page (spec 067); fullscreen map uses the result
@@ -219,6 +233,15 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 - Q: Should user interactions be tracked for analytics? → A: Deferred to a separate specification/ticket
 - Q: Is there a maximum number of pins to display? → A: No limit; display all pins returned by API for the visible area
 - Q: Should pin data auto-refresh if user stays on map for extended period? → A: No auto-refresh; data updates only on pan/zoom or return from background
+
+### Session 2026-01-09 (Figma Design Review)
+
+- Q: Should there be zoom control buttons (+/-)? → A: No; zoom via gestures only (pinch-to-zoom, double-tap) - default Google Maps behavior
+- Q: What should the header bar contain? → A: Back arrow (left) and "Pet Locations" title
+- Q: Should there be a legend showing pin meanings? → A: Yes; legend below header showing "● Missing" (red) and "● Found" (blue)
+- Q: Should bottom navigation remain visible? → A: Yes; bottom navigation bar remains visible in fullscreen mode
+- Q: What pin style should be used? → A: Initially use default Google Maps markers with red/blue colors; custom branded markers (matching landing page preview icons) to be added as future enhancement
+- Q: Should a new legend component be created? → A: No; reuse existing `MapPreviewLegend` component from `features/mapPreview/ui/components/`
 
 ## Design References
 
@@ -245,7 +268,7 @@ The following constraints are mandated by the PetSpot Android Constitution and M
 | ----------- | -- | ---- | ---------- | -------------------------------------- |
 | Initial     | 5  | 26   | ±50%       | Interactive map with pop-ups           |
 | After SPEC  | 5  | 26   | ±30%       | Scope aligned with 066 base spec       |
-| After PLAN  | —  | —    | ±20%       | [Update when plan.md complete]         |
+| After PLAN  | 5  | 26   | ±20%       | MVI pattern, maps-compose, no backend changes |
 | After TASKS | —  | —    | ±15%       | [Update when tasks.md complete]        |
 
 ### Per-Platform Breakdown (After TASKS)
