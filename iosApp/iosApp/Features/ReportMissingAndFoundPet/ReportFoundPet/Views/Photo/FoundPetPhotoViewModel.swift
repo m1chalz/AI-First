@@ -1,7 +1,8 @@
 import Foundation
 import UniformTypeIdentifiers
 
-/// ViewModel responsible for orchestrating the Animal Photo step (browse → confirm → continue).
+/// ViewModel responsible for orchestrating the Animal Photo step (Step 1/3 of Found Pet flow).
+/// Handles browse → confirm → continue workflow.
 @MainActor
 final class FoundPetPhotoViewModel: ObservableObject {
     // MARK: - Published State

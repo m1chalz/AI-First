@@ -1,8 +1,9 @@
 import Foundation
 import SwiftUI
 
-/// ViewModel for Animal Description screen (Step 3/4 of Found Pet flow).
+/// ViewModel for Pet Details screen (Step 2/3 of Found Pet flow).
 /// Manages form data, validation, and coordinator callbacks.
+/// Combines former ChipNumber + AnimalDescription - adds collar data (microchip) field.
 @MainActor
 class FoundPetAnimalDescriptionViewModel: ObservableObject {
     // MARK: - Published Properties (Form Data)
@@ -33,6 +34,10 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
     
     /// Pet name (optional, two-way binding for TextField)
     @Published var petName: String = ""
+    
+    /// Collar data / microchip number (optional, digits only, max 15)
+    /// Stored as digits-only string (no dashes)
+    @Published var collarData: String = ""
     
     // MARK: - Published Properties (Validation Errors)
     
@@ -109,6 +114,18 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         if let existingPetName = flowState.petName {
             self.petName = existingPetName
         }
+        
+        // Load collar data (microchip) from flow state
+        if let existingChip = flowState.chipNumber {
+            self.collarData = existingChip
+        }
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// Formatted collar data for display (00000-00000-00000)
+    var formattedCollarData: String {
+        MicrochipNumberFormatter.format(collarData)
     }
     
     // MARK: - Computed Properties (Component Models)
@@ -212,7 +229,25 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         return "\(additionalDescription.count)/500"
     }
     
+    /// Model for collar data text field (optional, digits only)
+    var collarDataTextFieldModel: ValidatedTextField.Model {
+        ValidatedTextField.Model(
+            label: L10n.ReportFoundPet.PetDetails.collarDataLabel,
+            placeholder: L10n.ReportFoundPet.PetDetails.collarDataPlaceholder,
+            errorMessage: nil, // Collar data is optional - no validation errors
+            isDisabled: false,
+            keyboardType: .numberPad,
+            accessibilityID: "reportFoundPet.petDetails.collarData.input"
+        )
+    }
+    
     // MARK: - User Actions
+    
+    /// Updates collar data with digit filtering and 15-digit limit
+    func updateCollarData(_ newValue: String) {
+        let digits = MicrochipNumberFormatter.extractDigits(newValue)
+        collarData = String(digits.prefix(MicrochipNumberFormatter.maxDigits))
+    }
     
     /// Called when species selection changes
     func handleSpeciesChange() {
@@ -428,6 +463,9 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         // Pet name (US1 - 046-ios-pet-name-field)
         let trimmedPetName = petName.trimmingCharacters(in: .whitespacesAndNewlines)
         flowState.petName = trimmedPetName.isEmpty ? nil : trimmedPetName
+        
+        // Collar data (microchip) - store digits-only
+        flowState.chipNumber = collarData.isEmpty ? nil : collarData
     }
 
     deinit {

@@ -55,6 +55,16 @@ final class FoundPetReportFlowState: ObservableObject, PetReportFlowStateProtoco
     /// Owner's contact details (phone, email, reward)
     @Published var contactDetails: OwnerContactDetails?
     
+    // MARK: - Step 4b: iOS-only Contact Fields (not sent to backend per FR-016)
+    
+    /// Optional caregiver phone number (7-11 digits when provided)
+    /// iOS-only field - kept in flow state but NOT sent to backend
+    @Published var caregiverPhoneNumber: String?
+    
+    /// Optional address where animal is currently located (multiline, max 500 chars)
+    /// iOS-only field - kept in flow state but NOT sent to backend
+    @Published var currentPhysicalAddress: String?
+    
     // MARK: - Step 5: Submission Result
     
     /// Management password returned by backend after successful report submission.
@@ -86,6 +96,9 @@ final class FoundPetReportFlowState: ObservableObject, PetReportFlowStateProtoco
         animalAdditionalDescription = nil
         contactDetails = nil
         managementPassword = nil
+        // Clear iOS-only fields (per FR-016)
+        caregiverPhoneNumber = nil
+        currentPhysicalAddress = nil
 
         try? await photoAttachmentCache.clearCurrent()
     }

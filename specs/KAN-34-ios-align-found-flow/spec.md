@@ -236,17 +236,17 @@ As a person who found an animal, I want to optionally provide a caregiver phone 
 | Initial | 1 | 5.2 | ±50% | Gut feel from feature title - iOS-only flow alignment |
 | After SPEC | 1 | 5.2 | ±30% | Scope confirmed: iOS-only, exactly 3 steps, new optional fields + microchip formatting and validation rules clarified |
 | After PLAN | 1 | 5.2 | ±20% | Research complete: reuse existing components, 7 files to delete (incl. Summary), no backend changes, ~10 files to modify/create |
-| After TASKS | — | — | ±15% | [Update when tasks.md complete] |
+| After TASKS | 1 | 5.5 | ±10% | Task breakdown complete: 42 tasks total (6 foundational, 9 US1 tests/impl, 6 US2, 7 US3, 14 polish/cleanup) - sequential strategy fits 5.2-day budget with 0.3-day buffer |
 
 ### Per-Platform Breakdown (After TASKS)
 
 | Platform | Tasks | Days | Notes |
 |----------|-------|------|-------|
 | Backend | 0 | 0 | No backend changes in this spec |
-| iOS | — | — | [Fill after tasks.md] |
+| iOS | 42 | 5.5 | Setup (4), Foundational (2), US1 (9), US2 (6), US3 (7), Polish (14) - includes unit tests, implementation, deletion of 7 obsolete files |
 | Android | 0 | 0 | No Android changes |
 | Web | 0 | 0 | No web changes |
-| **Total** | | **—** | |
+| **Total** | **42** | **5.5** | iOS-only feature |
 
 ### Variance Tracking
 

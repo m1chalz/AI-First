@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// View for Contact Details screen (Step 4/4).
-/// Displays phone, email, and reward input fields with validation.
+/// View for Contact Information screen (Step 3/3 of Found Pet flow).
+/// Displays phone, email, reward, and optional caregiver phone + current address fields.
 struct FoundPetContactDetailsView: View {
     @ObservedObject var viewModel: FoundPetContactDetailsViewModel
     
@@ -36,6 +36,18 @@ struct FoundPetContactDetailsView: View {
                     ValidatedTextField(
                         model: viewModel.rewardTextFieldModel,
                         text: $viewModel.rewardDescription
+                    )
+                    
+                    // Caregiver phone (optional, iOS-only)
+                    ValidatedTextField(
+                        model: viewModel.caregiverPhoneTextFieldModel,
+                        text: $viewModel.caregiverPhone
+                    )
+                    
+                    // Current physical address (optional, iOS-only)
+                    TextAreaView(
+                        model: viewModel.currentAddressTextAreaModel,
+                        text: $viewModel.currentAddress
                     )
                 }
                 .padding(.horizontal, 16)

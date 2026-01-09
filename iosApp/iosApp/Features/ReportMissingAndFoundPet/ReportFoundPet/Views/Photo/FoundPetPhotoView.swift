@@ -2,7 +2,7 @@ import SwiftUI
 import PhotosUI
 import Foundation
 
-/// Full PhotosPicker-driven UI for the Animal Photo step (2/4).
+/// Full PhotosPicker-driven UI for the Animal Photo step (1/3 of Found Pet flow).
 struct FoundPetPhotoView: View {
     @ObservedObject var viewModel: FoundPetPhotoViewModel
     
@@ -82,12 +82,14 @@ struct FoundPetPhotoView: View {
     
     private var titleSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(L10n.AnimalPhoto.title)
+            Text(L10n.ReportFoundPet.Photo.heading)
                 .font(.system(size: 32, weight: .regular))
                 .foregroundColor(Color(hex: "#2D2D2D"))
-            Text(viewModel.helperMessage)
+                .accessibilityIdentifier("reportFoundPet.photo.heading")
+            Text(L10n.ReportFoundPet.Photo.body)
                 .font(.system(size: 16))
                 .foregroundColor(Color(hex: "#545F71"))
+                .accessibilityIdentifier("reportFoundPet.photo.body")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

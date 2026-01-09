@@ -1,9 +1,10 @@
 import UIKit
 import SwiftUI
 
-/// Coordinator for Found Pet Report modal flow.
+/// Coordinator for Found Pet Report modal flow (3-step).
 /// Creates and manages own UINavigationController for modal presentation.
 /// Owns FoundPetReportFlowState and injects it into all ViewModels.
+/// Flow: Photo (1/3) → Pet Details (2/3) → Contact Information (3/3) → Exit
 class FoundPetReportCoordinator: CoordinatorInterface {
     // MARK: - Properties
     
@@ -47,7 +48,7 @@ class FoundPetReportCoordinator: CoordinatorInterface {
     // MARK: - CoordinatorInterface
     
     /// Starts the found pet report flow.
-    /// Creates modal UINavigationController and presents chip number screen.
+    /// Creates modal UINavigationController and presents photo screen (Step 1/3).
     func start(animated: Bool) async {
         // Create dedicated UINavigationController for modal flow
         // This provides independent navigation stack separate from parent
@@ -64,8 +65,8 @@ class FoundPetReportCoordinator: CoordinatorInterface {
         )
         self.flowState = flowState
         
-        // Navigate to chip number screen (step 1/4) - entry point
-        navigateToChipNumber()
+        // Navigate to photo screen (step 1/3) - new entry point
+        navigateToPhoto()
         
         // Present modally from parent navigation controller
         parentNavigationController.present(modalNavController, animated: animated)
@@ -73,39 +74,8 @@ class FoundPetReportCoordinator: CoordinatorInterface {
     
     // MARK: - Navigation Methods
     
-    /// Navigate to chip number screen (Step 1/4).
-    /// Entry point for the flow.
-    private func navigateToChipNumber() {
-        guard let flowState = flowState,
-              let modalNavController = navigationController else { return }
-        
-        let viewModel = FoundPetChipNumberViewModel(flowState: flowState)
-        
-        viewModel.onNext = { [weak self] in
-            self?.navigateToPhoto()
-        }
-        
-        viewModel.onBack = { [weak self] in
-            self?.exitFlow()
-        }
-        
-        let view = FoundPetChipNumberView(viewModel: viewModel)
-        let hostingController = UIHostingController(
-            rootView: NavigationBackHiding { view }
-        )
-        
-        // Configure navigation bar
-        hostingController.title = L10n.ReportMissingPet.ChipNumber.title
-        configureProgressIndicator(hostingController: hostingController, step: 1, total: 4)
-        configureCustomDismissButton(hostingController: hostingController, action: { [weak viewModel] in
-            viewModel?.handleBack()
-        })
-        
-        // Push to modal nav controller
-        modalNavController.setViewControllers([hostingController], animated: false)
-    }
-    
-    /// Navigate to photo screen (Step 2/4).
+    /// Navigate to photo screen (Step 1/3).
+    /// Entry point for the 3-step Found Pet flow.
     private func navigateToPhoto() {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
@@ -118,11 +88,11 @@ class FoundPetReportCoordinator: CoordinatorInterface {
         )
         
         viewModel.onNext = { [weak self] in
-            self?.navigateToDescription()
+            self?.navigateToPetDetails()
         }
         
         viewModel.onBack = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+            self?.exitFlow()
         }
         
         let view = FoundPetPhotoView(viewModel: viewModel)
@@ -130,23 +100,24 @@ class FoundPetReportCoordinator: CoordinatorInterface {
             rootView: NavigationBackHiding { view }
         )
         
-        // Configure navigation bar
-        hostingController.title = L10n.ReportMissingPet.Photo.title
-        configureProgressIndicator(hostingController: hostingController, step: 2, total: 4)
-        configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
+        // Configure navigation bar - Step 1/3 with dismiss button (entry point)
+        hostingController.title = L10n.ReportFoundPet.Photo.screenTitle
+        configureProgressIndicator(hostingController: hostingController, step: 1, total: 3)
+        configureCustomDismissButton(hostingController: hostingController, action: { [weak viewModel] in
             viewModel?.handleBack()
         })
         
-        modalNavController.pushViewController(hostingController, animated: true)
+        // Set as root view controller (entry point)
+        modalNavController.setViewControllers([hostingController], animated: false)
     }
     
-    /// Navigate to description screen (Step 3/4).
-    private func navigateToDescription() {
+    /// Navigate to pet details screen (Step 2/3).
+    /// Uses existing AnimalDescription with added collar data (microchip) field.
+    private func navigateToPetDetails() {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
         let toastScheduler = ToastScheduler()
-        // Create LocationPermissionHandler inline (each ViewModel needs its own instance)
         let locationHandler = LocationPermissionHandler(locationService: locationService)
         let viewModel = FoundPetAnimalDescriptionViewModel(
             flowState: flowState,
@@ -155,7 +126,7 @@ class FoundPetReportCoordinator: CoordinatorInterface {
         )
         
         viewModel.onContinue = { [weak self] in
-            self?.navigateToContactDetails()
+            self?.navigateToContactInformation()
         }
         
         viewModel.onBack = { [weak self] in
@@ -167,9 +138,9 @@ class FoundPetReportCoordinator: CoordinatorInterface {
             rootView: NavigationBackHiding { view }
         )
         
-        // Configure navigation bar
-        hostingController.title = L10n.ReportMissingPet.Description.title
-        configureProgressIndicator(hostingController: hostingController, step: 3, total: 4)
+        // Configure navigation bar - Step 2/3
+        hostingController.title = L10n.ReportFoundPet.PetDetails.screenTitle
+        configureProgressIndicator(hostingController: hostingController, step: 2, total: 3)
         configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
             viewModel?.onBackTapped()
         })
@@ -177,8 +148,8 @@ class FoundPetReportCoordinator: CoordinatorInterface {
         modalNavController.pushViewController(hostingController, animated: true)
     }
     
-    /// Navigate to contact details screen (Step 4/4).
-    private func navigateToContactDetails() {
+    /// Navigate to contact information screen (Step 3/3).
+    private func navigateToContactInformation() {
         guard let flowState = flowState,
               let modalNavController = navigationController else { return }
         
@@ -187,10 +158,10 @@ class FoundPetReportCoordinator: CoordinatorInterface {
             flowState: flowState
         )
         
-        // Callback invoked on successful submission with managementPassword
-        viewModel.onReportSent = { [weak self] managementPassword in
+        // On successful submission: notify parent and exit flow immediately (no Summary screen)
+        viewModel.onReportSent = { [weak self] _ in
             self?.onReportSent?() // Notify parent coordinator for list refresh
-            self?.navigateToSummary(managementPassword: managementPassword)
+            self?.exitFlow() // Exit immediately - Summary screen removed
         }
         
         viewModel.onBack = { [weak self] in
@@ -202,39 +173,12 @@ class FoundPetReportCoordinator: CoordinatorInterface {
             rootView: NavigationBackHiding { view }
         )
         
-        // Configure navigation bar
-        hostingController.title = L10n.ReportMissingPet.ContactDetails.title
-        configureProgressIndicator(hostingController: hostingController, step: 4, total: 4)
+        // Configure navigation bar - Step 3/3
+        hostingController.title = L10n.ReportFoundPet.ContactInfo.screenTitle
+        configureProgressIndicator(hostingController: hostingController, step: 3, total: 3)
         configureCustomBackButton(hostingController: hostingController, action: { [weak viewModel] in
             viewModel?.handleBack()
         })
-        
-        modalNavController.pushViewController(hostingController, animated: true)
-    }
-
-    /// Navigate to summary screen (Step 5 - Report Created Confirmation).
-    private func navigateToSummary(managementPassword: String) {
-        guard let flowState = flowState,
-              let modalNavController = navigationController else { return }
-
-        // Store managementPassword in FlowState for summary display
-        flowState.managementPassword = managementPassword
-
-        let toastScheduler = ToastScheduler()
-        let viewModel = FoundPetSummaryViewModel(flowState: flowState, toastScheduler: toastScheduler)
-
-        viewModel.onClose = { [weak self] in
-            self?.exitFlow()
-        }
-        
-        let view = FoundPetSummaryView(viewModel: viewModel)
-        let hostingController = UIHostingController(
-            rootView: NavigationBackHiding { view }
-        )
-        
-        // Configure navigation bar
-        hostingController.title = L10n.ReportMissingPet.Summary.title
-        // NO progress indicator and NO back button on summary screen (final confirmation)
         
         modalNavController.pushViewController(hostingController, animated: true)
     }

@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Animal Description screen (Step 3/4 of Found Pet flow).
-/// Collects required pet data: date, species, breed/race, gender.
+/// Pet Details screen (Step 2/3 of Found Pet flow).
+/// Collects pet data: date, species, breed/race, gender, location (required), collar data (optional).
 struct FoundPetAnimalDescriptionView: View {
     @ObservedObject var viewModel: FoundPetAnimalDescriptionViewModel
     
@@ -83,18 +83,21 @@ struct FoundPetAnimalDescriptionView: View {
                 .buttonStyle(PlainButtonStyle())
                 .accessibilityIdentifier("animalDescription.requestGPSButton.tap")
                 
-                // Location coordinates (optional)
+                // Location coordinates (required for Found flow)
                 CoordinateInputView(
                     model: viewModel.coordinateInputModel,
                     latitude: $viewModel.latitude,
                     longitude: $viewModel.longitude
                 )
                 
-                    // Description text area (optional - US3)
-                    TextAreaView(
-                        model: viewModel.descriptionTextAreaModel,
-                        text: $viewModel.additionalDescription
-                    )
+                // Collar data / microchip (optional)
+                collarDataSection
+                
+                // Description text area (optional)
+                TextAreaView(
+                    model: viewModel.descriptionTextAreaModel,
+                    text: $viewModel.additionalDescription
+                )
                 }
                 .padding()
             }
@@ -138,6 +141,36 @@ struct FoundPetAnimalDescriptionView: View {
             }
         } message: {
             Text("Location access is needed to capture GPS coordinates. Please enable it in Settings.")
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    /// Collar data (microchip) input with formatting
+    private var collarDataSection: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(L10n.ReportFoundPet.PetDetails.collarDataLabel)
+                .font(.custom("Hind-Regular", size: 16))
+                .foregroundColor(Color(hex: "#364153"))
+            
+            TextField(
+                L10n.ReportFoundPet.PetDetails.collarDataPlaceholder,
+                text: Binding(
+                    get: { viewModel.formattedCollarData },
+                    set: { viewModel.updateCollarData($0) }
+                )
+            )
+            .font(.custom("Hind-Regular", size: 16))
+            .foregroundColor(Color(hex: "#364153"))
+            .keyboardType(.numberPad)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(hex: "#D1D5DC"), lineWidth: 0.667)
+            )
+            .accessibilityIdentifier("reportFoundPet.petDetails.collarData.input")
         }
     }
 }
