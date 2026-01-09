@@ -186,14 +186,33 @@ class AnnouncementListCoordinator: CoordinatorInterface {
     
     /**
      * Shows Report Found Animal form.
-     * Mocked for now - will create ReportFoundCoordinator in future.
-     * Note: Not exposed in iOS mobile UI per design, but included for completeness.
+     * Creates and starts FoundPetReportCoordinator as child coordinator.
+     * User Story 3 (T066): Sets up callback chain to refresh list when report is sent.
      */
     private func showReportFound() {
-        // Placeholder: print log (real implementation will create child coordinator)
-        print("Navigate to report found form")
-        // Future: let reportCoordinator = ReportFoundCoordinator(...)
-        // Future: reportCoordinator.start()
+        guard let navigationController = navigationController else { return }
+        
+        // Create child coordinator with injected dependencies
+        let reportCoordinator = FoundPetReportCoordinator(
+            parentNavigationController: navigationController,
+            locationService: locationService,
+            photoAttachmentCache: photoAttachmentCache,
+            announcementSubmissionService: announcementSubmissionService
+        )
+        reportCoordinator.parentCoordinator = self
+        
+        // User Story 3 (T066): Set callback to refresh list when user sends report
+        // Coordinator -> ViewModel communication via public method
+        reportCoordinator.onReportSent = { [weak self] in
+            self?.announcementListViewModel?.requestToRefreshData()
+        }
+        
+        childCoordinators.append(reportCoordinator)
+        
+        // Start modal flow
+        Task { @MainActor in
+            await reportCoordinator.start(animated: true)
+        }
     }
     
     // MARK: - CoordinatorInterface Protocol

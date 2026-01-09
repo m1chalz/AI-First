@@ -1,10 +1,10 @@
 import Foundation
 
-/// Shared state for Missing Pet Report flow.
-/// Owned by ReportMissingPetCoordinator and injected into all ViewModels.
+/// Shared state for Found Pet Report flow.
+/// Owned by FoundPetReportCoordinator and injected into all ViewModels.
 /// Persists data during forward/backward navigation within active session.
 @MainActor
-final class MissingPetReportFlowState: ObservableObject, PetReportFlowStateProtocol {
+final class FoundPetReportFlowState: ObservableObject, PetReportFlowStateProtocol {
     private let photoAttachmentCache: PhotoAttachmentCacheProtocol
     
     // MARK: - Step 1: Chip Number
