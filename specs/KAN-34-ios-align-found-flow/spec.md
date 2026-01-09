@@ -235,7 +235,7 @@ As a person who found an animal, I want to optionally provide a caregiver phone 
 |-------|-----|------|------------|---------------|
 | Initial | 1 | 5.2 | ±50% | Gut feel from feature title - iOS-only flow alignment |
 | After SPEC | 1 | 5.2 | ±30% | Scope confirmed: iOS-only, exactly 3 steps, new optional fields + microchip formatting and validation rules clarified |
-| After PLAN | — | — | ±20% | [Update when plan.md complete] |
+| After PLAN | 1 | 5.2 | ±20% | Research complete: reuse existing components, 7 files to delete (incl. Summary), no backend changes, ~10 files to modify/create |
 | After TASKS | — | — | ±15% | [Update when tasks.md complete] |
 
 ### Per-Platform Breakdown (After TASKS)
