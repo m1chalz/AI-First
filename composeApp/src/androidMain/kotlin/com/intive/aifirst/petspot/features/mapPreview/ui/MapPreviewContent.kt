@@ -1,5 +1,6 @@
 package com.intive.aifirst.petspot.features.mapPreview.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -232,6 +233,7 @@ private fun MapContent(
         modifier =
             Modifier
                 .fillMaxSize()
+                .clickable { onMapClick() }
                 .testTag("mapPreview.map"),
     ) {
         GoogleMap(

@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsEffect
 import com.intive.aifirst.petspot.features.petdetails.presentation.mvi.PetDetailsIntent
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
+import com.intive.aifirst.petspot.ui.components.ErrorState
 import com.intive.aifirst.petspot.ui.components.FullScreenLoading
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -87,6 +88,7 @@ fun PetDetailsScreen(
             ErrorState(
                 error = state.error,
                 onRetryClick = { viewModel.dispatchIntent(PetDetailsIntent.RetryLoad) },
+                testTagPrefix = "petDetails",
             )
         }
         state.pet != null -> {

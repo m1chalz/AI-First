@@ -1,6 +1,5 @@
 package com.intive.aifirst.petspot.features.petdetails.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -8,22 +7,20 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.intive.aifirst.petspot.composeapp.domain.models.Animal
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalGender
 import com.intive.aifirst.petspot.composeapp.domain.models.AnimalStatus
 import com.intive.aifirst.petspot.composeapp.domain.models.Location
+import com.intive.aifirst.petspot.ui.components.ImagePlaceholder
 
 /**
  * Hero image section showing pet photo with close button, status badge, and reward badge.
@@ -55,11 +52,11 @@ fun PetPhotoSection(
                     .testTag("petDetails.photo"),
             contentScale = ContentScale.Crop,
             loading = {
-                ImageNotAvailablePlaceholder()
+                ImagePlaceholder()
             },
             error = {
                 // Handles blank/invalid URLs automatically
-                ImageNotAvailablePlaceholder()
+                ImagePlaceholder()
             },
             success = {
                 SubcomposeAsyncImageContent()
@@ -97,23 +94,6 @@ fun PetPhotoSection(
                 RewardBadge(reward = reward)
             }
         }
-    }
-}
-
-/**
- * Gray placeholder with "Image not available" text per FR-001 spec.
- */
-@Composable
-private fun ImageNotAvailablePlaceholder(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.background(Color(0xFFE5E5E5)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "Image not available",
-            color = Color(0xFF6A7282),
-            fontSize = 16.sp,
-        )
     }
 }
 

@@ -3,6 +3,7 @@ package com.intive.aifirst.petspot.di
 import android.content.ClipboardManager
 import android.content.Context
 import com.intive.aifirst.petspot.features.animallist.presentation.viewmodels.AnimalListViewModel
+import com.intive.aifirst.petspot.features.fullscreenmap.presentation.viewmodels.FullscreenMapViewModel
 import com.intive.aifirst.petspot.features.lostPetsTeaser.presentation.viewmodels.LostPetsTeaserViewModel
 import com.intive.aifirst.petspot.features.mapPreview.presentation.viewmodels.MapPreviewViewModel
 import com.intive.aifirst.petspot.features.petdetails.presentation.viewmodels.PetDetailsViewModel
@@ -49,6 +50,9 @@ val viewModelModule =
 
         // Map Preview (autonomous component for Home screen)
         viewModel { MapPreviewViewModel(get(), get()) }
+
+        // Fullscreen Map (interactive map screen)
+        viewModel { FullscreenMapViewModel(get(), get()) }
 
         // Report Missing flow
         // Legacy shared ViewModel (used by Photo, Description, ContactDetails, Summary screens)
