@@ -33,11 +33,6 @@ struct FoundPetContactDetailsView: View {
                         text: $viewModel.email
                     )
                     
-                    ValidatedTextField(
-                        model: viewModel.rewardTextFieldModel,
-                        text: $viewModel.rewardDescription
-                    )
-                    
                     // Caregiver phone (optional, iOS-only)
                     ValidatedTextField(
                         model: viewModel.caregiverPhoneTextFieldModel,

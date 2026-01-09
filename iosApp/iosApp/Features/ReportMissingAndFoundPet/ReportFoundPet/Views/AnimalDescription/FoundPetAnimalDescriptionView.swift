@@ -25,11 +25,8 @@ struct FoundPetAnimalDescriptionView: View {
                     date: $viewModel.disappearanceDate
                 )
                 
-                // Pet name text field (optional - US1: 046-ios-pet-name-field)
-                ValidatedTextField(
-                    model: viewModel.petNameTextFieldModel,
-                    text: $viewModel.petName
-                )
+                // Collar data / microchip (optional) - per Figma: position 2 after Date
+                collarDataSection
                 
                 // Species dropdown
                 DropdownView(
@@ -58,12 +55,6 @@ struct FoundPetAnimalDescriptionView: View {
                     viewModel.handleGenderChange()
                 }
                 
-                // Age text field (optional - US3)
-                ValidatedTextField(
-                    model: viewModel.ageTextFieldModel,
-                    text: $viewModel.age
-                )
-                
                 // GPS button
                 Button(action: {
                     Task {
@@ -89,9 +80,6 @@ struct FoundPetAnimalDescriptionView: View {
                     latitude: $viewModel.latitude,
                     longitude: $viewModel.longitude
                 )
-                
-                // Collar data / microchip (optional)
-                collarDataSection
                 
                 // Description text area (optional)
                 TextAreaView(

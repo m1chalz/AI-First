@@ -34,7 +34,6 @@ final class FoundPetContactDetailsViewModelTests: XCTestCase {
         // Given: Valid phone and email
         sut.phone = "+48123456789"
         sut.email = "owner@example.com"
-        sut.rewardDescription = "$250"
         setupValidFlowState()
         
         // When: Submit form

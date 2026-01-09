@@ -9,7 +9,6 @@ class FoundPetContactDetailsViewModel: ObservableObject {
     
     @Published var phone: String = ""
     @Published var email: String = ""
-    @Published var rewardDescription: String = ""
     
     /// Caregiver phone number (optional, iOS-only - not sent to backend per FR-016)
     @Published var caregiverPhone: String = ""
@@ -55,7 +54,6 @@ class FoundPetContactDetailsViewModel: ObservableObject {
         if let contactDetails = flowState.contactDetails {
             self.phone = contactDetails.phone
             self.email = contactDetails.email
-            self.rewardDescription = contactDetails.rewardDescription ?? ""
         }
         
         // Load iOS-only fields (not sent to backend)
@@ -122,18 +120,6 @@ class FoundPetContactDetailsViewModel: ObservableObject {
         )
     }
     
-    var rewardTextFieldModel: ValidatedTextField.Model {
-        ValidatedTextField.Model(
-            label: L10n.OwnersDetails.Reward.label,
-            placeholder: L10n.OwnersDetails.Reward.placeholder,
-            errorMessage: nil,
-            isDisabled: isSubmitting,
-            keyboardType: .default,
-            maxLength: 120,
-            accessibilityID: "ownersDetails.rewardInput"
-        )
-    }
-    
     /// Model for caregiver phone field (optional, iOS-only)
     var caregiverPhoneTextFieldModel: ValidatedTextField.Model {
         ValidatedTextField.Model(
@@ -195,7 +181,7 @@ class FoundPetContactDetailsViewModel: ObservableObject {
         flowState.contactDetails = OwnerContactDetails(
             phone: phone,
             email: email,
-            rewardDescription: rewardDescription.isEmpty ? nil : rewardDescription
+            rewardDescription: nil
         )
         
         // Save iOS-only fields to FlowState (NOT sent to backend per FR-016)

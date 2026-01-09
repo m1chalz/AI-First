@@ -20,9 +20,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
     /// Selected gender (nil if not selected)
     @Published var selectedGender: AnimalGender?
     
-    /// Age text input (optional, 0-40 range)
-    @Published var age: String = ""
-    
     /// Latitude text input (optional, -90 to 90 range)
     @Published var latitude: String = ""
     
@@ -31,9 +28,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
     
     /// Additional description text (optional, max 500 characters)
     @Published var additionalDescription: String = ""
-    
-    /// Pet name (optional, two-way binding for TextField)
-    @Published var petName: String = ""
     
     /// Collar data / microchip number (optional, digits only, max 15)
     /// Stored as digits-only string (no dashes)
@@ -44,7 +38,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
     @Published var speciesErrorMessage: String?
     @Published var raceErrorMessage: String?
     @Published var genderErrorMessage: String?
-    @Published var ageErrorMessage: String?
     @Published var latitudeErrorMessage: String?
     @Published var longitudeErrorMessage: String?
     
@@ -94,11 +87,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
             self.selectedGender = existingGender
         }
         
-        // Load optional fields (US2 & US3)
-        if let existingAge = flowState.animalAge {
-            self.age = String(existingAge)
-        }
-        
         if let existingLat = flowState.animalLatitude {
             self.latitude = String(format: "%.5f", existingLat)
         }
@@ -109,10 +97,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         
         if let existingDesc = flowState.animalAdditionalDescription {
             self.additionalDescription = existingDesc
-        }
-        
-        if let existingPetName = flowState.petName {
-            self.petName = existingPetName
         }
         
         // Load collar data (microchip) from flow state
@@ -173,30 +157,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
             ],
             errorMessage: genderErrorMessage,
             accessibilityIDPrefix: "animalDescription.gender"
-        )
-    }
-    
-    /// Model for age text field (optional, numeric keyboard)
-    var ageTextFieldModel: ValidatedTextField.Model {
-        ValidatedTextField.Model(
-            label: L10n.AnimalDescription.ageLabel,
-            placeholder: L10n.AnimalDescription.agePlaceholder,
-            errorMessage: ageErrorMessage,
-            isDisabled: false,
-            keyboardType: .numberPad,
-            accessibilityID: "animalDescription.ageTextField.input"
-        )
-    }
-    
-    /// Model for pet name text field (optional, default keyboard)
-    var petNameTextFieldModel: ValidatedTextField.Model {
-        ValidatedTextField.Model(
-            label: L10n.AnimalDescription.petNameLabel,
-            placeholder: L10n.AnimalDescription.petNamePlaceholder,
-            errorMessage: nil,  // Pet name has no validation errors
-            isDisabled: false,
-            keyboardType: .default,
-            accessibilityID: "animalDescription.petNameTextField.input"
         )
     }
     
@@ -335,17 +295,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
             errors.append(.missingGender)
         }
         
-        // Age validation (optional, but if provided must be 0-40)
-        if !age.isEmpty {
-            if let ageValue = Int(age) {
-                if ageValue < 0 || ageValue > 40 {
-                    errors.append(.invalidAge(L10n.AnimalDescription.Error.invalidAge))
-                }
-            } else {
-                errors.append(.invalidAge(L10n.AnimalDescription.Error.invalidAge))
-            }
-        }
-        
         // Coordinate validation (optional, but if provided must be in range)
         let coordinateValidation = validateCoordinates()
         if case .invalid(let latError, let longError) = coordinateValidation {
@@ -404,7 +353,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         speciesErrorMessage = nil
         raceErrorMessage = nil
         genderErrorMessage = nil
-        ageErrorMessage = nil
         latitudeErrorMessage = nil
         longitudeErrorMessage = nil
         toastScheduler.cancel()
@@ -435,8 +383,6 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
                 raceErrorMessage = error.message
             case .gender:
                 genderErrorMessage = error.message
-            case .age:
-                ageErrorMessage = error.message
             case .latitude:
                 latitudeErrorMessage = error.message
             case .longitude:
@@ -454,15 +400,9 @@ class FoundPetAnimalDescriptionViewModel: ObservableObject {
         flowState.animalRace = race.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : race.trimmingCharacters(in: .whitespacesAndNewlines)
         flowState.animalGender = selectedGender
         
-        // Optional fields (US2 & US3)
-        flowState.animalAge = age.isEmpty ? nil : Int(age)
         flowState.animalLatitude = latitude.isEmpty ? nil : Double(latitude)
         flowState.animalLongitude = longitude.isEmpty ? nil : Double(longitude)
         flowState.animalAdditionalDescription = additionalDescription.isEmpty ? nil : additionalDescription
-        
-        // Pet name (US1 - 046-ios-pet-name-field)
-        let trimmedPetName = petName.trimmingCharacters(in: .whitespacesAndNewlines)
-        flowState.petName = trimmedPetName.isEmpty ? nil : trimmedPetName
         
         // Collar data (microchip) - store digits-only
         flowState.chipNumber = collarData.isEmpty ? nil : collarData

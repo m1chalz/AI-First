@@ -54,7 +54,6 @@ final class FoundPetAnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.selectedSpecies, "Species should be nil")
         XCTAssertEqual(viewModel.race, "", "Race should be empty")
         XCTAssertNil(viewModel.selectedGender, "Gender should be nil")
-        XCTAssertEqual(viewModel.age, "", "Age should be empty")
         XCTAssertEqual(viewModel.latitude, "", "Latitude should be empty")
         XCTAssertEqual(viewModel.longitude, "", "Longitude should be empty")
         XCTAssertEqual(viewModel.additionalDescription, "", "Description should be empty")
@@ -67,7 +66,6 @@ final class FoundPetAnimalDescriptionViewModelTests: XCTestCase {
         flowState.animalSpecies = .dog
         flowState.animalRace = "Labrador"
         flowState.animalGender = .male
-        flowState.animalAge = 5
         flowState.animalLatitude = 52.2297
         flowState.animalLongitude = 21.0122
         flowState.animalAdditionalDescription = "Brown with white paws"
@@ -84,7 +82,6 @@ final class FoundPetAnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertEqual(vm.selectedSpecies, .dog)
         XCTAssertEqual(vm.race, "Labrador")
         XCTAssertEqual(vm.selectedGender, .male)
-        XCTAssertEqual(vm.age, "5")
         XCTAssertEqual(vm.latitude, "52.22970")
         XCTAssertEqual(vm.longitude, "21.01220")
         XCTAssertEqual(vm.additionalDescription, "Brown with white paws")
@@ -258,65 +255,5 @@ final class FoundPetAnimalDescriptionViewModelTests: XCTestCase {
         XCTAssertEqual(flowState.animalLongitude!, 21.0122, accuracy: 0.00001)
     }
     
-    // MARK: - Pet Name Tests
-    
-    func test_petName_whenUserEntersText_shouldUpdatePublishedProperty() {
-        // Given - fresh ViewModel
-        
-        // When - user types in pet name field
-        viewModel.petName = "Max"
-        
-        // Then - property updates
-        XCTAssertEqual(viewModel.petName, "Max")
-    }
-    
-    func test_petName_whenFlowStateHasPetName_shouldInitializeProperty() {
-        // Given - flow state with existing pet name
-        flowState.petName = "Buddy"
-        
-        // When - create new ViewModel
-        let vm = FoundPetAnimalDescriptionViewModel(
-            flowState: flowState,
-            locationHandler: locationHandler,
-            toastScheduler: ToastSchedulerFake()
-        )
-        
-        // Then - pet name loaded from flow state
-        XCTAssertEqual(vm.petName, "Buddy")
-    }
-    
-    func test_onContinueTapped_whenPetNameHasText_shouldStoreTrimmedValue() {
-        // Given - all required fields + pet name with whitespace
-        viewModel.disappearanceDate = Date()
-        viewModel.selectedSpecies = .dog
-        viewModel.race = "Labrador"
-        viewModel.selectedGender = .male
-        viewModel.latitude = "52.2297"
-        viewModel.longitude = "21.0122"
-        viewModel.petName = "  Max  "
-        
-        // When - tap continue
-        viewModel.onContinueTapped()
-        
-        // Then - flow state updated with trimmed pet name
-        XCTAssertEqual(flowState.petName, "Max")
-    }
-    
-    func test_onContinueTapped_whenPetNameIsEmpty_shouldStoreNil() {
-        // Given - all required fields + empty pet name
-        viewModel.disappearanceDate = Date()
-        viewModel.selectedSpecies = .dog
-        viewModel.race = "Labrador"
-        viewModel.selectedGender = .male
-        viewModel.latitude = "52.2297"
-        viewModel.longitude = "21.0122"
-        viewModel.petName = ""
-        
-        // When - tap continue
-        viewModel.onContinueTapped()
-        
-        // Then - flow state pet name is nil
-        XCTAssertNil(flowState.petName)
-    }
 }
 

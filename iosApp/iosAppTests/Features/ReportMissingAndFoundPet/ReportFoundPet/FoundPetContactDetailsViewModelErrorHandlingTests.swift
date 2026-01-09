@@ -93,7 +93,6 @@ final class FoundPetContactDetailsViewModelErrorHandlingTests: XCTestCase {
         // Given: Valid inputs, service throws error
         sut.phone = "+48123456789"
         sut.email = "owner@example.com"
-        sut.rewardDescription = "$250"
         fakeService.shouldThrow = true
         
         // When: Submit form
@@ -102,7 +101,6 @@ final class FoundPetContactDetailsViewModelErrorHandlingTests: XCTestCase {
         // Then: Inputs remain intact
         XCTAssertEqual(sut.phone, "+48123456789", "Phone should remain intact")
         XCTAssertEqual(sut.email, "owner@example.com", "Email should remain intact")
-        XCTAssertEqual(sut.rewardDescription, "$250", "Reward should remain intact")
     }
     
     func testSubmitForm_whenError_shouldKeepValidationErrorsCleared() async {
