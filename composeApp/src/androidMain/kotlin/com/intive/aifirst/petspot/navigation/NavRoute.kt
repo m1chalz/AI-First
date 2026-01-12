@@ -32,6 +32,13 @@ sealed interface NavRoute {
      */
     @Serializable
     data object ReportFound : NavRoute
+
+    /**
+     * Fullscreen Interactive Map screen.
+     * Route: "fullscreen_map"
+     */
+    @Serializable
+    data object FullscreenMap : NavRoute
 }
 
 /**
