@@ -116,6 +116,73 @@
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
 
+## Test Identifiers *(mandatory for UI features)*
+
+<!--
+  TEST IDENTIFIERS: All interactive UI elements MUST have stable test identifiers for E2E testing.
+  See docs/testing-workflow.md for complete guide.
+  
+  For backend-only features, mark this section as N/A.
+-->
+
+### Naming Convention
+
+Format: `{screen}.{element}.{action-or-id}`
+
+**Examples**:
+- Buttons/Inputs: `petDetails.shareButton.click`, `login.emailInput.field`
+- List Items: `petList.item.${petId}` (use stable IDs, NEVER array indices)
+- Actions: `click`, `field`, `toggle`, `submit` (descriptive of interaction type)
+
+### Test Identifiers for This Feature
+
+| Screen | Element | Test Identifier | Platform Notes |
+|--------|---------|----------------|----------------|
+| [Screen Name] | [Button/Input/Link] | `[screen].[element].[action]` | Android: testTag, iOS: accessibilityIdentifier, Web: data-testid |
+
+**Example**:
+| Pet Details | Share Button | `petDetails.shareButton.click` | All platforms |
+| Pet List | List Item | `petList.item.${petId}` | Dynamic ID based on pet |
+
+### Test Identifier Checklist
+
+- [ ] All buttons have test identifiers
+- [ ] All input fields have test identifiers
+- [ ] All navigation elements have test identifiers
+- [ ] List items use stable IDs (not indices)
+- [ ] Naming follows `{screen}.{element}.{action}` convention
+
+## Testing Strategy *(optional - use for complex features)*
+
+<!--
+  TESTING STRATEGY: For complex features (5+ SP), document which test types apply.
+  See docs/testing-workflow.md for test decision tree.
+  
+  For simple features (1-2 SP), this section is optional.
+-->
+
+### Test Types Required
+
+| Test Type | Required? | Rationale |
+|-----------|-----------|-----------|
+| **Unit Tests** | ✅ Yes | Business logic in ViewModels, services, use cases |
+| **Integration Tests** | ✅ Yes | Backend API endpoints (all platforms consume REST API) |
+| **E2E Tests** | ✅ Yes | Critical user flow across platforms |
+| **Manual Tests** | ⚠️ Optional | [Specify if needed, e.g., social platform preview validation] |
+
+### Coverage Targets
+
+- **Backend**: 80% (services, lib, API endpoints) - TDD mandatory
+- **Web**: 80% (hooks, lib functions) - TDD recommended, 80% coverage mandatory
+- **Android**: 80% (ViewModels, use cases, domain models)
+- **iOS**: 80% (ViewModels, domain models)
+
+### Test Complexity Indicators
+
+- **Simple** (1-2 SP): Standard unit + integration + E2E tests
+- **Medium** (3-5 SP): Add edge case tests, error scenario tests
+- **Complex** (8+ SP): Add integration with external systems, performance tests (if needed), security tests (if auth-related)
+
 ## Design Deliverables *(mandatory for UI features)*
 
 <!--

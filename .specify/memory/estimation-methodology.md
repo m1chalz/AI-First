@@ -106,6 +106,70 @@ Example: 30 tasks × 1.5 = 45 hours = ~6 days
 
 ---
 
+## Testing Effort Estimation
+
+Testing effort is included in Story Points but should be explicitly tracked for learning and accuracy.
+
+### Testing Effort Guidelines
+
+| Feature Complexity | Test Tasks % | Test Days Ratio | Example |
+|--------------------|--------------|-----------------|---------|
+| **Simple** (1-2 SP) | 20-30% | 0.2-0.3× implementation | 1 SP feature: 3 days impl + 1 day tests = 4 days |
+| **Medium** (3-5 SP) | 30-40% | 0.3-0.4× implementation | 3 SP feature: 9 days impl + 3.5 days tests = 12.5 days |
+| **Complex** (8-13 SP) | 40-50% | 0.4-0.5× implementation | 8 SP feature: 20 days impl + 10 days tests = 30 days |
+
+### Test Type Breakdown
+
+Typical test effort distribution:
+
+- **Unit Tests**: 50-60% of test time (most coverage, fast feedback)
+- **Integration Tests**: 15-20% of test time (backend API endpoints)
+- **E2E Tests**: 25-30% of test time (user flows, Page Objects, stability fixes)
+
+### Testing Effort Formula
+
+```
+Test Days = Implementation Days × Test Ratio
+Total Days = Implementation Days + Test Days
+```
+
+**Example** (3 SP feature):
+```
+Implementation: 9 days (70%)
+Testing: 3.5 days (30%) = 9 × 0.35
+Total: 12.5 days ≈ 13 days
+```
+
+### Variance Tracking for Testing
+
+When re-estimating after PLAN/TASKS, track testing variance separately:
+
+| Metric | Initial | Final | Variance | Reason |
+|--------|---------|-------|----------|--------|
+| Implementation Days | [X] | [Y] | [(Y-X)/X × 100%] | [Reuse, native APIs, etc.] |
+| Testing Days | [X] | [Y] | [(Y-X)/X × 100%] | [Test complexity, E2E flakiness, etc.] |
+| **Total Days** | **[X]** | **[Y]** | **[(Y-X)/X × 100%]** | |
+
+**Common Testing Variance Patterns**:
+- **-30% to -50%**: Backend API already works, minimal testing needed
+- **+30% to +50%**: E2E tests flaky, required significant stabilization effort
+- **+50% to +100%**: Complex test scenarios, edge cases not anticipated
+
+### Integration with Spec-Kit Phases
+
+Testing effort should be estimated and tracked at each phase:
+
+| Phase | Testing Estimation Activity |
+|-------|----------------------------|
+| **SPEC** | Identify test types needed (unit, integration, E2E) |
+| **PLAN** | Document test strategy decisions, estimate test task count |
+| **TASKS** | Create concrete test tasks per platform, calculate test percentage |
+| **IMPLEMENTATION** | Track actual testing time vs estimate, document variance |
+
+**Reference**: See `docs/testing-spec-kit-integration.md` for detailed integration guide.
+
+---
+
 ## Common Estimation Patterns
 
 ### Pattern 1: Reuse Discovery (-60% to -80%)
